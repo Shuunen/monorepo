@@ -1,0 +1,10 @@
+{
+  "name": "@shuunen/sample-e2e",
+  "nx": {
+    "implicitDependencies": [
+      "@shuunen/sample"
+    ]
+  },
+  "private": true,
+  "version": "0.0.1"
+}

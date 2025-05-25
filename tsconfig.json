@@ -1,0 +1,13 @@
+{
+  "compileOnSave": false,
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/sample-e2e"
+    },
+    {
+      "path": "./apps/sample"
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "defaultBase": "master",
+  "generators": {
+    "@nx/react": {
+      "application": {
+        "babel": true,
+        "bundler": "rspack",
+        "linter": "none",
+        "style": "tailwind"
+      },
+      "component": {
+        "style": "tailwind"
+      },
+      "library": {
+        "linter": "none",
+        "style": "tailwind"
+      }
+    }
+  },
+  "namedInputs": {
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
+    "production": [
+      "default",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/src/test-setup.[jt]s"
+    ],
+    "sharedGlobals": [
+      "{workspaceRoot}/.github/workflows/ci.yml"
+    ]
+  },
+  "nxCloudId": "683396f7d8f1014385a9bb12",
+  "plugins": [
+    {
+      "options": {
+        "build": {
+          "buildDepsName": "build-deps",
+          "configName": "tsconfig.lib.json",
+          "targetName": "build",
+          "watchDepsName": "watch-deps"
+        },
+        "typecheck": {
+          "targetName": "typecheck"
+        }
+      },
+      "plugin": "@nx/js/typescript"
+    },
+    {
+      "options": {
+        "buildDepsTargetName": "build-deps",
+        "buildTargetName": "build",
+        "devTargetName": "dev",
+        "startTargetName": "start",
+        "typecheckTargetName": "typecheck",
+        "watchDepsTargetName": "watch-deps"
+      },
+      "plugin": "@nx/react/router-plugin"
+    },
+    {
+      "options": {
+        "buildDepsTargetName": "build-deps",
+        "buildTargetName": "build",
+        "previewTargetName": "preview",
+        "serveTargetName": "serve",
+        "watchDepsTargetName": "watch-deps"
+      },
+      "plugin": "@nx/rspack/plugin"
+    },
+    {
+      "options": {
+        "buildDepsTargetName": "build-deps",
+        "buildTargetName": "build",
+        "devTargetName": "dev",
+        "previewTargetName": "preview",
+        "serveStaticTargetName": "serve-static",
+        "serveTargetName": "serve",
+        "testTargetName": "test",
+        "typecheckTargetName": "typecheck",
+        "watchDepsTargetName": "watch-deps"
+      },
+      "plugin": "@nx/vite/plugin"
+    },
+    {
+      "options": {
+        "targetName": "e2e"
+      },
+      "plugin": "@nx/playwright/plugin"
+    }
+  ],
+  "targetDefaults": {
+    "test": {
+      "dependsOn": [
+        "^build"
+      ]
+    }
+  }
+}

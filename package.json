@@ -1,0 +1,57 @@
+{
+  "dependencies": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "6.29.0"
+  },
+  "devDependencies": {
+    "@nx/devkit": "21.1.2",
+    "@nx/jest": "21.1.2",
+    "@nx/js": "21.1.2",
+    "@nx/playwright": "21.1.2",
+    "@nx/react": "21.1.2",
+    "@nx/rspack": "21.1.2",
+    "@nx/vite": "21.1.2",
+    "@nx/web": "21.1.2",
+    "@nx/workspace": "21.1.2",
+    "@playwright/test": "^1.36.0",
+    "@rspack/cli": "1.3.8",
+    "@rspack/core": "1.3.8",
+    "@rspack/dev-server": "1.1.1",
+    "@rspack/plugin-react-refresh": "^1.0.0",
+    "@swc-node/register": "~1.9.1",
+    "@swc/core": "~1.5.7",
+    "@swc/helpers": "~0.5.11",
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/react": "16.1.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "@vitest/coverage-v8": "^3.0.5",
+    "@vitest/ui": "^3.0.0",
+    "autoprefixer": "10.4.13",
+    "jiti": "2.4.2",
+    "jsdom": "~22.1.0",
+    "nx": "21.1.2",
+    "postcss": "8.4.38",
+    "react-refresh": "~0.14.0",
+    "tailwindcss": "3.4.3",
+    "tslib": "^2.3.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.0",
+    "vitest": "^3.0.0"
+  },
+  "license": "MIT",
+  "name": "@shuunen/monorepo",
+  "private": true,
+  "scripts": {},
+  "trustedDependencies": [
+    "@parcel/watcher",
+    "@swc/core"
+  ],
+  "version": "0.0.0",
+  "workspaces": [
+    "apps/*"
+  ]
+}
