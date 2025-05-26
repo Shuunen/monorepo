@@ -4,10 +4,10 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/sample-e2e"
+      "path": "./apps/sample-web-app-e2e"
     },
     {
-      "path": "./apps/sample"
+      "path": "./apps/sample-web-app"
     }
   ]
 }

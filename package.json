@@ -43,13 +43,9 @@
     "vitest": "^3.0.0"
   },
   "license": "MIT",
-  "name": "@shuunen/monorepo",
+  "name": "@monorepo/source",
   "private": true,
   "scripts": {},
-  "trustedDependencies": [
-    "@parcel/watcher",
-    "@swc/core"
-  ],
   "version": "0.0.0",
   "workspaces": [
     "apps/*"

@@ -1,17 +1,18 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "jsx": "react-jsx",
     "lib": [
       "dom"
     ],
-    "outDir": "dist",
-    "rootDir": "src",
-    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "types": [
       "node",
       "@nx/react/typings/cssmodule.d.ts",
       "@nx/react/typings/image.d.ts"
-    ]
+    ],
+    "rootDir": "src"
   },
   "exclude": [
     "out-tsc",
@@ -29,7 +30,6 @@
     "vitest.config.ts",
     "vitest.config.mts"
   ],
-  "extends": "../../tsconfig.base.json",
   "include": [
     "src/**/*.js",
     "src/**/*.jsx",
