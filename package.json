@@ -37,6 +37,12 @@
   "license": "MIT",
   "name": "@shuunen/source",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "check": "nx run-many -t lint,test,build,e2e,typecheck && echo check success",
+    "test": "vitest --coverage --run && echo test success",
+    "test:bench": "vitest bench && echo test bench success",
+    "test:update": "vitest --run --update && echo test update success",
+    "test:watch": "vitest --coverage"
+  },
   "version": "0.0.0"
 }

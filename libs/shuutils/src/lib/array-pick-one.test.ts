@@ -9,5 +9,5 @@ it('pick one returns an element from the array', () => {
 })
 
 it('pick one returns undefined', () => {
-  expect(() => pickOne([false].filter(Boolean))).toThrowErrorMatchingInlineSnapshot(`"Array is empty"`)
+  expect(() => pickOne([false].filter(Boolean))).toThrowErrorMatchingInlineSnapshot(`[Error: Array is empty]`)
 })
