@@ -1,10 +1,10 @@
 {
-  "name": "@monorepo/sample-web-app-e2e",
+  "name": "@shuunen/sample-web-app-e2e",
   "version": "0.0.1",
   "private": true,
   "nx": {
     "implicitDependencies": [
-      "@monorepo/sample-web-app"
+      "@shuunen/sample-web-app"
     ]
   }
 }

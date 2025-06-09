@@ -5,7 +5,7 @@
     "@nx/react": {
       "application": {
         "babel": true,
-        "bundler": "rspack",
+        "bundler": "vite",
         "linter": "none",
         "style": "tailwind"
       },
@@ -33,7 +33,7 @@
       "{workspaceRoot}/.github/workflows/ci.yml"
     ]
   },
-  "nxCloudId": "6834c203e1a9630c2eae3a0c",
+  "nxCloudId": "684693bbd6342c28b0159958",
   "plugins": [
     {
       "options": {
@@ -59,16 +59,6 @@
         "watchDepsTargetName": "watch-deps"
       },
       "plugin": "@nx/react/router-plugin"
-    },
-    {
-      "options": {
-        "buildDepsTargetName": "build-deps",
-        "buildTargetName": "build",
-        "previewTargetName": "preview",
-        "serveTargetName": "serve",
-        "watchDepsTargetName": "watch-deps"
-      },
-      "plugin": "@nx/rspack/plugin"
     },
     {
       "options": {
