@@ -47,7 +47,10 @@
           "targetName": "typecheck"
         }
       },
-      "plugin": "@nx/js/typescript"
+      "plugin": "@nx/js/typescript",
+      "exclude": [
+        "libs/shuutils/*"
+      ]
     },
     {
       "options": {
@@ -79,6 +82,17 @@
         "targetName": "e2e"
       },
       "plugin": "@nx/playwright/plugin"
+    },
+    {
+      "plugin": "@nx/js/typescript",
+      "include": [
+        "libs/shuutils/*"
+      ],
+      "options": {
+        "typecheck": {
+          "targetName": "typecheck"
+        }
+      }
     }
   ],
   "targetDefaults": {

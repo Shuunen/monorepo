@@ -1,21 +1,21 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "outDir": "./out-tsc/vitest",
     "types": [
       "vitest/globals",
       "vitest/importMeta",
       "vite/client",
       "node",
-      "vitest",
-      "@nx/react/typings/cssmodule.d.ts",
-      "@nx/react/typings/image.d.ts"
-    ],
-    "jsx": "react-jsx"
+      "vitest"
+    ]
   },
+  "extends": "../../tsconfig.base.json",
   "include": [
     "vite.config.ts",
-    "vite.config.ts",
+    "vite.config.mts",
     "vitest.config.ts",
     "vitest.config.mts",
     "src/**/*.test.ts",
@@ -30,7 +30,7 @@
   ],
   "references": [
     {
-      "path": "./tsconfig.app.json"
+      "path": "./tsconfig.lib.json"
     }
   ]
 }

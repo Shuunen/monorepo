@@ -26,7 +26,7 @@
     "src/**/*.spec.jsx",
     "src/**/*.test.jsx",
     "vite.config.ts",
-    "vite.config.mts",
+    "vite.config.ts",
     "vitest.config.ts",
     "vitest.config.mts"
   ],
@@ -36,5 +36,10 @@
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx"
+  ],
+  "references": [
+    {
+      "path": "../../libs/shuutils/tsconfig.lib.json"
+    }
   ]
 }

@@ -1,5 +1,9 @@
 {
   "name": "@shuunen/sample-web-app",
   "private": true,
-  "version": "0.0.1"
+  "type": "module",
+  "version": "0.0.1",
+  "devDependencies": {
+    "@shuunen/shuutils": "file:../../libs/shuutils"
+  }
 }
