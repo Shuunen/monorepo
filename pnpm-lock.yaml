@@ -106,7 +106,7 @@ importers:
   apps/sample-web-app:
     devDependencies:
       '@shuunen/shuutils':
-        specifier: file:../../libs/shuutils
+        specifier: workspace:*
         version: link:../../libs/shuutils
 
   apps/sample-web-app-e2e: {}
