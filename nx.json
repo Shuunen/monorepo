@@ -36,6 +36,9 @@
   "nxCloudId": "684693bbd6342c28b0159958",
   "plugins": [
     {
+      "exclude": [
+        "libs/shuutils/*"
+      ],
       "options": {
         "build": {
           "buildDepsName": "build-deps",
@@ -47,10 +50,7 @@
           "targetName": "typecheck"
         }
       },
-      "plugin": "@nx/js/typescript",
-      "exclude": [
-        "libs/shuutils/*"
-      ]
+      "plugin": "@nx/js/typescript"
     },
     {
       "options": {
@@ -84,7 +84,6 @@
       "plugin": "@nx/playwright/plugin"
     },
     {
-      "plugin": "@nx/js/typescript",
       "include": [
         "libs/shuutils/*"
       ],
@@ -92,14 +91,19 @@
         "typecheck": {
           "targetName": "typecheck"
         }
-      }
+      },
+      "plugin": "@nx/js/typescript"
     }
   ],
   "targetDefaults": {
     "test": {
       "dependsOn": [
         "^build"
-      ]
+      ],
+      "options": {
+        "coverage": true,
+        "coverage.thresholds.100": true
+      }
     }
   }
 }

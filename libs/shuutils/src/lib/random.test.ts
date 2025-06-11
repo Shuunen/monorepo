@@ -13,6 +13,11 @@ it('randomEmail A', () => {
   expect(email.includes('.scott')).toBe(true)
 })
 
+it('randomEmail B', () => {
+  const email = randomEmail('Mickael', 'Scott')
+  expect(email.includes('.s')).toBe(true)
+})
+
 it('randomPerson A', () => {
   const person = randomPerson()
   expect(person.email.includes('.')).toBe(true)

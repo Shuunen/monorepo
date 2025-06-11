@@ -10,14 +10,15 @@ export default defineConfig(() => ({
   //  plugins: [ nxViteTsPaths() ],
   // },
   test: {
-    'watch': false,
-    'globals': true,
-    'environment': "node",
-    'include': ["src/**/*.test.{ts,tsx}"],
-    'reporters': ["default"],
-    'coverage': {
-      'reportsDirectory': './test-output/vitest/coverage',
-      'provider': 'v8' as const,
+    watch: false,
+    globals: true,
+    environment: "node",
+    include: ["src/**/*.test.{ts,tsx}"],
+    reporters: ["default"],
+    coverage: {
+      exclude: ["src/index.ts", "dist/**", '**/*.config.ts', '**/*.d.ts'],
+      reportsDirectory: './test-output/vitest/coverage',
+      provider: 'v8' as const,
     }
   },
 }))
