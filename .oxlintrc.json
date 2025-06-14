@@ -1,0 +1,164 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error",
+    "nursery": "warn",
+    "pedantic": "warn",
+    "perf": "warn",
+    "restriction": "warn",
+    "style": "warn",
+    "suspicious": "warn"
+  },
+  "globals": {
+    "File": "readonly",
+    "__dirname": "readonly",
+    "clearInterval": "readonly",
+    "console": "readonly",
+    "document": "readonly",
+    "setTimeout": "readonly",
+    "structuredClone": "readonly"
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.tsx"
+      ],
+      "rules": {
+        "max-lines-per-function": [
+          "error",
+          50
+        ],
+        "max-nested-callbacks": [
+          "error",
+          2
+        ]
+      }
+    },
+    {
+      "files": [
+        "*.stories.tsx",
+        "*.test.ts"
+      ],
+      "rules": {
+        "eslint/max-lines-per-function": "off",
+        "eslint/no-negated-condition": "off",
+        "import/no-default-export": "off",
+        "import/no-namespace": "off",
+        "max-nested-callbacks": "off",
+        "no-magic-numbers": "off",
+        "sort-keys": "off",
+        "unicorn/numeric-separators-style": "off"
+      }
+    },
+    {
+      "files": [
+        "src/routes/**/*.ts",
+        "src/routes/**/*.tsx"
+      ],
+      "rules": {
+        "unicorn/filename-case": "off"
+      }
+    },
+    {
+      "files": [
+        "routeTree.gen.ts"
+      ],
+      "rules": {
+        "unicorn/filename-case": "off",
+        "unicorn/no-abusive-eslint-disable": "off"
+      }
+    },
+    {
+      "files": [
+        "vite-env.d.ts"
+      ],
+      "rules": {
+        "import/unambiguous": "off"
+      }
+    }
+  ],
+  "plugins": [
+    "import",
+    "jsdoc",
+    "oxc",
+    "typescript",
+    "unicorn",
+    "vitest"
+  ],
+  "rules": {
+    "@typescript-eslint/array-type": "off",
+    "@typescript-eslint/consistent-indexed-object-style": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "consistent-type-definitions": [
+      "error",
+      "type"
+    ],
+    "consistent-type-specifier-style": "off",
+    "curly": [
+      "error",
+      "multi"
+    ],
+    "eslint/max-depth": [
+      "error",
+      2
+    ],
+    "eslint/max-lines-per-function": [
+      "error",
+      12
+    ],
+    "eslint/no-undefined": "off",
+    "eslint/yoda": "off",
+    "func-style": [
+      "error",
+      "declaration",
+      {
+        "allowArrowFunctions": true
+      }
+    ],
+    "import/exports-last": "off",
+    "import/group-exports": "off",
+    "jsdoc/require-param-type": "off",
+    "jsdoc/require-returns-type": "off",
+    "max-dependencies": [
+      "error",
+      30
+    ],
+    "max-lines-per-function": [
+      "error",
+      20
+    ],
+    "max-nested-callbacks": [
+      "error",
+      1
+    ],
+    "no-async-await": "off",
+    "no-continue": "off",
+    "no-magic-numbers": [
+      "error",
+      {
+        "ignore": [
+          -1,
+          0,
+          1
+        ],
+        "ignoreClassFieldInitialValues": true,
+        "ignoreDefaultValues": true
+      }
+    ],
+    "no-rest-spread-properties": "off",
+    "no-ternary": "off",
+    "no-void": "off",
+    "oxc/no-optional-chaining": "off",
+    "sort-imports": "off",
+    "unicorn/filename-case": [
+      "error",
+      {
+        "case": "kebabCase"
+      }
+    ],
+    "unicorn/no-useless-undefined": "off",
+    "unicorn/prefer-string-replace-all": "off",
+    "vitest/prefer-to-be-falsy": "off",
+    "vitest/prefer-to-be-truthy": "off"
+  }
+}

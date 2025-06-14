@@ -11,6 +11,7 @@
   },
   "description": "the monorepo for my beloved projects",
   "devDependencies": {
+    "@biomejs/biome": "1.9",
     "@nx/devkit": "21.2",
     "@nx/js": "21.2",
     "@nx/playwright": "21.2",
@@ -33,6 +34,7 @@
     "jiti": "2.4",
     "jsdom": "26.1",
     "nx": "21.2",
+    "oxlint": "1.1",
     "repo-check": "1.45",
     "tslib": "2.8",
     "typescript": "5.8",
@@ -59,8 +61,10 @@
     "url": "git+https://github.com/Shuunen/monorepo.git"
   },
   "scripts": {
-    "check": "pnpm check:repo && pnpm check:nx && echo check success",
+    "check": "pnpm check:repo && pnpm check:biome && pnpm check:oxlint && pnpm check:nx && echo check success",
+    "check:biome": "biome check --error-on-warnings --write --unsafe && echo check:biome success",
     "check:nx": "nx run-many -t lint,test,build,e2e,typecheck && echo check:nx success",
+    "check:oxlint": "oxlint src --deny-warnings --fix --fix-suggestions --fix-dangerously && echo check:oxlint success",
     "check:repo": "repo-check && echo check:repo success",
     "check:tsc": "tsc --noEmit && echo lint:tsc success",
     "postversion": "git push && git push --tags",

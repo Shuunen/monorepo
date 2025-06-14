@@ -82,8 +82,10 @@ And join the Nx community:
 
 ## Thanks
 
+- [Biome](https://biomejs.dev) : super fast linter & formatter
 - [Boxy Svg](https://boxy-svg.com) : simple & effective svg editor
 - [Github](https://github.com) : for all their great work year after year, pushing OSS forward
+- [Oxc](https://oxc.rs) : a lovely super-fast collection of JavaScript tools written in Rust
 - [React](https://react.dev) : great library for web and native user interfaces
 - [Repo-checker](https://github.com/Shuunen/repo-checker) : eslint cover /src code and this tool the rest ^^
 - [Shields.io](https://shields.io) : for the nice badges on top of this readme
