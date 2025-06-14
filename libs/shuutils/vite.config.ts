@@ -1,4 +1,3 @@
-
 import { defineConfig } from 'vite'
 
 export default defineConfig(() => ({
@@ -12,13 +11,13 @@ export default defineConfig(() => ({
   test: {
     watch: false,
     globals: true,
-    environment: "node",
-    include: ["src/**/*.test.{ts,tsx}"],
-    reporters: ["default"],
+    environment: 'node',
+    include: ['src/**/*.test.{ts,tsx}'],
+    reporters: ['default'],
     coverage: {
-      exclude: ["src/index.ts", "dist/**", '**/*.config.ts', '**/*.d.ts'],
+      exclude: ['src/index.ts', 'dist/**', '**/*.config.ts', '**/*.d.ts'],
       reportsDirectory: './test-output/vitest/coverage',
       provider: 'v8' as const,
-    }
+    },
   },
 }))

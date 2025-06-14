@@ -1,7 +1,7 @@
+import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react'
 /// <reference types='vitest' />
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig(() => ({
   root: __dirname,
@@ -36,6 +36,6 @@ export default defineConfig(() => ({
     coverage: {
       reportsDirectory: './test-output/vitest/coverage',
       provider: 'v8' as const,
-    }
+    },
   },
 }))
