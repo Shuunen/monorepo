@@ -1,8 +1,8 @@
 # Shuunen Monorepo
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+[![Project license](https://img.shields.io/github/license/Shuunen/monorepo.svg?color=informational)](https://github.com/Shuunen/monorepo/blob/master/LICENSE)
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## Nx Workspace
 
 [Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
 
@@ -79,3 +79,20 @@ And join the Nx community:
 - [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
 - [Our Youtube channel](https://www.youtube.com/@nxdevtools)
 - [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+## Thanks
+
+- [Boxy Svg](https://boxy-svg.com) : simple & effective svg editor
+- [Github](https://github.com) : for all their great work year after year, pushing OSS forward
+- [React](https://react.dev) : great library for web and native user interfaces
+- [Repo-checker](https://github.com/Shuunen/repo-checker) : eslint cover /src code and this tool the rest ^^
+- [Shields.io](https://shields.io) : for the nice badges on top of this readme
+- [Svg Omg](https://jakearchibald.github.io/svgomg/) : the great king of svg file size reduction
+- [TailwindCss](https://tailwindcss.com) : awesome lib to produce maintainable style
+- [V8](https://github.com/demurgos/v8-coverage) : simple & effective cli for code coverage
+- [Vite](https://github.com/vitejs/vite) : super fast frontend tooling
+- [Vitest](https://github.com/vitest-dev/vitest) : super fast vite-native testing framework
+
+## Page views
+
+[![Views Counter](https://views-counter.vercel.app/badge?pageId=Shuunen%2Fmonorepo&leftColor=5c5c5c&rightColor=07a62f&type=total&label=Visitors&style=none)](https://github.com/Kumara2mahe/Views-Counter)
