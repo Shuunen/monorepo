@@ -1,0 +1,17 @@
+{
+  "name": "shuutils",
+  "targets": {
+    "list": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        {
+          "fileset": "{projectRoot}/src/lib/**/*"
+        }
+      ],
+      "options": {
+        "command": "bun src/list.cli.ts",
+        "cwd": "libs/shuutils"
+      }
+    }
+  }
+}
