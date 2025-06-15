@@ -111,7 +111,7 @@ function isEquals(file, config) {
   return areEquals
 }
 
-export const backupPath = path.join(currentFolder, '../files')
+export const backupPath = path.join(currentFolder, './files')
 
 /** @type {import('./types.js').File[]} */
 export const files = configs.map(config => {

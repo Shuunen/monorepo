@@ -33,7 +33,8 @@
     "args": {
       "commands": [
         "typescript.restartTsServer",
-        "eslint.restart"
+        "oxc.restartServer",
+        "biome.restart"
       ]
     },
     "command": "runCommands",
