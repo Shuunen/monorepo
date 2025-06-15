@@ -35,7 +35,14 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "all": true,
+      "complexity": {
+        "noUselessUndefinedInitialization": "off"
+      },
+      "correctness": {
+        "noUndeclaredDependencies": "off",
+        "useImportExtensions": "off"
+      },
       "style": {
         "useBlockStatements": "off"
       }
@@ -47,12 +54,68 @@
   "overrides": [
     {
       "include": [
-        "*.test.ts"
+        "index.ts"
       ],
       "linter": {
         "rules": {
+          "performance": {
+            "noReExportAll": "off",
+            "noBarrelFile": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": [
+        "*.jsx",
+        "*.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noReactSpecificProps": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": [
+        "*.test.ts",
+        "*.test.tsx"
+      ],
+      "javascript": {
+        "globals": [
+          "describe",
+          "mock",
+          "it",
+          "beforeEach",
+          "afterEach",
+          "navigator",
+          "expect",
+          "vi"
+        ]
+      },
+      "linter": {
+        "rules": {
+          "performance": {
+            "useTopLevelRegex": "off"
+          },
           "style": {
             "noUnusedTemplateLiteral": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": [
+        "*.cli.js",
+        "*.test.ts",
+        "*.cli.ts"
+      ],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noNodejsModules": "off"
           }
         }
       }

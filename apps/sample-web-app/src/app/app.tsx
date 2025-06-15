@@ -1,5 +1,5 @@
 import { Link, Route, Routes } from 'react-router-dom'
-import NxWelcome from './nx-welcome'
+import { NxWelcome } from './nx-welcome'
 
 export function App() {
   return (
@@ -44,5 +44,3 @@ export function App() {
     </div>
   )
 }
-
-export default App

@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 /// <reference types='vitest' />
 import { defineConfig } from 'vite'
 
+// biome-ignore lint/style/noDefaultExport: needed here
 export default defineConfig(() => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/sample-web-app',

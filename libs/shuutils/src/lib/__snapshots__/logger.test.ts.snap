@@ -1,0 +1,33 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`logger B 1`] = `
+[
+  " info This info 2 should be logged",
+  " info This info 3 should be logged too",
+  " good This success 0 should be logged",
+  " warn This warn 1 should be logged",
+  "  fix This fix 1 should be logged 42",
+  "error This error 0 should be logged {'isKeyA':true,'keyB':'John'}",
+  "error This error 1 should be logged too",
+]
+`;
+
+exports[`logger D 1`] = `
+[
+  " info This info 4 should be logged 12",
+  " info This info 5 should be logged too [1,2,3]",
+  " warn This warn 3 should be logged {'isKeyC':true,'keyA':1,'keyB':'John'}",
+  "error This error 5 should be logged null",
+]
+`;
+
+exports[`logger F show 1`] = `
+[
+  " info This info 1 should be logged 12",
+  " info This info 2 should be logged too [1,2,3]",
+  " warn This warn 3 should be logged {'isKeyC':true,'keyA':1,'keyB':'John'}",
+  "error This error 4 should not be logged",
+  "error This error 5 should be logged null",
+  " good This success 6 should be logged 12",
+]
+`;

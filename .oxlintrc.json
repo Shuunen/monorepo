@@ -15,6 +15,8 @@
     "clearInterval": "readonly",
     "console": "readonly",
     "document": "readonly",
+    "fetch": "readonly",
+    "setInterval": "readonly",
     "setTimeout": "readonly",
     "structuredClone": "readonly"
   },
@@ -32,6 +34,30 @@
           "error",
           2
         ]
+      }
+    },
+    {
+      "files": [
+        "*.cli.ts",
+        "*.cli.js"
+      ],
+      "globals": {
+        "Buffer": "readonly",
+        "process": "readonly",
+        "require": "readonly"
+      }
+    },
+    {
+      "files": [
+        "*.test.ts"
+      ],
+      "globals": {
+        "describe": "readonly",
+        "expect": "readonly",
+        "it": "readonly",
+        "mock": "readonly",
+        "process": "readonly",
+        "vi": "readonly"
       }
     },
     {
@@ -157,6 +183,7 @@
       }
     ],
     "unicorn/no-useless-undefined": "off",
+    "unicorn/prefer-spread": "off",
     "unicorn/prefer-string-replace-all": "off",
     "vitest/prefer-to-be-falsy": "off",
     "vitest/prefer-to-be-truthy": "off"

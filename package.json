@@ -7,7 +7,8 @@
     "react": "19.1",
     "react-dom": "19.1",
     "react-router-dom": "7.6",
-    "tailwindcss": "4.1"
+    "tailwindcss": "4.1",
+    "tiny-glob": "0.2"
   },
   "description": "the monorepo for my beloved projects",
   "devDependencies": {

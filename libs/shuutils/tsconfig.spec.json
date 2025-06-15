@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "outDir": "./out-tsc/vitest",

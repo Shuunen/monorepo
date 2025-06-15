@@ -1,0 +1,55 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`add color code 1`] = `"[22mtest[32m"`;
+
+exports[`color bgBlack 1`] = `"[40mtest[49m"`;
+
+exports[`color bgBlue 1`] = `"[44mtest[49m"`;
+
+exports[`color bgCyan 1`] = `"[46mtest[49m"`;
+
+exports[`color bgGray 1`] = `"[100mtest[49m"`;
+
+exports[`color bgGreen 1`] = `"[42mtest[49m"`;
+
+exports[`color bgMagenta 1`] = `"[45mtest[49m"`;
+
+exports[`color bgRed 1`] = `"[41mtest[49m"`;
+
+exports[`color bgWhite 1`] = `"[47mtest[49m"`;
+
+exports[`color bgYellow 1`] = `"[43mtest[49m"`;
+
+exports[`color black 1`] = `"[30mtest[39m"`;
+
+exports[`color blue 1`] = `"[34mtest[39m"`;
+
+exports[`color bold 1`] = `"[1mtest[22m"`;
+
+exports[`color cyan 1`] = `"[36mtest[39m"`;
+
+exports[`color dim 1`] = `"[2mtest[22m"`;
+
+exports[`color gray 1`] = `"[90mtest[39m"`;
+
+exports[`color green 1`] = `"[32mtest[39m"`;
+
+exports[`color inverse 1`] = `"[7mtest[27m"`;
+
+exports[`color italic 1`] = `"[3mtest[23m"`;
+
+exports[`color magenta 1`] = `"[35mtest[39m"`;
+
+exports[`color overline 1`] = `"[53mtest[55m"`;
+
+exports[`color red 1`] = `"[31mtest[39m"`;
+
+exports[`color reset 1`] = `"[0mtest[0m"`;
+
+exports[`color strikeThrough 1`] = `"[9mtest[29m"`;
+
+exports[`color underline 1`] = `"[4mtest[24m"`;
+
+exports[`color white 1`] = `"[37mtest[39m"`;
+
+exports[`color yellow 1`] = `"[33mtest[39m"`;

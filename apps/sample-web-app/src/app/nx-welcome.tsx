@@ -12,5 +12,3 @@ export function NxWelcome({ title }: { title: string }) {
     </div>
   )
 }
-
-export default NxWelcome

@@ -1,0 +1,177 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`tree-shake test A 1`] = `
+"
+  1 files built
+
+  0 warnings
+  
+  0 errors
+  
+  ╔══════════════════════════╗
+  ║  Input start             ║
+  ╚══════════════════════════╝
+  import { randomNumber } from '../index.ts'
+  console.log('tree-shaking test A, only using randomNumber', randomNumber(1, 10))
+  ╔══════════════════════════╗
+  ║  Input end, output start ║
+  ╚══════════════════════════╝
+  // src/lib/random.ts
+function randomNumber(min = 0, max = 100) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+// <stdin>
+console.log("tree-shaking test A, only using randomNumber", randomNumber(1, 10));
+  ╔══════════════════════════╗
+  ║  Output end              ║
+  ╚══════════════════════════╝"
+`;
+
+exports[`tree-shake test B 1`] = `
+"
+  1 files built
+
+  0 warnings
+  
+  0 errors
+  
+  ╔══════════════════════════╗
+  ║  Input start             ║
+  ╚══════════════════════════╝
+  import { randomNumber, randomString } from '../index.ts'
+  console.log('tree-shaking test B, using randomNumber and randomString', randomNumber(1, 10), randomString(10))
+  ╔══════════════════════════╗
+  ║  Input end, output start ║
+  ╚══════════════════════════╝
+  // src/lib/array-pick-one.ts
+function pickOne(items) {
+  if (items.length === 0) throw new Error("Array is empty");
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+// src/lib/random.ts
+function randomString() {
+  const strings = "Bar Alto,Sin Seguritat,Lorem Ipsum,Ciao,Sit dolor,Por erestet,Tchu la Comida,Amet Inn,Aqualeris baked,Bouquet,Zu Amarillo,Ploject,Ruhe animals,Mah Plizure,Baacon pasty,Vinci mador,Alan Awake,Malohe Sutur,A priore sur,Quel memento,Kalitat arae".split(",");
+  return pickOne(strings);
+}
+function randomNumber(min = 0, max = 100) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+// <stdin>
+console.log("tree-shaking test B, using randomNumber and randomString", randomNumber(1, 10), randomString(10));
+  ╔══════════════════════════╗
+  ║  Output end              ║
+  ╚══════════════════════════╝"
+`;
+
+exports[`tree-shake test C 1`] = `
+"
+  1 files built
+
+  0 warnings
+  
+  0 errors
+  
+  ╔══════════════════════════╗
+  ║  Input start             ║
+  ╚══════════════════════════╝
+  import { readableTimeAgo } from '../index.ts'
+  console.log('tree-shaking test C, only using readableTimeAgo', readableTimeAgo())
+  ╔══════════════════════════╗
+  ║  Input end, output start ║
+  ╚══════════════════════════╝
+  // src/lib/constants.ts
+var nbMsInSecond = 1e3;
+var nbMsInMinute = 6e4;
+var nbMsInHour = 36e5;
+var nbMsInDay = 864e5;
+var nbMsInWeek = 6048e5;
+var nbMsInMonth = 2592e6;
+var nbMsInYear = 31536e6;
+
+// src/lib/date-relative.ts
+var timeAgoTuples = [
+  [nbMsInMinute, nbMsInSecond, "second"],
+  [nbMsInHour, nbMsInMinute, "minute"],
+  [nbMsInDay, nbMsInHour, "hour"],
+  [nbMsInWeek, nbMsInDay, "day"],
+  [nbMsInMonth, nbMsInWeek, "week"],
+  [nbMsInYear, nbMsInMonth, "month"]
+];
+function readableTimeAgo(input, language = "en") {
+  const rtf = new Intl.RelativeTimeFormat(language, { numeric: "auto" });
+  const ms = typeof input === "number" ? input : Date.now() - input.getTime();
+  for (const [threshold, divisor, unit] of timeAgoTuples) if (ms < threshold) return rtf.format(-Math.floor(ms / divisor), unit);
+  return rtf.format(-Math.floor(ms / nbMsInYear), "year");
+}
+
+// <stdin>
+console.log("tree-shaking test C, only using readableTimeAgo", readableTimeAgo());
+  ╔══════════════════════════╗
+  ║  Output end              ║
+  ╚══════════════════════════╝"
+`;
+
+exports[`tree-shake test D 1`] = `
+"
+  1 files built
+
+  0 warnings
+  
+  0 errors
+  
+  ╔══════════════════════════╗
+  ║  Input start             ║
+  ╚══════════════════════════╝
+  import { toastSuccess } from '../index.ts'
+  console.log('tree-shaking test D, using toastSuccess', toastSuccess('my message'))
+  ╔══════════════════════════╗
+  ║  Input end, output start ║
+  ╚══════════════════════════╝
+  // src/lib/browser-toast.ts
+function toastHide(element, delay = 200) {
+  element.style.opacity = "0";
+  element.style.transform = "translateX(300px)";
+  setTimeout(() => {
+    element.remove();
+  }, delay);
+}
+function toastShow(element, delay = 100) {
+  document.body.append(element);
+  setTimeout(() => {
+    element.style.opacity = "1";
+    element.style.transform = "translateX(0)";
+  }, delay);
+}
+function toastStyle(type) {
+  if (type === "success") return { backgrounds: ["MediumSeaGreen", "SeaGreen"], icon: "&check;", iconStyle: "line-height: 21px; text-indent: 1px;" };
+  if (type === "error") return { backgrounds: ["FireBrick", "Brown"], icon: "x", iconStyle: "line-height: 21.5px;" };
+  return { backgrounds: ["DodgerBlue", "RoyalBlue"], icon: "i", iconStyle: "line-height: 21px;" };
+}
+function toastAdd(type, message = "", delay = 0, padding = 14) {
+  const element = document.createElement("div");
+  element.setAttribute("class", "shu-toast");
+  const last = document.querySelector(".shu-toast:nth-last-child(1 of .shu-toast)")?.getBoundingClientRect().top;
+  const bottom = last === void 0 ? 0 : globalThis.innerHeight - last;
+  const { backgrounds, icon, iconStyle } = toastStyle(type);
+  element.style = \`position: fixed; display: flex; align-items: center; gap: 9px; bottom: \${bottom + padding}px; right: \${padding}px; z-index: 99999; padding: 12px 20px 11px 14px; background: linear-gradient(45deg, \${backgrounds[0]}, 20%, \${backgrounds[1]}); color: white; border-radius: 5px; box-shadow: 0 3px 7px 0 rgba(0,0,0,.5); font-size: 18px; opacity: 0; transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; transform: translateX(300px);\`;
+  element.innerHTML = \`<span style="\${iconStyle}border-radius: 50%; color: \${backgrounds[1]}; background-color: #ffffff90; width: 20px; height: 20px; text-align: center; font-weight: bolder; font-size: 12px;">\${icon}</span><span style="margin-top: -1px;">\${message}</span>\`;
+  console[type === "error" ? "error" : "log"](\`toast \${type} : \${message}\`);
+  toastShow(element);
+  if (delay > 0)
+    setTimeout(() => {
+      toastHide(element);
+    }, delay);
+}
+function toastSuccess(message, delay = 2e3) {
+  toastAdd("success", message, delay);
+}
+
+// <stdin>
+console.log("tree-shaking test D, using toastSuccess", toastSuccess("my message"));
+  ╔══════════════════════════╗
+  ║  Output end              ║
+  ╚══════════════════════════╝"
+`;
