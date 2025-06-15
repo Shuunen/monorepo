@@ -1,6 +1,7 @@
 {
   "cSpell.words": [
-    "nrwl"
+    "nrwl",
+    "resultx"
   ],
   "javascript.format.insertSpaceAfterConstructor": false,
   "javascript.format.insertSpaceBeforeFunctionParenthesis": false,
