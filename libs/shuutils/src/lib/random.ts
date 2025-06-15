@@ -14,7 +14,6 @@ export function randomString() {
  * @returns boolean like `true`
  */
 export function randomBoolean() {
-  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
   return Math.random() > 0.5
 }
 
@@ -52,11 +51,9 @@ export function randomPerson() {
   const first = pickOne(['Michael', 'Dwight', 'Jim', 'Pam', 'Ryan', 'Andy', 'Kevin', 'Angela', 'Oscar', 'Toby'])
   const last = pickOne(['Scott', 'Schrute', 'Halpert', 'Beesly', 'Howard', 'Bernard', 'Malone', 'Martin', 'Martinez', 'Flenderson'])
   return {
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     age: randomNumber(18, 65),
     email: randomEmail(first, last),
     firstName: first,
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     income: randomNumber(1000, 10_000),
     lastName: last,
   }

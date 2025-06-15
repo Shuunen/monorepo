@@ -24,12 +24,12 @@ function alignForSnap(content: string) {
  */
 async function build(contents: string) {
   const result = await esbuild({
-    bundle: true, // eslint-disable-line @typescript-eslint/naming-convention
+    bundle: true,
     format: 'esm',
-    minify: false, // eslint-disable-line @typescript-eslint/naming-convention
+    minify: false,
     platform: 'node',
     stdin: { contents, resolveDir: currentDirectory },
-    write: false, // eslint-disable-line @typescript-eslint/naming-convention
+    write: false,
   })
   return `
   ${result.outputFiles.length} files built

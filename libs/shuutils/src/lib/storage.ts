@@ -1,9 +1,9 @@
 import { parseJson } from './json.js'
 
 function get(key: string, defaultValue: string): string
-function get(key: string, defaultValue: boolean): boolean // eslint-disable-line @typescript-eslint/naming-convention
+function get(key: string, defaultValue: boolean): boolean
 function get(key: string, defaultValue: number): number
-function get<Type = unknown>(key: string, defaultValue: Type): Type // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+function get<Type = unknown>(_key: string, _defaultValue: Type): Type
 function get<Type = unknown>(key: string): Type | undefined
 
 /**
@@ -14,12 +14,9 @@ function get<Type = unknown>(key: string): Type | undefined
  */
 function get<Type = unknown>(key: string, defaultValue?: Type) {
   const path = storage.prefix + key
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const data = storage.media[path] // don't use getItem because it's not supported by all browsers or in memory object storage
   if (data === undefined || data === null || data === '') return defaultValue
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const result = parseJson<Type>(data)
-  // eslint-disable-next-line no-warning-comments, @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
   if (!result.ok) return data as Type // TODO: wait... what ?!
   return result.value
 }
@@ -52,7 +49,6 @@ function has(key: string) {
  */
 function clear(key: string) {
   const path = storage.prefix + key
-  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
   delete storage.media[path]
 }
 

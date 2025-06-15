@@ -5,7 +5,6 @@
  * @returns a memoized function
  */
 export function memoize<Callback extends (...arguments_: Parameters<Callback>) => unknown>(callback: Callback) {
-  // eslint-disable-next-line no-restricted-syntax
   if (typeof callback !== 'function') throw new Error('memoize callback parameter should be a function')
   const cache: Record<string, ReturnType<Callback>> = {}
   /**
@@ -18,9 +17,8 @@ export function memoize<Callback extends (...arguments_: Parameters<Callback>) =
     // @ts-expect-error cache[key] is unknown
     if (!(key in cache)) cache[key] = callback(...parameters)
     // biome-ignore lint/style/noNonNullAssertion: <explanation>
-    return cache[key]! // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    return cache[key]!
   }
   memoized.cache = cache
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
   return memoized as unknown as Callback
 }

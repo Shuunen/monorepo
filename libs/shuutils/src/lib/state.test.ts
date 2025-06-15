@@ -1,7 +1,3 @@
-/* eslint-disable camelcase */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion */
-
 import { createState } from './state.js'
 import { storage } from './storage.js'
 
@@ -66,7 +62,6 @@ it('state C with storage and all keys stored by default', () => {
   expect(stateC.included, 'included loaded from storage that takes precedence over initial data because it is in the sync props').toBe(':D')
   stateC.age = 14
   expect(stateC.age, 'age changed in state').toBe(14)
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   expect(storage.get('age'), 'age synced in storage').toMatchInlineSnapshot(`14`)
 })
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Result } from './result.js'
 import { ellipsis } from './strings.js'
 
@@ -9,7 +8,6 @@ import { ellipsis } from './strings.js'
  * @returns a Result object
  */
 export async function copyToClipboard(stuff: number | Readonly<Record<string, unknown>> | readonly Readonly<Record<string, unknown>>[] | readonly string[] | string, willLog = false) {
-  // eslint-disable-next-line no-useless-assignment
   let text = ''
   try {
     text = typeof stuff === 'string' ? stuff : JSON.stringify(stuff)

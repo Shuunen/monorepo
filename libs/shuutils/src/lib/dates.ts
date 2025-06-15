@@ -37,7 +37,6 @@ export function dateIso10(date: Readonly<Date> = new Date()) {
  * @returns a string like : "2018-09-03"
  */
 export function formatDate(date: Readonly<Date>, format: string, locale = 'en-US') {
-  /* eslint-disable complexity, max-statements */
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: cant be simplified ^^
   return format.replace(/y{4}|yy|M{4}|MM|dd|d|e{4}|e{3}|HH|mm|ss|\s/gu, match => {
     if (match === 'yyyy') return date.toLocaleDateString(locale, { year: 'numeric' })
@@ -53,7 +52,6 @@ export function formatDate(date: Readonly<Date>, format: string, locale = 'en-US
     if (match === 'ss') return date.getSeconds().toString().padStart(match.length, '0')
     return match
   })
-  /* eslint-enable complexity, max-statements */
 }
 
 /**
@@ -66,7 +64,6 @@ export function formatDate(date: Readonly<Date>, format: string, locale = 'en-US
  */
 export function readableTime(input: number | Readonly<Date>, isLong = true) {
   const ms = typeof input === 'number' ? input : Date.now() - input.getTime()
-  // eslint-disable-next-line jsdoc/require-jsdoc
   const format = (value: number, long: string, short: string) => `${Math.floor(value)}${isLong ? ` ${long + (Math.floor(value) > 1 ? 's' : '')}` : short}`
   if (ms < nbMsInSecond) return format(ms, 'millisecond', 'ms')
   if (ms < nbMsInMinute) return format(ms / nbMsInSecond, 'second', 's')

@@ -7,7 +7,7 @@ type UserAgentDataValues = {
   readonly architecture?: string
   readonly bitness?: string
   readonly brands?: NavigatorUserAgentBrandVersion[]
-  readonly mobile?: boolean // eslint-disable-line @typescript-eslint/naming-convention
+  readonly mobile?: boolean
   readonly model?: string
   readonly platform?: string
   readonly platformVersion?: string
@@ -16,14 +16,14 @@ type UserAgentDataValues = {
 
 type UserAgentLowEntropyJson = {
   readonly brands: NavigatorUserAgentBrandVersion[]
-  readonly mobile: boolean // eslint-disable-line @typescript-eslint/naming-convention
+  readonly mobile: boolean
   readonly platform: string
 }
 
 type NavigatorUserAgentData = {
   getHighEntropyValues: (hints: readonly string[]) => Promise<UserAgentDataValues>
   // biome-ignore lint/style/useNamingConvention: <explanation>
-  toJSON: () => UserAgentLowEntropyJson // eslint-disable-line @typescript-eslint/naming-convention
+  toJSON: () => UserAgentLowEntropyJson
 } & UserAgentLowEntropyJson
 
 // below types from https://github.com/lukewarlow/user-agent-data-types/blob/master/index.d.ts

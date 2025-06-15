@@ -19,7 +19,6 @@ it('Result.error', () => {
 })
 
 it('Result.trySafe A ok', () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const result = Result.trySafe(() => JSON.parse('{"a": 42}'))
   expect(result).toMatchInlineSnapshot(`
     Ok {
@@ -32,7 +31,6 @@ it('Result.trySafe A ok', () => {
 })
 
 it('Result.trySafe B error', () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const result = Result.trySafe(() => JSON.parse('{"a": 42'))
   expect(result).toMatchInlineSnapshot(`
     Err {
@@ -60,9 +58,7 @@ it('Result.unwrap A ok', () => {
 })
 
 it('Result.unwrap B error', () => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const result = Result.trySafe(() => JSON.parse('{"a": 42'))
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { error, value } = Result.unwrap(result)
   expect(value).toMatchInlineSnapshot(`undefined`)
   expect(error).toMatchInlineSnapshot(`[SyntaxError: Expected ',' or '}' after property value in JSON at position 8 (line 1 column 9)]`)

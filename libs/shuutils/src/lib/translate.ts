@@ -6,7 +6,6 @@ const handledLangs = ['en', 'fr'] as const
 
 export type Lang = (typeof handledLangs)[number]
 
-// eslint-disable-next-line prefer-named-capture-group
 const langRegex = /^\/(en|fr)\//u
 
 const defaultLang = 'en'
@@ -27,12 +26,10 @@ export function getLangFromPath(path: string) {
  * @param data the data to fill the template, like { count: 3 }
  * @returns the translated string, like "3 items"
  */
-// eslint-disable-next-line complexity
 export function handlePlural(translated: string, data?: Readonly<Record<string, unknown>>) {
   if (!translated.includes('|')) return fillTemplate(translated, data)
-  // eslint-disable-next-line @typescript-eslint/no-base-to-string
   const count = Number.parseInt(String(data?.count ?? '1'), 10)
-  const [a = '', b = '', c = ''] = translated.split(' | ') // eslint-disable-line id-length
+  const [a = '', b = '', c = ''] = translated.split(' | ')
   if (c.length > 0 && count > 1) return fillTemplate(c, data)
   if ((c.length > 0 && count === 1) || (b.length > 0 && count > 1)) return fillTemplate(b, data)
   return fillTemplate(a, data)

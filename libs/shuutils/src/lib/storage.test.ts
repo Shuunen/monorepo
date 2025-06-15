@@ -7,7 +7,6 @@ type User = {
 }
 
 const key = 'Michael'
-// eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
 storage.media = {} as Storage
 
 const returnTestA = storage.get(key)
@@ -44,7 +43,6 @@ it('storage returnTestF', () => {
 })
 
 it('storage get without default value', () => {
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   expect(storage.get(key)).toBe(undefined)
 })
 
@@ -87,7 +85,6 @@ it('storage get array value for key', () => {
 })
 
 it('storage clear value for key', () => {
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   expect(storage.clear(key)).toBe(undefined)
 })
 
@@ -120,7 +117,6 @@ it('storage contains a prefixed key', () => {
   expect(hasOwn(storage.media, 'test-Michael')).toBe(true)
 })
 it('storage clear value for key with prefix', () => {
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   expect(storage.clear(key)).toBe(undefined)
 })
 
@@ -144,7 +140,6 @@ it('storage typeof returnD is object and TS inferred type should be User', () =>
   expect(typeof returnD).toBe('object')
 })
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const returnE = storage.get(key, true)
 it('storage typeof returnE is boolean and TS inferred type should be boolean', () => {
   expect(typeof returnE).toBe('boolean')

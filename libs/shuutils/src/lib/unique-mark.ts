@@ -88,21 +88,19 @@ export function injectMarkInFiles({ files = [], isReadOnly = false, mark = 'no-m
  * @param target the glob to get the files from, like "public/index.html" or "public/*.js"
  * @returns a Result object
  */
-// eslint-disable-next-line max-statements, complexity
 export async function init(target = process.argv[nbThird] ?? '') {
   const logger = new Logger()
   logger.debug('starting...')
   const version = getPackageJsonVersion()
-  if (!version.ok) throw new Error(version.error) // eslint-disable-line no-restricted-syntax
+  if (!version.ok) throw new Error(version.error)
   const files = await getTargetFiles(target)
-  if (!files.ok) throw new Error(files.error) // eslint-disable-line no-restricted-syntax
+  if (!files.ok) throw new Error(files.error)
   logger.debug(`found ${files.value.length} file${files.value.length > 1 ? 's' : ''} to inject mark :`, files.value.join(', '))
   const mark = generateMark({ version: version.value })
   logger.debug('generated mark', mark)
   const result = injectMarkInFiles({ files: files.value, mark })
-  if (!result.ok) throw new Error(result.error) // eslint-disable-line no-restricted-syntax
+  if (!result.ok) throw new Error(result.error)
   const { logs, totalInjections } = result.value
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
   for (const line of logs) logger.info(...(line.split(':') as [string, string]))
   if (totalInjections === 0) logger.info('files found but no mark found for injection')
   else logger.success('total injections :', String(totalInjections))

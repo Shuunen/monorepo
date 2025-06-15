@@ -6,6 +6,5 @@ it('cn A', () => {
 
 it('cn B', () => {
   // @ts-expect-error testing
-  // eslint-disable-next-line unicorn/no-useless-undefined, unicorn/no-null
   expect(cn('a', null, 'b', 'c', undefined)).toMatchInlineSnapshot(`"a b c"`)
 })

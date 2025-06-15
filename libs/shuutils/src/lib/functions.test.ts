@@ -21,11 +21,9 @@ it('sleep B', async () => {
 })
 
 it('functionReturningVoid A', () => {
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   expect(functionReturningVoid()).toMatchInlineSnapshot(`undefined`)
 })
 
 it('functionReturningUndefined A', () => {
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   expect(functionReturningUndefined()).toMatchInlineSnapshot(`undefined`)
 })

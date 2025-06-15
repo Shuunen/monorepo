@@ -1,9 +1,5 @@
 /* c8 ignore start */
-// oxlint-disable no-console
-// oxlint-disable no-magic-numbers
-// oxlint-disable no-undef
-// oxlint-disable prefer-rest-params
-// oxlint-disable no-extend-native
+// oxlint-disable no-console, no-magic-numbers, no-undef, prefer-rest-params, no-extend-native
 const lastRequest = { method: '', url: '' }
 
 // @ts-ignore

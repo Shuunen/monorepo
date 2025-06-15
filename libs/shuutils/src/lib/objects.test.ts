@@ -1,7 +1,3 @@
-/* eslint-disable unicorn/no-null */
-/* eslint-disable jsdoc/require-jsdoc */
-/* eslint-disable @typescript-eslint/naming-convention */
-
 import { clone } from './object-clone.js'
 import { objectEqual } from './object-equal.js'
 import { flatten } from './object-flatten.js'
@@ -103,7 +99,6 @@ it('sort byProperty D even if some does not have it', () => {
 
 const object3 = { notFun: false, 'pretty-good': true, size: 'large', superFun: true }
 it('class generator A undefined', () => {
-  // eslint-disable-next-line unicorn/no-useless-undefined
   expect(genClass(undefined)).toBe('')
 })
 it('class generator B null', () => {
@@ -212,12 +207,10 @@ it('objectSum I is different with a deep slight modification', () => {
 })
 
 it('objectSum J changes depending on key order', () => {
-  // eslint-disable-next-line perfectionist/sort-objects
   expect(objectSum({ keyA: 1, keyB: 2, keyC: 3 }) !== objectSum({ keyC: 3, keyA: 1, keyB: 2 })).toBe(true)
 })
 
 it('objectSum K same when key sorted', () => {
-  // eslint-disable-next-line perfectionist/sort-objects
   expect(objectSum({ keyA: 1, keyB: 2, keyC: 3 }, true) === objectSum({ keyC: 3, keyA: 1, keyB: 2 }, true)).toBe(true)
 })
 
@@ -248,29 +241,26 @@ it('objectEqual I true with same objects but different references', () => {
   expect(objectEqual(object4, object4ButAnotherReference)).toBe(true)
 })
 it('objectEqual J false with same objects but different key order', () => {
-  // eslint-disable-next-line perfectionist/sort-objects
   expect(objectEqual({ keyA: 1, keyB: 2, keyC: 3 }, { keyC: 3, keyA: 1, keyB: 2 })).toBe(false)
 })
 it('objectEqual K true with same objects, different key order but key sort is active', () => {
-  // eslint-disable-next-line perfectionist/sort-objects
   expect(objectEqual({ keyA: 1, keyB: 2, keyC: 3 }, { keyC: 3, keyA: 1, keyB: 2 }, true)).toBe(true)
 })
 
 it('objectSort A sort a simple object', () => {
-  const object = { keyC: 3, keyA: 1, keyB: 2 } // eslint-disable-line perfectionist/sort-objects
+  const object = { keyC: 3, keyA: 1, keyB: 2 }
   const sorted = objectSort(object)
   // we cannot use toStrictEqual because toStrictEqual does not check the order of the keys, objectEqual does
   expect(objectEqual(sorted, { keyA: 1, keyB: 2, keyC: 3 })).toBe(true)
 })
 
 it('objectSort B sort a 2 level object', () => {
-  const object = { keyC: 3, keyA: 1, alpaca: { c3: 33, c1: 11, c2: 22 }, keyB: 2 } // eslint-disable-line perfectionist/sort-objects
+  const object = { keyC: 3, keyA: 1, alpaca: { c3: 33, c1: 11, c2: 22 }, keyB: 2 }
   const sorted = objectSort(object)
   expect(objectEqual(sorted, { alpaca: { c1: 11, c2: 22, c3: 33 }, keyA: 1, keyB: 2, keyC: 3 })).toBe(true)
 })
 
 it('objectSort C sort a complex object with null, undefined, etc', () => {
-  /* eslint-disable perfectionist/sort-objects, unicorn/no-null */
   const object = {
     keyC: 3,
     keyA: undefined,

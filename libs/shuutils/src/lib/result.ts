@@ -5,7 +5,6 @@ import { err as error, ok, trySafe, unwrap } from './resultx.js'
  * @see https://github.com/johannschopplich/resultx
  * @see https://github.com/Shuunen/ts-result-comparison
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const Result = {
   /**
    * Create a failing `Result` with an error message.

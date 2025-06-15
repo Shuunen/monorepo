@@ -97,7 +97,7 @@ it('objectSerialize J handle undefined', () => {
 })
 
 it('objectSerialize K', () => {
-  const object = { keyC: 3, keyA: undefined, keyB: 2 } // eslint-disable-line perfectionist/sort-objects
+  const object = { keyC: 3, keyA: undefined, keyB: 2 }
   const serialized = JSON.stringify(objectSerialize(object, true))
   expect(serialized).toMatchInlineSnapshot(String.raw`""{\"keyA\":{\"__strUndefined__\":true},\"keyB\":2,\"keyC\":3}""`)
 })

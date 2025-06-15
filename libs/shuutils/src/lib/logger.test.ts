@@ -48,8 +48,8 @@ it('logger D', () => {
   loggerD.warn('This warn 4 should not be logged')
   loggerD.error('This error 4 should not be logged')
   loggerD.enable()
-  loggerD.error('This error 5 should be logged', null) // eslint-disable-line unicorn/no-null
-  loggerD.test(true, 'This test 4 should be logged', undefined) // eslint-disable-line unicorn/no-useless-undefined
+  loggerD.error('This error 5 should be logged', null)
+  loggerD.test(true, 'This test 4 should be logged', undefined)
   loggerD.test(false, 'This test 5 should be logged', () => 'Hello world')
   loggerD.debug('This debug 1 should be logged', true, [], {})
   loggerD.options.minimumLevel = '3-info'
@@ -83,11 +83,9 @@ it('logger clean H', () => {
   expect(loggerE.clean('a string ?', 'Hello world')).toMatchInlineSnapshot('"a string ? Hello world"')
 })
 it('logger clean I', () => {
-  // eslint-disable-next-line unicorn/no-null
   expect(loggerE.clean('a null ?', null)).toMatchInlineSnapshot('"a null ? null"')
 })
 it('logger clean J', () => {
-  // eslint-disable-next-line unicorn/no-useless-undefined
   expect(loggerE.clean('an undefined ?', undefined)).toMatchInlineSnapshot('"an undefined ? undefined"')
 })
 it('logger clean K', () => {
@@ -103,9 +101,9 @@ it('logger F show', () => {
   loggerF.info('This info 2 should be logged too', [1, 2, 3])
   loggerF.warn('This warn 3 should be logged', { isKeyC: true, keyA: 1, keyB: 'John' })
   loggerF.showError('This error 4 should not be logged')
-  loggerF.error('This error 5 should be logged', null) // eslint-disable-line unicorn/no-null
+  loggerF.error('This error 5 should be logged', null)
   loggerF.showSuccess('This success 6 should be logged', 12)
-  loggerF.test(true, 'This test 7 should be logged', undefined) // eslint-disable-line unicorn/no-useless-undefined
+  loggerF.test(true, 'This test 7 should be logged', undefined)
   loggerF.test(false, 'This test 8 should be logged', () => 'Hello world')
   loggerF.debug('This debug 9 should be logged', true, [], {})
   loggerF.options.minimumLevel = '3-info'

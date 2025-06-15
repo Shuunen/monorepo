@@ -20,15 +20,12 @@ it('copyToClipboard A no clipboard in test env', async () => {
 })
 
 it('copyToClipboard B un-stringifyable data', async () => {
-  /* eslint-disable jsdoc/require-jsdoc, @typescript-eslint/naming-convention */
   const objectThatCannotBeStringified = {
     // biome-ignore lint/style/useNamingConvention: <explanation>
     toJSON: () => {
-      // eslint-disable-next-line no-restricted-syntax
       throw new Error('cannot be stringified')
     },
   }
-  /* eslint-enable jsdoc/require-jsdoc, @typescript-eslint/naming-convention */
   const result = await copyToClipboard(objectThatCannotBeStringified)
   expect(result).toMatchInlineSnapshot(`
     Err {
@@ -80,7 +77,6 @@ it('readClipboard A no clipboard in test env', async () => {
 
 it('readClipboard B mocked clipboard', async () => {
   const clipboard = {
-    // eslint-disable-next-line jsdoc/require-jsdoc
     readText: async () => {
       await sleep(10)
       return 'hello there !'

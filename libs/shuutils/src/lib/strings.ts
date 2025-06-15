@@ -50,7 +50,7 @@ export function fillTemplate(template: Readonly<Record<string, unknown>> | strin
   if (string.length === 0) return string
   const flatData = flatten(data)
   for (const [key, value] of Object.entries(flatData)) {
-    const regex = new RegExp(`(/?\\*?{{?\\s*${key}\\s*}?}\\*?/?)`, 'g') // eslint-disable-line require-unicode-regexp
+    const regex = new RegExp(`(/?\\*?{{?\\s*${key}\\s*}?}\\*?/?)`, 'g')
     string = string.replace(regex, String(value))
   }
   return string
@@ -100,7 +100,7 @@ export function createCrc32Table(length = 256) {
   const table: number[] = Array.from({ length })
   for (let index = 0; index < length; index += 1) {
     let code = index
-    for (let indexB = 0; indexB < 8; indexB += 1) code = code & 0x01 ? 3_988_292_384 ^ (code >>> 1) : code >>> 1 // eslint-disable-line no-bitwise, @typescript-eslint/no-magic-numbers
+    for (let indexB = 0; indexB < 8; indexB += 1) code = code & 0x01 ? 3_988_292_384 ^ (code >>> 1) : code >>> 1
     table[index] = code
   }
   return table
@@ -118,11 +118,11 @@ export function crc32(text: string) {
   for (let index = 0; index < text.length; index += 1) {
     /* c8 ignore next */
     const code = text.codePointAt(index) ?? 0
-    const key: number = (code ^ crc) & 0xff // eslint-disable-line unicorn/number-literal-case, @typescript-eslint/no-magic-numbers, no-bitwise
+    const key: number = (code ^ crc) & 0xff
     const value: number | undefined = crcTable[key]
-    if (value !== undefined && value !== 0) crc = value ^ (crc >>> 8) // eslint-disable-line no-bitwise, @typescript-eslint/no-magic-numbers
+    if (value !== undefined && value !== 0) crc = value ^ (crc >>> 8)
   }
-  return Math.trunc(-1 ^ crc) // eslint-disable-line no-bitwise
+  return Math.trunc(-1 ^ crc)
 }
 
 /**
@@ -164,7 +164,7 @@ export function parseBase64(string: string) {
   if (type && typeof type[0] === 'string') [result.type] = type
   const base64 = string.split('base64,')
   if (base64.length > 1 && typeof base64[1] === 'string') [, result.base64] = base64
-  result.size = Math.round((result.base64.length * 3) / 4) // eslint-disable-line @typescript-eslint/no-magic-numbers
+  result.size = Math.round((result.base64.length * 3) / 4)
   return result
 }
 
@@ -188,7 +188,7 @@ export function isHtml(string: string) {
 export function injectMark(content: string, placeholder: string, mark: string) {
   return content
     .replace(new RegExp(`__${placeholder}__`, 'gu'), mark)
-    .replace(new RegExp(`{{1,2}${placeholder}}{1,2}`, 'g'), mark) // eslint-disable-line require-unicode-regexp
+    .replace(new RegExp(`{{1,2}${placeholder}}{1,2}`, 'g'), mark)
     .replace(new RegExp(`(<[a-z]+ .*id="${placeholder}"[^>]*>)[^<]*(</[a-z]+>)`, 'u'), `$1${mark}$2`)
     .replace(new RegExp(`(<meta name="${placeholder}" content=")[^"]*(")`, 'u'), `$1${mark}$2`)
 }

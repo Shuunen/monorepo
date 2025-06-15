@@ -6,7 +6,6 @@
  * @example alignForSnap({ value: '\\documents\\my-file.pdf' }) // => '{ "value": "/documents/my-file.pdf" }'
  */
 export function alignForSnap(content: unknown) {
-  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
   const text = typeof content === 'string' ? content : JSON.stringify(content, undefined, 2)
   return (
     text

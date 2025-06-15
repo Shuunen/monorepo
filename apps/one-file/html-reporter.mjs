@@ -1,7 +1,5 @@
 /* c8 ignore start */
-// oxlint-disable no-plusplus
-// oxlint-disable no-magic-numbers
-// oxlint-disable max-lines-per-function
+// oxlint-disable no-plusplus, no-magic-numbers, max-lines-per-function
 import { gray, green } from '@shuunen/shuutils'
 import { logger } from './repo-banner.utils'
 
@@ -88,7 +86,6 @@ export class HtmlReporter {
       this.tags++
       this.setState(states.onTagName)
     }
-    /* eslint-enable curly */
     this.scan()
   }
 

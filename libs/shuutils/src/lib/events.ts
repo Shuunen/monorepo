@@ -25,7 +25,6 @@ export function emit<Data>(name: string, data?: Readonly<Data>, media: ListenerM
  * @param media the media to listen to the event, like window or a dom element
  * @returns false if the event cannot be not listened to or a listener object if it can
  */
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function on<Data>(name: string, callback: (data: Data, event: Event) => unknown, media: ListenerMedia = globalThis) {
   /**
    * The callback to call when the event is emitted
@@ -36,7 +35,6 @@ export function on<Data>(name: string, callback: (data: Data, event: Event) => u
     /* c8 ignore next */
     return callback(event instanceof CustomEvent ? event.detail : event, event as Event)
   }
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   media.addEventListener(name, onCallback, { passive: true })
   return { callback: onCallback, media, name }
 }

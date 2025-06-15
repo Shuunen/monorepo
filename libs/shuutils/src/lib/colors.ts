@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
 // Credits to : https://github.com/sindresorhus/yoctocolors/blob/main/index.js
 
 /**

@@ -5,9 +5,7 @@
  * @param separator optional, the character to join keys
  * @returns object like `{ 'person.name': 'John Doe', 'person.age': 32 }`
  */
-// eslint-disable-next-line no-restricted-syntax
 export function flatten(object: Readonly<Record<string, unknown>>, path = '', separator = '.'): Record<string, unknown> {
-  // eslint-disable-next-line unicorn/no-array-reduce
   return Object.keys(object).reduce<Record<string, unknown>>((accumulator: Readonly<Record<string, unknown>>, key: string) => {
     const value = object[key]
     const updatedPath = Array.isArray(object) ? `${path}[${key}]` : [path, key].filter(Boolean).join(separator)

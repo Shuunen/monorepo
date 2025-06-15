@@ -3,7 +3,6 @@
 .DS_Store
 .DS_Store
 .env
-.eslintcache
 .github/instructions/nx.instructions.md
 .nx/cache
 .nx/workspace-data

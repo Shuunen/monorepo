@@ -12,10 +12,10 @@ export async function fillLikeHuman(input: HTMLInputElement, value: string) {
   input.focus()
   for (const char of value) {
     input.value += char
-    await sleep(randomNumber(40, 80)) // eslint-disable-line no-await-in-loop, @typescript-eslint/no-magic-numbers
+    await sleep(randomNumber(40, 80))
   }
-  input.dispatchEvent(new Event('input', { bubbles: true })) // eslint-disable-line @typescript-eslint/naming-convention
-  input.dispatchEvent(new Event('change', { bubbles: true })) // eslint-disable-line @typescript-eslint/naming-convention
-  input.dispatchEvent(new Event('blur', { bubbles: true })) // eslint-disable-line @typescript-eslint/naming-convention
+  input.dispatchEvent(new Event('input', { bubbles: true }))
+  input.dispatchEvent(new Event('change', { bubbles: true }))
+  input.dispatchEvent(new Event('blur', { bubbles: true }))
   input.blur()
 }

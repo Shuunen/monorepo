@@ -10,7 +10,6 @@ it('onPageChange A default callback', async () => {
 it('onPageChange B callback', async () => {
   let calls = 0
   let location = ''
-  // eslint-disable-next-line jsdoc/require-jsdoc
   function callback(href: string) {
     calls += 1
     location = href

@@ -1,6 +1,5 @@
 import { safeAssign } from './object-safe-assign.js'
 
-/* eslint-disable prefer-object-spread */
 it('object assign A simple', () => {
   expect(Object.assign({ name: 'John' }, { name: 'Claire' })).toStrictEqual({ name: 'Claire' })
 })
@@ -15,7 +14,6 @@ it('object assign B limitation, overwrite with undefined', () => {
 })
 
 it('object assign C limitation, overwrite with null', () => {
-  // eslint-disable-next-line unicorn/no-null
   expect(Object.assign({ age: 31, name: 'John' }, { age: null, name: 'Claire' })).toMatchInlineSnapshot(`
     {
       "age": null,
@@ -35,8 +33,6 @@ it('object assign D limitation, loose side data', () => {
   `)
 })
 
-/* eslint-enable prefer-object-spread */
-
 it('safe assign A simple', () => {
   expect(safeAssign({ name: 'John' }, { name: 'Claire' })).toStrictEqual({ name: 'Claire' })
 })
@@ -46,7 +42,6 @@ it('safe assign B does not overwrite with undefined', () => {
 })
 
 it('safe assign C does not overwrite with null', () => {
-  // eslint-disable-next-line unicorn/no-null
   expect(safeAssign({ age: 31, name: 'John' }, { age: null, name: 'Claire' })).toStrictEqual({ age: 31, name: 'Claire' })
 })
 

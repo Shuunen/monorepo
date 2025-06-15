@@ -30,8 +30,8 @@ export function byProperty<Type extends Record<string, unknown>>(property: strin
   if (order === '') return () => 0
   const sortOrder = order === 'asc' ? nbAscending : nbDescending
   return (recordA: Type, recordB: Type) => {
-    const valueA = recordA[property] as number // eslint-disable-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
-    const valueB = recordB[property] as number // eslint-disable-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
+    const valueA = recordA[property] as number
+    const valueB = recordB[property] as number
     if (!valueA && valueB) return sortOrder
     if (valueA && !valueB) return -sortOrder
     if (valueA === valueB) return 0
@@ -65,7 +65,6 @@ export function objectSum(object: Readonly<Record<string, unknown>>, willSortKey
  * @param keys optional, filter the keys to use
  * @param list optional, additional classes to add
  */
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 function genClassObjectKeys(object: Record<string, GenClassTypes>, keys: string[], list: GenClassTypes[]) {
   const finalKeys = keys.length === 0 ? Object.keys(object) : clone(keys)
   for (const key of finalKeys) {
@@ -83,7 +82,6 @@ function genClassObjectKeys(object: Record<string, GenClassTypes>, keys: string[
  * @param cls optional, additional classes to add, ex: "add-me"
  * @returns ready to use string class list, ex: "enabled size-large add-me"
  */
-// eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types
 export function genClass(object: GenClassTypes | GenClassTypes[] | Record<string, GenClassTypes>, keys: string[] = [], cls: GenClassTypes[] = []) {
   const list = clone(cls)
   if (object === null || object === undefined) list.unshift('')

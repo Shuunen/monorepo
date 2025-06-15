@@ -19,8 +19,7 @@ export function arraySort<ArrayType extends unknown[]>(subject: ArrayType, compa
   const result = []
   for (let value of subject) {
     if (value !== null && value !== undefined)
-      if (Array.isArray(value))
-        value = arraySort(value, comparator) // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      if (Array.isArray(value)) value = arraySort(value, comparator)
       else if (typeof value === 'object') value = objectSort(value as IndexedObject, comparator)
     result.push(value)
   }

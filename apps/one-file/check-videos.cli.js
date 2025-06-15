@@ -1,10 +1,5 @@
 /* c8 ignore start */
-// oxlint-disable max-lines
-// oxlint-disable no-eval
-// oxlint-disable require-returns
-// oxlint-disable no-magic-numbers
-// oxlint-disable max-nested-callbacks
-// oxlint-disable require-param-description
+// oxlint-disable max-lines, no-eval, require-returns, no-magic-numbers, max-nested-callbacks, require-param-description
 import { exec } from 'node:child_process'
 import { readFile, readdir, renameSync, stat, writeFileSync } from 'node:fs'
 import path from 'node:path'

@@ -8,10 +8,10 @@ const myObject = {
   },
   advanced: {
     base: {
-      caporalName: null, // eslint-disable-line unicorn/no-null
+      caporalName: null,
       color: 'red',
       colorType: 'primary',
-      current: true, // eslint-disable-line @typescript-eslint/naming-convention
+      current: true,
       details: {
         description: 'This is a description',
         descriptionType: 'long',

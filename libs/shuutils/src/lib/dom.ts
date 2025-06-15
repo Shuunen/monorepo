@@ -12,7 +12,7 @@ type DomContent = Node | Node[] | string
  */
 export function dom<Tag extends keyof HTMLElementTagNameMap>(type: Tag, classes = '', content: DomContent = '') {
   const element = document.createElement(type)
-  element.className = classes // eslint-disable-line unicorn/no-keyword-prefix
+  element.className = classes
   if (typeof content === 'string') element.innerHTML = content
   else if (content instanceof Node) element.append(content)
   else for (const node of content) element.append(node)
@@ -50,7 +50,6 @@ export function icon(classes = '') {
  * @param willOpenInNewTab true if the link should open in a new tab
  * @returns the generated link element
  */
-// eslint-disable-next-line @typescript-eslint/max-params
 export function link(classes: string, content: DomContent, href: string, willOpenInNewTab = false) {
   const element = dom('a', classes, content)
   element.href = href
@@ -177,7 +176,6 @@ export function css(href: string) {
  * @param context the dom context to search in
  * @returns the element or null if not found
  */
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export function findOne<Type extends Element = HTMLElement>(selector: string, context: Document | HTMLElement = document) {
   return context.querySelector<Type>(selector)
 }
@@ -200,7 +198,6 @@ export function findAll(selector: string, context: Document | HTMLElement = docu
  * @param maxTry the max number of tries, default 5
  * @returns the element or undefined if not found
  */
-// eslint-disable-next-line @typescript-eslint/max-params
 export async function waitToDetect(selector: string, wait = 500, nbTries = 0, maxTry = 5) {
   await sleep(wait)
   const element = findOne(selector)
@@ -220,10 +217,10 @@ export async function waitToDetect(selector: string, wait = 500, nbTries = 0, ma
 export async function scrollToHeightSync(element: HTMLElement) {
   const initial = element.style.height
   element.style.height = 'inherit'
-  const target = element.scrollHeight + 2 // eslint-disable-line @typescript-eslint/no-magic-numbers
+  const target = element.scrollHeight + 2
   element.style.height = initial
-  await sleep(10) // eslint-disable-line @typescript-eslint/no-magic-numbers
-  element.style.height = `${target}px` // eslint-disable-line require-atomic-updates
+  await sleep(10)
+  element.style.height = `${target}px`
 }
 
 /**

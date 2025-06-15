@@ -4,7 +4,7 @@
  * @returns number like : 1541258097
  */
 export function getTimestamp(date: Readonly<Date> = new Date()) {
-  return Math.round(date.getTime() / 1000) // eslint-disable-line @typescript-eslint/no-magic-numbers
+  return Math.round(date.getTime() / 1000)
 }
 
 /**

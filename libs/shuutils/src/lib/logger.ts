@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { toastError, toastInfo, toastSuccess } from './browser-toast.js'
 import { bgGreen, bgRed, blue, cyan, gray, green, red, yellow } from './colors.js'
 import { formatDate, readableTime } from './dates.js'
@@ -14,12 +13,10 @@ import { isVerbose } from './flags.js'
 function clean(...stuff: Readonly<unknown[]>) {
   return (
     stuff
-      // eslint-disable-next-line @typescript-eslint/no-base-to-string
       .map(thing => (typeof thing === 'object' ? JSON.stringify(thing) : String(thing)))
       .join(' ')
-      /* eslint-disable no-control-regex */
       // biome-ignore lint/suspicious/noControlCharactersInRegex: it's ok, daddy is here
-      .replace(/[\u001B\u009B][#();?[]*(?:\d{1,4}(?:;\d{0,4})*)?[\d<=>A-ORZcf-nqry]/gu, '') /* eslint-enable no-control-regex */
+      .replace(/[\u001B\u009B][#();?[]*(?:\d{1,4}(?:;\d{0,4})*)?[\d<=>A-ORZcf-nqry]/gu, '')
       .replace(/"/gu, "'")
   )
 }
@@ -71,14 +68,13 @@ export class Logger {
    */
   public constructor(options?: Readonly<Partial<LoggerOptions>>) {
     if (options) this.options = { ...this.options, ...options }
-    this.#padding = Math.max(...this.#levels.map(key => key.length - 2)) // eslint-disable-line @typescript-eslint/no-magic-numbers
+    this.#padding = Math.max(...this.#levels.map(key => key.length - 2))
   }
 
   /**
    * Calculate the delay since the last log
    * @returns the delay like "+12ms"
    */
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   private __getDelay() {
     const now = Date.now()
     if (this.#lastLogTimestamp === 0) {
@@ -95,7 +91,6 @@ export class Logger {
    * @param prefix the prefix to add before the message
    * @param stuff the things to log
    */
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   private __log(prefix: string, stuff: Readonly<unknown[]>) {
     const prefixes = [prefix]
     if (this.options.willLogTime) prefixes.unshift(formatDate(new Date(), 'HH:mm:ss'))
@@ -104,7 +99,7 @@ export class Logger {
     if (this.options.willOutputToConsole)
       // biome-ignore lint/suspicious/noConsoleLog: it's ok
       // biome-ignore lint/suspicious/noConsole: <explanation>
-      console.log(prefixes.join(' '), ...stuff) // eslint-disable-line no-console
+      console.log(prefixes.join(' '), ...stuff)
     if (this.options.willOutputToMemory) this.addToMemoryLogs(...prefixes, ...stuff)
   }
 
@@ -116,7 +111,6 @@ export class Logger {
    * @param color a function to colorize the prefix
    * @example logger.logIf('debug', '1-debug', ['Hello', 'world', 42])
    */
-  // eslint-disable-next-line @typescript-eslint/max-params, @typescript-eslint/naming-convention
   private __logIf(prefix: string, level: LogLevel, stuff: Readonly<unknown[]>, color: (string_: string) => string) {
     if (!this.__shouldLog(level)) return
     this.__log(color(prefix.padStart(this.#padding)), stuff)
@@ -127,7 +121,6 @@ export class Logger {
    * @param level the log level to check
    * @returns true if the log should be output
    */
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   private __shouldLog(level: LogLevel) {
     return this.options.isActive && this.#levels.indexOf(level) >= this.#levels.indexOf(this.options.minimumLevel)
   }
@@ -254,7 +247,7 @@ export class Logger {
     if (!this.__shouldLog('2-test')) return
     const isTruthy = Boolean(thing)
     const box = isTruthy ? bgGreen(' ✓ ') : bgRed(' ✗ ')
-    const prefix = ' '.repeat(this.#padding - 3) // eslint-disable-line @typescript-eslint/no-magic-numbers
+    const prefix = ' '.repeat(this.#padding - 3)
     this.__log(prefix + box, stuff)
   }
 

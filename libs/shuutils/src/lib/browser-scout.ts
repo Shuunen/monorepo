@@ -1,7 +1,6 @@
 import { isBrowserEnvironment } from './environment.js'
 import type { NavigatorUserAgent } from './types.js'
 
-/* eslint-disable @typescript-eslint/naming-convention, perfectionist/sort-objects */
 // oxlint-disable-next-line sort-keys
 const browsers = {
   // biome-ignore lint/style/useNamingConvention: <explanation>
@@ -42,7 +41,6 @@ const versions = {
   generic: /Version\/(?<version>[\d.]+)/iu,
   rv: /rv:(?<version>[\d.]+)/iu,
 }
-/* eslint-enable @typescript-eslint/naming-convention, perfectionist/sort-objects */
 
 type BrowserContext = Readonly<{
   browser: keyof typeof browsers
@@ -148,7 +146,7 @@ export function browserContext() {
     isMobile: isMobile(userAgent),
     language: isBrowser ? globalThis.navigator.language : 'Unknown language',
     os: getOperatingSystem(userAgent),
-    platform: isBrowser ? ((globalThis.navigator as NavigatorUserAgent).userAgentData?.platform ?? 'Unknown platform') : 'Unknown platform', // eslint-disable-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
+    platform: isBrowser ? ((globalThis.navigator as NavigatorUserAgent).userAgentData?.platform ?? 'Unknown platform') : 'Unknown platform',
     screenHeight: isBrowser ? globalThis.screen.height : 0,
     screenWidth: isBrowser ? globalThis.screen.width : 0,
     url: isBrowser ? globalThis.location.href : 'Unknown url',

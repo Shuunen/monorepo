@@ -17,7 +17,7 @@ export function rangedScore({ isHigherBetter, scoreMax, scoreMin, valueMax, valu
   const score = value * lineA + lineB
   if (score < scoreMin) return isHigherBetter ? scoreMin : scoreMax
   if (score > scoreMax) return isHigherBetter ? scoreMax : scoreMin
-  const nbDecimals = scoreMax - scoreMin > 10 ? 0 : 2 // eslint-disable-line @typescript-eslint/no-magic-numbers
+  const nbDecimals = scoreMax - scoreMin > 10 ? 0 : 2
   const finalScore = isHigherBetter ? score : scoreMax - score
   return round(finalScore, nbDecimals)
 }

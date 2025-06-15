@@ -12,8 +12,8 @@ export function shuffleArray<Type>(input: readonly Type[]) {
   for (let indexA = array.length - 1; indexA > 0; indexA += nbPrevious) {
     const indexB = Math.floor(Math.random() * (indexA + 1))
     const temporary = array[indexA]
-    array[indexA] = array[indexB] as Type // eslint-disable-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
-    array[indexB] = temporary as Type // eslint-disable-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
+    array[indexA] = array[indexB] as Type
+    array[indexB] = temporary as Type
   }
   return array
 }
