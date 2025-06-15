@@ -16,6 +16,7 @@ export function memoize<Callback extends (...arguments_: Parameters<Callback>) =
     const key = JSON.stringify(parameters)
     // @ts-expect-error cache[key] is unknown
     if (!(key in cache)) cache[key] = callback(...parameters)
+    // oxlint-disable no-non-null-assertion
     // biome-ignore lint/style/noNonNullAssertion: <explanation>
     return cache[key]!
   }

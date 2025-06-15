@@ -1,6 +1,6 @@
 /**
  * Cap the nesting level of an object
- * @param object like : `{ name : "Pine" }`
+ * @param object the object to cap
  * @param maxLevel like : `2`
  * @returns item like : `{ name : "Pine" }`
  */

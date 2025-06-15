@@ -3,40 +3,39 @@ import react from '@vitejs/plugin-react'
 /// <reference types='vitest' />
 import { defineConfig } from 'vite'
 
-// biome-ignore lint/style/noDefaultExport: needed here
 export default defineConfig(() => ({
-  root: __dirname,
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+    emptyOutDir: true,
+    outDir: './dist',
+    reportCompressedSize: true,
+  },
   cacheDir: '../../node_modules/.vite/apps/sample-web-app',
-  server: {
-    port: 4200,
-    host: 'localhost',
-  },
-  preview: {
-    port: 4300,
-    host: 'localhost',
-  },
   plugins: [react(), tailwindcss()],
+  preview: {
+    host: 'localhost',
+    port: 4300,
+  },
+  root: __dirname,
+  server: {
+    host: 'localhost',
+    port: 4200,
+  },
+  test: {
+    coverage: {
+      provider: 'v8' as const,
+      reportsDirectory: './test-output/vitest/coverage',
+    },
+    environment: 'jsdom',
+    globals: true,
+    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    reporters: ['default'],
+    watch: false,
+  },
   // Uncomment this if you are using workers.
   // worker: {
   //  plugins: [ nxViteTsPaths() ],
   // },
-  build: {
-    outDir: './dist',
-    emptyOutDir: true,
-    reportCompressedSize: true,
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
-  },
-  test: {
-    watch: false,
-    globals: true,
-    environment: 'jsdom',
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    reporters: ['default'],
-    coverage: {
-      reportsDirectory: './test-output/vitest/coverage',
-      provider: 'v8' as const,
-    },
-  },
 }))

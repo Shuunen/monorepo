@@ -3,8 +3,8 @@ import type { Mutable } from './types.js'
 
 /**
  * Return a deep copy of an object or array
- * @param object like : `{ name : "Pine" }`
- * @returns item copy like : `{ name : "Pine" }`
+ * @param object an object or array to clone
+ * @returns the copy
  */
 export function clone<Type>(object: Readonly<Type>) {
   try {

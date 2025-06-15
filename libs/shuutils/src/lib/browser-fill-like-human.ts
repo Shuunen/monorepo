@@ -12,6 +12,7 @@ export async function fillLikeHuman(input: HTMLInputElement, value: string) {
   input.focus()
   for (const char of value) {
     input.value += char
+    // oxlint-disable-next-line no-magic-numbers, no-await-in-loop
     await sleep(randomNumber(40, 80))
   }
   input.dispatchEvent(new Event('input', { bubbles: true }))

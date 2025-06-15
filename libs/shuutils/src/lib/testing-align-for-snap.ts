@@ -1,3 +1,5 @@
+import { nbSpacesIndent } from './constants.js'
+
 /**
  * Align & clean dynamic data & operating system related stuff that can mess-up the snaps
  * @param content the string to clean
@@ -6,7 +8,7 @@
  * @example alignForSnap({ value: '\\documents\\my-file.pdf' }) // => '{ "value": "/documents/my-file.pdf" }'
  */
 export function alignForSnap(content: unknown) {
-  const text = typeof content === 'string' ? content : JSON.stringify(content, undefined, 2)
+  const text = typeof content === 'string' ? content : JSON.stringify(content, undefined, nbSpacesIndent)
   return (
     text
       // 16/05/2024 17:36:32 => xx/xx/xxxx xx:xx:xx

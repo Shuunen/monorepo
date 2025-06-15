@@ -14,7 +14,7 @@ export function expectType<Type>(thing: Type) {
  * Check two types, you can provide the type or let TypeScript infer them
  * @param thingA first type to compare
  * @param thingB second type to compare
- * @returns parameters like : { thingA, thingB }
+ * @returns parameters
  * @example expectEqualTypes(funcA(), funcB())
  * expectEqualTypes(await funcA(), await funcB())
  * expectEqualTypes<PersonModel>({ name: 'John' }, { name: 'John' })

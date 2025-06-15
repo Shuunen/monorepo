@@ -1,4 +1,5 @@
 // Credits to : https://github.com/sindresorhus/yoctocolors/blob/main/index.js
+// oxlint-disable no-magic-numbers
 
 /**
  * Check if the browser is Firefox

@@ -113,7 +113,7 @@ export function isMobile(userAgent = getUserAgent()) {
 
 /**
  * Return a report of the browser context
- * @param {BrowserContext} context the browser context like { browser: 'Chrome', version: '91.0.4472', ... }
+ * @param context the browser context like : browser: 'Chrome', version: '91.0.4472', ...
  * @returns a textual report like : - Browser: Chrome 91.0.4472 - Language: en-US...
  */
 export function browserReport(context: BrowserContext) {

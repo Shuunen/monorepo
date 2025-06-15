@@ -77,7 +77,7 @@ function genClassObjectKeys(object: Record<string, GenClassTypes>, keys: string[
 
 /**
  * Auto-magically generate styling classes from an object
- * @param object every key-value will generate a class, ex: { enabled: true, disabled: false, size: 'large' }
+ * @param object every key-value will generate a class, ex: enabled: true, disabled: false, size: 'large'
  * @param keys optional, filter the keys to use
  * @param cls optional, additional classes to add, ex: "add-me"
  * @returns ready to use string class list, ex: "enabled size-large add-me"

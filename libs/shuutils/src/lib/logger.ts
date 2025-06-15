@@ -1,5 +1,7 @@
+import { consoleLog } from './browser-console.js'
 import { toastError, toastInfo, toastSuccess } from './browser-toast.js'
 import { bgGreen, bgRed, blue, cyan, gray, green, red, yellow } from './colors.js'
+import { nbFourth, nbSpacesIndent } from './constants.js'
 import { formatDate, readableTime } from './dates.js'
 import { isBrowserEnvironment } from './environment.js'
 import { isVerbose } from './flags.js'
@@ -11,6 +13,7 @@ import { isVerbose } from './flags.js'
  * @example clean(['Hello', { name: "world" }, 42]) // "Hello { "name": "world" } 42"
  */
 function clean(...stuff: Readonly<unknown[]>) {
+  // oxlint-disable no-control-regex
   return (
     stuff
       .map(thing => (typeof thing === 'object' ? JSON.stringify(thing) : String(thing)))
@@ -19,6 +22,7 @@ function clean(...stuff: Readonly<unknown[]>) {
       .replace(/[\u001B\u009B][#();?[]*(?:\d{1,4}(?:;\d{0,4})*)?[\d<=>A-ORZcf-nqry]/gu, '')
       .replace(/"/gu, "'")
   )
+  // oxlint-enable no-control-regex
 }
 
 type LogLevel = '1-debug' | '2-test' | '3-info' | '4-fix' | '5-warn' | '6-good' | '7-error'
@@ -68,7 +72,7 @@ export class Logger {
    */
   public constructor(options?: Readonly<Partial<LoggerOptions>>) {
     if (options) this.options = { ...this.options, ...options }
-    this.#padding = Math.max(...this.#levels.map(key => key.length - 2))
+    this.#padding = Math.max(...this.#levels.map(key => key.length - nbSpacesIndent))
   }
 
   /**
@@ -96,10 +100,7 @@ export class Logger {
     if (this.options.willLogTime) prefixes.unshift(formatDate(new Date(), 'HH:mm:ss'))
     if (this.options.willLogDate) prefixes.unshift(formatDate(new Date(), 'yyyy-MM-dd'))
     if (this.options.willLogDelay) prefixes.unshift(this.__getDelay())
-    if (this.options.willOutputToConsole)
-      // biome-ignore lint/suspicious/noConsoleLog: it's ok
-      // biome-ignore lint/suspicious/noConsole: <explanation>
-      console.log(prefixes.join(' '), ...stuff)
+    if (this.options.willOutputToConsole) consoleLog(prefixes.join(' '), ...stuff)
     if (this.options.willOutputToMemory) this.addToMemoryLogs(...prefixes, ...stuff)
   }
 
@@ -111,6 +112,7 @@ export class Logger {
    * @param color a function to colorize the prefix
    * @example logger.logIf('debug', '1-debug', ['Hello', 'world', 42])
    */
+  // oxlint-disable-next-line max-params
   private __logIf(prefix: string, level: LogLevel, stuff: Readonly<unknown[]>, color: (string_: string) => string) {
     if (!this.__shouldLog(level)) return
     this.__log(color(prefix.padStart(this.#padding)), stuff)
@@ -240,14 +242,14 @@ export class Logger {
   /**
    * Log a truthy/falsy test assertion
    * @param thing the thing to test for truthiness
-   * @param {...any} stuff the things to log
+   * @param stuff the things to log
    * @example logger.test(1 === 1, '1 is equal to 1') // will log : ✔️ 1 is equal to 1
    */
   public test(thing: unknown, ...stuff: Readonly<unknown[]>) {
     if (!this.__shouldLog('2-test')) return
     const isTruthy = Boolean(thing)
     const box = isTruthy ? bgGreen(' ✓ ') : bgRed(' ✗ ')
-    const prefix = ' '.repeat(this.#padding - 3)
+    const prefix = ' '.repeat(this.#padding - nbFourth)
     this.__log(prefix + box, stuff)
   }
 

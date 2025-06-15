@@ -2,7 +2,9 @@
   "cSpell.words": [
     "nrwl"
   ],
+  "javascript.format.insertSpaceAfterConstructor": false,
   "javascript.format.insertSpaceBeforeFunctionParenthesis": false,
   "nxConsole.generateAiAgentRules": true,
+  "typescript.format.insertSpaceAfterConstructor": false,
   "typescript.format.insertSpaceBeforeFunctionParenthesis": false
 }

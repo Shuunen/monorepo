@@ -44,6 +44,7 @@ function toastStyle(type: 'error' | 'info' | 'success') {
  * @param delay - The delay in milliseconds before the toast notification is removed.
  * @param padding - The padding in pixels for the toast notification.
  */
+// oxlint-disable-next-line max-params
 function toastAdd(type: 'error' | 'info' | 'success', message = '', delay = 0, padding = 14) {
   const element = document.createElement('div')
   element.setAttribute('class', 'shu-toast')

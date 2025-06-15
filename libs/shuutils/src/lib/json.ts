@@ -5,7 +5,7 @@ const JSON_START_REGEX = /^(?:\[\s*)?\{\s*"/u
 
 /**
  * Check if the given string is a JSON object
- * @param {string} jsonString The string to check, e.g. '{ "name": "Johnny" }'.
+ * @param jsonString The string to check
  * @returns The parsed object or false if parsing failed
  */
 export function isJson(jsonString: string) {
@@ -21,7 +21,7 @@ export function isJson(jsonString: string) {
 
 /**
  * Parse a supposed JSON string into an object
- * @param {string} json The JSON string to parse, e.g. '{ "name": "John Doe", "age": 32 }'.
+ * @param json The JSON string to parse
  * @returns An object with shape { error: string | undefined, value: Type | Record<string, unknown> } where error is a message if parsing fails, otherwise undefined.
  */
 export function parseJson<Type>(json: string) {

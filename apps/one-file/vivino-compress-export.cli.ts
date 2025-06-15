@@ -18,8 +18,8 @@ async function logClear() {
 }
 
 /**
- *
- * @param {...any} stuff things to add to the log
+ * Add stuff to the log file
+ * @param stuff things to add to the log
  */
 async function logAdd(...stuff: Date[] | string[]) {
   await fs.appendFile(logFile, `${stuff.join(' ')}\n`)

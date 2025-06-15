@@ -3,8 +3,9 @@
  * @param ms the time to wait in milliseconds, default 1000ms / 1 sec
  * @returns promise that resolve in the provided time
  */
-export async function sleep(ms = 1000) {
+export function sleep(ms = 1000) {
   return new Promise(resolve => {
+    // oxlint-disable-next-line max-nested-callbacks
     setTimeout(() => {
       resolve(ms)
     }, ms)
@@ -21,11 +22,13 @@ export function hasOwn(object: object, property: string) {
   return Object.hasOwn(object, property)
 }
 
+// oxlint-disable no-empty-function, empty-brace-spaces
 /**
  * A function that returns void, handy for initializing variables.
  */
 // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
 export function functionReturningVoid(): void {}
+// oxlint-enable no-empty-function, empty-brace-spaces
 
 /**
  * A function that returns `undefined`, handy for initializing variables.

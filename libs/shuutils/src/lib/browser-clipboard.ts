@@ -1,3 +1,4 @@
+import { consoleLog } from './browser-console.js'
 import { Result } from './result.js'
 import { ellipsis } from './strings.js'
 
@@ -15,9 +16,8 @@ export async function copyToClipboard(stuff: number | Readonly<Record<string, un
     return Result.error('failed to stringify the data')
   }
   try {
-    // biome-ignore lint/suspicious/noConsoleLog: it's ok here
-    // biome-ignore lint/suspicious/noConsole: it's ok here
-    if (willLog) console.log(`copying to clipboard : ${ellipsis(text)}`)
+    if (willLog) consoleLog(`copying to clipboard : ${ellipsis(text)}`)
+    // oxlint-disable-next-line no-undef
     await navigator.clipboard.writeText(text)
     return Result.ok(`copied to clipboard : ${ellipsis(text)}`)
   } catch {
@@ -31,14 +31,11 @@ export async function copyToClipboard(stuff: number | Readonly<Record<string, un
  * @param clipboard the clipboard object, default is navigator.clipboard
  * @returns the content of the clipboard
  */
+// oxlint-disable-next-line no-undef
 export async function readClipboard(willLog = false, clipboard = navigator.clipboard) {
   if (!clipboard) return Result.error('clipboard not available')
-  // biome-ignore lint/suspicious/noConsoleLog: it's ok here
-  // biome-ignore lint/suspicious/noConsole: it's ok here
-  if (willLog) console.log('reading clipboard...')
+  if (willLog) consoleLog('reading clipboard...')
   const text = await clipboard.readText()
-  // biome-ignore lint/suspicious/noConsoleLog: it's ok here
-  // biome-ignore lint/suspicious/noConsole: it's ok here
-  if (willLog) console.log(`got this text from clipboard : ${ellipsis(text)}`)
+  if (willLog) consoleLog(`got this text from clipboard : ${ellipsis(text)}`)
   return Result.ok(text)
 }

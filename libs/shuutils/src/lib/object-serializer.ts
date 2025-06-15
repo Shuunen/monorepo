@@ -43,6 +43,7 @@ function reviver(_key: string, value?: unknown) {
   if (value === undefined || value === null) return value
   if (typeof value !== 'object') return value // @ts-expect-error non-standard properties
   if ('__strRegexFlags__' in value && '__strRegexSource__' in value) return new RegExp(value.__strRegexSource__, value.__strRegexFlags__)
+  // oxlint-disable-next-line no-new-func
   if ('__strFunction__' in value) return new Function(`return ${value.__strFunction__}`)() /* @ts-expect-error non-standard properties */
   if ('__strDate__' in value) return new Date(value.__strDate__)
   // here we return undefined but JSON.parse will just remove the key from the object, not great but in the end it's the same result, myObject.undefinedKey will be undefined either in { undefinedKey: undefined } or in { } ... ^^'

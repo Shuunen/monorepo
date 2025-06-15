@@ -49,6 +49,7 @@ function has(key: string) {
  */
 function clear(key: string) {
   const path = storage.prefix + key
+  // oxlint-disable-next-line no-dynamic-delete
   delete storage.media[path]
 }
 

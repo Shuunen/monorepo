@@ -6,5 +6,6 @@
  * @example round(1.2345, 2) // returns 1.23
  */
 export function round(number: number, nbDecimals = 2) {
+  // oxlint-disable-next-line no-magic-numbers
   return Math.round(number * 10 ** nbDecimals) / 10 ** nbDecimals
 }

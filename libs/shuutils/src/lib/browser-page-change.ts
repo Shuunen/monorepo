@@ -1,3 +1,4 @@
+import { consoleLog } from './browser-console.js'
 import { sleep } from './functions.js'
 
 /**
@@ -5,9 +6,7 @@ import { sleep } from './functions.js'
  * @param location the new location
  */
 function onPageChangeDefaultCallback(location: string) {
-  // biome-ignore lint/suspicious/noConsoleLog: <explanation>
-  // biome-ignore lint/suspicious/noConsole: it's ok here
-  console.log(`location changed : ${location} but onPageChange callback is empty`)
+  consoleLog(`location changed : ${location} but onPageChange callback is empty`)
 }
 
 /**

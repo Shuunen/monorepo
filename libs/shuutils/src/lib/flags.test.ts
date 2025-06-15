@@ -1,5 +1,6 @@
 import { hasOption } from './flags.js'
 
+// oxlint-disable-next-line prefer-structured-clone
 const initialProcess = JSON.parse(JSON.stringify(process))
 
 describe('flags', () => {

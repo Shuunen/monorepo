@@ -38,13 +38,15 @@ export function slugify(string: string) {
     .replace(SLUGIFY_TRIM_DASH_END, '') // Trim dash from end
 }
 
+// oxlint-disable require-param-description
 /**
  * Fill mustaches in a given string
- * @param {Readonly<Record<string, unknown>> | string} template The input string, like "Hello {{ name }} !".
- * @param {Readonly<Record<string, unknown>>} data The input object, like { name: "world" }.
+ * @param template The input string, like "Hello {{ name }} !".
+ * @param data The input object, like { name: "world" }.
  * @returns The filled string, e.g. "Hello world !"
  */
 export function fillTemplate(template: Readonly<Record<string, unknown>> | string, data?: Readonly<Record<string, unknown>>) {
+  // oxlint-enable require-param-description
   let string = typeof template === 'object' ? JSON.stringify(template, undefined, nbSpacesIndent) : template
   if (data === undefined) return string
   if (string.length === 0) return string
@@ -100,6 +102,7 @@ export function createCrc32Table(length = 256) {
   const table: number[] = Array.from({ length })
   for (let index = 0; index < length; index += 1) {
     let code = index
+    // oxlint-disable-next-line no-bitwise, no-magic-numbers
     for (let indexB = 0; indexB < 8; indexB += 1) code = code & 0x01 ? 3_988_292_384 ^ (code >>> 1) : code >>> 1
     table[index] = code
   }
@@ -118,11 +121,13 @@ export function crc32(text: string) {
   for (let index = 0; index < text.length; index += 1) {
     /* c8 ignore next */
     const code = text.codePointAt(index) ?? 0
+    // oxlint-disable no-bitwise, no-magic-numbers
     const key: number = (code ^ crc) & 0xff
     const value: number | undefined = crcTable[key]
     if (value !== undefined && value !== 0) crc = value ^ (crc >>> 8)
   }
   return Math.trunc(-1 ^ crc)
+  // oxlint-enable no-bitwise, no-magic-numbers
 }
 
 /**
@@ -164,6 +169,7 @@ export function parseBase64(string: string) {
   if (type && typeof type[0] === 'string') [result.type] = type
   const base64 = string.split('base64,')
   if (base64.length > 1 && typeof base64[1] === 'string') [, result.base64] = base64
+  // oxlint-disable-next-line no-magic-numbers
   result.size = Math.round((result.base64.length * 3) / 4)
   return result
 }

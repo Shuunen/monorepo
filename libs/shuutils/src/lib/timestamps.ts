@@ -1,10 +1,12 @@
+import { nbMsInSecond } from './constants.js'
+
 /**
  * Give timestamp of a date or now in seconds
  * @param date input date
  * @returns number like : 1541258097
  */
 export function getTimestamp(date: Readonly<Date> = new Date()) {
-  return Math.round(date.getTime() / 1000)
+  return Math.round(date.getTime() / nbMsInSecond)
 }
 
 /**

@@ -59,8 +59,8 @@
       "linter": {
         "rules": {
           "performance": {
-            "noReExportAll": "off",
-            "noBarrelFile": "off"
+            "noBarrelFile": "off",
+            "noReExportAll": "off"
           }
         }
       }
@@ -116,6 +116,19 @@
         "rules": {
           "correctness": {
             "noNodejsModules": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": [
+        "*.config.ts",
+        "*.workspace.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDefaultExport": "off"
           }
         }
       }

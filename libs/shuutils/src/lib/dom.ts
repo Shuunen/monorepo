@@ -1,3 +1,4 @@
+import { nbDaysInWeek, nbSpacesIndent } from './constants.js'
 import { sleep } from './functions.js'
 import { Result } from './result.js'
 
@@ -50,6 +51,7 @@ export function icon(classes = '') {
  * @param willOpenInNewTab true if the link should open in a new tab
  * @returns the generated link element
  */
+// oxlint-disable-next-line max-params
 export function link(classes: string, content: DomContent, href: string, willOpenInNewTab = false) {
   const element = dom('a', classes, content)
   element.href = href
@@ -198,6 +200,7 @@ export function findAll(selector: string, context: Document | HTMLElement = docu
  * @param maxTry the max number of tries, default 5
  * @returns the element or undefined if not found
  */
+// oxlint-disable-next-line max-params
 export async function waitToDetect(selector: string, wait = 500, nbTries = 0, maxTry = 5) {
   await sleep(wait)
   const element = findOne(selector)
@@ -217,9 +220,9 @@ export async function waitToDetect(selector: string, wait = 500, nbTries = 0, ma
 export async function scrollToHeightSync(element: HTMLElement) {
   const initial = element.style.height
   element.style.height = 'inherit'
-  const target = element.scrollHeight + 2
+  const target = element.scrollHeight + nbSpacesIndent
   element.style.height = initial
-  await sleep(10)
+  await sleep(nbDaysInWeek)
   element.style.height = `${target}px`
 }
 

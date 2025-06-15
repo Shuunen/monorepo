@@ -15,23 +15,8 @@ const baseUrl = process.env.BASE_URL || 'http://localhost:4300'
  * See https://playwright.dev/docs/test-configuration.
  */
 
-// biome-ignore lint/style/noDefaultExport: <explanation>
 export default defineConfig({
   ...nxE2EPreset(__filename, { testDir: './src' }),
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-  use: {
-    // biome-ignore lint/style/useNamingConvention: <explanation>
-    baseURL: baseUrl,
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-  },
-  /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'pnpm exec nx run @shuunen/sample-web-app:preview',
-    url: 'http://localhost:4300',
-    reuseExistingServer: true,
-    cwd: workspaceRoot,
-  },
   projects: [
     {
       name: 'chromium',
@@ -68,4 +53,18 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     } */
   ],
+  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  use: {
+    // biome-ignore lint/style/useNamingConvention: <explanation>
+    baseURL: baseUrl,
+    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+    trace: 'on-first-retry',
+  },
+  /* Run your local dev server before starting the tests */
+  webServer: {
+    command: 'pnpm exec nx run @shuunen/sample-web-app:preview',
+    cwd: workspaceRoot,
+    reuseExistingServer: true,
+    url: 'http://localhost:4300',
+  },
 })

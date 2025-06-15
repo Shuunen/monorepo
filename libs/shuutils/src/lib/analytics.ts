@@ -21,6 +21,7 @@ export type AnalyticsOptions = Readonly<{
  * @param options.willPile if the analytics will pile the events in memory
  * @returns the analytics object
  */
+// oxlint-disable-next-line max-lines-per-function
 export function createAnalytics({ app = 'app-default', onIdentify, onPage, onTrack, willLog = false, willPile = false }: AnalyticsOptions | undefined = {}) {
   const pile: string[] = []
   const logger = willLog ? new Logger() : undefined
@@ -39,7 +40,7 @@ export function createAnalytics({ app = 'app-default', onIdentify, onPage, onTra
   /**
    * Identify a user
    * @param userId - The user, like '123456', 'super-admin', etc.
-   * @param additionalData - Additional data to identify the user, like `{ email: '...', age: 35, ... }`
+   * @param additionalData - Additional data to identify the user
    * @returns a Result object
    */
   function identify(userId: string, additionalData?: Record<string, unknown>) {
@@ -63,7 +64,7 @@ export function createAnalytics({ app = 'app-default', onIdentify, onPage, onTra
   /**
    * Track an event
    * @param event The event name like 'click', 'download-invoice', etc.
-   * @param additionalData Additional data to track the event, like `{ category: '...', label: '...', ... }`
+   * @param additionalData Additional data to track the event
    * @returns a Result object
    */
   function track(event: string, additionalData?: Record<string, unknown>) {
