@@ -10,8 +10,8 @@ import { Logger } from './lib/logger.js'
  */
 async function listEntries() {
   const logger = new Logger()
-  const lib = path.join(__dirname, 'lib')
-  const index = path.join(__dirname, 'index.ts')
+  const lib = path.join(import.meta.dirname, 'lib')
+  const index = path.join(import.meta.dirname, 'index.ts')
   logger.info('Listing entries in lib folder..., target: ', lib)
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const files = await glob('*.ts', { cwd: lib, filesOnly: true })

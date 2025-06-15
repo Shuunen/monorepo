@@ -5,7 +5,7 @@
       "cache": true,
       "executor": "nx:run-commands",
       "options": {
-        "command": "bun src/list.cli.ts",
+        "command": "tsx src/list.cli.ts",
         "cwd": "libs/shuutils"
       },
       "outputs": [
