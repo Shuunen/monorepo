@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { extractData, logger, replaceAndCheck, replaceAndCheckById } from './repo-banner.utils.js'
 
-// usage : node one-file/repo-banner.cli.js
+// usage : bun apps/one-file/repo-banner.cli.js
 
 const thisFileFolder = import.meta.dirname
 logger.info('Repo banner generator start @', new Date().toLocaleString())
