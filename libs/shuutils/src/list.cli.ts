@@ -1,7 +1,8 @@
+/* c8 ignore start */
 import { writeFileSync } from 'node:fs'
+import path from 'node:path'
 import glob from 'tiny-glob'
 import { Logger } from './lib/logger.js'
-import path from 'node:path'
 
 /**
  * List entries in lib folder into the barrel index.ts file
