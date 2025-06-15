@@ -90,9 +90,6 @@ importers:
       '@vitest/ui':
         specifier: '3.2'
         version: 3.2.3(vitest@3.2.3)
-      bun:
-        specifier: '1.2'
-        version: 1.2.16
       jiti:
         specifier: '2.4'
         version: 2.4.2
@@ -1517,61 +1514,6 @@ packages:
   '@nx/workspace@21.2.0':
     resolution: {integrity: sha512-2uaVMWo51MEoKo4nAgGCZNQxAPBkSR9i05R3t9bkYPgvM24u/0tE4ooWPefWpIulvsWysmUmdFJ6rTXARKer8g==}
 
-  '@oven/bun-darwin-aarch64@1.2.16':
-    resolution: {integrity: sha512-NLVU9YDORq/3WuJOE5TQv5of3R99n56gYZPfdqP4U0/5nllbC8yzRxA2BWwAS2RxxD0Y3bxqEVUsIGiTNN2jxg==}
-    cpu: [arm64]
-    os: [darwin]
-
-  '@oven/bun-darwin-x64-baseline@1.2.16':
-    resolution: {integrity: sha512-FtKr6FwLN+QfrF0/vJtOwBMU72krmrHlxhRSElbKEOWox2n2vWSZ/sNNkHePEsrxGfqaHC5GhEZk2lnaZTavBQ==}
-    cpu: [x64]
-    os: [darwin]
-
-  '@oven/bun-darwin-x64@1.2.16':
-    resolution: {integrity: sha512-HpcSVCTH9n+9bG2zu3OUJ9h22m6HzNgZpqib9r4NEVZg7Z2U86bOUMKlTCA0ZANaWsK9czl2VIhMWbLF4fgvLA==}
-    cpu: [x64]
-    os: [darwin]
-
-  '@oven/bun-linux-aarch64-musl@1.2.16':
-    resolution: {integrity: sha512-MhvQ0hecunZnbac9cEOqA1CGk/ISDhhnF35i9l90Jgc/osfgGndViLkMp3wk1EO5UG4/Kbil1OlfLmyOHKq0SQ==}
-    cpu: [aarch64]
-    os: [linux]
-
-  '@oven/bun-linux-aarch64@1.2.16':
-    resolution: {integrity: sha512-nd0eZhihfgrDtfI/NdEqOAQ8KY87SWNQLZKjRB8WoYkqcY1BGwtZqvJOc2bEn2oERJ8K2etJRynXz+MKngiYxw==}
-    cpu: [arm64]
-    os: [linux]
-
-  '@oven/bun-linux-x64-baseline@1.2.16':
-    resolution: {integrity: sha512-ZysDeqDfUAqKrQu2R+ddRgSCY30qSnn0LQLr6fAm7Pw9lU2yhWVNa8R3DavddmZQc1vUw6j3ITIAE+DDT9OBCg==}
-    cpu: [x64]
-    os: [linux]
-
-  '@oven/bun-linux-x64-musl-baseline@1.2.16':
-    resolution: {integrity: sha512-cWwny3cxYkvV9fYnSDb2brXodWV7IcG+Bwd3q3b8OUYbeC3ekHN3zm+TYdSxIVhMm7z46CkiDz5QnnQWVVfZ5A==}
-    cpu: [x64]
-    os: [linux]
-
-  '@oven/bun-linux-x64-musl@1.2.16':
-    resolution: {integrity: sha512-6o5Oi5ARKYErF6nIBrewxtl20PGhM97faPemJ+v26D47dRNAlUWN5lMVuOqZOhYjqzOe4V+NpxIFBHtXWEmoNQ==}
-    cpu: [x64]
-    os: [linux]
-
-  '@oven/bun-linux-x64@1.2.16':
-    resolution: {integrity: sha512-qYUXPXbT4S+MImv51+dLBHKFYy40QIowwCRtzUFGf3TG+9MQQUXHNXryMNSdHveHqecd9rO1EIQ8hroAPBl+Sg==}
-    cpu: [x64]
-    os: [linux]
-
-  '@oven/bun-windows-x64-baseline@1.2.16':
-    resolution: {integrity: sha512-tHdtHqH6c5ScNusLWOzZCTeuV2rSc3mvlLQQ+DYefTy+XwtjXmY47MbBSgNuBWVYePIob9BqDFOtTHYIWRZTww==}
-    cpu: [x64]
-    os: [win32]
-
-  '@oven/bun-windows-x64@1.2.16':
-    resolution: {integrity: sha512-1xUlHHbMZ3DMZlEcppBAQ5vQDgNHDMIGB/AXO+dxQJl/3GiO/Ek4pMDzcqMnlbGDaDcTmTXyZ6cEXEF4C2qygQ==}
-    cpu: [x64]
-    os: [win32]
-
   '@oxc-resolver/binding-darwin-arm64@5.3.0':
     resolution: {integrity: sha512-hXem5ZAguS7IlSiHg/LK0tEfLj4eUo+9U6DaFwwBEGd0L0VIF9LmuiHydRyOrdnnmi9iAAFMAn/wl2cUoiuruA==}
     cpu: [arm64]
@@ -2512,12 +2454,6 @@ packages:
 
   buffer@5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
-
-  bun@1.2.16:
-    resolution: {integrity: sha512-sjZH6rr1P6yu44+XPA8r+ZojwmK9Kbz9lO6KAA/4HRIupdpC31k7b93crLBm19wEYmd6f2+3+57/7tbOcmHbGg==}
-    cpu: [arm64, x64, aarch64]
-    os: [darwin, linux, win32]
-    hasBin: true
 
   bytes@3.1.2:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
@@ -6415,39 +6351,6 @@ snapshots:
       - '@swc/core'
       - debug
 
-  '@oven/bun-darwin-aarch64@1.2.16':
-    optional: true
-
-  '@oven/bun-darwin-x64-baseline@1.2.16':
-    optional: true
-
-  '@oven/bun-darwin-x64@1.2.16':
-    optional: true
-
-  '@oven/bun-linux-aarch64-musl@1.2.16':
-    optional: true
-
-  '@oven/bun-linux-aarch64@1.2.16':
-    optional: true
-
-  '@oven/bun-linux-x64-baseline@1.2.16':
-    optional: true
-
-  '@oven/bun-linux-x64-musl-baseline@1.2.16':
-    optional: true
-
-  '@oven/bun-linux-x64-musl@1.2.16':
-    optional: true
-
-  '@oven/bun-linux-x64@1.2.16':
-    optional: true
-
-  '@oven/bun-windows-x64-baseline@1.2.16':
-    optional: true
-
-  '@oven/bun-windows-x64@1.2.16':
-    optional: true
-
   '@oxc-resolver/binding-darwin-arm64@5.3.0':
     optional: true
 
@@ -7362,20 +7265,6 @@ snapshots:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
-
-  bun@1.2.16:
-    optionalDependencies:
-      '@oven/bun-darwin-aarch64': 1.2.16
-      '@oven/bun-darwin-x64': 1.2.16
-      '@oven/bun-darwin-x64-baseline': 1.2.16
-      '@oven/bun-linux-aarch64': 1.2.16
-      '@oven/bun-linux-aarch64-musl': 1.2.16
-      '@oven/bun-linux-x64': 1.2.16
-      '@oven/bun-linux-x64-baseline': 1.2.16
-      '@oven/bun-linux-x64-musl': 1.2.16
-      '@oven/bun-linux-x64-musl-baseline': 1.2.16
-      '@oven/bun-windows-x64': 1.2.16
-      '@oven/bun-windows-x64-baseline': 1.2.16
 
   bytes@3.1.2: {}
 
