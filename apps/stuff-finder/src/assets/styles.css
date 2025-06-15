@@ -1,0 +1,62 @@
+@import "tailwindcss";
+@import "./mui-chip.css" layer(utilities);
+
+@theme {
+  --breakpoint-xs: 360px;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-purple-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-purple-600 border border-current;
+}
+
+h1 {
+  @apply text-4xl text-purple-700 font-medium;
+}
+
+h2 {
+  @apply text-2xl text-purple-900;
+}
+
+h3 {
+  @apply text-5xl sm:text-7xl md:text-[5rem] relative indent-6 md:indent-8 translate-y-10 md:translate-y-12 z-0 tracking-[1rem] sm:tracking-[1.5rem] md:tracking-[2rem] font-black text-transparent opacity-30 uppercase;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: grey;
+}
+
+.flex:not([class*="gap-"]) {
+  @apply gap-6;
+}
+
+.shu-toast {
+  @apply print:hidden;
+}

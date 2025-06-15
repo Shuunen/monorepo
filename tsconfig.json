@@ -11,6 +11,9 @@
       "path": "./apps/sample-web-app"
     },
     {
+      "path": "./apps/stuff-finder"
+    },
+    {
       "path": "./libs/shuutils"
     }
   ]

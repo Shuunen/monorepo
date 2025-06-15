@@ -4,7 +4,7 @@ import { NxWelcome } from './nx-welcome'
 export function App() {
   return (
     <div>
-      <NxWelcome title="@shuunen/sample-web-app" />
+      <NxWelcome title="sample-web-app" />
 
       {/* START: routes */}
       {/* These routes and navigation have been generated for you */}

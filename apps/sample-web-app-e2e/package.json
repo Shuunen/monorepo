@@ -1,10 +1,10 @@
 {
-  "name": "@shuunen/sample-web-app-e2e",
-  "version": "0.0.1",
-  "private": true,
+  "name": "sample-web-app-e2e",
   "nx": {
     "implicitDependencies": [
-      "@shuunen/sample-web-app"
+      "sample-web-app"
     ]
-  }
+  },
+  "private": true,
+  "version": "0.0.1"
 }

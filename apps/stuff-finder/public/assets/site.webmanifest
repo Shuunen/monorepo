@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "background_color": "#ffffff",
+  "description": "Find your stuff",
+  "dir": "auto",
+  "display": "standalone",
+  "icons": [
+    {
+      "purpose": "any",
+      "sizes": "192x192",
+      "src": "/assets/android-chrome-192x192.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "192x192",
+      "src": "/assets/maskable-192x192.png",
+      "type": "image/png"
+    },
+    {
+      "sizes": "512x512",
+      "src": "/assets/android-chrome-512x512.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "/assets/maskable-512x512.png",
+      "type": "image/png"
+    }
+  ],
+  "id": "stuff-finder",
+  "lang": "fr",
+  "name": "Stuff Finder",
+  "orientation": "any",
+  "short_name": "Stuff Finder",
+  "start_url": "https://stuff-finder.netlify.app/",
+  "theme_color": "#209cee"
+}

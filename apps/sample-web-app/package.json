@@ -2,7 +2,7 @@
   "devDependencies": {
     "@shuunen/shuutils": "workspace:*"
   },
-  "name": "@shuunen/sample-web-app",
+  "name": "sample-web-app",
   "private": true,
   "type": "module",
   "version": "0.0.1"

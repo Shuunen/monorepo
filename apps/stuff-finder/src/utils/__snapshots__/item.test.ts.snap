@@ -1,0 +1,677 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`item.utils > addItem A should create remotely & push locally 1`] = `
+Ok {
+  "ok": true,
+  "value": {
+    "$id": "reference-b",
+    "barcode": "barcode B",
+    "box": "B (usb & audio)",
+    "brand": "brand B",
+    "details": "details B",
+    "drawer": 2,
+    "isPrinted": false,
+    "name": "name B",
+    "photos": [
+      "some-uuid",
+      "https://some.url/to/image.jpg",
+    ],
+    "price": 42,
+    "reference": "reference B",
+    "status": "bought",
+  },
+}
+`;
+
+exports[`item.utils > formToItem A default itemForm 1`] = `
+{
+  "$id": "",
+  "barcode": "",
+  "box": "",
+  "brand": "",
+  "details": "",
+  "drawer": -1,
+  "isPrinted": false,
+  "name": "",
+  "photos": [],
+  "price": -1,
+  "reference": "",
+  "status": "bought",
+}
+`;
+
+exports[`item.utils > formToItem B itemForm with some values 1`] = `
+{
+  "$id": "",
+  "barcode": "",
+  "box": "",
+  "brand": "",
+  "details": "",
+  "drawer": -1,
+  "isPrinted": false,
+  "name": "",
+  "photos": [
+    "https://photos.org/200/200",
+  ],
+  "price": 42,
+  "reference": "",
+  "status": "bought",
+}
+`;
+
+exports[`item.utils > itemToForm A mocked item 1`] = `
+{
+  "columns": 10,
+  "errorMessage": "",
+  "fields": {
+    "barcode": {
+      "columns": 1,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": false,
+      "label": "Barcode",
+      "link": "",
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,30\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "barcode B",
+    },
+    "box": {
+      "columns": 3,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Box",
+      "link": "",
+      "options": [
+        {
+          "label": "",
+          "value": "",
+        },
+        {
+          "label": "A (apple)",
+          "value": "A (apple)",
+        },
+        {
+          "label": "B (usb & audio)",
+          "value": "B (usb & audio)",
+        },
+        {
+          "label": "C (couteau)",
+          "value": "C (couteau)",
+        },
+        {
+          "label": "D (doll)",
+          "value": "D (doll)",
+        },
+        {
+          "label": "E (east)",
+          "value": "E (east)",
+        },
+        {
+          "label": "F (périphériques)",
+          "value": "F (périphériques)",
+        },
+        {
+          "label": "G (brico & sport)",
+          "value": "G (brico & sport)",
+        },
+        {
+          "label": "H (hardware)",
+          "value": "H (hardware)",
+        },
+        {
+          "label": "L (lemon)",
+          "value": "L (lemon)",
+        },
+        {
+          "label": "M (malettes)",
+          "value": "M (malettes)",
+        },
+        {
+          "label": "N (noodles)",
+          "value": "N (noodles)",
+        },
+        {
+          "label": "O (orange)",
+          "value": "O (orange)",
+        },
+        {
+          "label": "P (plan de travail)",
+          "value": "P (plan de travail)",
+        },
+        {
+          "label": "Q (sock)",
+          "value": "Q (sock)",
+        },
+        {
+          "label": "R (récup)",
+          "value": "R (récup)",
+        },
+        {
+          "label": "R (red)",
+          "value": "R (red)",
+        },
+        {
+          "label": "S (sdb)",
+          "value": "S (sdb)",
+        },
+        {
+          "label": "T (tour bureau)",
+          "value": "T (tour bureau)",
+        },
+        {
+          "label": "V (violet)",
+          "value": "V (violet)",
+        },
+        {
+          "label": "X (commode malm)",
+          "value": "X (commode malm)",
+        },
+        {
+          "label": "Z (poches zip)",
+          "value": "Z (poches zip)",
+        },
+      ],
+      "regex": /\\^\\[\\\\p\\{L\\}\\\\s&\\(\\)\\]\\{3,100\\}\\$/u,
+      "type": "select",
+      "unit": "",
+      "value": "B (usb & audio)",
+    },
+    "brand": {
+      "columns": 3,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Brand",
+      "link": "",
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,100\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "brand B",
+    },
+    "details": {
+      "columns": 5,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Details",
+      "link": "",
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,200\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "details B",
+    },
+    "drawer": {
+      "columns": 2,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Drawer",
+      "link": "",
+      "options": [
+        {
+          "label": "",
+          "value": "",
+        },
+        {
+          "label": "1",
+          "value": "1",
+        },
+        {
+          "label": "2",
+          "value": "2",
+        },
+        {
+          "label": "3",
+          "value": "3",
+        },
+        {
+          "label": "4",
+          "value": "4",
+        },
+        {
+          "label": "5",
+          "value": "5",
+        },
+        {
+          "label": "6",
+          "value": "6",
+        },
+        {
+          "label": "7",
+          "value": "7",
+        },
+      ],
+      "regex": /\\\\d/u,
+      "type": "select",
+      "unit": "",
+      "value": "2",
+    },
+    "id": {
+      "columns": 1,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": false,
+      "label": "Id",
+      "link": "",
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,100\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "itemToForm-A",
+    },
+    "isPrinted": {
+      "columns": 1,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": false,
+      "label": "Printed",
+      "link": "",
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,100\\}\\$/u,
+      "type": "checkbox",
+      "unit": "",
+      "value": false,
+    },
+    "name": {
+      "columns": 5,
+      "isRequired": true,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Name",
+      "link": "",
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,100\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "name B",
+    },
+    "photo": {
+      "columns": 5,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Photo",
+      "link": "",
+      "regex": /\\^\\.\\+\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "some-uuid",
+    },
+    "price": {
+      "columns": 2,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Price",
+      "link": "",
+      "regex": /\\^\\\\d\\{1,5\\}\\$/u,
+      "type": "text",
+      "unit": "€",
+      "value": "42",
+    },
+    "reference": {
+      "columns": 3,
+      "isRequired": true,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Reference",
+      "link": "",
+      "regex": /\\^\\[\\\\w-\\]\\{3,50\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "reference B",
+    },
+    "status": {
+      "columns": 2,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Status",
+      "link": "",
+      "options": [
+        {
+          "label": "bought",
+          "value": "bought",
+        },
+        {
+          "label": "for-sell",
+          "value": "for-sell",
+        },
+        {
+          "label": "lost",
+          "value": "lost",
+        },
+        {
+          "label": "to-give",
+          "value": "to-give",
+        },
+      ],
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,100\\}\\$/u,
+      "type": "select",
+      "unit": "",
+      "value": "bought",
+    },
+  },
+  "isTouched": false,
+  "isValid": false,
+}
+`;
+
+exports[`item.utils > itemToForm C no item 1`] = `
+{
+  "columns": 10,
+  "errorMessage": "",
+  "fields": {
+    "barcode": {
+      "columns": 1,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": false,
+      "label": "Barcode",
+      "link": "",
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,30\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "",
+    },
+    "box": {
+      "columns": 3,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Box",
+      "link": "",
+      "options": [
+        {
+          "label": "",
+          "value": "",
+        },
+        {
+          "label": "A (apple)",
+          "value": "A (apple)",
+        },
+        {
+          "label": "B (usb & audio)",
+          "value": "B (usb & audio)",
+        },
+        {
+          "label": "C (couteau)",
+          "value": "C (couteau)",
+        },
+        {
+          "label": "D (doll)",
+          "value": "D (doll)",
+        },
+        {
+          "label": "E (east)",
+          "value": "E (east)",
+        },
+        {
+          "label": "F (périphériques)",
+          "value": "F (périphériques)",
+        },
+        {
+          "label": "G (brico & sport)",
+          "value": "G (brico & sport)",
+        },
+        {
+          "label": "H (hardware)",
+          "value": "H (hardware)",
+        },
+        {
+          "label": "L (lemon)",
+          "value": "L (lemon)",
+        },
+        {
+          "label": "M (malettes)",
+          "value": "M (malettes)",
+        },
+        {
+          "label": "N (noodles)",
+          "value": "N (noodles)",
+        },
+        {
+          "label": "O (orange)",
+          "value": "O (orange)",
+        },
+        {
+          "label": "P (plan de travail)",
+          "value": "P (plan de travail)",
+        },
+        {
+          "label": "Q (sock)",
+          "value": "Q (sock)",
+        },
+        {
+          "label": "R (récup)",
+          "value": "R (récup)",
+        },
+        {
+          "label": "R (red)",
+          "value": "R (red)",
+        },
+        {
+          "label": "S (sdb)",
+          "value": "S (sdb)",
+        },
+        {
+          "label": "T (tour bureau)",
+          "value": "T (tour bureau)",
+        },
+        {
+          "label": "V (violet)",
+          "value": "V (violet)",
+        },
+        {
+          "label": "X (commode malm)",
+          "value": "X (commode malm)",
+        },
+        {
+          "label": "Z (poches zip)",
+          "value": "Z (poches zip)",
+        },
+      ],
+      "regex": /\\^\\[\\\\p\\{L\\}\\\\s&\\(\\)\\]\\{3,100\\}\\$/u,
+      "type": "select",
+      "unit": "",
+      "value": "",
+    },
+    "brand": {
+      "columns": 3,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Brand",
+      "link": "",
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,100\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "",
+    },
+    "details": {
+      "columns": 5,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Details",
+      "link": "",
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,200\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "",
+    },
+    "drawer": {
+      "columns": 2,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Drawer",
+      "link": "",
+      "options": [
+        {
+          "label": "",
+          "value": "",
+        },
+        {
+          "label": "1",
+          "value": "1",
+        },
+        {
+          "label": "2",
+          "value": "2",
+        },
+        {
+          "label": "3",
+          "value": "3",
+        },
+        {
+          "label": "4",
+          "value": "4",
+        },
+        {
+          "label": "5",
+          "value": "5",
+        },
+        {
+          "label": "6",
+          "value": "6",
+        },
+        {
+          "label": "7",
+          "value": "7",
+        },
+      ],
+      "regex": /\\\\d/u,
+      "type": "select",
+      "unit": "",
+      "value": "",
+    },
+    "id": {
+      "columns": 1,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": false,
+      "label": "Id",
+      "link": "",
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,100\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "",
+    },
+    "isPrinted": {
+      "columns": 1,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": false,
+      "label": "Printed",
+      "link": "",
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,100\\}\\$/u,
+      "type": "checkbox",
+      "unit": "",
+      "value": false,
+    },
+    "name": {
+      "columns": 5,
+      "isRequired": true,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Name",
+      "link": "",
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,100\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "",
+    },
+    "photo": {
+      "columns": 5,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Photo",
+      "link": "",
+      "regex": /\\^\\.\\+\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "",
+    },
+    "price": {
+      "columns": 2,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Price",
+      "link": "",
+      "regex": /\\^\\\\d\\{1,5\\}\\$/u,
+      "type": "text",
+      "unit": "€",
+      "value": "",
+    },
+    "reference": {
+      "columns": 3,
+      "isRequired": true,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Reference",
+      "link": "",
+      "regex": /\\^\\[\\\\w-\\]\\{3,50\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "",
+    },
+    "status": {
+      "columns": 2,
+      "isRequired": false,
+      "isValid": false,
+      "isVisible": true,
+      "label": "Status",
+      "link": "",
+      "options": [
+        {
+          "label": "bought",
+          "value": "bought",
+        },
+        {
+          "label": "for-sell",
+          "value": "for-sell",
+        },
+        {
+          "label": "lost",
+          "value": "lost",
+        },
+        {
+          "label": "to-give",
+          "value": "to-give",
+        },
+      ],
+      "regex": /\\^\\[-,\\\\d\\\\p\\{L\\}\\\\s/&\\]\\{3,100\\}\\$/u,
+      "type": "select",
+      "unit": "",
+      "value": "bought",
+    },
+  },
+  "isTouched": false,
+  "isValid": false,
+}
+`;
+
+exports[`item.utils > updateItem A should update remotely & update locally 1`] = `
+Ok {
+  "ok": true,
+  "value": {
+    "$id": "1",
+    "barcode": "barcode B",
+    "box": "B (usb & audio)",
+    "brand": "brand B",
+    "details": "details B",
+    "drawer": 2,
+    "isPrinted": false,
+    "name": "name B",
+    "photos": [
+      "some-uuid",
+      "https://some.url/to/image.jpg",
+    ],
+    "price": 42,
+    "reference": "reference B",
+    "status": "bought",
+  },
+}
+`;

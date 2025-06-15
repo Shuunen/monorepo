@@ -63,8 +63,9 @@
     "url": "git+https://github.com/Shuunen/monorepo.git"
   },
   "scripts": {
-    "check": "pnpm check:repo && pnpm check:biome && pnpm check:oxlint && pnpm check:nx && echo check success",
+    "check": "pnpm check:lock && pnpm check:repo && pnpm check:biome && pnpm check:oxlint && pnpm check:nx && echo check success",
     "check:biome": "biome check --error-on-warnings --write --unsafe && echo check:biome success",
+    "check:lock": "pnpm install && echo check:lock success",
     "check:nx": "nx run-many -t lint,test,build,e2e,list,typecheck && echo check:nx success",
     "check:oxlint": "oxlint --deny-warnings --fix --fix-suggestions --fix-dangerously && echo check:oxlint success",
     "check:repo": "repo-check && echo check:repo success",

@@ -2,7 +2,7 @@
   "devDependencies": {
     "@shuunen/shuutils": "workspace:*"
   },
-  "name": "@shuunen/one-file",
+  "name": "one-file",
   "private": true,
   "type": "module",
   "version": "0.0.1"

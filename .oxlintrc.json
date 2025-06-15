@@ -19,6 +19,13 @@
     "setTimeout": "readonly",
     "structuredClone": "readonly"
   },
+  "ignorePatterns": [
+    "vite-env.d.ts",
+    "routeTree.gen.ts",
+    "node_modules",
+    "dist",
+    "coverage"
+  ],
   "overrides": [
     {
       "files": [
@@ -37,11 +44,15 @@
     },
     {
       "files": [
-        "*.config.ts",
-        "*.{cli,node}.{js,ts}"
+        "*.config.{js,ts}",
+        "*.{cli,node}.{js,ts}",
+        "*.test.{js,ts}"
       ],
       "globals": {
+        "Blob": "readonly",
         "Buffer": "readonly",
+        "Response": "readonly",
+        "URL": "readonly",
         "__filename": "readonly",
         "process": "readonly",
         "require": "readonly"
@@ -49,8 +60,7 @@
     },
     {
       "files": [
-        "*.test.ts",
-        "*.test.tsx"
+        "*.test.{ts,tsx}"
       ],
       "globals": {
         "afterAll": "readonly",
@@ -61,7 +71,6 @@
         "expect": "readonly",
         "it": "readonly",
         "mock": "readonly",
-        "process": "readonly",
         "vi": "readonly"
       }
     },
@@ -90,23 +99,6 @@
       ],
       "rules": {
         "unicorn/filename-case": "off"
-      }
-    },
-    {
-      "files": [
-        "routeTree.gen.ts"
-      ],
-      "rules": {
-        "unicorn/filename-case": "off",
-        "unicorn/no-abusive-eslint-disable": "off"
-      }
-    },
-    {
-      "files": [
-        "vite-env.d.ts"
-      ],
-      "rules": {
-        "import/unambiguous": "off"
       }
     },
     {

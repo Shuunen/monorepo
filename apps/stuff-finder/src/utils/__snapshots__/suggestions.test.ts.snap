@@ -1,0 +1,117 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`addSuggestionsFromAliEx A with working get 1`] = `
+{
+  "$id": [],
+  "barcode": [],
+  "box": [],
+  "brand": [],
+  "details": [],
+  "drawer": [],
+  "isPrinted": [],
+  "name": [
+    "title A",
+  ],
+  "photos": [
+    undefined,
+  ],
+  "price": [
+    "",
+  ],
+  "reference": [
+    undefined,
+  ],
+  "status": [
+    "bought",
+  ],
+}
+`;
+
+exports[`addSuggestionsFromAngbo A with working get 1`] = `
+{
+  "$id": [],
+  "barcode": [],
+  "box": [],
+  "brand": [],
+  "details": [],
+  "drawer": [],
+  "isPrinted": [],
+  "name": [
+    "title A",
+  ],
+  "photos": [
+    undefined,
+  ],
+  "price": [
+    "",
+  ],
+  "reference": [
+    undefined,
+  ],
+  "status": [
+    "bought",
+  ],
+}
+`;
+
+exports[`addSuggestionsFromCampo B with working get 1`] = `
+{
+  "$id": [],
+  "barcode": [],
+  "box": [],
+  "brand": [
+    "brand B",
+  ],
+  "details": [],
+  "drawer": [],
+  "isPrinted": [],
+  "name": [
+    undefined,
+  ],
+  "photos": [
+    undefined,
+  ],
+  "price": [
+    "42",
+  ],
+  "reference": [
+    undefined,
+  ],
+  "status": [
+    "bought",
+  ],
+}
+`;
+
+exports[`addSuggestionsFromDeyes A with working get 1`] = `
+{
+  "$id": [],
+  "barcode": [],
+  "box": [],
+  "brand": [
+    "brand A",
+  ],
+  "details": [
+    "",
+  ],
+  "drawer": [],
+  "isPrinted": [],
+  "name": [
+    "name A",
+  ],
+  "photos": [
+    {
+      "image": undefined,
+    },
+  ],
+  "price": [
+    "43",
+  ],
+  "reference": [
+    "gtin13omg4878",
+  ],
+  "status": [
+    "bought",
+  ],
+}
+`;

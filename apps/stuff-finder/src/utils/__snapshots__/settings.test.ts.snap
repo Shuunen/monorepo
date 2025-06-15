@@ -1,0 +1,47 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`validateForm A default settingsForm is not changed & not valid 1`] = `
+{
+  "errorMessage": "AppWrite database id is required",
+  "fields": {
+    "bucketId": {
+      "columns": 1,
+      "isRequired": true,
+      "isValid": false,
+      "isVisible": true,
+      "label": "AppWrite storage bucket id",
+      "link": "https://appwrite.io/",
+      "regex": /\\^\\[\\\\w-\\]\\{20,100\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "",
+    },
+    "collectionId": {
+      "columns": 1,
+      "isRequired": true,
+      "isValid": false,
+      "isVisible": true,
+      "label": "AppWrite collection id",
+      "link": "",
+      "regex": /\\^\\[\\\\w-\\]\\{20,100\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "",
+    },
+    "databaseId": {
+      "columns": 1,
+      "isRequired": true,
+      "isValid": false,
+      "isVisible": true,
+      "label": "AppWrite database id",
+      "link": "",
+      "regex": /\\^\\[\\\\w-\\]\\{20,100\\}\\$/u,
+      "type": "text",
+      "unit": "",
+      "value": "",
+    },
+  },
+  "isTouched": false,
+  "isValid": false,
+}
+`;

@@ -62,7 +62,7 @@ export default defineConfig({
   },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'pnpm exec nx run @shuunen/sample-web-app:preview',
+    command: 'pnpm exec nx run sample-web-app:preview',
     cwd: workspaceRoot,
     reuseExistingServer: true,
     url: 'http://localhost:4300',

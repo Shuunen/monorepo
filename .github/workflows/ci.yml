@@ -49,4 +49,4 @@ jobs:
       - run: pnpm exec nx affected -t lint test build e2e list typecheck
 
       - name: Run other checks 👀
-        run: pnpm check:repo && pnpm check:biome && pnpm check:oxlint && echo Others checks passed!
+        run: pnpm check:lock && pnpm check:repo && pnpm check:biome && pnpm check:oxlint && echo Others checks passed!
