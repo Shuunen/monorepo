@@ -32,6 +32,7 @@
     "@vitejs/plugin-react": "4.5",
     "@vitest/coverage-v8": "3.2",
     "@vitest/ui": "3.2",
+    "bun": "1.2",
     "jiti": "2.4",
     "jsdom": "26.1",
     "nx": "21.2",
