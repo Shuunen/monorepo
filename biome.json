@@ -109,8 +109,10 @@
     {
       "include": [
         "*.cli.js",
-        "*.test.ts",
-        "*.cli.ts"
+        "*.cli.ts",
+        "*.node.js",
+        "*.node.ts",
+        "*.test.ts"
       ],
       "linter": {
         "rules": {

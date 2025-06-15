@@ -39,8 +39,7 @@
     {
       "files": [
         "*.config.ts",
-        "*.cli.ts",
-        "*.cli.js"
+        "*.{cli,node}.{js,ts}"
       ],
       "globals": {
         "Buffer": "readonly",

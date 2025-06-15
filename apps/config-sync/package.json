@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@shuunen/shuutils": "workspace:*"
+  },
+  "main": "sync.cli.js",
+  "name": "@shuunen/config-sync",
+  "private": true,
+  "type": "module",
+  "version": "0.0.1"
+}
