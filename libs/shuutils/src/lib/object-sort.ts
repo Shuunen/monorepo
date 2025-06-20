@@ -15,7 +15,6 @@ type IndexedObject = Record<string, unknown>
  * @returns the new sorted array
  */
 export function arraySort<ArrayType extends unknown[]>(subject: ArrayType, comparator?: KeyComparator) {
-  // biome-ignore lint/suspicious/noEvolvingTypes: <explanation>
   const result = []
   for (let value of subject) {
     if (value !== null && value !== undefined)

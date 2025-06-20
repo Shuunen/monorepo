@@ -1,4 +1,5 @@
 import { safeAssign } from './object-safe-assign.js'
+
 // oxlint-disable prefer-object-spread
 
 it('object assign A simple', () => {

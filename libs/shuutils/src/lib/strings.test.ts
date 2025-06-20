@@ -4,12 +4,12 @@ const data = {
   details: {
     pinCode: 3544,
   },
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: for testing purposes
   key_ToHappiness: 'Roo-doo-doot-da-doo',
   name: 'Wick',
   quote: 'Bears. Beets. Battlestar Galactica.',
 }
-// biome-ignore lint/style/useNamingConvention: <explanation>
+// biome-ignore lint/style/useNamingConvention: for testing purposes
 const objectIn = { Andy: '{{ key_ToHappiness }} !' }
 const stringOut = `{
   "Andy": "${data.key_ToHappiness} !"

@@ -12,9 +12,9 @@ mifare.read((/** @type {any} */ error, /** @type {{ toJSON: () => any; }} */ dat
   if (error) throw error
   logger.info('The NFC tag UID is', uid)
   // @ts-expect-error ndef not defined
-  // biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
+  // biome-ignore lint/correctness/noUndeclaredVariables: old POC
   const message = ndef.decodeMessage(data.toJSON())
   // @ts-expect-error ndef not defined
-  // biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
+  // biome-ignore lint/correctness/noUndeclaredVariables: old POC
   logger.info(ndef.stringify(message))
 })

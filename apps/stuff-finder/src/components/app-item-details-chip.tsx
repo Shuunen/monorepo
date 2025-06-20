@@ -1,8 +1,8 @@
 import Chip, { type ChipOwnProps } from '@mui/material/Chip'
 import Tooltip from '@mui/material/Tooltip'
 import { copyToClipboard } from '@shuunen/shuutils'
-import { route } from 'preact-router'
 import { useCallback } from 'preact/hooks'
+import { route } from 'preact-router'
 import type { MuiIcon } from '../types/icons.types'
 import { logger } from '../utils/logger.utils'
 

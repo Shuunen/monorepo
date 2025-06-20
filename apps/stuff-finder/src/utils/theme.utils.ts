@@ -1,4 +1,4 @@
-import { type ThemeOptions, createTheme } from '@mui/material/styles'
+import { createTheme, type ThemeOptions } from '@mui/material/styles'
 
 const themeOptions: ThemeOptions = {
   palette: {

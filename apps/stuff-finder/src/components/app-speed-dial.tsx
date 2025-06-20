@@ -10,8 +10,8 @@ import Fade from '@mui/material/Fade'
 import SpeedDial from '@mui/material/SpeedDial'
 import SpeedDialAction from '@mui/material/SpeedDialAction'
 import { isMobile } from '@shuunen/shuutils'
-import { route, useRouter } from 'preact-router'
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import { route, useRouter } from 'preact-router'
 import { logger } from '../utils/logger.utils'
 import { AppQuickSearch } from './app-quick-search'
 
@@ -53,7 +53,8 @@ export function AppSpeedDial({ isLoading = false, isSettingsRequired = false }: 
   return (
     <>
       <Fade in={isOpen}>
-        {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+        {/* biome-ignore lint/a11y/useKeyWithClickEvents: later */}
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: just a div */}
         <div class="absolute bottom-0 right-0 z-10 size-full bg-linear-to-tl" data-component="speed-dial-backdrop" onClick={toggleOpen} />
       </Fade>
       <div class="pointer-events-none fixed bottom-5 right-5 z-20 flex items-end md:bottom-10 md:right-10 print:hidden" data-component="speed-dial">

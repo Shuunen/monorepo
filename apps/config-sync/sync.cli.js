@@ -2,6 +2,7 @@
 import { gray, green, red, yellow } from '@shuunen/shuutils'
 import { backupPath, files } from './files.node.js'
 import { copy, filename, logger, normalizePathWithSlash } from './utils.node.js'
+
 const isDryRun = process.argv.includes('--dry')
 const isSetup = process.argv.includes('--setup')
 const isDebug = process.argv.includes('--debug')

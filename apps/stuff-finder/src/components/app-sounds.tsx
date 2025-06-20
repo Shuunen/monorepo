@@ -26,15 +26,15 @@ export function AppSounds() {
   })
   return (
     <>
-      {/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
+      {/* biome-ignore lint/a11y/useMediaCaption: fix me */}
       <audio preload="auto" ref={barcodeReference} src="/assets/barcode-scan-beep-09.mp3" />
-      {/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
+      {/* biome-ignore lint/a11y/useMediaCaption: fix me */}
       <audio preload="auto" ref={notifyReference} src="/assets/windows-xp-notify.mp3" />
-      {/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
+      {/* biome-ignore lint/a11y/useMediaCaption: fix me */}
       <audio preload="auto" ref={startReference} src="/assets/windows-xp-start.mp3" />
-      {/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
+      {/* biome-ignore lint/a11y/useMediaCaption: fix me */}
       <audio preload="auto" ref={stopReference} src="/assets/windows-xp-stop-mod.mp3" />
-      {/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
+      {/* biome-ignore lint/a11y/useMediaCaption: fix me */}
       <audio preload="auto" ref={errorReference} src="/assets/windows-hardware-fail-mod.mp3" />
     </>
   )

@@ -26,7 +26,7 @@ export function hasOwn(object: object, property: string) {
 /**
  * A function that returns void, handy for initializing variables.
  */
-// biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
+// biome-ignore lint/suspicious/noEmptyBlockStatements: that's the point of this function ^^'
 export function functionReturningVoid(): void {}
 // oxlint-enable no-empty-function, empty-brace-spaces
 

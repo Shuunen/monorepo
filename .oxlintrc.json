@@ -10,11 +10,19 @@
     "suspicious": "warn"
   },
   "globals": {
+    "Blob": "readonly",
+    "CustomEvent": "readonly",
+    "Event": "readonly",
     "File": "readonly",
+    "HTMLElement": "readonly",
+    "Node": "readonly",
+    "__dirname": "readonly",
     "clearInterval": "readonly",
+    "clearTimeout": "readonly",
     "console": "readonly",
     "document": "readonly",
     "fetch": "readonly",
+    "process": "readonly",
     "setInterval": "readonly",
     "setTimeout": "readonly",
     "structuredClone": "readonly"
@@ -152,6 +160,7 @@
     ],
     "eslint/no-undefined": "off",
     "eslint/yoda": "off",
+    "extensions": "off",
     "func-style": [
       "error",
       "declaration",

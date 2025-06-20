@@ -1,5 +1,5 @@
 /* c8 ignore start */
-import { copyFileSync, readFileSync, readdirSync, renameSync, statSync, unlinkSync } from 'node:fs'
+import { copyFileSync, readdirSync, readFileSync, renameSync, statSync, unlinkSync } from 'node:fs'
 import path from 'node:path'
 import { Logger } from '@shuunen/shuutils'
 

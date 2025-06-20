@@ -1,6 +1,6 @@
 /* c8 ignore start */
 import { readFile } from 'node:fs/promises'
-import { Logger, blue, gray, nbPercentMax, nbThird, yellow } from '@shuunen/shuutils'
+import { blue, gray, Logger, nbPercentMax, nbThird, yellow } from '@shuunen/shuutils'
 import { HtmlReporter } from './html-reporter.mjs'
 
 const /** @type {Record<string, string>} */ explanations = {

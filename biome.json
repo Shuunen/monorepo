@@ -1,12 +1,19 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
   "files": {
-    "ignore": [
-      "**/coverage/**/*",
-      "src/components/ui/**/*",
-      "routeTree.gen.ts"
-    ],
-    "ignoreUnknown": false
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!**/components/ui/**/*",
+      "!**/routeTree.gen.ts"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -33,29 +40,46 @@
     }
   },
   "linter": {
+    "domains": {
+      "project": "all",
+      "react": "all",
+      "test": "all"
+    },
     "enabled": true,
     "rules": {
-      "all": true,
       "complexity": {
+        "noExcessiveCognitiveComplexity": "error",
         "noUselessUndefinedInitialization": "off"
       },
       "correctness": {
+        "noNodejsModules": "error",
         "noUndeclaredDependencies": "off",
+        "noUndeclaredVariables": "error",
         "useImportExtensions": "off"
       },
+      "nursery": {
+        "noFloatingPromises": "error",
+        "noUnresolvedImports": "off"
+      },
+      "performance": {
+        "useTopLevelRegex": "error"
+      },
+      "recommended": true,
       "style": {
         "noImplicitBoolean": "off",
-        "useBlockStatements": "off"
+        "useBlockStatements": "off",
+        "useNamingConvention": "error"
+      },
+      "suspicious": {
+        "noConsole": "error",
+        "noEmptyBlockStatements": "error"
       }
     }
   },
-  "organizeImports": {
-    "enabled": true
-  },
   "overrides": [
     {
-      "include": [
-        "index.ts"
+      "includes": [
+        "**/index.ts"
       ],
       "linter": {
         "rules": {
@@ -67,9 +91,9 @@
       }
     },
     {
-      "include": [
-        "*.jsx",
-        "*.tsx"
+      "includes": [
+        "**/*.jsx",
+        "**/*.tsx"
       ],
       "linter": {
         "rules": {
@@ -80,9 +104,8 @@
       }
     },
     {
-      "include": [
-        "*.test.ts",
-        "*.test.tsx"
+      "includes": [
+        "**/*.test.ts"
       ],
       "javascript": {
         "globals": [
@@ -108,12 +131,10 @@
       }
     },
     {
-      "include": [
-        "*.cli.js",
-        "*.cli.ts",
-        "*.node.js",
-        "*.node.ts",
-        "*.test.ts"
+      "includes": [
+        "**/*.cli.*",
+        "**/*.node.*",
+        "**/*.test.*"
       ],
       "linter": {
         "rules": {
@@ -124,9 +145,9 @@
       }
     },
     {
-      "include": [
-        "*.config.ts",
-        "*.workspace.ts"
+      "includes": [
+        "**/*.config.*",
+        "**/*.workspace.*"
       ],
       "linter": {
         "rules": {

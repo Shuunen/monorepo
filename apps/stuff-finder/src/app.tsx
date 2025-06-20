@@ -1,6 +1,6 @@
-import { Router } from 'preact-router'
-import { Suspense, lazy } from 'preact/compat'
+import { lazy, Suspense } from 'preact/compat'
 import { useMemo } from 'preact/hooks'
+import { Router } from 'preact-router'
 import { AppLoader } from './components/app-loader'
 import type { PageHome } from './pages/page-home'
 

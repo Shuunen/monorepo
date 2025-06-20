@@ -20,8 +20,7 @@ let lastSum = 0
  */
 async function beep() {
   // oxlint-disable no-console
-  // biome-ignore lint/suspicious/noConsole: <explanation>
-  // biome-ignore lint/suspicious/noConsoleLog: <explanation>
+  // biome-ignore lint/suspicious/noConsole: needed to emit a sound
   console.log('\u0007')
   await sleep(nbRgbMax)
 }
