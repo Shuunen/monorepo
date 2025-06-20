@@ -1,7 +1,7 @@
 /* c8 ignore start */
 import { readdirSync, renameSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
-import { Logger, blue, ellipsis, green, isTestEnvironment, red, slugify, yellow } from '@shuunen/shuutils'
+import { blue, ellipsis, green, isTestEnvironment, Logger, red, slugify, yellow } from '@shuunen/shuutils'
 
 // Use me like : node ~/Projects/github/snippets/one-file/check-screens.cli.js "/u/Screens/"
 

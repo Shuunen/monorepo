@@ -12,8 +12,7 @@ function XhrProxy() {
   instance.addEventListener(
     'readystatechange',
     () => {
-      // biome-ignore lint/suspicious/noConsoleLog: <explanation>
-      // biome-ignore lint/suspicious/noConsole: <explanation>
+      // biome-ignore lint/suspicious/noConsole: old POC
       if (instance.readyState === 4 && instance.status !== 200) console.log(`HTTP Error ${instance.status} on ${lastRequest.method} ${lastRequest.url}`)
     },
     false,
@@ -26,7 +25,7 @@ OldXHR.prototype.open = function openProxy(/** @type {string} */ method, /** @ty
   lastRequest.method = method
   lastRequest.url = url
   // @ts-ignore
-  // biome-ignore lint/style/noArguments: <explanation>
+  // biome-ignore lint/complexity/noArguments: old POC
   return originalOpen.apply(this, Array.prototype.slice.call(arguments))
 }
 

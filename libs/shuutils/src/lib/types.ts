@@ -22,7 +22,7 @@ type UserAgentLowEntropyJson = {
 
 type NavigatorUserAgentData = {
   getHighEntropyValues: (hints: readonly string[]) => Promise<UserAgentDataValues>
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: can't change this
   toJSON: () => UserAgentLowEntropyJson
 } & UserAgentLowEntropyJson
 

@@ -21,7 +21,7 @@ it('copyToClipboard A no clipboard in test env', async () => {
 
 it('copyToClipboard B un-stringifyable data', async () => {
   const objectThatCannotBeStringified = {
-    // biome-ignore lint/style/useNamingConvention: <explanation>
+    // biome-ignore lint/style/useNamingConvention: cannot be changed
     toJSON: () => {
       throw new Error('cannot be stringified')
     },

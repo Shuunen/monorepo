@@ -6,7 +6,7 @@ import { isRecord } from './objects.js'
  * @param sources Object(s) to sequentially merge
  * @returns The resulting object merged
  */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation>
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: fix me later
 export function safeAssign(target: Record<string, unknown>, ...sources: Readonly<Record<string, unknown>>[]) {
   if (sources.length === 0) return target
   const source = sources.shift()

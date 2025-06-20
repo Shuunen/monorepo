@@ -41,7 +41,7 @@ it('state A watch callback', () => {
 })
 
 it('state B with storage and specific keys to store', () => {
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: for testing purposes
   storage.media = { stateB_age: 12, stateB_excluded: ':(' } as unknown as Storage
   storage.prefix = 'stateB_'
   const { state: stateB } = createState({ age: 42, excluded: ':)', name: 'Clara' }, storage, ['name', 'age'])
@@ -54,7 +54,7 @@ it('state B with storage and specific keys to store', () => {
 })
 
 it('state C with storage and all keys stored by default', () => {
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: for testing purposes
   storage.media = { stateC_age: 12, stateC_included: ':D' } as unknown as Storage
   storage.prefix = 'stateC_'
   const { state: stateC } = createState({ age: 42, included: 'but im gonna be ignored :(' }, storage)

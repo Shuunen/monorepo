@@ -7,8 +7,8 @@ import { BrowserMultiFormatReader } from '@zxing/library/es2015/browser/BrowserM
 import type Exception from '@zxing/library/es2015/core/Exception'
 import notFoundException from '@zxing/library/es2015/core/NotFoundException'
 import type Result from '@zxing/library/es2015/core/Result'
-import { route } from 'preact-router'
 import { useCallback, useRef, useState } from 'preact/hooks'
+import { route } from 'preact-router'
 import { AppPageCard } from '../components/app-page-card'
 import { logger } from '../utils/logger.utils'
 import { state } from '../utils/state.utils'
@@ -63,7 +63,10 @@ export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
             sleep(waitDelay).then(() => {
               setStatus('ready')
             })
-          onDecode(result, error)
+          // oxlint-disable-next-line max-nested-callbacks
+          onDecode(result, error).catch(error => {
+            logger.showError('error decoding video stream :', error)
+          })
         })
         .catch((error: unknown) => {
           const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase()
@@ -86,7 +89,7 @@ export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
         </Collapse>
         <Collapse in={status === 'ready'}>
           <div class="aspect-video max-h-80 overflow-hidden rounded-xl shadow-lg">
-            {/* biome-ignore lint/a11y/useMediaCaption: <explanation> */}
+            {/* biome-ignore lint/a11y/useMediaCaption: fix later */}
             <video class="w-full object-cover" ref={videoReference} />
           </div>
         </Collapse>

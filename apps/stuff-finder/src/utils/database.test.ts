@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { Result, nbPercentMax } from '@shuunen/shuutils'
+import { nbPercentMax, Result } from '@shuunen/shuutils'
 import { databaseMock, mockFile } from './database.mock'
 import {
   addItemRemotely,

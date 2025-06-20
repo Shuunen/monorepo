@@ -1,10 +1,10 @@
 /* c8 ignore start */
 // oxlint-disable max-lines, no-eval, require-returns, no-magic-numbers, max-nested-callbacks, require-param-description
 import { exec } from 'node:child_process'
-import { readFile, readdir, renameSync, stat, writeFileSync } from 'node:fs'
+import { readdir, readFile, renameSync, stat, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { inspect } from 'node:util'
-import { Logger, blue, red, slugify } from '@shuunen/shuutils'
+import { blue, Logger, red, slugify } from '@shuunen/shuutils'
 
 // use me like :
 //  node ~/Projects/github/snippets/one-file/check-videos.js "/u/A Voir/" --set-title

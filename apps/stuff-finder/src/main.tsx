@@ -13,8 +13,12 @@ const root = document.querySelector('#app')
 if (root) render(<App />, root)
 else logger.error('root not found')
 
-getItems().then(result => {
-  state.status = result.ok ? 'ready' : 'settings-required'
-  if (result.ok) toastInfo(result.value)
-  else if (typeof result.error === 'string') toastError(result.error)
-})
+getItems()
+  .then(result => {
+    state.status = result.ok ? 'ready' : 'settings-required'
+    if (result.ok) toastInfo(result.value)
+    else if (typeof result.error === 'string') toastError(result.error)
+  })
+  .catch(error => {
+    logger.showError('error while getting items', error)
+  })

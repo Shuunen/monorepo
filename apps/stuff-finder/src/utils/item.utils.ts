@@ -1,9 +1,9 @@
 /* eslint-disable jsdoc/require-jsdoc */
-import { Result, capitalize, clone, isTestEnvironment, nbMsInMinute, objectSum, readableTimeAgo } from '@shuunen/shuutils'
+import { capitalize, clone, isTestEnvironment, nbMsInMinute, objectSum, Result, readableTimeAgo } from '@shuunen/shuutils'
 import { type CommonLists, itemBoxes } from '../constants'
 import type { Item } from '../types/item.types'
 import { addItemRemotely, deleteItemRemotely, getItemsRemotely, removeAppWriteFields, updateItemRemotely } from './database.utils'
-import { type Form, createCheckboxField, createSelectField, createTextField } from './forms.utils'
+import { createCheckboxField, createSelectField, createTextField, type Form } from './forms.utils'
 import { logger } from './logger.utils'
 import { state } from './state.utils'
 import { coolAscii } from './strings.utils'
@@ -25,6 +25,7 @@ export const emptyItem = {
 
 const boxRooms = {
   bureau: ['E', 'P', 'Q', 'T', 'Z'] satisfies string[],
+  // biome-ignore lint/style/useNamingConvention: to be refactored
   entrée: ['A', 'B', 'D', 'H', 'M', 'O', 'W', 'R', 'V'] satisfies string[],
   'salle de bain': ['S'] satisfies string[],
   salon: ['G', 'C', 'X', 'N'] satisfies string[],

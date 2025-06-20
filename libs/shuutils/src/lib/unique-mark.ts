@@ -35,7 +35,7 @@ export function getPackageJsonVersion(location = path.join(process.cwd(), 'packa
 export async function getTargetFiles(target = process.argv[nbThird] ?? '') {
   if (target === '') return Result.error('no target specified, aborting.')
   // if ends with something like *.js
-  // biome-ignore lint/performance/useTopLevelRegex: <explanation>
+  // biome-ignore lint/performance/useTopLevelRegex: should be fixed
   const extension = /\.(?<ext>[a-z]+)$/u.exec(target)?.groups?.ext ?? ''
   if (extension !== '') return Result.error(`provided : "${target}", you need to use *.{${extension}} to capture all files with that extension (limitation of tiny-glob)`)
   const files = await glob(target)
@@ -107,5 +107,8 @@ export async function init(target = process.argv[nbThird] ?? '') {
   return Result.ok(`injected ${totalInjections} mark${totalInjections > 1 ? 's' : ''} in ${files.value.length} file${files.value.length > 1 ? 's' : ''}`)
 }
 
-/* c8 ignore next */
-if (!isTestEnvironment()) init()
+/* c8 ignore start */
+if (!isTestEnvironment())
+  init().catch((error: Error) => {
+    throw error
+  })

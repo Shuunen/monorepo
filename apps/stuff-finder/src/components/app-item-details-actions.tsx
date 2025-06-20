@@ -13,8 +13,8 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { copyToClipboard } from '@shuunen/shuutils'
-import { route } from 'preact-router'
 import { useState } from 'preact/hooks'
+import { route } from 'preact-router'
 import type { Item } from '../types/item.types'
 import { deleteItem } from '../utils/item.utils'
 import { logger } from '../utils/logger.utils'
@@ -67,10 +67,10 @@ export function AppItemDetailsActions({ item }: Readonly<{ item: Item }>) {
 
   return (
     <div>
-      <IconButton aria-controls={isOpen ? 'basic-menu' : undefined} aria-expanded={isOpen ? 'true' : undefined} aria-haspopup="true" aria-label="more" id="basic-button" onClick={handleClick}>
+      <IconButton aria-controls={isOpen ? 'basic-menu' : undefined} aria-expanded={isOpen ? 'true' : undefined} aria-haspopup="true" aria-label="more" onClick={handleClick}>
         <MoreDots />
       </IconButton>
-      <Menu anchorEl={anchorElement} id="basic-menu" onClose={closeMenu} open={isOpen}>
+      <Menu anchorEl={anchorElement} onClose={closeMenu} open={isOpen}>
         <MenuItem onClick={doEdit}>
           <ListItemIcon>
             <EditIcon />
@@ -91,9 +91,9 @@ export function AppItemDetailsActions({ item }: Readonly<{ item: Item }>) {
         </MenuItem>
       </Menu>
       <Dialog aria-describedby="alert-dialog-description" aria-labelledby="alert-dialog-title" onClose={closeDialog} open={isDialogOpen}>
-        <DialogTitle id="alert-dialog-title">Delete item ?</DialogTitle>
+        <DialogTitle>Delete item ?</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">We need to confirm the deletion of this item.</DialogContentText>
+          <DialogContentText>We need to confirm the deletion of this item.</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDialog}>Cancel</Button>

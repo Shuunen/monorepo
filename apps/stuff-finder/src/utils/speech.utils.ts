@@ -19,7 +19,6 @@ export function listenUserSpeech(onSuccess: (transcript: string, confidence: num
    * @param event the speech recognition event
    * @returns the result of the recognition
    */
-  // biome-ignore lint/correctness/noUndeclaredVariables: it's ok buddy
   recognition.onresult = (event: SpeechRecognitionEvent) => {
     isSuccess = true
     const [result] = Array.from(event.results.item(event.resultIndex))

@@ -3,40 +3,40 @@ import type { NavigatorUserAgent } from './types.js'
 
 // oxlint-disable-next-line sort-keys
 const browsers = {
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: it's ok
   Edge: /edge/iu, // keep me first
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: it's ok
   Chrome: /chrome|chromium|crios/iu,
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: it's ok
   Firefox: /firefox|fxios/iu,
   'Internet Explorer': /msie|trident/iu,
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: it's ok
   Safari: /safari/iu,
   'Unknown browser': /./u, // keep me last
 } as const
 // oxlint-disable-next-line sort-keys
 const operatingSystems = {
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: it's ok
   Android: /android/iu,
   'Chrome OS': /CrOS/iu,
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: it's ok
   iOS: /iphone/iu,
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: it's ok
   Linux: /linux/iu,
   'Mac OS': /MacIntel|Macintosh|MacPPC/iu,
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: it's ok
   Windows: /Win32|Win64|Windows/iu,
   'Unknown OS': /./u, // keep me last
 } as const
 // oxlint-disable-next-line sort-keys
 const versions = {
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: it's ok
   MSIE: /MSIE (?<version>[\d.]+)/iu,
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: it's ok
   Edge: /Edge\/(?<version>[\d.]+)/iu,
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: it's ok
   Chrome: /Chrome\/(?<version>[\d.]+)/iu,
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: it's ok
   Firefox: /Firefox\/(?<version>[\d.]+)/iu,
   generic: /Version\/(?<version>[\d.]+)/iu,
   rv: /rv:(?<version>[\d.]+)/iu,

@@ -1,4 +1,4 @@
-import { Result, dateIso10, storage as lsStorage, nbHueMax, nbPercentMax, nbSpacesIndent, sleep, slugify, toastSuccess } from '@shuunen/shuutils'
+import { dateIso10, storage as lsStorage, nbHueMax, nbPercentMax, nbSpacesIndent, Result, sleep, slugify, toastSuccess } from '@shuunen/shuutils'
 /* eslint-disable no-await-in-loop */
 import { Client, Databases, type Models, Query, Storage } from 'appwrite'
 import { safeParse } from 'valibot'
@@ -175,9 +175,9 @@ export function getItemId(item: Item) {
 }
 
 export function removeAppWriteFields(item: Record<string, unknown>) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { $id, ...rest } = structuredClone(item)
-  return rest
+  const clone = structuredClone(item)
+  delete clone.$id
+  return clone
 }
 
 // eslint-disable-next-line max-statements

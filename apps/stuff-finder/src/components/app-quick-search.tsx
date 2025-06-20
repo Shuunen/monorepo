@@ -1,7 +1,7 @@
 import { signal, useSignalEffect } from '@preact/signals'
 import { off, on, tw } from '@shuunen/shuutils'
-import { route, useRouter } from 'preact-router'
 import { useCallback, useRef, useState } from 'preact/hooks'
+import { route, useRouter } from 'preact-router'
 import { logger } from '../utils/logger.utils'
 import { state, watchState } from '../utils/state.utils'
 

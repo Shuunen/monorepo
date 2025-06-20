@@ -6,7 +6,6 @@
  * @param messages the messages to log to the console
  */
 export function consoleLog(...messages: unknown[]) {
-  // biome-ignore lint/suspicious/noConsoleLog: <explanation>
-  // biome-ignore lint/suspicious/noConsole: <explanation>
+  // biome-ignore lint/suspicious/noConsole: it's ok here, that's the point of this function ^^'
   console.log(...messages)
 }

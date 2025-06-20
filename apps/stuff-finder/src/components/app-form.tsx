@@ -1,8 +1,8 @@
 import Button from '@mui/material/Button'
 import { useSignalEffect } from '@preact/signals'
-import { Result, debounce, functionReturningVoid, off, on, parseJson, readClipboard } from '@shuunen/shuutils'
+import { debounce, functionReturningVoid, off, on, parseJson, Result, readClipboard } from '@shuunen/shuutils'
 import { useCallback, useState } from 'preact/hooks'
-import { type Form, alignClipboard, validateForm } from '../utils/forms.utils'
+import { alignClipboard, type Form, validateForm } from '../utils/forms.utils'
 import { logger } from '../utils/logger.utils'
 import { colSpanClass, gridClass } from '../utils/theme.utils'
 import { AppFormFieldCheckbox } from './app-form-field-checkbox'
@@ -54,7 +54,7 @@ export function AppForm<FormType extends Form>({ error: parentError = '', initia
   const updateDelay = 100
   const updateField = debounce(updateFieldSync, updateDelay)
 
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation>
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: to be refactored later
   const checkDataInClipboard = useCallback(async () => {
     const rawClip = await readClipboard()
     if (!rawClip.ok) {
@@ -86,9 +86,15 @@ export function AppForm<FormType extends Form>({ error: parentError = '', initia
   useSignalEffect(
     useCallback(() => {
       const handler = on('focus', () => {
-        checkDataInClipboard()
+        // oxlint-disable-next-line max-nested-callbacks
+        checkDataInClipboard().catch(error => {
+          logger.showError('error checking clipboard data on focus', error)
+        })
       })
-      if (document.hasFocus()) checkDataInClipboard()
+      if (document.hasFocus())
+        checkDataInClipboard().catch(error => {
+          logger.showError('error checking clipboard data on initial focus', error)
+        })
       return () => {
         off(handler)
       }
