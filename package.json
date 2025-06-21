@@ -13,7 +13,7 @@
   },
   "description": "the monorepo for my beloved projects",
   "devDependencies": {
-    "@biomejs/biome": "~2.0.1",
+    "@biomejs/biome": "2.0.0",
     "@nx/devkit": "~21.2.1",
     "@nx/js": "~21.2.1",
     "@nx/playwright": "~21.2.1",
@@ -23,7 +23,7 @@
     "@nx/workspace": "~21.2.1",
     "@playwright/test": "~1.53.1",
     "@swc-node/register": "~1.10.10",
-    "@swc/core": "~1.12.4",
+    "@swc/core": "~1.12.5",
     "@swc/helpers": "~0.5.17",
     "@testing-library/dom": "~10.4.0",
     "@testing-library/react": "~16.3.0",
