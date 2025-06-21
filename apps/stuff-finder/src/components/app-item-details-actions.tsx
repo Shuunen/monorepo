@@ -19,7 +19,7 @@ import type { Item } from '../types/item.types'
 import { deleteItem } from '../utils/item.utils'
 import { logger } from '../utils/logger.utils'
 
-// eslint-disable-next-line max-lines-per-function, max-statements
+// oxlint-disable-next-line max-lines-per-function
 export function AppItemDetailsActions({ item }: Readonly<{ item: Item }>) {
   logger.info('AppItemDetailsActions', item)
 
@@ -46,10 +46,9 @@ export function AppItemDetailsActions({ item }: Readonly<{ item: Item }>) {
     route('/item/add')
   }
 
-  // eslint-disable-next-line unicorn/no-null
+  // oxlint-disable-next-line no-null
   const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null)
   const isOpen = Boolean(anchorElement)
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
   const handleClick = (event: MouseEvent) => {
     setAnchorElement(event.currentTarget as HTMLElement | null)
   }

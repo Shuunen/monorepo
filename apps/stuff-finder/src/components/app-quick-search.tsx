@@ -8,7 +8,7 @@ import { state, watchState } from '../utils/state.utils'
 function onSearch(event: KeyboardEvent) {
   const { key, target } = event
   if (key !== 'Enter') return
-  const { value } = target as HTMLInputElement // eslint-disable-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
+  const { value } = target as HTMLInputElement
   if (value === '') return
   logger.debug('onSearch', { value })
   state.sound = 'start'

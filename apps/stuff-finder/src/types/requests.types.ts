@@ -1,6 +1,5 @@
 type WrapApiResponse = {
   messages: string[]
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   success: boolean
 }
 

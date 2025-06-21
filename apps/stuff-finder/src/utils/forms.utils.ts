@@ -1,4 +1,3 @@
-/* eslint-disable jsdoc/require-jsdoc */
 import { objectEqual } from '@shuunen/shuutils'
 
 type FormFieldType = 'checkbox' | 'select' | 'text'
@@ -16,7 +15,7 @@ type FormFieldBase = {
 }
 type FormFieldText = FormFieldBase & { type: 'text'; value: string }
 type FormFieldSelect = FormFieldBase & { options: FormFieldOptions; type: 'select'; value: string }
-type FormFieldCheckbox = FormFieldBase & { type: 'checkbox'; value: boolean } // eslint-disable-line @typescript-eslint/naming-convention
+type FormFieldCheckbox = FormFieldBase & { type: 'checkbox'; value: boolean }
 type FormField<Type extends FormFieldType> = Type extends 'text' ? FormFieldText : Type extends 'select' ? FormFieldSelect : FormFieldCheckbox
 
 function fieldRegex(regex?: RegExp, minLength = 3, maxLength = 100) {
@@ -50,15 +49,14 @@ export function validateForm<FormType extends Form>(form: FormType) {
   return { hasChanged, updatedForm }
 }
 
-// eslint-disable-next-line complexity
 export function createTextField(parameters: Partial<Pick<FormFieldText, 'columns' | 'isRequired' | 'isValid' | 'isVisible' | 'link' | 'regex' | 'unit' | 'value'>> & Pick<FormFieldText, 'label'> & { maxLength?: number; minLength?: number }) {
   const { columns = 1, isRequired = false, isValid = false, isVisible = true, label = '', link = '', maxLength = 100, minLength = 3, regex, unit = '', value = '' } = parameters
   return { columns, isRequired, isValid, isVisible, label, link, regex: fieldRegex(regex, minLength, maxLength), type: 'text', unit, value } satisfies FormFieldText
 }
 
 export function createCheckboxField(parameters: Partial<Pick<FormFieldCheckbox, 'columns' | 'isRequired' | 'isValid' | 'isVisible' | 'link' | 'value'>> & Pick<FormFieldCheckbox, 'label'>) {
-  const { columns = 1, isRequired = false, isValid = false, isVisible = true, label = '', link = '', value = false } = parameters // eslint-disable-line @typescript-eslint/naming-convention
-  return { columns, isRequired, isValid, isVisible, label, link, regex: fieldRegex(), type: 'checkbox', unit: '', value } satisfies FormFieldCheckbox // eslint-disable-line @typescript-eslint/naming-convention
+  const { columns = 1, isRequired = false, isValid = false, isVisible = true, label = '', link = '', value = false } = parameters
+  return { columns, isRequired, isValid, isVisible, label, link, regex: fieldRegex(), type: 'checkbox', unit: '', value } satisfies FormFieldCheckbox
 }
 
 export function createSelectField(parameters: Partial<Pick<FormFieldSelect, 'columns' | 'isRequired' | 'isValid' | 'isVisible' | 'link' | 'regex' | 'value'>> & Pick<FormFieldSelect, 'label' | 'options'>) {

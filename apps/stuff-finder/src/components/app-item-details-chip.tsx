@@ -16,7 +16,6 @@ type Properties = Readonly<{
 
 const chipsStyle = { height: 28, paddingTop: 0.3 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function AppItemDetailsChip({ color = 'default', icon: Icon, label, link, tooltip }: Properties) {
   const onChipClick = useCallback(
     async (event: MouseEvent) => {
@@ -26,14 +25,14 @@ export function AppItemDetailsChip({ color = 'default', icon: Icon, label, link,
         route(link)
         return
       }
-      const target = event.currentTarget as HTMLElement // eslint-disable-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
+      const target = event.currentTarget as HTMLElement
       await copyToClipboard(target.textContent ?? '')
       logger.showSuccess(`${tooltip.split(',')[0]} copied to clipboard`)
     },
     [link, tooltip],
   )
 
-  const attributes: Record<string, unknown> = Icon === undefined ? {} : { className: 'reverse', icon: <Icon /> } // eslint-disable-line unicorn/no-keyword-prefix
+  const attributes: Record<string, unknown> = Icon === undefined ? {} : { className: 'reverse', icon: <Icon /> }
 
   return (
     <Tooltip data-component="item-details-chip" title={tooltip}>

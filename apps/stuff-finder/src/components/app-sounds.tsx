@@ -3,7 +3,6 @@ import { useRef } from 'preact/hooks'
 import { logger } from '../utils/logger.utils'
 import { state, watchState } from '../utils/state.utils'
 
-// eslint-disable-next-line max-statements
 export function AppSounds() {
   const barcodeReference = useRef<HTMLAudioElement>(null)
   const barcodeSound = signal(barcodeReference)
@@ -15,7 +14,6 @@ export function AppSounds() {
   const stopSound = signal(stopReference)
   const errorReference = useRef<HTMLAudioElement>(null)
   const errorSound = signal(errorReference)
-  // eslint-disable-next-line complexity
   watchState('sound', () => {
     logger.info('sound to play', state.sound)
     if (state.sound === 'barcode') barcodeSound.value.current?.play()

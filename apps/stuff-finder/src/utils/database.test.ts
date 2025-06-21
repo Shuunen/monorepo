@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+// oxlint-disable max-lines
 import { nbPercentMax, Result } from '@shuunen/shuutils'
 import { databaseMock, mockFile } from './database.mock'
 import {
@@ -92,7 +92,6 @@ describe('database.utils', () => {
   it('getItemsRemotely E success but really malformed item => fail', async () => {
     const itemA = mockItemModel({ $id: 'some-item-uuid-a' })
     // @ts-expect-error we want to test a malformed item
-    // eslint-disable-next-line unicorn/no-null
     itemA.$id = null
     const items = [itemA]
     databaseMock.listDocuments.mockResolvedValueOnce({ documents: items, total: 2 })
@@ -156,7 +155,6 @@ describe('database.utils', () => {
   it('addItemRemotely F create succeed but parse failed', async () => {
     const malformedItemModel = mockItemModel({ name: 'add item remotely F' })
     // @ts-expect-error we want to test a malformed item
-    // eslint-disable-next-line unicorn/no-null
     malformedItemModel.$id = null
     databaseMock.createDocument.mockResolvedValueOnce(malformedItemModel)
     const item = mockItem()
@@ -208,7 +206,6 @@ describe('database.utils', () => {
   it('updateItemRemotely E update succeed but parse failed', async () => {
     const malformedItemModel = mockItemModel({ name: 'update item remotely E' })
     // @ts-expect-error we want to test a malformed item
-    // eslint-disable-next-line unicorn/no-null
     malformedItemModel.$id = null
     databaseMock.updateDocument.mockResolvedValueOnce(malformedItemModel)
     const item = mockItem()

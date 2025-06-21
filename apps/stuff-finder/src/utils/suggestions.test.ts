@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { clone } from '@shuunen/shuutils'
 import { get } from './browser.utils'
 import { mockItem } from './mock.utils'
@@ -19,7 +18,6 @@ it('cleanSuggestions D', () => {
 })
 it('cleanSuggestions E', () => {
   // @ts-expect-error typing is not correct
-  // eslint-disable-next-line unicorn/no-null
   expect(cleanSuggestions({ name: ['a', -1, '0', null, undefined, 'b', '', 0, 'c'] })).toEqual({ name: ['A', 'B', 'C'] })
 })
 it('cleanSuggestions F', () => {

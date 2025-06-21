@@ -1,11 +1,9 @@
 import { dateIso10, storage as lsStorage, nbHueMax, nbPercentMax, nbSpacesIndent, Result, sleep, slugify, toastSuccess } from '@shuunen/shuutils'
-/* eslint-disable no-await-in-loop */
 import { Client, Databases, type Models, Query, Storage } from 'appwrite'
 import { safeParse } from 'valibot'
 import { defaultImage, uuidMaxLength } from '../constants'
 import type { Item, ItemModel } from '../types/item.types'
 import { logger } from './logger.utils'
-/* eslint-disable jsdoc/require-jsdoc */
 import { itemModelSchema, itemSchema, itemsSchema } from './parsers.utils'
 import { state } from './state.utils'
 import { normalizePhotoUrl } from './url.utils'
@@ -61,8 +59,6 @@ export async function deleteImageRemotely(id: string) {
   else logger.error(`image "${id}" deletion failed`, result.error)
   return result
 }
-
-// eslint-disable-next-line max-statements
 export async function uploadImage(fileName: string, url: string) {
   const blob = await fetch(url).then(response => response.blob())
   const extension = fileTypeToExtension(blob.type)
@@ -107,11 +103,11 @@ export async function downloadUrl(url: string, fileName: string) {
 }
 
 export async function listImages(bucketId = state.credentials.bucketId) {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const images = [] as Models.File[]
   let offset = 0
   let shouldCheckNextPage = true
   while (shouldCheckNextPage) {
+    // oxlint-disable-next-line no-await-in-loop
     const result = await Result.trySafe(storage.listFiles(bucketId, [Query.limit(nbPercentMax), Query.offset(offset)]))
     if (!result.ok) return result
     if (result.value.files.length === 0) shouldCheckNextPage = false
@@ -123,7 +119,6 @@ export async function listImages(bucketId = state.credentials.bucketId) {
   return Result.ok(images)
 }
 
-// eslint-disable-next-line max-statements
 export async function downloadImages(bucketId = state.credentials.bucketId) {
   const result = await listImages(bucketId)
   if (!result.ok) return result
@@ -133,19 +128,21 @@ export async function downloadImages(bucketId = state.credentials.bucketId) {
     if (downloadedImages.includes(file.$id)) continue
     downloadedImages.push(file.$id)
     const url = itemIdToImageUrl(file.$id)
+    // oxlint-disable-next-line no-await-in-loop
     await downloadUrl(url, file.name)
+    // oxlint-disable-next-line no-await-in-loop
     await sleep(nbHueMax)
     lsStorage.set('downloadedImages', downloadedImages)
   }
   return Result.ok('images downloaded successfully')
 }
 
-// eslint-disable-next-line max-statements
 export async function getItemsRemotely() {
   const items: ItemModel[] = []
   let offset = 0
   let shouldCheckNextPage = true
   while (shouldCheckNextPage) {
+    // oxlint-disable-next-line no-await-in-loop
     const result = await Result.trySafe(database.listDocuments<ItemModel>(state.credentials.databaseId, state.credentials.collectionId, [Query.limit(nbPercentMax), Query.offset(offset)]))
     if (!result.ok) return result
     if (result.value.documents.length === 0) shouldCheckNextPage = false
@@ -180,7 +177,6 @@ export function removeAppWriteFields(item: Record<string, unknown>) {
   return clone
 }
 
-// eslint-disable-next-line max-statements
 export async function uploadPhotosIfNeeded(item: Item) {
   const data = structuredClone(item)
   const id = getItemId(data)
@@ -190,6 +186,7 @@ export async function uploadPhotosIfNeeded(item: Item) {
     if (!isUrl(photo)) continue
     let uuid = getAppWriteIdFromUrl(photo)
     if (uuid === undefined) {
+      // oxlint-disable-next-line no-await-in-loop
       const result = await uploadImage(`${id.value}_photo-${index}`, photo)
       uuid = result.value
     }
@@ -205,7 +202,6 @@ export function itemToAppWriteModel(item: Item) {
   return Result.ok(result.output)
 }
 
-// eslint-disable-next-line max-statements
 export async function addItemRemotely(item: Item, currentState = state) {
   const data = await uploadPhotosIfNeeded(item)
   if (!data.ok) return Result.error(data.error)
@@ -229,12 +225,12 @@ export async function deleteItemRemotely(item: Item, currentState = state) {
     for (const photo of item.photos) {
       // oxlint-disable-next-line max-depth
       if (isUrl(photo)) continue
+      // oxlint-disable-next-line no-await-in-loop
       await deleteImageRemotely(photo)
     }
   return result
 }
 
-// eslint-disable-next-line max-statements
 export async function updateItemRemotely(item: Item, currentState = state) {
   const data = await uploadPhotosIfNeeded(item)
   if (!data.ok) return Result.error(data.error)

@@ -1,5 +1,3 @@
-/* eslint-disable jsdoc/require-jsdoc */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { capitalize, clone } from '@shuunen/shuutils'
 import type { Item, ItemSuggestions } from '../types/item.types'
 import type { WrapApiAliExResponse, WrapApiAngboResponse, WrapApiCampoResponse, WrapApiDeyesResponse } from '../types/requests.types'
@@ -40,8 +38,8 @@ function isNullish(value: unknown) {
 
 export async function addSuggestionsFromWrap<ResponseType>(endpoint: string, getMethod = get) {
   const wrapApiKey = state.credentials.wrap
-  if (wrapApiKey === '') return {} as ResponseType // eslint-disable-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
-  return (await getMethod(`https://wrapapi.com/use/jojo/${endpoint}&wrapAPIKey=${wrapApiKey}`)) as ResponseType // eslint-disable-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
+  if (wrapApiKey === '') return {} as ResponseType
+  return (await getMethod(`https://wrapapi.com/use/jojo/${endpoint}&wrapAPIKey=${wrapApiKey}`)) as ResponseType
 }
 
 export async function addSuggestionsFromDeyes(suggestions: ItemSuggestions, code: string, getMethod = get) {
@@ -108,7 +106,6 @@ export function cleanSuggestions(suggestionsInput: Record<string, string[] | und
     if (values.length === 0) delete suggestions[key]
     else suggestions[key] = values.filter((value, index, array) => array.indexOf(value) === index && !isNullish(value)) // remove duplicates & nullish
   }
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
   return suggestions as Record<string, string[]>
 }
 

@@ -19,7 +19,7 @@ export function AppPrompter() {
   useSignalEffect(
     useCallback(() => {
       if (prompter.value.current === null) return
-      type(prompter.value.current, ...sequence) // eslint-disable-line @typescript-eslint/no-unsafe-call
+      type(prompter.value.current, ...sequence)
     }, [prompter.value]),
   )
 

@@ -17,7 +17,7 @@ type Properties<FormType extends Form> = Readonly<{
   suggestions?: Record<string, string[]>
 }>
 
-// eslint-disable-next-line max-statements, max-lines-per-function, complexity
+// oxlint-disable-next-line max-lines-per-function
 export function AppForm<FormType extends Form>({ error: parentError = '', initialForm, onChange = functionReturningVoid, onSubmit = undefined, suggestions = {} }: Properties<FormType>) {
   const [form, setForm] = useState(initialForm)
 
@@ -35,10 +35,9 @@ export function AppForm<FormType extends Form>({ error: parentError = '', initia
     [form, onSubmit],
   )
 
-  // eslint-disable-next-line max-statements
   function updateFieldSync(field: string, target: EventTarget | null, isFromClipboard = false) {
     if (target === null) return Result.error(`target for field "${field}" is null`)
-    const input = target as HTMLInputElement // eslint-disable-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
+    const input = target as HTMLInputElement
     let value = input.type === 'checkbox' ? input.checked : input.value
     if (input.role === 'option') value = input.textContent ?? '' // handle autocomplete target
     logger.debug('updateField', { field, value })

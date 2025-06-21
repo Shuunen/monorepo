@@ -1,4 +1,3 @@
-/* eslint-disable jsdoc/require-jsdoc */
 import { capitalize, clone, isTestEnvironment, nbMsInMinute, objectSum, Result, readableTimeAgo } from '@shuunen/shuutils'
 import { type CommonLists, itemBoxes } from '../constants'
 import type { Item } from '../types/item.types'
@@ -34,7 +33,6 @@ const boxRooms = {
 export function itemBoxToRoom(box: Item['box']) {
   const letter = box[0]
   if (letter === undefined) return undefined
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
   for (const [location, boxes] of Object.entries(boxRooms)) if (boxes.includes(letter)) return location as keyof typeof boxRooms
   return undefined
 }
@@ -94,7 +92,6 @@ export const itemForm = {
   errorMessage: '',
   // oxlint-disable-next-line sort-keys
   fields: {
-    /* eslint-disable perfectionist/sort-objects */
     name: createTextField({ columns: 5, isRequired: true, label: 'Name' }),
     brand: createTextField({ columns: 3, label: 'Brand' }),
     price: createTextField({ columns: 2, label: 'Price', regex: /^\d{1,5}$/u, unit: '€' }),
@@ -110,7 +107,7 @@ export const itemForm = {
     barcode: createTextField({ isVisible: false, label: 'Barcode', maxLength: 30 }),
     isPrinted: createCheckboxField({ isVisible: false, label: 'Printed' }),
     id: createTextField({ isVisible: false, label: 'Id' }),
-  } /* eslint-enable perfectionist/sort-objects */,
+  },
   isTouched: false,
   isValid: false,
 } as const satisfies Form
@@ -125,7 +122,6 @@ export function drawerStringToDrawer(drawer: string) {
 export function boxStringToBox(box: string) {
   // @ts-expect-error it's ok
   if (!itemBoxes.includes(box)) return ''
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
   return box as Item['box']
 }
 
@@ -148,7 +144,6 @@ export function formToItem(form: typeof itemForm) {
   } satisfies Item
 }
 
-// eslint-disable-next-line max-statements
 export function itemToForm(item?: Item) {
   if (item === undefined) return itemForm
   const form = clone(itemForm)
@@ -201,6 +196,6 @@ export async function getItems(items = state.items, itemsTimestamp = state.items
   state.status = 'loading'
   const result = await getItemsRemotely()
   if (!result.ok) return result
-  state.items = result.value // eslint-disable-line require-atomic-updates
+  state.items = result.value
   return Result.ok(`${result.value.length} items loaded ${coolAscii()}`)
 }

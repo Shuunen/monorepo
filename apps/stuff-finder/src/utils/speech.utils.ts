@@ -9,7 +9,6 @@ import { state } from './state.utils'
 // oxlint-disable-next-line max-lines-per-function
 export function listenUserSpeech(onSuccess: (transcript: string, confidence: number) => void) {
   let isSuccess = false
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/strict-boolean-expressions
   const recognition = new (globalThis.webkitSpeechRecognition || globalThis.SpeechRecognition)()
   recognition.lang = 'fr-FR'
   recognition.interimResults = false

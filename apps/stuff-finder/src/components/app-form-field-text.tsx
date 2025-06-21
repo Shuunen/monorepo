@@ -19,7 +19,6 @@ export function AppFormFieldText({ field, form, id, suggestions, updateField }: 
     [id, updateField],
   )
 
-  // eslint-disable-next-line arrow-body-style
   const renderInput = useCallback(
     (parameters: AutocompleteRenderInputParams) => {
       // @ts-expect-error typing issue

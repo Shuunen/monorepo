@@ -18,7 +18,6 @@ export function AppFormFieldSelect({ field, form, id, updateField }: Properties)
     [id, updateField],
   )
 
-  // eslint-disable-next-line arrow-body-style
   const renderInput = useCallback(
     (parameters: AutocompleteRenderInputParams) => {
       // @ts-expect-error typing issue

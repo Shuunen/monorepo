@@ -6,7 +6,6 @@ import type { PageHome } from './pages/page-home'
 
 type Component = typeof PageHome
 
-/* eslint-disable @typescript-eslint/promise-function-async, @typescript-eslint/naming-convention */
 const AsyncPageHome = lazy<Component>(() => import('./pages/page-home').then(({ PageHome }) => ({ default: PageHome })))
 const AsyncPageError = lazy<Component>(() => import('./pages/page-error').then(({ PageError }) => ({ default: PageError })))
 const AsyncPageScan = lazy<Component>(() => import('./pages/page-scan').then(({ PageScan }) => ({ default: PageScan })))
@@ -18,7 +17,6 @@ const AsyncPageSettings = lazy<Component>(() => import('./pages/page-settings').
 const AsyncPageKitchenSink = lazy<Component>(() => import('./pages/page-kitchen-sink').then(({ PageKitchenSink }) => ({ default: PageKitchenSink })))
 const AsyncAppSpeedDial = lazy<Component>(() => import('./components/app-speed-dial').then(({ AppSpeedDial }) => ({ default: AppSpeedDial })))
 const AsyncPageSounds = lazy<Component>(() => import('./components/app-sounds').then(({ AppSounds }) => ({ default: AppSounds })))
-/* eslint-enable @typescript-eslint/promise-function-async, @typescript-eslint/naming-convention */
 
 export function App() {
   const fallback = useMemo(() => <AppLoader isLoading />, [])

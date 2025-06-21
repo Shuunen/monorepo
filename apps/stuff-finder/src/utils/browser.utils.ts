@@ -1,4 +1,3 @@
-/* eslint-disable jsdoc/require-jsdoc */
 import { logger } from './logger.utils'
 
 async function request(method: 'DELETE' | 'GET' | 'PATCH' | 'POST', url: string, data?: Record<string, unknown>) {
@@ -7,9 +6,7 @@ async function request(method: 'DELETE' | 'GET' | 'PATCH' | 'POST', url: string,
   const response = await fetch(url, options).catch((error: unknown) => {
     logger.showError(error)
   })
-  // eslint-disable-next-line no-restricted-syntax
   if (!response) throw new Error('no response')
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return (await response.json()) as unknown
 }
 

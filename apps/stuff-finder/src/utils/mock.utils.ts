@@ -1,4 +1,3 @@
-/* eslint-disable jsdoc/require-jsdoc */
 import { nbDaysInWeek, sleep } from '@shuunen/shuutils'
 import { vi } from 'vitest'
 import { defaultCommonLists } from '../constants'
@@ -55,7 +54,7 @@ export function mockState(data: Partial<State> = {}) {
 }
 
 export const mockFetch = vi.fn(async (input: RequestInfo | URL, options?: RequestInit) => {
-  await sleep(nbDaysInWeek) // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion
+  await sleep(nbDaysInWeek)
   return {
     blob: async () => {
       await sleep(nbDaysInWeek)

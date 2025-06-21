@@ -8,7 +8,7 @@ import { state } from '../utils/state.utils'
 // https://fusejs.io/
 const fuseOptions = {
   distance: 200, // see the tip at https://fusejs.io/concepts/scoring-theory.html#scoring-theory
-  ignoreLocation: true, // eslint-disable-line @typescript-eslint/naming-convention
+  ignoreLocation: true,
   keys: [
     {
       name: 'name',
@@ -34,7 +34,7 @@ export const maxNameLength = 20
  * @returns the header and the results
  */
 export async function search(input: string) {
-  logger.info('search, input', { input }) // eslint-disable-next-line @typescript-eslint/naming-convention
+  logger.info('search, input', { input })
   const { default: Fuse } = await import('fuse.js/basic')
   const fuse = new Fuse(state.items, fuseOptions)
   const result = state.items.find(item => item.reference === input || item.barcode === input)

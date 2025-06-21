@@ -29,7 +29,6 @@ export const { state, watchState } = createState(
   {
     credentials: defaultCredentials,
     display: defaultDisplay,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     items: [] as Item[],
     /** timestamp of the last time items were fetched, in milliseconds */
     itemsTimestamp: 0,

@@ -28,7 +28,7 @@ function checkExisting(item: Item) {
   return { hasSameBarcode, hasSameReference, isDuplicate }
 }
 
-// eslint-disable-next-line max-statements, complexity, max-lines-per-function
+// oxlint-disable-next-line max-lines-per-function
 export function PageItemAddEdit({ id = '', isEdit = false }: Readonly<{ id?: string; isEdit?: boolean }>) {
   logger.debug('PageItemAddEdit', { id, isEdit })
   const initialItem = state.items.find(one => one.$id === id)
@@ -67,7 +67,6 @@ export function PageItemAddEdit({ id = '', isEdit = false }: Readonly<{ id?: str
     [isEdit],
   )
 
-  // eslint-disable-next-line max-statements
   const onSubmit = useCallback(async () => {
     const item = formToItem(lastForm)
     logger.debug('onSubmit', { form: lastForm, item })

@@ -9,7 +9,7 @@ export function PageItemDetails({ ...properties }: Readonly<Record<string, unkno
   const item = state.items.find(one => one.$id === properties.id)
   if (item === undefined) return <>Item with id &quot;{properties.id}&quot; not found ;(</>
   logger.debug('PageItemDetails', { item })
-  const stepsBack = properties.context === 'single' ? 2 : 1 // eslint-disable-line @typescript-eslint/no-magic-numbers
+  const stepsBack = properties.context === 'single' ? 2 : 1 // oxlint-disable-line @typescript-eslint/no-magic-numbers
   return (
     <AppPageCard cardTitle="Details" icon={ManageSearchIcon} nextLabel="Edit" nextUrl={`/item/edit/${item.$id}`} pageCode="item-details" pageTitle={`${item.name} - Details`} stepsBack={stepsBack}>
       <AppItemDetails item={item} />

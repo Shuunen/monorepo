@@ -19,12 +19,10 @@ import { state } from '../utils/state.utils'
 
 const waitDelay = 200
 
-// eslint-disable-next-line max-statements, max-lines-per-function
+// oxlint-disable-next-line max-lines-per-function
 export function PageItemPrint({ ...properties }: Readonly<Record<string, unknown>>) {
-  // eslint-disable-next-line no-restricted-syntax
   if (typeof properties.id !== 'string') throw new Error('An id in the url is required')
   const item = state.items.find(one => one.$id === properties.id)
-  // eslint-disable-next-line no-restricted-syntax
   if (item === undefined) throw new Error('Item with id &quot;{properties.id}&quot; not found ;(')
 
   const { value } = itemToPrintData(item)
@@ -34,10 +32,10 @@ export function PageItemPrint({ ...properties }: Readonly<Record<string, unknown
   logger.debug('PageItemPrint', { item })
   const onSizeChange = useCallback((_event: unknown, selectedSize: PrintSize) => {
     setSize(selectedSize)
-  }, []) // eslint-disable-line @typescript-eslint/naming-convention
+  }, [])
   const onHighlightChange = useCallback((_event: unknown, isChecked: boolean) => {
     setIsHighlighted(isChecked)
-  }, []) // eslint-disable-line @typescript-eslint/naming-convention
+  }, [])
   const highlightSwitch = useMemo(() => <Switch checked={isHighlighted} onChange={onHighlightChange} />, [isHighlighted, onHighlightChange])
   const onPrint = useCallback(async () => {
     clearElementsForPrint()

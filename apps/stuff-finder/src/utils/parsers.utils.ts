@@ -1,4 +1,4 @@
-/* eslint-disable unicorn/no-null, @typescript-eslint/no-magic-numbers */
+// oxlint-disable no-null, no-magic-numbers
 import { array, boolean, fallback, maxLength, minValue, nonEmpty, nullish, number, object, picklist, pipe, string } from 'valibot'
 import { itemBoxes, itemStatus, uuidMaxLength } from '../constants'
 
