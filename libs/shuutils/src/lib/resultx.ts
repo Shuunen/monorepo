@@ -58,5 +58,5 @@ export function unwrap<T>(result: Ok<T>): UnwrappedOk<T>
 export function unwrap<E>(result: Err<E>): UnwrappedErr<E>
 export function unwrap<T, E>(result: Result<T, E>): UnwrappedResult<T, E>
 export function unwrap<T, E>(result: Result<T, E>): UnwrappedResult<T, E> {
-  return result.ok ? { value: result.value, error: undefined } : { value: undefined, error: result.error }
+  return result.ok ? { error: undefined, value: result.value } : { error: result.error, value: undefined }
 }

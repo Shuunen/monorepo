@@ -16,8 +16,8 @@ function isNotIgnored(file) {
 function removeEslintComments(content) {
   // Remove single-line eslint comments
   let updated = content.replace(/\s*\/\/\s*eslint-.*$/gm, '')
-  // Remove block eslint comments and any empty line left
-  updated = updated.replace(/^[ \t]*\/\*\s*eslint-[^*]*\*\/[ \t]*\r?\n?/gm, '')
+  // Remove block eslint comments
+  updated = updated.replace(/\/\*\s*eslint-[^*]*\*\//gm, '')
   return updated
 }
 

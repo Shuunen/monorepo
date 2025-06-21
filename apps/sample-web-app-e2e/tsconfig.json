@@ -1,10 +1,14 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "allowJs": true,
     "outDir": "out-tsc/playwright",
     "sourceMap": false
   },
+  "exclude": [
+    "out-tsc",
+    "test-output"
+  ],
+  "extends": "../../tsconfig.base.json",
   "include": [
     "**/*.ts",
     "**/*.js",
@@ -14,9 +18,5 @@
     "src/**/*.test.ts",
     "src/**/*.test.js",
     "src/**/*.d.ts"
-  ],
-  "exclude": [
-    "out-tsc",
-    "test-output"
   ]
 }

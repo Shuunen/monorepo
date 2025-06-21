@@ -42,8 +42,8 @@ it('copyToClipboard C with willLog', async () => {
     writeText: vi.fn(() => undefined),
   }
   Object.defineProperty(globalThis.navigator, 'clipboard', {
-    value: mockClipboard,
     configurable: true,
+    value: mockClipboard,
   })
   const spy = vi.spyOn(console, 'log').mockImplementation(() => ({}))
   const result = await copyToClipboard('log this', true)
@@ -52,8 +52,8 @@ it('copyToClipboard C with willLog', async () => {
   expect(spy).toHaveBeenCalledWith(expect.stringContaining('copying to clipboard'))
   spy.mockRestore()
   Object.defineProperty(globalThis.navigator, 'clipboard', {
-    value: originalClipboard,
     configurable: true,
+    value: originalClipboard,
   })
 })
 

@@ -90,7 +90,8 @@ export async function deleteItem(item: Item, currentState = state) {
 export const itemForm = {
   columns: 10,
   errorMessage: '',
-  // oxlint-disable-next-line sort-keys
+  // oxlint-disable sort-keys
+  // biome-ignore assist/source/useSortedKeys: needed
   fields: {
     name: createTextField({ columns: 5, isRequired: true, label: 'Name' }),
     brand: createTextField({ columns: 3, label: 'Brand' }),
@@ -108,6 +109,7 @@ export const itemForm = {
     isPrinted: createCheckboxField({ isVisible: false, label: 'Printed' }),
     id: createTextField({ isVisible: false, label: 'Id' }),
   },
+  // oxlint-enable sort-keys
   isTouched: false,
   isValid: false,
 } as const satisfies Form

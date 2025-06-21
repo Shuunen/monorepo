@@ -16,8 +16,8 @@ const isWindows = process.env.APPDATA === appData
 /** @type {import('./types.js').Config[]} */
 const configs = [
   { source: `${home}/.bash_aliases` },
-  { source: `${appData}/Code/User/keybindings.json`, renameTo: 'vscode-keybindings.json' },
-  { source: `${appData}/Code/User/settings.json`, renameTo: 'vscode-settings.json' },
+  { renameTo: 'vscode-keybindings.json', source: `${appData}/Code/User/keybindings.json` },
+  { renameTo: 'vscode-settings.json', source: `${appData}/Code/User/settings.json` },
   // { source: `${appData}/HandBrake/presets.json`, renameTo: 'handbrake-presets.json' },
   // { source: `${appData}/HandBrake/settings.json`, renameTo: 'handbrake-settings.json' },
   { source: `${appData}/kupfer/kupfer.cfg` },
@@ -34,21 +34,21 @@ const configs = [
 ]
 
 const windowsConfigs = [
-  { source: `${home}/.bashrc`, renameTo: '.bashrc-windows' },
-  { source: `${appData}/Launchy/launchy.ini`, removeLinesAfter: /\[History\]/u, removeLinesMatching: [/^(?:pos=|proxyType=)/u] },
-  { source: 'D:/Apps/Espanso/.espanso/config/default.yml', renameTo: 'espanso-config.yml' },
-  { source: 'D:/Apps/Espanso/.espanso/match/base.yml', renameTo: 'espanso-match.yml' },
+  { renameTo: '.bashrc-windows', source: `${home}/.bashrc` },
+  { removeLinesAfter: /\[History\]/u, removeLinesMatching: [/^(?:pos=|proxyType=)/u], source: `${appData}/Launchy/launchy.ini` },
+  { renameTo: 'espanso-config.yml', source: 'D:/Apps/Espanso/.espanso/config/default.yml' },
+  { renameTo: 'espanso-match.yml', source: 'D:/Apps/Espanso/.espanso/match/base.yml' },
   {
-    source: `${appData}/Greenshot/Greenshot.ini`,
     removeLinesAfter: /PowerpointSlideLayout=ppLayoutPictureWithCaption/u,
     removeLinesMatching: [/^(?:BaseIconSize|ImgurUploadHistory|LastCapturedRegion|LastSaveWithVersion|LastUpdateCheck|OutputFileAsFull|OutputFilePath|DeletedBuildInCommands|Win10BorderCrop|Commands=)/u, /MS Paint/u, /Paint\.NET/u],
+    source: `${appData}/Greenshot/Greenshot.ini`,
   },
 ]
 
 const linuxConfigs = [
-  { source: `${home}/.bashrc`, renameTo: '.bashrc-linux' },
+  { renameTo: '.bashrc-linux', source: `${home}/.bashrc` },
   { source: `${home}/.config/autostart/xbox-controller-driver.desktop` },
-  { source: `${home}/.config/ulauncher/scripts.json`, renameTo: 'ulauncher-scripts.json' },
+  { renameTo: 'ulauncher-scripts.json', source: `${home}/.config/ulauncher/scripts.json` },
   { source: `${home}/.local/share/applications/add-stuff.desktop` },
   { source: `${home}/.local/share/applications/app-image-pool.desktop` },
   { source: `${home}/.local/share/applications/appimagekit-photopea.desktop` },

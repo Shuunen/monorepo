@@ -1,3 +1,4 @@
+/** biome-ignore-all assist/source/useSortedKeys: needed */
 import { isBrowserEnvironment } from './environment.js'
 import type { NavigatorUserAgent } from './types.js'
 

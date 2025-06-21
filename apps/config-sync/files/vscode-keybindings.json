@@ -74,10 +74,5 @@
     "command": "-workbench.action.terminal.new",
     "key": "ctrl+shift+[Backquote]",
     "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
-  },
-  {
-    "command": "sortJSON.sortJSON",
-    "key": "ctrl+s",
-    "when": "editorTextFocus && !editorReadonly && resourceExtname == .json"
   }
 ]

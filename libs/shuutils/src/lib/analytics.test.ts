@@ -46,7 +46,7 @@ it('analytics D with willLog', () => {
 })
 
 it('analytics E with willPile and willLog', () => {
-  const analytics = createAnalytics({ willPile: true, willLog: true })
+  const analytics = createAnalytics({ willLog: true, willPile: true })
   analytics.track('event1')
   analytics.page()
   analytics.identify('user1')

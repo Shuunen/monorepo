@@ -37,6 +37,7 @@ it('objectSerialize E function', () => {
   expect(objectSerialize({ func: add })).toMatchInlineSnapshot(String.raw`"{"func":{"__strFunction__":"function add(numberA, numberB) {\n  return numberA + numberB;\n}"}}"`)
 })
 it('objectSerialize F object with sort', () => {
+  // biome-ignore assist/source/useSortedKeys: needed
   expect(objectSerialize({ object: { name: 'John', age: 42 }, id: 123_456 }, true)).toMatchInlineSnapshot('"{"id":123456,"object":{"age":42,"name":"John"}}"')
 })
 it('objectSerialize G person', () => {
@@ -97,6 +98,7 @@ it('objectSerialize J handle undefined', () => {
 })
 
 it('objectSerialize K', () => {
+  // biome-ignore assist/source/useSortedKeys: needed
   const object = { keyC: 3, keyA: undefined, keyB: 2 }
   const serialized = JSON.stringify(objectSerialize(object, true))
   expect(serialized).toMatchInlineSnapshot(String.raw`""{\"keyA\":{\"__strUndefined__\":true},\"keyB\":2,\"keyC\":3}""`)

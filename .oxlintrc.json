@@ -10,18 +10,18 @@
     "suspicious": "warn"
   },
   "globals": {
+    "__dirname": "readonly",
     "Blob": "readonly",
     "CustomEvent": "readonly",
-    "Event": "readonly",
-    "File": "readonly",
-    "HTMLElement": "readonly",
-    "Node": "readonly",
-    "__dirname": "readonly",
     "clearInterval": "readonly",
     "clearTimeout": "readonly",
     "console": "readonly",
     "document": "readonly",
+    "Event": "readonly",
+    "File": "readonly",
     "fetch": "readonly",
+    "HTMLElement": "readonly",
+    "Node": "readonly",
     "process": "readonly",
     "setInterval": "readonly",
     "setTimeout": "readonly",
@@ -57,13 +57,13 @@
         "*.test.{js,ts}"
       ],
       "globals": {
+        "__filename": "readonly",
         "Blob": "readonly",
         "Buffer": "readonly",
-        "Response": "readonly",
-        "URL": "readonly",
-        "__filename": "readonly",
         "process": "readonly",
-        "require": "readonly"
+        "Response": "readonly",
+        "require": "readonly",
+        "URL": "readonly"
       }
     },
     {
