@@ -1,8 +1,12 @@
 {
   "cSpell.words": [
     "camwiegert",
+    "cssmodule",
+    "jozzo",
     "nrwl",
-    "resultx"
+    "resultx",
+    "yoda",
+    "zxing"
   ],
   "javascript.format.insertSpaceAfterConstructor": false,
   "javascript.format.insertSpaceBeforeFunctionParenthesis": false,

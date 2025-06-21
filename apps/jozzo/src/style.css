@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+:root {
+  @apply text-zinc-900 bg-zinc-100;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @apply text-zinc-200 bg-linear-to-tr from-10% from-zinc-800 to-zinc-950;
+  }
+}
+
+.color:root {
+  @apply bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500;
+}
+
+.bottle-pouring {
+  z-index: 10;
+  animation: bottle-pour-move 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes bottle-pour-move {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  30% {
+    transform: translateY(-60px) rotate(-30deg);
+  }
+  70% {
+    transform: translateY(-60px) rotate(-30deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+.bottle-pour-target {
+  z-index: 9;
+  filter: drop-shadow(0 0 8px #facc15);
+}
+
+.hat-win-animation {
+  animation:
+    zoom-in 5s ease-out,
+    heartbeat 1.2s infinite;
+}
+
+@keyframes zoom-in {
+  0% {
+    width: 0;
+    rotate: -180deg;
+    opacity: 0;
+  }
+  100% {
+    width: 310px;
+    rotate: 0deg;
+    opacity: 1;
+  }
+}
+
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  10%,
+  30% {
+    transform: scale(1.1);
+  }
+  20%,
+  40% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1);
+  }
+}

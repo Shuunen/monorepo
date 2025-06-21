@@ -29,7 +29,8 @@ export function PageKitchenSink() {
               <br />
               length : {item.reference.length}
               <br />
-              size : {item.name.includes('resized') ? 2 : 3 /* eslint-disable-line @typescript-eslint/no-magic-numbers */}
+              {/* oxlint-disable-next-line no-magic-numbers */}
+              size : {item.name.includes('resized') ? 2 : 3}
             </p>
           </div>
         ))}
