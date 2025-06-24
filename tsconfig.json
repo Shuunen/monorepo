@@ -18,6 +18,9 @@
     },
     {
       "path": "./apps/jozzo"
+    },
+    {
+      "path": "./libs/vite-plugins"
     }
   ]
 }

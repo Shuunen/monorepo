@@ -6,7 +6,8 @@
   },
   "devDependencies": {
     "@preact/preset-vite": "2.10",
-    "@shuunen/shuutils": "workspace:*"
+    "@shuunen/shuutils": "workspace:*",
+    "@shuunen/vite-plugins": "workspace:*"
   },
   "name": "jozzo",
   "private": true,

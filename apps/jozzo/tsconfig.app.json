@@ -50,6 +50,9 @@
   ],
   "references": [
     {
+      "path": "../../libs/vite-plugins/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/shuutils/tsconfig.lib.json"
     }
   ]
