@@ -159,6 +159,18 @@
           }
         }
       }
+    },
+    {
+      "assist": {
+        "actions": {
+          "source": {
+            "useSortedKeys": "off"
+          }
+        }
+      },
+      "includes": [
+        "libs/**/package.json"
+      ]
     }
   ],
   "vcs": {
