@@ -76,3 +76,12 @@ And join the Nx community:
 - [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
 - [Our Youtube channel](https://www.youtube.com/@nxdevtools)
 - [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+## Setup deployment in Netlify
+
+1. Go to [Netlify](https://app.netlify.com/)
+2. Branch to deploy: `master`
+3. Project to deploy: `apps/sample-web-app`
+4. Base directory: empty
+5. Build command: `nx run sample-web-app:build`
+6. Publish directory : `apps/sample-web-app/dist`

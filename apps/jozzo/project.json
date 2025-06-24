@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "jozzo",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite build && echo build success, apply mark... && bun ../../libs/shuutils/src/lib/unique-mark.ts dist/index.{html} && echo mark success",
+        "cwd": "apps/jozzo"
+      }
+    }
+  }
+}
