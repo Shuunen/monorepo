@@ -1,8 +1,10 @@
 packages:
   - apps/*
   - libs/*
+
 onlyBuiltDependencies:
   - '@swc/core'
   - '@tailwindcss/oxide'
+  - bun
   - esbuild
   - nx

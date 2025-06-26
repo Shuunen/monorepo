@@ -15,9 +15,13 @@
 *.mp4
 *.pem
 *.tgz
+apps/*/dist
 connect.lock
 coverage
-dist
+libs/shuutils/dist
+libs/vite-plugins/dist/*.tsbuildinfo
+libs/vite-plugins/dist/**/*.d.ts
+libs/vite-plugins/dist/**/*.map
 node_modules
 out-tsc
 sample.*

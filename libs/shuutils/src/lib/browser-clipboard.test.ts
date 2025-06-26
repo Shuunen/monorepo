@@ -1,5 +1,8 @@
+import { GlobalRegistrator } from '@happy-dom/global-registrator'
 import { copyToClipboard, readClipboard } from './browser-clipboard.js'
 import { sleep } from './functions.js'
+
+if (!GlobalRegistrator.isRegistered) GlobalRegistrator.register()
 
 it('copyToClipboard A no clipboard in test env', async () => {
   const result = await copyToClipboard('hello')

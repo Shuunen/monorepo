@@ -17,7 +17,9 @@ export function isTestEnvironment() {
  * @param userAgent optional, the user agent to check, default is navigator.userAgent
  * @returns true if the environment is a browser environment
  */
-export function isBrowserEnvironment(userAgent = globalThis.navigator.userAgent) {
+export function isBrowserEnvironment(userAgent = globalThis.navigator?.userAgent) {
+  /* c8 ignore next */
+  if (!userAgent) return false
   const isHappyDom = userAgent.includes('HappyDOM')
   if (isHappyDom) return false
   return typeof document !== 'undefined' && globalThis.matchMedia !== undefined

@@ -6,7 +6,7 @@
  * @returns boolean if the browser is Firefox
  */
 export function isFirefox() {
-  /* c8 ignore next */
+  /* c8 ignore next 3 */
   if (globalThis.navigator === undefined) return false
   return globalThis.navigator.userAgent.includes('Firefox')
 }

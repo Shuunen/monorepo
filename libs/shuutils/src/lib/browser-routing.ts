@@ -16,6 +16,7 @@ function removeExtraSlashes(url: string) {
  * @returns Path
  */
 export function getPath(url = '', addLang = '') {
+  /* c8 ignore next 2 */
   let path = url === '' && isBrowserEnvironment() ? document.location.pathname : url
   if (path === 'blank') path = ''
   path = removeExtraSlashes(path)
