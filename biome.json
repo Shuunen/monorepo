@@ -15,6 +15,7 @@
     "includes": [
       "**",
       "!**/components/ui/**/*",
+      "!**/dist/**/*",
       "!**/routeTree.gen.ts"
     ]
   },

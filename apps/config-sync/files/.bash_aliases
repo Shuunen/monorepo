@@ -11,10 +11,10 @@ pkgm() {
   fi
 }
 
-alias ..='cd ..' 
+alias ..='cd ..'
 alias ll="ls -lv --almost-all --no-group --human-readable --classify --group-directories-first --time-style=long-iso --color=auto"
-alias merge=meld 
-alias mkdir='mkdir -pv' 
+alias merge=meld
+alias mkdir='mkdir -pv'
 alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
 
 # Improved regenLock to handle bun, pnpm, and npm
@@ -72,4 +72,4 @@ if ! [[ "$PATH" =~ .local/share/applications ]] && [ -d "$HOME/.local/share/appl
 if ! [[ "$PATH" =~ snippets/one-file ]] && [ -d "$HOME/Projects/github/snippets/one-file" ]; then PATH="$PATH:$HOME/Projects/github/snippets/one-file"; fi
 if ! [[ "$PATH" =~ Node_22_Final ]] && [ -d "/d/Apps/Node_22_Final" ]; then PATH="$PATH:/d/Apps/Node_22_Final"; fi
 
-echo Bash aliases v1 loaded 🧭
+echo ' Bash aliases v1 loaded 🧭'
