@@ -22,6 +22,24 @@ export function generateMark({ commit = '', date = formatDate(new Date(), 'dd/MM
 /* c8 ignore start */
 
 /**
+ * Injects a unique mark into a file
+ * @param placeholder - The string placeholder in the HTML file where the unique mark should be injected, like "unique-mark", "foo-bar", etc.
+ */
+export function injectMarkInFile(placeholder: string) {
+  const logger = new Logger()
+  const distPath = path.resolve(process.cwd(), 'dist', 'index.html')
+  const html = readFileSync(distPath, 'utf8')
+  if (!html) {
+    logger.error('No HTML file found in dist directory')
+    return
+  }
+  const mark = generateMark({})
+  const newHtml = injectMark(html, placeholder, mark)
+  writeFileSync(distPath, newHtml)
+  logger.success(`Mark injected into HTML file: ${distPath}`)
+}
+
+/**
  * Vite plugin to inject unique mark into built HTML files
  * @param options - Plugin optionsAdd commentMore actions
  * @param options.placeholder - Placeholder string to replace in HTML
@@ -29,21 +47,11 @@ export function generateMark({ commit = '', date = formatDate(new Date(), 'dd/MM
  */
 // oxlint-disable-next-line max-lines-per-function
 export function uniqueMark(options: { placeholder?: string } = {}): Plugin {
-  const logger = new Logger()
   const placeholder = options.placeholder || 'unique-mark'
   return {
     apply: 'build',
     closeBundle() {
-      const distPath = path.resolve(process.cwd(), 'dist', 'index.html')
-      const html = readFileSync(distPath, 'utf8')
-      if (!html) {
-        logger.error('No HTML file found in dist directory')
-        return
-      }
-      const mark = generateMark({})
-      const newHtml = injectMark(html, placeholder, mark)
-      writeFileSync(distPath, newHtml)
-      logger.success(`Mark injected into HTML file: ${distPath}`)
+      injectMarkInFile(placeholder)
     },
     enforce: 'post',
     name: 'vite-plugin-unique-mark',
