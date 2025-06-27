@@ -6,6 +6,7 @@
     "@preact/preset-vite": "^2.10",
     "@preact/signals": "^2.0",
     "@shuunen/shuutils": "workspace:*",
+    "@shuunen/vite-plugins": "workspace:*",
     "@zxing/library": "^0.21",
     "appwrite": "^18.0",
     "fuse.js": "^7.1",

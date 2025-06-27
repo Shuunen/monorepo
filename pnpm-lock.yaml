@@ -194,6 +194,9 @@ importers:
       '@shuunen/shuutils':
         specifier: workspace:*
         version: link:../../libs/shuutils
+      '@shuunen/vite-plugins':
+        specifier: workspace:*
+        version: link:../../libs/vite-plugins
       '@zxing/library':
         specifier: ^0.21
         version: 0.21.3
