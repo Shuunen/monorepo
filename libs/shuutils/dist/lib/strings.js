@@ -172,7 +172,7 @@ const BASE64_TYPE_REGEX = /[^:]\w+\/[\w+.-]+(?=;|,)/u;
  * @param mark the mark to inject
  * @returns the new string with the mark injected
  */ export function injectMark(content, placeholder, mark) {
-    return content.replace(new RegExp(`__${placeholder}__`, 'gu'), mark).replace(new RegExp(`{{1,2}${placeholder}}{1,2}`, 'g'), mark).replace(new RegExp(`(<[a-z]+ .*id="${placeholder}"[^>]*>)[^<]*(</[a-z]+>)`, 'u'), `$1${mark}$2`).replace(new RegExp(`(<meta name="${placeholder}" content=")[^"]*(")`, 'u'), `$1${mark}$2`).replace(new RegExp(`(<meta content=")[^"]*(") name="${placeholder}"`, 'u'), `$1${mark}$2`);
+    return content.replace(new RegExp(`__${placeholder}__`, 'gu'), mark).replace(new RegExp(`{{1,2} ?${placeholder} ?}{1,2}`, 'g'), mark).replace(new RegExp(`(<[a-z]+ .*id="${placeholder}"[^>]*>)[^<]*(</[a-z]+>)`, 'u'), `$1${mark}$2`).replace(new RegExp(`(<meta name="${placeholder}" content=")[^"]*(")`, 'u'), `$1${mark}$2`).replace(new RegExp(`(<meta content=")[^"]*(") name="${placeholder}"`, 'u'), `$1${mark}$2`);
 }
 
 //# sourceMappingURL=strings.js.map

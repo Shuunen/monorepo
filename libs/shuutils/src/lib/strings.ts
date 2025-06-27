@@ -194,7 +194,7 @@ export function isHtml(string: string) {
 export function injectMark(content: string, placeholder: string, mark: string) {
   return content
     .replace(new RegExp(`__${placeholder}__`, 'gu'), mark)
-    .replace(new RegExp(`{{1,2}${placeholder}}{1,2}`, 'g'), mark)
+    .replace(new RegExp(`{{1,2} ?${placeholder} ?}{1,2}`, 'g'), mark)
     .replace(new RegExp(`(<[a-z]+ .*id="${placeholder}"[^>]*>)[^<]*(</[a-z]+>)`, 'u'), `$1${mark}$2`)
     .replace(new RegExp(`(<meta name="${placeholder}" content=")[^"]*(")`, 'u'), `$1${mark}$2`)
     .replace(new RegExp(`(<meta content=")[^"]*(") name="${placeholder}"`, 'u'), `$1${mark}$2`)
