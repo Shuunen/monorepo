@@ -18,10 +18,9 @@
 apps/*/dist
 connect.lock
 coverage
-libs/shuutils/dist
-libs/vite-plugins/dist/*.tsbuildinfo
-libs/vite-plugins/dist/**/*.d.ts
-libs/vite-plugins/dist/**/*.map
+libs/*/dist/*.tsbuildinfo
+libs/*/dist/**/*.d.ts
+libs/*/dist/**/*.map
 node_modules
 out-tsc
 sample.*
