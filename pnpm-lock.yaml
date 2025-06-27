@@ -134,7 +134,7 @@ importers:
         version: 3.2.4(@types/node@24.0.3)(@vitest/ui@3.2.4)(happy-dom@18.0.1)(jiti@2.4.2)(jsdom@26.1.0)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
 
   apps/config-sync:
-    devDependencies:
+    dependencies:
       '@shuunen/shuutils':
         specifier: workspace:*
         version: link:../../libs/shuutils
@@ -144,13 +144,6 @@ importers:
       '@mui/material':
         specifier: '7.1'
         version: 7.1.2(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react@19.1.0))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      preact:
-        specifier: '10.26'
-        version: 10.26.9
-      react-confetti-boom:
-        specifier: '2.0'
-        version: 2.0.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-    devDependencies:
       '@preact/preset-vite':
         specifier: '2.10'
         version: 2.10.1(@babel/core@7.27.4)(preact@10.26.9)(vite@6.3.5(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))
@@ -160,15 +153,21 @@ importers:
       '@shuunen/vite-plugins':
         specifier: workspace:*
         version: link:../../libs/vite-plugins
+      preact:
+        specifier: '10.26'
+        version: 10.26.9
+      react-confetti-boom:
+        specifier: '2.0'
+        version: 2.0.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
 
   apps/one-file:
-    devDependencies:
+    dependencies:
       '@shuunen/shuutils':
         specifier: workspace:*
         version: link:../../libs/shuutils
 
   apps/sample-web-app:
-    devDependencies:
+    dependencies:
       '@shuunen/shuutils':
         specifier: workspace:*
         version: link:../../libs/shuutils
@@ -226,6 +225,9 @@ importers:
       '@happy-dom/global-registrator':
         specifier: ^18.0.1
         version: 18.0.1
+      '@swc/helpers':
+        specifier: ~0.5.11
+        version: 0.5.17
       esbuild:
         specifier: ^0.25.5
         version: 0.25.5
@@ -235,6 +237,9 @@ importers:
 
   libs/vite-plugins:
     dependencies:
+      '@shuunen/shuutils':
+        specifier: workspace:*
+        version: link:../shuutils
       '@swc/helpers':
         specifier: ~0.5.11
         version: 0.5.17

@@ -1,5 +1,5 @@
 {
-  "devDependencies": {
+  "dependencies": {
     "@shuunen/shuutils": "workspace:*"
   },
   "main": "sync.cli.js",

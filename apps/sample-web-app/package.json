@@ -1,5 +1,5 @@
 {
-  "devDependencies": {
+  "dependencies": {
     "@shuunen/shuutils": "workspace:*"
   },
   "name": "sample-web-app",
