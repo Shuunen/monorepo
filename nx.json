@@ -36,9 +36,6 @@
   "nxCloudId": "684693bbd6342c28b0159958",
   "plugins": [
     {
-      "exclude": [
-        "libs/shuutils/*"
-      ],
       "options": {
         "build": {
           "buildDepsName": "build-deps",
@@ -82,17 +79,6 @@
         "targetName": "e2e"
       },
       "plugin": "@nx/playwright/plugin"
-    },
-    {
-      "include": [
-        "libs/shuutils/*"
-      ],
-      "options": {
-        "typecheck": {
-          "targetName": "typecheck"
-        }
-      },
-      "plugin": "@nx/js/typescript"
     }
   ],
   "targetDefaults": {
