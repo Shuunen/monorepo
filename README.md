@@ -7,6 +7,7 @@
 ## Todo
 
 - [ ] remove `noUndeclaredDependencies: "off"` from `biome.json` when Biome supports monorepo, for no it's reporting falsy undeclared dependencies
+- [ ] libs\shuutils\src\list.cli.ts is duplicated in vite-plugins, create a vite plugin to share it
 
 ## Thanks
 
