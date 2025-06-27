@@ -82,6 +82,27 @@ And join the Nx community:
 1. Go to [Netlify](https://app.netlify.com/)
 2. Branch to deploy: `master`
 3. Project to deploy: `apps/sample-web-app`
-4. Base directory: empty
-5. Build command: `nx run sample-web-app:build`
+4. Base directory: empty/default, results in `/`
+5. Build command: `nx build sample-web-app`
 6. Publish directory : `apps/sample-web-app/dist`
+
+### Build settings
+
+Example for the Jozzo app :
+
+- Runtime : empty/default, results in `Not set`
+- Base directory : empty/default, results in `/`
+- Package directory : `apps/jozzo`
+- Build command : `nx build jozzo`
+- Publish directory : `apps/jozzo/dist`
+- Functions directory : empty/default, results in `netlify/functions`
+- Deploy log visibility : empty/default, results in `Logs are public`
+- Build status : empty/default, results in `Active`
+
+### Branches and deploy contexts
+
+- Production branch : `master`
+- Branch deploys : `Deploy only the production branch`
+- Deploy Previews : `Don’t deploy pull requests`
+
+Why disabling the preview deploys ? Because each PR on the monorepo will trigger a preview build/deploy for each app
