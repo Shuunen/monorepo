@@ -1,3 +1,4 @@
+import { uniqueMark } from '@shuunen/vite-plugins'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 /// <reference types='vitest' />
@@ -13,7 +14,7 @@ export default defineConfig(() => ({
     reportCompressedSize: true,
   },
   cacheDir: '../../node_modules/.vite/apps/sample-web-app',
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), uniqueMark()],
   preview: {
     host: 'localhost',
     port: 4300,

@@ -17,27 +17,19 @@
   "exclude": [
     "out-tsc",
     "dist",
-    "src/**/*.spec.ts",
     "src/**/*.test.ts",
-    "src/**/*.spec.tsx",
     "src/**/*.test.tsx",
-    "src/**/*.spec.js",
-    "src/**/*.test.js",
-    "src/**/*.spec.jsx",
-    "src/**/*.test.jsx",
-    "vite.config.ts",
-    "vite.config.ts",
-    "vitest.config.ts",
-    "vitest.config.mts"
+    "vite.config.ts"
   ],
   "extends": "../../tsconfig.base.json",
   "include": [
-    "src/**/*.js",
-    "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx"
   ],
   "references": [
+    {
+      "path": "../../libs/vite-plugins/tsconfig.lib.json"
+    },
     {
       "path": "../../libs/shuutils/tsconfig.lib.json"
     }
