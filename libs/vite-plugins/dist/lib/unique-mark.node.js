@@ -11,12 +11,12 @@ import { formatDate, injectMark, Logger } from '@shuunen/shuutils';
  * @returns the mark to inject, like "4.2.0 - 123abc45 - 01/01/2021 12:00:00"
  */ export function generateMark({ commit = '', date = formatDate(new Date(), 'dd/MM/yyyy HH:mm:ss'), version = '' }) {
     let finalCommit = commit;
-    if (commit === '') finalCommit = execSync('git rev-parse --short HEAD', {
+    /* c8 ignore next */ if (commit === '') finalCommit = execSync('git rev-parse --short HEAD', {
         cwd: process.cwd()
     }).toString().trim();
     return `${version} - ${finalCommit} - ${date}`;
 }
-/**
+/* c8 ignore start */ /**
  * Vite plugin to inject unique mark into built HTML files
  * @param options - Plugin optionsAdd commentMore actions
  * @param options.placeholder - Placeholder string to replace in HTML
