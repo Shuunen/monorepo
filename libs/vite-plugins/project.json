@@ -11,6 +11,62 @@
       "outputs": [
         "{projectRoot}/src/index.ts"
       ]
+    },
+    "typecheck": {
+      "cache": true,
+      "configurations": {},
+      "dependsOn": [
+        "^typecheck"
+      ],
+      "executor": "nx:run-commands",
+      "inputs": [
+        "production",
+        "^production",
+        {
+          "externalDependencies": [
+            "typescript"
+          ]
+        }
+      ],
+      "metadata": {
+        "description": "Runs type-checking for the project.",
+        "help": {
+          "command": "pnpm exec tsc --build --help",
+          "example": {
+            "args": [
+              "--force"
+            ]
+          }
+        },
+        "technologies": [
+          "typescript"
+        ]
+      },
+      "options": {
+        "command": "tsc --build tsconfig.lib.json --emitDeclarationOnly",
+        "cwd": "libs/vite-plugins"
+      },
+      "outputs": [
+        "{projectRoot}/**/*.js",
+        "{projectRoot}/**/*.cjs",
+        "{projectRoot}/**/*.mjs",
+        "{projectRoot}/**/*.jsx",
+        "{projectRoot}/**/*.js.map",
+        "{projectRoot}/**/*.jsx.map",
+        "{projectRoot}/**/*.d.ts",
+        "{projectRoot}/**/*.d.cts",
+        "{projectRoot}/**/*.d.mts",
+        "{projectRoot}/**/*.d.ts.map",
+        "{projectRoot}/**/*.d.cts.map",
+        "{projectRoot}/**/*.d.mts.map",
+        "{projectRoot}/tsconfig.tsbuildinfo",
+        "{projectRoot}/out-tsc/vitest/**/*.d.ts",
+        "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo"
+      ],
+      "parallelism": true,
+      "syncGenerators": [
+        "@nx/js:typescript-sync"
+      ]
     }
   }
 }
