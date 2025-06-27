@@ -7,7 +7,7 @@ describe('unique-mark', () => {
   it('getPackageJsonVersion A', () => {
     const result = Result.unwrap(getPackageJsonVersion())
     expect(result.error).toMatchInlineSnapshot(`undefined`)
-    expect(result.value?.startsWith('0.0.')).toBe(true)
+    expect(result.value?.startsWith('10.6.')).toBe(true)
   })
 
   it('getPackageJsonVersion B pkg file not found', () => {
