@@ -77,7 +77,7 @@
     "check:repo": "repo-check && echo check:repo success",
     "check:tsc": "tsc --noEmit && echo lint:tsc success",
     "cs": "bun apps/config-sync",
-    "lint": "nx run-many -t lint && echo lint success",
+    "lint": "nx run-many -t lint && pnpm check:biome && pnpm check:oxlint && echo lint success",
     "postversion": "git push && git push --tags",
     "preversion": "pnpm check",
     "test": "nx run-many -t test && echo test success",

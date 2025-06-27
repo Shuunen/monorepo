@@ -19,8 +19,6 @@ export function generateMark({ commit = '', date = formatDate(new Date(), 'dd/MM
   return `${version} - ${finalCommit} - ${date}`
 }
 
-/* c8 ignore start */
-
 const logger = new Logger()
 
 type InjectMarkInAssetParams = {
@@ -30,7 +28,7 @@ type InjectMarkInAssetParams = {
   placeholder: string
 }
 
-function injectMarkInAsset({ asset, fileName, mark, placeholder }: InjectMarkInAssetParams) {
+export function injectMarkInAsset({ asset, fileName, mark, placeholder }: InjectMarkInAssetParams) {
   logger.debug(`Checking ${fileName}... hasAsset: ${!!asset}, typeof source: ${typeof asset.source}, typeof code: ${typeof asset.code}`)
   const firstLine = fileName.endsWith('.html') ? '' : `/* ${placeholder} : ${mark} */\n`
   const contentKey = fileName.endsWith('.js') ? 'code' : 'source'
@@ -41,7 +39,7 @@ function injectMarkInAsset({ asset, fileName, mark, placeholder }: InjectMarkInA
 
 type Assets = Record<string, InjectMarkInAssetParams['asset']>
 
-function injectMarkInAssets(assets: Assets, placeholder: string, version: string) {
+export function injectMarkInAssets(assets: Assets, placeholder: string, version: string) {
   const mark = generateMark({ version })
   logger.info('Injecting unique mark into HTML, JS, and CSS files...')
   const targets = Object.keys(assets).filter(fileName => fileName.endsWith('.html') || fileName.endsWith('.js') || fileName.endsWith('.css'))
@@ -49,9 +47,10 @@ function injectMarkInAssets(assets: Assets, placeholder: string, version: string
   logger.success(`Mark potentially injected into ${targets.length} files`)
 }
 
-function getProjectVersion(projectRoot: string) {
+export function getProjectVersion(projectRoot: string) {
   try {
     const pkg = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'))
+    /* c8 ignore next */
     return pkg.version || ''
   } catch (error) {
     logger.warn('Could not read project package.json for version', error)
@@ -76,5 +75,3 @@ export function uniqueMark(options: { placeholder?: string } = {}): Plugin {
     name: 'vite-plugin-unique-mark' as const,
   }
 }
-
-/* c8 ignore stop */

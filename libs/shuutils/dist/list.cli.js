@@ -14,7 +14,7 @@ import { Logger } from './lib/logger.js';
         cwd: lib,
         filesOnly: true
     });
-    const list = files.filter((file)=>!(file.includes('shuutils.ts') || file.includes('unique-mark.ts') || file.includes('.test.ts'))).map((file)=>`export ${file.includes('types') ? 'type ' : ''}* from './lib/${file.replace('.ts', '.js')}'`);
+    const list = files.filter((file)=>!file.includes('.test.ts')).map((file)=>`export ${file.includes('types') ? 'type ' : ''}* from './lib/${file.replace('.ts', '.js')}'`);
     const content = `${list.sort().join('\n')}\n`;
     writeFileSync(index, content);
     logger.success(`${index} has been updated !`);

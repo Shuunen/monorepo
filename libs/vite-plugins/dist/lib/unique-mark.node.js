@@ -16,8 +16,8 @@ import { formatDate, injectMark, Logger } from '@shuunen/shuutils';
     }).toString().trim();
     return `${version} - ${finalCommit} - ${date}`;
 }
-/* c8 ignore start */ const logger = new Logger();
-function injectMarkInAsset({ asset, fileName, mark, placeholder }) {
+const logger = new Logger();
+export function injectMarkInAsset({ asset, fileName, mark, placeholder }) {
     logger.debug(`Checking ${fileName}... hasAsset: ${!!asset}, typeof source: ${typeof asset.source}, typeof code: ${typeof asset.code}`);
     const firstLine = fileName.endsWith('.html') ? '' : `/* ${placeholder} : ${mark} */\n`;
     const contentKey = fileName.endsWith('.js') ? 'code' : 'source';
@@ -25,7 +25,7 @@ function injectMarkInAsset({ asset, fileName, mark, placeholder }) {
     asset[contentKey] = injected;
     logger.debug(`Mark injected into ${fileName}`);
 }
-function injectMarkInAssets(assets, placeholder, version) {
+export function injectMarkInAssets(assets, placeholder, version) {
     const mark = generateMark({
         version
     });
@@ -39,10 +39,10 @@ function injectMarkInAssets(assets, placeholder, version) {
     });
     logger.success(`Mark potentially injected into ${targets.length} files`);
 }
-function getProjectVersion(projectRoot) {
+export function getProjectVersion(projectRoot) {
     try {
         const pkg = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'));
-        return pkg.version || '';
+        /* c8 ignore next */ return pkg.version || '';
     } catch (error) {
         logger.warn('Could not read project package.json for version', error);
         return '';
@@ -64,6 +64,6 @@ export function uniqueMark(options = {}) {
         },
         name: 'vite-plugin-unique-mark'
     };
-} /* c8 ignore stop */ 
+}
 
 //# sourceMappingURL=unique-mark.node.js.map
