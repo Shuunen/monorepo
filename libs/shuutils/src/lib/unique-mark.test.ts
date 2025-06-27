@@ -69,9 +69,9 @@ describe('unique-mark', () => {
     expect(result.value).toMatchInlineSnapshot(`
       {
         "logs": [
-          "injected in src/lib/strings.ts : 7 times",
+          "injected in src/lib/strings.ts : 8 times",
         ],
-        "totalInjections": 7,
+        "totalInjections": 8,
       }
     `)
   })

@@ -12,7 +12,7 @@ export default defineConfig(() => ({
     },
     environment: 'node',
     globals: true,
-    include: ['src/**/*.test.{ts,tsx}'],
+    include: ['src/**/*.test.ts'],
     reporters: ['default'],
     watch: false,
   },
