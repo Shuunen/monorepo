@@ -171,6 +171,9 @@ importers:
       '@shuunen/shuutils':
         specifier: workspace:*
         version: link:../../libs/shuutils
+      '@shuunen/vite-plugins':
+        specifier: workspace:*
+        version: link:../../libs/vite-plugins
 
   apps/sample-web-app-e2e: {}
 
