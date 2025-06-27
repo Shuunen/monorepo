@@ -1,4 +1,6 @@
 import { execSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { formatDate, injectMark, Logger } from '@shuunen/shuutils';
 /**
  * Generate the mark to inject
@@ -23,8 +25,10 @@ function injectMarkInAsset({ asset, fileName, mark, placeholder }) {
     asset[contentKey] = injected;
     logger.debug(`Mark injected into ${fileName}`);
 }
-function injectMarkInAssets(assets, placeholder) {
-    const mark = generateMark({});
+function injectMarkInAssets(assets, placeholder, version) {
+    const mark = generateMark({
+        version
+    });
     logger.info('Injecting unique mark into HTML, JS, and CSS files...');
     const targets = Object.keys(assets).filter((fileName)=>fileName.endsWith('.html') || fileName.endsWith('.js') || fileName.endsWith('.css'));
     for (const fileName of targets)injectMarkInAsset({
@@ -35,16 +39,31 @@ function injectMarkInAssets(assets, placeholder) {
     });
     logger.success(`Mark potentially injected into ${targets.length} files`);
 }
+function getProjectVersion(projectRoot) {
+    try {
+        const pkg = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'));
+        return pkg.version || '';
+    } catch (error) {
+        logger.warn('Could not read project package.json for version', error);
+        return '';
+    }
+}
 export function uniqueMark(options = {}) {
     const placeholder = options.placeholder || 'unique-mark';
+    let projectRoot = '';
+    let projectVersion = '';
     return {
         apply: 'build',
+        configResolved (config) {
+            projectRoot = config.root;
+            projectVersion = getProjectVersion(projectRoot);
+        },
         enforce: 'post',
         generateBundle (_, bundle) {
-            injectMarkInAssets(bundle, placeholder);
+            injectMarkInAssets(bundle, placeholder, projectVersion);
         },
         name: 'vite-plugin-unique-mark'
     };
-}
+} /* c8 ignore stop */ 
 
 //# sourceMappingURL=unique-mark.node.js.map
