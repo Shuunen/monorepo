@@ -1,4 +1,6 @@
 import { execSync } from 'node:child_process'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { formatDate, injectMark, Logger } from '@shuunen/shuutils'
 import type { Plugin } from 'vite'
 
@@ -39,22 +41,40 @@ function injectMarkInAsset({ asset, fileName, mark, placeholder }: InjectMarkInA
 
 type Assets = Record<string, InjectMarkInAssetParams['asset']>
 
-function injectMarkInAssets(assets: Assets, placeholder: string) {
-  const mark = generateMark({})
+function injectMarkInAssets(assets: Assets, placeholder: string, version: string) {
+  const mark = generateMark({ version })
   logger.info('Injecting unique mark into HTML, JS, and CSS files...')
   const targets = Object.keys(assets).filter(fileName => fileName.endsWith('.html') || fileName.endsWith('.js') || fileName.endsWith('.css'))
   for (const fileName of targets) injectMarkInAsset({ asset: assets[fileName], fileName, mark, placeholder })
   logger.success(`Mark potentially injected into ${targets.length} files`)
 }
 
+function getProjectVersion(projectRoot: string) {
+  try {
+    const pkg = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'))
+    return pkg.version || ''
+  } catch (error) {
+    logger.warn('Could not read project package.json for version', error)
+    return ''
+  }
+}
+
 export function uniqueMark(options: { placeholder?: string } = {}): Plugin {
   const placeholder = options.placeholder || 'unique-mark'
+  let projectRoot = ''
+  let projectVersion = ''
   return {
     apply: 'build' as const,
+    configResolved(config) {
+      projectRoot = config.root
+      projectVersion = getProjectVersion(projectRoot)
+    },
     enforce: 'post' as const,
     generateBundle(_, bundle) {
-      injectMarkInAssets(bundle as unknown as Assets, placeholder)
+      injectMarkInAssets(bundle as unknown as Assets, placeholder, projectVersion)
     },
     name: 'vite-plugin-unique-mark' as const,
   }
 }
+
+/* c8 ignore stop */
