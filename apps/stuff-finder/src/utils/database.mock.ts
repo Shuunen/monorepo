@@ -109,6 +109,7 @@ function reset() {
 
 // oxlint-disable-next-line sort-keys
 export const databaseMock = {
+  // biome-ignore lint/style/useNamingConvention: I cant change this, it's part of the Appwrite SDK
   appwrite: { Client, Databases, Query, Storage },
   createDocument,
   createFile,
@@ -116,6 +117,7 @@ export const databaseMock = {
   deleteFile,
   listDocuments,
   listFiles,
+  // biome-ignore lint/style/useNamingConvention: I cant change this, it's part of the Appwrite SDK
   Query,
   reset,
   updateDocument,

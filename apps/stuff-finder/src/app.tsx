@@ -21,24 +21,22 @@ const AsyncPageSounds = lazy<Component>(() => import('./components/app-sounds').
 export function App() {
   const fallback = useMemo(() => <AppLoader isLoading />, [])
   return (
-    <>
-      <Suspense fallback={fallback}>
-        <Router>
-          <AsyncPageHome path="/" />
-          <AsyncPageItemAddEdit path="/item/add/:id?" />
-          <AsyncPageItemAddEdit isEdit path="/item/edit/:id" />
-          <AsyncPageItemDetails path="/item/details/:id/:context?" />
-          <AsyncPageItemPrint path="/item/print/:id" />
-          <AsyncPageScan path="/scan" />
-          <AsyncPageSearch path="/search/:input" />
-          <AsyncPageSettings path="/settings" />
-          <AsyncPageKitchenSink path="/kitchen-sink" />
-          <AppLoader isLoading={true} path="/loading" />
-          <AsyncPageError code="page-not-found" default />
-        </Router>
-        <AsyncPageSounds />
-        <AsyncAppSpeedDial />
-      </Suspense>
-    </>
+    <Suspense fallback={fallback}>
+      <Router>
+        <AsyncPageHome path="/" />
+        <AsyncPageItemAddEdit path="/item/add/:id?" />
+        <AsyncPageItemAddEdit isEdit path="/item/edit/:id" />
+        <AsyncPageItemDetails path="/item/details/:id/:context?" />
+        <AsyncPageItemPrint path="/item/print/:id" />
+        <AsyncPageScan path="/scan" />
+        <AsyncPageSearch path="/search/:input" />
+        <AsyncPageSettings path="/settings" />
+        <AsyncPageKitchenSink path="/kitchen-sink" />
+        <AppLoader isLoading={true} path="/loading" />
+        <AsyncPageError code="page-not-found" default />
+      </Router>
+      <AsyncPageSounds />
+      <AsyncAppSpeedDial />
+    </Suspense>
   )
 }
