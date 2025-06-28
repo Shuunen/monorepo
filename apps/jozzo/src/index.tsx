@@ -46,10 +46,6 @@ function App() {
           <BottleGrid state={state} />
         </>
       )}
-      <pre>
-        state : {state} <span className="text-2xl">{machine.icon()}</span>
-      </pre>
-      <footer className="fixed bottom-2 right-5 mt-4 text-center text-xs font-thin text-gray-500">__unique-mark__</footer>
     </div>
   )
 }
