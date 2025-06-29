@@ -5,7 +5,7 @@ import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { createInterface } from 'node:readline'
 import { Logger, nbFourth, nbSecondsInMinute, nbThird } from '@shuunen/shuutils'
-import { getFfmpegCommand, getScreenshotFilename, parseUserInput, parseVideoMetadata } from './take-screenshot.utils.js' // js extension is required here
+import { getFfmpegCommand, getScreenshotFilename, parseUserInput, parseVideoMetadata } from './take-screenshot.utils.js'
 
 /**
  * @typedef {import('./take-screenshot.types').Metadata} Metadata
@@ -30,8 +30,6 @@ async function logClear() {
 async function logAdd(...stuff) {
   await fs.appendFile(logFile, `${stuff.join(' ')}\n`)
 }
-
-const ask = createInterface({ input: process.stdin, output: process.stdout })
 
 /**
  * @param {string} cmd shell command to execute
@@ -135,8 +133,10 @@ async function init() {
   }
   const lastInput = await fs.readFile(lastInputFile, 'utf8').catch(() => '60')
   await logAdd('Last input :', lastInput)
+  const ask = createInterface({ input: process.stdin, output: process.stdout })
   ask.question(`  Please type the time in mmss or ss (enter to use "${lastInput}") : `, async time => {
     await takeScreenAt(time || lastInput)
+    ask.close() // close the readline interface to allow the process to exit
   })
 }
 
