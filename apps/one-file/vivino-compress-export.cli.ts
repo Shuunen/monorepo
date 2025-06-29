@@ -4,7 +4,7 @@ import path from 'node:path'
 import { Logger, nbPercentMax } from '@shuunen/shuutils'
 import { compressCsv } from './vivino-compress-export.utils.js'
 
-// usage : bun ~/Projects/github/snippets/one-file/vivino-compress-export.cli.ts full_wine_list.csv
+// usage : bun ~/Projects/github/monorepo/apps/one-file/vivino-compress-export.cli.ts full_wine_list.csv
 
 const currentFolder = import.meta.dirname
 const logFile = path.join(currentFolder, 'vivino-compress-export.log')

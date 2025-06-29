@@ -1,7 +1,7 @@
 [
   {
     "default_arguments": [
-      "~/Projects/github/snippets/one-file/lol-practice-5v5.js",
+      "~/Projects/github/monorepo/apps/one-file/lol-practice-5v5.js",
       "~/Games/league-of-legends/drive_c/Riot\\ Games/League\\ of\\ Legends/lockfile"
     ],
     "description": "Starts a LoL Practice 5v5 game",

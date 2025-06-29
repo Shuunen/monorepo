@@ -74,37 +74,37 @@ it('clean B', () => {
 })
 
 const winHome = 'C:/Users/Johnny'
-const winPath = 'C:/Users/Johnny/Projects/github/snippets/tests'
+const winPath = 'C:/Users/Johnny/Projects/github/my-project/tests'
 
 it('normalizePathWithSlash A', () => {
-  expect(normalizePathWithSlash(winPath, undefined, winHome)).toBe('C:/Users/Johnny/Projects/github/snippets/tests')
+  expect(normalizePathWithSlash(winPath, undefined, winHome)).toBe('C:/Users/Johnny/Projects/github/my-project/tests')
 })
 it('normalizePathWithSlash B', () => {
-  expect(normalizePathWithSlash(winPath, undefined, winHome)).toBe('C:/Users/Johnny/Projects/github/snippets/tests')
+  expect(normalizePathWithSlash(winPath, undefined, winHome)).toBe('C:/Users/Johnny/Projects/github/my-project/tests')
 })
 it('normalizePathWithSlash C', () => {
-  expect(normalizePathWithSlash(winPath, true, winHome)).toBe('~/Projects/github/snippets/tests')
+  expect(normalizePathWithSlash(winPath, true, winHome)).toBe('~/Projects/github/my-project/tests')
 })
 it('normalizePathWithSlash D', () => {
-  expect(normalizePathWithSlash(winPath, true, winHome)).toBe('~/Projects/github/snippets/tests')
+  expect(normalizePathWithSlash(winPath, true, winHome)).toBe('~/Projects/github/my-project/tests')
 })
 it('normalizePathWithSlash E', () => {
-  expect(normalizePathWithSlash(winPath, true, winHome)).toBe('~/Projects/github/snippets/tests')
+  expect(normalizePathWithSlash(winPath, true, winHome)).toBe('~/Projects/github/my-project/tests')
 })
 it('normalizePathWithSlash F', () => {
-  expect(normalizePathWithSlash(winPath, true, winHome)).toBe('~/Projects/github/snippets/tests')
+  expect(normalizePathWithSlash(winPath, true, winHome)).toBe('~/Projects/github/my-project/tests')
 })
 it('normalizePathWithSlash G', () => {
-  expect(normalizePathWithSlash(winPath)).toBe('C:/Users/Johnny/Projects/github/snippets/tests')
+  expect(normalizePathWithSlash(winPath)).toBe('C:/Users/Johnny/Projects/github/my-project/tests')
 })
 it('normalizePathWithSlash H', () => {
-  expect(normalizePathWithSlash(winPath)).toBe('C:/Users/Johnny/Projects/github/snippets/tests')
+  expect(normalizePathWithSlash(winPath)).toBe('C:/Users/Johnny/Projects/github/my-project/tests')
 })
 it('normalizePathWithSlash I', () => {
-  expect(normalizePathWithSlash(winPath)).toBe('C:/Users/Johnny/Projects/github/snippets/tests')
+  expect(normalizePathWithSlash(winPath)).toBe('C:/Users/Johnny/Projects/github/my-project/tests')
 })
 it('normalizePathWithSlash J', () => {
-  expect(normalizePathWithSlash(winPath, true)).toBe('C:/Users/Johnny/Projects/github/snippets/tests')
+  expect(normalizePathWithSlash(winPath, true)).toBe('C:/Users/Johnny/Projects/github/my-project/tests')
 })
 
 it('filename A', () => {

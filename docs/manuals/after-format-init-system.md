@@ -143,7 +143,7 @@ Avoid :
 Open Rapidee & add these to the user path :
 
 - `%USERPROFILE%\.npm-global`
-- `%USERPROFILE%\Projects\github\snippets\one-file`
+- `%USERPROFILE%\Projects\github\monorepo\apps\one-file`
 - `C:\ProgramData\chocolatey\bin`
 - `D:\Apps\_Globals`
 - `D:\Apps\Espanso_221_2024-08`
@@ -301,7 +301,7 @@ lsmod | grep xpad # should return nothing, if not : sudo rmmod xpad / sudo rmmod
 sudo chmod 700 ~/.ssh/ -R # remove 'sudo' on windows
 # mkdir ~/.npm-global # if not using nvm
 # npm config set prefix '~/.npm-global' # if not using nvm
-npm i pnpm -g
+npm i pnpm bun -g
 mkdir ~/Projects/github -p
 cd ~/Projects/github
 git clone git@github.com:Shuunen/c-est-donne.git
@@ -321,7 +321,8 @@ git clone git@github.com:Shuunen/user-scripts.git
 git clone git@github.com:Shuunen/vue-image-compare.git
 git clone git@github.com:Shuunen/what-now.git
 find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "cd '{}' && git checkout master && git pull && pnpm i" \;
-node snippets/configs/bin/sync.js --setup
+cd ~/Projects/github/monorepo
+bun cs --setup
 ```
 
 - [ ] install my recommended extensions

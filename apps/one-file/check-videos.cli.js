@@ -7,8 +7,8 @@ import { inspect } from 'node:util'
 import { blue, Logger, red, slugify } from '@shuunen/shuutils'
 
 // use me like :
-//  node ~/Projects/github/snippets/one-file/check-videos.js "/u/A Voir/" --set-title
-//  node ~/Projects/github/snippets/one-file/check-videos.js "/m/A Voir/Movies"
+//  node ~/Projects/github/monorepo/apps/one-file/check-videos.js "/u/A Voir/" --set-title
+//  node ~/Projects/github/monorepo/apps/one-file/check-videos.js "/m/A Voir/Movies"
 
 /**
  * @typedef {import('./take-screenshot.types').FfProbeOutput} FfProbeOutput

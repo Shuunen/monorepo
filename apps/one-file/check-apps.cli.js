@@ -4,7 +4,7 @@ import path from 'node:path'
 import { blue, green, Logger, nbPercentMax, nbThird, red, yellow } from '@shuunen/shuutils'
 import sevenZip from '7zip-min'
 
-// Use me like : node ~/Projects/github/snippets/one-file/check-apps.cli.js "/d/Apps/"
+// Use me like : node ~/Projects/github/monorepo/apps/one-file/check-apps.cli.js "/d/Apps/"
 
 /**
  * @typedef {Record<string, string[]>} Groups

@@ -1,5 +1,5 @@
 # shellcheck disable=2148
-export PATH=~/.npm-global/bin:~/Apps:~/Projects/github/snippets/one-file:$PATH
+export PATH=~/.npm-global/bin:~/Apps:~/Projects/github/monorepo/apps/one-file:$PATH
 
 # if running bash
 if [ -n "$BASH_VERSION" ]; then

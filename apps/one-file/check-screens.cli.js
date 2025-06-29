@@ -3,7 +3,7 @@ import { readdirSync, renameSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { blue, ellipsis, green, isTestEnvironment, Logger, red, slugify, yellow } from '@shuunen/shuutils'
 
-// Use me like : node ~/Projects/github/snippets/one-file/check-screens.cli.js "/u/Screens/"
+// Use me like : node ~/Projects/github/monorepo/apps/one-file/check-screens.cli.js "/u/Screens/"
 
 const parameters = process.argv
 const expectedNbParameters = 2
