@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "@shuunen/shuutils": "workspace:*"
+    "@shuunen/shuutils": "workspace:*",
+    "clipboardy": "^4.0.0"
   },
   "name": "one-file",
   "private": true,
