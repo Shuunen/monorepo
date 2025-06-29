@@ -5,7 +5,7 @@ import { cleanTrackers } from './clean-trackers.utils.js'
 
 // use me like :
 // 1) copy a list of trackers in clipboard
-// 2) bun ~/Projects/github/snippets/one-file/clean-trackers.cli.js
+// 2) bun ~/Projects/github/monorepo/apps/one-file/clean-trackers.cli.js
 // 3) the cleaned list is now in clipboard
 
 // you can also use --watch to keep the script running and clean the clipboard each time it changes
@@ -87,10 +87,10 @@ async function doClean() {
 
 logger.info(`clean-trackers.cli start, watch is ${willWatch ? 'on' : 'off'}`)
 
-if (!willWatch) {
+if (willWatch) {
+  logger.info('watching clipboard...')
+  setInterval(doClean, nbMsInSecond)
+} else {
   await doClean()
   await beep()
 }
-
-logger.info('watching clipboard...')
-setInterval(doClean, nbMsInSecond)
