@@ -86,12 +86,12 @@
     {
       "files": [
         "*.stories.tsx",
-        "*.test.ts",
-        "*.test.tsx"
+        "*.test.{ts,tsx}"
       ],
       "rules": {
         "eslint/max-lines-per-function": "off",
         "eslint/no-negated-condition": "off",
+        "id-length": "off",
         "import/no-default-export": "off",
         "import/no-namespace": "off",
         "max-nested-callbacks": "off",
@@ -204,6 +204,7 @@
     "no-void": "off",
     "number-literal-case": "off",
     "oxc/no-optional-chaining": "off",
+    "prefer-default-export": "off",
     "sort-imports": "off",
     "unicorn/filename-case": [
       "error",

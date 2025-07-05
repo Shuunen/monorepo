@@ -3,6 +3,7 @@
 // Artistic License 2.0
 
 /** A typical comparator for sorting object keys */
+// oxlint-disable-next-line id-length
 type KeyComparator = (a: string, b: string) => number
 
 /** An indexable object */

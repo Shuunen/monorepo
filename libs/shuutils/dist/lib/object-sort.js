@@ -1,7 +1,8 @@
 // Based on : https://github.com/bevry/sortobject/blob/master/source/index.ts
 // Copyright © Benjamin Lupton
 // Artistic License 2.0
-/** A typical comparator for sorting object keys */ /**
+/** A typical comparator for sorting object keys */ // oxlint-disable-next-line id-length
+/**
  * Returns a copy of the passed array, with all nested objects within it sorted deeply by their keys, without mangling any nested arrays.
  * @param subject the unsorted array
  * @param comparator an optional comparator for sorting keys of objects

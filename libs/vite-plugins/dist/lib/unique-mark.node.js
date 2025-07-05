@@ -59,7 +59,7 @@ export function uniqueMark(options = {}) {
             projectVersion = getProjectVersion(projectRoot);
         },
         enforce: 'post',
-        generateBundle (_, bundle) {
+        generateBundle (_options, bundle) {
             injectMarkInAssets(bundle, placeholder, projectVersion);
         },
         name: 'vite-plugin-unique-mark'

@@ -19,10 +19,8 @@ export function AppFormFieldSelect({ field, form, id, updateField }: Properties)
   )
 
   const renderInput = useCallback(
-    (parameters: AutocompleteRenderInputParams) => {
-      // @ts-expect-error typing issue
-      return <TextField {...parameters} error={Boolean(form.isTouched) && !field.isValid} label={field.label} onChange={onChange} required={field.isRequired} value={field.value} variant="standard" />
-    },
+    // @ts-expect-error typing issue
+    (parameters: AutocompleteRenderInputParams) => <TextField {...parameters} error={Boolean(form.isTouched) && !field.isValid} label={field.label} onChange={onChange} required={field.isRequired} value={field.value} variant="standard" />,
     [form.isTouched, field.isValid, field.isRequired, field.label, onChange, field.value],
   )
 

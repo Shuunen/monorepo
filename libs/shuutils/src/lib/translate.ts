@@ -31,10 +31,10 @@ export function handlePlural(translated: string, data?: Readonly<Record<string, 
   // oxlint-enable require-param-description
   if (!translated.includes('|')) return fillTemplate(translated, data)
   const count = Number.parseInt(String(data?.count ?? '1'), 10)
-  const [a = '', b = '', c = ''] = translated.split(' | ')
-  if (c.length > 0 && count > 1) return fillTemplate(c, data)
-  if ((c.length > 0 && count === 1) || (b.length > 0 && count > 1)) return fillTemplate(b, data)
-  return fillTemplate(a, data)
+  const [partA = '', partB = '', partC = ''] = translated.split(' | ')
+  if (partC.length > 0 && count > 1) return fillTemplate(partC, data)
+  if ((partC.length > 0 && count === 1) || (partB.length > 0 && count > 1)) return fillTemplate(partB, data)
+  return fillTemplate(partA, data)
 }
 
 // oxlint-disable require-param-description

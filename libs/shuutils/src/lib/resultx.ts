@@ -1,6 +1,6 @@
 // MIT License Copyright (c) 2023-PRESENT Johann Schopplich
 // I had to get sources from https://github.com/johannschopplich/resultx/blob/main/src/index.ts to be able to have a cjs working version of the library
-// oxlint-disable max-classes-per-file, consistent-type-definitions, curly, sort-keys
+// oxlint-disable max-classes-per-file, consistent-type-definitions, curly, sort-keys, id-length
 
 type Result<T, E> = Ok<T> | Err<E>
 

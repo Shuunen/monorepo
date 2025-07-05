@@ -28,10 +28,10 @@ const defaultLang = 'en';
     if (!translated.includes('|')) return fillTemplate(translated, data);
     var _data_count;
     const count = Number.parseInt(String((_data_count = data == null ? void 0 : data.count) != null ? _data_count : '1'), 10);
-    const [a = '', b = '', c = ''] = translated.split(' | ');
-    if (c.length > 0 && count > 1) return fillTemplate(c, data);
-    if (c.length > 0 && count === 1 || b.length > 0 && count > 1) return fillTemplate(b, data);
-    return fillTemplate(a, data);
+    const [partA = '', partB = '', partC = ''] = translated.split(' | ');
+    if (partC.length > 0 && count > 1) return fillTemplate(partC, data);
+    if (partC.length > 0 && count === 1 || partB.length > 0 && count > 1) return fillTemplate(partB, data);
+    return fillTemplate(partA, data);
 }
 // oxlint-disable require-param-description
 /**
