@@ -1,7 +1,9 @@
 import TuneIcon from '@mui/icons-material/Tune'
+import { Button } from '@mui/material'
 import { useCallback } from 'preact/hooks'
 import { AppForm } from '../components/app-form'
 import { AppPageCard } from '../components/app-page-card'
+import { downloadItems } from '../utils/database.utils'
 import { logger } from '../utils/logger.utils'
 import { settingsForm } from '../utils/settings.utils'
 import { state } from '../utils/state.utils'
@@ -20,7 +22,11 @@ export function PageSettings({ ...properties }: Readonly<Record<string, unknown>
     <AppPageCard cardTitle="Settings" icon={TuneIcon} pageCode="settings" pageTitle="Settings">
       <div class="flex flex-col">
         <p>Stuff-Finder need credentials to access your Airtable base, data will be saved in your browser local storage.</p>
-        <AppForm initialForm={settingsForm} onSubmit={onSubmit} />
+        <AppForm initialForm={settingsForm} onSubmit={onSubmit}>
+          <Button onClick={downloadItems} type="button" variant="contained">
+            Download items
+          </Button>
+        </AppForm>
       </div>
     </AppPageCard>
   )
