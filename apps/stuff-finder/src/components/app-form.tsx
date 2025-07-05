@@ -2,6 +2,7 @@ import Button from '@mui/material/Button'
 import { useSignalEffect } from '@preact/signals'
 import { debounce, functionReturningVoid, off, on, parseJson, Result, readClipboard } from '@shuunen/shuutils'
 import { useCallback, useState } from 'preact/hooks'
+import type { ReactNode } from 'react'
 import { alignClipboard, type Form, validateForm } from '../utils/forms.utils'
 import { logger } from '../utils/logger.utils'
 import { colSpanClass, gridClass } from '../utils/theme.utils'
@@ -10,6 +11,7 @@ import { AppFormFieldSelect } from './app-form-field-select'
 import { AppFormFieldText } from './app-form-field-text'
 
 type Properties<FormType extends Form> = Readonly<{
+  children?: ReactNode
   error?: string
   initialForm: FormType
   onChange?: (form: FormType) => void
@@ -18,7 +20,7 @@ type Properties<FormType extends Form> = Readonly<{
 }>
 
 // oxlint-disable-next-line max-lines-per-function
-export function AppForm<FormType extends Form>({ error: parentError = '', initialForm, onChange = functionReturningVoid, onSubmit = undefined, suggestions = {} }: Properties<FormType>) {
+export function AppForm<FormType extends Form>({ children, error: parentError = '', initialForm, onChange = functionReturningVoid, onSubmit = undefined, suggestions = {} }: Properties<FormType>) {
   const [form, setForm] = useState(initialForm)
 
   const { hasChanged, updatedForm } = validateForm(form)
@@ -112,13 +114,14 @@ export function AppForm<FormType extends Form>({ error: parentError = '', initia
           {field.type === 'select' && <AppFormFieldSelect field={field} form={form} id={id} updateField={updateField} />}
         </div>
       ))}
-      <div class="order-last flex flex-col items-center md:col-span-full">
+      <div class="order-last flex justify-center md:col-span-full">
         {Boolean(errorMessage) && Boolean(form.isTouched) && <p class="text-red-500">{errorMessage}</p>}
         {onSubmit !== undefined && (
           <Button disabled={!canSubmit} type="submit" variant="contained">
             Save
           </Button>
         )}
+        {children}
       </div>
     </form>
   )
