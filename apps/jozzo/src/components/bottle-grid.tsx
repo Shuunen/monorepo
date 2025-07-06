@@ -55,7 +55,7 @@ export function BottleGrid(properties: { state: (typeof machine)['state'] }) {
   if (hasWon) winEffects()
 
   return (
-    <div className="my-6 flex justify-center">
+    <div className="mt-6 mb-12 flex justify-center">
       {hasWon && <Confetti mode="fall" />}
       {/** biome-ignore lint/a11y/noStaticElementInteractions: fix me later */}
       <div className="grid grid-cols-3 gap-12" onClick={event => handleBottleClick(event, setPouringInfo)}>

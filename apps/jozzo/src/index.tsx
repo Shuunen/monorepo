@@ -18,7 +18,7 @@ function App() {
   // biome-ignore lint/suspicious/noConsole: remove me later ^^
   console.count('render') // oxlint-disable-line no-console
   return (
-    <div className="container mx-auto flex h-screen w-full max-w-xl flex-col items-center justify-center gap-6 md:justify-start">
+    <div className="container mx-auto flex flex-col pb-44 h-screen w-full max-w-xl align-middle items-center justify-center gap-6">
       {logo({ className: `${state === 'initial' ? 'pt-24 pb-6 w-4/5 fill-purple-900' : 'w-56 fill-transparent hidden md:block'} drop-shadow-lg transition-all`, title: 'app logo' })}
       {state === 'initial' && (
         <Button
@@ -33,6 +33,7 @@ function App() {
       )}
       {state !== 'initial' && (
         <>
+          <BottleGrid state={state} />
           <Button
             color="warning"
             onClick={() => {
@@ -43,7 +44,6 @@ function App() {
           >
             Reset game
           </Button>
-          <BottleGrid state={state} />
         </>
       )}
     </div>
