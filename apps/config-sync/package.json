@@ -5,6 +5,9 @@
   "main": "sync.cli.js",
   "name": "config-sync",
   "private": true,
+  "scripts": {
+    "test": "vitest --coverage --coverage.thresholds.100 --run && echo test success"
+  },
   "type": "module",
   "version": "0.0.1"
 }

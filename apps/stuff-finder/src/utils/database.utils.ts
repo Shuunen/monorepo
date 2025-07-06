@@ -123,7 +123,7 @@ export async function downloadImages(bucketId = state.credentials.bucketId) {
   const result = await listImages(bucketId)
   if (!result.ok) return result
   const downloadedImages = lsStorage.get<string[]>('downloadedImages', [])
-  /* c8 ignore next 8 */
+  /* c8 ignore next 10 */
   for (const file of result.value) {
     if (downloadedImages.includes(file.$id)) continue
     downloadedImages.push(file.$id)

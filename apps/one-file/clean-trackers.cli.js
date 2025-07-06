@@ -1,5 +1,5 @@
-import { Logger, nbMsInSecond, nbRgbMax, sleep, stringSum } from '@shuunen/shuutils'
 /* c8 ignore start */
+import { Logger, nbMsInSecond, nbRgbMax, sleep, stringSum } from '@shuunen/shuutils'
 import clipboard from 'clipboardy'
 import { cleanTrackers } from './clean-trackers.utils.js'
 

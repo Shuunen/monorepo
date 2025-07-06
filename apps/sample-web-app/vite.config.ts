@@ -1,10 +1,9 @@
 import { uniqueMark } from '@shuunen/vite-plugins'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-/// <reference types='vitest' />
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 
-export default defineConfig(() => ({
+export default defineConfig({
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,
@@ -31,7 +30,7 @@ export default defineConfig(() => ({
     },
     environment: 'jsdom',
     globals: true,
-    include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    include: ['src/**/*.test.{ts,tsx}'],
     reporters: ['default'],
     watch: false,
   },
@@ -39,4 +38,4 @@ export default defineConfig(() => ({
   // worker: {
   //  plugins: [ nxViteTsPaths() ],
   // },
-}))
+})

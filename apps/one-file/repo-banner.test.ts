@@ -28,7 +28,7 @@ describe('repo-banner', () => {
   })
 
   it('safeRead B existing file', () => {
-    expect(safeRead('README.md')).toContain('Snippets')
+    expect(safeRead('README.md')).toContain('One File')
   })
 
   it('safeRead C existing directory', () => {
@@ -40,7 +40,7 @@ describe('repo-banner', () => {
     {
       "color": "#54143A",
       "description": "My personal snippets",
-      "name": "snippets",
+      "name": "one-file",
       "scope": "Shuunen",
     }
   `)

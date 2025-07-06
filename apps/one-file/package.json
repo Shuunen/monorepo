@@ -3,6 +3,11 @@
     "@shuunen/shuutils": "workspace:*",
     "clipboardy": "^4.0.0"
   },
+  "description": "My personal snippets",
+  "homepage": "https://github.com/Shuunen/monorepo/tree/master/apps/one-file",
+  "keywords": [
+    "#54143A"
+  ],
   "name": "one-file",
   "private": true,
   "type": "module",

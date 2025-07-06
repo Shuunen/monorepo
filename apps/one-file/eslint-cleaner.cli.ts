@@ -1,3 +1,4 @@
+/* c8 ignore start */
 import { readFile, writeFile } from 'node:fs/promises'
 import { Logger } from '@shuunen/shuutils'
 import glob from 'tiny-glob'
