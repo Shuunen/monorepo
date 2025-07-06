@@ -28,12 +28,40 @@ function clean(...stuff: Readonly<unknown[]>) {
 type LogLevel = '1-debug' | '2-test' | '3-info' | '4-fix' | '5-warn' | '6-good' | '7-error'
 
 export type LoggerOptions = {
+  /**
+   * If the logger is active, when false, no logs will be output
+   * @default true
+   */
   isActive: boolean
+  /**
+   * The minimum log level to output
+   * @default '3-info' or '1-debug' if verbose mode is active
+   */
   minimumLevel: LogLevel
+  /**
+   * Will log the date in the format yyyy-MM-dd, example "2023-10-01"
+   * @default false
+   */
   willLogDate: boolean
+  /**
+   * Will log the delay since the last log, example "+12ms"
+   * @default true
+   */
   willLogDelay: boolean
+  /**
+   * Will log the time in the format "HH:mm:ss", example "12:34:56"
+   * @default false
+   */
   willLogTime: boolean
+  /**
+   * Will output the logs to the global console instance
+   * @default true
+   */
   willOutputToConsole: boolean
+  /**
+   * Will output the logs to the logger.inMemoryLogs array
+   * @default false
+   */
   willOutputToMemory: boolean
 }
 
