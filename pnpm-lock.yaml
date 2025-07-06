@@ -17,6 +17,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ~4.1.11
         version: 4.1.11(vite@7.0.2(@types/node@24.0.10)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))
+      appwrite:
+        specifier: ^18.1.1
+        version: 18.1.1
       react:
         specifier: ~19.1.0
         version: 19.1.0
@@ -206,9 +209,6 @@ importers:
       '@zxing/library':
         specifier: ^0.21
         version: 0.21.3
-      appwrite:
-        specifier: ^18.0
-        version: 18.1.1
       fuse.js:
         specifier: ^7.1
         version: 7.1.0
@@ -228,6 +228,25 @@ importers:
       '@types/dom-speech-recognition':
         specifier: ^0.0
         version: 0.0.6
+
+  apps/what-now:
+    dependencies:
+      '@shuunen/shuutils':
+        specifier: workspace:*
+        version: link:../../libs/shuutils
+      '@shuunen/vite-plugins':
+        specifier: workspace:*
+        version: link:../../libs/vite-plugins
+      canvas-confetti:
+        specifier: '1'
+        version: 1.9.3
+    devDependencies:
+      '@types/canvas-confetti':
+        specifier: 1.9.0
+        version: 1.9.0
+      '@types/serviceworker':
+        specifier: '0.0'
+        version: 0.0.140
 
   libs/shuutils:
     dependencies:
@@ -2593,6 +2612,9 @@ packages:
   '@types/babel__traverse@7.20.7':
     resolution: {integrity: sha512-dkO5fhS7+/oos4ciWxyEyjWe48zmG6wbCheo/G2ZnHx4fs3EU6YC6UM8rk56gAjNJ9P3MTH2jo5jb92/K6wbng==}
 
+  '@types/canvas-confetti@1.9.0':
+    resolution: {integrity: sha512-aBGj/dULrimR1XDZLtG9JwxX1b4HPRF6CX9Yfwh3NvstZEm1ZL7RBnel4keCPSqs1ANRu1u2Aoz9R+VmtjYuTg==}
+
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
 
@@ -2647,6 +2669,9 @@ packages:
 
   '@types/semver@7.5.8':
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
+
+  '@types/serviceworker@0.0.140':
+    resolution: {integrity: sha512-9YBn/87nAamFtRCKEFZh2F+3Hs0UQzrxPgDbiqTgIS+F0LxbcVavgKtLhqSgSVF+OYtQM+fw8r3VXs7P1QpiXg==}
 
   '@types/whatwg-mimetype@3.0.2':
     resolution: {integrity: sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==}
@@ -3072,6 +3097,9 @@ packages:
 
   caniuse-lite@1.0.30001726:
     resolution: {integrity: sha512-VQAUIUzBiZ/UnlM28fSp2CRF3ivUn1BWEvxMcVTNwpw91Py1pGbPIyIKtd+tzct9C3ouceCVdGAXxZOpZAsgdw==}
+
+  canvas-confetti@1.9.3:
+    resolution: {integrity: sha512-rFfTURMvmVEX1gyXFgn5QMn81bYk70qa0HLzcIOSVEyl57n6o9ItHeBtUSWdvKAPY0xlvBHno4/v3QPrT83q9g==}
 
   chai@5.2.0:
     resolution: {integrity: sha512-mCuXncKXk5iCLhfhwTc0izo0gtEmpz5CtG2y8GiOINBlMVS6v8TMRc5TaLWKS6692m9+dVVfzgeVxR5UxWHTYw==}
@@ -8207,6 +8235,8 @@ snapshots:
     dependencies:
       '@babel/types': 7.28.0
 
+  '@types/canvas-confetti@1.9.0': {}
+
   '@types/chai@5.2.2':
     dependencies:
       '@types/deep-eql': 4.0.2
@@ -8260,6 +8290,8 @@ snapshots:
       csstype: 3.1.3
 
   '@types/semver@7.5.8': {}
+
+  '@types/serviceworker@0.0.140': {}
 
   '@types/whatwg-mimetype@3.0.2': {}
 
@@ -8795,6 +8827,8 @@ snapshots:
   camelcase@6.3.0: {}
 
   caniuse-lite@1.0.30001726: {}
+
+  canvas-confetti@1.9.3: {}
 
   chai@5.2.0:
     dependencies:

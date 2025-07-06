@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "dependencies": {
+    "@shuunen/shuutils": "workspace:*",
+    "@shuunen/vite-plugins": "workspace:*",
+    "canvas-confetti": "1"
+  },
+  "description": "Minimalist task coach",
+  "devDependencies": {
+    "@types/canvas-confetti": "1.9.0",
+    "@types/serviceworker": "0.0"
+  },
+  "keywords": [
+    "minimalist",
+    "webapp",
+    "task",
+    "coach"
+  ],
+  "name": "what-now",
+  "private": true,
+  "type": "module",
+  "version": "1.4.0"
+}
