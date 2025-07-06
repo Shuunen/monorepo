@@ -108,7 +108,7 @@ async function getTasks(input) {
  */
 async function takeScreenAt(input) {
   await logAdd(`Input : "${input}"`)
-  fs.writeFile(lastInputFile, input)
+  if (input) fs.writeFile(lastInputFile, input)
   const tasks = await getTasks(input)
   await logAdd(`Tasks prepared : ${tasks.length}`)
   for (const task of tasks) {
@@ -127,7 +127,7 @@ async function init() {
   await logClear()
   await logAdd('Take screenshot starts @', new Date().toISOString())
   if (process.argv[nbThird] === undefined) throw new Error('missing videoPath')
-  if (process.argv[nbFourth] !== undefined) {
+  if (process.argv[nbFourth]) {
     await takeScreenAt(process.argv[nbFourth])
     return
   }
