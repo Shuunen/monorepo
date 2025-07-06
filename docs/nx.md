@@ -82,7 +82,7 @@ And join the Nx community:
 1. Go to [Netlify](https://app.netlify.com/)
 2. Branch to deploy: `master`
 3. Project to deploy: `apps/sample-web-app`
-4. Base directory: empty/default, results in `/`
+4. Base directory: empty, results in `/`
 5. Build command: `nx build sample-web-app`
 6. Publish directory : `apps/sample-web-app/dist`
 
