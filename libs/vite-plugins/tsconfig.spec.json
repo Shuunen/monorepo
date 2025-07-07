@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
     "outDir": "./out-tsc/vitest",
     "types": [
       "vitest/globals",
