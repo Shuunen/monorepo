@@ -1,0 +1,8 @@
+{
+  "description": "My personal user-scripts",
+  "homepage": "https://github.com/Shuunen/monorepo/tree/master/apps/user-scripts",
+  "name": "user-scripts",
+  "private": true,
+  "type": "module",
+  "version": "2.6.5"
+}

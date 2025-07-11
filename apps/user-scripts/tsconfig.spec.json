@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "outDir": "./out-tsc/vitest",
+    "types": [
+      "vitest/globals",
+      "vitest/importMeta",
+      "vite/client",
+      "node",
+      "vitest"
+    ]
+  },
+  "extends": "../../tsconfig.base.json",
+  "include": [
+    "vite.config.ts",
+    "src/**/*.test.ts",
+    "src/**/*.d.ts",
+    "src/**/*.js"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
+}

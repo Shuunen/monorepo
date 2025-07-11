@@ -21,6 +21,9 @@
     },
     {
       "path": "./libs/vite-plugins"
+    },
+    {
+      "path": "./apps/user-scripts"
     }
   ]
 }

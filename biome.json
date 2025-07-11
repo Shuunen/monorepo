@@ -96,6 +96,27 @@
     },
     {
       "includes": [
+        "**/*.user.js"
+      ],
+      "javascript": {
+        "globals": [
+          "atob",
+          "addMbField",
+          "KeyboardEvent",
+          "addMbSubmit",
+          "FormData",
+          "insertMbForm",
+          "localStorage",
+          "createMbForm",
+          "module",
+          "MutationObserver",
+          "Shuutils",
+          "textFromSelector"
+        ]
+      }
+    },
+    {
+      "includes": [
         "**/*.jsx",
         "**/*.tsx"
       ],

@@ -12,6 +12,7 @@
   "globals": {
     "__dirname": "readonly",
     "Audio": "readonly",
+    "atob": "readonly",
     "Blob": "readonly",
     "CustomEvent": "readonly",
     "clearInterval": "readonly",
@@ -20,9 +21,12 @@
     "document": "readonly",
     "Event": "readonly",
     "File": "readonly",
+    "FormData": "readonly",
     "fetch": "readonly",
     "HTMLElement": "readonly",
     "HTMLInputElement": "readonly",
+    "KeyboardEvent": "readonly",
+    "localStorage": "readonly",
     "Node": "readonly",
     "process": "readonly",
     "setInterval": "readonly",
@@ -52,6 +56,26 @@
           "error",
           2
         ]
+      }
+    },
+    {
+      "files": [
+        "*.user.js"
+      ],
+      "globals": {
+        "addMbField": "readonly",
+        "addMbSubmit": "readonly",
+        "createMbForm": "readonly",
+        "insertMbForm": "readonly",
+        "MutationObserver": "readonly",
+        "module": "readonly",
+        "Shuutils": "readonly",
+        "textFromSelector": "readonly"
+      },
+      "rules": {
+        "jest/require-hook": "off",
+        "no-commonjs": "off",
+        "numeric-separators-style": "off"
       }
     },
     {
@@ -212,6 +236,7 @@
     "oxc/no-optional-chaining": "off",
     "prefer-default-export": "off",
     "sort-imports": "off",
+    "unambiguous": "off",
     "unicorn/filename-case": [
       "error",
       {

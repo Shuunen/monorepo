@@ -1,5 +1,4 @@
 /* c8 ignore start */
-// @ts-ignore
 import { Logger } from '@shuunen/shuutils'
 import dashBtn from 'node-dash-button'
 
@@ -17,9 +16,7 @@ const buttons = [
 
 for (const button of buttons) {
   logger.info(`listening to button "${button.name}" with mac ${button.mac}`)
-  // @ts-ignore
   button.instance = dashBtn(button.mac, undefined, undefined, 'arp')
-  // @ts-ignore
   button.instance.on('detected', () => {
     logger.info(`"${button.name}" has been clicked`)
   })

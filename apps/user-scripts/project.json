@@ -1,0 +1,10 @@
+{
+  "name": "user-scripts",
+  "targets": {
+    "test": {
+      "options": {
+        "coverage.thresholds.100": false
+      }
+    }
+  }
+}
