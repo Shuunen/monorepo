@@ -3,7 +3,8 @@
 // @description  This script let you export data from AliExpress
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/aliexpress-takeout.user.js
 // @grant        none
-// @match        https://*.aliexpress.*/*
+// @match        https://www.aliexpress.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=aliexpress.com
 // @name         AliExpress Takeout - Get data with you
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/mb-import-utils.js

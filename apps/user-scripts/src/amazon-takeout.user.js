@@ -3,7 +3,8 @@
 // @description  This script let you export data from Amazon
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-takeout.user.js
 // @grant        none
-// @match        https://www.amazon.*/*
+// @match        https://www.amazon.fr/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.fr
 // @name         Amazon Takeout - Get data with you
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/mb-import-utils.js
