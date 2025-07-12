@@ -159,7 +159,6 @@ const score20Styled = (rating, reviews) => {
    * @returns {void} nothing and alter the score section dom element
    */
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX ME later
   function addPricePerWeight({ currency, price, product, scoreSection }) {
     const pricePerWeightElement = product.querySelector(selectors.productPricePerWeight)
     const pricePerWeightSection = document.createElement('div')

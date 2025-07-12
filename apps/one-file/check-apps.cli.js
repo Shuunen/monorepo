@@ -180,7 +180,7 @@ function checkArchive(archive) {
       const isValid = firstFolder?.name === expectedFolder
       if (!isValid && firstFolder) logger.warn(`Found ${color(firstFolder.name)} instead of ${color(expectedFolder)} in ${color(archive)}`)
       if (!isValid) writeFileSync(path.join(currentFolder, `check-apps-error-${expectedFolder}.json`), JSON.stringify(content, undefined, nbSpaces))
-      resolve()
+      void resolve()
     })
   })
 }

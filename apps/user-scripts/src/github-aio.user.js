@@ -19,32 +19,63 @@ const msInSecond = 1000
 const cacheDurationMinutes = 30
 const cacheDurationMs = cacheDurationMinutes * minutesInHour * msInSecond
 const countError = -1
+const selectors = {
+  lastLink: '.mr-3.Link--muted:last-of-type',
+  repoLink: 'a[itemprop="name codeRepository"]',
+  userRepos: '#user-repositories-list > ul > li:not(.github-aio)',
+}
 let stopQuerying = false
 
+/**
+ * Create issue count link element
+ * @param {string} repoFullName - The full name of the repo
+ * @param {number} count - The issue count
+ * @returns {HTMLAnchorElement} The created link element
+ */
+function createIssueCountLink(repoFullName, count) {
+  const link = document.createElement('a')
+  // eslint-disable-next-line unicorn/no-keyword-prefix
+  link.className = `${count > 0 ? '' : 'Link--muted'} tooltipped tooltipped-s mr-3`
+  if (count > 0) link.style.color = 'var(--color-ansi-red) !important'
+  else if (count === 0) link.style.color = 'var(--color-ansi-green) !important'
+  link.innerHTML = `${bugIcon} ${count === countError ? '&nbsp;?' : count}`
+  link.href = `/${repoFullName}/issues`
+  link.setAttribute('aria-label', 'see issues')
+  return link
+}
+
+/**
+ * Get repository full name from repo element
+ * @param {HTMLElement} repo - The repo element
+ * @returns {string} The repo full name or "" an empty string if not found
+ */
+function getRepoFullName(repo) {
+  const repoLinkElement = repo.querySelector(selectors.repoLink)
+  const repoLink = repoLinkElement?.getAttribute('href') ?? ''
+  if (repoLink === '') throw new Error(`no repo link found in : ${repo}`)
+  const repoFullName = repoLink.slice(1) // remove the leading /
+  if (!repoFullName) throw new Error(`failed to extract repo full name from link :${repoLink}`)
+  return repoFullName
+}
+
+/**
+ * Get issue count from cache
+ * @param {string} cacheKey The cache key to use
+ * @returns {number} The issue count or -1 if not found
+ */
+function getIssueCountCached(cacheKey) {
+  const cachedData = localStorage.getItem(cacheKey)
+  if (!cachedData) return countError
+  const { count = countError, timestamp } = JSON.parse(cachedData)
+  const isFresh = Date.now() - timestamp < cacheDurationMs
+  if (!isFresh) return countError
+  return count
+}
+
 // oxlint-disable-next-line max-lines-per-function
-;(() => {
+function githubAio() {
   /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('github-aio')
-  const selectors = {
-    lastLink: '.mr-3.Link--muted:last-of-type',
-    repoLink: 'a[itemprop="name codeRepository"]',
-    userRepos: '#user-repositories-list > ul > li:not(.github-aio)',
-  }
-  /**
-   * Get issue count from cache
-   * @param {string} repoFullName The full name of the repo like "owner/repo"
-   * @param {string} cacheKey The cache key to use
-   * @returns {number} The issue count or -1 if not found
-   */
-  function getIssueCountCached(repoFullName, cacheKey) {
-    const cachedData = localStorage.getItem(cacheKey)
-    if (!cachedData) return countError
-    const { count = countError, timestamp } = JSON.parse(cachedData)
-    const isFresh = Date.now() - timestamp < cacheDurationMs
-    if (!isFresh) return countError
-    utils.debug('using cached issue count for', repoFullName)
-    return count
-  }
   /**
    * Fetch issue count via API
    * @param {string} repoFullName The full name of the repo like "owner/repo"
@@ -86,45 +117,9 @@ let stopQuerying = false
    */
   function getIssueCount(repoFullName) {
     const cacheKey = `github-aio-issues-${repoFullName}`
-    const cachedCount = getIssueCountCached(repoFullName, cacheKey)
+    const cachedCount = getIssueCountCached(cacheKey)
     if (cachedCount !== countError) return Promise.resolve(cachedCount)
     return getIssueCountApi(repoFullName, cacheKey, cachedCount)
-  }
-  /**
-   * Get repository full name from repo element
-   * @param {HTMLElement} repo - The repo element
-   * @returns {string} The repo full name or "" an empty string if not found
-   */
-  function getRepoFullName(repo) {
-    const repoLinkElement = repo.querySelector(selectors.repoLink)
-    const repoLink = repoLinkElement?.getAttribute('href') ?? ''
-    if (repoLink === '') {
-      utils.error('no repo link found in', repo)
-      return ''
-    }
-    const repoFullName = repoLink.slice(1) // remove the leading /
-    if (!repoFullName) {
-      utils.error('failed to extract repo full name from link :', repoLink)
-      return ''
-    }
-    return repoFullName
-  }
-  /**
-   * Create issue count link element
-   * @param {string} repoFullName - The full name of the repo
-   * @param {number} count - The issue count
-   * @returns {HTMLAnchorElement} The created link element
-   */
-  function createIssueCountLink(repoFullName, count) {
-    const link = document.createElement('a')
-    // eslint-disable-next-line unicorn/no-keyword-prefix
-    link.className = `${count > 0 ? '' : 'Link--muted'} tooltipped tooltipped-s mr-3`
-    if (count > 0) link.style.color = 'var(--color-ansi-red) !important'
-    else if (count === 0) link.style.color = 'var(--color-ansi-green) !important'
-    link.innerHTML = `${bugIcon} ${count === countError ? '&nbsp;?' : count}`
-    link.href = `/${repoFullName}/issues`
-    link.setAttribute('aria-label', 'see issues')
-    return link
   }
   /**
    * Augment a repo with issue count
@@ -134,7 +129,6 @@ let stopQuerying = false
     const repoFullName = getRepoFullName(repo)
     if (repoFullName === '') return
     const lastLink = repo.querySelector(selectors.lastLink)
-    utils.debug({ lastLink, repo })
     const count = await getIssueCount(repoFullName)
     const link = createIssueCountLink(repoFullName, count)
     lastLink?.insertAdjacentHTML('afterend', link.outerHTML)
@@ -171,4 +165,8 @@ let stopQuerying = false
   utils.onPageChange(() => processDebounced('page-change'))
   document.addEventListener('DOMContentLoaded', () => process('initial-dom-loaded'))
   void process('initial-dom-ready')
-})()
+}
+
+githubAio().catch(error => {
+  throw error
+})

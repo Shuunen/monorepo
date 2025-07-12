@@ -40,7 +40,7 @@ function shellCommand(cmd) {
     // oxlint-disable-next-line max-nested-callbacks
     exec(cmd, (error, stdout, stderr) => {
       if (error) logger.error(error)
-      resolve(stdout || stderr)
+      void resolve(stdout || stderr)
     })
   })
 }
