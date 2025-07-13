@@ -12,6 +12,9 @@ export default defineConfig({
     reportCompressedSize: true,
   },
   cacheDir: '../../node_modules/.vite/apps/what-now',
+  html: {
+    cspNonce: 'shu1772n1',
+  },
   plugins: [tailwindcss(), uniqueMark()],
   server: {
     port: 8080,
