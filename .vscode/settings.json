@@ -12,6 +12,7 @@
     "vite",
     "vitest",
     "yoda",
+    "ytdl",
     "zxing"
   ],
   "javascript.format.insertSpaceAfterConstructor": false,
