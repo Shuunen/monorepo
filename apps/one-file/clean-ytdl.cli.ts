@@ -4,13 +4,22 @@ import { blue, green, Logger, red, yellow } from '@shuunen/shuutils'
 
 // cd into the folder and use me like : bun ~/Projects/github/monorepo/apps/one-file/clean-ytdl.cli.ts
 
-const logger = new Logger({ willOutputToMemory: true })
-const currentFolder = process.cwd()
-const dry = false // set to false to actually rename files
-const count = {
+export const logger = new Logger({ willOutputToMemory: true })
+export const currentFolder = process.cwd()
+export const options = { dry: false } // set dry to false to actually rename files
+export const count = {
   deleted: 0,
   renamed: 0,
   skipped: 0,
+}
+
+/**
+ * Reset count for testing
+ */
+export function resetCount() {
+  count.deleted = 0
+  count.renamed = 0
+  count.skipped = 0
 }
 
 /**
@@ -19,10 +28,10 @@ const count = {
  * @param {string} reason - reason for deletion
  * @returns {void}
  */
-function deleteFile(filePath: string, reason: string) {
-  if (!dry) unlinkSync(filePath) // delete the file if it already exists
+export function deleteFile(filePath: string, reason: string) {
+  if (!options.dry) unlinkSync(filePath) // delete the file if it already exists
   const file = path.basename(filePath)
-  logger.info(`${red(dry ? 'Should delete' : 'Deleted')} file : ${blue(file)}, reason : ${red(reason)}`)
+  logger.info(`${red(options.dry ? 'Should delete' : 'Deleted')} file : ${blue(file)}, reason : ${red(reason)}`)
   count.deleted += 1
 }
 
@@ -33,9 +42,9 @@ function deleteFile(filePath: string, reason: string) {
  * @returns {void}
  * @example renameFile('video (2160p_25fps_AV1-128kbit_AAC-French).mp4', 'video.mp4')
  */
-function renameFile(oldFilePath: string, newFilePath: string) {
-  if (!dry) renameSync(oldFilePath, newFilePath)
-  logger.info(`${dry ? 'Should rename' : 'Renamed'} file : ${yellow(path.basename(oldFilePath))} to ${green(path.basename(newFilePath))}`)
+export function renameFile(oldFilePath: string, newFilePath: string) {
+  if (!options.dry) renameSync(oldFilePath, newFilePath)
+  logger.info(`${options.dry ? 'Should rename' : 'Renamed'} file : ${yellow(path.basename(oldFilePath))} to ${green(path.basename(newFilePath))}`)
   count.renamed += 1
 }
 
@@ -47,7 +56,7 @@ function renameFile(oldFilePath: string, newFilePath: string) {
  * @example cleanFileName('video (English_ASR).srt') // returns 'video.en.srt'
  */
 // oxlint-disable-next-line max-lines-per-function
-function cleanFileName(file: string): string {
+export function cleanFileName(file: string): string {
   return (
     file
       // remove (2160p_25fps_AV1-128kbit_AAC-French)
@@ -85,7 +94,7 @@ function cleanFileName(file: string): string {
  * @param {string} filePath - file path to check
  * @returns {boolean} true if the file exists, false otherwise
  */
-function fileExists(filePath: string): boolean {
+export function fileExists(filePath: string): boolean {
   try {
     return statSync(filePath).isFile()
   } catch {
@@ -98,7 +107,7 @@ function fileExists(filePath: string): boolean {
  * @param {string} file - file name to check
  * @returns {boolean} true if the file should be deleted, false otherwise
  */
-function shouldDelete(file: string): boolean {
+export function shouldDelete(file: string): boolean {
   // I don't need french subtitles ^^'
   if (file.endsWith('.French.srt')) return true
   if (file.endsWith('(French_ASR).srt')) return true
@@ -112,7 +121,7 @@ function shouldDelete(file: string): boolean {
  * @returns {void}
  * @example checkFile('video (2160p_25fps_AV1-128kbit_AAC-French).mp4')
  */
-function checkFile(file: string) {
+export function checkFile(file: string) {
   const oldFilePath = `${currentFolder}/${file}`
   if (shouldDelete(file)) {
     deleteFile(oldFilePath, 'unwanted file')
@@ -132,7 +141,7 @@ function checkFile(file: string) {
  * Check files to remove unwanted characters and rename or delete them
  * @param {string[]} files - list of files to rename
  */
-function checkFiles(files: string[]) {
+export function checkFiles(files: string[]) {
   for (const file of files) checkFile(file)
 }
 
@@ -140,7 +149,7 @@ function checkFiles(files: string[]) {
  * Get files
  * @returns {string[]} list of files
  */
-function getFiles() {
+export function getFiles() {
   logger.info(`Scanning dir ${currentFolder}...`)
   const files = readdirSync(currentFolder)
   logger.info(`Found ${blue(files.length.toString())} files`)
@@ -150,16 +159,16 @@ function getFiles() {
 /**
  * Show the final report of operations
  */
-function showReport() {
-  logger.info(`${red(count.deleted.toString())} files ${dry ? 'should be ' : ''}deleted`)
-  logger.info(`${yellow(count.renamed.toString())} files ${dry ? 'should be ' : ''}renamed`)
+export function showReport() {
+  logger.info(`${red(count.deleted.toString())} files ${options.dry ? 'should be ' : ''}deleted`)
+  logger.info(`${yellow(count.renamed.toString())} files ${options.dry ? 'should be ' : ''}renamed`)
   logger.info(`${green(count.skipped.toString())} files skipped (no changes needed)`)
 }
 
 /**
  * Start the check
  */
-function start() {
+export function start() {
   logger.info('Clean YouTube downloaded files')
   const files = getFiles()
   checkFiles(files)
@@ -171,4 +180,6 @@ function start() {
   logger.success('Clean is done')
 }
 
-start()
+/* c8 ignore next 2 */
+// avoid running this script if it's imported for testing
+if (process.argv[1]?.includes('clean-ytdl.cli.ts')) start()
