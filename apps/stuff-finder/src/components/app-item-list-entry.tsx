@@ -12,7 +12,7 @@ import { itemToLocation } from '../utils/item.utils'
 
 export function AppItemListEntry({ display, item }: Readonly<{ display: Display; item: Item }>) {
   const title = `${item.name}${(typeof item.brand === 'string') && item.brand.length > 0 ? ` - ${item.brand.trim()}` : ''}`
-  const titleStyle = useMemo(() => ({ fontSize: 18, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }), [])
+  const titleStyle = useMemo(() => ({ color: 'black', fontSize: 18, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }), [])
   const subtitle = itemToLocation(item)
   const subtitleStyle = useMemo(() => ({ color: display === 'card' ? '#333' : 'grey', fontSize: 16, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }), [display])
   const listStyle = useMemo(() => ({ background: 'white', transition: 'filter 0.3s' }), [])
