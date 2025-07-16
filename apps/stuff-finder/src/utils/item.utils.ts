@@ -96,7 +96,7 @@ export const itemForm = {
     price: createTextField({ columns: 2, label: 'Price', regex: /^\d{1,5}$/u, unit: '€' }),
     // line
     details: createTextField({ columns: 5, label: 'Details', maxLength: 200 }),
-    reference: createTextField({ columns: 3, isRequired: true, label: 'Reference', maxLength: 30, regex: /^[\w-]{3,50}$/u }),
+    reference: createTextField({ columns: 3, isRequired: true, label: 'Reference', maxLength: 30, regex: /^[\w/-]{3,50}$/u }),
     status: createSelectField({ columns: 2, label: 'Status', options: valuesToOptions(itemStatus), value: 'bought' }),
     // line
     photo: createTextField({ columns: 5, label: 'Photo', regex: /^.+$/u }),
