@@ -5,15 +5,17 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import { useCallback, useMemo } from 'preact/hooks'
 import { route } from 'preact-router'
+import { formatCurrency } from '../pages/page-metrics.utils'
 import type { Item } from '../types/item.types'
 import type { Display } from '../types/theme.types'
 import { itemToImageUrl } from '../utils/database.utils'
 import { itemToLocation } from '../utils/item.utils'
 
-export function AppItemListEntry({ display, item }: Readonly<{ display: Display; item: Item }>) {
+export function AppItemListEntry({ display, item, showPrice }: Readonly<{ display: Display; item: Item; showPrice?: boolean }>) {
   const title = `${item.name}${(typeof item.brand === 'string') && item.brand.length > 0 ? ` - ${item.brand.trim()}` : ''}`
   const titleStyle = useMemo(() => ({ color: 'black', fontSize: 18, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }), [])
-  const subtitle = itemToLocation(item)
+  const location = itemToLocation(item)
+  const subtitle = showPrice ? `${location} - ${formatCurrency(item.price)}` : location
   const subtitleStyle = useMemo(() => ({ color: display === 'card' ? '#333' : 'grey', fontSize: 16, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }), [display])
   const listStyle = useMemo(() => ({ background: 'white', transition: 'filter 0.3s' }), [])
   const cardStyle = useMemo(() => ({ ':hover': { boxShadow: '0 0 20px 0 rgba(0, 0, 0, 0.5)' }, cursor: 'pointer', height: '100%', maxWidth: 300, position: 'relative', width: '100%' }), [])
