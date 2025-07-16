@@ -49,7 +49,7 @@ it('itemToPrintData value E', () => {
 })
 
 it('itemToPrintData location A', () => {
-  expect(itemToPrintData({ ...itemA, box: 'A (apple)', drawer: 4 }).location).toEqual('A4')
+  expect(itemToPrintData({ ...itemA, box: 'A (apple)', drawer: 4 }).location).toMatchInlineSnapshot(`"A‧4"`)
 })
 it('itemToPrintData location B', () => {
   expect(itemToPrintData({ ...itemA, box: 'A (apple)', drawer: -1 }).location).toEqual('A')
@@ -61,7 +61,7 @@ it('itemToPrintData location D', () => {
   expect(itemToPrintData({ ...itemA, box: '', drawer: -1 }).location).toEqual('')
 })
 it('itemToPrintData location E', () => {
-  expect(itemToPrintData({ ...itemA, box: 'A (apple)', drawer: 4 }).location).toEqual('A4')
+  expect(itemToPrintData({ ...itemA, box: 'A (apple)', drawer: 4 }).location).toMatchInlineSnapshot(`"A‧4"`)
 })
 it('itemToPrintData location F', () => {
   expect(itemToPrintData({ ...itemA, box: 'A (apple)', drawer: -1 }).location).toEqual('A')
@@ -70,13 +70,19 @@ it('itemToPrintData location G', () => {
   expect(itemToPrintData({ ...itemA, box: '', drawer: 4 }).location).toEqual('')
 })
 it('itemToPrintData location H no box imply no location', () => {
-  expect(itemToPrintData(itemA).location).toEqual('B2')
+  expect(itemToPrintData(itemA).location).toMatchInlineSnapshot(`"B‧2"`)
 })
 it('itemToPrintData location I', () => {
   expect(itemToPrintData({ ...itemA, box: '', drawer: -1 }).location).toEqual('')
 })
 it('itemToPrintData location J', () => {
   expect(itemToPrintData(itemB).location).toEqual('')
+})
+it('itemToPrintData location K box room', () => {
+  expect(itemToPrintData(mockItem({ box: 'Salon', drawer: 3 })).location).toMatchInlineSnapshot(`"Salon‧3"`)
+})
+it('itemToPrintData location L box room no drawer', () => {
+  expect(itemToPrintData(mockItem({ box: 'Salon', drawer: undefined })).location).toMatchInlineSnapshot(`"Salon"`)
 })
 
 it('itemToPrintData A', () => {

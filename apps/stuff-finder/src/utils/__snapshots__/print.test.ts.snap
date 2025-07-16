@@ -2,7 +2,7 @@
 
 exports[`itemToPrintData A 1`] = `
 {
-  "location": "B2",
+  "location": "B‧2",
   "text": "name brand details",
   "value": "reference",
 }
