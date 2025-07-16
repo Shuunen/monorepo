@@ -62,7 +62,9 @@ export function PageItemAddEdit({ id = '', isEdit = false }: Readonly<{ id?: str
         return
       }
       logger.showSuccess('item updated successfully')
-      route(`/item/details/${item.$id}`)
+      // Go back to the previous page in history instead of navigating to details
+      // This preserves the user's navigation flow
+      globalThis.history.back()
     },
     [isEdit],
   )
