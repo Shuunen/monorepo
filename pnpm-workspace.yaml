@@ -8,3 +8,4 @@ onlyBuiltDependencies:
   - bun
   - esbuild
   - nx
+  - oxc-resolver
