@@ -79,7 +79,7 @@ function MetricCardAmounts({ metrics }: { metrics: MetricsData }) {
   return (
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <MetricCard amount={metrics.totalItems} color={tw('text-purple-700')} icon={SpeedIcon} title="items registered" />
-      <MetricCard amount={metrics.toGiveItems} color={tw('text-green-600')} icon={OutboxIcon} title="items to give" />
+      <MetricCard amount={metrics.itemsToGive.length} color={tw('text-green-600')} icon={OutboxIcon} title="items to give" />
       <MetricCard amount={formatCurrency(metrics.totalValue)} color={tw('text-blue-600')} icon={ShoppingCartIcon} title="total value" />
     </div>
   )
@@ -90,6 +90,7 @@ function MetricCardLists({ metrics }: { metrics: MetricsData }) {
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <MetricCard color={tw('text-red-600')} items={metrics.itemsNotPrinted} title={`Items not printed : ${metrics.itemsNotPrinted.length}`} />
       <MetricCard color={tw('text-red-600')} items={metrics.itemsWithoutLocation} showPrice={true} title={`Items without location : ${metrics.itemsWithoutLocation.length}`} />
+      <MetricCard color={tw('text-red-600')} items={metrics.itemsWithoutPhoto} title={`Items without photo : ${metrics.itemsWithoutPhoto.length}`} />
       <MetricCard color={tw('text-red-600')} items={metrics.itemsWithoutPrice} title={`Items without price : ${metrics.itemsWithoutPrice.length}`} />
       <MetricCard color={tw('text-blue-700')} title="Storage locations">
         {Object.entries(metrics.boxAnalysis)
@@ -99,6 +100,7 @@ function MetricCardLists({ metrics }: { metrics: MetricsData }) {
           ))}
       </MetricCard>
       <MetricCard color={tw('text-green-700')} items={metrics.topValueItems} showPrice={true} title={`Top ${topValueItems} most valuable`} />
+      <MetricCard color={tw('text-yellow-700')} items={metrics.itemsToGive} title={`Items to give : ${metrics.itemsToGive.length}`} />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { Item } from '../types/item.types'
 import { mockItem } from '../utils/mock.utils'
-import { calculateBasicMetrics, calculateBoxAnalysis, calculateMetrics, calculateStatusCounts, formatCurrency, formatPercentage, getItemsNotPrinted, getItemsWithoutLocation, getItemsWithoutPrice, getToGiveItemsCount, getTopValueItems } from './page-metrics.utils'
+import { calculateBasicMetrics, calculateBoxAnalysis, calculateMetrics, calculateStatusCounts, formatCurrency, formatPercentage, getItemsNotPrinted, getItemsWithoutLocation, getItemsWithoutPhoto, getItemsWithoutPrice, getToGiveItems, getTopValueItems } from './page-metrics.utils'
 
 const mockItems: Item[] = [
   mockItem({
@@ -44,9 +44,22 @@ const mockItems: Item[] = [
     details: 'Old cable',
     isPrinted: false,
     name: 'USB Cable',
+    photos: [], // No photos
     price: -1, // Invalid price
     reference: 'USBCABLE',
     status: 'lost',
+  }),
+  mockItem({
+    $id: '5',
+    box: 'C (couteau)',
+    brand: 'Generic',
+    details: 'Power cable',
+    isPrinted: true,
+    name: 'Power Cable',
+    photos: undefined, // No photos
+    price: 10,
+    reference: 'POWERCABLE',
+    status: 'bought',
   }),
 ]
 
@@ -56,8 +69,8 @@ describe('page-metrics.utils', () => {
 
     expect(result).toMatchInlineSnapshot(`
       {
-        "totalItems": 4,
-        "totalValue": 800,
+        "totalItems": 5,
+        "totalValue": 810,
       }
     `)
   })
@@ -67,7 +80,7 @@ describe('page-metrics.utils', () => {
 
     expect(result).toMatchInlineSnapshot(`
       {
-        "bought": 2,
+        "bought": 3,
         "for-sell": 1,
         "lost": 1,
       }
@@ -86,6 +99,10 @@ describe('page-metrics.utils', () => {
         "B (usb & audio)": {
           "count": 1,
           "totalValue": 300,
+        },
+        "C (couteau)": {
+          "count": 1,
+          "totalValue": 10,
         },
         "Unknown": {
           "count": 1,
@@ -136,18 +153,32 @@ describe('page-metrics.utils', () => {
           "reference": "WH1000XM4",
           "status": "for-sell",
         },
+        {
+          "$createdAt": "2025-07-16T13:42:26.000Z",
+          "$id": "5",
+          "barcode": "barcode B",
+          "box": "C (couteau)",
+          "brand": "Generic",
+          "details": "Power cable",
+          "drawer": 2,
+          "isPrinted": true,
+          "name": "Power Cable",
+          "photos": undefined,
+          "price": 10,
+          "reference": "POWERCABLE",
+          "status": "bought",
+        },
       ]
     `)
   })
 
   it('calculateMetrics A should return complete metrics object', () => {
     const result = calculateMetrics(mockItems)
-
-    expect(result.totalItems).toMatchInlineSnapshot(`4`)
-    expect(result.totalValue).toMatchInlineSnapshot(`800`)
-    expect(result.topValueItems).toHaveLength(2)
-    expect(Object.keys(result.boxAnalysis)).toHaveLength(3)
-    expect(Object.keys(result.statusCounts)).toHaveLength(3)
+    expect(result.totalItems).toMatchInlineSnapshot(`5`)
+    expect(result.totalValue).toMatchInlineSnapshot(`810`)
+    expect(result.topValueItems, 'topValueItems length').toHaveLength(3)
+    expect(Object.keys(result.boxAnalysis), 'boxAnalysis length').toHaveLength(4)
+    expect(Object.keys(result.statusCounts), 'statusCounts length').toHaveLength(3)
   })
 
   it('formatCurrency A should format currency correctly', () => {
@@ -197,8 +228,8 @@ describe('page-metrics.utils', () => {
   })
 
   it('getToGiveItemsCount A should return 0 when no items have to-give status', () => {
-    const result = getToGiveItemsCount(mockItems)
-    expect(result).toMatchInlineSnapshot(`0`)
+    const result = getToGiveItems(mockItems)
+    expect(result).toMatchInlineSnapshot(`[]`)
   })
 
   it('getToGiveItemsCount B should count items with to-give status', () => {
@@ -223,9 +254,48 @@ describe('page-metrics.utils', () => {
       }),
     ]
 
-    const result = getToGiveItemsCount(itemsWithToGive)
+    const result = getToGiveItems(itemsWithToGive)
 
-    expect(result).toMatchInlineSnapshot(`2`)
+    expect(result).toMatchInlineSnapshot(`
+      [
+        {
+          "$createdAt": "2025-07-16T13:42:26.000Z",
+          "$id": "1",
+          "barcode": "barcode B",
+          "box": "B (usb & audio)",
+          "brand": "brand B",
+          "details": "details B",
+          "drawer": 2,
+          "isPrinted": false,
+          "name": "Item to give 1",
+          "photos": [
+            "some-uuid",
+            "https://some.url/to/image.jpg",
+          ],
+          "price": 42,
+          "reference": "GIVE1",
+          "status": "to-give",
+        },
+        {
+          "$createdAt": "2025-07-16T13:42:26.000Z",
+          "$id": "2",
+          "barcode": "barcode B",
+          "box": "B (usb & audio)",
+          "brand": "brand B",
+          "details": "details B",
+          "drawer": 2,
+          "isPrinted": false,
+          "name": "Item to give 2",
+          "photos": [
+            "some-uuid",
+            "https://some.url/to/image.jpg",
+          ],
+          "price": 42,
+          "reference": "GIVE2",
+          "status": "to-give",
+        },
+      ]
+    `)
   })
 
   it('getItemsNotPrinted A should return items that are not printed', () => {
@@ -260,14 +330,27 @@ describe('page-metrics.utils', () => {
     `)
   })
 
+  it('getItemsWithoutPhoto A should return items without photos', () => {
+    const result = getItemsWithoutPhoto(mockItems)
+
+    expect(result.map(item => item.$id)).toMatchInlineSnapshot(`
+      [
+        "4",
+        "5",
+      ]
+    `)
+  })
+
   it('calculateMetrics B should include new list properties', () => {
     const result = calculateMetrics(mockItems)
 
     expect(result.itemsNotPrinted).toHaveLength(2)
     expect(result.itemsWithoutLocation).toHaveLength(1)
+    expect(result.itemsWithoutPhoto).toHaveLength(2)
     expect(result.itemsWithoutPrice).toHaveLength(2)
     expect(result.itemsNotPrinted[0].$id).toMatchInlineSnapshot(`"2"`)
     expect(result.itemsWithoutLocation[0].$id).toMatchInlineSnapshot(`"4"`)
+    expect(result.itemsWithoutPhoto[0].$id).toMatchInlineSnapshot(`"4"`)
     expect(result.itemsWithoutPrice[0].$id).toMatchInlineSnapshot(`"3"`)
   })
 })

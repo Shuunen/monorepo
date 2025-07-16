@@ -7,17 +7,7 @@ export type BoxAnalysis = Record<string, { count: number; totalValue: number }>
 
 export type StatusCounts = Record<string, number>
 
-export type MetricsData = {
-  totalItems: number
-  totalValue: number
-  boxAnalysis: BoxAnalysis
-  toGiveItems: number
-  statusCounts: StatusCounts
-  topValueItems: Item[]
-  itemsNotPrinted: Item[]
-  itemsWithoutLocation: Item[]
-  itemsWithoutPrice: Item[]
-}
+export type MetricsData = ReturnType<typeof calculateMetrics>
 
 export function calculateBasicMetrics(items: Item[]) {
   const totalItems = items.length
@@ -54,8 +44,8 @@ export function getTopValueItems(items: Item[]): Item[] {
     .slice(0, topValueItems)
 }
 
-export function getToGiveItemsCount(items: Item[]): number {
-  return items.filter(item => item.status === 'to-give').length
+export function getToGiveItems(items: Item[]) {
+  return items.filter(item => item.status === 'to-give')
 }
 
 export function getItemsNotPrinted(items: Item[]): Item[] {
@@ -70,15 +60,20 @@ export function getItemsWithoutPrice(items: Item[]): Item[] {
   return items.filter(item => item.price <= 0)
 }
 
-export function calculateMetrics(items: Item[]): MetricsData {
+export function getItemsWithoutPhoto(items: Item[]): Item[] {
+  return items.filter(item => !item.photos || item.photos.length === 0)
+}
+
+export function calculateMetrics(items: Item[]) {
   return {
     ...calculateBasicMetrics(items),
     boxAnalysis: calculateBoxAnalysis(items),
     itemsNotPrinted: getItemsNotPrinted(items),
+    itemsToGive: getToGiveItems(items),
     itemsWithoutLocation: getItemsWithoutLocation(items),
+    itemsWithoutPhoto: getItemsWithoutPhoto(items),
     itemsWithoutPrice: getItemsWithoutPrice(items),
     statusCounts: calculateStatusCounts(items),
-    toGiveItems: getToGiveItemsCount(items),
     topValueItems: getTopValueItems(items),
   }
 }
