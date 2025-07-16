@@ -50,6 +50,11 @@ watchState('isLoading', (value) => { /* handle change */ })
 
 **For detailed unit testing guidelines, see [unit-testing.instructions.md](./instructions/unit-testing.instructions.md)**
 
+### Best Practices
+
+- avoid `as` type assertions unless absolutely necessary
+- follow DRY principle
+
 ## Essential Commands
 
 ```bash
