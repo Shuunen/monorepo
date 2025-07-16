@@ -123,7 +123,7 @@ describe('database.utils', () => {
     const result = await addItemRemotely(item)
     expect(result.ok).toBe(false)
     expect(Result.unwrap(result).error).toMatchInlineSnapshot(
-      `"item id is empty in {"$id":"rec234","barcode":"barcode B","box":"B (usb & audio)","brand":"brand B","details":"details B","drawer":2,"isPrinted":false,"name":"","photos":["some-uuid","https://some.url/to/image.jpg"],"price":42,"reference":"","status":"bought"}"`,
+      `"item id is empty in {"$createdAt":"2025-07-16T13:42:26.000Z","$id":"rec234","barcode":"barcode B","box":"B (usb & audio)","brand":"brand B","details":"details B","drawer":2,"isPrinted":false,"name":"","photos":["some-uuid","https://some.url/to/image.jpg"],"price":42,"reference":"","status":"bought"}"`,
     )
   })
 
@@ -182,7 +182,7 @@ describe('database.utils', () => {
     const result = await updateItemRemotely(item)
     expect(result.ok).toBe(false)
     expect(Result.unwrap(result).error).toMatchInlineSnapshot(
-      `"item id is empty in {"$id":"","barcode":"barcode B","box":"B (usb & audio)","brand":"brand B","details":"details B","drawer":2,"isPrinted":false,"name":"name B","photos":["some-uuid","https://some.url/to/image.jpg"],"price":42,"reference":"reference B","status":"bought"}"`,
+      `"item id is empty in {"$createdAt":"2025-07-16T13:42:26.000Z","$id":"","barcode":"barcode B","box":"B (usb & audio)","brand":"brand B","details":"details B","drawer":2,"isPrinted":false,"name":"name B","photos":["some-uuid","https://some.url/to/image.jpg"],"price":42,"reference":"reference B","status":"bought"}"`,
     )
   })
 
@@ -191,7 +191,7 @@ describe('database.utils', () => {
     const result = await updateItemRemotely(item)
     expect(result.ok).toBe(false)
     expect(Result.unwrap(result).error).toMatchInlineSnapshot(
-      `"item id is empty in {"$id":"rec234","barcode":"barcode B","box":"B (usb & audio)","brand":"brand B","details":"details B","drawer":2,"isPrinted":false,"name":"","photos":["some-uuid","https://some.url/to/image.jpg"],"price":42,"reference":"","status":"bought"}"`,
+      `"item id is empty in {"$createdAt":"2025-07-16T13:42:26.000Z","$id":"rec234","barcode":"barcode B","box":"B (usb & audio)","brand":"brand B","details":"details B","drawer":2,"isPrinted":false,"name":"","photos":["some-uuid","https://some.url/to/image.jpg"],"price":42,"reference":"","status":"bought"}"`,
     )
   })
 
@@ -274,7 +274,7 @@ describe('database.utils', () => {
     const result = await uploadPhotosIfNeeded(item)
     expect(result.ok).toBe(false)
     expect(Result.unwrap(result).error).toMatchInlineSnapshot(
-      `"item id is empty in {"$id":"rec234","barcode":"barcode B","box":"B (usb & audio)","brand":"brand B","details":"details B","drawer":2,"isPrinted":false,"name":"","photos":["https://example.com/photo-a.jpg"],"price":42,"reference":"","status":"bought"}"`,
+      `"item id is empty in {"$createdAt":"2025-07-16T13:42:26.000Z","$id":"rec234","barcode":"barcode B","box":"B (usb & audio)","brand":"brand B","details":"details B","drawer":2,"isPrinted":false,"name":"","photos":["https://example.com/photo-a.jpg"],"price":42,"reference":"","status":"bought"}"`,
     )
   })
 

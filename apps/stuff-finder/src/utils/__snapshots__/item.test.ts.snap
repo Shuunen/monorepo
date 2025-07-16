@@ -4,6 +4,7 @@ exports[`item.utils > addItem A should create remotely & push locally 1`] = `
 Ok {
   "ok": true,
   "value": {
+    "$createdAt": "2020-03-01T00:00:00.000Z",
     "$id": "reference-b",
     "barcode": "barcode B",
     "box": "B (usb & audio)",
@@ -24,7 +25,8 @@ Ok {
 `;
 
 exports[`item.utils > formToItem A default itemForm 1`] = `
-{
+"{
+  "$createdAt": "xxxx-xx-xxTxx:xx:xx.000Z",
   "$id": "",
   "barcode": "",
   "box": "",
@@ -36,12 +38,13 @@ exports[`item.utils > formToItem A default itemForm 1`] = `
   "photos": [],
   "price": -1,
   "reference": "",
-  "status": "bought",
-}
+  "status": "bought"
+}"
 `;
 
 exports[`item.utils > formToItem B itemForm with some values 1`] = `
-{
+"{
+  "$createdAt": "xxxx-xx-xxTxx:xx:xx.000Z",
   "$id": "",
   "barcode": "",
   "box": "",
@@ -51,12 +54,12 @@ exports[`item.utils > formToItem B itemForm with some values 1`] = `
   "isPrinted": false,
   "name": "",
   "photos": [
-    "https://photos.org/200/200",
+    "https://photos.org/200/200"
   ],
   "price": 42,
   "reference": "",
-  "status": "bought",
-}
+  "status": "bought"
+}"
 `;
 
 exports[`item.utils > itemToForm A mocked item 1`] = `
@@ -657,6 +660,7 @@ exports[`item.utils > updateItem A should update remotely & update locally 1`] =
 Ok {
   "ok": true,
   "value": {
+    "$createdAt": "2020-03-01T00:00:00.000Z",
     "$id": "1",
     "barcode": "barcode B",
     "box": "B (usb & audio)",

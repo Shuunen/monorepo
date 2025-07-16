@@ -9,6 +9,7 @@ import { getAsin } from './url.utils'
 const keysToCapitalize = new Set(['details', 'name'])
 
 export const emptyItemSuggestions = {
+  $createdAt: [],
   $id: [],
   barcode: [],
   box: [],

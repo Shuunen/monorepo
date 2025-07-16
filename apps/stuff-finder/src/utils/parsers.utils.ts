@@ -4,12 +4,8 @@ import { itemBoxes, itemStatus, uuidMaxLength } from '../constants'
 
 const itemRequiredStringSchema = pipe(string(), nonEmpty())
 
-/**
- * List of photos $id stored in the bucket
- * @example ['id123','id-456']
- */
-
 export const itemSchema = object({
+  $createdAt: pipe(string(), nonEmpty()),
   $id: pipe(string(), nonEmpty(), maxLength(uuidMaxLength)),
   barcode: fallback(string(), ''),
   box: fallback(picklist(['', ...itemBoxes]), ''),

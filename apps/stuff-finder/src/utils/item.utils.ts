@@ -8,6 +8,7 @@ import { state } from './state.utils'
 import { coolAscii } from './strings.utils'
 
 export const emptyItem = {
+  $createdAt: '',
   $id: '',
   barcode: '',
   box: '',
@@ -131,6 +132,7 @@ export function formToItem(form: typeof itemForm) {
   const { barcode, box, brand, details, drawer, id, isPrinted, name, photo, price, reference, status } = form.fields
   return {
     ...emptyItem,
+    $createdAt: new Date().toISOString(),
     $id: id.value,
     barcode: barcode.value,
     box: boxStringToBox(box.value),

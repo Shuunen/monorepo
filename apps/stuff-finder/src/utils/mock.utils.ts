@@ -9,6 +9,7 @@ import type { State } from './state.utils'
 
 export function mockItem(data: Partial<Item> = {}) {
   return {
+    $createdAt: '2025-07-16T13:42:26.000Z',
     $id: 'rec234',
     barcode: 'barcode B',
     box: 'B (usb & audio)',
@@ -22,7 +23,7 @@ export function mockItem(data: Partial<Item> = {}) {
     reference: 'reference B',
     status: 'bought',
     ...data,
-  } satisfies Item
+  } satisfies Item as Item
 }
 
 export function mockItemModel(data: Partial<ItemModel> = {}) {
@@ -36,7 +37,7 @@ export function mockItemModel(data: Partial<ItemModel> = {}) {
     box: 'B (usb & audio)',
     drawer: 2,
     ...data,
-  } satisfies ItemModel
+  } satisfies ItemModel as ItemModel
 }
 
 export function mockState(data: Partial<State> = {}) {

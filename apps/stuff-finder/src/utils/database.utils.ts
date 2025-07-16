@@ -174,6 +174,7 @@ export function getItemId(item: Item) {
 export function removeAppWriteFields(item: Record<string, unknown>) {
   const clone = structuredClone(item)
   delete clone.$id
+  delete clone.$createdAt
   return clone
 }
 

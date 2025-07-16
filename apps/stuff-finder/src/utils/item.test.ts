@@ -1,4 +1,4 @@
-import { clone, nbMsInMinute, Result, sleep } from '@shuunen/shuutils'
+import { alignForSnap, clone, nbMsInMinute, Result, sleep } from '@shuunen/shuutils'
 import { databaseMock } from './database.mock'
 import { removeAppWriteFields } from './database.utils'
 import { addItem, areItemsEquivalent, boxStringToBox, deleteItem, drawerStringToDrawer, formToItem, getItems, isDataOlderThan, itemBoxToRoom, itemForm, itemToForm, itemToLocation, statusStringToStatus, updateItem } from './item.utils'
@@ -47,7 +47,7 @@ describe('item.utils', () => {
 
   it('formToItem A default itemForm', () => {
     const item = formToItem(itemForm)
-    expect(item).toMatchSnapshot()
+    expect(alignForSnap(item)).toMatchSnapshot()
     expect(item.photos).toHaveLength(0)
   })
 
@@ -57,7 +57,7 @@ describe('item.utils', () => {
     form.fields.price.value = '42'
     form.fields.photo.value = url
     const item = formToItem(form)
-    expect(item).toMatchSnapshot()
+    expect(alignForSnap(item)).toMatchSnapshot()
     expect(item.price).toBe(42)
     expect(item.photos).toHaveLength(1)
     expect(item.photos[0]).toMatchInlineSnapshot(`"https://photos.org/200/200"`)

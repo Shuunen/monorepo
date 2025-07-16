@@ -2,6 +2,7 @@
 
 exports[`addSuggestionsFromAliEx A with working get 1`] = `
 {
+  "$createdAt": [],
   "$id": [],
   "barcode": [],
   "box": [],
@@ -29,6 +30,7 @@ exports[`addSuggestionsFromAliEx A with working get 1`] = `
 
 exports[`addSuggestionsFromAngbo A with working get 1`] = `
 {
+  "$createdAt": [],
   "$id": [],
   "barcode": [],
   "box": [],
@@ -56,6 +58,7 @@ exports[`addSuggestionsFromAngbo A with working get 1`] = `
 
 exports[`addSuggestionsFromCampo B with working get 1`] = `
 {
+  "$createdAt": [],
   "$id": [],
   "barcode": [],
   "box": [],
@@ -85,6 +88,7 @@ exports[`addSuggestionsFromCampo B with working get 1`] = `
 
 exports[`addSuggestionsFromDeyes A with working get 1`] = `
 {
+  "$createdAt": [],
   "$id": [],
   "barcode": [],
   "box": [],
