@@ -1,7 +1,7 @@
 import { nbPercentMax } from '@shuunen/shuutils'
 import type { Item } from '../types/item.types'
 
-export const TOP_ITEMS_COUNT = 5
+export const topValueItems = 10
 
 export type BoxAnalysis = Record<string, { count: number; totalValue: number }>
 
@@ -51,7 +51,7 @@ export function getTopValueItems(items: Item[]): Item[] {
   return items
     .filter(item => item.price > 0)
     .sort((itemA, itemB) => itemB.price - itemA.price)
-    .slice(0, TOP_ITEMS_COUNT)
+    .slice(0, topValueItems)
 }
 
 export function getToGiveItemsCount(items: Item[]): number {
