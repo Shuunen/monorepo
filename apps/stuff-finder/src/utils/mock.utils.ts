@@ -1,6 +1,5 @@
 import { nbDaysInWeek, sleep } from '@shuunen/shuutils'
 import { vi } from 'vitest'
-import { defaultCommonLists } from '../constants'
 import type { Item, ItemModel } from '../types/item.types'
 import { defaultSound } from '../types/sounds.types'
 import { defaultStatus } from '../types/status.types'
@@ -46,7 +45,6 @@ export function mockState(data: Partial<State> = {}) {
     display: 'list',
     items: [] satisfies Item[],
     itemsTimestamp: Date.now(),
-    lists: defaultCommonLists,
     sound: defaultSound,
     status: defaultStatus,
     theme: defaultTheme,

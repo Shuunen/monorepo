@@ -100,8 +100,20 @@ exports[`item.utils > itemToForm A mocked item 1`] = `
           "value": "B (usb & audio)",
         },
         {
+          "label": "Bureau",
+          "value": "Bureau",
+        },
+        {
           "label": "C (couteau)",
           "value": "C (couteau)",
+        },
+        {
+          "label": "Chambre",
+          "value": "Chambre",
+        },
+        {
+          "label": "Cuisine",
+          "value": "Cuisine",
         },
         {
           "label": "D (doll)",
@@ -112,6 +124,10 @@ exports[`item.utils > itemToForm A mocked item 1`] = `
           "value": "E (east)",
         },
         {
+          "label": "Entrée",
+          "value": "Entrée",
+        },
+        {
           "label": "F (périphériques)",
           "value": "F (périphériques)",
         },
@@ -120,8 +136,16 @@ exports[`item.utils > itemToForm A mocked item 1`] = `
           "value": "G (brico & sport)",
         },
         {
+          "label": "Garage",
+          "value": "Garage",
+        },
+        {
           "label": "H (hardware)",
           "value": "H (hardware)",
+        },
+        {
+          "label": "J (à donner)",
+          "value": "J (à donner)",
         },
         {
           "label": "L (lemon)",
@@ -160,8 +184,20 @@ exports[`item.utils > itemToForm A mocked item 1`] = `
           "value": "S (sdb)",
         },
         {
+          "label": "Salle de bain",
+          "value": "Salle de bain",
+        },
+        {
+          "label": "Salon",
+          "value": "Salon",
+        },
+        {
           "label": "T (tour bureau)",
           "value": "T (tour bureau)",
+        },
+        {
+          "label": "Terrasse",
+          "value": "Terrasse",
         },
         {
           "label": "V (violet)",
@@ -397,8 +433,20 @@ exports[`item.utils > itemToForm C no item 1`] = `
           "value": "B (usb & audio)",
         },
         {
+          "label": "Bureau",
+          "value": "Bureau",
+        },
+        {
           "label": "C (couteau)",
           "value": "C (couteau)",
+        },
+        {
+          "label": "Chambre",
+          "value": "Chambre",
+        },
+        {
+          "label": "Cuisine",
+          "value": "Cuisine",
         },
         {
           "label": "D (doll)",
@@ -409,6 +457,10 @@ exports[`item.utils > itemToForm C no item 1`] = `
           "value": "E (east)",
         },
         {
+          "label": "Entrée",
+          "value": "Entrée",
+        },
+        {
           "label": "F (périphériques)",
           "value": "F (périphériques)",
         },
@@ -417,8 +469,16 @@ exports[`item.utils > itemToForm C no item 1`] = `
           "value": "G (brico & sport)",
         },
         {
+          "label": "Garage",
+          "value": "Garage",
+        },
+        {
           "label": "H (hardware)",
           "value": "H (hardware)",
+        },
+        {
+          "label": "J (à donner)",
+          "value": "J (à donner)",
         },
         {
           "label": "L (lemon)",
@@ -457,8 +517,20 @@ exports[`item.utils > itemToForm C no item 1`] = `
           "value": "S (sdb)",
         },
         {
+          "label": "Salle de bain",
+          "value": "Salle de bain",
+        },
+        {
+          "label": "Salon",
+          "value": "Salon",
+        },
+        {
           "label": "T (tour bureau)",
           "value": "T (tour bureau)",
+        },
+        {
+          "label": "Terrasse",
+          "value": "Terrasse",
         },
         {
           "label": "V (violet)",

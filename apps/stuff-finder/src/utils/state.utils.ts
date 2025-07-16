@@ -1,6 +1,6 @@
 import { createState, debounce, isBrowserEnvironment, isTestEnvironment } from '@shuunen/shuutils'
 import { route } from 'preact-router'
-import { defaultCommonLists, defaultCredentials } from '../constants'
+import { defaultCredentials } from '../constants'
 import type { Item } from '../types/item.types'
 import { defaultSound } from '../types/sounds.types'
 import { type AppStatus, defaultStatus } from '../types/status.types'
@@ -32,14 +32,13 @@ export const { state, watchState } = createState(
     items: [] as Item[],
     /** timestamp of the last time items were fetched, in milliseconds */
     itemsTimestamp: 0,
-    lists: defaultCommonLists,
     sound: defaultSound,
     status: defaultStatus,
     /** the display theme of the item list : card or list */
     theme: defaultTheme,
   },
   storage,
-  ['credentials', 'display', 'items', 'itemsTimestamp', 'lists', 'theme'], // avoid status persistence
+  ['credentials', 'display', 'items', 'itemsTimestamp', 'theme'], // avoid status persistence
 )
 
 const statusDelay = 300
@@ -47,7 +46,7 @@ const statusDelay = 300
 const onStatusChange = debounce(onStatusChangeSync, statusDelay)
 
 watchState('status', () => {
-  onStatusChange(state.status)
+  void onStatusChange(state.status)
 })
 
 export type State = typeof state

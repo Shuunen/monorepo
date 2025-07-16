@@ -1,3 +1,4 @@
+// oxlint-disable max-lines
 import { alignForSnap, clone, nbMsInMinute, Result, sleep } from '@shuunen/shuutils'
 import { databaseMock } from './database.mock'
 import { removeAppWriteFields } from './database.utils'
@@ -154,14 +155,22 @@ describe('item.utils', () => {
   it('itemToLocation C partial box without details', () => {
     // @ts-expect-error for testing purposes
     const item = mockItem({ box: 'G' })
-    expect(itemToLocation(item)).toMatchInlineSnapshot(`"Salon G‧2"`)
+    expect(itemToLocation(item)).toMatchInlineSnapshot(`"G‧2"`)
   })
 
   it('itemToLocation D no drawer', () => {
-    // @ts-expect-error for testing purposes
-    const item = mockItem({ box: 'zboubi' })
-    item.drawer = -1
-    expect(itemToLocation(item)).toMatchInlineSnapshot(`"Z"`)
+    const item = mockItem({ box: 'S (sdb)', drawer: -1 })
+    expect(itemToLocation(item)).toMatchInlineSnapshot(`"Salle de bain S (sdb)"`)
+  })
+
+  it('itemToLocation E room box', () => {
+    const item = mockItem({ box: 'Salon', drawer: 2 })
+    expect(itemToLocation(item)).toMatchInlineSnapshot(`"Salon‧2"`)
+  })
+
+  it('itemToLocation F room box no drawer', () => {
+    const item = mockItem({ box: 'Salon', drawer: -1 })
+    expect(itemToLocation(item)).toMatchInlineSnapshot(`"Salon"`)
   })
 
   it('itemBoxToRoom A', () => {
@@ -176,6 +185,9 @@ describe('item.utils', () => {
   })
   it('itemBoxToRoom D empty box', () => {
     expect(itemBoxToRoom('')).toMatchInlineSnapshot(`undefined`)
+  })
+  it('itemBoxToRoom E room box', () => {
+    expect(itemBoxToRoom('Salon')).toMatchInlineSnapshot(`"salon"`)
   })
 
   it('statusStringToStatus A lost', () => {

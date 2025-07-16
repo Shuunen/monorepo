@@ -1,5 +1,5 @@
 import { capitalize, clone, isTestEnvironment, nbMsInMinute, objectSum, Result, readableTimeAgo } from '@shuunen/shuutils'
-import { type CommonLists, itemBoxes } from '../constants'
+import { boxRooms, itemBoxes, itemDrawers, itemStatus } from '../constants'
 import type { Item } from '../types/item.types'
 import { addItemRemotely, deleteItemRemotely, getItemsRemotely, removeAppWriteFields, updateItemRemotely } from './database.utils'
 import { createCheckboxField, createSelectField, createTextField, type Form } from './forms.utils'
@@ -23,18 +23,13 @@ export const emptyItem = {
   status: 'bought',
 } satisfies Item
 
-const boxRooms = {
-  bureau: ['E', 'P', 'Q', 'T', 'Z'] satisfies string[],
-  // biome-ignore lint/style/useNamingConvention: to be refactored
-  entrée: ['A', 'B', 'D', 'H', 'M', 'O', 'W', 'R', 'V'] satisfies string[],
-  'salle de bain': ['S'] satisfies string[],
-  salon: ['G', 'C', 'X', 'N'] satisfies string[],
-} as const
+const letterBoxFormat = /^[A-Z] \(/u
 
 export function itemBoxToRoom(box: Item['box']) {
+  const isLetterBox = letterBoxFormat.test(box)
   const letter = box[0]
   if (letter === undefined) return undefined
-  for (const [location, boxes] of Object.entries(boxRooms)) if (boxes.includes(letter)) return location as keyof typeof boxRooms
+  for (const [location, boxes] of Object.entries(boxRooms)) if (boxes.includes(isLetterBox ? letter : box)) return location as keyof typeof boxRooms
   return undefined
 }
 
@@ -45,8 +40,10 @@ export function statusStringToStatus(status: string) {
   return 'bought' satisfies Item['status']
 }
 
-function optionsFor(type: keyof CommonLists) {
-  return state.lists[type].map(value => ({ label: String(value), value: String(value) }))
+function valuesToOptions(values: ReadonlyArray<string>, addEmpty = false) {
+  const options = values.map(value => ({ label: String(value), value: String(value) }))
+  if (addEmpty) options.unshift({ label: '', value: '' })
+  return options
 }
 
 function deleteItemLocally(item: Item, currentState = state) {
@@ -100,11 +97,11 @@ export const itemForm = {
     // line
     details: createTextField({ columns: 5, label: 'Details', maxLength: 200 }),
     reference: createTextField({ columns: 3, isRequired: true, label: 'Reference', maxLength: 30, regex: /^[\w-]{3,50}$/u }),
-    status: createSelectField({ columns: 2, label: 'Status', options: optionsFor('statuses'), value: 'bought' }),
+    status: createSelectField({ columns: 2, label: 'Status', options: valuesToOptions(itemStatus), value: 'bought' }),
     // line
     photo: createTextField({ columns: 5, label: 'Photo', regex: /^.+$/u }),
-    box: createSelectField({ columns: 3, label: 'Box', options: optionsFor('boxes'), regex: /^[\p{L}\s&()]{3,100}$/u }),
-    drawer: createSelectField({ columns: 2, label: 'Drawer', options: optionsFor('drawers'), regex: /\d/u }),
+    box: createSelectField({ columns: 3, label: 'Box', options: valuesToOptions(itemBoxes, true), regex: /^[\p{L}\s&()]{3,100}$/u }),
+    drawer: createSelectField({ columns: 2, label: 'Drawer', options: valuesToOptions(itemDrawers, true), regex: /\d/u }),
     // hidden
     barcode: createTextField({ isVisible: false, label: 'Barcode', maxLength: 30 }),
     isPrinted: createCheckboxField({ isVisible: false, label: 'Printed' }),
@@ -167,19 +164,42 @@ export function itemToForm(item?: Item) {
 }
 
 /**
+ * Formats a room-based box location (like "Salon", "Bureau")
+ * @param boxTrimmed The trimmed box name
+ * @param drawer The drawer number
+ * @returns The formatted location string
+ */
+function formatRoomBoxLocation(boxTrimmed: string, drawer: number) {
+  const drawerSuffix = drawer < 0 ? '' : `‧${drawer}`
+  return `${boxTrimmed}${drawerSuffix}`
+}
+
+/**
+ * Formats a letter-based box location (like "A (apple)", "B (usb & audio)")
+ * @param input The item to format
+ * @returns The formatted location string like "Salon G‧2 (bricolage & sport)" or "Salon G‧2"
+ */
+function formatLetterBoxLocation(input: Item) {
+  const box = input.box.trim()[0].toUpperCase()
+  /* c8 ignore next 5 */
+  const room = capitalize(itemBoxToRoom(input.box) ?? '')
+  const drawer = input.drawer < 0 ? '' : `‧${input.drawer}` // '‧2' or ''
+  const details = input.box.split(' (')[1] // 'bricolage & sport)'
+  const infos = details === undefined ? '' : ` (${details}` // ' (bricolage & sport)'
+  return `${room}${room.length > 0 ? ' ' : ''}${box}${drawer} ${infos}`.trim().replace(/ {2,}/gu, ' ') // 'Salon G‧2 (bricolage & sport)' or 'Salon G‧2'
+}
+
+/**
  * Converts an item to its corresponding location string.
  * @param input The item to get the location for
  * @returns The location string like 'Salon B 2'.
  */
-
 export function itemToLocation(input: Item) {
-  const box = (input.box.trim()[0] ?? '').toUpperCase()
-  const room = capitalize(itemBoxToRoom(input.box) ?? '')
-  if (box.length === 0) return room
-  const drawer = input.drawer < 0 ? '' : `‧${input.drawer}` // '‧2' or ''
-  const details = input.box.split(' (')[1] // 'brico & sport)'
-  const infos = details === undefined ? '' : ` (${details}` // ' (brico & sport)'
-  return `${room}${room.length > 0 ? ' ' : ''}${box}${drawer} ${infos}`.trim().replace(/ {2,}/gu, ' ') // 'Salon G‧2 (brico & sport)' or 'Salon G‧2'
+  const boxTrimmed = input.box.trim()
+  if (boxTrimmed.length === 0) return ''
+  const isLetterBox = letterBoxFormat.test(boxTrimmed)
+  if (isLetterBox) return formatLetterBoxLocation(input)
+  return formatRoomBoxLocation(boxTrimmed, input.drawer)
 }
 
 export function areItemsEquivalent(itemA: Item, itemB: Item) {
