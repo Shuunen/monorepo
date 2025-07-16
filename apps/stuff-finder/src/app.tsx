@@ -14,6 +14,7 @@ const AsyncPageItemDetails = lazy<Component>(() => import('./pages/page-item-det
 const AsyncPageItemPrint = lazy<Component>(() => import('./pages/page-item-print').then(({ PageItemPrint }) => ({ default: PageItemPrint })))
 const AsyncPageSearch = lazy<Component>(() => import('./pages/page-search').then(({ PageSearch }) => ({ default: PageSearch })))
 const AsyncPageSettings = lazy<Component>(() => import('./pages/page-settings').then(({ PageSettings }) => ({ default: PageSettings })))
+const AsyncPageMetrics = lazy<Component>(() => import('./pages/page-metrics').then(({ PageMetrics }) => ({ default: PageMetrics })))
 const AsyncPageKitchenSink = lazy<Component>(() => import('./pages/page-kitchen-sink').then(({ PageKitchenSink }) => ({ default: PageKitchenSink })))
 const AsyncAppSpeedDial = lazy<Component>(() => import('./components/app-speed-dial').then(({ AppSpeedDial }) => ({ default: AppSpeedDial })))
 const AsyncPageSounds = lazy<Component>(() => import('./components/app-sounds').then(({ AppSounds }) => ({ default: AppSounds })))
@@ -31,6 +32,7 @@ export function App() {
         <AsyncPageScan path="/scan" />
         <AsyncPageSearch path="/search/:input" />
         <AsyncPageSettings path="/settings" />
+        <AsyncPageMetrics path="/metrics" />
         <AsyncPageKitchenSink path="/kitchen-sink" />
         <AppLoader isLoading={true} path="/loading" />
         <AsyncPageError code="page-not-found" default />

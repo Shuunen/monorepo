@@ -2,7 +2,7 @@ import AddIcon from '@mui/icons-material/Add'
 import SpeedDialIcon from '@mui/icons-material/EjectOutlined'
 import HomeIcon from '@mui/icons-material/Home'
 import HourglassTop from '@mui/icons-material/HourglassTop'
-import PrintIcon from '@mui/icons-material/Print'
+import InsightsIcon from '@mui/icons-material/Insights'
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner'
 import SettingsIcon from '@mui/icons-material/Settings'
 import type { FabProps } from '@mui/material'
@@ -19,7 +19,7 @@ const actions = [
   { handleClick: () => route('/'), icon: <HomeIcon />, name: 'Home' },
   { handleClick: () => route('/item/add'), icon: <AddIcon />, name: 'Add' },
   { handleClick: () => route('/settings'), icon: <SettingsIcon />, name: 'Settings' },
-  { handleClick: () => route('/print/missing'), icon: <PrintIcon />, name: 'Print' },
+  { handleClick: () => route('/metrics'), icon: <InsightsIcon />, name: 'Metrics' },
   { handleClick: () => route('/scan'), icon: <QrCodeScannerIcon />, name: 'Scan' },
 ]
 
