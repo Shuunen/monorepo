@@ -21,36 +21,36 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
   }
-}
 
-html {
-  scroll-behavior: smooth;
-}
+  html {
+    scroll-behavior: smooth;
+  }
 
-::-webkit-scrollbar {
-  @apply w-2 h-2;
-}
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
 
-::-webkit-scrollbar-track {
-  @apply bg-purple-100;
-}
+  ::-webkit-scrollbar-track {
+    @apply bg-current/10;
+  }
 
-::-webkit-scrollbar-thumb {
-  @apply bg-purple-600 border border-current;
-}
+  ::-webkit-scrollbar-thumb {
+    @apply bg-current border border-current;
+  }
 
-h1 {
-  @apply text-4xl text-purple-700 font-medium;
-}
+  h1 {
+    @apply text-4xl text-purple-700 font-medium;
+  }
 
-h2 {
-  @apply text-2xl text-purple-900;
-}
+  h2 {
+    @apply text-2xl text-purple-900;
+  }
 
-h3 {
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: grey;
-  @apply text-5xl sm:text-7xl md:text-[5rem] relative indent-6 md:indent-8 translate-y-10 md:translate-y-12 z-0 tracking-[1rem] sm:tracking-[1.5rem] md:tracking-[2rem] font-black text-transparent opacity-30 uppercase;
+  h3 {
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: grey;
+    @apply text-5xl sm:text-7xl md:text-[5rem] relative indent-6 md:indent-8 translate-y-10 md:translate-y-12 z-0 tracking-[1rem] sm:tracking-[1.5rem] md:tracking-[2rem] font-black text-transparent opacity-30 uppercase;
+  }
 }
 
 .flex:not([class*="gap-"]) {
