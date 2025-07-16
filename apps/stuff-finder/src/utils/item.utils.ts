@@ -23,7 +23,7 @@ export const emptyItem = {
   status: 'bought',
 } satisfies Item
 
-const letterBoxFormat = /^[A-Z] \(/u
+export const letterBoxFormat = /^[A-Z] \(/u
 
 export function itemBoxToRoom(box: Item['box']) {
   const isLetterBox = letterBoxFormat.test(box)
@@ -169,36 +169,38 @@ export function itemToForm(item?: Item) {
  * @param drawer The drawer number
  * @returns The formatted location string
  */
-function formatRoomBoxLocation(boxTrimmed: string, drawer: number) {
-  const drawerSuffix = drawer < 0 ? '' : `‧${drawer}`
+export function formatRoomBoxLocation(boxTrimmed: string, drawer: number) {
+  const drawerSuffix = drawer && drawer > 0 ? `‧${drawer}` : ''
   return `${boxTrimmed}${drawerSuffix}`
 }
 
 /**
  * Formats a letter-based box location (like "A (apple)", "B (usb & audio)")
  * @param input The item to format
+ * @param short Whether to return a short version of the location (without details)
  * @returns The formatted location string like "Salon G‧2 (bricolage & sport)" or "Salon G‧2"
  */
-function formatLetterBoxLocation(input: Item) {
+function formatLetterBoxLocation(input: Item, short = false) {
   const box = input.box.trim()[0].toUpperCase()
   /* c8 ignore next 5 */
-  const room = capitalize(itemBoxToRoom(input.box) ?? '')
-  const drawer = input.drawer < 0 ? '' : `‧${input.drawer}` // '‧2' or ''
+  const room = short ? '' : capitalize(itemBoxToRoom(input.box) ?? '')
+  const drawer = input.drawer && input.drawer > 0 ? `‧${input.drawer}` : '' // '‧2' or ''
   const details = input.box.split(' (')[1] // 'bricolage & sport)'
-  const infos = details === undefined ? '' : ` (${details}` // ' (bricolage & sport)'
+  const infos = short || details === undefined ? '' : ` (${details}` // ' (bricolage & sport)'
   return `${room}${room.length > 0 ? ' ' : ''}${box}${drawer} ${infos}`.trim().replace(/ {2,}/gu, ' ') // 'Salon G‧2 (bricolage & sport)' or 'Salon G‧2'
 }
 
 /**
  * Converts an item to its corresponding location string.
  * @param input The item to get the location for
+ * @param short Whether to return a short version of the location (without details)
  * @returns The location string like 'Salon B 2'.
  */
-export function itemToLocation(input: Item) {
+export function itemToLocation(input: Item, short = false) {
   const boxTrimmed = input.box.trim()
   if (boxTrimmed.length === 0) return ''
   const isLetterBox = letterBoxFormat.test(boxTrimmed)
-  if (isLetterBox) return formatLetterBoxLocation(input)
+  if (isLetterBox) return formatLetterBoxLocation(input, short)
   return formatRoomBoxLocation(boxTrimmed, input.drawer)
 }
 
