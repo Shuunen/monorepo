@@ -89,87 +89,12 @@ describe('page-metrics.utils', () => {
 
   it('calculateBoxAnalysis A should analyze box distribution correctly', () => {
     const result = calculateBoxAnalysis(mockItems)
-
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "A (apple)": {
-          "count": 2,
-          "totalValue": 500,
-        },
-        "B (usb & audio)": {
-          "count": 1,
-          "totalValue": 300,
-        },
-        "C (couteau)": {
-          "count": 1,
-          "totalValue": 10,
-        },
-        "Unknown": {
-          "count": 1,
-          "totalValue": 0,
-        },
-      }
-    `)
+    expect(result).toMatchSnapshot()
   })
 
   it('getTopValueItems A should return top valued items', () => {
     const result = getTopValueItems(mockItems)
-
-    expect(result).toMatchInlineSnapshot(`
-      [
-        {
-          "$createdAt": "2025-07-16T13:42:26.000Z",
-          "$id": "1",
-          "barcode": "barcode B",
-          "box": "A (apple)",
-          "brand": "Apple",
-          "details": "iPhone 12",
-          "drawer": 2,
-          "isPrinted": true,
-          "name": "iPhone 12",
-          "photos": [
-            "some-uuid",
-            "https://some.url/to/image.jpg",
-          ],
-          "price": 500,
-          "reference": "IP12",
-          "status": "bought",
-        },
-        {
-          "$createdAt": "2025-07-16T13:42:26.000Z",
-          "$id": "2",
-          "barcode": "barcode B",
-          "box": "B (usb & audio)",
-          "brand": "Sony",
-          "details": "Wireless headphones",
-          "drawer": 2,
-          "isPrinted": false,
-          "name": "WH-1000XM4",
-          "photos": [
-            "some-uuid",
-            "https://some.url/to/image.jpg",
-          ],
-          "price": 300,
-          "reference": "WH1000XM4",
-          "status": "for-sell",
-        },
-        {
-          "$createdAt": "2025-07-16T13:42:26.000Z",
-          "$id": "5",
-          "barcode": "barcode B",
-          "box": "C (couteau)",
-          "brand": "Generic",
-          "details": "Power cable",
-          "drawer": 2,
-          "isPrinted": true,
-          "name": "Power Cable",
-          "photos": undefined,
-          "price": 10,
-          "reference": "POWERCABLE",
-          "status": "bought",
-        },
-      ]
-    `)
+    expect(result).toMatchSnapshot()
   })
 
   it('calculateMetrics A should return complete metrics object', () => {
@@ -196,7 +121,6 @@ describe('page-metrics.utils', () => {
 
   it('calculateBasicMetrics B should handle empty array', () => {
     const result = calculateBasicMetrics([])
-
     expect(result).toMatchInlineSnapshot(`
       {
         "totalItems": 0,
@@ -221,9 +145,7 @@ describe('page-metrics.utils', () => {
         status: 'bought',
       }),
     ]
-
     const result = getTopValueItems(itemsWithoutPrices)
-
     expect(result).toMatchInlineSnapshot(`[]`)
   })
 
@@ -253,49 +175,8 @@ describe('page-metrics.utils', () => {
         status: 'bought',
       }),
     ]
-
     const result = getToGiveItems(itemsWithToGive)
-
-    expect(result).toMatchInlineSnapshot(`
-      [
-        {
-          "$createdAt": "2025-07-16T13:42:26.000Z",
-          "$id": "1",
-          "barcode": "barcode B",
-          "box": "B (usb & audio)",
-          "brand": "brand B",
-          "details": "details B",
-          "drawer": 2,
-          "isPrinted": false,
-          "name": "Item to give 1",
-          "photos": [
-            "some-uuid",
-            "https://some.url/to/image.jpg",
-          ],
-          "price": 42,
-          "reference": "GIVE1",
-          "status": "to-give",
-        },
-        {
-          "$createdAt": "2025-07-16T13:42:26.000Z",
-          "$id": "2",
-          "barcode": "barcode B",
-          "box": "B (usb & audio)",
-          "brand": "brand B",
-          "details": "details B",
-          "drawer": 2,
-          "isPrinted": false,
-          "name": "Item to give 2",
-          "photos": [
-            "some-uuid",
-            "https://some.url/to/image.jpg",
-          ],
-          "price": 42,
-          "reference": "GIVE2",
-          "status": "to-give",
-        },
-      ]
-    `)
+    expect(result).toMatchSnapshot()
   })
 
   it('getItemsNotPrinted A should return items that are not printed', () => {
