@@ -158,6 +158,7 @@
     "Firestore",
     "firstname",
     "flowbite",
+    "FNIRSI",
     "forestgreen",
     "Fortuneo",
     "france",
@@ -201,6 +202,7 @@
     "Jira",
     "Juliane",
     "kaspersky",
+    "Katleen",
     "Kbps",
     "keymaps",
     "keypress",
@@ -371,6 +373,7 @@
     "tensorflow",
     "tetris",
     "tfjs",
+    "Tiime",
     "timey",
     "tmux",
     "todos",
@@ -383,6 +386,7 @@
     "typeof",
     "typestrict",
     "Unigine",
+    "Unisys",
     "unitless",
     "untappd",
     "USERPROFILE",
@@ -425,7 +429,8 @@
   "diffEditor.renderSideBySide": true,
   "editor.accessibilitySupport": "off",
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
+    "source.fixAll": "explicit",
+    "source.removeUnusedImports": "explicit"
   },
   "editor.formatOnSave": true,
   "editor.inlineSuggest.enabled": true,
