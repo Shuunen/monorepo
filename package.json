@@ -84,7 +84,7 @@
     "preversion": "pnpm check",
     "test": "nx run-many -t test && echo test success",
     "test:bench": "vitest bench && echo test bench success",
-    "test:update": "vitest --run --update && echo test update success",
+    "test:update": "nx run-many -t test --update && echo test:update success",
     "test:watch": "vitest --coverage",
     "up:min": "npx taze minor --write"
   },

@@ -15,7 +15,7 @@ export const itemSchema = object({
   isPrinted: fallback(boolean(), false),
   name: itemRequiredStringSchema,
   photos: fallback(array(string()), []),
-  price: fallback(number(), -1),
+  price: pipe(number(), minValue(0)),
   reference: itemRequiredStringSchema,
   status: picklist(itemStatus),
 })
