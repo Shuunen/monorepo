@@ -70,6 +70,12 @@ export async function addItem(item: Item, currentState = state) {
   return result
 }
 
+/**
+ * Updates an item both remotely (api) and locally (state)
+ * @param item the item to update
+ * @param currentState the current state, defaults to global state, useful for testing
+ * @returns the result of the update operation
+ */
 export async function updateItem(item: Item, currentState = state) {
   const result = await updateItemRemotely(item, currentState)
   if (result.ok) updateItemLocally({ ...result.value }, currentState)
