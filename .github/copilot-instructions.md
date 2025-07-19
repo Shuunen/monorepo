@@ -54,6 +54,7 @@ watchState('isLoading', (value) => { /* handle change */ })
 
 - avoid `as` type assertions unless absolutely necessary
 - follow DRY principle
+- when declaring constants use camelCase convention
 
 ## Essential Commands
 
