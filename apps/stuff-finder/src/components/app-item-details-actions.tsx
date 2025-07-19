@@ -30,8 +30,10 @@ export function AppItemDetailsActions({ item }: Readonly<{ item: Item }>) {
       logger.showError('item deletion failed', result.error)
       return
     }
-    logger.showSuccess('item deleted, going back...')
-    globalThis.history.back()
+    const noBack = globalThis.history.length === 1
+    logger.showSuccess(`item deleted, going ${noBack ? 'home' : 'back'}...`)
+    if (noBack) route('/')
+    else globalThis.history.back()
   }
 
   function doEdit() {
