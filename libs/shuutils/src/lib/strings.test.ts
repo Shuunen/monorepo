@@ -15,17 +15,20 @@ const stringOut = `{
   "Andy": "${data.key_ToHappiness} !"
 }`
 
-it('sanitize a basic word', () => {
+it('sanitize A basic word', () => {
   expect(sanitize('Superbe')).toBe('superbe')
 })
-it('sanitize a basic sentence', () => {
+it('sanitize B basic sentence', () => {
   expect(sanitize("Superbe météo aujourd'hui")).toBe('superbe meteo aujourd hui')
 })
-it('sanitize a complex sentence', () => {
+it('sanitize C complex sentence', () => {
   expect(sanitize(" d'emblée€|| la@ PLUIE,,:& pùïs un cOup dê tonnerre_ !! Et puis 2 !? Mais qu'est-ce qui se trame...")).toBe('d emblee la pluie puis un coup de tonnerre et puis 2 mais qu est ce qui se trame')
 })
-it('sanitize text with tags', () => {
+it('sanitize D text with tags', () => {
   expect(sanitize("<div>Superbe météo aujourd'hui</div>", false)).toBe('Superbe meteo aujourd hui')
+})
+it('sanitize E text with quotes', () => {
+  expect(sanitize('"some-metal-parts"')).toBe('some metal parts')
 })
 
 const expected = 'oh-ma-darling'
