@@ -137,6 +137,7 @@ export async function downloadImages(bucketId = state.credentials.bucketId) {
   return Result.ok('images downloaded successfully')
 }
 
+// oxlint-disable-next-line max-lines-per-function
 export async function getItemsRemotely() {
   const items: ItemModel[] = []
   let offset = 0
@@ -153,7 +154,10 @@ export async function getItemsRemotely() {
   }
   state.itemsTimestamp = Date.now()
   const result = safeParse(itemsSchema, items)
-  if (!result.success) return Result.error(result.issues.map(issue => issue.message).join(', '))
+  if (!result.success) {
+    logger.error('getItemsRemotely failed', result.issues)
+    return Result.error('getItemsRemotely failed, see logs for details')
+  }
   return Result.ok(result.output)
 }
 
