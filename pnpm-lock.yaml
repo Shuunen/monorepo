@@ -165,6 +165,9 @@ importers:
 
   apps/one-file:
     dependencies:
+      7zip-min:
+        specifier: ^2.1.0
+        version: 2.1.0
       '@shuunen/shuutils':
         specifier: workspace:*
         version: link:../../libs/shuutils
@@ -275,6 +278,12 @@ importers:
         version: 0.5.17
 
 packages:
+
+  7zip-bin@5.1.1:
+    resolution: {integrity: sha512-sAP4LldeWNz0lNzmTird3uWfFDWWTeg6V/MsmyyLR9X1idwKBWIgt/ZvinqQldJm3LecKEs1emkbquO6PCiLVQ==}
+
+  7zip-min@2.1.0:
+    resolution: {integrity: sha512-6uoMmPaasBQOyEuMIuNnASA6mF6ZfNmhsKdxJiEbtkHt9DkrJ0w1cZwyNdkDeOKjR2c5gOQAEkvMN3gyZ9MEBw==}
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -5846,6 +5855,12 @@ packages:
     engines: {node: '>=10'}
 
 snapshots:
+
+  7zip-bin@5.1.1: {}
+
+  7zip-min@2.1.0:
+    dependencies:
+      7zip-bin: 5.1.1
 
   '@ampproject/remapping@2.3.0':
     dependencies:

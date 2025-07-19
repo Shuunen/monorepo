@@ -11,6 +11,7 @@ import sevenZip from '7zip-min'
  */
 
 const parameters = process.argv
+const minSimilarity = 0.68 // 68% similarity is the minimum to consider two names as similar
 const expectedNbParameters = 2
 const logger = new Logger({ willOutputToMemory: true })
 if (parameters.length <= expectedNbParameters) logger.info(String.raw`Targeting current folder, you can also specify a specific path, ex : node one-file/check-screens.cli.js "U:\Screens\"`)
@@ -148,7 +149,6 @@ function getGroups(files) {
  * @param {string} groupName the group name to check
  */
 function checkCloseName(groupNames, groupName) {
-  const minSimilarity = 0.65
   for (const groupNameA of groupNames) {
     if (groupName === groupNameA) continue
     if (groupName.startsWith('_')) continue
