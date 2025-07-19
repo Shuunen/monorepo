@@ -11,6 +11,14 @@ const fuseOptions = {
   ignoreLocation: true,
   keys: [
     {
+      name: 'reference',
+      weight: 2,
+    },
+    {
+      name: 'barcode',
+      weight: 2,
+    },
+    {
       name: 'name',
       weight: 4,
     },
@@ -37,7 +45,7 @@ export async function search(input: string) {
   logger.info('search, input', { input })
   const { default: Fuse } = await import('fuse.js/basic')
   const fuse = new Fuse(state.items, fuseOptions)
-  const result = state.items.find(item => item.reference === input || item.barcode === input)
+  const result = state.items.find(item => item.reference.toLowerCase() === input.toLowerCase() || item.barcode.toLowerCase() === input.toLowerCase())
   if (result !== undefined) {
     route(`/item/details/${result.$id}/single`)
     return { header: '', results: [] }
