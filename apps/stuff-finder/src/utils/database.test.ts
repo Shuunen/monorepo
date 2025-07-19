@@ -36,6 +36,7 @@ describe('database.utils', () => {
     state.credentials = { bucketId: 'bucketA', collectionId: 'collectionA', databaseId: 'databaseA', wrap: 'wrapA' }
     mockFetch.mockClear()
     databaseMock.reset()
+    logger.disable()
   })
 
   it('getItemsRemotely A success empty', async () => {
@@ -97,7 +98,7 @@ describe('database.utils', () => {
     databaseMock.listDocuments.mockResolvedValueOnce({ documents: items, total: 2 })
     const result = await getItemsRemotely()
     expect(result.ok).toBe(false)
-    expect(Result.unwrap(result).error).toMatchInlineSnapshot(`"Invalid type: Expected string but received null"`)
+    expect(Result.unwrap(result).error).toMatchInlineSnapshot(`"getItemsRemotely failed, see logs for details"`)
   })
 
   it('addItemRemotely A no photo', async () => {
