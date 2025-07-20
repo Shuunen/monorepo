@@ -2,7 +2,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { writeFile } from 'node:fs/promises'
 import path from 'node:path'
-import { clean, useUnixCarriageReturn } from './utils.node.js'
+import { clean, logger, useUnixCarriageReturn } from './utils.node.js'
 
 const currentFolderPath = import.meta.dirname
 const changesFolderPath = path.join(currentFolderPath, 'changes')
@@ -11,6 +11,9 @@ const home = process.env.HOME ?? ''
 const appData = process.env.APPDATA ?? (process.platform === 'darwin' ? `${home}Library/Preferences` : `${home}/.config`)
 const isWindows = process.env.APPDATA === appData
 // const prgFiles = 'C:/Program Files'
+logger.info(`Using home directory : ${home}`)
+logger.info(`Using app data directory : ${appData}`)
+logger.info(`Detected platform : ${isWindows ? 'Windows' : 'Linux'}, process.platform is "${process.platform}"`)
 
 // oxlint-disable sort-keys
 /** @type {import('./types.js').Config[]} */
