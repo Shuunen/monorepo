@@ -130,24 +130,29 @@ export NVM_DIR="$HOME/.nvm"
 # eval "$(fnm env)"
 # fnm end
 
+# bun
+test -r ~/.bun && export BUN_INSTALL="$HOME/.bun"
+test -r ~/.bun && export PATH="$BUN_INSTALL/bin:$PATH"
+# bun end
+
 # pnpm
-# export PNPM_HOME="$HOME/.local/share/pnpm"
-# case ":$PATH:" in
-# *":$PNPM_HOME:"*) ;;
-# *) export PATH="$PNPM_HOME:$PATH" ;;
-# esac
+export PNPM_HOME="$HOME/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
 # pnpm end
 
 # go
-test -r /usr/local/go/bin && export PATH=$PATH:/usr/local/go/bin
-test -r ~/go/bin && export PATH=$PATH:~/go/bin
+# test -r /usr/local/go/bin && export PATH=$PATH:/usr/local/go/bin
+# test -r ~/go/bin && export PATH=$PATH:~/go/bin
 # go end
 
 # console-ninja
-test -r ~/.console-ninja/.bin && export PATH=$PATH:~/.console-ninja/.bin
+# test -r ~/.console-ninja/.bin && export PATH=$PATH:~/.console-ninja/.bin
 # console-ninja end
 
 echo ''
 # neofetch
-echo ' Hey there ^^ Have a nice day!'
+echo ' Hey sweet-pie <3 have a nice day !'
 echo ''
