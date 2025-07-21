@@ -8,7 +8,7 @@ import glob from 'tiny-glob'
  * List entries in lib folder into the barrel index.ts file
  * @returns {Promise<void>}
  */
-async function listEntries() {
+export async function listEntries() {
   const logger = new Logger()
   const lib = path.join(import.meta.dirname, 'lib')
   const index = path.join(import.meta.dirname, 'index.ts')
@@ -20,4 +20,6 @@ async function listEntries() {
   logger.success(`${index} has been updated !`)
 }
 
-await listEntries()
+/* c8 ignore start */
+// avoid running this script if it's imported for testing
+if (process.argv[1]?.includes('list.cli.ts')) await listEntries()

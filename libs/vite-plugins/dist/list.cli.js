@@ -1,11 +1,12 @@
-/* c8 ignore start */ import { writeFileSync } from 'node:fs';
+/* c8 ignore start */ var _process_argv_;
+import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { Logger } from '@shuunen/shuutils';
 import glob from 'tiny-glob';
 /**
  * List entries in lib folder into the barrel index.ts file
  * @returns {Promise<void>}
- */ async function listEntries() {
+ */ export async function listEntries() {
     const logger = new Logger();
     const lib = path.join(import.meta.dirname, 'lib');
     const index = path.join(import.meta.dirname, 'index.ts');
@@ -19,6 +20,7 @@ import glob from 'tiny-glob';
     writeFileSync(index, content);
     logger.success(`${index} has been updated !`);
 }
-await listEntries();
+/* c8 ignore start */ // avoid running this script if it's imported for testing
+if ((_process_argv_ = process.argv[1]) == null ? void 0 : _process_argv_.includes('list.cli.ts')) await listEntries();
 
 //# sourceMappingURL=list.cli.js.map
