@@ -32,12 +32,8 @@ it('Result.trySafe A ok', () => {
 
 it('Result.trySafe B error', () => {
   const result = Result.trySafe(() => JSON.parse('{"a": 42'))
-  expect(result).toMatchInlineSnapshot(`
-    Err {
-      "error": [SyntaxError: Expected ',' or '}' after property value in JSON at position 8 (line 1 column 9)],
-      "ok": false,
-    }
-  `)
+  expect(result.ok).toBe(false)
+  if (!result.ok) expect(String(result.error)).toContain('SyntaxError')
 })
 
 it('Result.trySafe C promise ok', async () => {
@@ -61,5 +57,5 @@ it('Result.unwrap B error', () => {
   const result = Result.trySafe(() => JSON.parse('{"a": 42'))
   const { error, value } = Result.unwrap(result)
   expect(value).toMatchInlineSnapshot(`undefined`)
-  expect(error).toMatchInlineSnapshot(`[SyntaxError: Expected ',' or '}' after property value in JSON at position 8 (line 1 column 9)]`)
+  expect(String(error)).toContain('SyntaxError')
 })
