@@ -8,7 +8,7 @@
 *LanguageVersion: English
 *LanguageEncoding: ISOLatin1
 *PCFileName: "phomemo-m120.ppd"
-*Manufacturer: " "
+*Manufacturer: ""
 *cupsModelNumber: 6201
 *Product: "(M120)"
 *ModelName: "M120"
@@ -37,29 +37,29 @@
 
 *OpenUI *PageSize/Media Size: PickOne
 *OrderDependency: 10 AnySetup *PageSize
-*DefaultPageSize: w136h198
-*PageSize w113h57/40mm x 20mm: "<</PageSize[113 57]/ImagingBBox null>>setpagedevice"
+*DefaultPageSize: 40x20
 *PageSize w136h85/58(48mm)x30mm: "<</PageSize[136 85]/ImagingBBox null>>setpagedevice"
 *PageSize w136h198/58(48mm)x70mm: "<</PageSize[136 198]/ImagingBBox null>>setpagedevice"
+*PageSize 40x20: "<</PageSize[108 57]/ImagingBBox null>>setpagedevice"
 *CloseUI: *PageSize
 
 *OpenUI *PageRegion/Media Size: PickOne
 *OrderDependency: 10 AnySetup *PageRegion
-*DefaultPageRegion: w136h85
-*PageRegion w113h57/40mm x 20mm: "<</PageSize[113 57]/ImagingBBox null>>setpagedevice"
+*DefaultPageRegion: 40x20
 *PageRegion w136h85/58(48mm)x30mm: "<</PageSize[136 85]/ImagingBBox null>>setpagedevice"
 *PageRegion w136h198/58(48mm)x70mm: "<</PageSize[136 198]/ImagingBBox null>>setpagedevice"
+*PageRegion 40x20: "<</PageSize[108 57]/ImagingBBox null>>setpagedevice"
 *CloseUI: *PageRegion
 
 *DefaultImageableArea: w136h85
-*ImageableArea w113h57/40mm x 20mm: "0 0 113 57"
 *ImageableArea w136h85/58(48mm)x30mm: "0 0 136 85"
 *ImageableArea w136h198/58(48mm)x70mm: "0 0 136 198"
+*ImageableArea 40x20: "0 0 108 57"
 
 *DefaultPaperDimension: w136h85
-*PaperDimension w113h57/40mm x 20mm: "113 57"
 *PaperDimension w136h85/58(48mm)x30mm: "136 85"
 *PaperDimension w136h198/58(48mm)x70mm: "136 198"
+*PaperDimension 40x20: "108 57"
 
 *MaxMediaWidth: "142"
 *MaxMediaHeight: "1418"
@@ -259,8 +259,8 @@
 *DefaultRotate: 0
 *Rotate 0/0: "%%"
 *Rotate 1/180: "%%"
-
-
+*Rotate 2/90: "%%"
+*Rotate 3/270: "%%"
 *CloseUI: *Rotate
 
 

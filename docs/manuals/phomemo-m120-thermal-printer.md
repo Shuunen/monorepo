@@ -55,9 +55,10 @@ For example, I created :
 
 1. Turn on the printer
 2. Connect it via USB
-3. Install the provided `Phomemo-M120.ppd`
+3. Install the ppd from this repo `apps/config-sync/files/phomemo-m120.ppd`
 4. Open `Printers` settings
 5. Go to `Printer options` set `Media tracking` to `Gap` and `Vertical offset` to `-1mm`
+6. If the printer keep printing vertical instead of horizontal, set rotation to `90°` in this same screen
 
 ## Printing from a webpage
 
