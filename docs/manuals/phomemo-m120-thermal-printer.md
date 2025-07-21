@@ -53,12 +53,13 @@ For example, I created :
 
 ### Linux
 
-1. Turn on the printer
-2. Connect it via USB
-3. Install the ppd from this repo `apps/config-sync/files/phomemo-m120.ppd`
-4. Open `Printers` settings
-5. Go to `Printer options` set `Media tracking` to `Gap` and `Vertical offset` to `-1mm`
-6. If the printer keep printing vertical instead of horizontal, set rotation to `90°` in this same screen
+1. Install `Phomemo M120 - QY Label Printer v2.0.0 - Driver Linux` : not sure if needed, try without and update this manual
+2. Turn on the printer
+3. Connect it via USB
+4. Install the ppd from this repo `apps/config-sync/files/phomemo-m120.ppd`
+5. Open `Printers` settings
+6. Go to `Printer options` set `Media tracking` to `Gap` and `Vertical offset` to `-1mm`
+7. If the printer keep printing vertical instead of horizontal, set rotation to `90°` in this same screen
 
 ## Printing from a webpage
 
