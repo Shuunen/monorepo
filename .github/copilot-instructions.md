@@ -41,7 +41,8 @@ export const state = createState({
 watchState('isLoading', (value) => { /* handle change */ })
 ```
 
-### Testing Patterns
+### Testing guidelines
+
 - All tests must pass coverage thresholds (100% most of the time)
 - Use `vitest` with `toMatchInlineSnapshot()` for most assertions
 - Mock external dependencies with `vi.mock()`
@@ -49,6 +50,11 @@ watchState('isLoading', (value) => { /* handle change */ })
 - Organize tests with descriptive names: `it('functionName A should do something', () => {})`
 
 **For detailed unit testing guidelines, see [unit-testing.instructions.md](./instructions/unit-testing.instructions.md)**
+
+### User Scripts guidelines
+
+- Avoid `;(function AliExpressTakeout() { ... })();` pattern and do not use IIFEs, instead do `function AliExpressTakeout() { ... } AliExpressTakeout();`
+- Avoid `/** @type {HTMLTextAreaElement | undefined} */` and similar type assertions, remove the type annotation and use ` if (!(input instanceof HTMLInputElement)) { utils.showError('tableRowAmountInput is not an input element'); return; }` to ensure type safety
 
 ### Best Practices
 
