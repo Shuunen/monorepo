@@ -1,6 +1,4 @@
-// oxlint-disable unambiguous
-// oxlint-disable max-lines
-// oxlint-disable no-magic-numbers
+// oxlint-disable no-console,unambiguous,max-lines,no-magic-numbers
 
 /**
  * Collection of utility functions to help with common tasks in my user scripts.
@@ -8,7 +6,7 @@
 // eslint-disable-next-line no-restricted-syntax
 class Shuutils {
   id = ''
-  version = '2.6.5'
+  version = '2.6.6'
   willDebug = false
   /**
    * The ShuUserScriptUtils constructor
@@ -153,6 +151,8 @@ class Shuutils {
   debug(...stuff) {
     if (!this.willDebug) return
     if (this.id.length > 0) stuff.unshift(`${this.id} :`)
+    // biome-ignore lint/suspicious/noConsole: it's ok here :)
+    console.log(...stuff)
   }
   /**
    * Ellipsis a string to a given number of characters
@@ -188,6 +188,8 @@ class Shuutils {
    */
   error(...stuff) {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`)
+    // biome-ignore lint/suspicious/noConsole: it's ok here :)
+    console.error(...stuff)
   }
   /**
    * Fill an input like a human would do
@@ -312,6 +314,8 @@ class Shuutils {
    */
   log(...stuff) {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`)
+    // biome-ignore lint/suspicious/noConsole: it's ok here :)
+    console.log(...stuff)
   }
   /**
    * Wait for location.href to change and call a callback
