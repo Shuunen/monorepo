@@ -8,15 +8,72 @@
 // @match        https://wwws.linxo.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=linxo.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo/apps/user-scripts/src/utils.js
-// @version      1.0.0
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
+// @version      1.1.0
 // ==/UserScript==
 
+// const wrongCategories = ['Snacks, repas au travail', 'Meubles, équipement', 'A catégoriser', 'Restaurants, soirées']
+const authorizedCategories = new Set([
+  // Vie courante
+  'Alimentation, supermarché',
+  'Snacks, repas au travail',
+  'Dépenses vie courante',
+  'Internet, TV, télécom',
+  'Shopping/e-Commerce',
+  // Logement, energies
+  'Electricité, gaz, chauffage',
+  'Assurance logement',
+  'Loyer',
+  // Santé, prévoyance
+  'Cotis mutuelle, prévoyance',
+  // Voyages, train, hôtels
+  // Impôts, taxe habitation
+  'Impôts',
+  // Hors budget
+  "Salaire/Revenus d'activité",
+])
+
+// oxlint-disable-next-line max-lines-per-function
 function LinxoAio() {
-  /* globals Shuutils */
+  /* globals Shuutils, RoughNotation */
   /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('linxo-aio', true)
-  utils.debug('Linxo AIO script started')
+  const processed = `${utils.id}-processed`
+  const selectors = {
+    labels: `td > div > img + div[title]:not(.${processed})`,
+    // wrongCategories: wrongCategories.map(category => `[title="${category}"]:not(.${processed})`).join(', '),
+  }
+  /**
+   * Check for wrong categories in the page
+   */
+  function checkWrongCategories() {
+    const labels = utils.findAll(selectors.labels)
+    for (const element of labels) {
+      const label = element.getAttribute('title')
+      if (authorizedCategories.has(label)) continue
+      element.classList.add(processed)
+      element.dataset.highlightReason = 'wrong-category'
+      // oxlint-disable no-undef
+      // biome-ignore lint/correctness/noUndeclaredVariables: RoughNotation exists
+      const annotation = RoughNotation.annotate(element, { color: 'yellow', type: 'highlight' })
+      annotation.show()
+      // oxlint-enable no-undef
+    }
+  }
+  /**
+   * Process the page
+   */
+  function process() {
+    utils.log('processing')
+    checkWrongCategories()
+  }
+  // eslint-disable-next-line no-magic-numbers
+  const processDebounced = utils.debounce(process, 500)
+  document.addEventListener('scroll', processDebounced)
+  utils.onPageChange(processDebounced)
+  // eslint-disable-next-line no-magic-numbers
+  setTimeout(processDebounced, 1000)
 }
 
 LinxoAio()
