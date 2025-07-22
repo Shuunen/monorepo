@@ -1,11 +1,12 @@
 // ==UserScript==
+// @name         Gitlab - MR Shortcuts
 // @author       Romain Racamier-Lafon
 // @description  Ease access to my affected MR / opened MR
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/gitlab-mr.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/gitlab-mr.user.js
 // @grant        none
 // @match        https://some-gitlab.fr/*
-// @name         Gitlab - MR Shortcuts
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=some-gitlab.fr
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.1.6
@@ -105,4 +106,5 @@ function GitlabMr() {
   utils.onPageChange(processDebounced)
 }
 
-GitlabMr()
+if (globalThis.window) GitlabMr()
+else module.exports = {}

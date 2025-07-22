@@ -1,10 +1,12 @@
 // ==UserScript==
+// @name         Instagram Wide
 // @author       Romain Racamier-Lafon
 // @description  Improve Instagram UX
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/instagram-wide.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/instagram-wide.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/instagram-wide.user.js
 // @grant        none
-// @match        https://*.instagram.com/*
-// @name         Instagram Wide
+// @match        https://www.instagram.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=instagram.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
 // @version      1.0.3
@@ -82,4 +84,5 @@ function InstagramWide() {
   utils.onPageChange(() => processDebounced('page-change'))
 }
 
-InstagramWide()
+if (globalThis.window) InstagramWide()
+else module.exports = {}

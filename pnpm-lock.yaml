@@ -233,6 +233,10 @@ importers:
         version: 0.0.6
 
   apps/user-scripts:
+    dependencies:
+      '@shuunen/shuutils':
+        specifier: workspace:*
+        version: link:../../libs/shuutils
     devDependencies:
       rough-notation:
         specifier: latest

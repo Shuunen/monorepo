@@ -14,7 +14,7 @@
 // ==/UserScript==
 
 // @ts-nocheck
-function AmazonHide() {
+function AmazonHideProductsByKeywords() {
   const app = {
     debounceTime: 500,
     debug: false,
@@ -262,5 +262,5 @@ function AmazonHide() {
   document.addEventListener('scroll', () => processDebounced())
 }
 
-if (globalThis.window) AmazonHide()
+if (globalThis.window) AmazonHideProductsByKeywords()
 else module.exports = {}

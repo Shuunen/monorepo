@@ -126,7 +126,7 @@ function DealabsAio() {
       // @ts-expect-error autosize is loaded in the window
       // oxlint-disable no-undef
       // biome-ignore lint/correctness/noUndeclaredVariables: it is declared in the global scope
-      autosize.update(filter)
+      autosize.update(filterElement)
     }
     checkItems()
   }

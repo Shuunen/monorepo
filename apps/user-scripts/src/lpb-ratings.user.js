@@ -1,11 +1,12 @@
 // ==UserScript==
+// @name         Le Petit Ballon - Ratings
 // @author       Romain Racamier-Lafon
 // @description  See your ratings when buying
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/lpb-ratings.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/lpb-ratings.user.js
 // @grant        none
 // @match        https://www.lepetitballon.com/*
-// @name         Le Petit Ballon - Ratings
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=lepetitballon.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/fuse.js@6.6.2
@@ -446,7 +447,7 @@ function createReview(name, rating) {
 }
 
 // oxlint-disable-next-line max-lines-per-function, max-lines-per-function
-function lePetitBallonRatings() {
+function LpbRatings() {
   if (globalThis.matchMedia === undefined) return
   const fuseSettings = {
     includeScore: true,
@@ -519,5 +520,5 @@ function lePetitBallonRatings() {
   globalThis.addEventListener('DOMNodeInserted', () => injectRatingsDebounced())
 }
 
-if (globalThis.window) lePetitBallonRatings()
+if (globalThis.window) LpbRatings()
 else module.exports = { cleanTitle }

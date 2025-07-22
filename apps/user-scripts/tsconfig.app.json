@@ -24,5 +24,10 @@
   "include": [
     "src/**/*.js",
     "src/**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "../../libs/shuutils/tsconfig.lib.json"
+    }
   ]
 }

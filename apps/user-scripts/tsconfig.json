@@ -4,6 +4,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/shuutils"
+    },
+    {
       "path": "./tsconfig.app.json"
     },
     {

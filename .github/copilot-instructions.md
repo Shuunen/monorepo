@@ -54,7 +54,7 @@ watchState('isLoading', (value) => { /* handle change */ })
 ### User Scripts guidelines
 
 - Avoid `;(function AliExpressTakeout() { ... })();` pattern and do not use IIFEs, instead do `function AliExpressTakeout() { ... } AliExpressTakeout();`
-- Avoid `/** @type {HTMLTextAreaElement | undefined} */` and similar type assertions, remove the type annotation and use ` if (!(input instanceof HTMLInputElement)) { utils.showError('tableRowAmountInput is not an input element'); return; }` to ensure type safety
+- Avoid type assertions like `/** @type {HTMLTextAreaElement | undefined} */` when you can use ` if (!(input instanceof HTMLInputElement)) { utils.showError('tableRowAmountInput is not an input element'); return; }` to ensure type safety, if you cannot avoid it, keep the type assertion intact
 - The name of the main function should match the filename, e.g. `AliExpressTakeout` for `aliexpress-takeout.user.js` and respect PascalCase convention, all the other functions should be in camelCase
 - To allow testing and avoid user script main function execution in unit test environment, every last lines of a user script will be like `if (globalThis.window) AliExpressTakeout() else module.exports = { funcA, funcB }` where `funcA`, `funcB` are the functions outside the main function, they need to be unit-tested. This pattern is used to export functions for unit testing while still allowing the main function to run when the script is executed in a browser environment. If all the functions are inside the main function, just export an empty object.
 - the UserScript meta `@name` should be the second line of the file below the `// ==UserScript==` line

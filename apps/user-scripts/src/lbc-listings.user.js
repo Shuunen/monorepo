@@ -1,11 +1,12 @@
 // ==UserScript==
+// @name         LeBonCoin Listing Plus Plus
 // @author       Romain Racamier-Lafon
 // @description  Show more infos on LeBonCoin listings
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/lbc-listings.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/lbc-listings.user.js
 // @grant        none
 // @match        https://www.leboncoin.fr/*
-// @name         LeBonCoin Listing Plus Plus
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=leboncoin.fr
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.0.7
@@ -115,7 +116,7 @@ function getAdType(ad) {
   return 'unknown'
 }
 
-function LeBonCoinListing() {
+function LbcListings() {
   const utils = new Shuutils('lbc-lpp')
   const cls = {
     marker: `${utils.id}-processed`,
@@ -451,4 +452,5 @@ function LeBonCoinListing() {
   globalThis.addEventListener('load', () => processDebounced())
 }
 
-LeBonCoinListing()
+if (globalThis.window) LbcListings()
+else module.exports = {}

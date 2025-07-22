@@ -1,11 +1,12 @@
 // ==UserScript==
+// @name         Amazon Music - Export to MusicBrainz
 // @author       Shuunen
 // @description  This script let you import releases on Amazon Music to the great MusicBrainz db <3
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/mb-import-from-amazon-music.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/mb-import-from-amazon-music.user.js
 // @grant        none
 // @match        https://www.amazon.fr/*
-// @name         Amazon Music - Export to MusicBrainz
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.fr
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/mb-import-utils.js
 // @version      1.0.5
@@ -13,7 +14,7 @@
 
 /* eslint-disable jsdoc/require-jsdoc */
 
-function AmazonMusicBrainzExport() {
+function MbImportFromAmazonMusic() {
   const utils = new Shuutils('amazon-mb-export')
   const selectors = {
     artist: '[data-feature-name="artistLink"',
@@ -68,4 +69,5 @@ function AmazonMusicBrainzExport() {
   utils.onPageChange(init)
 }
 
-AmazonMusicBrainzExport()
+if (globalThis.window) MbImportFromAmazonMusic()
+else module.exports = {}

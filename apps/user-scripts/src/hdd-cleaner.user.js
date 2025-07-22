@@ -1,4 +1,5 @@
 // ==UserScript==
+// @name         HDD Cleaner
 // @author       Romain Racamier-Lafon
 // @description  Remove unwanted hard drives disks
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/hdd-cleaner.user.js
@@ -11,7 +12,7 @@
 // @match        https://www.ldlc.com/*
 // @match        https://www.materiel.net/*
 // @match        https://www.topachat.com/*
-// @name         HDD Cleaner
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.fr
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.2.6
@@ -138,4 +139,5 @@ function HddCleaner() {
   setTimeout(processDebounced, 1000)
 }
 
-HddCleaner()
+if (globalThis.window) HddCleaner()
+else module.exports = {}

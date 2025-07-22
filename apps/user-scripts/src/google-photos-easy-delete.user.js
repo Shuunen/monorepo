@@ -54,5 +54,5 @@ function GooglePhotosEasyDelete() {
   utils.onPageChange(init)
 }
 
-if (globalThis.module) module.exports = {}
-else GooglePhotosEasyDelete()
+if (globalThis.window) GooglePhotosEasyDelete()
+else module.exports = {}

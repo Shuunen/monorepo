@@ -1,7 +1,9 @@
 // ==UserScript==
+// @name         Laptop Helper
 // @author       Romain Racamier-Lafon
 // @description  Add annotations on displayed informations
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/laptop-helper.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/laptop-helper.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/laptop-helper.user.js
 // @grant        none
 // @match        https://bestware.com/*
 // @match        https://deals.dell.com/*
@@ -18,13 +20,12 @@
 // @match        https://www.laptopspirit.fr/*
 // @match        https://www.ldlc.com/*
 // @match        https://www.lenovo.com/*
-// @match        https://www.lenovo.com/*
 // @match        https://www.materiel.net/*
 // @match        https://www.newegg.com/*
 // @match        https://www.notebookcheck.net/*
 // @match        https://www.topachat.com/*
 // @match        https://www.tuxedocomputers.com/*
-// @name         Laptop Helper
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=bestware.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
@@ -354,8 +355,7 @@ for (const line of data.split('\n')) {
 /**
  * Laptop Helper
  */
-// eslint-disable-next-line max-lines-per-function, max-statements
-function laptopHelper() {
+function LaptopHelper() {
   const utils = new Shuutils('lpt-hlp')
   const cls = {
     mark: `${utils.id}-mark`,
@@ -488,4 +488,5 @@ function laptopHelper() {
   setTimeout(processDebounced, 1000)
 }
 
-laptopHelper()
+if (globalThis.window) LaptopHelper()
+else module.exports = {}

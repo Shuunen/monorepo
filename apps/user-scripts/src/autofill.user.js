@@ -21,7 +21,7 @@ function triggerChange(element) {
   element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
 }
 
-function AutofillLogin() {
+function Autofill() {
   const utils = new Shuutils('auto-fill')
   const data = {
     email: atob('cm9tYWluLnJhY2FtaWVyQGdtYWlsLmNvbQ=='),
@@ -83,5 +83,5 @@ function AutofillLogin() {
   utils.onPageChange(() => initDebounced())
 }
 
-if (globalThis.window) AutofillLogin()
+if (globalThis.window) Autofill()
 else module.exports = {}

@@ -14,7 +14,7 @@
 // @version      1.1.3
 // ==/UserScript==
 
-function BundlePhobiaEverywhere() {
+function BundlephobiaEverywhere() {
   const utils = new Shuutils('bdl-evr')
   /**
    * Inject bundlephobia badges into the page
@@ -68,5 +68,5 @@ function BundlePhobiaEverywhere() {
   utils.onPageChange(detectName)
 }
 
-if (globalThis.window) BundlePhobiaEverywhere()
+if (globalThis.window) BundlephobiaEverywhere()
 else module.exports = {}

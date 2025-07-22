@@ -1,11 +1,12 @@
 // ==UserScript==
+// @name         LoL - KPM Counter - Kills per minutes
 // @author       Romain Racamier-Lafon
 // @description  Show how many kills per minutes you did, isn't the title that obvious ?
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/lol-kpm.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/lol-kpm.user.js
 // @grant        none
 // @match        https://matchhistory.euw.leagueoflegends.com/*
-// @name         LoL - KPM Counter - Kills per minutes
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=leagueoflegends.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.1.5
@@ -13,7 +14,7 @@
 
 /* eslint-disable jsdoc/require-jsdoc */
 
-function LolKpmCounter() {
+function LolKpm() {
   const utils = new Shuutils('lol-kpm')
   const maxKpm = 1.8
   /**
@@ -74,4 +75,5 @@ function LolKpmCounter() {
   })
 }
 
-LolKpmCounter()
+if (globalThis.window) LolKpm()
+else module.exports = {}

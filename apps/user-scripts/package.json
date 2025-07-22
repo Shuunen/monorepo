@@ -1,4 +1,7 @@
 {
+  "dependencies": {
+    "@shuunen/shuutils": "workspace:*"
+  },
   "description": "My personal user-scripts",
   "devDependencies": {
     "rough-notation": "latest"
@@ -6,6 +9,9 @@
   "homepage": "https://github.com/Shuunen/monorepo/tree/master/apps/user-scripts",
   "name": "user-scripts",
   "private": true,
+  "scripts": {
+    "lint": "bun ./bin/lint.cli.ts"
+  },
   "type": "module",
   "version": "2.6.5"
 }

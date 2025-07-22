@@ -74,7 +74,7 @@ function getIssueCountCached(cacheKey) {
   return count
 }
 
-function githubAio() {
+function GithubAio() {
   const utils = new Shuutils('github-aio')
   /**
    * Fetch issue count via API
@@ -166,5 +166,6 @@ function githubAio() {
   void process('initial-dom-ready')
 }
 
-if (globalThis.window) void githubAio()
+// biome-ignore lint/nursery/noFloatingPromises: it's ok
+if (globalThis.window) GithubAio()
 else module.exports = { createIssueCountLink, getRepoFullName }

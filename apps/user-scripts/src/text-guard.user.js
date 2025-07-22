@@ -5,6 +5,7 @@
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/text-guard.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/text-guard.user.js
 // @namespace    https://github.com/Shuunen
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=saveur-biere.com
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
 // @version      1.0.4

@@ -1,11 +1,12 @@
 // ==UserScript==
+// @name         ImgUnblock
 // @author       Romain Racamier-Lafon
 // @description  Use DuckDuckGo image proxy
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/img-unblock.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/img-unblock.user.js
 // @grant        none
 // @match        https://www.reddit.com/*
-// @name         Image Unblock
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.1.5
@@ -13,7 +14,7 @@
 
 /* eslint-disable jsdoc/require-jsdoc */
 
-function ImageUnblock() {
+function ImgUnblock() {
   const proxyUrl = 'https://proxy.duckduckgo.com/iu/?u='
   const utils = new Shuutils('img-unblock')
   const selectors = {
@@ -47,5 +48,5 @@ function ImageUnblock() {
   utils.onPageChange(processDebounced)
 }
 
-if (globalThis.module) module.exports = {}
-else ImageUnblock()
+if (globalThis.window) ImgUnblock()
+else module.exports = {}
