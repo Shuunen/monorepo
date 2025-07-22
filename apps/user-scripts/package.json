@@ -1,5 +1,8 @@
 {
   "description": "My personal user-scripts",
+  "devDependencies": {
+    "rough-notation": "latest"
+  },
   "homepage": "https://github.com/Shuunen/monorepo/tree/master/apps/user-scripts",
   "name": "user-scripts",
   "private": true,

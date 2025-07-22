@@ -232,7 +232,11 @@ importers:
         specifier: ^0.0
         version: 0.0.6
 
-  apps/user-scripts: {}
+  apps/user-scripts:
+    devDependencies:
+      rough-notation:
+        specifier: latest
+        version: 0.5.1
 
   apps/what-now:
     dependencies:
@@ -5067,6 +5071,9 @@ packages:
     resolution: {integrity: sha512-WLjEcJRIo7i3WDDgOIJqVI2d+lAC3EwvOGy+Xfq6hs+GQuAA4Di/H72xmXkOhrIWFg2PFYSKZYfH0f4vfKXN4A==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
+
+  rough-notation@0.5.1:
+    resolution: {integrity: sha512-ITHofTzm13cWFVfoGsh/4c/k2Mg8geKgBCwex71UZLnNuw403tCRjYPQ68jSAd37DMbZIePXPjDgY0XdZi9HPw==}
 
   rrweb-cssom@0.8.0:
     resolution: {integrity: sha512-guoltQEx+9aMf2gDZ0s62EcV8lsXR+0w8915TC3ITdn2YueuNjdAYh/levpU9nFaoChh9RUS5ZdQMrKfVEN9tw==}
@@ -11010,6 +11017,8 @@ snapshots:
       '@rollup/rollup-win32-ia32-msvc': 4.45.0
       '@rollup/rollup-win32-x64-msvc': 4.45.0
       fsevents: 2.3.3
+
+  rough-notation@0.5.1: {}
 
   rrweb-cssom@0.8.0: {}
 
