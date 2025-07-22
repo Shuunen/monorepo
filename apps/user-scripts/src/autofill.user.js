@@ -84,4 +84,4 @@ function Autofill() {
 }
 
 if (globalThis.window) Autofill()
-else module.exports = {}
+else module.exports = { triggerChange }

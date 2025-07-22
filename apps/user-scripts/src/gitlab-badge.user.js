@@ -68,15 +68,16 @@ async function animateCss(element, animation, canRemoveAfter = true) {
       return
     }
     // When the animation ends, we clean the classes and resolve the Promise
-    /**
-     * @param {{ stopPropagation: () => void; }} event - The animation end event
-     */
-    function handleAnimationEnd(event) {
-      event.stopPropagation()
-      element.classList.remove('animate__animated', animationName)
-      void resolve('Animation ended')
-    }
-    element.addEventListener('animationend', handleAnimationEnd, { once: true })
+    element.addEventListener(
+      'animationend',
+      // oxlint-disable-next-line max-nested-callbacks
+      event => {
+        event.stopPropagation()
+        element.classList.remove('animate__animated', animationName)
+        void resolve('Animation ended')
+      },
+      { once: true },
+    )
   })
 }
 
@@ -125,7 +126,7 @@ function GitlabBadge() {
 }
 
 if (globalThis.window) GitlabBadge()
-else module.exports = {}
+else module.exports = { animateCss, getNbContributions, injectStyles }
 
 injectStyles(`
 /*!

@@ -102,4 +102,4 @@ function AliExpressAio() {
 }
 
 if (globalThis.window) AliExpressAio()
-else module.exports = {}
+else module.exports = { extendsImage }

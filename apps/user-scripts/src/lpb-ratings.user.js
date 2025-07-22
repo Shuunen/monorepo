@@ -393,9 +393,7 @@ chateau grand puy lacoste lacoste borie pauillac,5.0
 mouton cadet bordeaux rouge,3.0
 la prade mari gourmandise des bois,2.5
 chateau saint ahon haut medoc,4.0
-gallo family vineyards summer red,1.0
-chateau lynch bages pauillac,4.0
-san pedro gato negro rose,1.0`
+gallo family vineyards summer red,1.0`
 
 /**
  * Clean a title string
@@ -521,4 +519,4 @@ function LpbRatings() {
 }
 
 if (globalThis.window) LpbRatings()
-else module.exports = { cleanTitle }
+else module.exports = { cleanTitle, createReview }

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { expect, it } from 'vitest'
-import { maxScore, score, score20Styled } from './amazon-aio.user.js'
+import { maxScore, calcScore as score, score20Styled } from './amazon-aio.user.js'
 
 /**
  * Checks if the score calculated from rating and reviews for two items is greater for the first item.

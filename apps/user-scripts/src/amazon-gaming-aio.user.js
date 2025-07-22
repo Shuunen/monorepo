@@ -313,4 +313,4 @@ function AmazonGamingAio() {
 }
 
 if (globalThis.window) AmazonGamingAio()
-else module.exports = {}
+else module.exports = { cleanDlcName }

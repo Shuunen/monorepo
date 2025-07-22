@@ -293,4 +293,4 @@ function AmazonPricePerWeight() {
 }
 
 if (globalThis.window) AmazonPricePerWeight()
-else module.exports = {}
+else module.exports = { getTitle, priceFloatToString, priceStringToFloat }
