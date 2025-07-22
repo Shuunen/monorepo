@@ -1,10 +1,11 @@
 // ==UserScript==
+// @name         Text Guard
 // @author       Romain Racamier-Lafon
 // @description  Check the text of the current page, show alerts if it contains weird/forbidden words
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/text-guard.user.js
-// @name         Text Guard
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/text-guard.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/text-guard.user.js
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
 // @version      1.0.4
 // ==/UserScript==
@@ -158,4 +159,5 @@ function TextGuard() {
   observer.observe(document.body, { childList: true, subtree: true })
 }
 
-TextGuard()
+if (globalThis.window) TextGuard()
+else module.exports = {}

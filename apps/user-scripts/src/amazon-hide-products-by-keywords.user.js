@@ -1,12 +1,14 @@
 // ==UserScript==
+// @name         Amazon - Hide products by keyword
 // @author       Romain Racamier-Lafon
 // @description  Easily hide products from your searches by specifying a block list
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-hide-products-by-keywords.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-hide-products-by-keywords.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-hide-products-by-keywords.user.js
 // @grant        none
 // @match        https://www.amazon.fr/s*
-// @name         Amazon - Hide products by keyword
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js
 // @version      1.1.9
 // ==/UserScript==
@@ -260,4 +262,5 @@ function AmazonHide() {
   document.addEventListener('scroll', () => processDebounced())
 }
 
-AmazonHide()
+if (globalThis.window) AmazonHide()
+else module.exports = {}

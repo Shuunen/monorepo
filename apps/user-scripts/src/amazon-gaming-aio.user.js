@@ -9,7 +9,7 @@
 // @match        https://gaming.amazon.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.1.1
 // ==/UserScript==
 

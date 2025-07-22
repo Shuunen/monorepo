@@ -1,10 +1,13 @@
 // ==UserScript==
+// @name         Autofill
 // @author       Romain Racamier-Lafon
 // @description  Simply fill your login everywhere
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/autofill.user.js
-// @name         Autofill
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/autofill.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/autofill.user.js
+// @grant        none
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=autofill.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.0.5
 // ==/UserScript==
 
@@ -80,4 +83,5 @@ function AutofillLogin() {
   utils.onPageChange(() => initDebounced())
 }
 
-AutofillLogin()
+if (globalThis.window) AutofillLogin()
+else module.exports = {}

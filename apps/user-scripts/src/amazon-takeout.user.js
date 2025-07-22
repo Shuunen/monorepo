@@ -1,15 +1,16 @@
 // ==UserScript==
+// @name         Amazon Takeout - Get data with you
 // @author       Shuunen
 // @description  This script let you export data from Amazon
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-takeout.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-takeout.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-takeout.user.js
 // @grant        none
 // @match        https://www.amazon.fr/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.fr
-// @name         Amazon Takeout - Get data with you
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/mb-import-utils.js
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
-// @version      1.0.2
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @version      1.0.3
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */
@@ -52,4 +53,5 @@ function AmazonTakeout() {
   utils.onPageChange(initDebounced)
 }
 
-AmazonTakeout()
+if (globalThis.window) AmazonTakeout()
+else module.exports = {}

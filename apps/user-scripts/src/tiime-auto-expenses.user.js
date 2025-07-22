@@ -7,7 +7,7 @@
 // @match        https://apps.tiime.fr/companies/*/expense/advanced-expenses
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tiime.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.1.2
 // ==/UserScript==
 

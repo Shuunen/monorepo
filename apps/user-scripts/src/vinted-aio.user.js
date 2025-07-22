@@ -5,7 +5,7 @@
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/vinted-aio.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/vinted-aio.user.js
 // @grant        none
-// @match        https://*.vinted.fr/*
+// @match        https://www.vinted.fr/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=vinted.fr
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js

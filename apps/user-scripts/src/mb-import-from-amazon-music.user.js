@@ -1,7 +1,8 @@
 // ==UserScript==
 // @author       Shuunen
 // @description  This script let you import releases on Amazon Music to the great MusicBrainz db <3
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/mb-import-from-amazon-music.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/mb-import-from-amazon-music.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/mb-import-from-amazon-music.user.js
 // @grant        none
 // @match        https://www.amazon.fr/*
 // @name         Amazon Music - Export to MusicBrainz

@@ -1,14 +1,15 @@
 // ==UserScript==
 // @author       Shuunen
 // @description  This script let you import releases on Spotify to the great MusicBrainz db <3
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/mb-import-from-spotify.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/mb-import-from-spotify.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/mb-import-from-spotify.user.js
 // @grant        none
 // @match        https://open.spotify.com/album/*
 // @match        https://open.spotify.com/playlist/*
 // @name         Spotify - Export to MusicBrainz
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/mb-import-utils.js
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.0.6
 // ==/UserScript==
 

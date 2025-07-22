@@ -1,12 +1,15 @@
 // ==UserScript==
+// @name         Steam Wishlist Export
 // @author       Romain Racamier-Lafon
 // @description  Export games from a wishlist page
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/steam-wishlist-export.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/steam-wishlist-export.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/steam-wishlist-export.user.js
+// @grant        none
 // @match        https://store.steampowered.com/wishlist/id/*
 // @match        https://store.steampowered.com/wishlist/profiles/*
-// @name         Steam Wishlist Export
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=steampowered.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.1.3
 // ==/UserScript==
 
@@ -93,5 +96,5 @@ function SteamWishlistExport() {
   utils.onPageChange(init)
 }
 
-if (globalThis.module) module.exports = {}
-else SteamWishlistExport()
+if (globalThis.window) SteamWishlistExport()
+else module.exports = {}

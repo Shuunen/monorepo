@@ -1,19 +1,21 @@
 // ==UserScript==
+// @name         Lybox
 // @author       Romain Racamier-Lafon
 // @description  Add features to LyBox
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lybox.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/lybox.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/lybox.user.js
 // @grant        none
 // @match        https://www.lybox.fr/app/search/*
-// @name         LyBox Enhanced
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=lybox.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.0.2
 // ==/UserScript==
 
 // @ts-nocheck FIX ME later, I dont use LyBox for now
 /* eslint-disable jsdoc/require-jsdoc */
 
-function LyBoxEnhanced() {
+function Lybox() {
   const utils = new Shuutils('lyb-enhanced')
   // eslint-disable-next-line no-restricted-syntax
   class Store {
@@ -96,4 +98,5 @@ function LyBoxEnhanced() {
   globalThis.addEventListener('load', processDebounced)
 }
 
-LyBoxEnhanced()
+if (globalThis.window) Lybox()
+else module.exports = {}

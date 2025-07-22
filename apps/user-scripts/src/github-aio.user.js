@@ -1,10 +1,12 @@
 // ==UserScript==
+// @name         Github AIO
 // @author       Romain Racamier-Lafon
 // @description  Add nice features to GitHub
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/github-aio.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/github-aio.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/github-aio.user.js
 // @grant        none
 // @match        https://github.com/*
-// @name         Github AIO
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=github.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
 // @version      1.0.0
@@ -164,9 +166,5 @@ function githubAio() {
   void process('initial-dom-ready')
 }
 
-if (globalThis.module)
-  module.exports = {
-    createIssueCountLink,
-    getRepoFullName,
-  }
-else void githubAio()
+if (globalThis.window) void githubAio()
+else module.exports = { createIssueCountLink, getRepoFullName }

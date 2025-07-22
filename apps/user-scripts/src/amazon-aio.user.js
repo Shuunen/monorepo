@@ -5,10 +5,10 @@
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-aio.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-aio.user.js
 // @grant        none
-// @match        https://*.amazon.fr/*
+// @match        https://www.amazon.fr/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.0.2
 // ==/UserScript==
 

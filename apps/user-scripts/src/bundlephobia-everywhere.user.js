@@ -1,14 +1,16 @@
 // ==UserScript==
+// @name         BundlePhobia <3 Everywhere
 // @author       Romain Racamier-Lafon
 // @description  Show size of npm packages on Github & Npm
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/bundlephobia-everywhere.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/bundlephobia-everywhere.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/bundlephobia-everywhere.user.js
 // @grant        none
 // @inject-into  content
 // @match        https://github.com/*
 // @match        https://www.npmjs.com/package/*
-// @name         BundlePhobia <3 Everywhere
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=npmjs.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.1.3
 // ==/UserScript==
 
@@ -66,4 +68,5 @@ function BundlePhobiaEverywhere() {
   utils.onPageChange(detectName)
 }
 
-BundlePhobiaEverywhere()
+if (globalThis.window) BundlePhobiaEverywhere()
+else module.exports = {}

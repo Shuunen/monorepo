@@ -1,15 +1,17 @@
 // ==UserScript==
+// @name         G2A Batch Compare
 // @author       Romain Racamier-Lafon
 // @description  Compare prices with game list in the clipboard
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/g2a-batch-compare.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/g2a-batch-compare.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/g2a-batch-compare.user.js
 // @grant        none
 // @match        https://www.g2a.com/*
-// @name         G2A Batch Compare
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=g2a.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/didyoumean/didYouMean-1.2.1.min.js
 // @require      https://cdn.jsdelivr.net/npm/simple-datatables
-// @version      1.1.2
+// @version      1.1.3
 // ==/UserScript==
 
 // @ts-nocheck FIXME later, too much issues
@@ -169,4 +171,5 @@ function G2aBatchCompare() {
   utils.onPageChange(init)
 }
 
-G2aBatchCompare()
+if (globalThis.window) G2aBatchCompare()
+else module.exports = { injectModal }

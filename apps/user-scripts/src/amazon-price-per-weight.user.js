@@ -1,13 +1,15 @@
 // ==UserScript==
+// @name         Amazon - Price per weight
 // @author       Romain Racamier-Lafon
 // @description  Display price per weight & sort ascending
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-price-per-weight.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-price-per-weight.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-price-per-weight.user.js
 // @grant        none
-// @match        https://*.amazon.fr/*
-// @name         Amazon - Price per weight
+// @match        https://www.amazon.fr/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
-// @version      1.0.8
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @version      1.0.9
 // ==/UserScript==
 
 // @ts-nocheck
@@ -290,4 +292,5 @@ function AmazonPricePerWeight() {
   init()
 }
 
-AmazonPricePerWeight()
+if (globalThis.window) AmazonPricePerWeight()
+else module.exports = {}

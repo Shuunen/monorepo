@@ -26,7 +26,7 @@
 // @match        https://www.tuxedocomputers.com/*
 // @name         Laptop Helper
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
 // @version      1.0.3
 // ==/UserScript==

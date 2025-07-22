@@ -1,13 +1,15 @@
 // ==UserScript==
+// @name         Auchan - All in one
 // @author       Romain Racamier-Lafon
 // @description  Improve Auchan UX
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/auchan-aio.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/auchan-aio.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/auchan-aio.user.js
 // @grant        none
-// @match        https://*.auchan.fr/*
-// @name         Auchan - All in one
+// @match        https://www.auchan.fr/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=auchan.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
-// @version      1.0.2
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @version      1.0.3
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */
@@ -106,4 +108,5 @@ function AuchanAio() {
   `)
 }
 
-AuchanAio()
+if (globalThis.window) AuchanAio()
+else module.exports = {}

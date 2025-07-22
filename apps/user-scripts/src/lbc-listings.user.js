@@ -1,12 +1,13 @@
 // ==UserScript==
 // @author       Romain Racamier-Lafon
 // @description  Show more infos on LeBonCoin listings
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lbc-listings.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/lbc-listings.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/lbc-listings.user.js
 // @grant        none
 // @match        https://www.leboncoin.fr/*
 // @name         LeBonCoin Listing Plus Plus
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.0.7
 // ==/UserScript==
 

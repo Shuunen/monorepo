@@ -33,6 +33,19 @@ Fetch your own beer ratings from Untappd and inject them in the search results t
 
 ![demo](src/saveur-biere-ratings.demo.jpg)
 
+## Prompt to follow guidelines
+
+Acknowledge the guidelines for user scripts inside `.github/copilot-instructions.md` then loop over every user-script file matching `apps/user-scripts/src/*.user.js` and for each file do theses steps:
+
+1. Check if all and every guidelines are respected
+2. Fix any issues found
+3. Fix any linting issues
+4. Go to next file
+
+At the end of the loop, run `nx typecheck user-scripts` and `nx test user-scripts` to make sure you have not break anything.
+
+Don't provide me any explanations/comments/summary, just iterate, fix all the issues and run the commands at the end.
+
 ## Todo
 
 - [ ] fix disabled lint rules

@@ -1,7 +1,8 @@
 // ==UserScript==
 // @author       Romain Racamier-Lafon
 // @description  Remove unwanted hard drives disks
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/hdd-cleaner.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/hdd-cleaner.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/hdd-cleaner.user.js
 // @grant        none
 // @match        https://keepa.com/*
 // @match        https://www.amazon.co.uk/*
@@ -12,7 +13,7 @@
 // @match        https://www.topachat.com/*
 // @name         HDD Cleaner
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.2.6
 // ==/UserScript==
 

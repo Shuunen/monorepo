@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linxo AIO - Get data with you
-// @description  This script help me improve my Linxo user experience
 // @author       Shuunen
+// @description  This script help me improve my Linxo user experience
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/linxo-aio.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/linxo-aio.user.js
 // @grant        none
@@ -72,4 +72,5 @@ function LinxoAio() {
   setTimeout(processDebounced, 1000)
 }
 
-LinxoAio()
+if (globalThis.window) LinxoAio()
+else module.exports = {}

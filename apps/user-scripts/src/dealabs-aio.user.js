@@ -1,14 +1,16 @@
 // ==UserScript==
+// @name         Dealabs - All in one
 // @author       Romain Racamier-Lafon
 // @description  Un-clutter & add filters to Dealabs
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/dealabs-aio.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/dealabs-aio.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/dealabs-aio.user.js
 // @grant        none
 // @match        https://www.dealabs.com/*
-// @name         Dealabs - All in one
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=dealabs.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js
-// @version      1.1.5
+// @version      1.1.6
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */
@@ -178,5 +180,5 @@ function DealabsAio() {
   document.addEventListener('scroll', () => processDebounced())
 }
 
-if (globalThis.module) module.exports = {}
-else DealabsAio()
+if (globalThis.window) DealabsAio()
+else module.exports = {}

@@ -87,7 +87,7 @@ function getNoteIdFromNote(noteElement) {
   // eslint-disable-line no-console
   return noteIdString
 }
-function LeBonCoinNotes() {
+function LbcNotes() {
   if (globalThis.matchMedia === undefined) return
   // oxlint-disable no-undef
   // biome-ignore lint/correctness/noUndeclaredVariables: globally available
@@ -507,5 +507,5 @@ function LeBonCoinNotes() {
   utils.onPageChange(() => processDebounced('page-change-event'))
 }
 
-if (globalThis.window) LeBonCoinNotes()
-else module.exports = { getListingId }
+if (globalThis.window) LbcNotes()
+else module.exports = { getListingId, getListingIdFromNote, getNoteIdFromNote, multipleAdDisplayed }

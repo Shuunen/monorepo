@@ -1,12 +1,13 @@
 // ==UserScript==
 // @author       Romain Racamier-Lafon
 // @description  Use DuckDuckGo image proxy
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/img-unblock.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/img-unblock.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/img-unblock.user.js
 // @grant        none
 // @match        https://www.reddit.com/*
 // @name         Image Unblock
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.1.5
 // ==/UserScript==
 
