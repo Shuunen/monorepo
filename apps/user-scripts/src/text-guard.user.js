@@ -14,8 +14,7 @@
 // 2. Using querySelectorAll
 // both methods are used to find elements containing a specific word in their text content, sometimes one method is more efficient than the other ¯\_(ツ)_/¯
 
-// oxlint-disable-next-line max-lines-per-function
-;(function TextGuard() {
+function TextGuard() {
   const counts = {
     forbidden: 0,
   }
@@ -56,7 +55,6 @@
    * @param {string} word - The word to search for in the elements' text content.
    * @returns {HTMLElement[]} An array of HTMLElements that match the XPath expression and contain the specified word.
    */
-  // oxlint-disable-next-line max-lines-per-function
   function findElementsByXpath(word) {
     const needle = sanitize(word)
     const results = document.evaluate(`//*[contains(translate(text(),"ABCDEFGHIJKLMNOPQRSTUVWXYZ ,","abcdefghijklmnopqrstuvwxyz "),"${needle}")]`, document, undefined, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE)
@@ -158,4 +156,6 @@
   }
   const observer = new MutationObserver(onMutation)
   observer.observe(document.body, { childList: true, subtree: true })
-})()
+}
+
+TextGuard()

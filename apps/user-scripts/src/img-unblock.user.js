@@ -12,13 +12,12 @@
 
 /* eslint-disable jsdoc/require-jsdoc */
 
-;(function ImageUnblock() {
+function ImageUnblock() {
   const proxyUrl = 'https://proxy.duckduckgo.com/iu/?u='
   const utils = new Shuutils('img-unblock')
   const selectors = {
     images: 'a[href^="https://i.imgur.com/"]:not(.img-unblock)',
   }
-  // oxlint-disable-next-line max-lines-per-function
   function process() {
     const images = utils.findAll(selectors.images)
     for (const element of images) {
@@ -45,4 +44,7 @@
   utils.log('set scroll listener')
   document.addEventListener('scroll', () => processDebounced())
   utils.onPageChange(processDebounced)
-})()
+}
+
+if (globalThis.module) module.exports = {}
+else ImageUnblock()

@@ -55,6 +55,12 @@ watchState('isLoading', (value) => { /* handle change */ })
 
 - Avoid `;(function AliExpressTakeout() { ... })();` pattern and do not use IIFEs, instead do `function AliExpressTakeout() { ... } AliExpressTakeout();`
 - Avoid `/** @type {HTMLTextAreaElement | undefined} */` and similar type assertions, remove the type annotation and use ` if (!(input instanceof HTMLInputElement)) { utils.showError('tableRowAmountInput is not an input element'); return; }` to ensure type safety
+- The name of the main function should match the filename, e.g. `AliExpressTakeout` for `aliexpress-takeout.user.js` and respect PascalCase convention, all the other functions should be in camelCase
+- To allow testing and avoid user script main function execution in unit test environment, every last lines of a user script will be like `if (globalThis.window) AliExpressTakeout() else module.exports = { funcA, funcB }` where `funcA`, `funcB` are the functions outside the main function, they need to be unit-tested. This pattern is used to export functions for unit testing while still allowing the main function to run when the script is executed in a browser environment. If all the functions are inside the main function, just export an empty object.
+- the UserScript meta `@name` should be the second line of the file below the `// ==UserScript==` line
+- the meta `@downloadURL` and `@updateURL` should be the same URL, pointing to the raw file in the repository, e.g. `https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/linxo-aio.user.js` where `linxo-aio.user.js` is the filename
+- the meta `@match` should be the URL pattern where the script should run, but star pattern in the domain part is not allowed, for example `https://*.linxo.com/*` will fail, use `https://linxo.com/*` or `https://www.linxo.com/*` instead
+- the meta `@icon` is a URL like `https://www.google.com/s2/favicons?sz=64&domain=linxo.com` where it use the domain from the `@match` URL
 
 ### Best Practices
 

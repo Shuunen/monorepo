@@ -12,13 +12,12 @@
 // @version      1.1.3
 // ==/UserScript==
 
-;(function BundlePhobiaEverywhere() {
+function BundlePhobiaEverywhere() {
   const utils = new Shuutils('bdl-evr')
   /**
    * Inject bundlephobia badges into the page
    * @param {string} name the package name
    */
-  // oxlint-disable-next-line max-lines-per-function
   function injectBadge(name) {
     const link = document.createElement('a')
     link.innerHTML = `"${name}" stats from BundlePhobia :
@@ -32,14 +31,17 @@
     link.style.zIndex = '1000'
     link.style.display = 'flex'
     link.style.gap = '20px'
-    const /** @type {HTMLElement} */ anchor = document.querySelector('#readme') || document.body
+    const anchor = document.querySelector('#readme') || document.body
+    if (!(anchor instanceof HTMLElement)) {
+      utils.showError('anchor is not an HTMLElement')
+      return
+    }
     anchor.style.position = 'relative'
     anchor.append(link)
   }
   /**
    * Detect the package name in the page and inject the badge
    */
-  // oxlint-disable-next-line max-lines-per-function
   function detectName() {
     let text = document.body.textContent
     if (!text) {
@@ -62,4 +64,6 @@
     injectBadge(name)
   }
   utils.onPageChange(detectName)
-})()
+}
+
+BundlePhobiaEverywhere()

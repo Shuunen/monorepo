@@ -1,10 +1,12 @@
 // ==UserScript==
+// @name         Vinted AIO
 // @author       Romain Racamier-Lafon
 // @description  Hide unwanted elements and add features on Vinted
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/vinted-aio.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/vinted-aio.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/vinted-aio.user.js
 // @grant        none
 // @match        https://*.vinted.fr/*
-// @name         Vinted AIO
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=vinted.fr
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
 // @version      1.0.0
@@ -48,7 +50,7 @@ const styles = `
   }
 `
 
-;(function vintedHideSelector() {
+function VintedAio() {
   const utils = new Shuutils('vinted-hide-selector')
   utils.injectStyles(styles)
   const uselessSelectors = {
@@ -77,4 +79,7 @@ const styles = `
   utils.onPageChange(() => processDebounced('page-change'))
   document.addEventListener('DOMContentLoaded', () => process('initial-dom-loaded'))
   process('initial-dom-ready')
-})()
+}
+
+if (globalThis.window) VintedAio()
+else module.exports = {}

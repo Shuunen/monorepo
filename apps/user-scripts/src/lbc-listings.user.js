@@ -56,7 +56,65 @@ const districtsToHide = new Set([
 
 const citiesToHide = new Set(['Eschau'])
 
-;(function LeBonCoinListing() {
+/**
+ * Get square info from the ad
+ * @param {LbcHousingAd} ad the ad to process
+ * @returns {LbcCustomInfo} the custom info
+ */
+function getSquareInfo(ad) {
+  const square = ad.attributes.find(attribute => attribute.key === 'square')
+  const text = square ? `surface : ${square.value} m²` : ''
+  return { text }
+}
+
+/**
+ * Get rooms info from the ad
+ * @param {LbcHousingAd} ad the ad to process
+ * @returns {LbcCustomInfo} the custom info
+ */
+function getRoomsInfo(ad) {
+  const rooms = ad.attributes.find(attribute => attribute.key === 'rooms')
+  const text = rooms ? `${rooms.value} pièces` : ''
+  return { text }
+}
+
+/**
+ * Readable floor number
+ * @param {string} floorNumber the floor number
+ * @returns {string} the human readable floor number
+ */
+function humanReadableFloor(floorNumber) {
+  if (floorNumber === '0') return 'étage : rdc'
+  if (floorNumber === '1') return '1er étage'
+  return `${floorNumber}e étage`
+}
+
+/**
+ * Get elevator info from the ad
+ * @param {LbcHousingAd} ad the ad to process
+ * @returns {LbcCustomInfo} the custom info
+ */
+function getElevatorInfo(ad) {
+  const elevator = ad.attributes.find(attribute => attribute.key === 'elevator')
+  if (elevator === undefined) return {}
+  // oxlint-disable-next-line no-nested-ternary
+  const text = elevator.value === '1' ? 'ascenseur' : elevator.value === '2' ? "pas d'ascenseur" : `unknown elevator value "${elevator.value}"`
+  const score = elevator.value === '2' ? 0.5 : 1
+  return { score, text }
+}
+
+/**
+ * Get the ad type
+ * @param {LbcAd} ad the ad to process
+ * @returns {LbcAdType} the ad type
+ */
+function getAdType(ad) {
+  const category = ad.category_id
+  if (['2', '4', '5'].includes(category)) return 'car'
+  return 'unknown'
+}
+
+function LeBonCoinListing() {
   const utils = new Shuutils('lbc-lpp')
   const cls = {
     marker: `${utils.id}-processed`,
@@ -70,7 +128,6 @@ const citiesToHide = new Set(['Eschau'])
    * @param {LbcAd} ad the ad object
    * @returns {HTMLElement|undefined} the ad element
    */
-  // oxlint-disable-next-line max-lines-per-function
   function getAdElement(ad) {
     const id = ad.list_id
     const link = document.querySelector(`[href*="${id}"]`)
@@ -215,40 +272,6 @@ const citiesToHide = new Set(['Eschau'])
     const score = isPrivateBetter ? (owner.type === 'pro' ? 0.5 : 1.2) : 1
     return { score, text }
   }
-
-  /**
-   * Get square info from the ad
-   * @param {LbcHousingAd} ad the ad to process
-   * @returns {LbcCustomInfo} the custom info
-   */
-  function getSquareInfo(ad) {
-    const square = ad.attributes.find(attribute => attribute.key === 'square')
-    const text = square ? `surface : ${square.value} m²` : ''
-    return { text }
-  }
-
-  /**
-   * Get rooms info from the ad
-   * @param {LbcHousingAd} ad the ad to process
-   * @returns {LbcCustomInfo} the custom info
-   */
-  function getRoomsInfo(ad) {
-    const rooms = ad.attributes.find(attribute => attribute.key === 'rooms')
-    const text = rooms ? `${rooms.value} pièces` : ''
-    return { text }
-  }
-
-  /**
-   * Readable floor number
-   * @param {string} floorNumber the floor number
-   * @returns {string} the human readable floor number
-   */
-  function humanReadableFloor(floorNumber) {
-    if (floorNumber === '0') return 'étage : rdc'
-    if (floorNumber === '1') return '1er étage'
-    return `${floorNumber}e étage`
-  }
-
   /**
    * Get floor info from the ad
    * @param {LbcHousingAd} ad the ad to process
@@ -261,21 +284,6 @@ const citiesToHide = new Set(['Eschau'])
     const score = floorNumber.value === '0' ? 0.5 : 1
     return { score, text }
   }
-
-  /**
-   * Get elevator info from the ad
-   * @param {LbcHousingAd} ad the ad to process
-   * @returns {LbcCustomInfo} the custom info
-   */
-  function getElevatorInfo(ad) {
-    const elevator = ad.attributes.find(attribute => attribute.key === 'elevator')
-    if (elevator === undefined) return {}
-    // oxlint-disable-next-line no-nested-ternary
-    const text = elevator.value === '1' ? 'ascenseur' : elevator.value === '2' ? "pas d'ascenseur" : `unknown elevator value "${elevator.value}"`
-    const score = elevator.value === '2' ? 0.5 : 1
-    return { score, text }
-  }
-
   /**
    * Add custom infos to the element
    * @param {LbcHousingAd} ad the housing ad to process
@@ -284,7 +292,6 @@ const citiesToHide = new Set(['Eschau'])
   function getCustomInfosHousing(ad) {
     return [getOwnerInfo(ad, true), getDpeInfos(ad), getLocationInfo(ad), getSquareInfo(ad), getRoomsInfo(ad), getFloorNumberInfo(ad), getElevatorInfo(ad)]
   }
-
   /**
    * Get custom infos from a car ad
    * @param {LbcCarAd} ad the car ad to process
@@ -292,7 +299,6 @@ const citiesToHide = new Set(['Eschau'])
    */
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   function getCustomInfosCar(ad) {
-    /** @type {LbcCustomInfo[]} */
     const infos = [getOwnerInfo(ad, false)]
     const year = Number.parseInt(ad.attributes.find(attribute => attribute.key === 'regdate')?.value ?? '', 10)
     if (year) infos.push({ score: utils.rangedScore(yearRules, year), text: `année : ${year}` })
@@ -306,18 +312,6 @@ const citiesToHide = new Set(['Eschau'])
     if (price) infos.push({ score: utils.rangedScore(priceRules, price), text: `prix : ${price} €` })
     return infos
   }
-
-  /**
-   * Get the ad type
-   * @param {LbcAd} ad the ad to process
-   * @returns {LbcAdType} the ad type
-   */
-  function getAdType(ad) {
-    const category = ad.category_id
-    if (['2', '4', '5'].includes(category)) return 'car'
-    return 'unknown'
-  }
-
   /**
    * Get display classes from the score
    * @param {number} score the score to get the classes from
@@ -330,7 +324,6 @@ const citiesToHide = new Set(['Eschau'])
     if (score < 1) classes.push(...utils.tw('text-red-600'))
     return classes
   }
-
   /**
    * Compute the custom classes for the info
    * @param {LbcCustomInfo} info the info to get the classes from
@@ -455,4 +448,6 @@ const citiesToHide = new Set(['Eschau'])
   const processDebounced = utils.debounce(process, 1000)
   globalThis.addEventListener('scroll', () => processDebounced())
   globalThis.addEventListener('load', () => processDebounced())
-})()
+}
+
+LeBonCoinListing()

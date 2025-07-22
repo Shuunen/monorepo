@@ -12,8 +12,7 @@
 
 /* eslint-disable jsdoc/require-jsdoc */
 
-// oxlint-disable-next-line max-lines-per-function
-;(function instagramWide() {
+function InstagramWide() {
   const utils = new Shuutils('instagram-wide')
   const uselessSelectors = {
     sidebar: 'main > div > div + div', // useless account suggestions
@@ -25,10 +24,10 @@
   }
 
   function showVideoControls() {
-    /** @type {HTMLVideoElement[]} */
     const videos = Array.from(document.querySelectorAll('video:not([controls])'))
     if (videos.length === 0) return
     for (const video of videos) {
+      if (!(video instanceof HTMLVideoElement)) continue
       video.controls = true
 
       if (video.nextElementSibling instanceof HTMLElement) video.nextElementSibling.style.pointerEvents = 'none'
@@ -78,7 +77,9 @@
     showVideoControls()
   }
 
-  const processDebounced = utils.debounce((/** @type {string} */ reason) => process(reason), 300) // eslint-disable-line no-magic-numbers
+  const processDebounced = utils.debounce((/** @type {string | undefined} */ reason) => process(reason), 300) // eslint-disable-line no-magic-numbers
   globalThis.addEventListener('scroll', () => processDebounced('scroll'))
   utils.onPageChange(() => processDebounced('page-change'))
-})()
+}
+
+InstagramWide()

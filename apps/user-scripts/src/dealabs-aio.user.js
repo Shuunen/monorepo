@@ -13,8 +13,7 @@
 
 /* eslint-disable jsdoc/require-jsdoc */
 
-// oxlint-disable-next-line max-lines-per-function
-;(function DealabsAio() {
+function DealabsAio() {
   const utils = new Shuutils('dlb-clr')
   /** @type {string[]} */
   let excluders = (globalThis.localStorage[`${utils.id}.filter`] || 'my-keyword, other-keyword').split(',')
@@ -46,7 +45,6 @@
     // @ts-expect-error it's ok
     for (const key of Object.keys(uselessClasses)) for (const node of utils.findAll(uselessClasses[key], document, true)) node.classList = []
   }
-  // oxlint-disable-next-line max-lines-per-function
   function insertStyles() {
     const styleTag = document.createElement('style')
     styleTag.innerHTML = `
@@ -117,9 +115,12 @@
     filter = excluders.join(', ')
     globalThis.localStorage[`${utils.id}.filter`] = filter
     if (!isFromFilter) {
-      /** @type {HTMLTextAreaElement | undefined} */ // @ts-expect-error it's ok
       const filterElement = utils.findOne(`.${cls.filter}`)
-      if (filterElement) filterElement.value = filter
+      if (!(filterElement instanceof HTMLTextAreaElement)) {
+        utils.showError('filterElement is not a textarea element')
+        return
+      }
+      filterElement.value = filter
       // @ts-expect-error autosize is loaded in the window
       // oxlint-disable no-undef
       // biome-ignore lint/correctness/noUndeclaredVariables: it is declared in the global scope
@@ -139,7 +140,6 @@
   }
   // eslint-disable-next-line no-magic-numbers
   const onFilterChangeDebounced = utils.debounce(onFilterChange, 500)
-  // oxlint-disable-next-line max-lines-per-function
   function insertFilter() {
     utils.log('insert filter...')
     const container = utils.findFirst(selectors.dealList)
@@ -176,4 +176,7 @@
   const processDebounced = utils.debounce(process, 500)
 
   document.addEventListener('scroll', () => processDebounced())
-})()
+}
+
+if (globalThis.module) module.exports = {}
+else DealabsAio()

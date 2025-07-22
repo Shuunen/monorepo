@@ -1,9 +1,11 @@
 // ==UserScript==
+// @name         Tiime Auto Expenses Filler
 // @author       Romain Racamier-Lafon
 // @description  Generate expenses automatically
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/tiime-auto-expenses.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/tiime-auto-expenses.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/tiime-auto-expenses.user.js
 // @match        https://apps.tiime.fr/companies/*/expense/advanced-expenses
-// @name         Tiime Auto Expenses Filler
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=tiime.fr
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
 // @version      1.1.2
@@ -33,7 +35,7 @@ function createButton(label = '') {
   return button
 }
 
-;(function TiimeAutoExpenses() {
+function TiimeAutoExpenses() {
   const utils = new Shuutils(id)
   const elements = {
     addOneButton: createButton(''),
@@ -210,9 +212,8 @@ function createButton(label = '') {
         utils.showError('row closest to chip not found')
         return false
       }
-      /** @type {HTMLInputElement | null} */
       const input = row.querySelector(selectors.tableRowAmountInput)
-      if (input === null) {
+      if (!(input instanceof HTMLInputElement)) {
         utils.showError('amount input not found')
         return false
       }
@@ -314,4 +315,7 @@ function createButton(label = '') {
   const initDebounced = utils.debounce(init, delays.large)
   initDebounced()
   utils.onPageChange(initDebounced)
-})()
+}
+
+if (globalThis.window) TiimeAutoExpenses()
+else module.exports = {}

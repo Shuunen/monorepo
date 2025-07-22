@@ -14,8 +14,37 @@
 /** biome-ignore-all lint/performance/useTopLevelRegex: FIX me later */
 // oxlint-disable no-magic-numbers
 
-// oxlint-disable-next-line max-lines-per-function
-;(function AmazonPricePerWeight() {
+/**
+ * Converts a price string to a floating-point number.
+ * Replaces commas with dots to handle European decimal notation.
+ *
+ * @param {string} string - The price string to convert (e.g., "12,34" or "12.34").
+ * @returns {number} The parsed floating-point price.
+ */
+function priceStringToFloat(string) {
+  let price = string.replace(',', '.')
+  price = Number.parseFloat(price)
+  return price
+}
+
+/**
+ * Converts a floating-point price to a string formatted with one decimal place,
+ * replaces the decimal point with a comma, and appends a trailing zero.
+ *
+ * @param {number} number - The price value to format.
+ * @returns {string} The formatted price string (e.g., "12,30").
+ */
+function priceFloatToString(number) {
+  let price = number.toFixed(1)
+  price = `${price.replace('.', ',')}0`
+  return price
+}
+
+function getTitle(text) {
+  return text.split(' ').slice(0, 5).join(' ')
+}
+
+function AmazonPricePerWeight() {
   const app = {
     id: 'amz-kg',
     injectRealPrice: true,
@@ -74,18 +103,13 @@
     }
   }
 
-  function priceStringToFloat(string) {
-    let price = string.replace(',', '.')
-    price = Number.parseFloat(price)
-    return price
-  }
-
-  function priceFloatToString(number) {
-    let price = number.toFixed(1)
-    price = `${price.replace('.', ',')}0`
-    return price
-  }
-
+  /**
+   * Extracts the price from a given text using a regular expression.
+   * Logs warnings if the price cannot be found, and logs matches and price if `app.processOne` is enabled.
+   *
+   * @param {string} text - The input text containing the price information.
+   * @returns {number|undefined} The extracted price as a float, or undefined if not found.
+   */
   function getPrice(text) {
     const matches = text.match(regex.price) || []
     if (matches.length !== 3) return utils.warn(`failed to find price in : "${text}"`, matches)
@@ -118,7 +142,6 @@
     return bulk
   }
 
-  // oxlint-disable-next-line max-lines-per-function
   function getProductDataViaPricePer(text) {
     const matches = text.replace('&nbsp;', ' ').match(regex.pricePer) || []
     const data = {
@@ -141,10 +164,6 @@
     if (!['', 'g', 'kg'].includes(data.unit)) utils.error('unit ?', data.unit)
     if (app.processOne) utils.log('found pricePer :', data)
     return data
-  }
-
-  function getTitle(text) {
-    return text.split(' ').slice(0, 5).join(' ')
   }
 
   function getProductData(item, data = {}) {
@@ -173,7 +192,6 @@
     return tpl
   }
 
-  // oxlint-disable-next-line max-lines-per-function
   function showDebugData(item, data) {
     let debug = utils.findOne(selectors.debug, item, true)
     if (!app.showDebug) {
@@ -207,7 +225,6 @@
     return data
   }
 
-  // oxlint-disable-next-line max-lines-per-function
   function injectRealPrice(item, data) {
     if (!app.injectRealPrice) return
     const price = utils.findOne(selectors.price, item)
@@ -225,7 +242,6 @@
     if (otherPrice) otherPrice.classList.remove('a-color-price', 'a-text-bold')
   }
 
-  // oxlint-disable-next-line max-lines-per-function
   function augmentProduct(item) {
     if (app.processOne) utils.log('augment', item)
     const pricePer = utils.findOne(selectors.pricePer, item, true)
@@ -272,4 +288,6 @@
   }
 
   init()
-})()
+}
+
+AmazonPricePerWeight()

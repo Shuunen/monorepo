@@ -12,8 +12,7 @@
 // ==/UserScript==
 
 // @ts-nocheck
-// oxlint-disable-next-line max-lines-per-function
-;(function AmazonHide() {
+function AmazonHide() {
   const app = {
     debounceTime: 500,
     debug: false,
@@ -197,7 +196,6 @@
   /**
    * Insert the filter in the page
    */
-  // oxlint-disable-next-line max-lines-per-function
   function insertFilter() {
     const container = utils.findFirst(selectors.container)
     if (!container) {
@@ -260,4 +258,6 @@
   init()
   const processDebounced = utils.debounce(process, app.debounceTime)
   document.addEventListener('scroll', () => processDebounced())
-})()
+}
+
+AmazonHide()

@@ -33,7 +33,6 @@ const authorizedCategories = new Set([
   "Salaire/Revenus d'activité",
 ])
 
-// oxlint-disable-next-line max-lines-per-function
 function LinxoAio() {
   /* globals Shuutils, RoughNotation */
   const utils = new Shuutils('linxo-aio', true)

@@ -12,8 +12,7 @@
 // @version      1.0.2
 // ==/UserScript==
 
-// oxlint-disable-next-line max-lines-per-function
-;(function LidlTakeout() {
+function LidlTakeout() {
   const utils = new Shuutils('ldl-tko')
   const selectors = {
     details: '.keyfacts__title',
@@ -95,4 +94,6 @@
   const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
   initDebounced()
   utils.onPageChange(initDebounced)
-})()
+}
+
+LidlTakeout()

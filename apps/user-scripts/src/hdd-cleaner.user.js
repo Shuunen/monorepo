@@ -19,8 +19,7 @@
 // oxlint-disable no-magic-numbers
 /* eslint-disable jsdoc/require-jsdoc */
 
-// oxlint-disable-next-line max-lines-per-function
-;(function hddCleaner() {
+function HddCleaner() {
   const id = 'hdd-clr'
   const app = {
     maxSize: 12_000,
@@ -71,7 +70,6 @@
    * @param {number} size - The size of the product in gigabytes (GB).
    * @returns {boolean} Returns true if the price per size was successfully inserted, false otherwise.
    */
-  // oxlint-disable-next-line max-lines-per-function
   function insertPricePerSize(productElement, descElement, size) {
     const priceElement = utils.findOne(selectors.price, productElement)
     if (!priceElement) {
@@ -137,4 +135,6 @@
   const processDebounced = utils.debounce(process, 500)
   document.addEventListener('scroll', () => processDebounced())
   setTimeout(processDebounced, 1000)
-})()
+}
+
+HddCleaner()

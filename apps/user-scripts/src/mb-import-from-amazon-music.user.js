@@ -12,7 +12,7 @@
 
 /* eslint-disable jsdoc/require-jsdoc */
 
-;(function AmazonMusicBrainzExport() {
+function AmazonMusicBrainzExport() {
   const utils = new Shuutils('amazon-mb-export')
   const selectors = {
     artist: '[data-feature-name="artistLink"',
@@ -26,7 +26,6 @@
       number: String(index + 1),
     }))
   }
-  // oxlint-disable-next-line max-lines-per-function
   function mbImport() {
     const details = textFromSelector('#productDetailsTable')
     const data = {
@@ -66,4 +65,6 @@
     mbImport()
   }
   utils.onPageChange(init)
-})()
+}
+
+AmazonMusicBrainzExport()

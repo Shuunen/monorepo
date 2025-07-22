@@ -12,7 +12,7 @@
 
 /* eslint-disable jsdoc/require-jsdoc */
 
-;(function gitlabMr() {
+function GitlabMr() {
   const debounceTime = 300
 
   const utils = new Shuutils('gitlab-mr')
@@ -25,10 +25,12 @@
    * @param {string} href - The URL to set for the button's link and to fetch for counting merge requests.
    * @returns {HTMLElement} The newly created button element.
    */
-  // oxlint-disable-next-line max-lines-per-function
   function addButton(element, label, href) {
-    /** @type {HTMLElement} */ // @ts-expect-error it's ok ^^
     const button = element.cloneNode(true)
+    if (!(button instanceof HTMLElement)) {
+      utils.showError('button is not an HTMLElement')
+      return element
+    }
     const link = button.firstChild
     if (!link) {
       utils.error('no link found in element', element)
@@ -100,4 +102,6 @@
   }
   const processDebounced = utils.debounce(process, debounceTime)
   utils.onPageChange(processDebounced)
-})()
+}
+
+GitlabMr()

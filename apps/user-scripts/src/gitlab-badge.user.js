@@ -77,8 +77,8 @@ async function animateCss(element, animation, canRemoveAfter = true) {
     element.addEventListener('animationend', handleAnimationEnd, { once: true })
   })
 }
-// oxlint-disable-next-line max-lines-per-function
-;(function GitlabBadge() {
+
+function GitlabBadge() {
   const utils = new Shuutils('gtb-bdg')
   function getBadge() {
     const badge = document.createElement('div')
@@ -120,7 +120,9 @@ async function animateCss(element, animation, canRemoveAfter = true) {
   })
   globalThis.addEventListener('click', () => processDebounced('click'))
   utils.onPageChange(async () => await process('page-change'))
-})()
+}
+
+GitlabBadge()
 
 injectStyles(`
 /*!

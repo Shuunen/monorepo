@@ -1,9 +1,11 @@
 // ==UserScript==
+// @name         Trade Republic AIO
 // @author       Romain Racamier-Lafon
 // @description  Add some features to Trade Republic like investment report
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/trade-republic-aio.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/trade-republic-aio.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/trade-republic-aio.user.js
 // @match        https://app.traderepublic.com/profile/transactions
-// @name         Trade Republic AIO
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=traderepublic.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
 // @version      1.1.1
@@ -12,8 +14,7 @@
 /* eslint-disable no-console */
 // oxlint-disable no-magic-numbers
 
-// oxlint-disable-next-line max-lines-per-function
-;(function TradeRepublicAio() {
+function TradeRepublicAio() {
   const data = {
     currentYear: new Date().getFullYear(),
   }
@@ -45,7 +46,6 @@
   /**
    * Inject the elements needed for the script
    */
-  // oxlint-disable-next-line max-lines-per-function
   function injectElements() {
     if (document.querySelector(`#${elements.meter.id}`) !== null) return
     elements.meter.style.position = 'fixed'
@@ -165,4 +165,7 @@
   observer.observe(document.body, { childList: true, subtree: true })
   document.addEventListener('scroll', () => initDebounced())
   utils.onPageChange(initDebounced)
-})()
+}
+
+if (globalThis.window) TradeRepublicAio()
+else module.exports = {}

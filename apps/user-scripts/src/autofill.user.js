@@ -8,8 +8,17 @@
 // @version      1.0.5
 // ==/UserScript==
 
-// oxlint-disable-next-line max-lines-per-function
-;(function AutofillLogin() {
+/**
+ * Trigger a change event on an input element
+ * @param {HTMLInputElement} element the input element
+ * @returns {void}
+ */
+function triggerChange(element) {
+  element.dispatchEvent(new KeyboardEvent('change'))
+  element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
+}
+
+function AutofillLogin() {
   const utils = new Shuutils('auto-fill')
   const data = {
     email: atob('cm9tYWluLnJhY2FtaWVyQGdtYWlsLmNvbQ=='),
@@ -19,15 +28,6 @@
     login: 'input[id*="mail"], input[name*="mail"], input[name*="ogin"], input[type*="mail"], input[name*="user"], input[name*="ident"]',
     phone: 'input[type*="phone"], input[name*="phone"], input[name*="mobile"], input[name*="tel"], input[inputmode="tel"]',
     phoneCountry: '[id="areaCode-+33"]',
-  }
-  /**
-   * Trigger a change event on an input element
-   * @param {HTMLInputElement} element the input element
-   * @returns {void}
-   */
-  function triggerChange(element) {
-    element.dispatchEvent(new KeyboardEvent('change'))
-    element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
   }
   /**
    * Get the inputs matching the selector
@@ -78,4 +78,6 @@
   const initDebounced = utils.debounce(init, 1000) // eslint-disable-line no-magic-numbers
   if (document.location.hostname === 'localhost') return
   utils.onPageChange(() => initDebounced())
-})()
+}
+
+AutofillLogin()

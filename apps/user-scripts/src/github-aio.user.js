@@ -72,7 +72,6 @@ function getIssueCountCached(cacheKey) {
   return count
 }
 
-// oxlint-disable-next-line max-lines-per-function
 function githubAio() {
   const utils = new Shuutils('github-aio')
   /**
@@ -82,7 +81,6 @@ function githubAio() {
    * @param {number} cachedCount The cached count to use if available
    * @returns {Promise<number>} The issue count or -1 on error
    */
-  // oxlint-disable-next-line max-lines-per-function
   function getIssueCountApi(repoFullName, cacheKey, cachedCount) {
     if (stopQuerying) {
       utils.warn('stopping querying for issue count')
@@ -166,4 +164,9 @@ function githubAio() {
   void process('initial-dom-ready')
 }
 
-void githubAio()
+if (globalThis.module)
+  module.exports = {
+    createIssueCountLink,
+    getRepoFullName,
+  }
+else void githubAio()

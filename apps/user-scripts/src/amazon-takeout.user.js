@@ -14,7 +14,7 @@
 
 /* eslint-disable jsdoc/require-jsdoc */
 
-;(function AmazonTakeout() {
+function AmazonTakeout() {
   const utils = new Shuutils('amz-tko')
   const selectors = {
     brand: '.po-brand .po-break-word',
@@ -50,4 +50,6 @@
   const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
   initDebounced()
   utils.onPageChange(initDebounced)
-})()
+}
+
+AmazonTakeout()

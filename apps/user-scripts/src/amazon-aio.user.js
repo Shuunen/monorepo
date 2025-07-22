@@ -1,10 +1,12 @@
 // ==UserScript==
+// @name         Amazon - All in one
 // @author       Romain Racamier-Lafon
 // @description  Bigger listing
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-aio.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-aio.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-aio.user.js
 // @grant        none
 // @match        https://*.amazon.fr/*
-// @name         Amazon - All in one
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.fr
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
 // @version      1.0.2
@@ -63,7 +65,7 @@ const score20Styled = (rating, reviews) => {
   return data
 }
 
-;(function amazonAio() {
+function AmazonAio() {
   if (globalThis.matchMedia === undefined) return
   const utils = new Shuutils('amz-aio')
   const selectors = {
@@ -297,9 +299,10 @@ const score20Styled = (rating, reviews) => {
   const processDebounced = utils.debounce(process, 500)
   utils.onPageChange(processDebounced)
   globalThis.addEventListener('scroll', () => processDebounced())
-})()
+}
 
-if (module)
+if (globalThis.window) AmazonAio()
+else
   module.exports = {
     maxScore,
     score: calcScore,

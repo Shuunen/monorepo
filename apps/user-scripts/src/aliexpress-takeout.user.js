@@ -15,7 +15,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
 // oxlint-disable no-magic-numbers
 
-;(function AliExpressTakeout() {
+function AliExpressTakeout() {
   const utils = new Shuutils('alx-tko')
   const selectors = {
     details: '[data-pl="product-title"]',
@@ -64,9 +64,11 @@
   /** @param {MouseEvent} event the click event */
   async function init(event) {
     utils.debug('init')
-    /** @type {HTMLElement | null} */ // @ts-expect-error it's ok
     const { target } = event
-    if (target === null) return
+    if (!(target instanceof HTMLElement)) {
+      utils.showError('target is not an HTMLElement')
+      return
+    }
     if (!target.className.includes('image')) return
     const photo = await utils.waitToDetect(selectors.photo)
     if (photo === undefined) {
@@ -77,4 +79,6 @@
   }
   const initDebounced = utils.debounce(init, 500)
   globalThis.addEventListener('click', () => initDebounced())
-})()
+}
+
+if (!globalThis.module) AliExpressTakeout()

@@ -30,8 +30,7 @@ function cleanTitle(title) {
     .replace(/\s+/gu, ' ')
     .trim()
 }
-// oxlint-disable-next-line max-lines-per-function
-;(function SaveurBiereUntappd() {
+function SaveurBiereRatings() {
   if (globalThis.matchMedia === undefined) return
   // eslint-disable-next-line no-magic-numbers
   const cached = new Date().toISOString().slice(0, 7) // like 2021-11
@@ -96,7 +95,6 @@ function cleanTitle(title) {
     if (titleElement.tagName !== 'A') titleElement.outerHTML = `<a href="https://www.saveur-biere.com/fr/search-result/${name}" target="_blank">${name}</a>`
   }
   // oxlint-enable max-lines-per-function, consistent-return, complexity
-  // oxlint-disable-next-line max-lines-per-function
   function injectRatings() {
     const items = utils.findAll(selectors.items)
     utils.log('found items', items)
@@ -129,9 +127,7 @@ function cleanTitle(title) {
     injectRatings()
   }
   utils.onPageChange(init)
-})()
+}
 
-if (module)
-  module.exports = {
-    cleanTitle,
-  }
+if (globalThis.window) SaveurBiereRatings()
+else module.exports = { cleanTitle }

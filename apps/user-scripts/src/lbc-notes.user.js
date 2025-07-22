@@ -1,10 +1,12 @@
 // ==UserScript==
+// @name         LeBonCoin Notes
 // @author       Romain Racamier-Lafon
 // @description  Add notes to LeBonCoin listings
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lbc-notes.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/lbc-notes.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/lbc-notes.user.js
 // @grant        GM_addStyle
 // @match        https://www.leboncoin.fr/*
-// @name         LeBonCoin Notes
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=leboncoin.fr
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.5/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/appwrite@10.1.0
@@ -85,8 +87,7 @@ function getNoteIdFromNote(noteElement) {
   // eslint-disable-line no-console
   return noteIdString
 }
-// oxlint-disable-next-line max-lines-per-function
-;(function LeBonCoinNotes() {
+function LeBonCoinNotes() {
   if (globalThis.matchMedia === undefined) return
   // oxlint-disable no-undef
   // biome-ignore lint/correctness/noUndeclaredVariables: globally available
@@ -241,7 +242,11 @@ function getNoteIdFromNote(noteElement) {
       const response = await (noteId ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note: noteContent }) : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note: noteContent }))
       saveNoteSuccess({ listingId, noteContent, noteId: response.$id }, noteElement)
       updateNoteStyle(noteElement) /* @ts-ignore */
-    } catch (/** @type {Error} */ error) {
+    } catch (error) {
+      if (!(error instanceof Error)) {
+        utils.showError('unknown error occurred')
+        return
+      }
       saveNoteFailure({ listingId, noteContent, noteId: '' }, noteElement, error)
     }
   }
@@ -280,7 +285,6 @@ function getNoteIdFromNote(noteElement) {
    * @param {number} listingId - The listing id to search for in the DOM
    * @returns {string} The price as a string, or empty string if not found
    */
-  // oxlint-disable-next-line max-lines-per-function
   function getListingPrice(listingId) {
     utils.log('getListingPrice for listingId', listingId)
     // eslint-disable-next-line no-useless-assignment
@@ -370,7 +374,6 @@ function getNoteIdFromNote(noteElement) {
    * @param {number} listingId the listing id
    * @returns {void}
    */
-  // oxlint-disable-next-line max-lines-per-function
   function addPriceToListing(listingElement, listingId) {
     utils.debug('add the price to listing', listingId)
     if (!listingElement.parentElement) {
@@ -390,7 +393,6 @@ function getNoteIdFromNote(noteElement) {
     listingElement.dataset.price = `${amount} ${currency}` // Store the price in the listing element for later use
   }
 
-  // oxlint-disable-next-line max-lines-per-function
   function mosaicToList() {
     const mosaic = utils.findOne('[data-test-id="listing-mosaic"]', document, true)
     if (!mosaic) return
@@ -431,9 +433,9 @@ function getNoteIdFromNote(noteElement) {
   function addNotesToListings() {
     utils.log('add note to each listing')
     mosaicToList()
-    /** @type {HTMLAnchorElement[]} */ // @ts-expect-error it's ok
     const listings = utils.findAll(`article[data-test-id="ad"] > a:not(.${cls.marker})`)
     for (const listing of listings) {
+      if (!(listing instanceof HTMLAnchorElement)) continue
       listing.classList.add(cls.marker)
       const listingId = getListingId(listing.href)
       if (listingId === undefined) utils.error('no listing id found for', listing)
@@ -503,6 +505,7 @@ function getNoteIdFromNote(noteElement) {
   globalThis.addEventListener('scroll', () => processDebounced('scroll-event'))
   globalThis.addEventListener('load', () => processDebounced('load-event'))
   utils.onPageChange(() => processDebounced('page-change-event'))
-})()
+}
 
-if (module) module.exports = { getListingId }
+if (globalThis.window) LeBonCoinNotes()
+else module.exports = { getListingId }

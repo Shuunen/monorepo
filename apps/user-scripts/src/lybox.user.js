@@ -13,7 +13,7 @@
 // @ts-nocheck FIX ME later, I dont use LyBox for now
 /* eslint-disable jsdoc/require-jsdoc */
 
-;(function LyBoxEnhanced() {
+function LyBoxEnhanced() {
   const utils = new Shuutils('lyb-enhanced')
   // eslint-disable-next-line no-restricted-syntax
   class Store {
@@ -49,7 +49,6 @@
     row: '#searchForm > div.ng-star-inserted:not(.processed)',
   }
   const hiddenRows = store.get('hiddenRows', [])
-  // oxlint-disable-next-line max-lines-per-function
   function processRow(row) {
     row.classList.add('processed')
     // mark row id as... id
@@ -95,4 +94,6 @@
   const processDebounced = utils.debounce(process, 1000)
   globalThis.addEventListener('scroll', processDebounced)
   globalThis.addEventListener('load', processDebounced)
-})()
+}
+
+LyBoxEnhanced()

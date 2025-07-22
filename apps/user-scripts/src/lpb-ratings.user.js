@@ -484,7 +484,6 @@ function lePetitBallonRatings() {
   /**
    * @param {HTMLElement} item The item to inject the rating into
    */
-  // oxlint-disable-next-line max-lines-per-function
   function injectRating(item) {
     item.classList.add(utils.id)
     const title = utils.findOne(selectors.wineTitle, item, true)
@@ -519,9 +518,5 @@ function lePetitBallonRatings() {
   globalThis.addEventListener('DOMNodeInserted', () => injectRatingsDebounced())
 }
 
-lePetitBallonRatings()
-
-if (module)
-  module.exports = {
-    cleanTitle,
-  }
+if (globalThis.window) lePetitBallonRatings()
+else module.exports = { cleanTitle }

@@ -548,8 +548,7 @@ class Shuutils {
   }
 }
 
-// oxlint-disable-next-line no-undef
-if (module)
+if (globalThis.window === undefined)
   // oxlint-disable-next-line no-commonjs, no-undef
   module.exports = {
     // biome-ignore lint/style/useNamingConvention: nope

@@ -12,7 +12,7 @@
 // @version      1.0.6
 // ==/UserScript==
 
-;(function SpotifyMusicBrainzExport() {
+function SpotifyMusicBrainzExport() {
   const utils = new Shuutils('spotify-mb-export')
   const selectors = {
     title: '.entity-info.media h1, .os-content h1[as="h1"]',
@@ -25,7 +25,6 @@
       number: String(index + 1),
     }))
   }
-  // oxlint-disable-next-line max-lines-per-function
   function mbImport() {
     const data = {
       app: {
@@ -64,4 +63,6 @@
     mbImport()
   }
   utils.onPageChange(init)
-})()
+}
+
+SpotifyMusicBrainzExport()

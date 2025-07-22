@@ -10,7 +10,7 @@
 // @version      1.1.3
 // ==/UserScript==
 
-;(function SteamWishlistExport() {
+function SteamWishlistExport() {
   let appButton = document.createElement('button')
   /** @type {{ id: string, img: string, price: number, title: string }[]} */
   let appGames = []
@@ -91,4 +91,7 @@
     injectButton()
   }
   utils.onPageChange(init)
-})()
+}
+
+if (globalThis.module) module.exports = {}
+else SteamWishlistExport()

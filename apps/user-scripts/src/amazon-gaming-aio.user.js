@@ -1,18 +1,36 @@
 // oxlint-disable max-lines
 // ==UserScript==
+// @name         Amazon Gaming - All in one
 // @author       Romain Racamier-Lafon
 // @description  Hide games
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-gaming-aio.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-gaming-aio.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-gaming-aio.user.js
 // @grant        none
 // @match        https://gaming.amazon.com/*
-// @name         Amazon Gaming - All in one
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
 // @version      1.1.1
 // ==/UserScript==
 
-// oxlint-disable-next-line max-lines-per-function
-;(function amazonGamingAio() {
+/**
+ * Clean a dlc name
+ * @param {string} name the name to clean
+ * @returns {string} the cleaned name
+ */
+function cleanDlcName(name = '') {
+  return (
+    name
+      .normalize('NFD')
+      .replace(/[\u0300-\u036F]/gu, '') // remove accents
+      .replace(/\W/gu, ' ') // remove non word characters
+      .replace(/\s+/gu, ' ') // remove multiple spaces
+      .trim() // remove leading and trailing spaces
+      .toLowerCase() || '' // lowercase
+  )
+}
+
+function AmazonGamingAio() {
   if (globalThis.matchMedia === undefined) return
   const utils = new Shuutils('amz-gm-aio')
   // non word characters will be removed
@@ -149,9 +167,8 @@
     utils.log(grids.length, 'grids found', grids)
     for (const grid of grids) {
       grid.style.display = 'flex'
-      /** @type {HTMLElement[]} */ // @ts-expect-error type issue
-      const children = Array.from(grid.children)
-      for (const node of children) node.style.minWidth = '380px'
+      const htmlChildren = Array.from(grid.children).filter(node => node instanceof HTMLElement)
+      for (const node of htmlChildren) node.style.minWidth = '380px'
     }
   }
   /**
@@ -203,41 +220,22 @@
     utils.log(claimed.length, 'claimed found')
     for (const node of claimed) {
       node.classList.add(`${utils.id}-processed`)
-      /** @type {HTMLElement | null} */
       const product = node.closest(selectors.productAlt)
-      if (!product) continue
+      if (!(product instanceof HTMLElement)) continue
       hideElement(product, 'claimed')
     }
   }
   /**
-   * Clean a dlc name
-   * @param {string} name the name to clean
-   * @returns {string} the cleaned name
-   */
-  function cleanDlcName(name = '') {
-    return (
-      name
-        .normalize('NFD')
-        .replace(/[\u0300-\u036F]/gu, '') // remove accents
-        .replace(/\W/gu, ' ') // remove non word characters
-        .replace(/\s+/gu, ' ') // remove multiple spaces
-        .trim() // remove leading and trailing spaces
-        .toLowerCase() || '' // lowercase
-    )
-  }
-  /**
    * Hide unwanted dlc
    */
-  // oxlint-disable-next-line max-lines-per-function
   function hideUnwantedDlc() {
     const list = utils.findAll(selectors.productDlcName, document, true)
     utils.log(list.length, 'dlc found')
 
     for (const node of list) {
       node.classList.add(`${utils.id}-processed`)
-      /** @type {HTMLElement | null} */
       const product = node.closest(selectors.product)
-      if (!product) {
+      if (!(product instanceof HTMLElement)) {
         utils.error('no product found in product :', node)
         continue
       }
@@ -246,7 +244,6 @@
         utils.error('no title found in product :', node)
         continue
       }
-      /** @type {string} */
       const gameName = cleanDlcName(title.textContent ?? '')
       if (gameName.length === 0) {
         utils.error('no game name found', node)
@@ -271,9 +268,8 @@
     utils.log(buttons.length, 'luna games found')
     for (const button of buttons) {
       button.classList.add(`${utils.id}-processed`)
-      /** @type {HTMLElement | null} */
       const product = button.closest(selectors.productAlt) // the link to the game
-      if (!product) {
+      if (!(product instanceof HTMLElement)) {
         utils.error('no product found for button :', button)
         continue
       }
@@ -314,4 +310,7 @@
   }
   const observer = new MutationObserver(onMutation)
   observer.observe(document.body, { childList: true, subtree: true })
-})()
+}
+
+if (globalThis.window) AmazonGamingAio()
+else module.exports = {}

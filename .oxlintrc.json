@@ -29,6 +29,7 @@
     "HTMLImageElement": "readonly",
     "HTMLInputElement": "readonly",
     "HTMLTextAreaElement": "readonly",
+    "HTMLVideoElement": "readonly",
     "KeyboardEvent": "readonly",
     "localStorage": "readonly",
     "Node": "readonly",
@@ -78,6 +79,7 @@
       },
       "rules": {
         "jest/require-hook": "off",
+        "max-lines-per-function": "off",
         "no-commonjs": "off",
         "numeric-separators-style": "off"
       }

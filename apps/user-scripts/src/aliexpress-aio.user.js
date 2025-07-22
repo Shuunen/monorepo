@@ -1,10 +1,12 @@
 // ==UserScript==
+// @name         AliExpress - All in one
 // @author       Romain Racamier-Lafon
 // @description  Bigger listing
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/aliexpress-aio.user.js
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/aliexpress-aio.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/aliexpress-aio.user.js
 // @grant        none
 // @match        https://*.aliexpress.com/*
-// @name         AliExpress - All in one
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=aliexpress.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
 // @version      1.0.4
@@ -17,44 +19,52 @@
 /* eslint-disable jsdoc/require-param-description */
 /* eslint-disable jsdoc/require-returns */
 
-;(function aliExpressAio() {
+/** @param {HTMLImageElement} img */
+function extendsImage(img, size = 600) {
+  // img.src = img.src.split('.jpg_')[0] + '.jpg'
+  img.style.height = `${size}px`
+  img.style.width = `${size}px`
+  img.style.maxHeight = 'inherit'
+  img.style.maxWidth = 'inherit'
+}
+
+function AliExpressAio() {
   const utils = new Shuutils('ali-express-aio')
-  /** @param {HTMLImageElement} img */
-  function extendsImage(img, size = 600) {
-    // img.src = img.src.split('.jpg_')[0] + '.jpg'
-    img.style.height = `${size}px`
-    img.style.width = `${size}px`
-    img.style.maxHeight = 'inherit'
-    img.style.maxWidth = 'inherit'
-  }
+
   /** @param {HTMLElement} element */
-  // oxlint-disable-next-line max-lines-per-function
   function processProductCard(element) {
-    /** @type {HTMLImageElement | null} */
     const img = element.querySelector('.item-img, img')
-    if (!img?.src) return utils.error('cannot find image on card el', element)
+    if (!(img instanceof HTMLImageElement) || !img.src) {
+      utils.error('cannot find image on card el', element)
+      return
+    }
     extendsImage(img)
-    /** @type {HTMLImageElement | null} */
     const wrapper = img.closest('.product-img, a')
-    if (!wrapper) return utils.error('failed to find wrapper of', img)
+    if (!(wrapper instanceof HTMLElement)) {
+      utils.error('failed to find wrapper of', img)
+      return
+    }
     wrapper.style.height = 'inherit'
     wrapper.style.width = 'inherit'
     element.style.display = 'flex'
-    /** @type {HTMLImageElement | null} */
     const zone = element.querySelector('.right-zone')
-    if (!zone) return utils.error('cannot find zone on card el', element)
+    if (!(zone instanceof HTMLElement)) {
+      utils.error('cannot find zone on card el', element)
+      return
+    }
     zone.style.paddingLeft = '16px'
     zone.style.marginTop = '16px'
-    /** @type {HTMLImageElement | null} */ // @ts-expect-error it's ok
     const sibling = zone.previousElementSibling
-    if (sibling) sibling.style.width = '80%'
+    if (sibling instanceof HTMLElement) sibling.style.width = '80%'
     element.classList.add('ali-aio-handled')
   }
   /** @param {HTMLElement} element */
   function processItemRow(element) {
-    /** @type {HTMLImageElement | null} */
     const img = element.querySelector('.pic-core')
-    if (!img?.src) return utils.error('cannot find image on row el', element)
+    if (!(img instanceof HTMLImageElement) || !img.src) {
+      utils.error('cannot find image on row el', element)
+      return
+    }
     utils.log('image src was', img.src)
     extendsImage(img, 500)
     utils.log('now image src is', img.src)
@@ -72,21 +82,13 @@
     element.classList.add('ali-aio-handled')
   }
   /**
-   * Returns an array of all elements that match the given selector.
-   * @param {string} selector - The CSS selector to match elements against.
-   * @returns {Array<HTMLElement>} - An array of elements that match the selector.
-   */
-  function all(selector) {
-    return Array.from(document.querySelectorAll(selector))
-  }
-  /**
    * Process the product cards
    */
-  const processProductCards = () => all('.list.product-card:not(.ali-aio-handled)').map(element => processProductCard(element))
+  const processProductCards = () => utils.findAll('.list.product-card:not(.ali-aio-handled)').map(element => processProductCard(element))
   /**
    * Process the item rows
    */
-  const processItemRows = () => all('.items-list > .item:not(.ali-aio-handled)').map(element => processItemRow(element))
+  const processItemRows = () => utils.findAll('.items-list > .item:not(.ali-aio-handled)').map(element => processItemRow(element))
   /**
    * Process the page
    */
@@ -97,4 +99,7 @@
   }
   const processDebounced = utils.debounce(process, 1000)
   globalThis.addEventListener('scroll', () => processDebounced())
-})()
+}
+
+if (globalThis.window) AliExpressAio()
+else module.exports = {}

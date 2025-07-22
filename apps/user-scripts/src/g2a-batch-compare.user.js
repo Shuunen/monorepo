@@ -13,9 +13,28 @@
 // ==/UserScript==
 
 // @ts-nocheck FIXME later, too much issues
-// oxlint-disable-next-line max-lines-per-function
 
-;(function g2aBatchCompare() {
+function injectModal() {
+  const backdrop = document.createElement('div')
+  backdrop.style = 'display: flex; z-index: 100; width: 100%; height: 100%; background-color: rgba(0,0,0,.5); position: fixed; top: 0; left: 0;'
+  backdrop.dataset.close = true
+  backdrop.addEventListener('click', event => {
+    if (event.target.dataset.close === 'true') backdrop.remove()
+  })
+  const modal = document.createElement('div')
+  modal.style = 'z-index: 200; position: relative; max-height: 90%; overflow-y: auto; margin: auto; padding: 32px 24px; background: floralwhite; width: 800px;'
+  modal.innerHTML = `
+      <h1 style=" margin: 1rem 0 2rem; text-align: center; text-decoration: underline; ">
+        <a target="_blank" href="https://github.com/Shuunen/user-scripts/">G2A Batch Compare</a>
+      </h1>
+      <button data-close="true" style="position: absolute; border: none; background: none; top: 2rem; right: 2rem; font-size: 4rem; font-family: monospace; color: darkgray;">x</button>
+    `
+  backdrop.append(modal)
+  document.body.append(backdrop)
+  return modal
+}
+
+function G2aBatchCompare() {
   let list = []
 
   const utils = new Shuutils('g2a-bcp')
@@ -30,25 +49,6 @@
     if (utils.app.debug) utils.log(`${hasResult ? 'same' : 'different'} : "${stringA}" & "${stringB}"`)
     return hasResult
   }
-  function injectModal() {
-    const backdrop = document.createElement('div')
-    backdrop.style = 'display: flex; z-index: 100; width: 100%; height: 100%; background-color: rgba(0,0,0,.5); position: fixed; top: 0; left: 0;'
-    backdrop.dataset.close = true
-    backdrop.addEventListener('click', event => {
-      if (event.target.dataset.close === 'true') backdrop.remove()
-    })
-    const modal = document.createElement('div')
-    modal.style = 'z-index: 200; position: relative; max-height: 90%; overflow-y: auto; margin: auto; padding: 32px 24px; background: floralwhite; width: 800px;'
-    modal.innerHTML = `
-      <h1 style=" margin: 1rem 0 2rem; text-align: center; text-decoration: underline; ">
-        <a target="_blank" href="https://github.com/Shuunen/user-scripts/">G2A Batch Compare</a>
-      </h1>
-      <button data-close="true" style="position: absolute; border: none; background: none; top: 2rem; right: 2rem; font-size: 4rem; font-family: monospace; color: darkgray;">x</button>
-    `
-    backdrop.append(modal)
-    document.body.append(backdrop)
-    return modal
-  }
   function injectStyles(string = '') {
     if (string.length === 0) {
       utils.log('cannot inject empty style stuff')
@@ -60,7 +60,6 @@
     }
     document.body.insertAdjacentHTML('beforeend', `<style>${string}</style>`)
   }
-  // oxlint-disable-next-line max-lines-per-function
   function generateTable() {
     const table = document.createElement('table')
     const head = document.createElement('thead')
@@ -98,7 +97,6 @@
     })
     utils.log('dataTable init', dataTable)
   }
-  // oxlint-disable-next-line max-lines-per-function
   async function getLocalPrice(game) {
     game.priceLocal = 0
     game.priceLocalUrl = ''
@@ -136,7 +134,6 @@
       await getLocalPrice(game)
     }
   }
-  // oxlint-disable-next-line max-lines-per-function
   async function showModal() {
     const modal = injectModal()
     const message = document.createElement('p')
@@ -170,4 +167,6 @@
     injectButton()
   }
   utils.onPageChange(init)
-})()
+}
+
+G2aBatchCompare()

@@ -12,8 +12,7 @@
 
 /* eslint-disable jsdoc/require-jsdoc */
 
-// oxlint-disable-next-line max-lines-per-function
-;(function auchanAio() {
+function AuchanAio() {
   const utils = new Shuutils('auchan-aio')
   const uselessSelectors = {
     productIcon: '.product-thumbnail__icon', // useless icon like "Frais", "Vegan", "Bio"...
@@ -105,4 +104,6 @@
     margin-bottom: 5px;
   }
   `)
-})()
+}
+
+AuchanAio()

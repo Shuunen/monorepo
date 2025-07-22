@@ -21,7 +21,6 @@ function textFromSelector(selector, context) {
  * @param {Function} [callback] a function to call with the data, prevent form submission is used
  * @returns {HTMLFormElement} the form
  */
-// oxlint-disable-next-line max-lines-per-function
 function createMbForm(app, callback = () => ({})) {
   const existing = document.querySelector(`#${app.id}`)
   if (existing) existing.remove()

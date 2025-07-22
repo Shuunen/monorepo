@@ -12,7 +12,7 @@
 
 /* eslint-disable jsdoc/require-jsdoc */
 
-;(function LolKpmCounter() {
+function LolKpmCounter() {
   const utils = new Shuutils('lol-kpm')
   const maxKpm = 1.8
   /**
@@ -36,7 +36,6 @@
    *
    * @param {HTMLElement} row - The table row element containing match data.
    */
-  // oxlint-disable-next-line max-lines-per-function
   function showKpmOnRow(row) {
     const kdaPlate = row.querySelector('.kda-plate')
     if (!kdaPlate || !kdaPlate.textContent) {
@@ -72,4 +71,6 @@
     const rows = utils.findAll('div[id^=game-summary]:not(.kpm-handled)', node, true)
     for (const row of rows) showKpmOnRow(row)
   })
-})()
+}
+
+LolKpmCounter()
