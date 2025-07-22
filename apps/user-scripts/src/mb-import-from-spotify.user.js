@@ -13,7 +13,6 @@
 // ==/UserScript==
 
 ;(function SpotifyMusicBrainzExport() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('spotify-mb-export')
   const selectors = {
     title: '.entity-info.media h1, .os-content h1[as="h1"]',
@@ -35,7 +34,7 @@
       },
       // biome-ignore lint/performance/useTopLevelRegex: FIX me later
       artist: textFromSelector('.entity-info.media h2 a, .os-content a[href^="/artist/"]') || textFromSelector('.entity-info.media h2').match(/^.+\b\s(?<artist>.+)$/u)?.groups?.artist || '',
-      date: { day: 0, month: 0, year: 0 },
+      date: { day: '0', month: '0', year: '0' },
       // biome-ignore lint/performance/useTopLevelRegex: FIX me later
       label: textFromSelector('.copyrights li, .os-content p[as="p"]').match(/[\d\s©℗]+(?<label>.*)/u)?.groups?.label || '',
       title: textFromSelector(selectors.title),
@@ -45,7 +44,7 @@
     }
     // biome-ignore lint/performance/useTopLevelRegex: FIX me later
     const dateMatches = textFromSelector('script[type="application/ld+json"]').match(/datePublished":"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/u)
-    if (dateMatches.groups?.day) {
+    if (dateMatches?.groups?.day) {
       data.date.year = dateMatches.groups.year
       data.date.month = dateMatches.groups.month
       data.date.day = dateMatches.groups.day

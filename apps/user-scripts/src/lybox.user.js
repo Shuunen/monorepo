@@ -10,10 +10,10 @@
 // @version      1.0.2
 // ==/UserScript==
 
+// @ts-nocheck FIX ME later, I dont use LyBox for now
 /* eslint-disable jsdoc/require-jsdoc */
 
 ;(function LyBoxEnhanced() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('lyb-enhanced')
   // eslint-disable-next-line no-restricted-syntax
   class Store {

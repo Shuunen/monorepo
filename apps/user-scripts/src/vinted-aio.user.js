@@ -49,7 +49,6 @@ const styles = `
 `
 
 ;(function vintedHideSelector() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('vinted-hide-selector')
   utils.injectStyles(styles)
   const uselessSelectors = {

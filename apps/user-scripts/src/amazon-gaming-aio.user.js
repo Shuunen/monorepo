@@ -14,7 +14,6 @@
 // oxlint-disable-next-line max-lines-per-function
 ;(function amazonGamingAio() {
   if (globalThis.matchMedia === undefined) return
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('amz-gm-aio')
   // non word characters will be removed
   const dlcToHide = [

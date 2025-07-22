@@ -14,7 +14,6 @@
 
 // oxlint-disable-next-line max-lines-per-function
 ;(function instagramWide() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('instagram-wide')
   const uselessSelectors = {
     sidebar: 'main > div > div + div', // useless account suggestions
@@ -32,7 +31,7 @@
     for (const video of videos) {
       video.controls = true
 
-      if (video.nextElementSibling) video.nextElementSibling.style.pointerEvents = 'none'
+      if (video.nextElementSibling instanceof HTMLElement) video.nextElementSibling.style.pointerEvents = 'none'
     }
     utils.log(`video controls added to ${videos.length} video${videos.length > 1 ? 's' : ''}`)
   }

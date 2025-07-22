@@ -14,7 +14,6 @@
 
 // oxlint-disable-next-line max-lines-per-function
 ;(function auchanAio() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('auchan-aio')
   const uselessSelectors = {
     productIcon: '.product-thumbnail__icon', // useless icon like "Frais", "Vegan", "Bio"...

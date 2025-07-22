@@ -88,7 +88,6 @@ function getNoteIdFromNote(noteElement) {
 // oxlint-disable-next-line max-lines-per-function
 ;(function LeBonCoinNotes() {
   if (globalThis.matchMedia === undefined) return
-  /** @type {{get: IdbKeyvalNoteGetter, set: Function, clear: Function}} */
   // oxlint-disable no-undef
   // biome-ignore lint/correctness/noUndeclaredVariables: globally available
   const { clear: clearStore, get: getNoteFromStore, set: setInStore } = idbKeyval
@@ -98,7 +97,6 @@ function getNoteIdFromNote(noteElement) {
       preflight: false,
     },
   }
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('lbc-nts')
   // Remove me one day :)
   utils.tw ||= classes => classes.split(' ')
@@ -121,6 +119,10 @@ function getNoteIdFromNote(noteElement) {
   }
   if (!db.databaseId || !db.notesCollectionId) {
     utils.showError('missing lbcNotes_databaseId or lbcNotes_notesCollectionId in localStorage')
+    return
+  }
+  if (!db.project) {
+    utils.showError('missing lbcNotes_project in localStorage')
     return
   }
   const client = new Client()
@@ -234,6 +236,8 @@ function getNoteIdFromNote(noteElement) {
     const listingId = getListingIdFromNote(noteElement)
     utils.log(`${noteId ? 'update' : 'create'} note for listing ${listingId} with content : ${noteContent}`)
     try {
+      if (!db.databaseId) throw new Error('db.databaseId is not defined')
+      if (!db.notesCollectionId) throw new Error('db.notesCollectionId is not defined')
       const response = await (noteId ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note: noteContent }) : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note: noteContent }))
       saveNoteSuccess({ listingId, noteContent, noteId: response.$id }, noteElement)
       updateNoteStyle(noteElement) /* @ts-ignore */
@@ -249,8 +253,9 @@ function getNoteIdFromNote(noteElement) {
    * @returns {Promise<LbcNote>} a promise
    */
   async function loadNoteFromAppWrite(listingId) {
+    if (!db.databaseId) throw new Error('db.databaseId is not defined')
+    if (!db.notesCollectionId) throw new Error('db.notesCollectionId is not defined')
     const notesByListingId = await databases.listDocuments(db.databaseId, db.notesCollectionId, [Query.equal('listingId', listingId)])
-    /** @type {[{ note: string; $id: string } | undefined]} */
     const [first] = notesByListingId.documents
     const note = { listingId, noteContent: first?.note || '', noteId: first?.$id || '' }
     if (note) utils.debug(`loaded note for listing ${listingId} from AppWrite`, note)
@@ -426,7 +431,7 @@ function getNoteIdFromNote(noteElement) {
   function addNotesToListings() {
     utils.log('add note to each listing')
     mosaicToList()
-    /** @type {HTMLAnchorElement[]} */
+    /** @type {HTMLAnchorElement[]} */ // @ts-expect-error it's ok
     const listings = utils.findAll(`article[data-test-id="ad"] > a:not(.${cls.marker})`)
     for (const listing of listings) {
       listing.classList.add(cls.marker)
@@ -463,6 +468,7 @@ function getNoteIdFromNote(noteElement) {
     document.body.append(getClearStoreButton(clearStore))
   }
 
+  // @ts-expect-error GM_addStyle is globally available
   // eslint-disable-next-line new-cap
   // biome-ignore lint/correctness/noUndeclaredVariables: should be available
   GM_addStyle(`

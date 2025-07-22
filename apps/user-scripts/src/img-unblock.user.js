@@ -14,16 +14,18 @@
 
 ;(function ImageUnblock() {
   const proxyUrl = 'https://proxy.duckduckgo.com/iu/?u='
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('img-unblock')
   const selectors = {
     images: 'a[href^="https://i.imgur.com/"]:not(.img-unblock)',
   }
   // oxlint-disable-next-line max-lines-per-function
   function process() {
-    /** @type {HTMLAnchorElement[]} */
     const images = utils.findAll(selectors.images)
     for (const element of images) {
+      if (!(element instanceof HTMLAnchorElement)) {
+        utils.error('element is not an anchor', element)
+        continue
+      }
       element.classList.add('img-unblock')
       if (!element.href.includes('.jpg') && !element.href.includes('.png')) continue
       utils.log('processing', element)

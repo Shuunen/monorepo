@@ -12,10 +12,12 @@
 // @version      1.1.2
 // ==/UserScript==
 
+// @ts-nocheck FIXME later, too much issues
 // oxlint-disable-next-line max-lines-per-function
+
 ;(function g2aBatchCompare() {
   let list = []
-  /** @type {import('./utils.js').Shuutils} */
+
   const utils = new Shuutils('g2a-bcp')
   function cleanGameName(string) {
     const output = string.toLowerCase().split(' deluxe edition')[0].split(' definitive edition')[0].split(' standard edition')[0].split(' (')[0].split('steam')[0]

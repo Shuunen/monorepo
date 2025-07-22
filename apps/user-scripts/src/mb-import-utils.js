@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+// oxlint-disable no-unused-vars, max-lines-per-function
 
 /**
  * Get the text content from the node behind a css selector
@@ -10,6 +10,7 @@
 function textFromSelector(selector, context) {
   const element = (context ?? document).querySelector(selector)
   if (!element) return ''
+  // @ts-expect-error it's ok
   const text = element.textContent || element.value || element.src || ''
   return text.trim().replace(/^\W+/gu, '').replace(/\W+$/gu, '')
 }
@@ -63,6 +64,7 @@ function createMbForm(app, callback = () => ({})) {
     form.addEventListener('submit', event => {
       event.preventDefault()
       const formData = new FormData(form)
+      // @ts-expect-error it's ok
       const values = Object.fromEntries(formData.entries())
       callback(values)
     })
@@ -119,7 +121,6 @@ function addMbField(form, name, value, isHidden = false) {
  * @param {string} [label] the button label
  * @returns {void} nothing
  */
-// oxlint-disable-next-line max-lines-per-function
 function addMbSubmit(form, label = 'Export to MusicBrainz') {
   const submit = document.createElement('input')
   submit.type = 'submit'
@@ -141,8 +142,8 @@ function addMbSubmit(form, label = 'Export to MusicBrainz') {
  * @param {{ app: { id:string, title: string }, title: string, artist: string, date: {day:string, month:string, year: string}, tracks: {number: string, name: string, artist: string, duration: string}[], label: string, url: string, urlType: string }} data the data to insert
  * @returns {void} nothing
  */
-// oxlint-disable-next-line max-lines-per-function
-function _insertMbForm({ app, artist, date, label, title, tracks, url, urlType }) {
+// biome-ignore lint/correctness/noUnusedVariables: it is used
+function insertMbForm({ app, artist, date, label, title, tracks, url, urlType }) {
   // eslint-disable-next-line no-console
   if (!title || !artist) return
   const form = createMbForm(app)

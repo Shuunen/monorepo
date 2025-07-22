@@ -18,7 +18,6 @@
 /* eslint-disable jsdoc/require-returns */
 
 ;(function aliExpressAio() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('ali-express-aio')
   /** @param {HTMLImageElement} img */
   function extendsImage(img, size = 600) {
@@ -46,7 +45,7 @@
     if (!zone) return utils.error('cannot find zone on card el', element)
     zone.style.paddingLeft = '16px'
     zone.style.marginTop = '16px'
-    /** @type {HTMLImageElement | null} */
+    /** @type {HTMLImageElement | null} */ // @ts-expect-error it's ok
     const sibling = zone.previousElementSibling
     if (sibling) sibling.style.width = '80%'
     element.classList.add('ali-aio-handled')
@@ -59,12 +58,13 @@
     utils.log('image src was', img.src)
     extendsImage(img, 500)
     utils.log('now image src is', img.src)
-    /** @type {HTMLImageElement | null} */
     let wrapper = img.closest('.pic')
-    if (!wrapper) return utils.error('failed to find wrapper of', img)
+    if (!wrapper) return utils.showError('failed to find wrapper of img')
+    if (!(wrapper instanceof HTMLElement)) return utils.showError('wrapper is not an HTMLElement')
     wrapper.style.height = 'inherit'
     wrapper.style.width = 'inherit'
     wrapper = wrapper.parentElement
+    if (!(wrapper instanceof HTMLElement)) return utils.showError('wrapper parent is not an HTMLElement')
     wrapper.style.height = 'inherit'
     wrapper.style.width = 'inherit'
     element.style.display = 'flex'
@@ -96,5 +96,5 @@
     processItemRows()
   }
   const processDebounced = utils.debounce(process, 1000)
-  globalThis.addEventListener('scroll', processDebounced)
+  globalThis.addEventListener('scroll', () => processDebounced())
 })()

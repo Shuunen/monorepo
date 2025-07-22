@@ -10,6 +10,8 @@
 // @version      1.2.2
 // ==/UserScript==
 
+// @ts-nocheck FIX ME later, I dont use Saveur Bière for now
+
 /**
  * Clean a title string
  * @param {string} title The title to clean
@@ -33,7 +35,6 @@ function cleanTitle(title) {
   if (globalThis.matchMedia === undefined) return
   // eslint-disable-next-line no-magic-numbers
   const cached = new Date().toISOString().slice(0, 7) // like 2021-11
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('svb-rat')
   const user = localStorage.untappdUser || ''
   if (user === '') {

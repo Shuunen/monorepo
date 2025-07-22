@@ -3,7 +3,8 @@
     "allowJs": true,
     "checkJs": true,
     "lib": [
-      "dom"
+      "dom",
+      "ESNext"
     ],
     "outDir": "dist",
     "rootDir": "src",
@@ -21,6 +22,7 @@
   ],
   "extends": "../../tsconfig.base.json",
   "include": [
+    "src/**/*.js",
     "src/**/*.ts"
   ]
 }

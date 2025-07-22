@@ -27,7 +27,6 @@
     entryPrice: '.timelineV2Event__price p',
     entrySubtitle: '.timelineV2Event__subtitle',
   }
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('trep-aio')
 
   /**

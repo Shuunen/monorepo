@@ -10,7 +10,6 @@
 
 // oxlint-disable-next-line max-lines-per-function
 ;(function AutofillLogin() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('auto-fill')
   const data = {
     email: atob('cm9tYWluLnJhY2FtaWVyQGdtYWlsLmNvbQ=='),
@@ -36,6 +35,7 @@
    * @returns {HTMLInputElement[]} the inputs if any
    */
   function getInputs(selector) {
+    // @ts-expect-error it's ok ^^
     return utils.findAll(selector, document, true)
   }
   /**

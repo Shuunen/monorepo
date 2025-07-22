@@ -65,7 +65,6 @@ const score20Styled = (rating, reviews) => {
 
 ;(function amazonAio() {
   if (globalThis.matchMedia === undefined) return
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('amz-aio')
   const selectors = {
     product: '[data-asin][data-component-type="s-search-result"]:not(.AdHolder):not(.amz-processed)',
@@ -273,6 +272,7 @@ const score20Styled = (rating, reviews) => {
       const title = utils.findOne('h2', product, true)?.textContent ?? ''
       const ratingSection = utils.findOne(selectors.productRatingSection, product, true)
       if (!ratingSection) continue
+      // @ts-expect-error it's ok
       const children = Array.from(ratingSection.firstChild?.children)
       const rating = getRating(children.at(0))
       const reviews = getReviews(children.at(-1))

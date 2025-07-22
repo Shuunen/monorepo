@@ -13,7 +13,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 
 ;(function AmazonMusicBrainzExport() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('amazon-mb-export')
   const selectors = {
     artist: '[data-feature-name="artistLink"',
@@ -21,6 +20,7 @@
   }
   function getTracks() {
     return utils.findAll('[id^="dmusic_tracklist_player_row"]').map((element, index) => ({
+      artist: '',
       duration: textFromSelector('[id^="dmusic_tracklist_duration"]', element),
       name: textFromSelector('.TitleLink', element),
       number: String(index + 1),
@@ -35,7 +35,7 @@
         title: 'Amazon to MB',
       },
       artist: textFromSelector(selectors.artist),
-      date: { day: 0, month: 0, year: 0 },
+      date: { day: '0', month: '0', year: '0' },
       // biome-ignore lint/performance/useTopLevelRegex: FIX me later
       label: (details.match(/Label: (?<name>\S+)/u) || [])[1] || '',
       title: textFromSelector(selectors.title),
@@ -45,10 +45,10 @@
     }
     // biome-ignore lint/performance/useTopLevelRegex: FIX me later
     const dateMatches = details.match(/origine : (?<day>\d{1,2}) (?<month>\S+) (?<year>\d{4})/u)
-    if (dateMatches.groups?.year) {
+    if (dateMatches?.groups?.year) {
       const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
       data.date.year = dateMatches.groups.year
-      data.date.month = months.indexOf(dateMatches.groups.month) + 1
+      data.date.month = String(months.indexOf(dateMatches.groups.month) + 1)
       data.date.day = dateMatches.groups.day
     }
     if (data.title && data.artist) {

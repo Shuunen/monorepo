@@ -13,7 +13,6 @@
 // ==/UserScript==
 
 ;(function TemuTakeout() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('ldl-tko')
   /**
    * Handles the form submission event.
@@ -30,6 +29,7 @@
    */
   // oxlint-disable-next-line max-lines-per-function
   function getData() {
+    // @ts-expect-error rawData is not defined but exists in the page
     // oxlint-disable no-undef
     // biome-ignore lint/correctness/noUndeclaredVariables: rawData is not defined but exists in the page
     const { store } = rawData

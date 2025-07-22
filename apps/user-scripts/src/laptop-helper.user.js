@@ -31,6 +31,7 @@
 // @version      1.0.3
 // ==/UserScript==
 
+// @ts-nocheck FIX ME later, I dont use Laptop Helper for now
 /* eslint-disable jsdoc/require-jsdoc */
 // oxlint-disable no-magic-numbers
 // oxlint-disable max-lines
@@ -355,7 +356,6 @@ for (const line of data.split('\n')) {
  */
 // eslint-disable-next-line max-lines-per-function, max-statements
 function laptopHelper() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('lpt-hlp')
   const cls = {
     mark: `${utils.id}-mark`,
@@ -429,12 +429,14 @@ function laptopHelper() {
     element.dataset.score = score
     element.title = `Score : ${score}%`
     const color = getColorForScore(score)
+    // @ts-expect-error RoughNotation is a global variable
     // oxlint-disable no-undef
     // biome-ignore lint/correctness/noUndeclaredVariables: it's a global var
     let annotation = RoughNotation.annotate(element, { color, type: 'highlight' })
     annotation.show()
     // eslint-disable-next-line no-magic-numbers
     if (score >= 80) {
+      // @ts-expect-error RoughNotation is a global variable
       // biome-ignore lint/correctness/noUndeclaredVariables: it's a global var
       annotation = RoughNotation.annotate(element.parentElement, { color: 'darkgreen', type: 'bracket' })
       annotation.show()

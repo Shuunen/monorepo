@@ -13,7 +13,6 @@
 // ==/UserScript==
 
 ;(function BundlePhobiaEverywhere() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('bdl-evr')
   /**
    * Inject bundlephobia badges into the page

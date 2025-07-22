@@ -14,7 +14,6 @@
 
 // oxlint-disable-next-line max-lines-per-function
 ;(function LidlTakeout() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('ldl-tko')
   const selectors = {
     details: '.keyfacts__title',
@@ -35,10 +34,13 @@
    * @returns {string} the product brand
    */
   function getBrand() {
-    /** @type {HTMLImageElement | undefined} */
     const image = utils.findOne('.features__link > img')
     if (image === undefined) {
       utils.showError('failed to get brand image from page')
+      return ''
+    }
+    if (!(image instanceof HTMLImageElement)) {
+      utils.showError('brand image is not an image element')
       return ''
     }
     return utils.capitalize(utils.readableString(image.alt ?? '').toLowerCase())

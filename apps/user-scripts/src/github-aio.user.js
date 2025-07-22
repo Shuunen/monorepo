@@ -74,7 +74,6 @@ function getIssueCountCached(cacheKey) {
 
 // oxlint-disable-next-line max-lines-per-function
 function githubAio() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('github-aio')
   /**
    * Fetch issue count via API
@@ -167,6 +166,4 @@ function githubAio() {
   void process('initial-dom-ready')
 }
 
-githubAio().catch(error => {
-  throw error
-})
+void githubAio()

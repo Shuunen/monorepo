@@ -13,7 +13,6 @@
 // @version      1.1.0
 // ==/UserScript==
 
-// const wrongCategories = ['Snacks, repas au travail', 'Meubles, équipement', 'A catégoriser', 'Restaurants, soirées']
 const authorizedCategories = new Set([
   // Vie courante
   'Alimentation, supermarché',
@@ -37,12 +36,10 @@ const authorizedCategories = new Set([
 // oxlint-disable-next-line max-lines-per-function
 function LinxoAio() {
   /* globals Shuutils, RoughNotation */
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('linxo-aio', true)
   const processed = `${utils.id}-processed`
   const selectors = {
     labels: `td > div > img + div[title]:not(.${processed})`,
-    // wrongCategories: wrongCategories.map(category => `[title="${category}"]:not(.${processed})`).join(', '),
   }
   /**
    * Check for wrong categories in the page
@@ -51,7 +48,7 @@ function LinxoAio() {
     const labels = utils.findAll(selectors.labels)
     for (const element of labels) {
       const label = element.getAttribute('title')
-      if (authorizedCategories.has(label)) continue
+      if (label === null || authorizedCategories.has(label)) continue
       element.classList.add(processed)
       element.dataset.highlightReason = 'wrong-category'
       // oxlint-disable no-undef
@@ -70,7 +67,7 @@ function LinxoAio() {
   }
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
-  document.addEventListener('scroll', processDebounced)
+  document.addEventListener('scroll', () => processDebounced())
   utils.onPageChange(processDebounced)
   // eslint-disable-next-line no-magic-numbers
   setTimeout(processDebounced, 1000)

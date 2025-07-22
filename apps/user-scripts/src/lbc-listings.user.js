@@ -57,7 +57,6 @@ const districtsToHide = new Set([
 const citiesToHide = new Set(['Eschau'])
 
 ;(function LeBonCoinListing() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('lbc-lpp')
   const cls = {
     marker: `${utils.id}-processed`,
@@ -417,9 +416,13 @@ const citiesToHide = new Set(['Eschau'])
     utils.log('process ad :', ad.subject, ad)
     element.classList.add(cls.marker)
 
-    const /** @type {HTMLElement[]} */ [, link] = Array.from(element.children)
+    const [, link] = Array.from(element.children)
     if (!link) {
       utils.warn('no link found in ad', ad)
+      return
+    }
+    if (!(link instanceof HTMLAnchorElement)) {
+      utils.error('link is not an anchor element', link)
       return
     }
     ad.element = link

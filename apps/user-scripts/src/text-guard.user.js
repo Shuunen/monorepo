@@ -22,7 +22,6 @@
   const forbiddenWords = ['23 rue du Berry']
   const hostExceptions = new Set(['localhost'])
   const elementExceptions = new Set(['br', 'circle', 'defs', 'ellipse', 'g', 'hr', 'iframe', 'line', 'link', 'meta', 'path', 'polygon', 'polyline', 'rect', 'script', 'style', 'svg', 'symbol', 'text', 'title', 'use'])
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('txt-grd')
   /**
    * Handles the detection of a forbidden word.
@@ -66,7 +65,7 @@
       const node = results.snapshotItem(index)
       if (node === null) continue
       if (!(node instanceof HTMLElement)) {
-        utils.error(node)
+        utils.error(`Node is not an HTMLElement: ${node?.nodeName || 'unknown'}`, node)
         utils.showError('Node is not an HTMLElement')
         continue
       }

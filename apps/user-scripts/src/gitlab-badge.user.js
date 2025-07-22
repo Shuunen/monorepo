@@ -22,9 +22,11 @@ const steps = {
 }
 
 async function getNbContributions() {
+  // @ts-expect-error gon is a global variable set by Gitlab
   // oxlint-disable no-undef
   // biome-ignore lint/correctness/noUndeclaredVariables: it's a global variable set by Gitlab
   const isOnUserProfile = gon.feature_category === 'user_profile'
+  // @ts-expect-error gon is a global variable set by Gitlab
   // biome-ignore lint/correctness/noUndeclaredVariables: it's a global variable set by Gitlab
   const username = isOnUserProfile ? document.location.pathname.slice(1) : gon.current_username
   if (!username) throw new Error('No username found, looked in global gon.current_username')
@@ -41,12 +43,20 @@ function injectStyles(string = '') {
   // eslint-disable-next-line no-console
   if (string.length === 0) return
   if (string.includes('://') && !string.includes('\n') && string.includes('.css')) {
-    document.querySelector('head').insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
+    document.querySelector('head')?.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
     return
   }
   document.body.insertAdjacentHTML('beforeend', `<style>${string}</style>`)
 }
 
+/**
+ * Adds a CSS animation to an element using Animate.css classes and returns a Promise that resolves when the animation ends.
+ *
+ * @param {HTMLElement} element - The DOM element to animate.
+ * @param {string} animation - The name of the Animate.css animation (e.g., 'fadeIn', 'bounce').
+ * @param {boolean} [canRemoveAfter] - Whether to remove animation classes after the animation ends.
+ * @returns {Promise<string>} A Promise that resolves with a message when the animation ends.
+ */
 async function animateCss(element, animation, canRemoveAfter = true) {
   return await new Promise(resolve => {
     const animationName = `animate__${animation}`
@@ -56,6 +66,9 @@ async function animateCss(element, animation, canRemoveAfter = true) {
       return
     }
     // When the animation ends, we clean the classes and resolve the Promise
+    /**
+     * @param {{ stopPropagation: () => void; }} event - The animation end event
+     */
     function handleAnimationEnd(event) {
       event.stopPropagation()
       element.classList.remove('animate__animated', animationName)
@@ -66,7 +79,6 @@ async function animateCss(element, animation, canRemoveAfter = true) {
 }
 // oxlint-disable-next-line max-lines-per-function
 ;(function GitlabBadge() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('gtb-bdg')
   function getBadge() {
     const badge = document.createElement('div')
@@ -96,7 +108,7 @@ async function animateCss(element, animation, canRemoveAfter = true) {
     const todayContributions = await getNbContributions()
     utils.log(`process, reason ${reason}, found ${todayContributions} contributions`)
     const previousContributions = Number(badge.textContent)
-    badge.textContent = todayContributions
+    badge.textContent = String(todayContributions)
     if (todayContributions < steps.bronze) badge.style.backgroundImage = `url(${badges.bronze})`
     else if (todayContributions < steps.silver) badge.style.backgroundImage = `url(${badges.silver})`
     else badge.style.backgroundImage = `url(${badges.gold})`

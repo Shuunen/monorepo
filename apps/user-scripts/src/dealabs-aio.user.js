@@ -14,8 +14,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
 
 // oxlint-disable-next-line max-lines-per-function
-;(function dealabsAio() {
-  /** @type {import('./utils.js').Shuutils} */
+;(function DealabsAio() {
   const utils = new Shuutils('dlb-clr')
   /** @type {string[]} */
   let excluders = (globalThis.localStorage[`${utils.id}.filter`] || 'my-keyword, other-keyword').split(',')
@@ -40,9 +39,11 @@
     descriptions: '.cept-description-container',
   }
   function cleanElements() {
+    // @ts-expect-error it's ok
     for (const key of Object.keys(uselessElements)) for (const node of utils.findAll(uselessElements[key], document, true)) node.remove()
   }
   function cleanClasses() {
+    // @ts-expect-error it's ok
     for (const key of Object.keys(uselessClasses)) for (const node of utils.findAll(uselessClasses[key], document, true)) node.classList = []
   }
   // oxlint-disable-next-line max-lines-per-function
@@ -116,8 +117,10 @@
     filter = excluders.join(', ')
     globalThis.localStorage[`${utils.id}.filter`] = filter
     if (!isFromFilter) {
+      /** @type {HTMLTextAreaElement | undefined} */ // @ts-expect-error it's ok
       const filterElement = utils.findOne(`.${cls.filter}`)
-      filterElement.value = filter
+      if (filterElement) filterElement.value = filter
+      // @ts-expect-error autosize is loaded in the window
       // oxlint-disable no-undef
       // biome-ignore lint/correctness/noUndeclaredVariables: it is declared in the global scope
       autosize.update(filter)
@@ -125,6 +128,10 @@
     checkItems()
   }
 
+  /**
+   * Updates the excluders list based on the filter input.
+   * @param {{ target: { value: string; }; }} event the event that triggered the change
+   */
   function onFilterChange(event) {
     utils.log('filter changed !')
     excluders = event.target.value.split(',')
@@ -144,11 +151,12 @@
     filterElement.spellcheck = false
     filterElement.classList.add(cls.filter)
     filterElement.value = filter
+    // @ts-expect-error autosize is loaded in the window
     // oxlint-disable no-undef
     // biome-ignore lint/correctness/noUndeclaredVariables: it is declared in the global scope
-    autosize(filter)
-    filter.addEventListener('keyup', onFilterChangeDebounced)
-    container.insertAdjacentElement('beforeBegin', filter)
+    autosize(filterElement)
+    filterElement.addEventListener('keyup', () => onFilterChangeDebounced())
+    container.before(filterElement)
   }
 
   function process() {
@@ -167,5 +175,5 @@
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
 
-  document.addEventListener('scroll', processDebounced)
+  document.addEventListener('scroll', () => processDebounced())
 })()

@@ -14,7 +14,6 @@
   let appButton = document.createElement('button')
   /** @type {{ id: string, img: string, price: number, title: string }[]} */
   let appGames = []
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('stm-wex')
   const selectors = {
     img: '.capsule img',
@@ -32,7 +31,8 @@
     row.scrollIntoView()
     const titleElement = utils.findOne(selectors.title, row)
     const title = titleElement ? utils.readableString(titleElement.textContent?.trim() ?? '') : ''
-    const img = utils.findOne(selectors.img, row)?.src ?? ''
+    const image = utils.findOne(selectors.img, row) // ?.src ?? ''
+    const img = image instanceof HTMLImageElement ? image.src : ''
     const id = row.dataset.appId ?? ''
     const priceElement = utils.findOne(selectors.price, row)
     const price = priceElement ? Math.round(Number.parseFloat(priceElement.textContent?.replace(',', '.') ?? '')) : 0

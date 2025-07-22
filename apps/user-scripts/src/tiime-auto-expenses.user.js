@@ -34,7 +34,6 @@ function createButton(label = '') {
 }
 
 ;(function TiimeAutoExpenses() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils(id)
   const elements = {
     addOneButton: createButton(''),
@@ -99,10 +98,13 @@ function createButton(label = '') {
       return
     }
     button.click()
-    /** @type {HTMLInputElement | undefined} */
     const input = await utils.waitToDetect(selectors.tableRowLabelInput)
     if (input === undefined) {
       utils.showError('tableRowLabelInput not found')
+      return
+    }
+    if (!(input instanceof HTMLInputElement)) {
+      utils.showError('tableRowLabelInput is not an input element')
       return
     }
     input.value = label
@@ -121,10 +123,13 @@ function createButton(label = '') {
    */
   async function setAmount(row, amount) {
     utils.log(`setting amount "${amount}"`)
-    /** @type {HTMLInputElement | undefined} */
     const input = utils.findOne(selectors.tableRowAmountInput, row)
     if (input === undefined) {
       utils.showError('tableRowAmountInput not found')
+      return
+    }
+    if (!(input instanceof HTMLInputElement)) {
+      utils.showError('tableRowAmountInput is not an input element')
       return
     }
     if (input.value !== '') {
@@ -168,10 +173,13 @@ function createButton(label = '') {
       return
     }
     entry.click()
-    /** @type {HTMLTextAreaElement | undefined} */
     const textarea = await utils.waitToDetect(selectors.textareaComment)
     if (textarea === undefined) {
       utils.showError('textareaComment not found')
+      return
+    }
+    if (!(textarea instanceof HTMLTextAreaElement)) {
+      utils.showError('textareaComment is not a textarea element')
       return
     }
     textarea.value = comment
@@ -277,10 +285,13 @@ function createButton(label = '') {
    * Initialize the script
    */
   async function init() {
-    /** @type {HTMLButtonElement | undefined} */
     const addOne = await utils.waitToDetect(selectors.addExpenseBtn)
     if (addOne === undefined) {
       utils.log('no add expense button found on this page')
+      return
+    }
+    if (!(addOne instanceof HTMLButtonElement)) {
+      utils.showError('addOne is not a button element')
       return
     }
     elements.addOneButton = addOne

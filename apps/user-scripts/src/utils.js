@@ -131,9 +131,10 @@ class Shuutils {
    * @example const debounced = utils.debounce(myFunction, 500)
    */
   debounce(callback, waitFor) {
+    /** @type {ReturnType<typeof setTimeout>} */
     // eslint-disable-next-line init-declarations
     let timeout
-    return async (...parameters) =>
+    return async (/** @type {any} */ ...parameters) =>
       await new Promise(resolve => {
         clearTimeout(timeout)
         // oxlint-disable-next-line max-nested-callbacks
@@ -476,7 +477,7 @@ class Shuutils {
    */
   throttle(callback, timeout) {
     let isReady = true
-    return (...parameters) => {
+    return (/** @type {any} */ ...parameters) => {
       if (!isReady) return
       isReady = false
       callback(...parameters)

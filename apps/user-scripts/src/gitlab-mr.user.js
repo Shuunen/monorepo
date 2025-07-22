@@ -14,13 +14,39 @@
 
 ;(function gitlabMr() {
   const debounceTime = 300
-  /** @type {import('./utils.js').Shuutils} */
+
   const utils = new Shuutils('gitlab-mr')
+  /**
+   * Clones a given element to create a new button, updates its label and href,
+   * fetches the provided href to count merge requests, and updates the badge accordingly.
+   *
+   * @param {HTMLElement} element - The DOM element to clone as a template for the button.
+   * @param {string} label - The text label to display on the button.
+   * @param {string} href - The URL to set for the button's link and to fetch for counting merge requests.
+   * @returns {HTMLElement} The newly created button element.
+   */
   // oxlint-disable-next-line max-lines-per-function
   function addButton(element, label, href) {
+    /** @type {HTMLElement} */ // @ts-expect-error it's ok ^^
     const button = element.cloneNode(true)
     const link = button.firstChild
+    if (!link) {
+      utils.error('no link found in element', element)
+      return button
+    }
+    if (!(link instanceof HTMLAnchorElement)) {
+      utils.error('link is not an anchor element', link)
+      return button
+    }
     const badge = link.querySelector('.badge')
+    if (!badge) {
+      utils.error('no badge found in link', link)
+      return button
+    }
+    if (!(badge instanceof HTMLElement)) {
+      utils.error('badge is not a span element', badge)
+      return button
+    }
     button.style.display = ''
     badge.innerHTML = '&nbsp;'
     badge.classList.add('ml-0')
@@ -29,15 +55,16 @@
     link.style.height = '28px'
     link.style.marginTop = '7px'
     link.style.marginRight = '2px'
-    link.querySelector('.label').textContent = label
-    element.insertAdjacentElement('afterEnd', button)
+    const labelInside = link.querySelector('.label')
+    if (labelInside) labelInside.textContent = label
+    element.after(button)
     fetch(href)
       .then(async response => await response.text())
       .then(html => {
         const matches = html.match(/class="merge-request" data-id/gu)
         const nb = matches ? matches.length : 0
         utils.log('found', nb, 'matches for', label)
-        badge.textContent = nb
+        badge.textContent = String(nb)
         if (nb < 1) badge.style.backgroundColor = '#1aaa55'
         return nb
       })
@@ -47,10 +74,18 @@
   async function enhanceLinks() {
     const link = document.querySelector('.dashboard-shortcuts-merge_requests:not(.processed)')
     if (!link) return
+    if (!link.parentElement) {
+      utils.error('no parent element found for link', link)
+      return
+    }
+    if (!(link instanceof HTMLAnchorElement)) {
+      utils.error('link is not an anchor element', link)
+      return
+    }
     link.classList.add('processed')
     const text = document.createElement('div')
     text.classList.add('label')
-    link.insertAdjacentElement('afterBegin', text)
+    link.after(text)
     link.parentElement.style.display = 'none'
     await addButton(link.parentElement, 'MR affectée(s)', link.href.replace('assignee_username', 'wip=no&assignee_username'))
     await utils.sleep(debounceTime)

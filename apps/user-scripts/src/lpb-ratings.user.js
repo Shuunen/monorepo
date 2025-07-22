@@ -416,12 +416,17 @@ function cleanTitle(title) {
 const ratings = ratingsCsv.split('\n').map(line => {
   const [title, rating] = line.split(',')
   return {
-    rating: Number.parseFloat(rating, 10),
+    rating: Number.parseFloat(rating),
     title: cleanTitle(title),
   }
 })
 
-// oxlint-disable-next-line max-lines-per-function
+/**
+ * Creates a styled review element representing a user's rating.
+ * @param {string} name - The name of the reviewer.
+ * @param {number} rating - The rating given by the reviewer (typically between 1 and 5).
+ * @returns {HTMLDivElement} The styled review div element.
+ */
 function createReview(name, rating) {
   const review = document.createElement('div')
   review.classList.add('my-review')
@@ -448,9 +453,10 @@ function lePetitBallonRatings() {
     minMatchCharLength: 4,
     threshold: 0.4,
   }
+  // @ts-expect-error Fuse is globally available
   // biome-ignore lint/correctness/noUndeclaredVariables: globally available
   const fuse = new Fuse(ratings, fuseSettings) // oxlint-disable-line no-undef
-  /** @type {import('./utils.js').Shuutils} */
+
   const utils = new Shuutils('lpb-ratings')
   const selectors = {
     items: `.product-item:not(.${utils.id})`,
@@ -459,7 +465,7 @@ function lePetitBallonRatings() {
   }
   function hideUseless() {
     for (const node of utils.findAll(selectors.useless, document, true))
-      if (utils.app.debug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
+      if (utils.willDebug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
       else node.style.display = 'none'
   }
 
@@ -475,6 +481,9 @@ function lePetitBallonRatings() {
     return { isMatching: true, percent, rating, search: wine, title }
   }
 
+  /**
+   * @param {HTMLElement} item The item to inject the rating into
+   */
   // oxlint-disable-next-line max-lines-per-function
   function injectRating(item) {
     item.classList.add(utils.id)
@@ -484,7 +493,7 @@ function lePetitBallonRatings() {
       return
     }
     const domain = title.nextElementSibling
-    const wine = cleanTitle(`${domain.textContent} ${title.textContent}`)
+    const wine = cleanTitle(`${domain?.textContent} ${title.textContent}`)
     const result = searchRating(wine)
     if (!result.isMatching) return
     utils.log('found', result)

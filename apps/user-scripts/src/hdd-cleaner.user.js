@@ -41,7 +41,7 @@
     size: /(?<size>\d+)\s?(?<unit>\w+)/u,
     sizes: /(?<size>\d+)\s?(?<unit>gb|go|tb|to)\b/giu,
   }
-  /** @type {import('./utils.js').Shuutils} */
+
   const utils = new Shuutils(id)
   /**
    * Get the size from a text
@@ -55,11 +55,22 @@
     for (const match of matches) {
       // eslint-disable-next-line prefer-const
       let [, mSize, mUnit] = match.match(regex.size) ?? []
+      // @ts-expect-error FIX ME later
       if (mUnit === 'to' || mUnit === 'tb') mSize *= 1000 // align sizes to Go, may be slightly different according to TO vs TB
+      // @ts-expect-error FIX ME later
       if (mSize > size) size = Number.parseInt(mSize, 10)
     }
     return size
   }
+  /**
+   * Calculates the price per terabyte (To) for a product and inserts it into the description element,
+   * along with a rating based on the price per To.
+   *
+   * @param {HTMLElement} productElement - The DOM element representing the product.
+   * @param {HTMLElement} descElement - The DOM element where the price per size will be inserted.
+   * @param {number} size - The size of the product in gigabytes (GB).
+   * @returns {boolean} Returns true if the price per size was successfully inserted, false otherwise.
+   */
   // oxlint-disable-next-line max-lines-per-function
   function insertPricePerSize(productElement, descElement, size) {
     const priceElement = utils.findOne(selectors.price, productElement)
@@ -68,7 +79,7 @@
       return false
     }
     utils.log('found price element :', priceElement.textContent)
-    const matches = priceElement.textContent.match(regex.price)
+    const matches = priceElement.textContent?.match(regex.price) ?? []
     if (matches.length !== 2) {
       utils.error('failed at finding price')
       return false
@@ -87,6 +98,10 @@
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   function checkItems() {
     for (const descElement of utils.findAll(selectors.desc, document, true)) {
+      if (!descElement.textContent) {
+        utils.error('no text content found in description element', descElement)
+        continue
+      }
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       const size = getSize(text)
       if (!size) {
@@ -101,9 +116,13 @@
         utils.error('fail at finding closest product')
         continue
       }
+      if (!(productElement instanceof HTMLElement)) {
+        utils.error('product element is not an HTMLElement', productElement)
+        continue
+      }
       let willMarkItem = true
       if (isSizeOk) willMarkItem = insertPricePerSize(productElement, descElement, size)
-      else productElement.style = app.debug ? 'background-color: lightcoral; opacity: 0.6;' : 'display: none;'
+      else productElement.style = utils.willDebug ? 'background-color: lightcoral; opacity: 0.6;' : 'display: none;'
       if (willMarkItem) {
         // only add mark class if check completed
         descElement.classList.add(cls.mark)
@@ -116,6 +135,6 @@
     checkItems()
   }
   const processDebounced = utils.debounce(process, 500)
-  document.addEventListener('scroll', processDebounced)
+  document.addEventListener('scroll', () => processDebounced())
   setTimeout(processDebounced, 1000)
 })()

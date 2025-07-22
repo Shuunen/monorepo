@@ -16,7 +16,6 @@
 // oxlint-disable no-magic-numbers
 
 ;(function AliExpressTakeout() {
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('alx-tko')
   const selectors = {
     details: '[data-pl="product-title"]',
@@ -65,7 +64,7 @@
   /** @param {MouseEvent} event the click event */
   async function init(event) {
     utils.debug('init')
-    /** @type {HTMLElement | null} */
+    /** @type {HTMLElement | null} */ // @ts-expect-error it's ok
     const { target } = event
     if (target === null) return
     if (!target.className.includes('image')) return
@@ -77,5 +76,5 @@
     startTakeout()
   }
   const initDebounced = utils.debounce(init, 500)
-  globalThis.addEventListener('click', initDebounced)
+  globalThis.addEventListener('click', () => initDebounced())
 })()

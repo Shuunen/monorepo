@@ -14,8 +14,7 @@
   "include": [
     "vite.config.ts",
     "src/**/*.test.ts",
-    "src/**/*.d.ts",
-    "src/**/*.js"
+    "src/**/*.d.ts"
   ],
   "references": [
     {

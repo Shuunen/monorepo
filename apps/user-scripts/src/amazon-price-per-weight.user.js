@@ -10,9 +10,9 @@
 // @version      1.0.8
 // ==/UserScript==
 
+// @ts-nocheck
 /** biome-ignore-all lint/performance/useTopLevelRegex: FIX me later */
 // oxlint-disable no-magic-numbers
-/* eslint-disable jsdoc/require-jsdoc */
 
 // oxlint-disable-next-line max-lines-per-function
 ;(function AmazonPricePerWeight() {
@@ -58,7 +58,6 @@
     pricePerKilo: `<span class="a-color-price s-price a-text-bold ${cls.pricePer}">EUR {{pricePerKilo}}/kg</span>`,
   }
 
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils(app.id)
 
   const products = []

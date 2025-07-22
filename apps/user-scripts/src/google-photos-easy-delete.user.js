@@ -14,7 +14,6 @@
 
 ;(function GooglePhotosEasyDelete() {
   const app = { init: false, timeToWait: 200 }
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils('gp-ed')
   const selectors = {
     confirmBtn: 'button[autofocus]',

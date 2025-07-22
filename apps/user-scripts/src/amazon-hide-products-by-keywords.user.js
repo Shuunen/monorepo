@@ -11,6 +11,7 @@
 // @version      1.1.9
 // ==/UserScript==
 
+// @ts-nocheck
 // oxlint-disable-next-line max-lines-per-function
 ;(function AmazonHide() {
   const app = {
@@ -42,7 +43,6 @@
     productTitle: ['a.s-access-detail-page > h2.s-access-title', '.a-size-medium.a-color-base.a-text-normal'].join(','),
   }
 
-  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils(app.id)
 
   /**
@@ -124,7 +124,7 @@
    * Update the excluders list
    * @param {boolean} fromFilter - Whether the update comes from the filter or not
    */
-  function onExcludersUpdate(fromFilter) {
+  function onExcludersUpdate(fromFilter = false) {
     app.excluders = app.excluders.map(entry => entry.trim().toLowerCase()).filter(entry => entry.length)
     if (app.excluders.length <= 0) return
     utils.log('new excluders :', app.excluders)
@@ -259,5 +259,5 @@
   }
   init()
   const processDebounced = utils.debounce(process, app.debounceTime)
-  document.addEventListener('scroll', processDebounced)
+  document.addEventListener('scroll', () => processDebounced())
 })()
