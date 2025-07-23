@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "@shuunen/shuutils": "workspace:*",
+    "@shuunen/shuutils": "workspace:*"
+  },
+  "devDependencies": {
     "@shuunen/vite-plugins": "workspace:*"
   },
   "name": "sample-web-app",

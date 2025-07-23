@@ -153,15 +153,16 @@ importers:
       '@shuunen/shuutils':
         specifier: workspace:*
         version: link:../../libs/shuutils
-      '@shuunen/vite-plugins':
-        specifier: workspace:*
-        version: link:../../libs/vite-plugins
       preact:
         specifier: '10.26'
         version: 10.26.9
       react-confetti-boom:
         specifier: '2.0'
         version: 2.0.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+    devDependencies:
+      '@shuunen/vite-plugins':
+        specifier: workspace:*
+        version: link:../../libs/vite-plugins
 
   apps/one-file:
     dependencies:
@@ -180,6 +181,7 @@ importers:
       '@shuunen/shuutils':
         specifier: workspace:*
         version: link:../../libs/shuutils
+    devDependencies:
       '@shuunen/vite-plugins':
         specifier: workspace:*
         version: link:../../libs/vite-plugins
@@ -206,9 +208,6 @@ importers:
       '@shuunen/shuutils':
         specifier: workspace:*
         version: link:../../libs/shuutils
-      '@shuunen/vite-plugins':
-        specifier: workspace:*
-        version: link:../../libs/vite-plugins
       '@zxing/library':
         specifier: ^0.21
         version: 0.21.3
@@ -228,6 +227,9 @@ importers:
         specifier: ^1.3
         version: 1.3.0
     devDependencies:
+      '@shuunen/vite-plugins':
+        specifier: workspace:*
+        version: link:../../libs/vite-plugins
       '@types/dom-speech-recognition':
         specifier: ^0.0
         version: 0.0.6
@@ -247,13 +249,13 @@ importers:
       '@shuunen/shuutils':
         specifier: workspace:*
         version: link:../../libs/shuutils
-      '@shuunen/vite-plugins':
-        specifier: workspace:*
-        version: link:../../libs/vite-plugins
       canvas-confetti:
         specifier: '1'
         version: 1.9.3
     devDependencies:
+      '@shuunen/vite-plugins':
+        specifier: workspace:*
+        version: link:../../libs/vite-plugins
       '@types/canvas-confetti':
         specifier: 1.9.0
         version: 1.9.0
@@ -3228,7 +3230,6 @@ packages:
 
   bun@1.2.18:
     resolution: {integrity: sha512-OR+EpNckoJN4tHMVZPaTPxDj2RgpJgJwLruTIFYbO3bQMguLd0YrmkWKYqsiihcLgm2ehIjF/H1RLfZiRa7+qQ==}
-    cpu: [arm64, x64, aarch64]
     os: [darwin, linux, win32]
     hasBin: true
 
