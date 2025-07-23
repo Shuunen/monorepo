@@ -16,22 +16,7 @@
   "name": "@shuunen/vite-plugins",
   "nx": {
     "name": "vite-plugins",
-    "sourceRoot": "libs/vite-plugins/src",
-    "targets": {
-      "build": {
-        "executor": "@nx/js:swc",
-        "options": {
-          "main": "libs/vite-plugins/src/index.ts",
-          "outputPath": "libs/vite-plugins/dist",
-          "skipTypeCheck": true,
-          "stripLeadingPaths": true,
-          "tsConfig": "libs/vite-plugins/tsconfig.lib.json"
-        },
-        "outputs": [
-          "{options.outputPath}"
-        ]
-      }
-    }
+    "sourceRoot": "libs/vite-plugins/src"
   },
   "private": true,
   "type": "module",
