@@ -278,9 +278,6 @@ importers:
 
   libs/vite-plugins:
     dependencies:
-      '@shuunen/shuutils':
-        specifier: workspace:*
-        version: link:../shuutils
       '@swc/helpers':
         specifier: ~0.5.11
         version: 0.5.17

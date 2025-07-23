@@ -1,7 +1,16 @@
 import { execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { formatDate, injectMark, Logger } from '@shuunen/shuutils';
+/**
+ * Inject a mark in a string at a specific placeholder locations like
+ * `__placeholder__` or `<div id="placeholder">...</div>` or `<meta name="placeholder" content="..." />`
+ * @param content the string to inject the mark in
+ * @param placeholder the placeholder to replace
+ * @param mark the mark to inject
+ * @returns the new string with the mark injected
+ */ export function injectMark(content, placeholder, mark) {
+    return content.replace(new RegExp(`__${placeholder}__`, 'gu'), mark).replace(new RegExp(`{{1,2} ?${placeholder} ?}{1,2}`, 'g'), mark).replace(new RegExp(`(<[a-z]+ .*id="${placeholder}"[^>]*>)[^<]*(</[a-z]+>)`, 'u'), `$1${mark}$2`).replace(new RegExp(`(<meta name="${placeholder}" content=")[^"]*(")`, 'u'), `$1${mark}$2`).replace(new RegExp(`(<meta content=")[^"]*(") name="${placeholder}"`, 'u'), `$1${mark}$2`);
+}
 /**
  * Generate the mark to inject
  * @param root0 the options
@@ -9,27 +18,26 @@ import { formatDate, injectMark, Logger } from '@shuunen/shuutils';
  * @param root0.date the date to use, if empty, will use the current date
  * @param root0.version the version to use, if empty, will use the version from package.json
  * @returns the mark to inject, like "4.2.0 - 123abc45 - 01/01/2021 12:00:00"
- */ export function generateMark({ commit = '', date = formatDate(new Date(), 'dd/MM/yyyy HH:mm:ss'), version = '' }) {
+ */ export function generateMark({ commit = '', date = new Date().toISOString(), version = '' }) {
     let finalCommit = commit;
     /* c8 ignore next */ if (commit === '') finalCommit = execSync('git rev-parse --short HEAD', {
         cwd: process.cwd()
     }).toString().trim();
     return `${version} - ${finalCommit} - ${date}`;
 }
-const logger = new Logger();
 export function injectMarkInAsset({ asset, fileName, mark, placeholder }) {
-    logger.debug(`Checking ${fileName}... hasAsset: ${!!asset}, typeof source: ${typeof asset.source}, typeof code: ${typeof asset.code}`);
+    // console.log(`Checking ${fileName}... hasAsset: ${!!asset}, typeof source: ${typeof asset.source}, typeof code: ${typeof asset.code}`)
     const firstLine = fileName.endsWith('.html') ? '' : `/* ${placeholder} : ${mark} */\n`;
     const contentKey = fileName.endsWith('.js') ? 'code' : 'source';
     const injected = `${firstLine}${injectMark(asset[contentKey], placeholder, mark)}`;
     asset[contentKey] = injected;
-    logger.debug(`Mark injected into ${fileName}`);
+// console.log(`Mark injected into ${fileName}`)
 }
 export function injectMarkInAssets(assets, placeholder, version) {
     const mark = generateMark({
         version
     });
-    logger.info('Injecting unique mark into HTML, JS, and CSS files...');
+    console.log('Injecting unique mark into HTML, JS, and CSS files...');
     const targets = Object.keys(assets).filter((fileName)=>fileName.endsWith('.html') || fileName.endsWith('.js') || fileName.endsWith('.css'));
     for (const fileName of targets)injectMarkInAsset({
         asset: assets[fileName],
@@ -37,14 +45,14 @@ export function injectMarkInAssets(assets, placeholder, version) {
         mark,
         placeholder
     });
-    logger.success(`Mark potentially injected into ${targets.length} files`);
+    console.log(`Mark potentially injected into ${targets.length} files`);
 }
 export function getProjectVersion(projectRoot) {
     try {
         const pkg = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'));
         /* c8 ignore next */ return pkg.version || '';
     } catch (error) {
-        logger.warn('Could not read project package.json for version', error);
+        console.error('Could not read project package.json for version', error);
         return '';
     }
 }

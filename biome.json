@@ -183,6 +183,18 @@
       }
     },
     {
+      "includes": [
+        "libs/vite-plugins/**/*"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    },
+    {
       "assist": {
         "actions": {
           "source": {

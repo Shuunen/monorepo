@@ -164,6 +164,14 @@
       "rules": {
         "no-barrel-file": "off"
       }
+    },
+    {
+      "files": [
+        "libs/vite-plugins/**/*"
+      ],
+      "rules": {
+        "no-console": "off"
+      }
     }
   ],
   "plugins": [

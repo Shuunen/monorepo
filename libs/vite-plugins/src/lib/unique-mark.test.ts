@@ -1,4 +1,3 @@
-import * as shuutils from '@shuunen/shuutils'
 import { generateMark, getProjectVersion, injectMarkInAsset, injectMarkInAssets, uniqueMark } from './unique-mark.node.js'
 
 describe('vite-plugin-unique-mark', () => {
@@ -9,18 +8,14 @@ describe('vite-plugin-unique-mark', () => {
 
   it('injectMarkInAsset A injects mark in js file', () => {
     const asset = { code: 'console.log("__unique-mark__")', source: '' }
-    const injectMarkSpy = vi.spyOn(shuutils, 'injectMark').mockImplementation((code: string, placeholder: string, mark: string) => code.replace(placeholder, mark))
-    injectMarkInAsset({ asset, fileName: 'main.js', mark: 'MARK', placeholder: '__unique-mark__' })
+    injectMarkInAsset({ asset, fileName: 'main.js', mark: 'MARK', placeholder: 'unique-mark' })
     expect(asset.code).toContain('MARK')
-    injectMarkSpy.mockRestore()
   })
 
   it('injectMarkInAsset B injects mark in html file', () => {
     const asset = { code: '', source: '<!-- __unique-mark__ -->' }
-    const injectMarkSpy = vi.spyOn(shuutils, 'injectMark').mockImplementation((code: string, placeholder: string, mark: string) => code.replace(placeholder, mark))
-    injectMarkInAsset({ asset, fileName: 'index.html', mark: 'MARK', placeholder: '__unique-mark__' })
+    injectMarkInAsset({ asset, fileName: 'index.html', mark: 'MARK', placeholder: 'unique-mark' })
     expect(asset.source).toContain('MARK')
-    injectMarkSpy.mockRestore()
   })
 
   it('injectMarkInAssets C injects into multiple assets (observable effect)', () => {
