@@ -92,6 +92,11 @@
         "^production"
       ]
     },
+    "lint": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
     "test": {
       "dependsOn": [
         "^build"
@@ -100,6 +105,11 @@
         "coverage": true,
         "coverage.thresholds.100": true
       }
+    },
+    "typecheck": {
+      "dependsOn": [
+        "^build"
+      ]
     }
   }
 }

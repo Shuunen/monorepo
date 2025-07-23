@@ -18,9 +18,7 @@
 apps/*/dist
 connect.lock
 coverage
-libs/*/dist/*.tsbuildinfo
-libs/*/dist/**/*.d.ts
-libs/*/dist/**/*.map
+dist
 node_modules
 out-tsc
 sample.*

@@ -3,9 +3,11 @@
     "@mui/material": "7.1",
     "@preact/preset-vite": "2.10",
     "@shuunen/shuutils": "workspace:*",
-    "@shuunen/vite-plugins": "workspace:*",
     "preact": "10.26",
     "react-confetti-boom": "2.0"
+  },
+  "devDependencies": {
+    "@shuunen/vite-plugins": "workspace:*"
   },
   "name": "jozzo",
   "private": true,
