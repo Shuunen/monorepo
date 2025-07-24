@@ -1,3 +1,4 @@
+import { Landing } from '@shuunen/components'
 import { NavLink, Route, Routes } from 'react-router-dom'
 
 const navClasses = ({ isActive }: { isActive: boolean }) => `transition-colors ${isActive ? 'text-blue-600 underline underline-offset-22' : 'text-gray-700 hover:text-blue-600'}`
@@ -14,24 +15,9 @@ export function App() {
         </NavLink>
       </nav>
       <Routes>
-        <Route
-          element={
-            <div>
-              This is the generated root route. <Link to="/page-2">Click here for page 2.</Link>
-            </div>
-          }
-          path="/"
-        />
-        <Route
-          element={
-            <div>
-              <Link to="/">Click here to go back to root page.</Link>
-            </div>
-          }
-          path="/page-2"
-        />
+        <Route element={<Landing status="Use me as a template" subtitle="Web application built with React and TailwindCSS" title="Sample Web App" />} path="/" />
+        <Route element={<Landing subtitle="Lorem ipsum sit dolor in Shuunen" title="About" />} path="/about" />
       </Routes>
-      {/* END: routes */}
     </div>
   )
 }
