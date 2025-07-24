@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "@swc/helpers": "~0.5.11",
-    "@happy-dom/global-registrator": "^18.0.1",
     "esbuild": "^0.25.5",
     "tiny-glob": "^0.2.9"
   },

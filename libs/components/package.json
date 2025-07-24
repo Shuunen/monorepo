@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@shuunen/shuutils": "workspace:*",
+    "@shuunen/vite-plugins": "workspace:*"
+  },
+  "name": "@shuunen/components",
+  "nx": {
+    "name": "components"
+  },
+  "private": true,
+  "type": "module",
+  "version": "0.0.1"
+}

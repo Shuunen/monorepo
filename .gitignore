@@ -21,6 +21,7 @@ coverage
 libs/*/dist/*.tsbuildinfo
 libs/*/dist/**/*.d.ts
 libs/*/dist/**/*.map
+libs/components/dist
 node_modules
 out-tsc
 sample.*
