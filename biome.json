@@ -189,7 +189,8 @@
     },
     {
       "includes": [
-        "libs/vite-plugins/**"
+        "libs/vite-plugins/**",
+        "libs/components/.storybook/**"
       ],
       "linter": {
         "rules": {

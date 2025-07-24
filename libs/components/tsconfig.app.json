@@ -19,6 +19,7 @@
     "dist",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
+    "src/**/*.stories.tsx",
     "vite.config.ts"
   ],
   "extends": "../../tsconfig.base.json",
