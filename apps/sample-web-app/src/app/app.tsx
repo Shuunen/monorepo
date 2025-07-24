@@ -1,26 +1,17 @@
-import { Link, Route, Routes } from 'react-router-dom'
-import { NxWelcome } from './nx-welcome'
+import { NavLink, Route, Routes } from 'react-router-dom'
+
+const navClasses = ({ isActive }: { isActive: boolean }) => `transition-colors ${isActive ? 'text-blue-600 underline underline-offset-22' : 'text-gray-700 hover:text-blue-600'}`
 
 export function App() {
   return (
     <div>
-      <NxWelcome title="sample-web-app" />
-
-      {/* START: routes */}
-      {/* These routes and navigation have been generated for you */}
-      {/* Feel free to move and update them to fit your needs */}
-      <br />
-      <hr />
-      <br />
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/page-2">Page 2</Link>
-          </li>
-        </ul>
+      <nav className="absolute flex gap-6 text-2xl font-semibold justify-center w-full p-4 bg-white shadow-md">
+        <NavLink className={navClasses} to="/">
+          Home
+        </NavLink>
+        <NavLink className={navClasses} to="/about">
+          About
+        </NavLink>
       </nav>
       <Routes>
         <Route
