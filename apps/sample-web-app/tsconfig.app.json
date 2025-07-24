@@ -32,6 +32,9 @@
     },
     {
       "path": "../../libs/shuutils/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/components/tsconfig.app.json"
     }
   ]
 }

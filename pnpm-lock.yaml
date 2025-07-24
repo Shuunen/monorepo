@@ -180,6 +180,9 @@ importers:
 
   apps/sample-web-app:
     dependencies:
+      '@shuunen/components':
+        specifier: workspace:*
+        version: link:../../libs/components
       '@shuunen/shuutils':
         specifier: workspace:*
         version: link:../../libs/shuutils
