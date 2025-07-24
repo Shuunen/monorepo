@@ -1,0 +1,12 @@
+{
+  "name": "components",
+  "targets": {
+    "storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "storybook dev --port 6006",
+        "cwd": "libs/components"
+      }
+    }
+  }
+}

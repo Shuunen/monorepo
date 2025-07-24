@@ -167,7 +167,8 @@
     },
     {
       "files": [
-        "libs/vite-plugins/**/*"
+        "libs/vite-plugins/**/*",
+        "libs/components/.storybook/**/*"
       ],
       "rules": {
         "no-console": "off"
