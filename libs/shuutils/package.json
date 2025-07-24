@@ -1,42 +1,18 @@
 {
   "dependencies": {
-    "@swc/helpers": "~0.5.11",
     "esbuild": "^0.25.5",
     "tiny-glob": "^0.2.9"
   },
   "exports": {
-    ".": {
-      "development": "./src/index.ts",
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
   "name": "@shuunen/shuutils",
   "nx": {
     "name": "shuutils",
-    "sourceRoot": "libs/shuutils/src",
-    "targets": {
-      "build": {
-        "executor": "@nx/js:swc",
-        "options": {
-          "main": "libs/shuutils/src/index.ts",
-          "outputPath": "libs/shuutils/dist",
-          "skipTypeCheck": true,
-          "stripLeadingPaths": true,
-          "tsConfig": "libs/shuutils/tsconfig.lib.json"
-        },
-        "outputs": [
-          "{options.outputPath}"
-        ]
-      }
-    }
+    "sourceRoot": "libs/shuutils/src"
   },
   "private": true,
   "type": "module",
-  "types": "./dist/index.d.ts",
   "version": "10.6.0"
 }

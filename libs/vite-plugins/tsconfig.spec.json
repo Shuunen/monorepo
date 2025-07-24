@@ -12,8 +12,7 @@
   },
   "extends": "../../tsconfig.base.json",
   "include": [
-    "src/**/*.test.ts",
-    "src/**/*.d.ts"
+    "src/**/*.test.js"
   ],
   "references": [
     {
