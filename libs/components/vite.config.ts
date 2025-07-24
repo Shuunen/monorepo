@@ -25,7 +25,7 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      exclude: ['src/**/*.tsx'],
+      exclude: ['src/**/*.tsx', 'src/index.ts'],
       include: ['src'],
       provider: 'v8' as const,
       reportsDirectory: './test-output/vitest/coverage',
