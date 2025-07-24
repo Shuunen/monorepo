@@ -6,13 +6,14 @@ export default defineConfig(() => ({
   root: __dirname,
   test: {
     coverage: {
-      exclude: ['src/index.ts', 'dist/**', '**/*.config.ts', '**/*.d.ts'],
+      exclude: ['src/index.js', '*.config.ts', 'src/**/*.d.ts'],
+      include: ['src'],
       provider: 'v8' as const,
       reportsDirectory: './test-output/vitest/coverage',
     },
     environment: 'node',
     globals: true,
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.js'],
     reporters: ['default'],
     watch: false,
   },

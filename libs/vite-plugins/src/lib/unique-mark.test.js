@@ -1,4 +1,4 @@
-import { generateMark, getProjectVersion, injectMarkInAsset, injectMarkInAssets, uniqueMark } from './unique-mark.node.js'
+import { generateMark, getProjectVersion, injectMarkInAsset, injectMarkInAssets, uniqueMark } from './unique-mark.node'
 
 describe('vite-plugin-unique-mark', () => {
   it('generateMark A generate a mocked mark', () => {
@@ -71,11 +71,11 @@ describe('vite-plugin-unique-mark', () => {
     const mockBundle = { 'test.js': { code: '__test-mark__', source: '' } }
     // These methods may not have full context but should execute without throwing
     expect(() => {
-      const method = plugin.configResolved as unknown as (config: { root: string }) => void
+      const method = plugin.configResolved
       method(mockConfig)
     }).not.toThrow()
     expect(() => {
-      const method = plugin.generateBundle as unknown as (options: unknown, bundle: Record<string, { source: string; code: string }>, isWrite: boolean) => void
+      const method = plugin.generateBundle
       method({}, mockBundle, false)
     }).not.toThrow()
   })

@@ -135,7 +135,8 @@
     },
     {
       "includes": [
-        "**/*.test.ts"
+        "**/*.test.ts",
+        "**/*.test.js"
       ],
       "javascript": {
         "globals": [

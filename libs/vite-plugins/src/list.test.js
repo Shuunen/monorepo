@@ -16,7 +16,7 @@ describe('list.cli', () => {
   })
 
   it('listEntries A glob matched some files', async () => {
-    vi.mocked(glob).mockReturnValue(Promise.resolve(['unique-mark.node.js', 'some.test.ts', 'also.types.ts']))
+    vi.mocked(glob).mockReturnValue(Promise.resolve(['unique-mark.node.js', 'some.test.js', 'also.types.js']))
 
     await listEntries()
 
@@ -26,7 +26,7 @@ describe('list.cli', () => {
 
     const content = writeCall[1]
 
-    expect(filePath).toContain('libs/vite-plugins/src/index.ts')
+    expect(filePath).toContain('libs/vite-plugins/src/index.js')
 
     expect(content).toBe("export * from './lib/unique-mark.node.js'\nexport type * from './lib/also.types.js'\n")
   })

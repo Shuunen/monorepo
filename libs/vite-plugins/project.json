@@ -1,24 +1,24 @@
 {
   "name": "vite-plugins",
   "targets": {
-    "build": {
-      "cache": true,
-      "dependsOn": []
-    },
     "list": {
       "cache": true,
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsx src/list.cli.ts",
+        "command": "node src/list.cli.js",
         "cwd": "libs/vite-plugins"
       },
       "outputs": [
-        "{projectRoot}/src/index.ts"
+        "{projectRoot}/src/index.js"
       ]
     },
     "typecheck": {
-      "cache": true,
-      "dependsOn": []
+      "outputs": [
+        "{projectRoot}/out-tsc/vitest/**/*.d.ts",
+        "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo",
+        "{projectRoot}/types/**/*.d.ts",
+        "{projectRoot}/tsconfig.lib.tsbuildinfo"
+      ]
     }
   }
 }

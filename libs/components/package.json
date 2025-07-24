@@ -9,7 +9,8 @@
   },
   "name": "@shuunen/components",
   "nx": {
-    "name": "components"
+    "name": "components",
+    "sourceRoot": "libs/components/src"
   },
   "private": true,
   "type": "module",

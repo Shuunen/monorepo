@@ -94,30 +94,11 @@
     }
   ],
   "targetDefaults": {
-    "@nx/js:swc": {
-      "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
-    },
     "test": {
-      "dependsOn": [
-        "^build"
-      ],
       "options": {
         "coverage": true,
         "coverage.thresholds.100": true
       }
-    },
-    "typecheck": {
-      "cache": true,
-      "dependsOn": [
-        "^build"
-      ]
     }
   },
   "tui": {
