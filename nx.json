@@ -101,5 +101,8 @@
         "coverage.thresholds.100": true
       }
     }
+  },
+  "tui": {
+    "enabled": false
   }
 }
