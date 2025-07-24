@@ -11,11 +11,16 @@
     }
   },
   "files": {
+    "experimentalScannerIgnores": [
+      ".git",
+      "dist",
+      "node_modules"
+    ],
     "ignoreUnknown": false,
     "includes": [
       "**",
-      "!**/components/ui/**/*",
-      "!**/dist/**/*",
+      "!**/components/ui/**",
+      "!**/dist/**",
       "!**/routeTree.gen.ts"
     ]
   },
@@ -184,7 +189,7 @@
     },
     {
       "includes": [
-        "libs/vite-plugins/**/*"
+        "libs/vite-plugins/**"
       ],
       "linter": {
         "rules": {
