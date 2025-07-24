@@ -6,7 +6,7 @@
     ],
     "outDir": "dist",
     "rootDir": "src",
-    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "types": [
       "node",
       "@nx/react/typings/cssmodule.d.ts",
