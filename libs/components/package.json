@@ -3,6 +3,10 @@
     "@shuunen/shuutils": "workspace:*",
     "@shuunen/vite-plugins": "workspace:*"
   },
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
   "name": "@shuunen/components",
   "nx": {
     "name": "components"
