@@ -23,7 +23,6 @@ node_modules
 out-tsc
 sample.*
 storybook-static
-take-screenshot-last-input.txt
 test-output
 Thumbs.db
 tmp
