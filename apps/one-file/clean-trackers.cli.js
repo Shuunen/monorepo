@@ -1,6 +1,8 @@
 /* c8 ignore start */
+import { readFileSync, statSync, writeFileSync } from 'node:fs'
+import path from 'node:path'
 import { Logger, nbMsInSecond, nbRgbMax, sleep, stringSum } from '@shuunen/shuutils'
-import clipboard from 'clipboardy'
+import clipboardy from 'clipboardy'
 import { cleanTrackers } from './clean-trackers.utils.js'
 
 // use me like :
@@ -12,6 +14,8 @@ import { cleanTrackers } from './clean-trackers.utils.js'
 
 const willWatch = process.argv.includes('--watch')
 const isVerbose = process.argv.includes('--verbose')
+const willCheckFile = process.argv.includes('--file')
+const fileInput = path.join(import.meta.dirname, 'clean-trackers.input.txt')
 const logger = new Logger({ minimumLevel: isVerbose ? '1-debug' : '3-info' })
 let lastSum = 0
 
@@ -43,7 +47,7 @@ function log(message) {
  */
 async function updateClipboard(content) {
   log(`will copy this to clipboard :\n---\n${content}\n---`)
-  clipboard.writeSync(content)
+  clipboardy.writeSync(content)
   logger.info('cleaned clipboard content at', new Date().toLocaleString())
   await beep()
 }
@@ -57,15 +61,39 @@ function hash(input) {
   return stringSum(input.trim())
 }
 
+async function readClipboard() {
+  const content = await clipboardy.read()
+  if (!content) {
+    log('clipboard is empty')
+    return ''
+  }
+  logger.debug(`found clipboard content : "${content}"`)
+  return content
+}
+
+function readFile() {
+  const exists = statSync(fileInput, { throwIfNoEntry: false })
+  if (!exists) {
+    logger.debug(`file ${fileInput} does not exist, creating it...`)
+    writeFileSync(fileInput, '', 'utf8')
+    return ''
+  }
+  return readFileSync(fileInput, 'utf8')
+}
+
+async function readInput() {
+  return willCheckFile ? readFile() : await readClipboard()
+}
+
 /**
  * Clean the clipboard content
  */
 // oxlint-disable-next-line max-lines-per-function
 async function doClean() {
-  log('cleaning trackers...')
-  const input = clipboard.readSync()
+  log(`cleaning trackers in ${willCheckFile ? 'file' : 'clipboard (use --file to read file input)'}...`)
+  const input = await readInput()
   if (!(input.includes('http') || input.includes('udp'))) {
-    log('no trackers in clipboard')
+    log(`no trackers found in input : "${input}"`)
     return
   }
   const actualSum = hash(input)
@@ -88,7 +116,7 @@ async function doClean() {
 logger.info(`clean-trackers.cli start, watch is ${willWatch ? 'on' : 'off'}`)
 
 if (willWatch) {
-  logger.info('watching clipboard...')
+  logger.info(`watching ${willCheckFile ? 'file' : 'clipboard'} input...`)
   setInterval(doClean, nbMsInSecond)
 } else {
   await doClean()

@@ -24,6 +24,16 @@
     },
     {
       "path": "./apps/user-scripts"
+    },
+    {
+      "path": "./libs/components"
     }
-  ]
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "customConditions": null,
+      "module": "commonjs",
+      "moduleResolution": "node10"
+    }
+  }
 }

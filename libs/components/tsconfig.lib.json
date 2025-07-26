@@ -6,7 +6,7 @@
     ],
     "outDir": "dist",
     "rootDir": "src",
-    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
+    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "types": [
       "node",
       "@nx/react/typings/cssmodule.d.ts",
@@ -19,6 +19,7 @@
     "dist",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
+    "src/**/*.stories.tsx",
     "vite.config.ts"
   ],
   "extends": "../../tsconfig.base.json",
@@ -28,13 +29,10 @@
   ],
   "references": [
     {
-      "path": "../../libs/vite-plugins/tsconfig.lib.json"
+      "path": "../vite-plugins/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/shuutils/tsconfig.lib.json"
-    },
-    {
-      "path": "../../libs/components/tsconfig.lib.json"
+      "path": "../shuutils/tsconfig.lib.json"
     }
   ]
 }

@@ -1,0 +1,20 @@
+{
+  "name": "components",
+  "targets": {
+    "storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "storybook dev --port 6006",
+        "cwd": "libs/components"
+      }
+    },
+    "typecheck": {
+      "outputs": [
+        "{projectRoot}/out-tsc/vitest/**/*.d.ts",
+        "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo",
+        "{projectRoot}/out-tsc/storybook/**/*.d.ts",
+        "{projectRoot}/out-tsc/storybook/tsconfig.tsbuildinfo"
+      ]
+    }
+  }
+}

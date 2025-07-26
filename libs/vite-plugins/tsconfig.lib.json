@@ -1,10 +1,13 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "baseUrl": ".",
+    "checkJs": true,
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "dist",
+    "outDir": "types",
     "rootDir": "src",
+    "sourceMap": false,
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "types": [
       "node"
@@ -12,11 +15,11 @@
   },
   "exclude": [
     "vite.config.ts",
-    "src/**/*.test.ts"
+    "src/**/*.test.js"
   ],
   "extends": "../../tsconfig.base.json",
   "include": [
-    "src/**/*.ts"
+    "src/**/*.js"
   ],
   "references": []
 }
