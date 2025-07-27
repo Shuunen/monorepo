@@ -324,6 +324,34 @@ bun cs --setup
 - [ ] [pimp with a 2k wallpaper](https://www.google.com/search?q=wallpaper+2k)
 - [ ] encrypt drive
 
+Plugins status for qBittorrent 5.1.1 :
+
+- BitSearch 1.1 : failing
+- BtDig 1.1 : failing
+- CloudTorrent 1.0 : failing
+- EliteTorrent 1.6 : failing
+- EzTV 1.17 : failing
+- **LimeTorrent 4.11 : working**
+- MagnetDL 2.1 : failing
+- **MyPrnClub 1.1 : working**
+- **SnowFl 1.3 : working**
+- SolidTorrents 2.5 : failing
+- **ThePirateBay 1.1 : working**
+- **ThePirateBay 3.7 : working**
+- **TheRarBg 1.3 : working**
+- **TorLock 2.26 : working**
+- Torrent Downloads 1.1 : failing
+- **Torrent9 2.0 : working**
+- TorrentDownload 1.1 : failing
+- TorrentFlix 1.0 : failing
+- TorrentGalaxy 0.8 : failing
+- **TorrentProject 1.6 : working**
+- **TorrentsCsv 1.6 : working**
+- **Traht 1.0 : working**
+- UnionDht 1.2 : failing
+- xClub 1.3 : failing
+- Zooqle 1.1 : failing
+
 Nice app to keep in mind :
 
 - [Boxy SVG](https://boxy-svg.com/) : simple & effective svg editor
