@@ -104,7 +104,6 @@ function AmazonAio() {
    * Clear classnames of some elements to remove their styles
    */
   function clearClassnames() {
-    // eslint-disable-next-line unicorn/no-keyword-prefix
     for (const selector of Object.values(clearClassSelectors)) for (const node of utils.findAll(selector, document, true)) node.className = ''
   }
   /**
@@ -139,7 +138,7 @@ function AmazonAio() {
    * @param {HTMLDivElement} scoreSection The score section
    * @returns {number} The score by currency
    */
-  // eslint-disable-next-line max-params
+  // oxlint-disable-next-line max-params
   function getScoreByCurrency(price, currency, score, scoreSection) {
     const scoreByCurrencySection = document.createElement('div')
     const scoreByCurrency = Math.round((score / price) * 100) / 100
@@ -218,7 +217,6 @@ function AmazonAio() {
    */
   function generateScoreSection({ color, product, rating, reviews, score, size }) {
     const scoreSection = document.createElement('div')
-    // eslint-disable-next-line unicorn/no-keyword-prefix
     scoreSection.className = 'amz-aio-score a-spacing-top-micro'
     const on20 = document.createElement('span')
     on20.textContent = `💯 ${score}/20`

@@ -140,7 +140,8 @@ function TextGuard() {
     for (const word of forbiddenWords) search(word, true)
     report()
   }
-  const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
+  const initDebouncedTime = 500
+  const initDebounced = utils.debounce(init, initDebouncedTime)
   initDebounced()
   /**
    * Handles page mutations

@@ -74,7 +74,8 @@ function VintedAio() {
     utils.debug(`process called because "${reason}"`)
     utils.hideElements(uselessSelectors, 'useless')
   }
-  const processDebounced = utils.debounce((/** @type {string} */ reason) => process(reason), 300) // eslint-disable-line no-magic-numbers
+  const processDebounceTime = 300
+  const processDebounced = utils.debounce((/** @type {string} */ reason) => process(reason), processDebounceTime)
   globalThis.addEventListener('scroll', () => processDebounced('scroll'))
   utils.onPageChange(() => processDebounced('page-change'))
   document.addEventListener('DOMContentLoaded', () => process('initial-dom-loaded'))

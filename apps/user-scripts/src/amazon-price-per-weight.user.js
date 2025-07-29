@@ -75,12 +75,10 @@ function AmazonPricePerWeight() {
   // selectors.price = selectors.debugContainer + ' div:first-child .a-link-normal'
 
   const regex = {
-    /* eslint-disable prefer-named-capture-group */
     bulk: /lot de (\d+)/iu,
     price: /(eur|€)\s?(\d+,\d{2})/iu,
     pricePer: /(\d+,\d{2})\s€\/(\w+)/u,
     weight: /(\d+)\s?(g|kg|-)/iu,
-    /* eslint-enable prefer-named-capture-group */
   }
 
   const templates = {

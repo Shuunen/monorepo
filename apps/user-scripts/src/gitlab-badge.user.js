@@ -42,7 +42,6 @@ async function getNbContributions() {
 }
 
 function injectStyles(string = '') {
-  // eslint-disable-next-line no-console
   if (string.length === 0) return
   if (string.includes('://') && !string.includes('\n') && string.includes('.css')) {
     document.querySelector('head')?.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
@@ -117,7 +116,8 @@ function GitlabBadge() {
     else badge.style.backgroundImage = `url(${badges.gold})`
     animateBadge(todayContributions !== previousContributions)
   }
-  const processDebounced = utils.debounce(process, 1000) // eslint-disable-line no-magic-numbers
+  const processDebounceTime = 1000
+  const processDebounced = utils.debounce(process, processDebounceTime)
   globalThis.addEventListener('focus', () => {
     void process('focus')
   })

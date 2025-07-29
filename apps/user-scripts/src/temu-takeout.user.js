@@ -41,7 +41,8 @@ function getData() {
     details: store.seoPageAltInfo.pageAlt,
     name: store.seoPageAltInfo.pageAlt,
     photo: store.goods.hdThumbUrl,
-    price: String(store.goods.minOnSalePrice / 100), // eslint-disable-line no-magic-numbers
+    // oxlint-disable-next-line no-magic-numbers
+    price: String(store.goods.minOnSalePrice / 100),
     reference: store.goods.itemId,
   }
 }
@@ -79,9 +80,10 @@ function TemuTakeout() {
   function init() {
     startTakeout()
   }
-  const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
-  initDebounced()
-  utils.onPageChange(initDebounced)
+  const processDebounceTime = 500
+  const processDebounced = utils.debounce(init, processDebounceTime)
+  processDebounced()
+  utils.onPageChange(processDebounced)
 }
 
 if (globalThis.window) TemuTakeout()

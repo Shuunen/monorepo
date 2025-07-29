@@ -12,8 +12,6 @@
 // @version      1.0.7
 // ==/UserScript==
 
-/* eslint-disable max-statements, no-magic-numbers */
-/* eslint-disable jsdoc/require-jsdoc */
 // oxlint-disable max-lines
 
 /**
@@ -27,8 +25,11 @@
 const scoreRules = { scoreMax: 2, scoreMin: 0 }
 const priceRules = { ...scoreRules, isHigherBetter: false, valueMax: 12_000, valueMin: 6000 }
 const mileageRules = { ...scoreRules, isHigherBetter: false, valueMax: 130_000, valueMin: 70_000 }
-const yearRules = { ...scoreRules, isHigherBetter: true, valueMax: new Date().getFullYear(), valueMin: new Date().getFullYear() - 12 }
+const nbMonths = 12
+const nbPercents = 100
+const yearRules = { ...scoreRules, isHigherBetter: true, valueMax: new Date().getFullYear(), valueMin: new Date().getFullYear() - nbMonths }
 
+/* oxlint-disable no-magic-numbers */
 // oxlint-disable-next-line sort-keys
 const districts = {
   67218: 'Illkirch',
@@ -55,6 +56,7 @@ const districtsToHide = new Set([
   districts[3_001_199], // Cronenbourg
   districts[3_001_211], // Hautepierre
 ])
+/* oxlint-enable no-magic-numbers */
 
 const citiesToHide = new Set(['Eschau'])
 
@@ -101,7 +103,8 @@ function getElevatorInfo(ad) {
   if (elevator === undefined) return {}
   // oxlint-disable-next-line no-nested-ternary
   const text = elevator.value === '1' ? 'ascenseur' : elevator.value === '2' ? "pas d'ascenseur" : `unknown elevator value "${elevator.value}"`
-  const score = elevator.value === '2' ? 0.5 : 1
+  const half = 0.5
+  const score = elevator.value === '2' ? half : 1
   return { score, text }
 }
 
@@ -150,7 +153,7 @@ function LbcListings() {
       utils.debug('ad already processed', id)
       return
     }
-    return element // eslint-disable-line consistent-return
+    return element
   }
 
   /**
@@ -164,7 +167,7 @@ function LbcListings() {
     const ges = ad.attributes.find(attribute => attribute.key === 'ges')?.value ?? ''
     if (ges === '') utils.warn('no GES found in ad', ad)
     const text = `DPE : ${energy} / GES : ${ges}`
-    // oxlint-disable-next-line no-nested-ternary
+    // oxlint-disable-next-line no-nested-ternary, no-magic-numbers
     const score = ['A', 'B'].includes(energy) ? 1.5 : energy === 'C' ? 1 : 0.5
     return { score, text }
   }
@@ -253,6 +256,7 @@ function LbcListings() {
     if (shouldHide) hideAdElement(ad.element, 'location')
     let text = city
     if (!city.includes(district)) text += ` - ${district}`
+    // oxlint-disable-next-line no-magic-numbers
     const score = shouldHide ? 0.1 : 1
     return { score, text }
   }
@@ -270,7 +274,7 @@ function LbcListings() {
       return {}
     }
     const text = [owner.type, ':', owner.name.toLocaleLowerCase()].join(' ')
-    // oxlint-disable-next-line no-nested-ternary
+    // oxlint-disable-next-line no-nested-ternary, no-magic-numbers
     const score = isPrivateBetter ? (owner.type === 'pro' ? 0.5 : 1.2) : 1
     return { score, text }
   }
@@ -283,6 +287,7 @@ function LbcListings() {
     const floorNumber = ad.attributes.find(attribute => attribute.key === 'floor_number')
     if (floorNumber === undefined) return {}
     const text = humanReadableFloor(floorNumber.value)
+    // oxlint-disable-next-line no-magic-numbers
     const score = floorNumber.value === '0' ? 0.5 : 1
     return { score, text }
   }
@@ -309,8 +314,9 @@ function LbcListings() {
     const fuel = ad.attributes.find(attribute => attribute.key === 'fuel')?.value_label.toLowerCase() ?? ''
     if (fuel) infos.push({ text: `carburant : ${fuel}` })
     const gearbox = ad.attributes.find(attribute => attribute.key === 'gearbox')?.value_label.toLowerCase() ?? ''
+    // oxlint-disable-next-line no-magic-numbers
     if (gearbox) infos.push({ score: gearbox === 'automatique' ? 1.2 : 1, text: `boite : ${gearbox}` })
-    const price = ad.price_cents / 100
+    const price = ad.price_cents / nbPercents
     if (price) infos.push({ score: utils.rangedScore(priceRules, price), text: `prix : ${price} €` })
     return infos
   }
@@ -322,6 +328,7 @@ function LbcListings() {
   function getScoreClasses(score) {
     const classes = []
     if (score > 1) classes.push(...utils.tw('text-green-600'))
+    // oxlint-disable-next-line no-magic-numbers
     if (score > 2) classes.push(...utils.tw('text-2xl font-bold'))
     if (score < 1) classes.push(...utils.tw('text-red-600'))
     return classes
@@ -350,6 +357,7 @@ function LbcListings() {
       const line = document.createElement('div')
       line.classList.add(...utils.tw('text-right'))
       if (info.text) line.textContent = info.text
+      // oxlint-disable-next-line no-magic-numbers
       if (info.score !== undefined && !info.text?.includes('score')) line.title += `${info.text?.split(' : ')[0] ?? ''} score : ${info.score.toFixed(2)}`
       line.classList.add(...getInfoClasses(info))
       panel.append(line)
@@ -393,8 +401,8 @@ function LbcListings() {
     else if (type === 'car') infos.push(...getCustomInfosCar(ad))
     else utils.warn('un handled ad type', { ad, type })
     const score = infos.reduce((total, info) => total * (info.score ?? 1), 1)
-    const scoreRounded = Math.round(score * 100) / 100
-    // oxlint-disable-next-line no-nested-ternary
+    const scoreRounded = Math.round(score * nbPercents) / nbPercents
+    // oxlint-disable-next-line no-nested-ternary, no-magic-numbers
     const classes = scoreRounded > 1 ? (scoreRounded > 2 ? ['text-4xl', 'font-bold'] : ['text-2xl', 'font-bold']) : []
     infos.push({ classes, score: scoreRounded, text: `score : ${scoreRounded}` })
     ad.element.append(createCustomInfosPanel(infos))
@@ -446,8 +454,8 @@ function LbcListings() {
     for (const ad of ads) processAd(ad)
     removeViewedStyles()
   }
-
-  const processDebounced = utils.debounce(process, 1000)
+  const processDebounceTime = 1000
+  const processDebounced = utils.debounce(process, processDebounceTime)
   globalThis.addEventListener('scroll', () => processDebounced())
   globalThis.addEventListener('load', () => processDebounced())
 }

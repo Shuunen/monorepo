@@ -34,7 +34,7 @@ function cleanTitle(title) {
 }
 function SaveurBiereRatings() {
   if (globalThis.matchMedia === undefined) return
-  // eslint-disable-next-line no-magic-numbers
+  // oxlint-disable-next-line no-magic-numbers
   const cached = new Date().toISOString().slice(0, 7) // like 2021-11
   const utils = new Shuutils('svb-rat')
   const user = localStorage.untappdUser || ''
@@ -58,9 +58,9 @@ function SaveurBiereRatings() {
     const rating = document.createElement('p')
     rating.textContent = `You rated "${data.title}" : ${data.user_rating}/5 on Untappd`
     rating.style.padding = '2px 6px'
-    // eslint-disable-next-line no-magic-numbers
+    // oxlint-disable-next-line no-magic-numbers
     if (data.user_rating >= 4) rating.style.backgroundColor = 'lightgreen'
-    // eslint-disable-next-line no-magic-numbers
+    // oxlint-disable-next-line no-magic-numbers
     else if (data.user_rating >= 3) rating.style.backgroundColor = 'lightyellow'
     else rating.style.backgroundColor = 'lightpink'
     element.append(rating)
@@ -77,7 +77,6 @@ function SaveurBiereRatings() {
     titleElement.title = `Cleaned title : ${name}`
     const storageKey = `${utils.id}-${cached}-${name}` // '2021-11-svb-rat-Gouden Carolus Tripel'
     utils.log(`looking for "${storageKey}" in localStorage`)
-    // eslint-disable-next-line no-useless-assignment
     let data = {}
     if (localStorage.getItem(storageKey) === null) {
       utils.log('fetching rating for :', name)

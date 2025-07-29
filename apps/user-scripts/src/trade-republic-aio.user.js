@@ -11,7 +11,6 @@
 // @version      1.1.1
 // ==/UserScript==
 
-/* eslint-disable no-console */
 // oxlint-disable no-magic-numbers
 
 function TradeRepublicAio() {

@@ -230,7 +230,7 @@ function TiimeAutoExpenses() {
    * @param {number} amount the amount
    */
   async function addExpense(label, comment, amount) {
-    // console.groupEnd() // eslint-disable-line no-console
+    // console.groupEnd()
     await utils.sleep(delays.medium)
     if (isExpenseFilled(label, amount)) {
       utils.log(`expense already filled : ${label}`)
@@ -277,7 +277,7 @@ function TiimeAutoExpenses() {
     const subset = expenses
     for (const [label = '', comment = '', amount = ''] of subset) {
       const amountNumber = Number.parseFloat(amount.replace(',', '.'))
-      // eslint-disable-next-line no-await-in-loop
+      // oxlint-disable-next-line no-await-in-loop
       await addExpense(label, comment, amountNumber)
     }
     utils.showSuccess('expenses added 😎')

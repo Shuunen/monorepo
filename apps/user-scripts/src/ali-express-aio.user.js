@@ -12,14 +12,12 @@
 // @version      1.0.4
 // ==/UserScript==
 
-// oxlint-disable no-magic-numbers
-// oxlint-disable max-lines-per-function
-/* eslint-disable consistent-return */
-/* eslint-disable jsdoc/require-param */
-/* eslint-disable jsdoc/require-param-description */
-/* eslint-disable jsdoc/require-returns */
+// oxlint-disable no-magic-numbers, max-lines-per-function
 
-/** @param {HTMLImageElement} img */
+/**
+ * @param {HTMLImageElement} img the image to extend
+ * @param {number} [size] the size to extend the image to, default is 600px
+ */
 function extendsImage(img, size = 600) {
   // img.src = img.src.split('.jpg_')[0] + '.jpg'
   img.style.height = `${size}px`
@@ -31,7 +29,7 @@ function extendsImage(img, size = 600) {
 function AliExpressAio() {
   const utils = new Shuutils('ali-express-aio')
 
-  /** @param {HTMLElement} element */
+  /** @param {HTMLElement} element the product card element to process */
   function processProductCard(element) {
     const img = element.querySelector('.item-img, img')
     if (!(img instanceof HTMLImageElement) || !img.src) {
@@ -58,7 +56,12 @@ function AliExpressAio() {
     if (sibling instanceof HTMLElement) sibling.style.width = '80%'
     element.classList.add('ali-aio-handled')
   }
-  /** @param {HTMLElement} element */
+  /**
+   * Processes a given item row element by locating its image, extending the image,
+   * adjusting wrapper styles, and marking the element as handled.
+   * @param {HTMLElement} element - The DOM element representing the item row to process.
+   * @returns {void} This function does not return a value; it modifies the DOM directly.
+   */
   function processItemRow(element) {
     const img = element.querySelector('.pic-core')
     if (!(img instanceof HTMLImageElement) || !img.src) {
@@ -83,10 +86,12 @@ function AliExpressAio() {
   }
   /**
    * Process the product cards
+   * @returns {void[]} nothing
    */
   const processProductCards = () => utils.findAll('.list.product-card:not(.ali-aio-handled)').map(element => processProductCard(element))
   /**
    * Process the item rows
+   * @returns {void[]} nothing
    */
   const processItemRows = () => utils.findAll('.items-list > .item:not(.ali-aio-handled)').map(element => processItemRow(element))
   /**

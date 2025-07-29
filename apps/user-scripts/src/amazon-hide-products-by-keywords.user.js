@@ -102,7 +102,7 @@ function AmazonHideProductsByKeywords() {
       isFound = titleString.includes(app.excluders[remaining - 1])
       remaining -= 1
     }
-    // eslint-disable-next-line no-magic-numbers
+    // oxlint-disable-next-line no-magic-numbers
     if (isFound) utils.log(`"${titleString.slice(0, 40)}..."`, 'should be excluded')
     else addTitleToSuggestions(titleString)
     const product = titleElement.closest(selectors.product)

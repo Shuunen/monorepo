@@ -12,8 +12,6 @@
 // @version      1.0.6
 // ==/UserScript==
 
-/* eslint-disable jsdoc/require-jsdoc */
-
 function GooglePhotosEasyDelete() {
   const app = { init: false, timeToWait: 200 }
   const utils = new Shuutils('gp-ed')

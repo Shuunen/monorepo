@@ -33,7 +33,6 @@
 // ==/UserScript==
 
 // @ts-nocheck FIX ME later, I dont use Laptop Helper for now
-/* eslint-disable jsdoc/require-jsdoc */
 // oxlint-disable no-magic-numbers
 // oxlint-disable max-lines
 
@@ -137,7 +136,7 @@ const scoresByKeyword = {
 }
 
 // oxlint-disable-next-line no-abusive-eslint-disable
-/* eslint-disable */
+/* oxlint-disable */
 function b2a(a) {
   let c,
     d,
@@ -186,7 +185,7 @@ function a2b(a) {
   for (c = 0; j > c; c++) for (b = e[a.charAt(c)], f = (f << 6) + b, g += 6; g >= 8; ) ((d = 255 & (f >>> (g -= 8))) || j - 2 > c) && (h += i(d))
   return h
 }
-/* eslint-enable */
+/* oxlint-enable */
 
 /**
  * Encode a string to base64
@@ -434,7 +433,6 @@ function LaptopHelper() {
     // biome-ignore lint/correctness/noUndeclaredVariables: it's a global var
     let annotation = RoughNotation.annotate(element, { color, type: 'highlight' })
     annotation.show()
-    // eslint-disable-next-line no-magic-numbers
     if (score >= 80) {
       // @ts-expect-error RoughNotation is a global variable
       // biome-ignore lint/correctness/noUndeclaredVariables: it's a global var
@@ -460,7 +458,6 @@ function LaptopHelper() {
    */
   function clearLinks() {
     for (const link of utils.findAll(selectors.clearLinks, document, true)) {
-      // eslint-disable-next-line no-magic-numbers
       if (typeof link.href !== 'string' || link.href.length < 2) continue
       link.dataset.url = stringToBase64(link.href)
       link.href = '#'
@@ -480,11 +477,9 @@ function LaptopHelper() {
     clearLinks()
     checkItems()
   }
-  // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
   document.addEventListener('scroll', processDebounced)
   utils.onPageChange(processDebounced)
-  // eslint-disable-next-line no-magic-numbers
   setTimeout(processDebounced, 1000)
 }
 

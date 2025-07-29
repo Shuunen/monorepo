@@ -12,8 +12,6 @@
 // @version      1.0.5
 // ==/UserScript==
 
-/* eslint-disable jsdoc/require-jsdoc */
-
 function MbImportFromAmazonMusic() {
   const utils = new Shuutils('amazon-mb-export')
   const selectors = {

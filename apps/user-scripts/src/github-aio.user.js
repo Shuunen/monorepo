@@ -36,7 +36,6 @@ let stopQuerying = false
  */
 function createIssueCountLink(repoFullName, count) {
   const link = document.createElement('a')
-  // eslint-disable-next-line unicorn/no-keyword-prefix
   link.className = `${count > 0 ? '' : 'Link--muted'} tooltipped tooltipped-s mr-3`
   if (count > 0) link.style.color = 'var(--color-ansi-red) !important'
   else if (count === 0) link.style.color = 'var(--color-ansi-green) !important'
@@ -147,7 +146,7 @@ function GithubAio() {
     utils.log(`found ${repos.length} user repos to augment`)
     // important : mark all repos as processed before waiting for the async processes
     for (const repo of repos) repo.classList.add(utils.id)
-    // eslint-disable-next-line no-await-in-loop
+    // oxlint-disable-next-line no-await-in-loop
     for (const repo of repos) await augmentRepo(repo)
     if (!stopQuerying) utils.showSuccess('augmented user repos')
   }
@@ -159,7 +158,8 @@ function GithubAio() {
     utils.debug(`process called because "${reason}"`)
     await augmentUserRepos()
   }
-  const processDebounced = utils.debounce((/** @type {string} */ reason) => process(reason), 300) // eslint-disable-line no-magic-numbers
+  const processDebounceTime = 300
+  const processDebounced = utils.debounce((/** @type {string} */ reason) => process(reason), processDebounceTime)
   globalThis.addEventListener('scroll', () => processDebounced('scroll'))
   utils.onPageChange(() => processDebounced('page-change'))
   document.addEventListener('DOMContentLoaded', () => process('initial-dom-loaded'))
