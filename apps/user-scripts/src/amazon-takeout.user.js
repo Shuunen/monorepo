@@ -13,8 +13,6 @@
 // @version      1.0.3
 // ==/UserScript==
 
-/* eslint-disable jsdoc/require-jsdoc */
-
 function AmazonTakeout() {
   const utils = new Shuutils('amz-tko')
   const selectors = {
@@ -48,7 +46,8 @@ function AmazonTakeout() {
     }
     startTakeout()
   }
-  const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
+  // oxlint-disable-next-line no-magic-numbers
+  const initDebounced = utils.debounce(init, 500)
   initDebounced()
   utils.onPageChange(initDebounced)
 }

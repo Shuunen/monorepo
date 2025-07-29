@@ -47,8 +47,8 @@ function SteamWishlistExport() {
    * @returns {Promise<{ id: string, img: string, price: number, title: string }[]>} - A promise that resolves to an array of games.
    */
   async function getGames(list = []) {
-    // eslint-disable-next-line no-magic-numbers
-    const row = await utils.waitToDetect(selectors.row, 50)
+    const wait = 50
+    const row = await utils.waitToDetect(selectors.row, wait)
     if (row === undefined) return list
     list.push(getGameData(row))
     return await getGames(list)
@@ -66,7 +66,6 @@ function SteamWishlistExport() {
     utils.copyToClipboard(games)
     appButton.style.backgroundColor = 'lightgreen'
     appButton.textContent = `${games.length} games copied to your clipboard`
-    // eslint-disable-next-line require-atomic-updates
     appGames = games
   }
   /**

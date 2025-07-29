@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 /** biome-ignore-all lint/style/useNamingConvention: cant change these */
 
 type LbcAdAttribute = {

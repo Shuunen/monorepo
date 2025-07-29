@@ -92,7 +92,8 @@ function LidlTakeout() {
     }
     startTakeout()
   }
-  const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
+  const initDebouncedTime = 500
+  const initDebounced = utils.debounce(init, initDebouncedTime)
   initDebounced()
   utils.onPageChange(initDebounced)
 }

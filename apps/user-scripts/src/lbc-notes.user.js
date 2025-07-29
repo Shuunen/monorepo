@@ -72,7 +72,6 @@ function multipleAdDisplayed() {
 function getListingIdFromNote(noteElement) {
   const listingIdString = noteElement.dataset.listingId
   if (listingIdString === undefined) return 0
-  // eslint-disable-line no-console
   return Number.parseInt(listingIdString, 10)
 }
 
@@ -84,7 +83,6 @@ function getListingIdFromNote(noteElement) {
 function getNoteIdFromNote(noteElement) {
   const noteIdString = noteElement.dataset.noteId
   if (noteIdString === undefined) return ''
-  // eslint-disable-line no-console
   return noteIdString
 }
 function LbcNotes() {
@@ -112,7 +110,6 @@ function LbcNotes() {
   // biome-ignore lint/correctness/noUndeclaredVariables: globally available
   const { Client, Databases, ID, Query } = Appwrite
   const db = {
-    // eslint-disable-line unicorn/prevent-abbreviations
     databaseId: localStorage.getItem('lbcNotes_databaseId'),
     endpoint: 'https://cloud.appwrite.io/v1',
     notesCollectionId: localStorage.getItem('lbcNotes_notesCollectionId'),
@@ -140,7 +137,8 @@ function LbcNotes() {
     button.textContent = 'Clear notes store'
     button.classList.add(...utils.tw('fixed bottom-5 right-5 z-10 rounded-md border border-gray-600 bg-gray-100 px-2 py-1 opacity-30 transition-all duration-500 ease-in-out hover:opacity-100'))
     button.addEventListener('click', () => {
-      if (!confirm('Are you sure you want to clear all notes ?')) return // eslint-disable-line no-alert
+      // oxlint-disable-next-line no-alert
+      if (!confirm('Are you sure you want to clear all notes ?')) return
       clearStoreCallback()
       globalThis.location.reload()
     })
@@ -207,10 +205,11 @@ function LbcNotes() {
     noteElement.dataset.noteId = note.noteId
     noteElement.classList.remove(config.loading.class)
     noteElement.classList.add(...utils.tw('bg-green-200'))
+    const delay = 1000
     setTimeout(() => {
       noteElement.classList.remove(...utils.tw('bg-green-200'))
       updateNoteStyle(noteElement)
-    }, 1000) // eslint-disable-line no-magic-numbers
+    }, delay)
   }
   /**
    * Callback when a note failed to save
@@ -250,7 +249,8 @@ function LbcNotes() {
       saveNoteFailure({ listingId, noteContent, noteId: '' }, noteElement, error)
     }
   }
-  const saveNoteDebounced = utils.debounce(saveNote, 2000) // eslint-disable-line no-magic-numbers
+  const saveNoteDebounceTime = 2000
+  const saveNoteDebounced = utils.debounce(saveNote, saveNoteDebounceTime)
 
   /**
    * Load a note from AppWrite
@@ -287,7 +287,6 @@ function LbcNotes() {
    */
   function getListingPrice(listingId) {
     utils.log('getListingPrice for listingId', listingId)
-    // eslint-disable-next-line no-useless-assignment
     let text = ''
     const listingElement = utils.findOne(`[data-list-id="${listingId}"]`, document, true)
     if (listingElement) {
@@ -343,10 +342,8 @@ function LbcNotes() {
     const listingId = getListingIdFromNote(noteElement)
     utils.debug(`loading note for listing ${listingId}...`)
     const { noteContent, noteId } = (await loadNoteFromLocalStore(listingId)) ?? (await loadNoteFromAppWrite(listingId))
-    // eslint-disable-next-line require-atomic-updates
     noteElement.dataset.noteId = noteId
     const updatedContent = addTodayPrice(listingId, noteContent)
-    // eslint-disable-next-line require-atomic-updates
     noteElement.textContent = updatedContent
     initNoteStyle(noteElement)
     if (updatedContent !== noteContent) void saveNote(noteElement) // Save the updated content
@@ -471,7 +468,6 @@ function LbcNotes() {
   }
 
   // @ts-expect-error GM_addStyle is globally available
-  // eslint-disable-next-line new-cap
   // biome-ignore lint/correctness/noUndeclaredVariables: should be available
   GM_addStyle(`
     .${utils.id}--note.loading {
@@ -501,7 +497,8 @@ function LbcNotes() {
       opacity: 1;
     }
   `)
-  const processDebounced = utils.debounce(process, 300) // eslint-disable-line no-magic-numbers
+  const processDebounceTime = 300
+  const processDebounced = utils.debounce(process, processDebounceTime)
   globalThis.addEventListener('scroll', () => processDebounced('scroll-event'))
   globalThis.addEventListener('load', () => processDebounced('load-event'))
   utils.onPageChange(() => processDebounced('page-change-event'))

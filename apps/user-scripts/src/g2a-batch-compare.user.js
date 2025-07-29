@@ -91,7 +91,7 @@ function G2aBatchCompare() {
     injectStyles('https://cdn.jsdelivr.net/npm/simple-datatables/dist/style.css')
     const dataTable = new globalThis.simpleDatatables.DataTable(`#${table.id}`, {
       columns: [
-        // eslint-disable-next-line no-magic-numbers
+        // oxlint-disable-next-line no-magic-numbers
         { select: [1, 2, 4], sortable: false },
         { hidden: true, render: value => (value === '0' ? '?' : value), select: 3, sort: 'asc' }, // raw price
       ],
@@ -121,9 +121,7 @@ function G2aBatchCompare() {
         lowestUrl = result.href
       }
     }
-    // eslint-disable-next-line require-atomic-updates
     game.priceLocal = lowestPrice
-    // eslint-disable-next-line require-atomic-updates
     game.priceLocalUrl = lowestUrl
   }
   async function getLocalPrices(progress) {
@@ -132,7 +130,7 @@ function G2aBatchCompare() {
     for (const game of list) {
       index += 1
       progress.textContent = `${index}/${total}`
-      // eslint-disable-next-line no-await-in-loop
+      // oxlint-disable-next-line no-await-in-loop
       await getLocalPrice(game)
     }
   }

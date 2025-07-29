@@ -13,8 +13,6 @@
 // @version      1.1.6
 // ==/UserScript==
 
-/* eslint-disable jsdoc/require-jsdoc */
-
 function DealabsAio() {
   const utils = new Shuutils('dlb-clr')
   /** @type {string[]} */
@@ -94,7 +92,7 @@ function DealabsAio() {
       isFound = text.includes(exclude)
       remaining -= 1
     }
-    // eslint-disable-next-line no-magic-numbers
+    // oxlint-disable-next-line no-magic-numbers
     if (isFound) utils.warn(`"${text.slice(0, 40)}..."`, `is excluded, it contains : "${excluders[remaining] || ''}"`)
     else if (utils.willDebug) element.style.backgroundColor = '#f0fbf0'
     element.style.opacity = isFound ? '0.3' : '1'
@@ -140,7 +138,7 @@ function DealabsAio() {
     excluders = event.target.value.split(',')
     onExcludersUpdate(true)
   }
-  // eslint-disable-next-line no-magic-numbers
+  // oxlint-disable-next-line no-magic-numbers
   const onFilterChangeDebounced = utils.debounce(onFilterChange, 500)
   function insertFilter() {
     utils.log('insert filter...')
@@ -174,7 +172,7 @@ function DealabsAio() {
     process()
   }
   init()
-  // eslint-disable-next-line no-magic-numbers
+  // oxlint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
 
   document.addEventListener('scroll', () => processDebounced())

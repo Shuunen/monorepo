@@ -64,12 +64,11 @@ function LinxoAio() {
     utils.log('processing')
     checkWrongCategories()
   }
-  // eslint-disable-next-line no-magic-numbers
-  const processDebounced = utils.debounce(process, 500)
+  const processDebounceTime = 500
+  const processDebounced = utils.debounce(process, processDebounceTime)
   document.addEventListener('scroll', () => processDebounced())
   utils.onPageChange(processDebounced)
-  // eslint-disable-next-line no-magic-numbers
-  setTimeout(processDebounced, 1000)
+  setTimeout(processDebounced, processDebounceTime)
 }
 
 if (globalThis.window) LinxoAio()

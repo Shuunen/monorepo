@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { expect, it } from 'vitest'
 import { maxScore, calcScore as score, score20Styled } from './amazon-aio.user.js'
 
@@ -11,7 +10,6 @@ import { maxScore, calcScore as score, score20Styled } from './amazon-aio.user.j
  * @param {number} reviewsB - The number of reviews for the second item.
  * @returns {void}
  */
-// eslint-disable-next-line max-params
 function checkGreaterThan(title: string, ratingA: number, reviewsA: number, ratingB: number, reviewsB: number) {
   const scoreA = score(ratingA, reviewsA)
   const scoreB = Number.parseFloat(score(ratingB, reviewsB).toString())

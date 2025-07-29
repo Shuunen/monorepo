@@ -78,7 +78,8 @@ function Autofill() {
     fillLogin()
     fillPhone()
   }
-  const initDebounced = utils.debounce(init, 1000) // eslint-disable-line no-magic-numbers
+  // oxlint-disable-next-line no-magic-numbers
+  const initDebounced = utils.debounce(init, 1000)
   if (document.location.hostname === 'localhost') return
   utils.onPageChange(() => initDebounced())
 }

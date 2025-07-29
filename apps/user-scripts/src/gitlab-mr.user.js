@@ -12,8 +12,6 @@
 // @version      1.1.6
 // ==/UserScript==
 
-/* eslint-disable jsdoc/require-jsdoc */
-
 function GitlabMr() {
   const debounceTime = 300
 

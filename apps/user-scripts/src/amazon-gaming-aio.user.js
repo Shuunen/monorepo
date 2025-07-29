@@ -156,7 +156,6 @@ function AmazonGamingAio() {
    * Clear classnames
    */
   function clearClassnames() {
-    // eslint-disable-next-line unicorn/no-keyword-prefix
     for (const selector of Object.values(clearClassSelectors)) for (const node of utils.findAll(selector, document, true)) node.className = ''
   }
   /**
@@ -290,7 +289,7 @@ function AmazonGamingAio() {
     hideLuna()
     showGridFlex()
   }
-  // eslint-disable-next-line no-magic-numbers
+  // oxlint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
 
   utils.onPageChange(() => processDebounced('page-change'))

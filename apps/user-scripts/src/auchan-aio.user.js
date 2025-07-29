@@ -12,8 +12,6 @@
 // @version      1.0.3
 // ==/UserScript==
 
-/* eslint-disable jsdoc/require-jsdoc */
-
 function AuchanAio() {
   const utils = new Shuutils('auchan-aio')
   const uselessSelectors = {
@@ -81,7 +79,8 @@ function AuchanAio() {
     enhancePricePerKgReadability()
   }
 
-  const processDebounced = utils.debounce(process, 300) // eslint-disable-line no-magic-numbers
+  // oxlint-disable-next-line no-magic-numbers
+  const processDebounced = utils.debounce(process, 300)
   globalThis.addEventListener('focus', () => processDebounced('focus'))
   globalThis.addEventListener('click', () => processDebounced('click'))
   globalThis.addEventListener('scroll', () => processDebounced('scroll'))

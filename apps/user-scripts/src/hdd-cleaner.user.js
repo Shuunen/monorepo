@@ -19,7 +19,6 @@
 // ==/UserScript==
 
 // oxlint-disable no-magic-numbers
-/* eslint-disable jsdoc/require-jsdoc */
 
 function HddCleaner() {
   const id = 'hdd-clr'
@@ -54,7 +53,6 @@ function HddCleaner() {
     if (!matches) return false
     let size = 0
     for (const match of matches) {
-      // eslint-disable-next-line prefer-const
       let [, mSize, mUnit] = match.match(regex.size) ?? []
       // @ts-expect-error FIX ME later
       if (mUnit === 'to' || mUnit === 'tb') mSize *= 1000 // align sizes to Go, may be slightly different according to TO vs TB

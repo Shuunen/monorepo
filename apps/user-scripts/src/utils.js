@@ -3,7 +3,6 @@
 /**
  * Collection of utility functions to help with common tasks in my user scripts.
  */
-// eslint-disable-next-line no-restricted-syntax
 class Shuutils {
   id = ''
   version = '2.6.6'
@@ -27,7 +26,7 @@ class Shuutils {
    * @param {number} padding - The padding in pixels between the toast and the bottom of the window.
    * @example utils.#toastAdd('error', 'hello world', 4000, 20)
    */
-  // eslint-disable-next-line max-params
+  // oxlint-disable-next-line max-params
   #toastAdd(type, message, delay = 0, padding = 14) {
     const element = document.createElement('div')
     element.setAttribute('class', 'shu-toast')
@@ -132,7 +131,7 @@ class Shuutils {
    */
   debounce(callback, waitFor) {
     /** @type {ReturnType<typeof setTimeout>} */
-    // eslint-disable-next-line init-declarations
+    // oxlint-disable-next-line init-declarations
     let timeout
     return async (/** @type {any} */ ...parameters) =>
       await new Promise(resolve => {
@@ -204,7 +203,8 @@ class Shuutils {
     input.focus()
     for (const char of value) {
       input.value += char
-      await this.sleep(this.getRandomNumber(40, 80)) // eslint-disable-line no-await-in-loop
+      // oxlint-disable-next-line no-await-in-loop
+      await this.sleep(this.getRandomNumber(40, 80))
     }
     input.dispatchEvent(new Event('input', { bubbles: true }))
     input.dispatchEvent(new Event('change', { bubbles: true }))
@@ -524,7 +524,7 @@ class Shuutils {
   /**
    * WaitToDetect will wait for an element to be detected in the DOM and return it
    * @param {string} selector the css selector to detect
-   * @param {number} wait in ms, the time to wait between each try
+   * @param {number} wait in ms, the time to wait between each try, defaults to 500ms
    * @param {number} nbTries the number of tries already done, don't use it
    * @returns {Promise<HTMLElement|undefined>} the element found or undefined
    */
@@ -535,7 +535,7 @@ class Shuutils {
     if (nbTries > 5) {
       this.log(`stop searching after 5 fails to detect : "${selector}"`)
       return undefined
-    } // eslint-disable-line unicorn/no-useless-undefined
+    }
     return await this.waitToDetect(selector, wait, nbTries + 1)
   }
   /**

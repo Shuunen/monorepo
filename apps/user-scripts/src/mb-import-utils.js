@@ -143,7 +143,6 @@ function addMbSubmit(form, label = 'Export to MusicBrainz') {
  */
 // biome-ignore lint/correctness/noUnusedVariables: it is used
 function insertMbForm({ app, artist, date, label, title, tracks, url, urlType }) {
-  // eslint-disable-next-line no-console
   if (!title || !artist) return
   const form = createMbForm(app)
   addMbField(form, 'name', title)

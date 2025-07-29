@@ -12,8 +12,6 @@
 // @version      1.0.3
 // ==/UserScript==
 
-/* eslint-disable jsdoc/require-jsdoc */
-
 function InstagramWide() {
   const utils = new Shuutils('instagram-wide')
   const uselessSelectors = {
@@ -78,8 +76,8 @@ function InstagramWide() {
     enlargeWrappers()
     showVideoControls()
   }
-
-  const processDebounced = utils.debounce((/** @type {string | undefined} */ reason) => process(reason), 300) // eslint-disable-line no-magic-numbers
+  const processDebounceTime = 300
+  const processDebounced = utils.debounce((/** @type {string | undefined} */ reason) => process(reason), processDebounceTime)
   globalThis.addEventListener('scroll', () => processDebounced('scroll'))
   utils.onPageChange(() => processDebounced('page-change'))
 }

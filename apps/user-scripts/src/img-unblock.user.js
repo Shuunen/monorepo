@@ -12,8 +12,6 @@
 // @version      1.1.5
 // ==/UserScript==
 
-/* eslint-disable jsdoc/require-jsdoc */
-
 function ImgUnblock() {
   const proxyUrl = 'https://proxy.duckduckgo.com/iu/?u='
   const utils = new Shuutils('img-unblock')
@@ -41,8 +39,8 @@ function ImgUnblock() {
       element.parentElement.style.flexDirection = 'column'
     }
   }
-  // eslint-disable-next-line no-magic-numbers
-  const processDebounced = utils.debounce(process, 500)
+  const processDebounceTime = 500
+  const processDebounced = utils.debounce(process, processDebounceTime)
   utils.log('set scroll listener')
   document.addEventListener('scroll', () => processDebounced())
   utils.onPageChange(processDebounced)

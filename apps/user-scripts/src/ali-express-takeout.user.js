@@ -13,7 +13,6 @@
 // @version      1.0.4
 // ==/UserScript==
 
-/* eslint-disable jsdoc/require-jsdoc */
 // oxlint-disable no-magic-numbers
 
 function AliExpressTakeout() {
