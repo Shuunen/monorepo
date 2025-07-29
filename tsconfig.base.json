@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "composite": true,
     "customConditions": [
       "development"
@@ -18,6 +19,17 @@
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
+    "paths": {
+      "@shuunen/components": [
+        "libs/components/src/index.ts"
+      ],
+      "@shuunen/shuutils": [
+        "libs/shuutils/src/index.ts"
+      ],
+      "@shuunen/vite-plugins": [
+        "libs/vite-plugins/src/index.ts"
+      ]
+    },
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022"
