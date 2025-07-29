@@ -1,7 +1,6 @@
 .cache
 .cursor/rules/nx-rules.mdc
 .DS_Store
-.DS_Store
 .env
 .github/instructions/nx.instructions.md
 .nx/cache
