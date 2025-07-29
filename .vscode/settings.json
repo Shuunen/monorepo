@@ -2,6 +2,7 @@
   "cSpell.words": [
     "camwiegert",
     "cssmodule",
+    "dircolors",
     "esbuild",
     "jozzo",
     "linxo",
@@ -9,6 +10,7 @@
     "nrwl",
     "oxlint",
     "phomemo",
+    "pyenv",
     "Registrator",
     "resultx",
     "shuutils",
@@ -17,6 +19,7 @@
     "vitest",
     "yoda",
     "ytdl",
+    "zenity",
     "zxing"
   ],
   "javascript.format.insertSpaceAfterConstructor": false,
