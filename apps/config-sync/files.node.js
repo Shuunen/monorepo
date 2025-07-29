@@ -25,7 +25,7 @@ const configs = [
   // { source: `${appData}/HandBrake/settings.json`, renameTo: 'handbrake-settings.json' },
   { source: `${appData}/kupfer/kupfer.cfg` },
   { source: `${appData}/mpv/mpv.conf` },
-  { source: `${appData}/qBittorrent/qBittorrent.conf` },
+  { removeLinesMatching: [/@Size/, /(Qt6|qt5)/, /(Cookies|CurrentTab|geometry|LastViewedPage|Sizes|Width)=/], source: `${appData}/qBittorrent/qBittorrent.conf` },
   { source: `${home}/.gitconfig-anatec` },
   { source: `${home}/.gitconfig-collectif-energie` },
   { source: `${home}/.gitconfig-github` },
