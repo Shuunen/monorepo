@@ -30,6 +30,7 @@
   "[xml]": {
     "editor.defaultFormatter": "mikeburgh.xml-format"
   },
+  "biome.suggestInstallingGlobally": false,
   "breadcrumbs.enabled": true,
   "chat.agent.enabled": true,
   "chat.editing.alwaysSaveWithGeneratedChanges": true,
@@ -115,6 +116,7 @@
     "darkred",
     "Datepicker",
     "Dealabs",
+    "debian",
     "Debounced",
     "deeppink",
     "deno",
