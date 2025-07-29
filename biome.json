@@ -13,15 +13,27 @@
   "files": {
     "experimentalScannerIgnores": [
       ".git",
+      ".nx",
+      "coverage",
       "dist",
-      "node_modules"
+      "node_modules",
+      "out-tsc",
+      "storybook-static",
+      "test-output"
     ],
     "ignoreUnknown": false,
     "includes": [
       "**",
+      "!**/.git/**",
+      "!**/.nx/**",
       "!**/components/ui/**",
+      "!**/coverage/**",
       "!**/dist/**",
-      "!**/routeTree.gen.ts"
+      "!**/node_modules/**",
+      "!**/out-tsc/**",
+      "!**/routeTree.gen.ts",
+      "!**/storybook-static/**",
+      "!**/test-output/**"
     ]
   },
   "formatter": {

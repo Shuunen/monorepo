@@ -41,11 +41,17 @@
     "window": "readonly"
   },
   "ignorePatterns": [
+    "**/components/ui",
+    ".git",
+    ".nx",
     "*.d.ts",
-    "routeTree.gen.ts",
-    "node_modules",
+    "coverage",
     "dist",
-    "coverage"
+    "node_modules",
+    "out-tsc",
+    "routeTree.gen.ts",
+    "storybook-static",
+    "test-output"
   ],
   "overrides": [
     {
