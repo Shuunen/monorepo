@@ -15,6 +15,7 @@
 *.mp4
 *.pem
 *.tgz
+*.tsbuildinfo
 connect.lock
 coverage
 dist
@@ -25,7 +26,6 @@ storybook-static
 test-output
 Thumbs.db
 tmp
-tsconfig.lib.tsbuildinfo
 typings
 vite.config.*.timestamp*
 vitest.config.*.timestamp*

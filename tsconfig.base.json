@@ -27,7 +27,7 @@
         "libs/shuutils/src/index.ts"
       ],
       "@shuunen/vite-plugins": [
-        "libs/vite-plugins/src/index.ts"
+        "libs/vite-plugins/src/index.js"
       ]
     },
     "skipLibCheck": true,
