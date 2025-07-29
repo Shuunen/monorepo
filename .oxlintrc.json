@@ -206,6 +206,7 @@
     ],
     "eslint/no-undefined": "off",
     "eslint/yoda": "off",
+    "explicit-module-boundary-types": "off",
     "extensions": "off",
     "func-style": [
       "error",
