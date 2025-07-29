@@ -63,6 +63,7 @@ const linuxConfigs = [
   { source: `${home}/.local/share/applications/league-of-legends.desktop` },
   { source: `${home}/.local/share/applications/lol-practice-5v5.desktop` },
   { source: `${home}/.local/share/applications/stuff-finder.desktop` },
+  { source: `${home}/.local/share/kio/servicemenus/take-screenshot.desktop` },
   // { source: `${home}/.local/share/nautilus/scripts/Shrink all pdf`},
   // { source: `${home}/.local/share/nautilus/scripts/Take screenshot`},
 ]
