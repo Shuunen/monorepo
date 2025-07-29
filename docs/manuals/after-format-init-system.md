@@ -277,17 +277,8 @@ echo -e "optional : you can manually run 'sudo apt install ttf-mscorefonts-insta
 
 ```bash
 sudo snap install node --classic --channel=18 # sudo dnf module install nodejs:18/common # not working on Nobara 38
-sudo dnf install neofetch git aria2 nano curl -y # vvv below is for desktop only vvv
+sudo dnf install neofetch git aria2 nano curl golang -y # vvv below is for desktop only vvv
 sudo dnf install pinta gparted meld mediainfo mkvtoolnix mkvtoolnix-gui mpv xsel shotwell vlc ffmpeg qbittorrent -y
-```
-
-To use XBox 360 controller on Nobara :
-
-```bash
-sudo dnf copr enable petrb/xboxdrv -y
-sudo dnf install xboxdrv -y
-lsmod | grep xpad # should return nothing, if not : sudo rmmod xpad / sudo rmmod hid_xpadneo / ...
-
 ```
 
 </details>
