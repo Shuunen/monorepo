@@ -14,7 +14,5 @@ const preview: Preview = {
   },
 }
 
-console.log('Storybook preview configuration loaded')
-
 // oxlint-disable-next-line no-default-export
 export { preview as default }
