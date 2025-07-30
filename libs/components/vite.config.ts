@@ -1,3 +1,4 @@
+import path from 'node:path'
 import { uniqueMark } from '@shuunen/vite-plugins'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
@@ -18,6 +19,11 @@ export default defineConfig({
     host: 'localhost',
     port: 4300,
   },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   root: __dirname,
   server: {
     host: 'localhost',
@@ -25,7 +31,8 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      exclude: ['src/**/*.tsx', 'src/index.ts'],
+      // enabled: false, // it's not overridden by the command line, so we do the below trick ^^'
+      exclude: ['src'],
       include: ['src'],
       provider: 'v8' as const,
       reportsDirectory: './test-output/vitest/coverage',

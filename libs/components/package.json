@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
     "@shuunen/shuutils": "workspace:*",
     "@shuunen/vite-plugins": "workspace:*"
   },

@@ -1,6 +1,4 @@
-// biome-ignore lint/correctness/noNodejsModules: it's ok here
 import path from 'node:path'
-// biome-ignore lint/correctness/noNodejsModules: it's ok here
 import { fileURLToPath } from 'node:url'
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin'
 import { defineConfig } from 'vitest/config'
@@ -16,6 +14,11 @@ export default defineConfig({
     // See options at: https://storybook.js.org/docs/writing-tests/test-addon#storybooktest
     storybookTest({ configDir: path.join(dirname, '.storybook') }),
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   test: {
     browser: {
       enabled: true,
