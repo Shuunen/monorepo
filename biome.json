@@ -18,6 +18,7 @@
       "dist",
       "node_modules",
       "out-tsc",
+      "shadcn",
       "storybook-static",
       "test-output"
     ],
@@ -26,12 +27,12 @@
       "**",
       "!**/.git/**",
       "!**/.nx/**",
-      "!**/components/ui/**",
       "!**/coverage/**",
       "!**/dist/**",
       "!**/node_modules/**",
       "!**/out-tsc/**",
       "!**/routeTree.gen.ts",
+      "!**/shadcn/**",
       "!**/storybook-static/**",
       "!**/test-output/**",
       "!**/types/**/*.d.ts"
@@ -176,6 +177,7 @@
     },
     {
       "includes": [
+        "**/*.config.*",
         "**/*.cli.*",
         "**/*.node.*",
         "**/*.test.*"

@@ -11,7 +11,7 @@ type Story = StoryObj<typeof Landing>
 
 export const Basic: Story = {
   args: {
-    status: 'the status text',
+    status: 'This is a status message.',
     subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     title: 'Welcome to Landing',
   },

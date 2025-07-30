@@ -41,7 +41,6 @@
     "window": "readonly"
   },
   "ignorePatterns": [
-    "**/components/ui",
     ".git",
     ".nx",
     "*.d.ts",
@@ -50,6 +49,7 @@
     "node_modules",
     "out-tsc",
     "routeTree.gen.ts",
+    "shadcn",
     "storybook-static",
     "test-output"
   ],
