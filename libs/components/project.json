@@ -1,12 +1,30 @@
 {
   "name": "components",
   "targets": {
-    "storybook": {
+    "run-storybook": {
       "executor": "nx:run-commands",
       "options": {
         "command": "storybook dev --port 6006",
         "cwd": "libs/components"
       }
+    },
+    "test-storybook": {
+      "cache": true,
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/src/**/*.{ts,tsx,js,jsx}",
+        "{projectRoot}/src/**/*.stories.{ts,tsx,js,jsx}",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/vitest.storybook.config.ts",
+        "{projectRoot}/vite.config.ts",
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/package.json"
+      ],
+      "options": {
+        "command": "vitest --config=vitest.storybook.config.ts --run",
+        "cwd": "libs/components"
+      },
+      "outputs": []
     },
     "typecheck": {
       "outputs": [

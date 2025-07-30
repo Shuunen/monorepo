@@ -32,7 +32,7 @@ export default defineConfig({
     },
     environment: 'happy-dom',
     globals: true,
-    // include: ['src/**/*.test.{ts,tsx}'], // storybook complain if we keep this include
+    include: ['src/**/*.test.{ts,tsx}'],
     reporters: ['default'],
     watch: false,
   },
