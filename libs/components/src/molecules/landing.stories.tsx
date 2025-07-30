@@ -16,6 +16,6 @@ export const Basic: Story = {
     title: 'Welcome to Landing',
   },
   play: async ({ canvas }) => {
-    await expect(canvas.getByText(/Welcome to Landing/gi)).toBeTruthy()
+    await expect(canvas.getByText('Welcome to Landing')).toBeTruthy()
   },
 }
