@@ -34,7 +34,7 @@ export default defineConfig({
         100: true,
       },
     },
-    // environment: 'jsdom',
+    // environment: 'happy-dom',
     globals: true,
     include: ['src/**/*.test.{ts,tsx}'],
     pool: 'threads',
