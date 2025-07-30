@@ -1,10 +1,10 @@
 import Chip, { type ChipOwnProps } from '@mui/material/Chip'
 import Tooltip from '@mui/material/Tooltip'
 import { copyToClipboard } from '@shuunen/shuutils'
-import { useCallback } from 'preact/hooks'
-import { route } from 'preact-router'
+import { useCallback } from 'react'
 import type { MuiIcon } from '../types/icons.types'
 import { logger } from '../utils/logger.utils'
+import { navigate } from '../utils/navigation.utils'
 
 type Properties = Readonly<{
   color?: ChipOwnProps['color']
@@ -18,11 +18,11 @@ const chipsStyle = { height: 28, paddingTop: 0.3 }
 
 export function AppItemDetailsChip({ color = 'default', icon: Icon, label, link, tooltip }: Properties) {
   const onChipClick = useCallback(
-    async (event: MouseEvent) => {
+    async (event: React.MouseEvent<HTMLDivElement>) => {
       event.stopPropagation()
       logger.debug('onChipClick', { event })
       if (link !== undefined) {
-        route(link)
+        navigate(link)
         return
       }
       const target = event.currentTarget as HTMLElement

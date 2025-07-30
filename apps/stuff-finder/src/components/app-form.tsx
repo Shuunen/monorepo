@@ -1,8 +1,6 @@
 import Button from '@mui/material/Button'
-import { useSignalEffect } from '@preact/signals'
 import { debounce, functionReturningVoid, off, on, parseJson, Result, readClipboard } from '@shuunen/shuutils'
-import { useCallback, useState } from 'preact/hooks'
-import type { ReactNode } from 'react'
+import { type ReactNode, useCallback, useEffect, useState } from 'react'
 import { alignClipboard, type Form, validateForm } from '../utils/forms.utils'
 import { logger } from '../utils/logger.utils'
 import { colSpanClass, gridClass } from '../utils/theme.utils'
@@ -30,7 +28,7 @@ export function AppForm<FormType extends Form>({ children, error: parentError = 
   }
 
   const onFormSubmit = useCallback(
-    (event: Event) => {
+    (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       onSubmit?.(form)
     },
@@ -84,38 +82,36 @@ export function AppForm<FormType extends Form>({ children, error: parentError = 
     setForm(futureForm)
   }, [form])
 
-  useSignalEffect(
-    useCallback(() => {
-      const handler = on('focus', () => {
-        // oxlint-disable-next-line max-nested-callbacks
-        checkDataInClipboard().catch(error => {
-          logger.showError('error checking clipboard data on focus', error)
-        })
+  useEffect(() => {
+    const handler = on('focus', () => {
+      // oxlint-disable-next-line max-nested-callbacks
+      checkDataInClipboard().catch(error => {
+        logger.showError('error checking clipboard data on focus', error)
       })
-      if (document.hasFocus())
-        checkDataInClipboard().catch(error => {
-          logger.showError('error checking clipboard data on initial focus', error)
-        })
-      return () => {
-        off(handler)
-      }
-    }, [checkDataInClipboard]),
-  )
+    })
+    if (document.hasFocus())
+      checkDataInClipboard().catch(error => {
+        logger.showError('error checking clipboard data on initial focus', error)
+      })
+    return () => {
+      off(handler)
+    }
+  }, [checkDataInClipboard])
 
   const errorMessage = parentError.length > 0 ? parentError : form.errorMessage
   const canSubmit = form.isValid && form.isTouched && errorMessage.length === 0
 
   return (
-    <form autoComplete="off" class={`grid w-full gap-6 md:min-w-[44rem] ${gridClass(form.columns)}`} noValidate={true} onSubmit={onFormSubmit} spellcheck={false}>
+    <form autoComplete="off" className={`grid w-full gap-6 md:min-w-[44rem] ${gridClass(form.columns)}`} noValidate={true} onSubmit={onFormSubmit} spellCheck={false}>
       {Object.entries(form.fields).map(([id, field]) => (
-        <div class={`grid w-full ${field.isVisible ? '' : 'hidden'} ${colSpanClass(field.columns)}`} key={id}>
+        <div className={`grid w-full ${field.isVisible ? '' : 'hidden'} ${colSpanClass(field.columns)}`} key={id}>
           {field.type === 'text' && <AppFormFieldText field={field} form={form} id={id} suggestions={suggestions} updateField={updateField} />}
           {field.type === 'checkbox' && <AppFormFieldCheckbox field={field} id={id} updateField={updateField} />}
           {field.type === 'select' && <AppFormFieldSelect field={field} form={form} id={id} updateField={updateField} />}
         </div>
       ))}
-      <div class="order-last flex justify-center md:col-span-full">
-        {Boolean(errorMessage) && Boolean(form.isTouched) && <p class="text-red-500">{errorMessage}</p>}
+      <div className="order-last flex justify-center md:col-span-full">
+        {Boolean(errorMessage) && Boolean(form.isTouched) && <p className="text-red-500">{errorMessage}</p>}
         {onSubmit !== undefined && (
           <Button disabled={!canSubmit} type="submit" variant="contained">
             Save

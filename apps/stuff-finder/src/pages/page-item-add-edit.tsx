@@ -2,10 +2,9 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import SaveIcon from '@mui/icons-material/Save'
 import Button from '@mui/material/Button'
-import { signal, useSignalEffect } from '@preact/signals'
 import { dom, objectSum, off, on, Result } from '@shuunen/shuutils'
-import { useCallback, useRef, useState } from 'preact/hooks'
-import { route } from 'preact-router'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { AppForm } from '../components/app-form'
 import { AppPageCard } from '../components/app-page-card'
 import { defaultImage } from '../constants'
@@ -13,6 +12,7 @@ import type { Item } from '../types/item.types'
 import { itemPhotoToImageUrl } from '../utils/database.utils'
 import { addItem, areItemsEquivalent, formToItem, type itemForm, itemToForm, updateItem } from '../utils/item.utils'
 import { logger } from '../utils/logger.utils'
+import { navigate } from '../utils/navigation.utils'
 import { state } from '../utils/state.utils'
 
 function onImageError(image: HTMLImageElement) {
@@ -29,7 +29,8 @@ function checkExisting(item: Item) {
 }
 
 // oxlint-disable-next-line max-lines-per-function
-export function PageItemAddEdit({ id = '', isEdit = false }: Readonly<{ id?: string; isEdit?: boolean }>) {
+export function PageItemAddEdit({ isEdit = false }: Readonly<{ isEdit?: boolean }>) {
+  const { id = '' } = useParams<{ id: string }>()
   logger.debug('PageItemAddEdit', { id, isEdit })
   const initialItem = state.items.find(one => one.$id === id)
   const [initialSum] = useState(initialItem ? objectSum(initialItem) : 0)
@@ -39,7 +40,6 @@ export function PageItemAddEdit({ id = '', isEdit = false }: Readonly<{ id?: str
   const [canSubmit, setCanSubmit] = useState(false)
   const [lastForm, setLastForm] = useState(initialForm)
   const photoReference = useRef<HTMLImageElement>(null)
-  const photo = signal(photoReference)
   type Form = typeof itemForm
 
   const checkExistingSetError = useCallback(
@@ -58,7 +58,7 @@ export function PageItemAddEdit({ id = '', isEdit = false }: Readonly<{ id?: str
   const onSubmitSuccess = useCallback(
     (item: Item) => {
       if (!isEdit) {
-        route(`/item/print/${item.$id}`)
+        navigate(`/item/print/${item.$id}`)
         return
       }
       logger.showSuccess('item updated successfully')
@@ -84,18 +84,15 @@ export function PageItemAddEdit({ id = '', isEdit = false }: Readonly<{ id?: str
     setIsLoading(false)
   }, [checkExistingSetError, isEdit, lastForm, onSubmitSuccess])
 
-  const handlePhoto = useCallback(
-    (form: Form) => {
-      const field = form.fields.photo
-      if (field.value === '') return Result.ok('photo form field value is empty')
-      if (!field.isValid) return Result.error(`photo form field value "${field.value}" is not valid`)
-      const url = itemPhotoToImageUrl(field.value)
-      form.fields.photo.value = url
-      photo.value.current?.setAttribute('src', url)
-      return Result.ok(`photo url set to : ${url}`)
-    },
-    [photo.value],
-  )
+  const handlePhoto = useCallback((form: Form) => {
+    const field = form.fields.photo
+    if (field.value === '') return Result.ok('photo form field value is empty')
+    if (!field.isValid) return Result.error(`photo form field value "${field.value}" is not valid`)
+    const url = itemPhotoToImageUrl(field.value)
+    form.fields.photo.value = url
+    photoReference.current?.setAttribute('src', url)
+    return Result.ok(`photo url set to : ${url}`)
+  }, [])
 
   const onChange = useCallback(
     (form: Form) => {
@@ -112,40 +109,38 @@ export function PageItemAddEdit({ id = '', isEdit = false }: Readonly<{ id?: str
     [checkExistingSetError, error, initialItem, initialSum, handlePhoto],
   )
 
-  useSignalEffect(
-    useCallback(() => {
-      if (photo.value.current === null) {
-        logger.showError('photo not found')
-        return () => ({})
-      }
-      const handler = on(
-        'error',
-        () => {
-          onImageError(photo.value.current ?? dom('img'))
-        },
-        photo.value.current,
-      )
-      return () => {
-        off(handler)
-      }
-    }, [photo.value]),
-  )
+  useEffect(() => {
+    if (photoReference.current === null) {
+      logger.showError('photo not found')
+      return
+    }
+    const handler = on(
+      'error',
+      () => {
+        onImageError(photoReference.current ?? dom('img'))
+      },
+      photoReference.current,
+    )
+    return () => {
+      off(handler)
+    }
+  }, [])
 
   if (isEdit && initialItem === undefined) return <>Cannot edit, item with id &quot;{id}&quot; not found ;(</>
 
   return (
     <AppPageCard cardTitle={`${isEdit ? 'Edit' : 'Add'} item`} icon={isEdit ? EditOutlinedIcon : AddCircleOutlineIcon} pageCode={`item-${isEdit ? 'edit' : 'add'}`} pageTitle={`${isEdit ? 'Edit' : 'Add'} item`}>
-      <div class="mb-20 flex max-h-[90%] flex-col overflow-y-auto overflow-x-hidden md:mb-0 md:max-h-full">
-        {Boolean(isEdit) && <p class="text-center">Please fill in the form below to edit the item, you can change any field you want 🔄</p>}
-        {!isEdit && <p class="text-center">Please fill in the form below to add a new item, no worry, you will be able to edit it later if needed ✏️</p>}
+      <div className="mb-20 flex max-h-[90%] flex-col overflow-y-auto overflow-x-hidden md:mb-0 md:max-h-full">
+        {Boolean(isEdit) && <p className="text-center">Please fill in the form below to edit the item, you can change any field you want 🔄</p>}
+        {!isEdit && <p className="text-center">Please fill in the form below to add a new item, no worry, you will be able to edit it later if needed ✏️</p>}
         {id !== '' && initialForm.fields.reference.value === '' && <p>Here is the keyword you search previously : {id}</p>}
-        <div class="flex flex-col items-end gap-6 md:flex-row">
-          <img alt="item visual" class="w-auto justify-self-center p-4 md:max-h-80 md:w-1/3 md:max-w-72" ref={photoReference} src={itemPhotoToImageUrl(initialForm.fields.photo.value)} />
-          <div class="w-full place-self-center pr-4 md:pr-0">
+        <div className="flex flex-col items-end gap-6 md:flex-row">
+          <img alt="item visual" className="w-auto justify-self-center p-4 md:max-h-80 md:w-1/3 md:max-w-72" ref={photoReference} src={itemPhotoToImageUrl(initialForm.fields.photo.value)} />
+          <div className="w-full place-self-center pr-4 md:pr-0">
             <AppForm error={error} initialForm={initialForm} onChange={onChange} />
           </div>
         </div>
-        <div class="flex justify-center">
+        <div className="flex justify-center">
           <Button disabled={!canSubmit} loading={isLoading} onClick={onSubmit} startIcon={<SaveIcon />} variant="contained">
             {isEdit ? 'Save' : 'Create'}
           </Button>

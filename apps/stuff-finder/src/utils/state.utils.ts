@@ -1,10 +1,10 @@
 import { createState, debounce, isBrowserEnvironment, isTestEnvironment } from '@shuunen/shuutils'
-import { route } from 'preact-router'
 import { defaultCredentials } from '../constants'
 import type { Item } from '../types/item.types'
 import { defaultSound } from '../types/sounds.types'
 import { type AppStatus, defaultStatus } from '../types/status.types'
 import { type Display, defaultTheme } from '../types/theme.types'
+import { navigate } from './navigation.utils'
 import { storage } from './storage.utils'
 
 /* c8 ignore start */
@@ -15,8 +15,8 @@ import { storage } from './storage.utils'
  */
 function onStatusChangeSync(status: AppStatus) {
   if (isTestEnvironment()) return
-  if (status === 'settings-required') route('/settings')
-  if (status === 'ready' && document.location.pathname.includes('/settings')) route('/')
+  if (status === 'settings-required') navigate('/settings')
+  if (status === 'ready' && document.location.pathname.includes('/settings')) navigate('/')
 }
 
 const laptopWidth = 1500

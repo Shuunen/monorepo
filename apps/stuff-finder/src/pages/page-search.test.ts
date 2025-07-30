@@ -1,11 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { mockItem } from '../utils/mock.utils'
+import { navigate } from '../utils/navigation.utils'
 import { state } from '../utils/state.utils'
 import { search } from './page-search.const'
 
-// Mock preact-router
-vi.mock('preact-router', () => ({
-  route: vi.fn(),
+// Mock navigation utils
+vi.mock('../utils/navigation.utils', () => ({
+  navigate: vi.fn(),
 }))
 
 // Mock fuse.js/basic
@@ -55,11 +56,9 @@ describe('page-search.const', () => {
   })
 
   it('search B should route to item details when exact reference match found', async () => {
-    const { route } = await import('preact-router')
-
     const result = await search('REF123')
 
-    expect(route).toHaveBeenCalledWith('/item/details/1/single')
+    expect(vi.mocked(navigate)).toHaveBeenCalledWith('/item/details/1/single')
     expect(result).toMatchInlineSnapshot(`
       {
         "header": "",
@@ -69,11 +68,9 @@ describe('page-search.const', () => {
   })
 
   it('search C should route to item details when exact barcode match found', async () => {
-    const { route } = await import('preact-router')
-
     const result = await search('BAR456')
 
-    expect(route).toHaveBeenCalledWith('/item/details/2/single')
+    expect(vi.mocked(navigate)).toHaveBeenCalledWith('/item/details/2/single')
     expect(result).toMatchInlineSnapshot(`
       {
         "header": "",

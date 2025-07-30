@@ -1,8 +1,8 @@
 import { sanitize } from '@shuunen/shuutils'
 import type { IFuseOptions } from 'fuse.js/basic'
-import { route } from 'preact-router'
 import type { Item } from '../types/item.types'
 import { logger } from '../utils/logger.utils'
+import { navigate } from '../utils/navigation.utils'
 import { state } from '../utils/state.utils'
 
 // https://fusejs.io/
@@ -47,7 +47,7 @@ export async function search(input: string) {
   const fuse = new Fuse(state.items, fuseOptions)
   const result = state.items.find(item => item.reference.toLowerCase() === input.toLowerCase() || item.barcode.toLowerCase() === input.toLowerCase())
   if (result !== undefined) {
-    route(`/item/details/${result.$id}/single`)
+    navigate(`/item/details/${result.$id}/single`)
     return { header: '', results: [] }
   }
   const results = fuse.search(sanitize(input)).map(item => item.item)

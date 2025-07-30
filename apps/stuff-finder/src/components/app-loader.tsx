@@ -4,7 +4,7 @@ export function AppLoader({ isLoading = true, path }: Readonly<{ isLoading?: boo
   logger.debug('AppLoader', { isLoading, path })
   return (
     isLoading && (
-      <div class="fixed left-0 top-0 z-50 flex size-full flex-col items-center justify-center bg-white/50" data-component="loader">
+      <div className="fixed left-0 top-0 z-50 flex size-full flex-col items-center justify-center bg-white/50" data-component="loader">
         Loading...
       </div>
     )

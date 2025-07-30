@@ -13,11 +13,11 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { copyToClipboard } from '@shuunen/shuutils'
-import { useState } from 'preact/hooks'
-import { route } from 'preact-router'
+import { useState } from 'react'
 import type { Item } from '../types/item.types'
 import { deleteItem } from '../utils/item.utils'
 import { logger } from '../utils/logger.utils'
+import { navigate } from '../utils/navigation.utils'
 
 // oxlint-disable-next-line max-lines-per-function
 export function AppItemDetailsActions({ item }: Readonly<{ item: Item }>) {
@@ -32,26 +32,26 @@ export function AppItemDetailsActions({ item }: Readonly<{ item: Item }>) {
     }
     const noBack = globalThis.history.length === 1
     logger.showSuccess(`item deleted, going ${noBack ? 'home' : 'back'}...`)
-    if (noBack) route('/')
+    if (noBack) navigate('/')
     else globalThis.history.back()
   }
 
   function doEdit() {
     logger.info('editing item', item)
-    route(`/item/edit/${item.$id}`)
+    navigate(`/item/edit/${item.$id}`)
   }
 
   async function doClone() {
     const data = { barcode: item.barcode, box: item.box, brand: item.brand, details: item.details, drawer: item.drawer, name: item.name, photos: item.photos, price: item.price.toString(), reference: item.reference, status: item.status }
     logger.info('cloning item', data)
     await copyToClipboard(data)
-    route('/item/add')
+    navigate('/item/add')
   }
 
   // oxlint-disable-next-line no-null
   const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null)
   const isOpen = Boolean(anchorElement)
-  const handleClick = (event: MouseEvent) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElement(event.currentTarget as HTMLElement | null)
   }
   const closeMenu = () => {

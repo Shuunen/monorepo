@@ -2,19 +2,10 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "preact",
     "lib": [
       "dom"
     ],
     "outDir": "dist",
-    "paths": {
-      "react": [
-        "./node_modules/preact/compat/"
-      ],
-      "react-dom": [
-        "./node_modules/preact/compat/"
-      ]
-    },
     "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
     "types": [

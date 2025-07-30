@@ -4,14 +4,13 @@ import CardMedia from '@mui/material/CardMedia'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
-import { memo } from 'preact/compat'
-import { useCallback, useMemo, useState } from 'preact/hooks'
-import { route } from 'preact-router'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { formatCurrency } from '../pages/page-metrics.utils'
 import type { Item } from '../types/item.types'
 import type { Display } from '../types/theme.types'
 import { itemToImageUrl } from '../utils/database.utils'
 import { itemToLocation } from '../utils/item.utils'
+import { navigate } from '../utils/navigation.utils'
 
 type Props = Readonly<{
   display: Display
@@ -33,7 +32,7 @@ function AppItemListEntryComponent({ display, item, showPrice, onSelect, isLoadi
   const cardStyle = useMemo(() => ({ ':hover': { boxShadow: '0 0 20px 0 rgba(0, 0, 0, 0.5)' }, height: '100%', maxWidth: 300, position: 'relative', width: '100%' }), [])
   const imgStyle = useMemo(() => ({ aspectRatio: 1, objectFit: 'contain', padding: '1vw 1vw 0 1vw', width: '100%' }), [])
   const floatingHeaderStyle = useMemo(() => ({ background: 'whitesmoke', color: 'black', fontSize: 18, height: '100%', marginBottom: 0, paddingX: 2, paddingY: 1, width: '100%' }), [])
-  const goToDetails = useCallback(() => route(`/item/details/${item.$id}`), [item.$id])
+  const goToDetails = useCallback(() => navigate(`/item/details/${item.$id}`), [item.$id])
   // handle selection
   const [checked, setChecked] = useState(false)
   const toggleSelection = useCallback(() => {
@@ -53,7 +52,7 @@ function AppItemListEntryComponent({ display, item, showPrice, onSelect, isLoadi
     <ListItem data-type="list-item" disablePadding key={item.$id} secondaryAction={secondaryAction}>
       {display === 'list' && (
         <ListItemButton component="a" disabled={isLoading} href={`/item/details/${item.$id}`} sx={listStyle}>
-          <img alt={title} class="mr-4 size-12 rounded-full object-contain" data-test="item-list-entry-image" loading="lazy" src={itemToImageUrl(item)} />
+          <img alt={title} className="mr-4 size-12 rounded-full object-contain" data-test="item-list-entry-image" loading="lazy" src={itemToImageUrl(item)} />
           <ListItemText
             primary={title}
             secondary={displaySubtitle}

@@ -1,0 +1,59 @@
+vite v7.0.4 building for production...
+
+✓ 1210 modules transformed.
+
+rendering chunks (47)...Injecting unique mark into HTML, JS, and CSS files...
+
+dist/assets/app-barcode.js                      16.65 kB
+dist/assets/app-form.js                         69.14 kB
+dist/assets/app-item-list.js                    14.85 kB
+dist/assets/app-page-card.js                     1.76 kB
+dist/assets/app-quick-search.js                  1.54 kB
+dist/assets/app-sounds.js                        0.91 kB
+dist/assets/app-speed-dial.js                   16.24 kB
+dist/assets/Checkbox.js                          3.12 kB
+dist/assets/Close.js                             0.30 kB
+dist/assets/createSimplePaletteValueFilter.js   86.80 kB
+dist/assets/createSvgIcon.js                     2.48 kB
+dist/assets/dom.js                               0.33 kB
+dist/assets/events.js                            0.32 kB
+dist/assets/FormControlLabel.js                  2.92 kB
+dist/assets/functions.js                         0.17 kB
+dist/assets/fuse.basic.js                       13.27 kB
+dist/assets/Grow.js                             27.32 kB
+dist/assets/IconButton.js                        3.61 kB
+dist/assets/index.css                           27.60 kB
+dist/assets/index.js                           277.65 kB
+dist/assets/Insights.js                          0.68 kB
+dist/assets/isMuiElement.js                      0.22 kB
+dist/assets/ListContext.js                       0.19 kB
+dist/assets/listItemTextClasses.js               0.29 kB
+dist/assets/Menu.js                             32.08 kB
+dist/assets/mergeSlotProps.js                    1.05 kB
+dist/assets/page-error.js                        1.42 kB
+dist/assets/page-home.js                         4.26 kB
+dist/assets/page-item-add-edit.js                5.01 kB
+dist/assets/page-item-details.js                17.93 kB
+dist/assets/page-item-print.js                   7.08 kB
+dist/assets/page-kitchen-sink.js                 1.33 kB
+dist/assets/page-metrics.js                      5.92 kB
+dist/assets/page-scan.js                       271.51 kB
+dist/assets/page-search.js                       3.18 kB
+dist/assets/page-settings.js                     2.34 kB
+dist/assets/Paper.js                             2.04 kB
+dist/assets/Print.js                             0.34 kB
+dist/assets/QrCodeScanner.js                     0.51 kB
+dist/assets/SwitchBase.js                        2.62 kB
+dist/assets/theme.utils.js                      24.02 kB
+dist/assets/ToggleButtonGroup.js                 6.75 kB
+dist/assets/Tooltip.js                           9.37 kB
+dist/assets/Typography.js                        3.45 kB
+dist/assets/useControlled.js                     0.29 kB
+dist/assets/useSlot.js                           1.89 kB
+dist/assets/useTheme.js                          0.26 kB
+dist/assets/utils.js                             4.30 kB
+dist/index.html                                  1.23 kB
+
+Total assets size:                             978.54 kB
+
+✓ built in 2.19s

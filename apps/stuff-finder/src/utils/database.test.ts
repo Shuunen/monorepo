@@ -319,7 +319,7 @@ describe('database.utils', () => {
 
   it('downloadBlob A', () => {
     expect(() => {
-      downloadBlob(new Blob(), 'file.txt')
+      downloadBlob(new Blob([]), 'file.txt')
     }).toThrowErrorMatchingInlineSnapshot(`[ReferenceError: document is not defined]`)
   })
 
