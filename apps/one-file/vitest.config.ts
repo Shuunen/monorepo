@@ -11,7 +11,7 @@ export default defineConfig({
         100: true,
       },
     },
-    // environment: 'jsdom',
+    // environment: 'happy-dom',
     globals: true,
     include: ['./*.test.ts'],
     pool: 'threads',

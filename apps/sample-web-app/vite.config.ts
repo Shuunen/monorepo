@@ -28,7 +28,7 @@ export default defineConfig({
       provider: 'v8' as const,
       reportsDirectory: './test-output/vitest/coverage',
     },
-    environment: 'jsdom',
+    environment: 'happy-dom',
     globals: true,
     include: ['src/**/*.test.{ts,tsx}'],
     reporters: ['default'],
