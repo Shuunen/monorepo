@@ -1,6 +1,6 @@
-import { preact } from '@preact/preset-vite'
 import { uniqueMark } from '@shuunen/vite-plugins'
 import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -13,11 +13,15 @@ export default defineConfig({
     reportCompressedSize: true,
   },
   cacheDir: '../../node_modules/.vite/apps/stuff-finder',
-  // @ts-expect-error typing issues
-  plugins: [preact(), tailwindcss(), uniqueMark()],
+  plugins: [react(), tailwindcss(), uniqueMark()],
+  preview: {
+    host: 'localhost',
+    port: 4300,
+  },
   root: __dirname,
   server: {
-    port: 8080,
+    host: 'localhost',
+    port: 4200,
   },
   test: {
     coverage: {

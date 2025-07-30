@@ -1,5 +1,5 @@
 import { toastError, toastInfo } from '@shuunen/shuutils'
-import { render } from 'preact'
+import { createRoot } from 'react-dom/client'
 import { App } from './app'
 // oxlint-disable-next-line no-unassigned-import
 import './assets/styles.css'
@@ -10,7 +10,7 @@ import { state } from './utils/state.utils'
 logger.info('app start')
 
 const root = document.querySelector('#app')
-if (root) render(<App />, root)
+if (root) createRoot(root).render(<App />)
 else logger.error('root not found')
 
 getItems()

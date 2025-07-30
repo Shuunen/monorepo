@@ -1,7 +1,5 @@
-// @ts-expect-error missing types
 import { type } from '@camwiegert/typical'
-import { signal, useSignalEffect } from '@preact/signals'
-import { useCallback, useRef } from 'preact/hooks'
+import { useEffect, useRef } from 'react'
 import { coolAscii } from '../utils/strings.utils'
 
 type TypicalArguments = (number | string)[]
@@ -14,17 +12,14 @@ const sequence = ['Stuff Finder', shortDelay, `Stuff Finder\n${coolAscii()}`, lo
 
 export function AppPrompter() {
   const prompterReference = useRef<HTMLHeadingElement>(null)
-  const prompter = signal(prompterReference)
 
-  useSignalEffect(
-    useCallback(() => {
-      if (prompter.value.current === null) return
-      type(prompter.value.current, ...sequence)
-    }, [prompter.value]),
-  )
+  useEffect(() => {
+    if (prompterReference.current === null) return
+    type(prompterReference.current, ...sequence)
+  }, [])
 
   return (
-    <h1 class="mb-12 mt-8 h-20 whitespace-pre text-center print:hidden" data-component="prompter" ref={prompterReference}>
+    <h1 className="mb-12 mt-8 h-20 whitespace-pre text-center print:hidden" data-component="prompter" ref={prompterReference}>
       Hey ^^
     </h1>
   )

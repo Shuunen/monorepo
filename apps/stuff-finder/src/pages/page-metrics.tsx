@@ -4,9 +4,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import SpeedIcon from '@mui/icons-material/Speed'
 import { Button } from '@mui/material'
 import { tw } from '@shuunen/shuutils'
-import type { ComponentChildren } from 'preact'
-import { memo } from 'preact/compat'
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import { memo, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AppItemList } from '../components/app-item-list'
 import { AppPageCard } from '../components/app-page-card'
 import type { MuiIcon } from '../types/icons.types'
@@ -21,7 +19,7 @@ const priceList = [1, 2, 5, 10, 20, 50, 100, 200] as const
 
 type MetricCardProps = {
   amount?: number | string
-  children?: ComponentChildren
+  children?: ReactNode
   color: string
   icon?: MuiIcon
   items?: Item[]
@@ -36,17 +34,17 @@ const MetricCard = memo(function MetricCard(props: MetricCardProps) {
   const isHidden = items?.length === 0
 
   return (
-    <div class={`flex whitespace-nowrap gap-6 rounded-lg border border-gray-200 relative bg-white p-6 shadow-sm ${color} ${isHidden ? 'hidden' : ''}`}>
+    <div className={`flex whitespace-nowrap gap-6 rounded-lg border border-gray-200 relative bg-white p-6 shadow-sm ${color} ${isHidden ? 'hidden' : ''}`}>
       {amount && Icon && (
-        <div class="flex items-center">
+        <div className="flex items-center">
           <Icon className="opacity-30" sx={{ fontSize: '3rem' }} />
-          <p class="text-3xl font-bold">{amount}</p>
+          <p className="text-3xl font-bold">{amount}</p>
         </div>
       )}
-      <div class={`flex flex-col w-full ${amount ? 'justify-center' : ''}`}>
-        <h2 class="text-xl font-semibold text-current">{title}</h2>
+      <div className={`flex flex-col w-full ${amount ? 'justify-center' : ''}`}>
+        <h2 className="text-xl font-semibold text-current">{title}</h2>
         {(children || items) && (
-          <div class="space-y-3 max-h-96 overflow-y-auto">
+          <div className="space-y-3 max-h-96 overflow-y-auto">
             {items && <AppItemList display="list" items={items} loadingItemIds={loadingItemIds} onSelection={onSelection} showPrice={showPrice ?? false} />}
             {!items && children}
           </div>
@@ -59,12 +57,12 @@ const MetricCard = memo(function MetricCard(props: MetricCardProps) {
 
 function MetricCardEntry({ title, subtitle, value }: { title: string; subtitle: string; value: string }) {
   return (
-    <div class="flex items-center justify-between rounded-md border border-gray-200 p-3 mr-3">
-      <div class="flex-1 max-w-4/5">
-        <h4 class="font-medium text-gray-900 truncate">{title}</h4>
-        <p class="text-sm text-gray-600">{subtitle}</p>
+    <div className="flex items-center justify-between rounded-md border border-gray-200 p-3 mr-3">
+      <div className="flex-1 max-w-4/5">
+        <h4 className="font-medium text-gray-900 truncate">{title}</h4>
+        <p className="text-sm text-gray-600">{subtitle}</p>
       </div>
-      <p class="font-medium">{value}</p>
+      <p className="font-medium">{value}</p>
     </div>
   )
 }
@@ -160,15 +158,15 @@ export function PageMetrics({ ...properties }: Readonly<Record<string, unknown>>
   const metrics = useMemo(() => calculateMetrics(state.items), [])
   return (
     <AppPageCard cardTitle="Metrics" icon={InsightsIcon} pageCode="metrics" pageTitle="Metrics">
-      <div class="flex flex-col">
+      <div className="flex flex-col">
         {/* Amounts */}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <MetricCard amount={metrics.totalItems} color={tw('text-purple-700')} icon={SpeedIcon} title="items registered" />
           <MetricCard amount={metrics.itemsToGive.length} color={tw('text-green-600')} icon={OutboxIcon} title="items to give" />
           <MetricCard amount={formatCurrency(metrics.totalValue)} color={tw('text-blue-600')} icon={ShoppingCartIcon} title="total value" />
         </div>
         {/* Lists */}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <MetricCard color={tw('text-red-600')} items={metrics.itemsNotPrinted} title={`Items not printed : ${metrics.itemsNotPrinted.length}`} />
           <MetricCard color={tw('text-red-600')} items={metrics.itemsWithoutLocation} showPrice={true} title={`Items without location : ${metrics.itemsWithoutLocation.length}`} />
           <MetricCard color={tw('text-red-600')} items={metrics.itemsWithoutPhoto} title={`Items without photo : ${metrics.itemsWithoutPhoto.length}`} />

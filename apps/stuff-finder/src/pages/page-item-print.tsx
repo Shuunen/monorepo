@@ -4,9 +4,9 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
-import { useSignalEffect } from '@preact/signals'
 import { sleep } from '@shuunen/shuutils'
-import { useCallback, useMemo, useState } from 'preact/hooks'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { AppBarcode } from '../components/app-barcode'
 import { AppPageCard } from '../components/app-page-card'
 import { type PrintSize, printSizes } from '../types/print.types'
@@ -20,10 +20,11 @@ import { state } from '../utils/state.utils'
 const waitDelay = 200
 
 // oxlint-disable-next-line max-lines-per-function
-export function PageItemPrint({ ...properties }: Readonly<Record<string, unknown>>) {
-  if (typeof properties.id !== 'string') throw new Error('An id in the url is required')
-  const item = state.items.find(one => one.$id === properties.id)
-  if (item === undefined) throw new Error('Item with id &quot;{properties.id}&quot; not found ;(')
+export function PageItemPrint() {
+  const { id } = useParams<{ id: string }>()
+  if (typeof id !== 'string') throw new Error('An id in the url is required')
+  const item = state.items.find(one => one.$id === id)
+  if (item === undefined) throw new Error(`Item with id "${id}" not found ;(`)
 
   const { value } = itemToPrintData(item)
   const [size, setSize] = useState<PrintSize>('40x20')
@@ -50,21 +51,22 @@ export function PageItemPrint({ ...properties }: Readonly<Record<string, unknown
     if (!result.ok) logger.error('pushItem failed', result)
   }, [item])
   // trigger print directly on page load
-  useSignalEffect(() => {
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to run this only once
+  useEffect(() => {
     sleep(waitDelay).then(() => onPrint())
-  })
+  }, [])
 
   return (
     <>
       <AppPageCard cardTitle="Print" icon={Print} pageCode="item-print" pageTitle={`${item.name} - Print`}>
-        <div class="flex flex-col md:flex-row">
-          <img alt={item.name} class="mx-auto max-h-64 w-1/3 object-contain" src={itemToImageUrl(item)} />
-          <div class="flex flex-col gap-4 text-center md:items-start md:text-left">
-            <h1 class="w-full">{item.name}</h1>
+        <div className="flex flex-col md:flex-row">
+          <img alt={item.name} className="mx-auto max-h-64 w-1/3 object-contain" src={itemToImageUrl(item)} />
+          <div className="flex flex-col gap-4 text-center md:items-start md:text-left">
+            <h1 className="w-full">{item.name}</h1>
             <p>You are about to print a barcode with the following value : {value}</p>
-            <div class="flex flex-col items-center pt-3 md:flex-row md:items-start">
+            <div className="flex flex-col items-center pt-3 md:flex-row md:items-start">
               <AppBarcode isHighlighted={isHighlighted} item={item} size={size} />
-              <div class="flex flex-col gap-3 md:ml-6 md:items-start">
+              <div className="flex flex-col gap-3 md:ml-6 md:items-start">
                 <ToggleButtonGroup aria-label="Size" color="primary" exclusive={true} onChange={onSizeChange} size="small" value={size}>
                   {Object.keys(printSizes).map(one => (
                     <ToggleButton key={one} value={one}>

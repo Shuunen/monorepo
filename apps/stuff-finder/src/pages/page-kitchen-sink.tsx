@@ -17,14 +17,14 @@ const items = [
 
 export function PageKitchenSink() {
   return (
-    <div class="flex flex-col">
+    <div className="flex flex-col">
       <h1>Kitchen Sink</h1>
       <h2>Barcodes</h2>
-      <div class="grid w-3/4 grid-cols-3 gap-6">
+      <div className="grid w-3/4 grid-cols-3 gap-6">
         {items.map(item => (
-          <div class="flex flex-col items-start gap-0" key={item.reference + item.name}>
+          <div className="flex flex-col items-start gap-0" key={item.reference + item.name}>
             <AppBarcode isHighlighted={isHighlighted} item={item} size={size} willResize={!item.name.includes('NOK')} />
-            <p class="mt-1 break-all font-mono text-xs">
+            <p className="mt-1 break-all font-mono text-xs">
               reference : {item.reference}
               <br />
               length : {item.reference.length}

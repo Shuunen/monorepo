@@ -1,6 +1,6 @@
 import Autocomplete, { type AutocompleteRenderInputParams } from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
-import { useCallback } from 'preact/hooks'
+import { useCallback } from 'react'
 import type { Form, FormFieldText } from '../utils/forms.utils'
 
 type Properties = Readonly<{
@@ -13,7 +13,7 @@ type Properties = Readonly<{
 
 export function AppFormFieldText({ field, form, id, suggestions, updateField }: Properties) {
   const onChange = useCallback(
-    (event: Event) => {
+    (event: React.SyntheticEvent, _value: string | null) => {
       updateField(id, event.target)
     },
     [id, updateField],

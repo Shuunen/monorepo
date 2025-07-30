@@ -1,16 +1,15 @@
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner'
 import { Alert, Collapse } from '@mui/material'
 import Skeleton from '@mui/material/Skeleton'
-import { signal, useSignalEffect } from '@preact/signals'
 import { sleep } from '@shuunen/shuutils'
 import { BrowserMultiFormatReader } from '@zxing/library/es2015/browser/BrowserMultiFormatReader'
 import type Exception from '@zxing/library/es2015/core/Exception'
 import notFoundException from '@zxing/library/es2015/core/NotFoundException'
 import type Result from '@zxing/library/es2015/core/Result'
-import { useCallback, useRef, useState } from 'preact/hooks'
-import { route } from 'preact-router'
+import { useEffect, useRef, useState } from 'react'
 import { AppPageCard } from '../components/app-page-card'
 import { logger } from '../utils/logger.utils'
+import { navigate } from '../utils/navigation.utils'
 import { state } from '../utils/state.utils'
 
 const reader = new BrowserMultiFormatReader()
@@ -19,7 +18,7 @@ const waitDelay = 200
 function onDecodeSuccess(result: Result) {
   const code = result.getText()
   logger.info('found qr or barcode :', code)
-  route(`/search/${code}`)
+  navigate(`/search/${code}`)
 }
 
 /**
@@ -43,54 +42,51 @@ async function onDecode(result: null | Result, error?: Exception) {
 export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
   logger.debug('PageScan', { properties })
   const videoReference = useRef<HTMLVideoElement>(null)
-  const video = signal(videoReference)
   const [status, setStatus] = useState<'error' | 'loading' | 'need-perm' | 'ready'>('loading')
 
-  useSignalEffect(
-    useCallback(() => {
-      // this run once, when the component is mounted
-      if (video.value.current === null) {
-        logger.showError('video element is null')
-        return () => ({})
-      }
-      logger.debug('starting video stream decoding...')
-      state.sound = 'start'
-      reader
-        // oxlint-disable-next-line no-null
-        .decodeFromVideoDevice(null, video.value.current, (result, error) => {
-          if (status === 'loading')
-            // oxlint-disable-next-line max-nested-callbacks
-            sleep(waitDelay).then(() => {
-              setStatus('ready')
-            })
+  useEffect(() => {
+    // this run once, when the component is mounted
+    if (videoReference.current === null) {
+      logger.showError('video element is null')
+      return
+    }
+    logger.debug('starting video stream decoding...')
+    state.sound = 'start'
+    reader
+      // oxlint-disable-next-line no-null
+      .decodeFromVideoDevice(null, videoReference.current, (result, error) => {
+        if (status === 'loading')
           // oxlint-disable-next-line max-nested-callbacks
-          onDecode(result, error).catch(error => {
-            logger.showError('error decoding video stream :', error)
+          sleep(waitDelay).then(() => {
+            setStatus('ready')
           })
+        // oxlint-disable-next-line max-nested-callbacks
+        onDecode(result, error).catch(error => {
+          logger.showError('error decoding video stream :', error)
         })
-        .catch((error: unknown) => {
-          const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase()
-          state.sound = 'error'
-          logger.error('error starting video stream decoding :', error)
-          setStatus(message.includes('permission') ? 'need-perm' : 'error')
-        })
-      return () => {
-        reader.reset()
-      } // this run once, when the component is about to unmount
-    }, [video.value, status]),
-  )
+      })
+      .catch((error: unknown) => {
+        const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase()
+        state.sound = 'error'
+        logger.error('error starting video stream decoding :', error)
+        setStatus(message.includes('permission') ? 'need-perm' : 'error')
+      })
+    return () => {
+      reader.reset()
+    } // this run once, when the component is about to unmount
+  }, [status])
 
   return (
     <AppPageCard cardTitle="Scan" icon={QrCodeScannerIcon} pageCode="scan" pageTitle="Scan QR Code or Barcode">
-      <div class="text-center">
-        <h2 class="mb-6">Scan a QR Code or a barcode to search for it 👀</h2>
+      <div className="text-center">
+        <h2 className="mb-6">Scan a QR Code or a barcode to search for it 👀</h2>
         <Collapse in={status === 'loading'}>
           <Skeleton animation="wave" height={320} variant="rounded" />
         </Collapse>
         <Collapse in={status === 'ready'}>
-          <div class="aspect-video max-h-80 overflow-hidden rounded-xl shadow-lg">
+          <div className="aspect-video max-h-80 overflow-hidden rounded-xl shadow-lg">
             {/* biome-ignore lint/a11y/useMediaCaption: fix later */}
-            <video class="w-full object-cover" ref={videoReference} />
+            <video className="w-full object-cover" ref={videoReference} />
           </div>
         </Collapse>
         <Collapse in={status === 'need-perm'}>

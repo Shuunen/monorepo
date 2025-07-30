@@ -1,6 +1,6 @@
 import Autocomplete, { type AutocompleteRenderInputParams } from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
-import { useCallback } from 'preact/hooks'
+import { useCallback } from 'react'
 import { type Form, type FormFieldSelect, optionsToLabels } from '../utils/forms.utils'
 
 type Properties = Readonly<{
@@ -12,7 +12,7 @@ type Properties = Readonly<{
 
 export function AppFormFieldSelect({ field, form, id, updateField }: Properties) {
   const onChange = useCallback(
-    (event: Event) => {
+    (event: React.SyntheticEvent, _value: string | null) => {
       updateField(id, event.target)
     },
     [id, updateField],

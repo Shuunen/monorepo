@@ -1,6 +1,6 @@
 import ArrowBack from '@mui/icons-material/ArrowBack'
 import Button from '@mui/material/Button'
-import { useCallback } from 'preact/hooks'
+import { useCallback } from 'react'
 
 const previous = -1
 
