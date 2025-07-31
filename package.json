@@ -82,7 +82,7 @@
     "check:nx:all": "nx run-many -t typecheck && nx run-many -t lint,test,build,e2e,list,build-storybook && echo check:nx:all success",
     "check:oxlint": "oxlint --deny-warnings --fix --fix-suggestions --fix-dangerously && echo check:oxlint success",
     "check:repo": "repo-check && echo check:repo success",
-    "check:tsc": "tsc --noEmit && echo lint:tsc success",
+    "check:types": "nx run-many -t typecheck && echo check:types success",
     "cs": "bun apps/config-sync",
     "lint": "nx run-many -t lint && pnpm check:biome && pnpm check:oxlint && echo lint success",
     "postversion": "git push && git push --tags",
