@@ -173,6 +173,14 @@
     },
     {
       "files": [
+        "**/*.cli.{js,ts}"
+      ],
+      "rules": {
+        "unicorn/no-process-exit": "off"
+      }
+    },
+    {
+      "files": [
         "libs/vite-plugins/**/*",
         "libs/components/.storybook/**/*"
       ],
