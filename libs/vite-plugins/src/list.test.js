@@ -16,7 +16,7 @@ describe('list.cli', () => {
   })
 
   it('listEntries A glob matched some files', async () => {
-    vi.mocked(glob).mockReturnValue(Promise.resolve(['unique-mark.node.js', 'some.test.js', 'also.types.js']))
+    vi.mocked(glob).mockReturnValue(Promise.resolve(['lib/unique-mark.node.js', 'lib/some.test.js', 'lib/also.types.js']))
 
     await listEntries()
 

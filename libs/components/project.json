@@ -1,6 +1,17 @@
 {
   "name": "components",
   "targets": {
+    "list": {
+      "cache": true,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx src/list.cli.ts",
+        "cwd": "libs/components"
+      },
+      "outputs": [
+        "{projectRoot}/src/index.ts"
+      ]
+    },
     "run-storybook": {
       "executor": "nx:run-commands",
       "options": {

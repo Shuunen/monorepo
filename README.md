@@ -7,7 +7,7 @@
 ## Todo
 
 - [ ] remove `noUndeclaredDependencies: "off"` from `biome.json` when Biome supports monorepo, for no it's reporting falsy undeclared dependencies
-- [ ] libs\shuutils\src\list.cli.ts is duplicated in vite-plugins, create a vite plugin to share it
+- [ ] `libs\shuutils\src\list.cli.ts` is duplicated in components & vite-plugins, create a vite plugin to share it
 - [ ] remove `explicit-module-boundary-types: off` from oxlint conf and declare types everywhere ?
 
 ## Thanks

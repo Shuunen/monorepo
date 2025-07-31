@@ -1,1 +1,2 @@
-export { Landing } from './molecules/landing'
+export * from './atoms/breadcrumb'
+export * from './molecules/landing'
