@@ -14,11 +14,6 @@ export default defineConfig({
     // See options at: https://storybook.js.org/docs/writing-tests/test-addon#storybooktest
     storybookTest({ configDir: path.join(dirname, '.storybook') }),
   ],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
   test: {
     browser: {
       enabled: true,

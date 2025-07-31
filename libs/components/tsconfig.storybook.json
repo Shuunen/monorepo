@@ -1,15 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "jsx": "preserve",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "outDir": "out-tsc/storybook",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
+    "outDir": "out-tsc/storybook"
   },
   "exclude": [
     "src/**/*.test.ts",

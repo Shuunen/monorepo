@@ -1,2 +1,7 @@
-@import "tailwindcss";
+@import "../../../libs/components/src/styles.css";
 @source "../../../libs/components/src";
+
+@theme inline {
+  /* Override the default theme with built-in colors or use your own */
+  --color-primary: var(--chart-2);
+}
