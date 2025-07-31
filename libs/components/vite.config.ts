@@ -1,4 +1,3 @@
-import path from 'node:path'
 import { uniqueMark } from '@shuunen/vite-plugins'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
@@ -18,11 +17,6 @@ export default defineConfig({
   preview: {
     host: 'localhost',
     port: 4300,
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
   },
   root: __dirname,
   server: {

@@ -88,6 +88,7 @@
     "postversion": "git push && git push --tags",
     "preversion": "pnpm check",
     "sb": "pnpm run storybook:run",
+    "shadcn:add": "bun libs/components/bin/add.cli.ts",
     "storybook:build": "nx build-storybook components && echo storybook:build success",
     "storybook:run": "nx run-storybook components",
     "storybook:test": "nx test-storybook components && echo storybook:test success",

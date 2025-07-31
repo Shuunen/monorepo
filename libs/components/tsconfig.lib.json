@@ -1,16 +1,10 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "jsx": "react-jsx",
     "lib": [
       "dom"
     ],
     "outDir": "dist",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    },
     "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "types": [
