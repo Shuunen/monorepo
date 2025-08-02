@@ -16,8 +16,14 @@ export default defineConfig({
     cspNonce: 'shu1772n1',
   },
   plugins: [tailwindcss(), uniqueMark()],
+  preview: {
+    host: 'localhost',
+    port: 4300,
+  },
+  root: __dirname,
   server: {
-    port: 8080,
+    host: 'localhost',
+    port: 4200,
   },
   test: {
     coverage: {
