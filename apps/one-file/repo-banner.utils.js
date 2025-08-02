@@ -4,7 +4,7 @@ import { readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { Logger } from '@shuunen/shuutils'
 
-export const logger = new Logger()
+export const logger = new Logger({ willOutputToConsole: process.env.NODE_ENV !== 'test' })
 
 /**
  * Replace a placeholder in a string and check if it was replaced

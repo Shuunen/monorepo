@@ -12,6 +12,7 @@ This is an **Nx monorepo** using **pnpm** workspace management with a mix of Rea
 ## Key Development Patterns
 
 ### Import Conventions
+
 ```typescript
 // Always import from the workspace shuutils library
 import { Logger, createState, tw, dom } from '@shuunen/shuutils'
@@ -21,6 +22,7 @@ import { Logger, createState, tw, dom } from '@shuunen/shuutils'
 ```
 
 ### Component Architecture (React/Preact Apps)
+
 - **Preact** is preferred over React for smaller bundle sizes
 - Components use functional style with hooks: `useState`, `useCallback`, `useMemo`
 - Lazy loading pattern: `const AsyncPage = lazy(() => import('./page').then(({ Page }) => ({ default: Page })))`
@@ -28,6 +30,7 @@ import { Logger, createState, tw, dom } from '@shuunen/shuutils'
 - Page components follow `PageXxx` naming
 
 ### State Management
+
 ```typescript
 // Use shuutils createState for lightweight state management
 import { createState } from '@shuunen/shuutils'
@@ -67,6 +70,11 @@ watchState('isLoading', (value) => { /* handle change */ })
 - avoid `as` type assertions unless absolutely necessary
 - follow DRY principle
 - when declaring constants use camelCase convention
+- use standard camelCase for function and variable names **even if they are constants**
+- use named functions instead of arrow functions for better stack traces
+- use comments only when absolutely necessary, prefer descriptive variable and function names
+- avoid using : try,catch,throw or even `.catch` and instead `import { Result } from '@shuunen/shuutils'` and then use `const result = Result.trySafe(() => ...)` to handle errors gracefully
+- always export directly each functions and variables (that need to be exported) instead of exporting an object with them
 
 ## Essential Commands
 

@@ -21,10 +21,11 @@ it('parseClipboard B invalid', () => {
 })
 
 it('parseClipboard C valid', () => {
-  const { apiCollection, apiDatabase, hueEndpoint } = parseClipboard(`"${validUuid}\n${validUuid}\n${validUrl}"`)
+  const { apiCollection, apiDatabase, hueEndpoint, trmnlWebhook } = parseClipboard(`"${validUuid}\n${validUuid}\n${validUrl}\n${validUrl}"`)
   expect(apiCollection).toBe(validUuid)
   expect(apiDatabase).toBe(validUuid)
   expect(hueEndpoint).toBe(validUrl)
+  expect(trmnlWebhook).toBe(validUrl)
 })
 
 it('validateCredentials A', () => {

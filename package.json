@@ -85,6 +85,7 @@
     "check:tsc": "nx run-many -t typecheck && echo check:tsc success",
     "cs": "bun apps/config-sync",
     "lint": "nx run-many -t lint && pnpm check:biome && pnpm check:oxlint && echo lint success",
+    "list": "nx run-many -t list && echo list success",
     "postversion": "git push && git push --tags",
     "preversion": "pnpm check",
     "sb": "pnpm run storybook:run",

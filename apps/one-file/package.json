@@ -2,9 +2,14 @@
   "dependencies": {
     "@shuunen/shuutils": "workspace:*",
     "7zip-min": "^2.1.0",
-    "clipboardy": "^4.0.0"
+    "clipboardy": "^4.0.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
   },
   "description": "My personal snippets",
+  "devDependencies": {
+    "@types/express": "^5.0.3"
+  },
   "homepage": "https://github.com/Shuunen/monorepo/tree/master/apps/one-file",
   "keywords": [
     "#54143A"

@@ -1,8 +1,8 @@
 // oxlint-disable no-magic-numbers
-import { debounce, dom, nbPercentMax, tw } from '@shuunen/shuutils'
+import { debounce, dom, fetchJson, fetchRaw, nbPercentMax, tw } from '@shuunen/shuutils'
 import { logger } from '../utils/logger.utils'
 import { state, watchState } from '../utils/state.utils'
-import { isTaskActive } from '../utils/tasks.utils'
+import { isTaskActive, minutesRemaining } from '../utils/tasks.utils'
 
 const progress = dom('hr', tw('app-progress mb-4 mt-1'))
 progress.style.width = '0'
@@ -16,19 +16,16 @@ function counterText(percent = 0) {
   if (percent < 100) return 'Lasts tasks remaining !'
   return 'You made it, well done dude :)'
 }
-async function emitHueColor(percent = 0) {
-  if (state.hueEndpoint === '') {
-    logger.info('no hue endpoint defined')
-    return
-  }
+
+async function emitToHue(percent = 0) {
   const options = {
     body: `progress=${percent}`,
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     method: 'POST',
     mode: 'no-cors',
   } as const
-  const response = await fetch(state.hueEndpoint, options).catch((error: unknown) => ({ ok: false, reason: (error as Error).message }))
-  logger.info('emitted hue color', response)
+  const result = await fetchRaw(state.hueEndpoint, options)
+  logger.info('hue response', result)
 }
 function getProgressBackground(percent = 0) {
   if (percent <= 10) return 'from-red-700 to-red-800'
@@ -49,6 +46,27 @@ function showProgressBackground(percent = 0) {
   document.body.className = document.body.className.replace(/from-\w+-\d+ to-\w+-\d+/giu, target)
 }
 
+async function emitToTrmnl(progress = 0) {
+  const activeTasks = state.tasks.filter(task => isTaskActive(task))
+  const payload = {
+    // biome-ignore lint/style/useNamingConvention: that's what trmnl webhook expects
+    merge_variables: {
+      nextSubtitle: activeTasks[0].reason,
+      nextTitle: activeTasks[0].name,
+      progress,
+      remaining: `${minutesRemaining(activeTasks)} min to take care`,
+    },
+  }
+  const options = {
+    body: JSON.stringify(payload),
+    headers: { 'content-type': 'application/json' },
+    method: 'POST',
+    // mode: 'no-cors', // can't use no-cors, that will prevent us from making the correct request (it mess up the accept header and the response is failing)
+  } as const
+  const result = await fetchJson(state.trmnlWebhook, options)
+  logger.info('trmnl response', result)
+}
+
 function showProgressSync() {
   const total = state.tasks.length
   const remaining = state.tasks.filter(task => isTaskActive(task)).length
@@ -58,7 +76,8 @@ function showProgressSync() {
   document.body.dataset.progress = String(percent)
   state.statusProgress = counterText(percent)
   showProgressBackground(percent)
-  void emitHueColor(percent)
+  if (state.hueEndpoint !== '') void emitToHue(percent)
+  if (state.trmnlWebhook !== '') void emitToTrmnl(percent)
 }
 
 const showProgress = debounce(showProgressSync, 300)

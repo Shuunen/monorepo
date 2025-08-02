@@ -20,9 +20,11 @@ export const { state, watchState } = createState(
     tasks,
     /** timestamp of the last time tasks were fetched, in milliseconds */
     tasksTimestamp: 0,
+    /** the webhook URL for the terminal */
+    trmnlWebhook: '',
   },
   storage,
-  /* c8 ignore next */ ['apiDatabase', 'apiCollection', 'hueEndpoint', 'tasks', 'tasksTimestamp'],
+  /* c8 ignore next */ ['apiDatabase', 'apiCollection', 'hueEndpoint', 'tasks', 'tasksTimestamp', 'trmnlWebhook'],
 )
 
-export type CredentialField = keyof Pick<typeof state, 'apiCollection' | 'apiDatabase' | 'hueEndpoint'>
+export type CredentialField = keyof Pick<typeof state, 'apiCollection' | 'apiDatabase' | 'hueEndpoint' | 'trmnlWebhook'>

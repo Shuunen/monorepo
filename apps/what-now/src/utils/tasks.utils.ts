@@ -6,6 +6,17 @@ import { state } from './state.utils'
 
 const recurrenceRegex = /(?<quantity>\d{1,3})?-?(?<unit>day|month|week|year)/u
 
+/**
+ * Calculates the total number of minutes remaining for all active tasks in the provided array.
+ * @param tasks - An array of `Task` objects to evaluate.
+ * @returns The total minutes remaining for all active tasks.
+ */
+export function minutesRemaining(tasks: Task[]) {
+  let minutes = 0
+  for (const task of tasks) if (isTaskActive(task)) minutes += task.minutes
+  return minutes
+}
+
 export function daysRecurrence(task: Task) {
   const matches = recurrenceRegex.exec(task.once)
   if (matches === null) return 0

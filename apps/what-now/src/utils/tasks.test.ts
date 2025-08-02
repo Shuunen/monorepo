@@ -4,7 +4,7 @@ import { expect, it, vi } from 'vitest'
 import type { Task } from '../types'
 import { addTask, localToRemoteTask } from './database.utils'
 import { state } from './state.utils'
-import { byActive, completeTask, daysRecurrence, daysSinceCompletion, dispatchTask, dispatchTasks, fetchList, isDataOlderThan, isTaskActive, loadTasks, toggleComplete, unCompleteTask } from './tasks.utils'
+import { byActive, completeTask, daysRecurrence, daysSinceCompletion, dispatchTask, dispatchTasks, fetchList, isDataOlderThan, isTaskActive, loadTasks, minutesRemaining, toggleComplete, unCompleteTask } from './tasks.utils'
 
 const today = daysAgoIso10(0)
 const yesterday = daysAgoIso10(1)
@@ -341,4 +341,59 @@ it('addTask B failing', async () => {
       "ok": false,
     }
   `)
+})
+
+it('minutesRemaining A should return 0 for empty array', () => {
+  const result = minutesRemaining([])
+  expect(result).toMatchInlineSnapshot('0')
+})
+
+it('minutesRemaining B should return total minutes for all active tasks', () => {
+  const tasks = [
+    createTask({ completedOn: yesterday, minutes: 30, once: 'day' }), // active
+    createTask({ completedOn: daysAgoIso10(8), minutes: 15, once: 'week' }), // active
+    createTask({ completedOn: '', minutes: 45, once: 'yes' }), // active (one-time, not done)
+  ]
+  const result = minutesRemaining(tasks)
+  expect(result).toMatchInlineSnapshot('90')
+})
+
+it('minutesRemaining C should exclude inactive tasks', () => {
+  const tasks = [
+    createTask({ completedOn: today, minutes: 30, once: 'day' }), // inactive (completed today)
+    createTask({ completedOn: yesterday, minutes: 15, once: 'week' }), // inactive (weekly, completed yesterday)
+    createTask({ completedOn: yesterday, minutes: 45, once: 'day' }), // active (daily, completed yesterday)
+  ]
+  const result = minutesRemaining(tasks)
+  expect(result).toMatchInlineSnapshot('45')
+})
+
+it('minutesRemaining D should exclude done tasks', () => {
+  const tasks = [
+    createTask({ completedOn: yesterday, isDone: true, minutes: 30, once: 'day' }), // inactive (done)
+    createTask({ completedOn: yesterday, isDone: false, minutes: 15, once: 'day' }), // active
+  ]
+  const result = minutesRemaining(tasks)
+  expect(result).toMatchInlineSnapshot('15')
+})
+
+it('minutesRemaining E should handle mixed active and inactive tasks', () => {
+  const tasks = [
+    createTask({ completedOn: yesterday, minutes: 10, once: 'day' }), // active
+    createTask({ completedOn: today, isDone: true, minutes: 20, once: 'day' }), // inactive (done)
+    createTask({ completedOn: yesterday, minutes: 30, once: 'week' }), // inactive (weekly, too recent)
+    createTask({ completedOn: daysAgoIso10(35), minutes: 40, once: 'month' }), // active (monthly, old enough)
+    createTask({ completedOn: '', minutes: 50, once: 'yes' }), // active (one-time, not done)
+  ]
+  const result = minutesRemaining(tasks)
+  expect(result).toMatchInlineSnapshot('100')
+})
+
+it('minutesRemaining F should handle tasks with zero minutes', () => {
+  const tasks = [
+    createTask({ completedOn: yesterday, minutes: 0, once: 'day' }), // active but 0 minutes
+    createTask({ completedOn: yesterday, minutes: 25, once: 'day' }), // active
+  ]
+  const result = minutesRemaining(tasks)
+  expect(result).toMatchInlineSnapshot('25')
 })

@@ -1,3 +1,4 @@
+/* c8 ignore start */
 type NavigatorUserAgentBrandVersion = {
   readonly brand: string
   readonly version: string
