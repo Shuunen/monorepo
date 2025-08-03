@@ -49,6 +49,37 @@ it('throttle A', async () => {
   expect(times).toBe(2)
 })
 
+let optionalCallCount = 0
+
+/**
+ * A function with an optional parameter
+ * @param value - optional value parameter
+ * @returns {number} the number of times the function has been called
+ */
+function functionWithOptionalParameter(value = 10) {
+  optionalCallCount += 1
+  return value + optionalCallCount
+}
+
+it('throttle B should work with functions that have optional parameters', async () => {
+  optionalCallCount = 0
+  const throttledFunction = throttle(functionWithOptionalParameter, 10)
+  expect(optionalCallCount).toBe(0)
+
+  // Call without parameter (uses default)
+  throttledFunction()
+  expect(optionalCallCount).toBe(1)
+
+  // Call with parameter
+  throttledFunction(20)
+  // Should not execute due to throttling
+  expect(optionalCallCount).toBe(1)
+
+  await sleep(10)
+  throttledFunction(30)
+  expect(optionalCallCount).toBe(2)
+})
+
 it('anAsyncFunctionThatReturn12 A', async () => {
   expect(await anAsyncFunctionThatReturn12()).toBe(12)
 })

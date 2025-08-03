@@ -5,12 +5,12 @@
  * @param timeout the time to wait before each function call
  * @returns a throttled function
  */
-export function throttle<Method extends (...parameters: readonly unknown[]) => ReturnType<Method>>(callback: Method, timeout: number) {
+export function throttle<Arguments extends readonly unknown[], Return>(callback: (...arguments_: Arguments) => Return, timeout: number): (...arguments_: Arguments) => void {
   let isReady = true
-  return (...parameters: Parameters<Method>) => {
+  return (...arguments_: Arguments) => {
     if (!isReady) return
     isReady = false
-    callback(...parameters)
+    callback(...arguments_)
     setTimeout(() => {
       isReady = true
     }, timeout)
