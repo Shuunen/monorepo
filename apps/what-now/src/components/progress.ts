@@ -47,11 +47,13 @@ function showProgressBackground(percent = 0) {
   document.body.className = document.body.className.replace(/from-\w+-\d+ to-\w+-\d+/giu, target)
 }
 
+// oxlint-disable-next-line max-lines-per-function
 async function emitToTrmnlSync(progress = 0) {
   const activeTasks = state.tasks.filter(task => isTaskActive(task))
   const payload = {
     // biome-ignore lint/style/useNamingConvention: that's what trmnl webhook expects
     merge_variables: {
+      date: new Date().toTimeString().slice(0, 5),
       nextSubtitle: activeTasks[0].reason,
       nextTitle: activeTasks[0].name,
       progress,
