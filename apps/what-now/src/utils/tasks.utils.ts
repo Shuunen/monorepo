@@ -118,3 +118,13 @@ export function toggleComplete(task: Task) {
   if (isTaskActive(task)) return completeTask(task)
   return unCompleteTask(task)
 }
+
+/**
+ * Create a task mock with default values
+ * @param fields - fields to override
+ * @returns a task mock
+ */
+export function taskMock(fields: Partial<Task> = {}): Task {
+  const { completedOn = daysAgoIso10(0), id = 'id-123', isDone = false, minutes = 20, name = 'a super task', once = 'day', reason } = { ...fields }
+  return { completedOn, id, isDone, minutes, name, once, reason } satisfies Task
+}
