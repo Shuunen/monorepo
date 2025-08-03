@@ -1,5 +1,5 @@
 // oxlint-disable no-magic-numbers
-import { debounce, dom, fetchJson, fetchRaw, nbPercentMax, tw } from '@shuunen/shuutils'
+import { debounce, dom, fetchJson, fetchRaw, nbPercentMax, throttle, tw } from '@shuunen/shuutils'
 import { logger } from '../utils/logger.utils'
 import { state, watchState } from '../utils/state.utils'
 import { isTaskActive, minutesRemaining } from '../utils/tasks.utils'
@@ -27,6 +27,7 @@ async function emitToHue(percent = 0) {
   const result = await fetchRaw(state.hueEndpoint, options)
   logger.info('hue response', result)
 }
+
 function getProgressBackground(percent = 0) {
   if (percent <= 10) return 'from-red-700 to-red-800'
   if (percent <= 20) return 'from-red-800 to-orange-700'
@@ -46,7 +47,7 @@ function showProgressBackground(percent = 0) {
   document.body.className = document.body.className.replace(/from-\w+-\d+ to-\w+-\d+/giu, target)
 }
 
-async function emitToTrmnl(progress = 0) {
+async function emitToTrmnlSync(progress = 0) {
   const activeTasks = state.tasks.filter(task => isTaskActive(task))
   const payload = {
     // biome-ignore lint/style/useNamingConvention: that's what trmnl webhook expects
@@ -67,6 +68,9 @@ async function emitToTrmnl(progress = 0) {
   logger.info('trmnl response', result)
 }
 
+// Throttle to max 12 calls per hour (one call every 5 minutes = 300,000ms)
+const emitToTrmnl = throttle(emitToTrmnlSync, 300_000)
+
 function showProgressSync() {
   const total = state.tasks.length
   const remaining = state.tasks.filter(task => isTaskActive(task)).length
@@ -77,7 +81,7 @@ function showProgressSync() {
   state.statusProgress = counterText(percent)
   showProgressBackground(percent)
   if (state.hueEndpoint !== '') void emitToHue(percent)
-  if (state.trmnlWebhook !== '') void emitToTrmnl(percent)
+  if (state.trmnlWebhook !== '') emitToTrmnl(percent)
 }
 
 const showProgress = debounce(showProgressSync, 300)
