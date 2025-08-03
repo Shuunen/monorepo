@@ -1,10 +1,11 @@
 // oxlint-disable no-magic-numbers
 import { debounce, dom, fetchJson, fetchRaw, nbPercentMax, throttle, tw } from '@shuunen/shuutils'
 import { logger } from '../utils/logger.utils'
+import { trmnlPayload } from '../utils/progress.utils'
 import { state, watchState } from '../utils/state.utils'
-import { isTaskActive, minutesRemaining } from '../utils/tasks.utils'
+import { isTaskActive } from '../utils/tasks.utils'
 
-const progress = dom('hr', tw('app-progress mb-4 mt-1'))
+export const progress = dom('hr', tw('app-progress mb-4 mt-1'))
 progress.style.width = '0'
 
 function counterText(percent = 0) {
@@ -47,21 +48,9 @@ function showProgressBackground(percent = 0) {
   document.body.className = document.body.className.replace(/from-\w+-\d+ to-\w+-\d+/giu, target)
 }
 
-// oxlint-disable-next-line max-lines-per-function
 async function emitToTrmnlSync(progress = 0) {
-  const activeTasks = state.tasks.filter(task => isTaskActive(task))
-  const payload = {
-    // biome-ignore lint/style/useNamingConvention: that's what trmnl webhook expects
-    merge_variables: {
-      date: new Date().toTimeString().slice(0, 5),
-      nextSubtitle: activeTasks[0].reason,
-      nextTitle: activeTasks[0].name,
-      progress,
-      remaining: `${minutesRemaining(activeTasks)} min to take care`,
-    },
-  }
   const options = {
-    body: JSON.stringify(payload),
+    body: trmnlPayload(progress),
     headers: { 'content-type': 'application/json' },
     method: 'POST',
     // mode: 'no-cors', // can't use no-cors, that will prevent us from making the correct request (it mess up the accept header and the response is failing)
@@ -102,5 +91,3 @@ watchState('tasks', () => {
 watchState('isSetup', () => {
   if (state.isSetup) void showProgress()
 })
-
-export { progress }
