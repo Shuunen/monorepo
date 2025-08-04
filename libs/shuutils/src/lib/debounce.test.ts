@@ -12,10 +12,10 @@ function myFunction() {
   return times
 }
 
-const myFunctionDebounced = debounce(myFunction, 10)
+const myFunctionDebounced = debounce(myFunction, 5)
 
 /**
- * @returns the number of times the function has been called after 50ms
+ * @returns the number of times the function has been called after 5ms
  */
 async function myAsyncFunction() {
   await sleep(5)
@@ -23,34 +23,34 @@ async function myAsyncFunction() {
   return times
 }
 
-const myAsyncFunctionDebounced = debounce(myAsyncFunction, 10)
+const myAsyncFunctionDebounced = debounce(myAsyncFunction, 5)
 
 it('debounce A : sync function', async () => {
   times = 0
-  expect(times, 'initial call').toBe(0)
+  expect(times, 'before any call, time : 0ms').toBe(0)
   myFunctionDebounced()
-  expect(times, 'after first call').toBe(0)
-  await sleep(5)
-  expect(times, 'after 5ms').toBe(0)
+  myFunctionDebounced()
+  myFunctionDebounced()
+  await sleep(1)
+  expect(times, 'after 3 successive calls, time : 1ms').toBe(0)
   await sleep(6)
-  expect(times, 'after 11ms').toBe(1)
+  expect(times, 'after sleep should have fired, time : 7ms').toBe(1)
   await sleep(3)
-  expect(times, 'after 14ms').toBe(1)
+  expect(times, 'after even more sleep should not have fired again, time : 10ms').toBe(1)
 })
 
 it('debounce B : async function', async () => {
   times = 0
-  expect(times, 'initial call').toBe(0)
+  expect(times, 'before any call, time : 0ms').toBe(0)
   myAsyncFunctionDebounced()
-  expect(times, 'after first call').toBe(0)
-  await sleep(5)
-  expect(times, 'after 5ms').toBe(0)
-  await sleep(5) // the delay inside the function is 50ms
-  expect(times, 'after 10ms').toBe(0)
+  myAsyncFunctionDebounced()
+  myAsyncFunctionDebounced()
+  await sleep(1)
+  expect(times, 'after 3 successive calls, time : 1ms').toBe(0)
   await sleep(6)
-  expect(times, 'after 16ms').toBe(1)
+  expect(times, 'after first sleep should not have fired, time : 7ms').toBe(0)
   await sleep(3)
-  expect(times, 'after 19ms').toBe(1)
+  expect(times, 'after even more sleep should have fired, time : 10ms').toBe(1)
 })
 
 it('debounce C : return type', () => {
