@@ -27,30 +27,30 @@ const myAsyncFunctionDebounced = debounce(myAsyncFunction, 10)
 
 it('debounce A : sync function', async () => {
   times = 0
-  expect(times).toBe(0)
+  expect(times, 'initial call').toBe(0)
   myFunctionDebounced()
-  expect(times).toBe(0)
+  expect(times, 'after first call').toBe(0)
   await sleep(5)
-  expect(times).toBe(0)
+  expect(times, 'after 5ms').toBe(0)
   await sleep(6)
-  expect(times).toBe(1)
+  expect(times, 'after 11ms').toBe(1)
   await sleep(3)
-  expect(times).toBe(1)
+  expect(times, 'after 14ms').toBe(1)
 })
 
 it('debounce B : async function', async () => {
   times = 0
-  expect(times).toBe(0)
+  expect(times, 'initial call').toBe(0)
   myAsyncFunctionDebounced()
-  expect(times).toBe(0)
+  expect(times, 'after first call').toBe(0)
   await sleep(5)
-  expect(times).toBe(0)
+  expect(times, 'after 5ms').toBe(0)
   await sleep(5) // the delay inside the function is 50ms
-  expect(times).toBe(0)
+  expect(times, 'after 10ms').toBe(0)
   await sleep(6)
-  expect(times).toBe(1)
+  expect(times, 'after 16ms').toBe(1)
   await sleep(3)
-  expect(times).toBe(1)
+  expect(times, 'after 19ms').toBe(1)
 })
 
 it('debounce C : return type', () => {
