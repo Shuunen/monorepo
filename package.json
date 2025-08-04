@@ -99,5 +99,5 @@
     "test:watch": "vitest --coverage",
     "up:min": "npx taze minor --write"
   },
-  "version": "0.0.0"
+  "version": "1.0.0"
 }
