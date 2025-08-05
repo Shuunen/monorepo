@@ -75,6 +75,7 @@ watchState('isLoading', (value) => { /* handle change */ })
 - use comments only when absolutely necessary, prefer descriptive variable and function names
 - avoid using : try,catch,throw or even `.catch` and instead `import { Result } from '@shuunen/shuutils'` and then use `const result = Result.trySafe(() => ...)` to handle errors gracefully
 - always export directly each functions and variables (that need to be exported) instead of exporting an object with them
+- use `bun` to executes `.cli.js` or `.cli.ts` scripts
 
 ## Essential Commands
 
