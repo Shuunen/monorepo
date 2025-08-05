@@ -5,28 +5,43 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/sample-web-app-e2e"
+      "path": "./apps/jozzo"
+    },
+    {
+      "path": "./apps/recipes"
+    },
+    {
+      "path": "./apps/recipes"
+    },
+    {
+      "path": "./apps/recipes"
+    },
+    {
+      "path": "./apps/recipes"
+    },
+    {
+      "path": "./apps/recipes"
     },
     {
       "path": "./apps/sample-web-app"
     },
     {
+      "path": "./apps/sample-web-app-e2e"
+    },
+    {
       "path": "./apps/stuff-finder"
-    },
-    {
-      "path": "./libs/shuutils"
-    },
-    {
-      "path": "./apps/jozzo"
-    },
-    {
-      "path": "./libs/vite-plugins"
     },
     {
       "path": "./apps/user-scripts"
     },
     {
       "path": "./libs/components"
+    },
+    {
+      "path": "./libs/shuutils"
+    },
+    {
+      "path": "./libs/vite-plugins"
     }
   ],
   "ts-node": {

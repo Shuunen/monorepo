@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@shuunen/components": "workspace:*",
+    "@shuunen/shuutils": "workspace:*",
+    "@shuunen/vite-plugins": "workspace:*"
+  },
+  "name": "recipes",
+  "private": true,
+  "type": "module",
+  "version": "0.0.1"
+}

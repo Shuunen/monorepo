@@ -197,6 +197,18 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3
 
+  apps/recipes:
+    dependencies:
+      '@shuunen/components':
+        specifier: workspace:*
+        version: link:../../libs/components
+      '@shuunen/shuutils':
+        specifier: workspace:*
+        version: link:../../libs/shuutils
+      '@shuunen/vite-plugins':
+        specifier: workspace:*
+        version: link:../../libs/vite-plugins
+
   apps/sample-web-app:
     dependencies:
       '@shuunen/components':
