@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "lib": [
@@ -10,7 +9,6 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "outDir": "dist",
-    "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "types": [
       "node"
