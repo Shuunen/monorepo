@@ -18,6 +18,6 @@ describe('App', () => {
         <App />
       </BrowserRouter>,
     )
-    expect(getAllByText('recipes').length > 0).toBeTruthy()
+    expect(getAllByText('Les recettes de Shuunen').length > 0).toBeTruthy()
   })
 })
