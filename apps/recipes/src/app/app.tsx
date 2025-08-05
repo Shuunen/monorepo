@@ -1,24 +1,29 @@
-import { Landing } from '@shuunen/components'
-import { randomPerson } from '@shuunen/shuutils'
 import { NavLink, Route, Routes } from 'react-router-dom'
+import { ReactComponent as Chips } from '../recipes/aperitifs/chips.md'
 
 const navClasses = ({ isActive }: { isActive: boolean }) => `transition-colors ${isActive ? 'text-primary underline underline-offset-22' : 'text-gray-700 hover:text-primary'}`
 
 export function App() {
-  const person = randomPerson()
   return (
-    <div>
-      <nav className="absolute flex gap-6 text-2xl font-semibold justify-center w-full p-4 bg-white shadow-md">
+    <div className="flex flex-col h-full bg-pasta">
+      <nav className="flex gap-6 text-2xl font-semibold justify-center w-full p-4 bg-white shadow-md">
         <NavLink className={navClasses} to="/">
-          Home
+          Accueil
         </NavLink>
-        <NavLink className={navClasses} to="/about">
-          About
+        <NavLink className={navClasses} to="/recipes/aperitifs/chips">
+          Chips
         </NavLink>
       </nav>
       <Routes>
-        <Route element={<Landing status="I'm a starter base project" subtitle="Web application built with React and TailwindCSS" title="recipes" />} path="/" />
-        <Route element={<Landing subtitle={`This project is the great work of ${person.firstName} ${person.lastName} 😎`} title="About" />} path="/about" />
+        <Route
+          element={
+            <div>
+              <h1>Les recettes de Shuunen</h1>
+            </div>
+          }
+          path="/"
+        />
+        <Route element={<Chips />} path="/recipes/aperitifs/chips" />
       </Routes>
     </div>
   )

@@ -2,7 +2,8 @@
   "dependencies": {
     "@shuunen/components": "workspace:*",
     "@shuunen/shuutils": "workspace:*",
-    "@shuunen/vite-plugins": "workspace:*"
+    "@shuunen/vite-plugins": "workspace:*",
+    "vite-plugin-markdown": "^2.2.0"
   },
   "name": "recipes",
   "private": true,

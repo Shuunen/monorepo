@@ -3,5 +3,63 @@
 
 @theme inline {
   /* Override the default theme with built-in colors or use your own */
-  --color-primary: var(--chart-2);
+  --color-primary: var(--warning);
+}
+
+html,
+body,
+#root {
+  @apply h-full;
+}
+
+body {
+  @apply leading-9;
+}
+
+h1 {
+  @apply text-5xl font-bold shadow-lg py-4 px-8 -rotate-2 mb-12 transition-transform bg-white;
+}
+
+h2 {
+  @apply text-3xl pb-4 font-semibold;
+}
+
+ul {
+  @apply list-disc pb-4;
+}
+
+ol {
+  @apply list-decimal pb-4;
+}
+
+.bg-pasta {
+  background-image: url("/background.svg");
+}
+
+nav + div {
+  @apply justify-center items-center align-middle grow h-full flex flex-col;
+}
+
+h1 + h2 {
+  @apply pt-6 -mt-16;
+}
+
+h2,
+ul,
+ol,
+p {
+  @apply bg-white/95 w-1/2 shadow-lg pl-6;
+}
+
+ul {
+  @apply pl-12;
+}
+
+ol {
+  @apply pl-11;
+}
+
+div > p:last-child {
+  background-image: url("/divider.svg");
+  @apply pb-18 bg-bottom bg-no-repeat bg-blend-color;
 }

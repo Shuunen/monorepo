@@ -1,6 +1,7 @@
 import { uniqueMark } from '@shuunen/vite-plugins'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+import { Mode, plugin as md } from 'vite-plugin-markdown'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -13,7 +14,15 @@ export default defineConfig({
     reportCompressedSize: true,
   },
   cacheDir: '../../node_modules/.vite/apps/recipes',
-  plugins: [react(), tailwindcss(), uniqueMark()],
+  plugins: [
+    react(),
+    // @ts-expect-error type issue with vite-plugin-markdown
+    md({
+      mode: [Mode.REACT, Mode.TOC],
+    }),
+    tailwindcss(),
+    uniqueMark(),
+  ],
   preview: {
     host: 'localhost',
     port: 4300,
