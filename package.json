@@ -74,6 +74,7 @@
   },
   "scripts": {
     "add:app": "bun apps/sample-web-app/src/bin/add-app.cli.ts",
+    "add:shadcn": "bun libs/components/bin/add.cli.ts",
     "build": "nx run-many -t build,list && echo build success",
     "check": "pnpm check:lock && pnpm check:repo && pnpm check:biome && pnpm check:oxlint && pnpm check:nx && echo check success",
     "check:biome": "biome check --error-on-warnings --write --unsafe && echo check:biome success",
@@ -90,7 +91,6 @@
     "postversion": "git push && git push --tags",
     "preversion": "pnpm check",
     "sb": "pnpm run storybook:run",
-    "shadcn:add": "bun libs/components/bin/add.cli.ts",
     "storybook:build": "nx build-storybook components && echo storybook:build success",
     "storybook:run": "nx run-storybook components",
     "storybook:test": "nx test-storybook components && echo storybook:test success",

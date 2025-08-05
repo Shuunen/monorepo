@@ -11,7 +11,7 @@ function exitWithError(message: string) {
   process.exit(1)
 }
 
-if (!component) exitWithError('Please provide a component name to add, ex : pnpm shadcn:add breadcrumb')
+if (!component) exitWithError('Please provide a component name to add, ex : pnpm add:shadcn breadcrumb')
 
 function moveComponent() {
   const sourceFile = join(process.cwd(), '@shadcn', `${component}.tsx`)
