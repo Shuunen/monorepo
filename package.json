@@ -73,6 +73,7 @@
     "url": "git+https://github.com/Shuunen/monorepo.git"
   },
   "scripts": {
+    "add:app": "bun apps/sample-web-app/src/bin/add-app.cli.ts",
     "build": "nx run-many -t build,list && echo build success",
     "check": "pnpm check:lock && pnpm check:repo && pnpm check:biome && pnpm check:oxlint && pnpm check:nx && echo check success",
     "check:biome": "biome check --error-on-warnings --write --unsafe && echo check:biome success",
