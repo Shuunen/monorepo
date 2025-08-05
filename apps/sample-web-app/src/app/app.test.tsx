@@ -18,6 +18,6 @@ describe('App', () => {
         <App />
       </BrowserRouter>,
     )
-    expect(getAllByText(/Sample Web App/gi).length > 0).toBeTruthy()
+    expect(getAllByText('sample-web-app').length > 0).toBeTruthy()
   })
 })

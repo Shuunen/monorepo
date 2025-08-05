@@ -17,7 +17,7 @@ export function App() {
         </NavLink>
       </nav>
       <Routes>
-        <Route element={<Landing status="Use apps/sample-web-app as a template" subtitle="Web application built with React and TailwindCSS" title="Sample Web App" />} path="/" />
+        <Route element={<Landing status="I'm a starter base project" subtitle="Web application built with React and TailwindCSS" title="sample-web-app" />} path="/" />
         <Route element={<Landing subtitle={`This project is the great work of ${person.firstName} ${person.lastName} 😎`} title="About" />} path="/about" />
       </Routes>
     </div>
