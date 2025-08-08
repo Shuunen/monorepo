@@ -166,6 +166,5 @@ function GithubAio() {
   void process('initial-dom-ready')
 }
 
-// biome-ignore lint/nursery/noFloatingPromises: it's ok
 if (globalThis.window) GithubAio()
 else module.exports = { createIssueCountLink, getIssueCountCached, getRepoFullName }

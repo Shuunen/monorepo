@@ -58,7 +58,7 @@ export class Machine {
    * @returns the icon
    */
   public icon() {
-    const { state } = this
+    const state = this.state
     /* c8 ignore next 7 */
     if (state === 'initial') return '🎬'
     if (state === 'ready') return '🏎️'
