@@ -21,7 +21,7 @@ h1 {
 }
 
 h2 {
-  @apply text-3xl pb-4 font-semibold;
+  @apply text-3xl pb-4 pt-6 font-semibold;
 }
 
 ul {
@@ -32,23 +32,21 @@ ol {
   @apply list-decimal pb-4;
 }
 
-.bg-pasta {
-  background-image: url("/background.svg");
-}
-
 nav + div {
-  @apply justify-center items-center align-middle grow h-full flex flex-col;
+  background-image: url("/background.svg");
+  @apply justify-center items-center align-middle grow flex flex-col p-12;
 }
 
-h1 + h2 {
-  @apply pt-6 -mt-16;
+h1 + h2,
+h1 + p {
+  @apply pt-8 -mt-14;
 }
 
 h2,
 ul,
 ol,
 p {
-  @apply bg-white/95 w-1/2 shadow-lg pl-6;
+  @apply bg-white/95 w-1/2 min-w-md shadow-lg pl-6;
 }
 
 ul {
