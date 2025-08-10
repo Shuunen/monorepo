@@ -1,5 +1,6 @@
+import { HomeIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 type RecipeParams = {
   category: string
@@ -65,5 +66,15 @@ export function RecipeViewer() {
 
   if (!RecipeComponent) return <ErrorMessage error="Composant de recette non disponible" />
 
-  return <RecipeComponent data-component="recipe" />
+  return (
+    <div className="flex flex-col min-h-screen" data-component="recipe">
+      <Link className="flex fixed bottom-4 w-full  " to="/">
+        <span className="flex mx-auto w-fit rounded-full border-2 bg-white text-primary border-primary shadow-lg items-center gap-4 px-4 py-2">
+          Retour à l'accueil
+          <HomeIcon />
+        </span>
+      </Link>
+      <RecipeComponent />
+    </div>
+  )
 }

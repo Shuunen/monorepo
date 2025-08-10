@@ -17,11 +17,11 @@ body {
 }
 
 h1 {
-  @apply text-5xl font-bold shadow-lg py-4 px-8 -rotate-2 mb-12 transition-transform bg-white;
+  @apply text-3xl shrink-0 md:text-5xl font-bold shadow-lg mt-6 py-4 px-8 -rotate-2 mb-12 transition-transform bg-white truncate max-w-full block;
 }
 
 h2 {
-  @apply text-3xl pb-4 pt-6 font-semibold;
+  @apply text-2xl md:text-3xl pb-4 pt-6 font-semibold;
 }
 
 ul {
@@ -32,21 +32,25 @@ ol {
   @apply list-decimal pb-4;
 }
 
-nav + div {
+h2,
+ul,
+ol,
+p {
+  @apply bg-white/95 w-full shadow-lg px-6 max-w-2xl;
+}
+
+[data-component="recipe"] > div {
+  @apply justify-center items-center align-middle grow flex flex-col pb-12;
+}
+
+.bg-pasta,
+[data-component="recipe"] > div {
   background-image: url("/background.svg");
-  @apply justify-center items-center align-middle grow flex flex-col p-12;
 }
 
 h1 + h2,
 h1 + p {
   @apply pt-8 -mt-14;
-}
-
-h2,
-ul,
-ol,
-p {
-  @apply bg-white/95 w-1/2 min-w-md shadow-lg pl-6;
 }
 
 ul {
@@ -60,4 +64,8 @@ ol {
 div > p:last-child {
   background-image: url("/divider.svg");
   @apply pb-18 bg-bottom bg-no-repeat bg-blend-color;
+}
+
+a {
+  @apply text-primary hover:underline truncate max-w-full block;
 }
