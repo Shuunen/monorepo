@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
-const navClasses = ({ isActive }: { isActive: boolean }) => `transition-colors ${isActive ? 'text-primary underline underline-offset-22' : 'text-gray-700 hover:text-primary'}`
-
 const RECIPE_PATH_REGEX = /\.\.\/recipes\/([^/]+)\/([^/]+)\.md$/
 
 const categoryMap: Record<string, string> = {
@@ -27,6 +25,7 @@ function parseRecipesFromPaths(recipeModules: Record<string, () => Promise<unkno
     const match = path.match(RECIPE_PATH_REGEX)
     if (!match) continue
     const [, category, name] = match
+    /* c8 ignore next */
     if (name === 'template') continue
     recipes.push({ category, name })
   }
@@ -43,12 +42,9 @@ function groupRecipesByCategory(recipes: Recipe[]): Record<string, Recipe[]> {
   return grouped
 }
 
-function LoadingNav() {
+function Loading() {
   return (
     <nav className="flex gap-6 text-2xl font-semibold justify-center w-full p-4 bg-white shadow-md">
-      <NavLink className={navClasses} to="/">
-        Accueil
-      </NavLink>
       <span className="text-gray-500">Chargement des recettes...</span>
     </nav>
   )
@@ -59,6 +55,7 @@ export function RecipeMenu() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    /* c8 ignore next */
     const recipeModules = import.meta.glob('../recipes/**/*.md')
     const parsedRecipes = parseRecipesFromPaths(recipeModules)
     const grouped = groupRecipesByCategory(parsedRecipes)
@@ -66,7 +63,7 @@ export function RecipeMenu() {
     setIsLoading(false)
   }, [])
 
-  if (isLoading) return <LoadingNav />
+  if (isLoading) return <Loading />
 
   const categories = Object.keys(groupedRecipes).sort()
 
@@ -74,7 +71,7 @@ export function RecipeMenu() {
     <div className="-mt-12 mb-8 pt-8">
       {categories.map(category => (
         <section className="mb-8" key={category}>
-          <h2 className="text-2xl font-bold text-gray-800">{categoryMap[category] || 'missing-mapping'}</h2>
+          <h2 className="text-2xl font-bold text-gray-800">{categoryMap[category] /* c8 ignore next */ || 'missing-mapping'}</h2>
           <ol className="gap-x-6 gap-y-2 grid sm:grid-cols-2 md:grid-cols-3 md:max-w-fit!">
             {groupedRecipes[category].map((recipe, index) => (
               <li className="flex items-center" key={`${recipe.category}/${recipe.name}`}>

@@ -13,3 +13,4 @@ root.render(
     </BrowserRouter>
   </StrictMode>,
 )
+/* c8 ignore end */

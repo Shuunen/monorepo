@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
+    "lib": [
+      "DOM"
+    ],
     "outDir": "./out-tsc/vitest",
     "types": [
       "vitest/globals",
