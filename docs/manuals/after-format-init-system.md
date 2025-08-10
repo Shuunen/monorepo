@@ -301,7 +301,6 @@ git clone git@github.com:Shuunen/folio.git
 git clone git@github.com:Shuunen/ging.git
 git clone git@github.com:Shuunen/goals.git
 git clone git@github.com:Shuunen/monorepo.git
-git clone git@github.com:Shuunen/recipes.git
 git clone git@github.com:Shuunen/regex-converter.git
 git clone git@github.com:Shuunen/vue-image-compare.git
 find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "cd '{}' && git checkout master && git pull && pnpm i" \;
