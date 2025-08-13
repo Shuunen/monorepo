@@ -31,6 +31,7 @@ function LoadingMessage() {
   )
 }
 
+// oxlint-disable-next-line max-lines-per-function
 export function RecipeViewer() {
   const { category, recipe } = useParams<RecipeParams>()
   const [RecipeComponent, setRecipeComponent] = useState<React.ComponentType | undefined>(undefined)
@@ -52,6 +53,7 @@ export function RecipeViewer() {
     /* c8 ignore start */
     import(`../recipes/${category}/${recipe}.md`)
       .then((module: RecipeModule) => {
+        // oxlint-disable-next-line max-nested-callbacks
         setRecipeComponent(() => module.ReactComponent)
         setIsLoading(false)
       })
