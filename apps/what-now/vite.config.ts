@@ -1,5 +1,6 @@
 import { uniqueMark } from '@shuunen/vite-plugins'
 import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -15,7 +16,7 @@ export default defineConfig({
   html: {
     cspNonce: 'shu1772n1',
   },
-  plugins: [tailwindcss(), uniqueMark()],
+  plugins: [react(), tailwindcss(), uniqueMark()],
   preview: {
     host: 'localhost',
     port: 4300,
@@ -29,7 +30,7 @@ export default defineConfig({
     coverage: {
       include: ['src/utils'],
       provider: 'v8' as const,
-      reporter: ['text', 'lcov', 'html'],
+      reporter: [['text', { maxCols: 120 }], 'lcov', 'html'],
       reportsDirectory: './test-output/vitest/coverage',
       thresholds: {
         100: true,

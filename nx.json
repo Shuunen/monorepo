@@ -105,6 +105,7 @@
     }
   },
   "tui": {
-    "enabled": false
+    "autoExit": true,
+    "enabled": true
   }
 }

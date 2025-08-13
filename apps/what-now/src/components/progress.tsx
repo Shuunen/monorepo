@@ -1,14 +1,12 @@
-// oxlint-disable no-magic-numbers
-import { debounce, dom, fetchJson, fetchRaw, nbPercentMax, throttle, tw } from '@shuunen/shuutils'
+import { debounce, fetchJson, fetchRaw, nbHueMax, nbMsInHour, nbPercentMax, throttle } from '@shuunen/shuutils'
+import type { Task } from '../types'
 import { logger } from '../utils/logger.utils'
 import { trmnlPayload } from '../utils/progress.utils'
-import { state, watchState } from '../utils/state.utils'
+import { state } from '../utils/state.utils'
 import { isTaskActive } from '../utils/tasks.utils'
 
-export const progress = dom('hr', tw('app-progress mb-4 mt-1'))
-progress.style.width = '0'
-
 function counterText(percent = 0) {
+  /* oxlint-disable no-magic-numbers */
   if (!percent) return 'Nothing done... yet'
   if (percent <= 25) return 'Amuse-bouche : check'
   if (percent <= 33) return 'Now we are talking'
@@ -16,9 +14,10 @@ function counterText(percent = 0) {
   if (percent <= 75) return 'Final chapter for today'
   if (percent < 100) return 'Lasts tasks remaining !'
   return 'You made it, well done dude :)'
+  /* oxlint-enable no-magic-numbers */
 }
 
-async function emitToHue(percent = 0) {
+async function emitToHue(percent: number) {
   const options = {
     body: `progress=${percent}`,
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -29,7 +28,8 @@ async function emitToHue(percent = 0) {
   logger.info('hue response', result)
 }
 
-function getProgressBackground(percent = 0) {
+function getProgressBackground(percent: number) {
+  /* oxlint-disable no-magic-numbers */
   if (percent <= 10) return 'from-red-700 to-red-800'
   if (percent <= 20) return 'from-red-800 to-orange-700'
   if (percent <= 30) return 'from-orange-700 to-yellow-700'
@@ -40,15 +40,16 @@ function getProgressBackground(percent = 0) {
   if (percent <= 80) return 'from-green-800 to-green-900'
   if (percent <= 90) return 'from-green-900 to-green-950'
   return 'from-green-950 to-green-950'
+  /* oxlint-enable no-magic-numbers */
 }
 
-function showProgressBackground(percent = 0) {
+function showProgressBackground(percent: number) {
   logger.info(`show progress background for ${percent}%`)
   const target = getProgressBackground(percent)
   document.body.className = document.body.className.replace(/from-\w+-\d+ to-\w+-\d+/giu, target)
 }
 
-async function emitToTrmnlSync(progress = 0) {
+async function emitToTrmnlSync(progress: number) {
   const options = {
     body: trmnlPayload(progress),
     headers: { 'content-type': 'application/json' },
@@ -59,15 +60,12 @@ async function emitToTrmnlSync(progress = 0) {
   logger.info('trmnl response', result)
 }
 
-// Throttle to max 12 calls per hour (one call every 5 minutes = 300,000ms)
-const emitToTrmnl = throttle(emitToTrmnlSync, 300_000)
+const maxCallsPerHour = 12
+const throttleDelay = Math.round(nbMsInHour / maxCallsPerHour)
+const emitToTrmnl = throttle(emitToTrmnlSync, throttleDelay)
 
-function showProgressSync() {
-  const total = state.tasks.length
-  const remaining = state.tasks.filter(task => isTaskActive(task)).length
-  const percent = nbPercentMax - Math.round((remaining / total) * nbPercentMax)
-  logger.info('show progress', { percent, remaining, total })
-  progress.style.width = `${percent}%`
+function showProgressSync(percent: number) {
+  logger.info('show progress', { percent })
   document.body.dataset.progress = String(percent)
   state.statusProgress = counterText(percent)
   showProgressBackground(percent)
@@ -75,19 +73,14 @@ function showProgressSync() {
   if (state.trmnlWebhook !== '') emitToTrmnl(percent)
 }
 
-const showProgress = debounce(showProgressSync, 300)
+const showProgress = debounce(showProgressSync, nbHueMax)
 
-// async function fakeProgress () {
-//   for (let percent = 0; percent <= nbPercentMax; percent += 10) {
-//     showProgressBackground(percent)
-//     await sleep(2000)
-//   }
-// }
-
-watchState('tasks', () => {
-  void showProgress()
-})
-
-watchState('isSetup', () => {
-  if (state.isSetup) void showProgress()
-})
+export function Progress({ tasks }: { tasks: Task[] }) {
+  const total = tasks.length
+  const remaining = tasks.filter(task => isTaskActive(task)).length
+  const percent = nbPercentMax - Math.round((remaining / total) * nbPercentMax)
+  const style = { width: `${percent}%` }
+  showProgress(percent)
+  logger.info('progress render')
+  return <hr className="mb-4 mt-1" data-testid="progress" style={style} />
+}

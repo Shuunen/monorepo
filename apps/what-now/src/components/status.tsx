@@ -1,24 +1,9 @@
-import { div, text, tw } from '@shuunen/shuutils'
-import { state, watchState } from '../utils/state.utils'
-
-const error = text(tw('app-error font-bold text-red-500'), state.statusError)
-watchState('statusError', () => {
-  error.innerHTML = state.statusError
-})
-
-const info = text('info text-transparent transition-colors ease-in-out', state.statusInfo)
-watchState('statusInfo', () => {
-  info.innerHTML = state.statusInfo || '&nbsp;'
-  info.classList.toggle(tw('text-inherit'), state.statusInfo !== '')
-})
-
-const progress = text(tw('app-progress text-2xl font-light italic'), state.statusProgress)
-watchState('statusProgress', () => {
-  progress.innerHTML = state.statusProgress
-})
-
-const status = div(tw('app-status flex flex-col'))
-
-status.append(error, info, progress)
-
-export { status }
+export function Status({ error, info, progress }: { error?: string; info?: string; progress?: string }) {
+  return (
+    <div className="flex flex-col" data-testid="status">
+      <div className="font-bold text-red-500">{error}</div>
+      <div className={`transition-colors ease-in-out ${info ? 'text-inherit' : 'text-transparent'}`}>{info || '\u00A0'}</div>
+      <div className="text-2xl font-light italic">{progress}</div>
+    </div>
+  )
+}

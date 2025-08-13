@@ -3,8 +3,9 @@
 
 <head>
   <title>What Now</title>
-  <meta charset="UTF-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <base href="/">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
   <meta content="Minimalist task coach" name="description">
   <meta content="#0c7ade" name="theme-color">
   <meta content="" name="unique-mark">
@@ -12,9 +13,12 @@
   <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
   <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
   <link href="/app.webmanifest" rel="manifest">
+  <link rel="stylesheet" href="/src/styles.css">
 </head>
 
-<body class="flex flex-col bg-fixed items-center justify-center min-h-full pt-6 px-6 pb-12 text-blue-100 bg-linear-to-tr from-gray-800 to-gray-900">
+<body class="flex flex-col bg-fixed min-h-full p-12 bg-linear-to-tr text-white from-gray-800 to-gray-900">
+
+  <div id="root"></div>
 
   <noscript>
     We're sorry but What Now doesn't work properly without JavaScript enabled. Please enable it to continue.
@@ -24,7 +28,7 @@
     __unique-mark__
   </footer>
 
-  <script nonce="shu1772n1" src="/src/index.ts" type="module"></script>
+  <script nonce="shu1772n1" src="/src/main.tsx" type="module"></script>
 
 </body>
 
