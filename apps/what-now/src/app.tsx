@@ -4,7 +4,9 @@ import { checkUrlCredentials } from './utils/credentials.utils'
 import './utils/database.utils'
 import './utils/idle.utils'
 import { Route, Routes } from 'react-router-dom'
-import { PageTasks } from './pages/tasks'
+import { PageAbout } from './pages/page-about'
+import { PageSettings } from './pages/page-settings'
+import { PageTasks } from './pages/page-tasks'
 import { logger } from './utils/logger.utils'
 import { state, watchState } from './utils/state.utils'
 import { loadTasks } from './utils/tasks.utils'
@@ -24,6 +26,8 @@ export function App() {
   return (
     <Routes>
       <Route element={<PageTasks />} path="/" />
+      <Route element={<PageSettings />} path="/settings" />
+      <Route element={<PageAbout />} path="/about" />
     </Routes>
   )
 }

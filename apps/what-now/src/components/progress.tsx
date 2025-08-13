@@ -77,10 +77,9 @@ const showProgress = debounce(showProgressSync, nbHueMax)
 
 export function Progress({ tasks }: { tasks: Task[] }) {
   const total = tasks.length
+  if (total === 0) return
   const remaining = tasks.filter(task => isTaskActive(task)).length
   const percent = nbPercentMax - Math.round((remaining / total) * nbPercentMax)
-  const style = { width: `${percent}%` }
   showProgress(percent)
-  logger.info('progress render')
-  return <hr className="mb-4 mt-1" data-testid="progress" style={style} />
+  return <hr className="mb-4 border-dashed border mt-1" data-testid="progress" style={{ width: `${percent}%` }} />
 }

@@ -44,6 +44,6 @@ export function checkUrlCredentials(hash = '') {
   }
   state.isSetup = validateCredentials(state.apiDatabase, state.apiCollection)
   logger.info('credentials are', state.isSetup ? 'valid' : 'invalid')
-  state.statusInfo = state.isSetup ? '' : 'Welcome dear user !'
+  state.statusInfo = state.isSetup ? '' : 'Welcome dear user, please setup your credentials in settings.'
   return state.isSetup
 }

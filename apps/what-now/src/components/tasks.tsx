@@ -157,11 +157,6 @@ export function Tasks({ tasks }: { tasks: Task[] }) {
           </button>
         )
       })}
-      {tasks.length === 0 && (
-        <p className="text-center text-gray-500" data-testid="no-tasks">
-          No tasks available
-        </p>
-      )}
     </div>
   )
 }
