@@ -4,9 +4,11 @@ import { Landing } from './landing'
 
 const meta: Meta<typeof Landing> = {
   component: Landing,
-  title: 'Landing',
+  title: 'molecules/Landing',
 }
+
 export default meta
+
 type Story = StoryObj<typeof Landing>
 
 export const Basic: Story = {

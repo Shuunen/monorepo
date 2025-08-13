@@ -12,6 +12,13 @@ const config: StorybookConfig = {
   },
   // initially : '../src/**/*.@(mdx|stories.@(js|jsx|ts|tsx))'
   stories: ['../src/**/*.@(mdx|stories.tsx)'],
+  viteFinal: config => {
+    config.esbuild = {
+      ...config.esbuild,
+      jsx: 'automatic',
+    }
+    return config
+  },
 }
 
 // oxlint-disable-next-line no-default-export
