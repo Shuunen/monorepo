@@ -30,7 +30,7 @@ function moveComponent() {
 function fixImports() {
   const filePath = join(process.cwd(), 'libs', 'components', 'src', 'shadcn', `${component}.tsx`)
   let content = readFileSync(filePath, 'utf8')
-  content = content.replace('@shadcn/utils', './utils')
+  content = content.replace('@shadcn/', './')
   writeFileSync(filePath, content, 'utf8')
   logger.success(`Imports fixed`)
 }
