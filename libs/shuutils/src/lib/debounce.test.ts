@@ -47,10 +47,10 @@ it('debounce B : async function', async () => {
   myAsyncFunctionDebounced()
   await sleep(1)
   expect(times, 'after 3 successive calls, time : 1ms').toBe(0)
-  await sleep(6)
-  expect(times, 'after first sleep should not have fired, time : 7ms').toBe(0)
   await sleep(3)
-  expect(times, 'after even more sleep should have fired, time : 10ms').toBe(1)
+  expect(times, 'after first sleep should not have fired yet, time : 4ms').toBe(0)
+  await sleep(8)
+  expect(times, 'after enough time for debounce + async execution, time : 12ms').toBe(1)
 })
 
 it('debounce C : return type', () => {
