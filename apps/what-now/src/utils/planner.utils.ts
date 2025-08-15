@@ -146,22 +146,59 @@ export function createTaskDistribution(tasks: Task[], modifications: Record<stri
  */
 function createTaskUpdatePromise(taskId: string, newDays: number, tasks: Task[]) {
   const task = tasks.find(currentTask => currentTask.id === taskId)
-  if (!task) return Result.error(`failed to find task ${taskId}`)
+  if (!task) return Promise.resolve(Result.error(`failed to find task ${taskId}`))
   const frequencyString = daysToFrequencyString(newDays)
   return updateTask({ ...task, once: frequencyString })
 }
 
 /**
+ * Creates a date update promise for a task
+ * @param taskId - Task ID to update
+ * @param newCompletedOn - New completion date
+ * @param tasks - Array of all tasks
+ * @returns Promise that resolves to update result
+ */
+function createTaskDateUpdatePromise(taskId: string, newCompletedOn: string, tasks: Task[]) {
+  const task = tasks.find(currentTask => currentTask.id === taskId)
+  if (!task) return Promise.resolve(Result.error(`task with id ${taskId} not found`))
+  return updateTask({ ...task, completedOn: newCompletedOn })
+}
+
+/**
+ * Processes all update promises and checks if they were successful
+ * @param updatePromises - Array of update promises
+ * @returns Promise that resolves to Result indicating success or failure
+ */
+async function processUpdatePromises(updatePromises: Promise<unknown>[]) {
+  const results = await Promise.allSettled(updatePromises)
+  const allSuccessful = results.every(result => {
+    if (result.status !== 'fulfilled') return false
+    const value = result.value as { ok: boolean }
+    return value?.ok
+  })
+  if (!allSuccessful) return Result.error('failed to save task modifications')
+  return Result.ok('successfully saved task modifications')
+}
+
+/**
  * Handles saving task frequency modifications
- * @param modifications - Record of task ID to new frequency in days
+ * @param frequencyModifications - Record of task ID to new frequency in days
+ * @param dateModifications - Record of task ID to new completion date
  * @param tasks - Array of all tasks
  * @returns Promise that resolves when save is complete
  */
-export async function saveTaskModifications(modifications: Record<string, number>, tasks: Task[]) {
-  const entries = Object.entries(modifications)
-  const updatePromises = entries.map(([taskId, newDays]) => createTaskUpdatePromise(taskId, newDays, tasks))
-  const results = await Promise.allSettled(updatePromises)
-  const allSuccessful = results.every(result => result.status === 'fulfilled' && result.value.ok)
-  if (!allSuccessful) return Result.error('failed to save task modifications')
-  return Result.ok('successfully saved task modifications')
+export function saveTaskModifications(frequencyModifications: Record<string, number>, dateModifications: Record<string, string>, tasks: Task[]) {
+  const updatePromises: Promise<unknown>[] = []
+
+  // Handle frequency modifications
+  const frequencyEntries = Object.entries(frequencyModifications)
+  const frequencyPromises = frequencyEntries.map(([taskId, newDays]) => createTaskUpdatePromise(taskId, newDays, tasks))
+  updatePromises.push(...frequencyPromises)
+
+  // Handle date modifications
+  const dateEntries = Object.entries(dateModifications)
+  const datePromises = dateEntries.map(([taskId, newCompletedOn]) => createTaskDateUpdatePromise(taskId, newCompletedOn, tasks))
+  updatePromises.push(...datePromises)
+
+  return processUpdatePromises(updatePromises)
 }

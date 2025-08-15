@@ -202,9 +202,10 @@ describe('planner utils', () => {
 
   it('saveTaskModifications A should save all modifications successfully', async () => {
     const modifications = { 'task-1': 14 }
+    const dateModifications = {}
     const tasks = [mockTask]
     vi.mocked(databaseUtils.updateTask).mockResolvedValue(Result.ok(mockAppWriteTask))
-    const result = await saveTaskModifications(modifications, tasks)
+    const result = await saveTaskModifications(modifications, dateModifications, tasks)
     expect(result.ok).toBe(true)
     expect(databaseUtils.updateTask).toHaveBeenCalledWith({
       ...mockTask,
@@ -214,25 +215,68 @@ describe('planner utils', () => {
 
   it('saveTaskModifications B should return error when task not found', async () => {
     const modifications = { 'nonexistent-task': 14 }
+    const dateModifications = {}
     const tasks = [mockTask]
-    const result = await saveTaskModifications(modifications, tasks)
+    const result = await saveTaskModifications(modifications, dateModifications, tasks)
     expect(result.ok).toBe(false)
   })
 
   it('saveTaskModifications C should return error when update fails', async () => {
     const modifications = { 'task-1': 14 }
+    const dateModifications = {}
     const tasks = [mockTask]
     vi.mocked(databaseUtils.updateTask).mockResolvedValue(Result.error('update failed'))
-    const result = await saveTaskModifications(modifications, tasks)
+    const result = await saveTaskModifications(modifications, dateModifications, tasks)
     expect(result.ok).toBe(false)
   })
 
   it('saveTaskModifications D should handle mixed success and failure', async () => {
     const modifications = { 'task-1': 14, 'task-2': 7 }
+    const dateModifications = {}
     const task2 = { ...mockTask, id: 'task-2' }
     const tasks = [mockTask, task2]
     vi.mocked(databaseUtils.updateTask).mockResolvedValueOnce(Result.ok(mockAppWriteTask)).mockResolvedValueOnce(Result.error('failure'))
-    const result = await saveTaskModifications(modifications, tasks)
+    const result = await saveTaskModifications(modifications, dateModifications, tasks)
+    expect(result.ok).toBe(false)
+  })
+
+  it('saveTaskModifications E should save date modifications successfully', async () => {
+    const modifications = {}
+    const dateModifications = { 'task-1': '2023-10-01T00:00:00.000Z' }
+    const tasks = [mockTask]
+    vi.mocked(databaseUtils.updateTask).mockResolvedValue(Result.ok(mockAppWriteTask))
+    const result = await saveTaskModifications(modifications, dateModifications, tasks)
+    expect(result.ok).toBe(true)
+    expect(databaseUtils.updateTask).toHaveBeenCalledWith({
+      ...mockTask,
+      completedOn: '2023-10-01T00:00:00.000Z',
+    })
+  })
+
+  it('saveTaskModifications F should save both frequency and date modifications', async () => {
+    const modifications = { 'task-1': 7 }
+    const dateModifications = { 'task-1': '2023-10-01T00:00:00.000Z' }
+    const tasks = [mockTask]
+    vi.mocked(databaseUtils.updateTask).mockResolvedValue(Result.ok(mockAppWriteTask))
+    const result = await saveTaskModifications(modifications, dateModifications, tasks)
+    expect(result.ok).toBe(true)
+    expect(databaseUtils.updateTask).toHaveBeenCalledTimes(2) // Should be called twice: once for frequency, once for date
+  })
+
+  it('saveTaskModifications G should return error when date modification task not found', async () => {
+    const modifications = {}
+    const dateModifications = { 'nonexistent-task': '2023-10-01T00:00:00.000Z' }
+    const tasks = [mockTask]
+    const result = await saveTaskModifications(modifications, dateModifications, tasks)
+    expect(result.ok).toBe(false)
+  })
+
+  it('saveTaskModifications H should handle promise rejection', async () => {
+    const modifications = { 'task-1': 7 }
+    const dateModifications = {}
+    const tasks = [mockTask]
+    vi.mocked(databaseUtils.updateTask).mockRejectedValue(new Error('network error'))
+    const result = await saveTaskModifications(modifications, dateModifications, tasks)
     expect(result.ok).toBe(false)
   })
 })
