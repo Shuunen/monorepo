@@ -8,7 +8,7 @@ const client = new Client()
 const database = new Databases(client)
 client.setEndpoint('https://cloud.appwrite.io/v1').setProject('what-now')
 
-type AppWriteTaskModel = AppWriteTask & Models.Document
+export type AppWriteTaskModel = AppWriteTask & Models.Document
 
 export const uuidMaxLength = 36
 
@@ -17,7 +17,7 @@ export const uuidMaxLength = 36
  * @param task the db task to convert
  * @returns the app task
  */
-export function remoteToLocalTask(task: AppWriteTaskModel) {
+export function modelToLocalTask(task: AppWriteTaskModel) {
   return {
     completedOn: task['completed-on'],
     id: task.$id,
@@ -25,7 +25,24 @@ export function remoteToLocalTask(task: AppWriteTaskModel) {
     minutes: task.minutes,
     name: task.name,
     once: task.once,
+    reason: task.reason ?? undefined,
   } satisfies Task
+}
+
+/**
+ * Create task for database insertion
+ * @param model - The uploaded task
+ * @returns AppWrite task format
+ */
+export function modelToRemoteTask(model: AppWriteTaskModel) {
+  return {
+    'completed-on': model['completed-on'],
+    done: model.done,
+    minutes: model.minutes,
+    name: model.name,
+    once: model.once,
+    reason: model.reason,
+  } satisfies AppWriteTask
 }
 
 /**
@@ -40,6 +57,7 @@ export function localToRemoteTask(task: Readonly<Task>) {
     minutes: task.minutes,
     name: task.name,
     once: task.once,
+    reason: task.reason ?? '',
   } satisfies AppWriteTask
 }
 
@@ -64,13 +82,13 @@ export function updateTask(task: Readonly<Task>) {
 }
 
 /**
- * Get all tasks from the database and store them in the state
+ * Get all tasks from the database
  * @returns the result of the operation
  */
 export async function getTasks() {
   const result = await Result.trySafe(database.listDocuments<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, [Query.limit(nbPercentMax)]))
   if (!result.ok) return result
-  const tasks = result.value.documents.map<Task>(task => remoteToLocalTask(task))
+  const tasks = result.value.documents.map<Task>(task => modelToLocalTask(task))
   logger.info(`found ${tasks.length} tasks on db`, tasks)
   return Result.ok(tasks)
 }

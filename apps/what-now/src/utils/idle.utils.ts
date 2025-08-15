@@ -64,3 +64,4 @@ import { logger } from './logger.utils'
     }, this.checkInactivityEvery * nbMsInMinute)
   }
 })()
+/* c8 ignore end */

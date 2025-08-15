@@ -5,6 +5,7 @@ import './utils/database.utils'
 import './utils/idle.utils'
 import { Route, Routes } from 'react-router-dom'
 import { PageAbout } from './pages/page-about'
+import { PagePlanner } from './pages/page-planner'
 import { PageSettings } from './pages/page-settings'
 import { PageTasks } from './pages/page-tasks'
 import { logger } from './utils/logger.utils'
@@ -26,6 +27,7 @@ export function App() {
   return (
     <Routes>
       <Route element={<PageTasks />} path="/" />
+      <Route element={<PagePlanner />} path="/planner" />
       <Route element={<PageSettings />} path="/settings" />
       <Route element={<PageAbout />} path="/about" />
     </Routes>

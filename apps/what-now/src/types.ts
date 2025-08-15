@@ -14,7 +14,7 @@ export type Task = {
    * The average time to complete the task in minutes
    */
   minutes: number
-  /** exemple: "ranger un truc qui traîne" */
+  /** @example "ranger un truc qui traîne" */
   name: string
   /**
    * The frequency of the task like "day", "2-months"
@@ -27,16 +27,16 @@ export type Task = {
 }
 
 export type AppWriteTask = {
-  /** exemple: "2025-01-26T18:53:32.006+00:00" */
+  /** @example "2025-01-26T18:53:32.006+00:00" */
   'completed-on': string
-  /** exemple: false */
+  /** @example false */
   done: boolean
-  /** exemple: 5 */
+  /** @example 5 */
   minutes: number
-  /** exemple: "ranger un truc qui traîne" */
+  /** @example "ranger un truc qui traîne" */
   name: string
-  /** exemple: "day" */
+  /** @example "day" */
   once: string
-  /** exemple: null */
-  reason?: string
+  /** @example null */
+  reason?: string | null
 }

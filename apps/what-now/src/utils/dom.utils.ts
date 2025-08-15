@@ -60,3 +60,4 @@ export function form(fields: Readonly<FormField[]>) {
   element.append(div(tw('flex gap-4'), buttons))
   return element
 }
+/* c8 ignore end */

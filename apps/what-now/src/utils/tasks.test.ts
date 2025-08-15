@@ -3,7 +3,7 @@ import { daysAgoIso10, daysFromNow, functionReturningVoid, sleep } from '@shuune
 import { expect, it, vi } from 'vitest'
 import { addTask, localToRemoteTask } from './database.utils'
 import { state } from './state.utils'
-import { byActive, completeTask, daysRecurrence, daysSinceCompletion, dispatchTask, dispatchTasks, fetchList, isDataOlderThan, isTaskActive, loadTasks, minutesRemaining, taskMock, toggleComplete, unCompleteTask } from './tasks.utils'
+import { byActive, completeTask, daysRecurrence, daysSinceCompletion, dispatchTask, dispatchTasksAndUpdate, fetchList, isDataOlderThan, isTaskActive, loadTasks, minutesRemaining, taskMock, toggleComplete, unCompleteTask } from './tasks.utils'
 
 const today = daysAgoIso10(0)
 const yesterday = daysAgoIso10(1)
@@ -174,7 +174,13 @@ it('data old check', async () => {
 
 it('dispatch tasks list', async () => {
   const task = taskMock({ completedOn: yesterday, once: 'day' })
-  await dispatchTasks([task])
+  await dispatchTasksAndUpdate([task])
+})
+
+it('dispatch tasks list with mixed success and failure', async () => {
+  const successTask = taskMock({ completedOn: yesterday, once: 'week' })
+  const failureTask = taskMock({ completedOn: yesterday, once: 'day' })
+  await dispatchTasksAndUpdate([successTask, failureTask])
 })
 
 it('dispatch task A : cannot dispatch a daily task', async () => {
@@ -248,6 +254,23 @@ it('loadTasks C failed to fetch tasks', async () => {
       "ok": false,
     }
   `)
+})
+
+it('loadTasks D should successfully fetch and load tasks', async () => {
+  state.isSetup = true
+  state.tasks = []
+  state.isLoading = true
+  state.tasksTimestamp = daysFromNow(-1).getTime()
+  state.apiDatabase = 'test-database'
+  state.apiCollection = 'test-collection'
+  expect(await loadTasks()).toMatchInlineSnapshot(`
+    Ok {
+      "ok": true,
+      "value": "tasks loaded",
+    }
+  `)
+  expect(state.isLoading).toBe(false)
+  expect(state.tasks.length).toBeGreaterThanOrEqual(0)
 })
 
 it('days recurrence A', () => {

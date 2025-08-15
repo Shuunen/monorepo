@@ -40,6 +40,8 @@ function setupComponent() {
   logger.info('Setup component...')
   moveComponent()
   fixImports()
+  // TODO : add the related story if it exists
+  // https://raw.githubusercontent.com/lloydrichards/shadcn-storybook-registry/refs/heads/main/registry/command.stories.tsx
   logger.success(`Component ${green(component)} is ready to use in libs/components 🚀`)
 }
 

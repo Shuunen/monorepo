@@ -1,5 +1,5 @@
 import type { FloatingMenuAction } from '@shuunen/components'
-import { CircleQuestionMarkIcon, HomeIcon, SettingsIcon } from 'lucide-react'
+import { CalendarIcon, CircleQuestionMarkIcon, HomeIcon, SettingsIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 /**
@@ -19,5 +19,5 @@ export function useActions() {
       name,
     } satisfies FloatingMenuAction
   }
-  return [getAction(HomeIcon, 'Tasks', '/'), getAction(SettingsIcon, 'Settings', '/settings'), getAction(CircleQuestionMarkIcon, 'About', '/about')]
+  return [getAction(HomeIcon, 'Tasks', '/'), getAction(CalendarIcon, 'Planner', '/planner'), getAction(SettingsIcon, 'Settings', '/settings'), getAction(CircleQuestionMarkIcon, 'About', '/about')]
 }

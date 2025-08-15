@@ -104,14 +104,21 @@ export function dispatchTask(task: Task, index = 0) {
   const completionDate = daysAgoIso10(nbBefore * position + delay)
   if (completionDate === task.completedOn) return Result.error('task already dispatched')
   task.completedOn = completionDate
-  return updateTask(task)
+  return Result.ok(task) // task dispatched
 }
 
-export async function dispatchTasks(tasks: Task[]) {
-  logger.info('dispatch tasks')
-  await Promise.all(tasks.map((task, index) => dispatchTask(task, index)))
-  state.tasksTimestamp = 0 // invalidate cache
-  await loadTasks()
+export function dispatchTasks(tasks: Task[]) {
+  logger.info('dispatch tasks...')
+  return tasks.map(task => dispatchTask(task))
+}
+
+export async function dispatchTasksAndUpdate(tasks: Task[]) {
+  logger.info('dispatch tasks and update...')
+  const taskUpdates = dispatchTasks(tasks).map(result => {
+    if (result.ok) return updateTask(result.value)
+    return Promise.resolve()
+  })
+  await Promise.all(taskUpdates)
 }
 
 export function toggleComplete(task: Task) {

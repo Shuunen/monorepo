@@ -130,9 +130,26 @@
 
 @layer base {
   * {
+    scrollbar-color: rgb(var(--color-muted-foreground)) rgb(var(--color-background));
+    scrollbar-width: thin;
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+  }
+  ::-webkit-scrollbar {
+    @apply size-2;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-background rounded;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted rounded border border-border;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/20;
+  }
+  ::-webkit-scrollbar-corner {
+    @apply bg-background;
   }
 }
