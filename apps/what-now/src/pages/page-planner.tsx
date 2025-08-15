@@ -1,11 +1,10 @@
-// oxlint-disable max-lines
-import { FloatingMenu } from '@shuunen/components'
+// oxlint-disable max-dependencies, max-lines
+import { Button, FloatingMenu } from '@shuunen/components'
 import { dateIso10 } from '@shuunen/shuutils'
-import { clsx } from 'clsx'
-import { CalendarIcon, MinusIcon, MoveLeftIcon, MoveRightIcon, PlusIcon } from 'lucide-react'
+import { ArrowLeftRightIcon, CalendarIcon, DownloadIcon, MinusIcon, MoveLeftIcon, MoveRightIcon, PlusIcon, SaveIcon, UploadIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Task } from '../types'
-import { getTasks } from '../utils/database.utils'
+import { downloadData, getTasks } from '../utils/database.utils'
 import { logger } from '../utils/logger.utils'
 import { useActions } from '../utils/pages.utils'
 import { createTaskDistribution, dailyRecurrence, getHigherFrequency, getLowerFrequency, getTaskColor, saveTaskModifications, weekDays } from '../utils/planner.utils'
@@ -30,20 +29,22 @@ type TaskModifications = {
  * @returns JSX element for control buttons
  */
 function TaskCardControls({ canIncrease, canDecrease, canMove, onIncrease, onDecrease, onBefore, onAfter }: { canIncrease: boolean; canDecrease: boolean; canMove: boolean; onIncrease: () => void; onDecrease: () => void; onBefore: () => void; onAfter: () => void }) {
+  const btnClasses = 'size-4 py-2'
+  const iconClasses = 'size-3'
   return (
     <div className="absolute right-0.5 top-0.5 grid grid-cols-2 gap-1.5 opacity-10 sepia hover:opacity-100 hover:sepia-0">
-      <button className={clsx('size-4 rounded flex items-center justify-center text-xs', { 'cursor-pointer text-white bg-green-600 hover:bg-green-700': canIncrease })} disabled={!canIncrease} onClick={onIncrease} type="button">
-        <PlusIcon className="size-3" />
-      </button>
-      <button className={clsx('size-4 rounded flex items-center justify-center text-xs', { 'cursor-pointer text-white bg-red-600 hover:bg-red-700': canDecrease })} disabled={!canDecrease} onClick={onDecrease} type="button">
-        <MinusIcon className="size-3" />
-      </button>
-      <button className={clsx('size-4 rounded flex items-center justify-center text-xs', { 'cursor-pointer text-white bg-primary/80 hover:bg-primary/50': canMove })} disabled={!canMove} onClick={onBefore} type="button">
-        <MoveLeftIcon className="size-3" />
-      </button>
-      <button className={clsx('size-4 rounded flex items-center justify-center text-xs', { 'cursor-pointer text-white bg-primary/80 hover:bg-primary/50': canMove })} disabled={!canMove} onClick={onAfter} type="button">
-        <MoveRightIcon className="size-3" />
-      </button>
+      <Button className={btnClasses} disabled={!canIncrease} onClick={onIncrease} variant={canIncrease ? 'destructive' : 'ghost'}>
+        <PlusIcon className={iconClasses} />
+      </Button>
+      <Button className={btnClasses} disabled={!canDecrease} onClick={onDecrease} variant={canDecrease ? 'secondary' : 'ghost'}>
+        <MinusIcon className={iconClasses} />
+      </Button>
+      <Button className={btnClasses} disabled={!canMove} onClick={onBefore} variant={canMove ? 'default' : 'ghost'}>
+        <MoveLeftIcon className={iconClasses} />
+      </Button>
+      <Button className={btnClasses} disabled={!canMove} onClick={onAfter} variant={canMove ? 'default' : 'ghost'}>
+        <MoveRightIcon className={iconClasses} />
+      </Button>
     </div>
   )
 }
@@ -332,48 +333,86 @@ function usePlannerTasks() {
 }
 
 /**
+ * Component for the planner header with title and action buttons
+ * @param properties - Component properties
+ * @param properties.onTasksUpload - Handler for tasks upload
+ * @param properties.onTasksDispatch - Handler for tasks dispatch
+ * @param properties.onSaveModifications - Handler for saving modifications
+ * @param properties.hasModifications - Whether there are unsaved modifications
+ * @param properties.saving - Whether save operation is in progress
+ * @returns JSX element for the planner header
+ */
+function PlannerHeader({ onTasksUpload, onTasksDispatch, onSaveModifications, hasModifications, saving }: { onTasksUpload: () => void; onTasksDispatch: () => void; onSaveModifications: () => void; hasModifications: boolean; saving: boolean }) {
+  return (
+    <header className="sticky rounded-lg top-0 z-10 backdrop-blur-sm border-b border-gray-600/30">
+      <div className="py-4 flex items-center gap-6">
+        <div className="flex items-center gap-3 mr-auto">
+          <CalendarIcon className="size-8 text-primary" />
+          <h1 className="text-2xl font-bold">What-Now Planner</h1>
+        </div>
+        <Button onClick={onTasksUpload} variant="outline">
+          <UploadIcon className="size-4" />
+          Upload tasks
+        </Button>
+        <Button onClick={downloadData} variant="outline">
+          <DownloadIcon className="size-4" />
+          Download tasks
+        </Button>
+        <Button onClick={onTasksDispatch} variant="outline">
+          <ArrowLeftRightIcon className="size-4" />
+          Dispatch tasks
+        </Button>
+        {hasModifications && (
+          <Button disabled={saving} onClick={onSaveModifications}>
+            <SaveIcon className="size-4" />
+            {saving ? 'Saving...' : 'Save modifications'}
+          </Button>
+        )}
+      </div>
+    </header>
+  )
+}
+
+/**
+ * Hook to handle planner actions
+ * @param tasks - Current tasks
+ * @param setTasks - Setter for tasks
+ * @param loadTasks - Function to reload tasks
+ * @returns Object containing action handlers
+ */
+function usePlannerActions(tasks: Task[], setTasks: React.Dispatch<React.SetStateAction<Task[]>>, loadTasks: () => Promise<void>) {
+  const handleTasksDispatch = useCallback(async () => {
+    const active = tasks.filter(task => isTaskActive(task))
+    logger.info('dispatching active tasks...', { active })
+    await dispatchTasks(active)
+    setTasks([...tasks])
+  }, [tasks, setTasks])
+
+  const handleTasksUploadAndReload = useCallback(async () => {
+    await handleTasksUpload()
+    await loadTasks()
+  }, [loadTasks])
+
+  return {
+    handleTasksDispatch,
+    handleTasksUploadAndReload,
+  }
+}
+
+/**
  * The main planner page component
  * @returns JSX element for the planner page
  */
 export function PagePlanner() {
   const actions = useActions()
   const { handleDateChange, handleFrequencyChange, handleSaveModifications, setTasks, hasModifications, modifications, saving, tasks, loadTasks } = usePlannerTasks()
+  const { handleTasksDispatch, handleTasksUploadAndReload } = usePlannerActions(tasks, setTasks, loadTasks)
   const tasksWithModifications = applyModificationsToTasks(tasks, modifications)
   const tasksByDay = createTaskDistribution(tasksWithModifications, modifications.frequency || {})
 
-  async function handleTasksDispatch() {
-    const active = tasks.filter(task => isTaskActive(task))
-    logger.info('dispatching active tasks...', { active })
-    await dispatchTasks(active)
-    setTasks([...tasks])
-  }
-
-  async function handleTasksUploadAndReload() {
-    await handleTasksUpload()
-    await loadTasks() // Reload tasks after upload
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br">
-      <header className="sticky rounded-lg top-0 z-10 backdrop-blur-sm border-b border-gray-600/30">
-        <div className="py-4 flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <CalendarIcon className="size-8 text-primary" />
-            <h1 className="text-2xl font-bold">What-Now Planner</h1>
-          </div>
-          <button className="flex items-center ml-auto px-4 py-2 bg-gray-700 hover:bg-gray-800 rounded-lg transition-colors" onClick={handleTasksUploadAndReload} type="button">
-            Upload tasks
-          </button>
-          <button className="flex items-center px-4 py-2 bg-gray-700 hover:bg-gray-800 rounded-lg transition-colors" onClick={handleTasksDispatch} type="button">
-            Dispatch tasks
-          </button>
-          {hasModifications && (
-            <button className="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 disabled:cursor-not-allowed rounded-lg transition-colors" disabled={saving} onClick={handleSaveModifications} type="button">
-              {saving ? 'Saving...' : 'Save modifications'}
-            </button>
-          )}
-        </div>
-      </header>
+      <PlannerHeader hasModifications={hasModifications} onSaveModifications={handleSaveModifications} onTasksDispatch={handleTasksDispatch} onTasksUpload={handleTasksUploadAndReload} saving={saving} />
       <PlannerContent modifications={modifications.frequency || {}} onDateChange={handleDateChange} onFrequencyChange={handleFrequencyChange} tasksByDay={tasksByDay} />
       <PlannerMetrics modifications={modifications.frequency || {}} tasks={tasks} />
       <FloatingMenu actions={actions} />

@@ -4,4 +4,5 @@
 
 @theme inline {
   --color-primary: var(--chart-2);
+  --color-secondary: var(--chart-1);
 }

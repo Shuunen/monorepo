@@ -1,8 +1,8 @@
+import { Button } from '@shuunen/components'
 import { nbFirst, nbSecond, nbThird, on, readClipboard } from '@shuunen/shuutils'
 import { ExternalLinkIcon } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { parseClipboard, validateCredentials } from '../utils/credentials.utils'
-import { downloadData } from '../utils/database.utils'
 import { logger } from '../utils/logger.utils'
 import { type CredentialField, state } from '../utils/state.utils'
 
@@ -72,12 +72,7 @@ function CredentialsForm({ formData, onInputChange, onSubmit }: CredentialsFormP
       })}
 
       <div className="flex gap-4 justify-center">
-        <button className="cursor-pointer bg-primary text-primary-foreground mt-2 py-2 px-4 rounded-md" type="submit">
-          Save Credentials
-        </button>
-        <button className="cursor-pointer border mt-2 py-2 px-4 rounded-md" onClick={downloadData} type="button">
-          Download data
-        </button>
+        <Button type="submit">Save Credentials</Button>
       </div>
     </form>
   )

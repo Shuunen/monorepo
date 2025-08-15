@@ -1,3 +1,4 @@
+import { Button } from '@shuunen/components'
 import { nbPercentMax, nbRgbMax, pickOne, sleep } from '@shuunen/shuutils'
 import confetti from 'canvas-confetti'
 import { useCallback, useEffect, useRef } from 'react'
@@ -152,9 +153,9 @@ export function Tasks({ tasks }: { tasks: Task[] }) {
       {tasks.map(task => {
         const isActive = isTaskActive(task)
         return (
-          <button className={`app-task -ml-2 cursor-pointer mr-auto max-w-full truncate px-2 py-1 text-start transition-transform duration-300 ease-out ${isActive ? '' : 'opacity-60'}`} key={task.id} onClick={event => onTaskClick(task, event)} type="button">
+          <Button className={`-ml-2 mr-auto max-w-full truncate pl-2 pr-3 py-1 text-start transition-transform duration-300 ease-out ${isActive ? '' : 'opacity-60'}`} key={task.id} onClick={event => onTaskClick(task, event)} type="button" variant="ghost">
             {isActive ? pickOne(emojis) : '✔️'}&nbsp; {task.name}
-          </button>
+          </Button>
         )
       })}
     </div>
