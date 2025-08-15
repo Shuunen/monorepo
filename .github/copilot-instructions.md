@@ -1,5 +1,18 @@
 # Copilot Instructions for Shuunen Monorepo
 
+## Best Practices
+
+- avoid `as` type assertions unless absolutely necessary
+- follow DRY principle
+- when declaring constants use camelCase convention
+- use standard camelCase for function and variable names **even if they are constants**
+- use named functions instead of arrow functions for better stack traces
+- use comments only when absolutely necessary, prefer descriptive variable and function names
+- avoid using : try,catch,throw or even `.catch` and instead `import { Result } from '@shuunen/shuutils'` and then use `const result = Result.trySafe(() => ...)` to handle errors gracefully
+- always export directly each functions and variables (that need to be exported) instead of exporting an object with them
+- use `bun` to executes `.cli.js` or `.cli.ts` scripts
+- don't use blank lines inside functions, only use them to separate functions
+
 ## Architecture Overview
 
 This is an **Nx monorepo** using **pnpm** workspace management with a mix of React/Preact web applications, Node.js utilities, and shared libraries. The core architectural pattern is:
@@ -64,18 +77,6 @@ watchState('isLoading', (value) => { /* handle change */ })
 - the meta `@downloadURL` and `@updateURL` should be the same URL, pointing to the raw file in the repository, e.g. `https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/linxo-aio.user.js` where `linxo-aio.user.js` is the filename
 - the meta `@match` should be the URL pattern where the script should run, but star pattern in the domain part is not allowed, for example `https://*.linxo.com/*` will fail, use `https://linxo.com/*` or `https://www.linxo.com/*` instead
 - the meta `@icon` is a URL like `https://www.google.com/s2/favicons?sz=64&domain=linxo.com` where it use the domain from the `@match` URL
-
-### Best Practices
-
-- avoid `as` type assertions unless absolutely necessary
-- follow DRY principle
-- when declaring constants use camelCase convention
-- use standard camelCase for function and variable names **even if they are constants**
-- use named functions instead of arrow functions for better stack traces
-- use comments only when absolutely necessary, prefer descriptive variable and function names
-- avoid using : try,catch,throw or even `.catch` and instead `import { Result } from '@shuunen/shuutils'` and then use `const result = Result.trySafe(() => ...)` to handle errors gracefully
-- always export directly each functions and variables (that need to be exported) instead of exporting an object with them
-- use `bun` to executes `.cli.js` or `.cli.ts` scripts
 
 ## Essential Commands
 
