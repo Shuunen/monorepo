@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "~4.1.11",
     "appwrite": "^18.2.0",
     "class-variance-authority": "^0.7.1",
@@ -86,6 +87,7 @@
     "check:repo": "repo-check && echo check:repo success",
     "check:tsc": "nx run-many -t typecheck && echo check:tsc success",
     "cs": "bun apps/config-sync",
+    "dev": "nx dev components",
     "lint": "nx run-many -t lint && pnpm check:biome && pnpm check:oxlint && echo lint success",
     "list": "nx run-many -t list && echo list success",
     "postversion": "git push && git push --tags",

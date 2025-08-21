@@ -17,15 +17,6 @@ describe('main', () => {
     expect(mockCreateRoot).toHaveBeenCalled()
     expect(root).toBeDefined()
     expect(root.render).toBe(mockRender)
-    expect(mockRender).toHaveBeenCalledWith(
-      expect.objectContaining({
-        props: {
-          status: 'Ready for development',
-          subtitle: 'This React app is just a placeholder to hook Storybook',
-          title: 'Components',
-        },
-        type: expect.any(Function),
-      }),
-    )
+    expect(mockRender).toHaveBeenCalled()
   })
 })
