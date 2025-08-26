@@ -10,7 +10,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
-// @version      1.1.1
+// @version      1.1.2
 // ==/UserScript==
 
 /**
@@ -186,8 +186,8 @@ function AmazonGamingAio() {
         return true
       }
       // oxlint-disable-next-line no-magic-numbers
-      if (length < 6500) {
-        utils.error(`element is too small (${length} < 6500) to be hidden`, element)
+      if (length < 2000) {
+        utils.error(`element is too small (${length} < 2000) to be hidden`, element)
         return true
       }
     }
