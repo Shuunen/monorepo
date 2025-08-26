@@ -25,16 +25,16 @@
     "ignoreUnknown": false,
     "includes": [
       "**",
-      "!**/.git/**",
-      "!**/.nx/**",
-      "!**/coverage/**",
-      "!**/dist/**",
-      "!**/node_modules/**",
-      "!**/out-tsc/**",
+      "!**/.git",
+      "!**/.nx",
+      "!**/coverage",
+      "!**/dist",
+      "!**/node_modules",
+      "!**/out-tsc",
       "!**/routeTree.gen.ts",
-      "!**/shadcn/**",
-      "!**/storybook-static/**",
-      "!**/test-output/**",
+      "!**/shadcn",
+      "!**/storybook-static",
+      "!**/test-output",
       "!**/types/**/*.d.ts"
     ]
   },
@@ -95,7 +95,8 @@
       },
       "suspicious": {
         "noConsole": "error",
-        "noEmptyBlockStatements": "error"
+        "noEmptyBlockStatements": "error",
+        "noUnknownAtRules": "off"
       }
     }
   },
