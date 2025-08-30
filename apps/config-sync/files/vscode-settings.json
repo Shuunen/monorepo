@@ -33,7 +33,27 @@
   "biome.suggestInstallingGlobally": false,
   "breadcrumbs.enabled": true,
   "chat.agent.enabled": true,
+  "chat.agent.maxRequests": 50,
   "chat.editing.alwaysSaveWithGeneratedChanges": true,
+  "chat.tools.autoApprove": true,
+  "chat.tools.terminal.autoApprove": {
+    "/^Remove-Item\\b/i": false,
+    "cat": true,
+    "cd": true,
+    "chmod": false,
+    "chown": false,
+    "curl": false,
+    "del": false,
+    "eval": false,
+    "kill": false,
+    "npm": true,
+    "npx": true,
+    "nx": true,
+    "pnpm": true,
+    "rm": false,
+    "rmdir": false,
+    "wget": false
+  },
   "colorize.languages": [
     "css",
     "html",
@@ -373,6 +393,7 @@
     "taze",
     "Temu",
     "tensorflow",
+    "testid",
     "tetris",
     "tfjs",
     "Tiime",
@@ -488,6 +509,7 @@
   "git.enableSmartCommit": true,
   "git.openRepositoryInParentFolders": "never",
   "git.replaceTagsWhenPull": true,
+  "github.copilot.chat.codesearch.enabled": true,
   "github.copilot.editor.enableAutoCompletions": true,
   "github.copilot.enable": {
     "*": true,
@@ -498,6 +520,7 @@
     "scminput": false,
     "yaml": true
   },
+  "github.copilot.nextEditSuggestions.enabled": true,
   "githubPullRequests.pullBranch": "never",
   "headwind.classRegex": {
     "css": "\\B@apply\\s+([_a-zA-Z0-9\\s\\-\\:\\/]+);",

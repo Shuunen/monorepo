@@ -109,6 +109,11 @@ if test -r ~/.pyenv; then
   eval "$(pyenv init -)"
 fi
 
+# Source cargo environment if it exists
+if [ -f "$HOME/.cargo/env" ]; then
+  . "$HOME/.cargo/env"
+fi
+
 echo ''
 # neofetch
 echo ' Hey sweet-pie <3 have a nice day !'
