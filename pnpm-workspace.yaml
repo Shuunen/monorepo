@@ -1,11 +1,14 @@
 packages:
   - apps/*
+  - apps/what-now/electron
   - libs/*
 
 onlyBuiltDependencies:
   - '@swc/core'
   - '@tailwindcss/oxide'
   - bun
+  - electron
   - esbuild
+  - lzma-native
   - nx
   - oxc-resolver

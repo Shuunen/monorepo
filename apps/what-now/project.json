@@ -1,0 +1,26 @@
+{
+  "name": "what-now",
+  "targets": {
+    "build:desktop": {
+      "executor": "nx:run-commands",
+      "metadata": {
+        "description": "Build WhatNow electron desktop app"
+      },
+      "options": {
+        "command": "pnpm electron:make",
+        "cwd": "apps/what-now/electron"
+      }
+    },
+    "dev:desktop": {
+      "continuous": true,
+      "executor": "nx:run-commands",
+      "metadata": {
+        "description": "Start WhatNow electron desktop app in dev mode"
+      },
+      "options": {
+        "command": "pnpm electron:start",
+        "cwd": "apps/what-now/electron"
+      }
+    }
+  }
+}
