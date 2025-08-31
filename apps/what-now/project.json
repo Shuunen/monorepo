@@ -21,6 +21,17 @@
         "command": "pnpm electron:start",
         "cwd": "apps/what-now/electron"
       }
+    },
+    "sync": {
+      "continuous": true,
+      "executor": "nx:run-commands",
+      "metadata": {
+        "description": "Sync WhatNow electron desktop app"
+      },
+      "options": {
+        "command": "cap sync && cap sync @capacitor-community/electron",
+        "cwd": "apps/what-now"
+      }
     }
   }
 }

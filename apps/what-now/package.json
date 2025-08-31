@@ -2,7 +2,8 @@
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
     "@capacitor-community/electron": "^5.0.1",
-    "@capacitor/core": "^7.4.3",
+    "@capacitor/core": "latest",
+    "@capacitor/splash-screen": "latest",
     "@monorepo/components": "workspace:*",
     "@monorepo/utils": "workspace:*",
     "@monorepo/vite-plugins": "workspace:*",
@@ -10,7 +11,7 @@
   },
   "description": "Minimalist task coach",
   "devDependencies": {
-    "@capacitor/cli": "^7.4.3",
+    "@capacitor/cli": "latest",
     "@types/canvas-confetti": "1.9.0",
     "@types/serviceworker": "0.0"
   },
@@ -22,9 +23,6 @@
   ],
   "name": "what-now",
   "private": true,
-  "scripts": {
-    "sync": "cap sync && cap sync @capacitor-community/electron"
-  },
   "type": "module",
   "version": "1.4.0"
 }

@@ -279,8 +279,11 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1
       '@capacitor/core':
-        specifier: ^7.4.3
+        specifier: latest
         version: 7.4.3
+      '@capacitor/splash-screen':
+        specifier: latest
+        version: 7.0.2(@capacitor/core@7.4.3)
       '@monorepo/components':
         specifier: workspace:*
         version: link:../../libs/components
@@ -295,7 +298,7 @@ importers:
         version: 1.9.3
     devDependencies:
       '@capacitor/cli':
-        specifier: ^7.4.3
+        specifier: latest
         version: 7.4.3
       '@types/canvas-confetti':
         specifier: 1.9.0
@@ -1110,6 +1113,11 @@ packages:
 
   '@capacitor/core@7.4.3':
     resolution: {integrity: sha512-wCWr8fQ9Wxn0466vPg7nMn0tivbNVjNy1yL4GvDSIZuZx7UpU2HeVGNe9QjN/quEd+YLRFeKEBLBw619VqUiNg==}
+
+  '@capacitor/splash-screen@7.0.2':
+    resolution: {integrity: sha512-bchh4F73CnVONm6XFEgXKEhbSEDQh2CQ0rNSoasIeJ5pf9JqHkkPS3t0Fnm33qHkLVFcaPoKPW69Y9zMpT5Vxg==}
+    peerDependencies:
+      '@capacitor/core': '>=7.0.0'
 
   '@chromatic-com/storybook@4.1.0':
     resolution: {integrity: sha512-B9XesFX5lQUdP81/QBTtkiYOFqEsJwQpzkZlcYPm2n/L1S/8ZabSPbz6NoY8hOJTXWZ2p7grygUlxyGy+gAvfQ==}
@@ -8387,6 +8395,10 @@ snapshots:
   '@capacitor/core@7.4.3':
     dependencies:
       tslib: 2.8.1
+
+  '@capacitor/splash-screen@7.0.2(@capacitor/core@7.4.3)':
+    dependencies:
+      '@capacitor/core': 7.4.3
 
   '@chromatic-com/storybook@4.1.0(storybook@9.0.18(@testing-library/dom@10.4.1))':
     dependencies:
