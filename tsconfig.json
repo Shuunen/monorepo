@@ -30,6 +30,9 @@
     },
     {
       "path": "./libs/vite-plugins"
+    },
+    {
+      "path": "./apps/what-now/electron"
     }
   ],
   "ts-node": {

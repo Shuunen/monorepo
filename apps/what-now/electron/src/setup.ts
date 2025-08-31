@@ -4,7 +4,7 @@
 import { join } from 'node:path'
 import { type CapacitorElectronConfig, CapacitorSplashScreen, CapElectronEventEmitter, setupCapacitorElectronPlugins } from '@capacitor-community/electron'
 import chokidar from 'chokidar'
-import { app, BrowserWindow, Menu, MenuItem, type MenuItemConstructorOptions, nativeImage, session, Tray } from 'electron'
+import { app, BrowserWindow, Menu, MenuItem, type MenuItemConstructorOptions, nativeImage, Tray } from 'electron'
 import electronIsDev from 'electron-is-dev'
 import electronServe from 'electron-serve'
 import windowStateKeeper from 'electron-window-state'
@@ -102,6 +102,8 @@ export class ElectronCapacitorApp {
         // Use preload to inject the electron variant overrides for capacitor plugins.
         // preload: join(app.getAppPath(), "node_modules", "@capacitor-community", "electron", "dist", "runtime", "electron-rt.js"),
         preload: preloadPath,
+        // prevent CORS issues :p
+        webSecurity: false,
       },
       width: this.mainWindowState.width,
       x: this.mainWindowState.x,
@@ -183,17 +185,4 @@ export class ElectronCapacitorApp {
       }, 400)
     })
   }
-}
-
-// Set a CSP up for our application based on the custom scheme
-export function setupContentSecurityPolicy(customScheme: string): void {
-  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    const csp = electronIsDev ? `default-src ${customScheme}://* 'unsafe-inline' devtools://* 'unsafe-eval' data:; img-src ${customScheme}://* blob: data:;` : `default-src ${customScheme}://* 'unsafe-inline' data:; img-src ${customScheme}://* blob: data:;`
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        'Content-Security-Policy': [csp],
-      },
-    })
-  })
 }

@@ -2,14 +2,20 @@
   "name": "what-now",
   "targets": {
     "build:desktop": {
+      "cache": true,
       "executor": "nx:run-commands",
       "metadata": {
         "description": "Build WhatNow electron desktop app"
       },
       "options": {
-        "command": "pnpm electron:make",
-        "cwd": "apps/what-now/electron"
-      }
+        "command": "nx build what-now && cd electron && pnpm electron:make",
+        "cwd": "{projectRoot}"
+      },
+      "outputs": [
+        "{projectRoot}/electron/build/src/**/*.js",
+        "{projectRoot}/electron/build/src/**/*.d.ts",
+        "{projectRoot}/electron/build/tsconfig.tsbuildinfo"
+      ]
     },
     "dev:desktop": {
       "continuous": true,
@@ -18,8 +24,8 @@
         "description": "Start WhatNow electron desktop app in dev mode"
       },
       "options": {
-        "command": "pnpm electron:start",
-        "cwd": "apps/what-now/electron"
+        "command": "nx build what-now && cd electron && pnpm electron:start",
+        "cwd": "{projectRoot}"
       }
     },
     "sync": {
@@ -30,7 +36,7 @@
       },
       "options": {
         "command": "cap sync && cap sync @capacitor-community/electron",
-        "cwd": "apps/what-now"
+        "cwd": "{projectRoot}"
       }
     }
   }

@@ -2,8 +2,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "allowJs": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
+    "composite": true,
     "esModuleInterop": true,
     "importHelpers": true,
     "module": "CommonJS",

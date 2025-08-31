@@ -4,7 +4,7 @@ import { type CapacitorElectronConfig, getCapacitorElectronConfig, setupElectron
 import { app, MenuItem, type MenuItemConstructorOptions } from 'electron'
 import electronIsDev from 'electron-is-dev'
 import unhandled from 'electron-unhandled'
-import { ElectronCapacitorApp, setupContentSecurityPolicy, setupReloadWatcher } from './setup'
+import { ElectronCapacitorApp, setupReloadWatcher } from './setup'
 
 // Graceful handling of unhandled errors.
 unhandled()
@@ -43,7 +43,7 @@ if (electronIsDev)
   const { Menu } = require('electron')
   Menu.setApplicationMenu(null)
   // Security - Set Content-Security-Policy based on whether or not we are in dev mode.
-  setupContentSecurityPolicy(myCapacitorApp.getCustomURLScheme())
+  // setupContentSecurityPolicy(myCapacitorApp.getCustomURLScheme())
   // Initialize our app, build windows, and load content.
   await myCapacitorApp.init()
   // Register global shortcut for toggling DevTools (Ctrl+Shift+I)

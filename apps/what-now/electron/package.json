@@ -27,9 +27,9 @@
   ],
   "license": "MIT",
   "main": "build/src/index.js",
-  "name": "capatesto",
+  "name": "what-now-desktop",
   "scripts": {
-    "build": "tsc && electron-rebuild",
+    "build": "tsc && rm dist -rf && rm app -rf && cp -r ../dist app && electron-rebuild",
     "electron:make": "npm run build && electron-builder build -c ./electron-builder.config.json -p always",
     "electron:pack": "npm run build && electron-builder build --dir -c ./electron-builder.config.json",
     "electron:start": "npm run build && electron --inspect=5858 ./",
