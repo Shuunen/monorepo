@@ -1,7 +1,7 @@
 {
   "name": "what-now",
   "targets": {
-    "build:desktop": {
+    "build-desktop": {
       "cache": true,
       "executor": "nx:run-commands",
       "metadata": {
@@ -17,7 +17,7 @@
         "{projectRoot}/electron/build/tsconfig.tsbuildinfo"
       ]
     },
-    "dev:desktop": {
+    "dev-desktop": {
       "continuous": true,
       "executor": "nx:run-commands",
       "metadata": {
