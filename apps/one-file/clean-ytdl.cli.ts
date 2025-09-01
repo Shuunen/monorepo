@@ -1,6 +1,6 @@
 import { readdirSync, renameSync, statSync, unlinkSync } from 'node:fs'
 import path from 'node:path'
-import { blue, green, Logger, red, yellow } from '@shuunen/shuutils'
+import { blue, green, Logger, red, yellow } from '@shuunen/utils'
 
 // cd into the folder and use me like : bun ~/Projects/github/monorepo/apps/one-file/clean-ytdl.cli.ts
 

@@ -1,5 +1,5 @@
 /* c8 ignore start */
-import { div, dom, emit, slugify, tw } from '@shuunen/shuutils'
+import { div, dom, emit, slugify, tw } from '@shuunen/utils'
 
 type FormField = Readonly<{
   href: string

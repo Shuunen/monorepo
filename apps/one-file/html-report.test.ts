@@ -1,4 +1,4 @@
-import { gray } from '@shuunen/shuutils'
+import { gray } from '@shuunen/utils'
 import { expect, it } from 'vitest'
 import { HtmlReporter } from './html-reporter.mjs'
 

@@ -1,5 +1,5 @@
 /* c8 ignore start */
-import { Logger, nbMsInSecond } from '@shuunen/shuutils'
+import { Logger, nbMsInSecond } from '@shuunen/utils'
 // @ts-expect-error missing types
 import notifier from 'node-notifier'
 // @ts-expect-error missing types

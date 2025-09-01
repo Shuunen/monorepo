@@ -1,6 +1,6 @@
 /* c8 ignore start */
 // oxlint-disable no-plusplus, no-magic-numbers, max-lines-per-function
-import { gray, green } from '@shuunen/shuutils'
+import { gray, green } from '@shuunen/utils'
 import { logger } from './repo-banner.utils'
 
 const states = {

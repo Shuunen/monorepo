@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@shuunen/shuutils": "workspace:*"
+    "@shuunen/utils": "workspace:*"
   },
   "main": "sync.cli.js",
   "name": "config-sync",

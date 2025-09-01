@@ -1,4 +1,4 @@
-import { debounce, fetchJson, fetchRaw, nbHueMax, nbMsInHour, nbPercentMax, throttle } from '@shuunen/shuutils'
+import { debounce, fetchJson, fetchRaw, nbHueMax, nbMsInHour, nbPercentMax, throttle } from '@shuunen/utils'
 import type { Task } from '../types'
 import { logger } from '../utils/logger.utils'
 import { trmnlPayload } from '../utils/progress.utils'

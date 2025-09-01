@@ -1,11 +1,11 @@
-import { Result, toastError, toastSuccess } from '@shuunen/shuutils'
+import { Result, toastError, toastSuccess } from '@shuunen/utils'
 import { describe, expect, it, vi } from 'vitest'
 import { type AppWriteTaskModel, addTask, getTasks, updateTask } from './database.utils'
 import { logger } from './logger.utils'
 import { handleTasksUpload, readJsonFile, selectJsonFile, uploadTasksToDatabase } from './upload.utils'
 
-vi.mock('@shuunen/shuutils', async () => {
-  const actual = await vi.importActual('@shuunen/shuutils')
+vi.mock('@shuunen/utils', async () => {
+  const actual = await vi.importActual('@shuunen/utils')
   return {
     ...actual,
     toastError: vi.fn(),

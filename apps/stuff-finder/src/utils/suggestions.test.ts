@@ -1,4 +1,4 @@
-import { clone } from '@shuunen/shuutils'
+import { clone } from '@shuunen/utils'
 import { get } from './browser.utils'
 import { mockItem } from './mock.utils'
 import { state } from './state.utils'

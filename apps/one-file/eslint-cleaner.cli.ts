@@ -1,6 +1,6 @@
 /* c8 ignore start */
 import { readFile, writeFile } from 'node:fs/promises'
-import { Logger } from '@shuunen/shuutils'
+import { Logger } from '@shuunen/utils'
 import glob from 'tiny-glob'
 
 const gitIgnore = await readFile('.gitignore', 'utf8')

@@ -1,5 +1,5 @@
 // oxlint-disable no-unassigned-import
-import { on, storage, toastError } from '@shuunen/shuutils'
+import { on, storage, toastError } from '@shuunen/utils'
 import { checkUrlCredentials } from './utils/credentials.utils'
 import './utils/database.utils'
 import './utils/idle.utils'

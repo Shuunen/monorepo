@@ -1,4 +1,4 @@
-import { storage } from '@shuunen/shuutils'
+import { storage } from '@shuunen/utils'
 
 storage.prefix = '@shuunen/stuff-finder_'
 

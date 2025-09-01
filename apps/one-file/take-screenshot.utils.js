@@ -1,4 +1,4 @@
-import { nbMsInSecond, nbSecondsInMinute } from '@shuunen/shuutils'
+import { nbMsInSecond, nbSecondsInMinute } from '@shuunen/utils'
 
 /**
  * @typedef {import('./take-screenshot.types').FfProbeOutput} FfProbeOutput

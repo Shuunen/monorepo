@@ -4,7 +4,7 @@
     "@camwiegert/typical": "^0.1",
     "@mui/icons-material": "^7.1",
     "@mui/material": "^7.1",
-    "@shuunen/shuutils": "workspace:*",
+    "@shuunen/utils": "workspace:*",
     "@shuunen/vite-plugins": "workspace:*",
     "@zxing/library": "^0.21",
     "fuse.js": "^7.1",

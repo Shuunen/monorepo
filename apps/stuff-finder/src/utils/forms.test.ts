@@ -1,4 +1,4 @@
-import { clone } from '@shuunen/shuutils'
+import { clone } from '@shuunen/utils'
 import { alignClipboard, createCheckboxField, createSelectField, optionsToLabels, validateForm } from './forms.utils'
 import { settingsForm } from './settings.utils'
 

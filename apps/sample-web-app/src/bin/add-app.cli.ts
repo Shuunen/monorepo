@@ -2,7 +2,7 @@
 import { execSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import { green, Logger, nbSpacesIndent, nbThird } from '@shuunen/shuutils'
+import { green, Logger, nbSpacesIndent, nbThird } from '@shuunen/utils'
 
 // use me like : bun bin/add-app.cli.ts <app-name>
 // or pnpm run add:app <app-name>

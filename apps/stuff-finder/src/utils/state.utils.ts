@@ -1,4 +1,4 @@
-import { createState, debounce, isBrowserEnvironment, isTestEnvironment } from '@shuunen/shuutils'
+import { createState, debounce, isBrowserEnvironment, isTestEnvironment } from '@shuunen/utils'
 import { defaultCredentials } from '../constants'
 import type { Item } from '../types/item.types'
 import { defaultSound } from '../types/sounds.types'

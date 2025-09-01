@@ -1,4 +1,4 @@
-import { dateIso10, daysAgoIso10, nbBefore, nbDaysInMonth, nbDaysInWeek, nbDaysInYear, nbMsInDay, nbMsInMinute, Result, readableTimeAgo } from '@shuunen/shuutils'
+import { dateIso10, daysAgoIso10, nbBefore, nbDaysInMonth, nbDaysInWeek, nbDaysInYear, nbMsInDay, nbMsInMinute, Result, readableTimeAgo } from '@shuunen/utils'
 import type { Task } from '../types'
 import { getTasks, updateTask } from './database.utils'
 import { logger } from './logger.utils'

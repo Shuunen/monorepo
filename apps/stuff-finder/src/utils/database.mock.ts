@@ -1,4 +1,4 @@
-import { functionReturningVoid, nbDaysInWeek, sleep } from '@shuunen/shuutils'
+import { functionReturningVoid, nbDaysInWeek, sleep } from '@shuunen/utils'
 import type { Models } from 'appwrite'
 import { vi } from 'vitest'
 import type { ItemModel } from '../types/item.types'

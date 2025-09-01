@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig(() => ({
-  cacheDir: '../../node_modules/.vite/libs/shuutils',
+  cacheDir: '../../node_modules/.vite/libs/utils',
   plugins: [],
   root: __dirname,
   test: {

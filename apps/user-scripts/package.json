@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@shuunen/shuutils": "workspace:*"
+    "@shuunen/utils": "workspace:*"
   },
   "description": "My personal user-scripts",
   "devDependencies": {

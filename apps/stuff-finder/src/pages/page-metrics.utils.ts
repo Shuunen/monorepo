@@ -1,4 +1,4 @@
-import { nbPercentMax } from '@shuunen/shuutils'
+import { nbPercentMax } from '@shuunen/utils'
 import type { Item } from '../types/item.types'
 
 export const topValueItems = 10

@@ -1,4 +1,4 @@
-import { isBrowserEnvironment } from '@shuunen/shuutils'
+import { isBrowserEnvironment } from '@shuunen/utils'
 import { describe, expect, it } from 'vitest'
 import { localToRemoteTask, modelToLocalTask, modelToRemoteTask } from './database.utils'
 

@@ -2,7 +2,7 @@
 // oxlint-disable no-magic-numbers
 import { readdir, stat } from 'node:fs/promises'
 import path from 'node:path'
-import { Logger } from '@shuunen/shuutils'
+import { Logger } from '@shuunen/utils'
 
 const maxResults = 10
 const sizeGrain = 10_000

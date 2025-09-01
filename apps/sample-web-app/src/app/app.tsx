@@ -1,5 +1,5 @@
 import { Landing } from '@shuunen/components'
-import { randomPerson } from '@shuunen/shuutils'
+import { randomPerson } from '@shuunen/utils'
 import { NavLink, Route, Routes } from 'react-router-dom'
 
 const navClasses = ({ isActive }: { isActive: boolean }) => `transition-colors ${isActive ? 'text-primary underline underline-offset-22' : 'text-gray-700 hover:text-primary'}`

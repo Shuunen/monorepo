@@ -26,7 +26,7 @@
       "path": "./libs/components"
     },
     {
-      "path": "./libs/shuutils"
+      "path": "./libs/utils"
     },
     {
       "path": "./libs/vite-plugins"

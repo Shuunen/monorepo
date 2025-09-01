@@ -23,8 +23,8 @@
       "@shuunen/components": [
         "libs/components/src/index.ts"
       ],
-      "@shuunen/shuutils": [
-        "libs/shuutils/src/index.ts"
+      "@shuunen/utils": [
+        "libs/utils/src/index.ts"
       ],
       "@shuunen/vite-plugins": [
         "libs/vite-plugins/src/index.js"

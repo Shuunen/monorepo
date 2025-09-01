@@ -32,7 +32,7 @@
       "path": "../vite-plugins/tsconfig.lib.json"
     },
     {
-      "path": "../shuutils/tsconfig.lib.json"
+      "path": "../utils/tsconfig.lib.json"
     }
   ]
 }

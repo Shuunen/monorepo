@@ -1,4 +1,4 @@
-import { Logger } from '@shuunen/shuutils'
+import { Logger } from '@shuunen/utils'
 
 export const logger = new Logger()
 

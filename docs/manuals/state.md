@@ -144,8 +144,6 @@ And the size is even smaller :
 
 > Tested with Shuutils 7.0.0
 
-I've migrated the homemade vanilla state management to [Shuutils](https://github.com/Shuunen/shuutils).
-
 Super simple to use, just install `shuutils` and create a state :
 
 ```ts

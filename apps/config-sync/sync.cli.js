@@ -1,5 +1,5 @@
 /* c8 ignore start */
-import { gray, green, red, yellow } from '@shuunen/shuutils'
+import { gray, green, red, yellow } from '@shuunen/utils'
 import { backupPath, files } from './files.node.js'
 import { copy, filename, logger, normalizePathWithSlash } from './utils.node.js'
 

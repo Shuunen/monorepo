@@ -153,9 +153,9 @@ importers:
 
   apps/config-sync:
     dependencies:
-      '@shuunen/shuutils':
+      '@shuunen/utils':
         specifier: workspace:*
-        version: link:../../libs/shuutils
+        version: link:../../libs/utils
 
   apps/jozzo:
     dependencies:
@@ -165,9 +165,9 @@ importers:
       '@preact/preset-vite':
         specifier: '2.10'
         version: 2.10.2(@babel/core@7.28.3)(preact@10.26.9)(vite@6.3.5(@types/node@24.3.0)(jiti@2.5.1)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))
-      '@shuunen/shuutils':
+      '@shuunen/utils':
         specifier: workspace:*
-        version: link:../../libs/shuutils
+        version: link:../../libs/utils
       '@shuunen/vite-plugins':
         specifier: workspace:*
         version: link:../../libs/vite-plugins
@@ -183,9 +183,9 @@ importers:
       7zip-min:
         specifier: ^2.1.0
         version: 2.1.0
-      '@shuunen/shuutils':
+      '@shuunen/utils':
         specifier: workspace:*
-        version: link:../../libs/shuutils
+        version: link:../../libs/utils
       clipboardy:
         specifier: ^4.0.0
         version: 4.0.0
@@ -205,9 +205,9 @@ importers:
       '@shuunen/components':
         specifier: workspace:*
         version: link:../../libs/components
-      '@shuunen/shuutils':
+      '@shuunen/utils':
         specifier: workspace:*
-        version: link:../../libs/shuutils
+        version: link:../../libs/utils
       '@shuunen/vite-plugins':
         specifier: workspace:*
         version: link:../../libs/vite-plugins
@@ -220,9 +220,9 @@ importers:
       '@shuunen/components':
         specifier: workspace:*
         version: link:../../libs/components
-      '@shuunen/shuutils':
+      '@shuunen/utils':
         specifier: workspace:*
-        version: link:../../libs/shuutils
+        version: link:../../libs/utils
       '@shuunen/vite-plugins':
         specifier: workspace:*
         version: link:../../libs/vite-plugins
@@ -240,9 +240,9 @@ importers:
       '@mui/material':
         specifier: ^7.1
         version: 7.1.2(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.12)(react@19.1.1))(@types/react@19.1.12)(react@19.1.1))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@shuunen/shuutils':
+      '@shuunen/utils':
         specifier: workspace:*
-        version: link:../../libs/shuutils
+        version: link:../../libs/utils
       '@shuunen/vite-plugins':
         specifier: workspace:*
         version: link:../../libs/vite-plugins
@@ -265,9 +265,9 @@ importers:
 
   apps/user-scripts:
     dependencies:
-      '@shuunen/shuutils':
+      '@shuunen/utils':
         specifier: workspace:*
-        version: link:../../libs/shuutils
+        version: link:../../libs/utils
     devDependencies:
       rough-notation:
         specifier: latest
@@ -278,9 +278,9 @@ importers:
       '@shuunen/components':
         specifier: workspace:*
         version: link:../../libs/components
-      '@shuunen/shuutils':
+      '@shuunen/utils':
         specifier: workspace:*
-        version: link:../../libs/shuutils
+        version: link:../../libs/utils
       '@shuunen/vite-plugins':
         specifier: workspace:*
         version: link:../../libs/vite-plugins
@@ -309,9 +309,9 @@ importers:
       '@radix-ui/react-toggle':
         specifier: ^1.1.9
         version: 1.1.9(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@shuunen/shuutils':
+      '@shuunen/utils':
         specifier: workspace:*
-        version: link:../shuutils
+        version: link:../utils
       '@shuunen/vite-plugins':
         specifier: workspace:*
         version: link:../vite-plugins
@@ -338,7 +338,7 @@ importers:
         specifier: 9.0.18
         version: 9.0.18(@testing-library/dom@10.4.1)
 
-  libs/shuutils:
+  libs/utils:
     dependencies:
       esbuild:
         specifier: ^0.25.5

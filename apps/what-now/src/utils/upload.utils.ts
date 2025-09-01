@@ -1,4 +1,4 @@
-import { parseJson, Result, toastError, toastSuccess } from '@shuunen/shuutils'
+import { parseJson, Result, toastError, toastSuccess } from '@shuunen/utils'
 import { type AppWriteTaskModel, addTask, getTasks, modelToLocalTask, modelToRemoteTask, updateTask } from './database.utils'
 import { logger } from './logger.utils'
 

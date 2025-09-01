@@ -7,10 +7,10 @@
     ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
-  "name": "@shuunen/shuutils",
+  "name": "@shuunen/utils",
   "nx": {
-    "name": "shuutils",
-    "sourceRoot": "libs/shuutils/src"
+    "name": "utils",
+    "sourceRoot": "libs/utils/src"
   },
   "private": true,
   "type": "module",

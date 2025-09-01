@@ -1,5 +1,5 @@
 import { Button } from '@shuunen/components'
-import { nbFirst, nbSecond, nbThird, on, readClipboard } from '@shuunen/shuutils'
+import { nbFirst, nbSecond, nbThird, on, readClipboard } from '@shuunen/utils'
 import { ExternalLinkIcon } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { parseClipboard, validateCredentials } from '../utils/credentials.utils'

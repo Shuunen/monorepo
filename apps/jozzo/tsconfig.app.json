@@ -44,7 +44,7 @@
       "path": "../../libs/vite-plugins/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/shuutils/tsconfig.lib.json"
+      "path": "../../libs/utils/tsconfig.lib.json"
     }
   ]
 }

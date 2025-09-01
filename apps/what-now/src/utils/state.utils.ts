@@ -1,4 +1,4 @@
-import { createState, storage } from '@shuunen/shuutils'
+import { createState, storage } from '@shuunen/utils'
 import type { Task } from '../types'
 
 const tasks: Task[] = []

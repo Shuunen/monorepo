@@ -27,7 +27,7 @@
   ],
   "references": [
     {
-      "path": "../../libs/shuutils/tsconfig.lib.json"
+      "path": "../../libs/utils/tsconfig.lib.json"
     }
   ]
 }

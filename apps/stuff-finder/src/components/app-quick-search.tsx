@@ -1,4 +1,4 @@
-import { off, on, tw } from '@shuunen/shuutils'
+import { off, on, tw } from '@shuunen/utils'
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { logger } from '../utils/logger.utils'

@@ -2,7 +2,7 @@
   "dependencies": {
     "@mui/material": "7.1",
     "@preact/preset-vite": "2.10",
-    "@shuunen/shuutils": "workspace:*",
+    "@shuunen/utils": "workspace:*",
     "@shuunen/vite-plugins": "workspace:*",
     "preact": "10.26",
     "react-confetti-boom": "2.0"

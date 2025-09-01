@@ -1,4 +1,4 @@
-import { arrayUnique, clone } from '@shuunen/shuutils'
+import { arrayUnique, clone } from '@shuunen/utils'
 
 /**
  * Sort lists

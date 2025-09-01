@@ -1,4 +1,4 @@
-import { Logger, nbSpacesIndent, Result } from '@shuunen/shuutils'
+import { Logger, nbSpacesIndent, Result } from '@shuunen/utils'
 import cors from 'cors'
 import express, { type Request, type Response } from 'express'
 

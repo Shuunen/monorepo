@@ -8,7 +8,7 @@
 - use standard camelCase for function and variable names **even if they are constants**
 - use named functions instead of arrow functions for better stack traces
 - use comments only when absolutely necessary, prefer descriptive variable and function names
-- avoid using : try,catch,throw or even `.catch` and instead `import { Result } from '@shuunen/shuutils'` and then use `const result = Result.trySafe(() => ...)` to handle errors gracefully
+- avoid using : try,catch,throw or even `.catch` and instead `import { Result } from '@shuunen/utils'` and then use `const result = Result.trySafe(() => ...)` to handle errors gracefully
 - always export directly each functions and variables (that need to be exported) instead of exporting an object with them
 - use `bun` to executes `.cli.js` or `.cli.ts` scripts
 - don't use blank lines inside functions, only use them to separate functions
@@ -17,7 +17,7 @@
 
 This is an **Nx monorepo** using **pnpm** workspace management with a mix of React/Preact web applications, Node.js utilities, and shared libraries. The core architectural pattern is:
 
-- **`libs/shuutils`**: Central utility library providing DOM helpers, state management, logging, and all kind of utilities
+- **`libs/utils`**: Central utility library providing DOM helpers, state management, logging, and all kind of utilities
 - **`libs/vite-plugins`**: Custom Vite plugins for build tooling
 - **`apps/*`**: Individual applications (web apps, CLI tools, user scripts)
 - All projects use **TypeScript**, **Vitest** for testing, and **Biome** and **OxLint** for linting/formatting
@@ -27,11 +27,11 @@ This is an **Nx monorepo** using **pnpm** workspace management with a mix of Rea
 ### Import Conventions
 
 ```typescript
-// Always import from the workspace shuutils library
-import { Logger, createState, tw, dom } from '@shuunen/shuutils'
+// Always import from the workspace utils library
+import { Logger, createState, tw, dom } from '@shuunen/utils'
 
 // Use workspace protocol for internal dependencies
-"@shuunen/shuutils": "workspace:*"
+"@shuunen/utils": "workspace:*"
 ```
 
 ### Component Architecture (React/Preact Apps)
@@ -45,8 +45,8 @@ import { Logger, createState, tw, dom } from '@shuunen/shuutils'
 ### State Management
 
 ```typescript
-// Use shuutils createState for lightweight state management
-import { createState } from '@shuunen/shuutils'
+// Use utils createState for lightweight state management
+import { createState } from '@shuunen/utils'
 
 export const state = createState({
   isLoading: false,
@@ -105,12 +105,12 @@ nx run-many -t build     # Build all projects
 - **Preact** with **TailwindCSS** and **ShadCn** components
 - Router: `preact-router` with lazy-loaded pages
 - Database: **Appwrite** for backend services
-- State: Custom lightweight state management via `@shuunen/shuutils`
+- State: Custom lightweight state management via `@shuunen/utils`
 
 ### CLI Tools (`apps/one-file/*`)
 
 - Single-file utilities for various automation tasks
-- Use `@shuunen/shuutils` Logger for consistent output
+- Use `@shuunen/utils` Logger for consistent output
 - Comprehensive test coverage with mocked file system operations
 - Export all functions for testability: `export const options = { dry: false }`
 
@@ -138,7 +138,7 @@ nx run-many -t build     # Build all projects
 
 ### Internal Libraries
 
-- Import utilities from `@shuunen/shuutils` rather than implementing locally
+- Import utilities from `@shuunen/utils` rather than implementing locally
 - Use `tw()` helper for TailwindCSS class composition
 - Leverage `Logger` class for consistent logging across all projects
 - Use `createState()` for reactive state management in web apps
@@ -147,6 +147,6 @@ nx run-many -t build     # Build all projects
 
 ## Anti-Patterns to Avoid
 
-- Don't install duplicate utilities - use `@shuunen/shuutils`, add new utilities there if needed
+- Don't install duplicate utilities - use `@shuunen/utils`, add new utilities there if needed
 - Don't skip test coverage - maintain coverage requirement (100% most of the time)
-- Don't implement custom state management - use `createState()` from shuutils
+- Don't implement custom state management - use `createState()` from utils

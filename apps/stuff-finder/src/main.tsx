@@ -1,4 +1,4 @@
-import { toastError, toastInfo } from '@shuunen/shuutils'
+import { toastError, toastInfo } from '@shuunen/utils'
 import { createRoot } from 'react-dom/client'
 import { App } from './app'
 // oxlint-disable-next-line no-unassigned-import

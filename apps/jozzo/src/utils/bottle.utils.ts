@@ -1,4 +1,4 @@
-import { pickOne, randomNumber } from '@shuunen/shuutils'
+import { pickOne, randomNumber } from '@shuunen/utils'
 import { type Bottle, type Color, getNextColor } from './colors.utils'
 import { logger } from './logger.utils'
 

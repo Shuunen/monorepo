@@ -7,7 +7,7 @@
       "path": "../../libs/vite-plugins"
     },
     {
-      "path": "../../libs/shuutils"
+      "path": "../../libs/utils"
     },
     {
       "path": "./tsconfig.app.json"

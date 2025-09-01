@@ -1,6 +1,6 @@
 // oxlint-disable no-new
 /* c8 ignore start */
-import { debounce, emit, nbMsInMinute } from '@shuunen/shuutils'
+import { debounce, emit, nbMsInMinute } from '@shuunen/utils'
 import { logger } from './logger.utils'
 ;new (class IdleService {
   private readonly checkInactivityEvery = 10

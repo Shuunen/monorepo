@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { createServer } from 'node:http'
 import path from 'node:path'
-import { Logger, nbPercentMax } from '@shuunen/shuutils'
+import { Logger, nbPercentMax } from '@shuunen/utils'
 
 const currentFolder = import.meta.dirname
 const wsPort = 54_430

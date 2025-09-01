@@ -1,4 +1,4 @@
-import { createState, sleep } from '@shuunen/shuutils'
+import { createState, sleep } from '@shuunen/utils'
 import { getBottles, pour } from './bottle.utils'
 import type { Bottle } from './colors.utils'
 import { logger } from './logger.utils'

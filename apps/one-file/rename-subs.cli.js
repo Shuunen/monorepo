@@ -1,7 +1,7 @@
 /* c8 ignore start */
 import { copyFileSync, readdirSync, readFileSync, renameSync, statSync, unlinkSync } from 'node:fs'
 import path from 'node:path'
-import { Logger } from '@shuunen/shuutils'
+import { Logger } from '@shuunen/utils'
 
 // Go into the Downloads\Azerty.S01.1080p.WEBRip.x265-RARBG folder
 // then use me like : node ~/Projects/github/monorepo/apps/one-file/rename-subs.cli.js

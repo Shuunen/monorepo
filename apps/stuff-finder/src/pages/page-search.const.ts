@@ -1,4 +1,4 @@
-import { sanitize } from '@shuunen/shuutils'
+import { sanitize } from '@shuunen/utils'
 import type { IFuseOptions } from 'fuse.js/basic'
 import type { Item } from '../types/item.types'
 import { logger } from '../utils/logger.utils'

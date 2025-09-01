@@ -1,7 +1,7 @@
 /* c8 ignore start */
 import { writeFileSync } from 'node:fs'
 import path from 'node:path'
-import { green, Logger } from '@shuunen/shuutils'
+import { green, Logger } from '@shuunen/utils'
 import glob from 'tiny-glob'
 
 const options = {

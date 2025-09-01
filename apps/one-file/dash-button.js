@@ -1,5 +1,5 @@
 /* c8 ignore start */
-import { Logger } from '@shuunen/shuutils'
+import { Logger } from '@shuunen/utils'
 import dashBtn from 'node-dash-button'
 
 const logger = new Logger()

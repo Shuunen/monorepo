@@ -1,4 +1,4 @@
-import { dateIso10, storage as lsStorage, nbHueMax, nbPercentMax, nbSpacesIndent, Result, sleep, slugify, toastSuccess } from '@shuunen/shuutils'
+import { dateIso10, storage as lsStorage, nbHueMax, nbPercentMax, nbSpacesIndent, Result, sleep, slugify, toastSuccess } from '@shuunen/utils'
 import { Client, Databases, type Models, Query, Storage } from 'appwrite'
 import { safeParse } from 'valibot'
 import { defaultImage, uuidMaxLength } from '../constants'

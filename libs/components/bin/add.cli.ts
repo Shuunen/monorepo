@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process'
 import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { green, Logger, nbThird, yellow } from '../../shuutils/src'
+import { green, Logger, nbThird, yellow } from '../../utils/src'
 
 const logger = new Logger()
 const [component] = process.argv.slice(nbThird)

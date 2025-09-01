@@ -1,4 +1,4 @@
-import { objectEqual } from '@shuunen/shuutils'
+import { objectEqual } from '@shuunen/utils'
 
 type FormFieldType = 'checkbox' | 'select' | 'text'
 type FormFieldOptions = { label: string; value: string }[]

@@ -1,4 +1,4 @@
-import { capitalize, clone, isTestEnvironment, nbMsInMinute, objectSum, Result, readableTimeAgo } from '@shuunen/shuutils'
+import { capitalize, clone, isTestEnvironment, nbMsInMinute, objectSum, Result, readableTimeAgo } from '@shuunen/utils'
 import { boxRooms, itemBoxes, itemDrawers, itemStatus } from '../constants'
 import type { Item } from '../types/item.types'
 import { addItemRemotely, deleteItemRemotely, getItemsRemotely, removeAppWriteFields, updateItemRemotely } from './database.utils'

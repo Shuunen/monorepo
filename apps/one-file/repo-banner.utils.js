@@ -2,7 +2,7 @@
 import { readFileSync, statSync } from 'node:fs'
 // biome-ignore lint/correctness/noNodejsModules: ok here
 import path from 'node:path'
-import { Logger } from '@shuunen/shuutils'
+import { Logger } from '@shuunen/utils'
 
 export const logger = new Logger({ willOutputToConsole: process.env.NODE_ENV !== 'test' })
 

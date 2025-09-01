@@ -1,7 +1,7 @@
 /* c8 ignore start */
 import { readFileSync, statSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
-import { Logger, nbMsInSecond, nbRgbMax, sleep, stringSum } from '@shuunen/shuutils'
+import { Logger, nbMsInSecond, nbRgbMax, sleep, stringSum } from '@shuunen/utils'
 import clipboardy from 'clipboardy'
 import { cleanTrackers } from './clean-trackers.utils.js'
 

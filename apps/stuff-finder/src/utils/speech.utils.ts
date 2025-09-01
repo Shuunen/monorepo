@@ -1,4 +1,4 @@
-import { Result } from '@shuunen/shuutils'
+import { Result } from '@shuunen/utils'
 import { logger } from './logger.utils'
 import { state } from './state.utils'
 
