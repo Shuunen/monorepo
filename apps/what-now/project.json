@@ -8,7 +8,7 @@
         "description": "Build WhatNow electron desktop app"
       },
       "options": {
-        "command": "nx build what-now && cd electron && pnpm electron:make",
+        "command": "nx build what-now && cd electron && pnpm install --dir . && pnpm electron:make && cd .. && pnpm install",
         "cwd": "{projectRoot}"
       },
       "outputs": [
