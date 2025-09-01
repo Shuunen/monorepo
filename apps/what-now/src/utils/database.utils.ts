@@ -1,4 +1,4 @@
-import { dateIso10, nbPercentMax, nbSpacesIndent, Result, slugify, toastError, toastSuccess } from '@shuunen/utils'
+import { dateIso10, nbPercentMax, nbSpacesIndent, Result, slugify, toastError, toastSuccess } from '@monorepo/utils'
 import { Client, Databases, type Models, Query } from 'appwrite'
 import type { AppWriteTask, Task } from '../types'
 import { logger } from './logger.utils'

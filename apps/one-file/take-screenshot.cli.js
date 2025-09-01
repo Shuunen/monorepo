@@ -4,7 +4,7 @@ import { exec } from 'node:child_process'
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { createInterface } from 'node:readline'
-import { Logger, nbFourth, nbSecondsInMinute, nbThird } from '@shuunen/utils'
+import { Logger, nbFourth, nbSecondsInMinute, nbThird } from '@monorepo/utils'
 import { getFfmpegCommand, getScreenshotFilename, parseUserInput, parseVideoMetadata } from './take-screenshot.utils.js'
 
 /**

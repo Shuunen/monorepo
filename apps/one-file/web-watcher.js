@@ -1,5 +1,5 @@
 /* c8 ignore start */
-import { Logger, nbMsInSecond } from '@shuunen/utils'
+import { Logger, nbMsInSecond } from '@monorepo/utils'
 // @ts-expect-error missing types
 import notifier from 'node-notifier'
 // @ts-expect-error missing types

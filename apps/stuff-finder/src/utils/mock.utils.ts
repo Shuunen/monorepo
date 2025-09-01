@@ -1,4 +1,4 @@
-import { nbDaysInWeek, sleep } from '@shuunen/utils'
+import { nbDaysInWeek, sleep } from '@monorepo/utils'
 import { vi } from 'vitest'
 import type { Item, ItemModel } from '../types/item.types'
 import { defaultSound } from '../types/sounds.types'

@@ -1,5 +1,5 @@
+import { ellipsis } from '@monorepo/utils'
 import SearchIcon from '@mui/icons-material/Search'
-import { ellipsis } from '@shuunen/utils'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { AppButtonNext } from '../components/app-button-next'

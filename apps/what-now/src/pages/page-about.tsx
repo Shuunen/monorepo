@@ -1,4 +1,4 @@
-import { FloatingMenu } from '@shuunen/components'
+import { FloatingMenu } from '@monorepo/components'
 import { Intro } from '../components/intro'
 import { Title } from '../components/title'
 import { useActions } from '../utils/pages.utils'

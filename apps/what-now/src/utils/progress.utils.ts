@@ -1,4 +1,4 @@
-import { nbSixth } from '@shuunen/utils'
+import { nbSixth } from '@monorepo/utils'
 import { state } from './state.utils'
 import { isTaskActive, minutesRemaining } from './tasks.utils'
 

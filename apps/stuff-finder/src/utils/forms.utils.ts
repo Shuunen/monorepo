@@ -1,4 +1,4 @@
-import { objectEqual } from '@shuunen/utils'
+import { objectEqual } from '@monorepo/utils'
 
 type FormFieldType = 'checkbox' | 'select' | 'text'
 type FormFieldOptions = { label: string; value: string }[]

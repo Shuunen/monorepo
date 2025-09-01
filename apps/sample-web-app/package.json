@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "@shuunen/components": "workspace:*",
-    "@shuunen/utils": "workspace:*",
-    "@shuunen/vite-plugins": "workspace:*"
+    "@monorepo/components": "workspace:*",
+    "@monorepo/utils": "workspace:*",
+    "@monorepo/vite-plugins": "workspace:*"
   },
   "name": "sample-web-app",
   "private": true,

@@ -1,7 +1,7 @@
 /* c8 ignore start */
 import { readdirSync, renameSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
-import { blue, ellipsis, green, isTestEnvironment, Logger, red, slugify, yellow } from '@shuunen/utils'
+import { blue, ellipsis, green, isTestEnvironment, Logger, red, slugify, yellow } from '@monorepo/utils'
 
 // Use me like : node ~/Projects/github/monorepo/apps/one-file/check-screens.cli.js "/u/Screens/"
 

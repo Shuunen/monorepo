@@ -1,4 +1,4 @@
-import { capitalize, clone, isTestEnvironment, nbMsInMinute, objectSum, Result, readableTimeAgo } from '@shuunen/utils'
+import { capitalize, clone, isTestEnvironment, nbMsInMinute, objectSum, Result, readableTimeAgo } from '@monorepo/utils'
 import { boxRooms, itemBoxes, itemDrawers, itemStatus } from '../constants'
 import type { Item } from '../types/item.types'
 import { addItemRemotely, deleteItemRemotely, getItemsRemotely, removeAppWriteFields, updateItemRemotely } from './database.utils'

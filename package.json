@@ -67,7 +67,7 @@
     "nx"
   ],
   "license": "MIT",
-  "name": "@shuunen/source",
+  "name": "@monorepo/source",
   "private": true,
   "repository": {
     "type": "git",

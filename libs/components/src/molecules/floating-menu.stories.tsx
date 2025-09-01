@@ -1,4 +1,4 @@
-import { toastInfo } from '@shuunen/utils'
+import { toastInfo } from '@monorepo/utils'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { BanIcon, CogIcon, TvIcon } from 'lucide-react'
 import { FloatingMenu } from './floating-menu'

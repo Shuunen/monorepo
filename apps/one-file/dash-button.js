@@ -1,5 +1,5 @@
 /* c8 ignore start */
-import { Logger } from '@shuunen/utils'
+import { Logger } from '@monorepo/utils'
 import dashBtn from 'node-dash-button'
 
 const logger = new Logger()

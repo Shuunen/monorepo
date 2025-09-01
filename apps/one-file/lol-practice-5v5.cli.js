@@ -2,7 +2,7 @@
 import { appendFileSync, readFileSync, writeFileSync } from 'node:fs'
 import { request as _request } from 'node:https'
 import path from 'node:path'
-import { nbFourth, nbThird } from '@shuunen/utils'
+import { nbFourth, nbThird } from '@monorepo/utils'
 
 const data = {
   customGameLobby: {

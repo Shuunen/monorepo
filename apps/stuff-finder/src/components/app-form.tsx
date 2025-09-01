@@ -1,5 +1,5 @@
+import { debounce, functionReturningVoid, off, on, parseJson, Result, readClipboard } from '@monorepo/utils'
 import Button from '@mui/material/Button'
-import { debounce, functionReturningVoid, off, on, parseJson, Result, readClipboard } from '@shuunen/utils'
 import { type ReactNode, useCallback, useEffect, useState } from 'react'
 import { alignClipboard, type Form, validateForm } from '../utils/forms.utils'
 import { logger } from '../utils/logger.utils'

@@ -1,7 +1,7 @@
+import { sleep } from '@monorepo/utils'
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner'
 import { Alert, Collapse } from '@mui/material'
 import Skeleton from '@mui/material/Skeleton'
-import { sleep } from '@shuunen/utils'
 import { BrowserMultiFormatReader } from '@zxing/library/es2015/browser/BrowserMultiFormatReader'
 import type Exception from '@zxing/library/es2015/core/Exception'
 import notFoundException from '@zxing/library/es2015/core/NotFoundException'

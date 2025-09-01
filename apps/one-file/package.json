@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@shuunen/utils": "workspace:*",
+    "@monorepo/utils": "workspace:*",
     "7zip-min": "^2.1.0",
     "clipboardy": "^4.0.0",
     "cors": "^2.8.5",

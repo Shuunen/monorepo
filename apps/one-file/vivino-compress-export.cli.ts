@@ -1,7 +1,7 @@
 /* c8 ignore start */
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
-import { Logger, nbPercentMax } from '@shuunen/utils'
+import { Logger, nbPercentMax } from '@monorepo/utils'
 import { compressCsv } from './vivino-compress-export.utils.js'
 
 // usage : bun ~/Projects/github/monorepo/apps/one-file/vivino-compress-export.cli.ts full_wine_list.csv

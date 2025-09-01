@@ -1,5 +1,5 @@
 /* c8 ignore start */
-import { Logger } from '@shuunen/utils'
+import { Logger } from '@monorepo/utils'
 import clipboard from 'clipboardy'
 import { isolateLines, linesToList } from './isolate-lines.utils.js' // js extension is required here
 

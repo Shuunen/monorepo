@@ -1,4 +1,4 @@
-import { Result } from '@shuunen/utils'
+import { Result } from '@monorepo/utils'
 import type { Models } from 'appwrite'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { AppWriteTask, Task } from '../types'

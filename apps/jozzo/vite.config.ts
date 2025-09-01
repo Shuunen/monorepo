@@ -1,6 +1,7 @@
 // oxlint-disable no-console
+
+import { uniqueMark } from '@monorepo/vite-plugins'
 import { preact } from '@preact/preset-vite'
-import { uniqueMark } from '@shuunen/vite-plugins'
 import tailwindcss from '@tailwindcss/vite'
 import svgReact from 'vite-plugin-svgr'
 import { defineConfig } from 'vitest/config'

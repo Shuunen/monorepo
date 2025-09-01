@@ -7,7 +7,7 @@
     ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
-  "name": "@shuunen/utils",
+  "name": "@monorepo/utils",
   "nx": {
     "name": "utils",
     "sourceRoot": "libs/utils/src"

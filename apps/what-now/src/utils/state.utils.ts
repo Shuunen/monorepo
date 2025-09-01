@@ -1,4 +1,4 @@
-import { createState, storage } from '@shuunen/utils'
+import { createState, storage } from '@monorepo/utils'
 import type { Task } from '../types'
 
 const tasks: Task[] = []

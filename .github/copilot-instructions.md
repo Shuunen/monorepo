@@ -8,7 +8,7 @@
 - use standard camelCase for function and variable names **even if they are constants**
 - use named functions instead of arrow functions for better stack traces
 - use comments only when absolutely necessary, prefer descriptive variable and function names
-- avoid using : try,catch,throw or even `.catch` and instead `import { Result } from '@shuunen/utils'` and then use `const result = Result.trySafe(() => ...)` to handle errors gracefully
+- avoid using : try,catch,throw or even `.catch` and instead `import { Result } from '@monorepo/utils'` and then use `const result = Result.trySafe(() => ...)` to handle errors gracefully
 - always export directly each functions and variables (that need to be exported) instead of exporting an object with them
 - use `bun` to executes `.cli.js` or `.cli.ts` scripts
 - don't use blank lines inside functions, only use them to separate functions
@@ -28,10 +28,10 @@ This is an **Nx monorepo** using **pnpm** workspace management with a mix of Rea
 
 ```typescript
 // Always import from the workspace utils library
-import { Logger, createState, tw, dom } from '@shuunen/utils'
+import { Logger, createState, tw, dom } from '@monorepo/utils'
 
 // Use workspace protocol for internal dependencies
-"@shuunen/utils": "workspace:*"
+"@monorepo/utils": "workspace:*"
 ```
 
 ### Component Architecture (React/Preact Apps)
@@ -46,7 +46,7 @@ import { Logger, createState, tw, dom } from '@shuunen/utils'
 
 ```typescript
 // Use utils createState for lightweight state management
-import { createState } from '@shuunen/utils'
+import { createState } from '@monorepo/utils'
 
 export const state = createState({
   isLoading: false,
@@ -105,12 +105,12 @@ nx run-many -t build     # Build all projects
 - **Preact** with **TailwindCSS** and **ShadCn** components
 - Router: `preact-router` with lazy-loaded pages
 - Database: **Appwrite** for backend services
-- State: Custom lightweight state management via `@shuunen/utils`
+- State: Custom lightweight state management via `@monorepo/utils`
 
 ### CLI Tools (`apps/one-file/*`)
 
 - Single-file utilities for various automation tasks
-- Use `@shuunen/utils` Logger for consistent output
+- Use `@monorepo/utils` Logger for consistent output
 - Comprehensive test coverage with mocked file system operations
 - Export all functions for testability: `export const options = { dry: false }`
 
@@ -138,15 +138,15 @@ nx run-many -t build     # Build all projects
 
 ### Internal Libraries
 
-- Import utilities from `@shuunen/utils` rather than implementing locally
+- Import utilities from `@monorepo/utils` rather than implementing locally
 - Use `tw()` helper for TailwindCSS class composition
 - Leverage `Logger` class for consistent logging across all projects
 - Use `createState()` for reactive state management in web apps
-- Use components from `@shuunen/components` for UI consistency
-- Use `@shuunen/vite-plugins` for custom Vite plugins
+- Use components from `@monorepo/components` for UI consistency
+- Use `@monorepo/vite-plugins` for custom Vite plugins
 
 ## Anti-Patterns to Avoid
 
-- Don't install duplicate utilities - use `@shuunen/utils`, add new utilities there if needed
+- Don't install duplicate utilities - use `@monorepo/utils`, add new utilities there if needed
 - Don't skip test coverage - maintain coverage requirement (100% most of the time)
 - Don't implement custom state management - use `createState()` from utils

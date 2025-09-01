@@ -1,4 +1,4 @@
-import { debounce, fetchJson, fetchRaw, nbHueMax, nbMsInHour, nbPercentMax, throttle } from '@shuunen/utils'
+import { debounce, fetchJson, fetchRaw, nbHueMax, nbMsInHour, nbPercentMax, throttle } from '@monorepo/utils'
 import type { Task } from '../types'
 import { logger } from '../utils/logger.utils'
 import { trmnlPayload } from '../utils/progress.utils'

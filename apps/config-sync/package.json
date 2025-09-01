@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@shuunen/utils": "workspace:*"
+    "@monorepo/utils": "workspace:*"
   },
   "main": "sync.cli.js",
   "name": "config-sync",

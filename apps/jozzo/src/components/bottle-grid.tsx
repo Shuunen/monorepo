@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: fix later */
-import { tw } from '@shuunen/utils'
+import { tw } from '@monorepo/utils'
 import { useState } from 'preact/hooks'
 import Confetti from 'react-confetti-boom'
 import hat from '../assets/hat.svg?react'

@@ -1,5 +1,5 @@
 // oxlint-disable max-lines
-import { daysAgoIso10, daysFromNow, functionReturningVoid, sleep } from '@shuunen/utils'
+import { daysAgoIso10, daysFromNow, functionReturningVoid, sleep } from '@monorepo/utils'
 import { expect, it, vi } from 'vitest'
 import { addTask, localToRemoteTask } from './database.utils'
 import { state } from './state.utils'

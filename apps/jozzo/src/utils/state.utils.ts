@@ -1,4 +1,4 @@
-import { createState, sleep } from '@shuunen/utils'
+import { createState, sleep } from '@monorepo/utils'
 import { getBottles, pour } from './bottle.utils'
 import type { Bottle } from './colors.utils'
 import { logger } from './logger.utils'

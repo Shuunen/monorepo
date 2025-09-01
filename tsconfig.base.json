@@ -20,13 +20,13 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "paths": {
-      "@shuunen/components": [
+      "@monorepo/components": [
         "libs/components/src/index.ts"
       ],
-      "@shuunen/utils": [
+      "@monorepo/utils": [
         "libs/utils/src/index.ts"
       ],
-      "@shuunen/vite-plugins": [
+      "@monorepo/vite-plugins": [
         "libs/vite-plugins/src/index.js"
       ]
     },

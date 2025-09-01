@@ -1,6 +1,6 @@
+import { copyToClipboard } from '@monorepo/utils'
 import Chip, { type ChipOwnProps } from '@mui/material/Chip'
 import Tooltip from '@mui/material/Tooltip'
-import { copyToClipboard } from '@shuunen/utils'
 import { useCallback } from 'react'
 import type { MuiIcon } from '../types/icons.types'
 import { logger } from '../utils/logger.utils'

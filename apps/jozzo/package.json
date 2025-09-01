@@ -1,9 +1,9 @@
 {
   "dependencies": {
+    "@monorepo/utils": "workspace:*",
+    "@monorepo/vite-plugins": "workspace:*",
     "@mui/material": "7.1",
     "@preact/preset-vite": "2.10",
-    "@shuunen/utils": "workspace:*",
-    "@shuunen/vite-plugins": "workspace:*",
     "preact": "10.26",
     "react-confetti-boom": "2.0"
   },

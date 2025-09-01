@@ -1,6 +1,6 @@
 import { copyFile, mkdir } from 'node:fs/promises'
 import path from 'node:path'
-import { Logger } from '@shuunen/utils'
+import { Logger } from '@monorepo/utils'
 
 const regex = {
   carriageReturn: /\r\n/gu,

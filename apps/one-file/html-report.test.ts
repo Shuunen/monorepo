@@ -1,4 +1,4 @@
-import { gray } from '@shuunen/utils'
+import { gray } from '@monorepo/utils'
 import { expect, it } from 'vitest'
 import { HtmlReporter } from './html-reporter.mjs'
 

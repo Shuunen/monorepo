@@ -1,4 +1,4 @@
-import { capitalize, clone } from '@shuunen/utils'
+import { capitalize, clone } from '@monorepo/utils'
 import type { Item, ItemSuggestions } from '../types/item.types'
 import type { WrapApiAliExResponse, WrapApiAngboResponse, WrapApiCampoResponse, WrapApiDeyesResponse } from '../types/requests.types'
 import { get } from './browser.utils'

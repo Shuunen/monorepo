@@ -1,4 +1,4 @@
-import { pickOne } from '@shuunen/utils'
+import { pickOne } from '@monorepo/utils'
 
 /**
  * Returns a random cool ascii face

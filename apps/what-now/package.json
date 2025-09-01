@@ -1,9 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
-    "@shuunen/components": "workspace:*",
-    "@shuunen/utils": "workspace:*",
-    "@shuunen/vite-plugins": "workspace:*",
+    "@monorepo/components": "workspace:*",
+    "@monorepo/utils": "workspace:*",
+    "@monorepo/vite-plugins": "workspace:*",
     "canvas-confetti": "1"
   },
   "description": "Minimalist task coach",

@@ -1,4 +1,4 @@
-import { arrayUnique, clone } from '@shuunen/utils'
+import { arrayUnique, clone } from '@monorepo/utils'
 
 /**
  * Sort lists

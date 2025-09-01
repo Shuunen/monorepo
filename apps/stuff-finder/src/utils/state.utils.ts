@@ -1,4 +1,4 @@
-import { createState, debounce, isBrowserEnvironment, isTestEnvironment } from '@shuunen/utils'
+import { createState, debounce, isBrowserEnvironment, isTestEnvironment } from '@monorepo/utils'
 import { defaultCredentials } from '../constants'
 import type { Item } from '../types/item.types'
 import { defaultSound } from '../types/sounds.types'

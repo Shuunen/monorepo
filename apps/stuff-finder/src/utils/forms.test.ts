@@ -1,4 +1,4 @@
-import { clone } from '@shuunen/utils'
+import { clone } from '@monorepo/utils'
 import { alignClipboard, createCheckboxField, createSelectField, optionsToLabels, validateForm } from './forms.utils'
 import { settingsForm } from './settings.utils'
 

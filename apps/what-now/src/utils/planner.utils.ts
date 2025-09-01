@@ -1,4 +1,4 @@
-import { Result } from '@shuunen/utils'
+import { Result } from '@monorepo/utils'
 import type { Task } from '../types'
 import { updateTask } from './database.utils'
 import { daysRecurrence, daysSinceCompletion } from './tasks.utils'

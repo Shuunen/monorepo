@@ -1,7 +1,7 @@
 /* c8 ignore start */
 import { readdirSync, statSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
-import { blue, green, Logger, nbPercentMax, nbThird, red, yellow } from '@shuunen/utils'
+import { blue, green, Logger, nbPercentMax, nbThird, red, yellow } from '@monorepo/utils'
 import sevenZip from '7zip-min'
 
 // Use me like : node ~/Projects/github/monorepo/apps/one-file/check-apps.cli.js "/d/Apps/"

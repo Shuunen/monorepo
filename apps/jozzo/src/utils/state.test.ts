@@ -1,4 +1,4 @@
-import { sleep } from '@shuunen/utils'
+import { sleep } from '@monorepo/utils'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { logger } from './logger.utils'
 import { Machine } from './state.utils'

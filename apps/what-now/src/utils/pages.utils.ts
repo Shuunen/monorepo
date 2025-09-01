@@ -1,4 +1,4 @@
-import type { FloatingMenuAction } from '@shuunen/components'
+import type { FloatingMenuAction } from '@monorepo/components'
 import { CalendarIcon, CircleQuestionMarkIcon, HomeIcon, SettingsIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 

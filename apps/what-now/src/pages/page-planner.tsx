@@ -1,6 +1,6 @@
 // oxlint-disable max-dependencies, max-lines
-import { Button, FloatingMenu } from '@shuunen/components'
-import { dateIso10 } from '@shuunen/utils'
+import { Button, FloatingMenu } from '@monorepo/components'
+import { dateIso10 } from '@monorepo/utils'
 import { ArrowLeftRightIcon, CalendarIcon, DownloadIcon, MinusIcon, MoveLeftIcon, MoveRightIcon, PlusIcon, SaveIcon, UploadIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Task } from '../types'

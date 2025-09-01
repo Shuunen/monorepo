@@ -1,5 +1,5 @@
 /* c8 ignore start */
-import { isBrowserEnvironment, Logger } from '@shuunen/utils'
+import { isBrowserEnvironment, Logger } from '@monorepo/utils'
 import { state } from './state.utils'
 
 function stuffToMessage(...stuff: unknown[]) {

@@ -1,4 +1,4 @@
-import { nbMsInSecond, nbSecondsInMinute } from '@shuunen/utils'
+import { nbMsInSecond, nbSecondsInMinute } from '@monorepo/utils'
 
 /**
  * @typedef {import('./take-screenshot.types').FfProbeOutput} FfProbeOutput

@@ -1,5 +1,5 @@
-import { Button } from '@shuunen/components'
-import { nbPercentMax, nbRgbMax, pickOne, sleep } from '@shuunen/utils'
+import { Button } from '@monorepo/components'
+import { nbPercentMax, nbRgbMax, pickOne, sleep } from '@monorepo/utils'
 import confetti from 'canvas-confetti'
 import { useCallback, useEffect, useRef } from 'react'
 import type { Task } from '../types'

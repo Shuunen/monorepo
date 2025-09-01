@@ -1,4 +1,4 @@
-import { uniqueMark } from '@shuunen/vite-plugins'
+import { uniqueMark } from '@monorepo/vite-plugins'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { Mode, plugin as md } from 'vite-plugin-markdown'

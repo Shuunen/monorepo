@@ -1,5 +1,5 @@
-import { storage } from '@shuunen/utils'
+import { storage } from '@monorepo/utils'
 
-storage.prefix = '@shuunen/stuff-finder_'
+storage.prefix = 'stuff-finder_'
 
 export { storage }

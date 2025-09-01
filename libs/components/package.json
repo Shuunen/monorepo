@@ -4,8 +4,8 @@
     "@radix-ui/react-popover": "^1.1.14",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-toggle": "^1.1.9",
-    "@shuunen/utils": "workspace:*",
-    "@shuunen/vite-plugins": "workspace:*",
+    "@monorepo/utils": "workspace:*",
+    "@monorepo/vite-plugins": "workspace:*",
     "tailwindcss": "*",
     "cmdk": "^1.1.1"
   },
@@ -20,7 +20,7 @@
     ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
-  "name": "@shuunen/components",
+  "name": "@monorepo/components",
   "nx": {
     "name": "components",
     "sourceRoot": "libs/components/src"

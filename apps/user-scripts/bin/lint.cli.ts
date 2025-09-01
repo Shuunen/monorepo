@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { Logger } from '@shuunen/utils'
+import { Logger } from '@monorepo/utils'
 
 // This script lints user scripts in the src directory according to guidelines for user scripts inside `.github/copilot-instructions.md`
 // Run this script with `nx lint user-scripts` to check for compliance with the guidelines.

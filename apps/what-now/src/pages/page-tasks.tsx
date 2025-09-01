@@ -1,4 +1,4 @@
-import { FloatingMenu } from '@shuunen/components'
+import { FloatingMenu } from '@monorepo/components'
 import { useState } from 'react'
 import { Progress } from '../components/progress'
 import { Status } from '../components/status'

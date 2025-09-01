@@ -9,7 +9,7 @@
   },
   "main": "./src/index.js",
   "module": "./src/index.js",
-  "name": "@shuunen/vite-plugins",
+  "name": "@monorepo/vite-plugins",
   "nx": {
     "name": "vite-plugins",
     "sourceRoot": "libs/vite-plugins/src"

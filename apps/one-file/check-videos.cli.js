@@ -4,7 +4,7 @@ import { exec } from 'node:child_process'
 import { readdir, readFile, renameSync, stat, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { inspect } from 'node:util'
-import { blue, Logger, red, slugify } from '@shuunen/utils'
+import { blue, Logger, red, slugify } from '@monorepo/utils'
 
 // use me like :
 //  node ~/Projects/github/monorepo/apps/one-file/check-videos.js "/u/A Voir/" --set-title

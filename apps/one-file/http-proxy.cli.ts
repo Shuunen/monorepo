@@ -1,4 +1,4 @@
-import { Logger, nbSpacesIndent, Result } from '@shuunen/utils'
+import { Logger, nbSpacesIndent, Result } from '@monorepo/utils'
 import cors from 'cors'
 import express, { type Request, type Response } from 'express'
 
