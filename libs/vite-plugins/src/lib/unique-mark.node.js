@@ -81,7 +81,7 @@ export function getProjectVersion(projectRoot) {
     const pkg = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'))
     /* c8 ignore next */ return pkg.version || ''
   } catch (error) {
-    console.error('Could not read project package.json for version', error)
+    if (error instanceof Error) console.error('Could not read project package.json for version', error.message)
     return ''
   }
 }
