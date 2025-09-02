@@ -1,0 +1,10 @@
+{
+  "appId": "com.capatesto.app",
+  "appName": "Capatesto",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false
+    }
+  },
+  "webDir": "dist"
+}

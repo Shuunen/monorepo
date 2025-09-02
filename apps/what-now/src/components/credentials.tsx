@@ -10,7 +10,7 @@ const fields = [
   { href: 'https://cloud.appwrite.io/', label: 'AppWrite database id', link: 'appwrite dashboard', maxlength: 100, name: 'appwrite-database-id', pattern: String.raw`^\w+$` },
   { href: 'https://cloud.appwrite.io/', label: 'AppWrite collection id', link: 'appwrite dashboard', maxlength: 100, name: 'appwrite-collection-id', pattern: String.raw`^\w+$` },
   { href: 'https://developers.meethue.com/develop/get-started-2/', label: 'Hue status light', link: 'find endpoint', maxlength: 150, name: 'hue-status-light', pattern: '^https://.+$' },
-  { href: 'https://usetrmnl.com/', label: 'Trmnl Webhook', link: 'get webhook', maxlength: 150, name: 'trmnl-webhook', pattern: '^https?://.+$' },
+  { href: 'https://usetrmnl.com/', label: 'Trmnl Webhook', link: 'get webhook', maxlength: 150, name: 'trmnl-webhook', pattern: '^https://.+$' },
 ] as const
 
 type FormData = {
