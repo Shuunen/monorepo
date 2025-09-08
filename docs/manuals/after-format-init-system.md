@@ -286,13 +286,13 @@ sudo dnf install pinta qimgv gparted meld mediainfo mkvtoolnix mkvtoolnix-gui mp
 <details>
   <summary>All</summary>
 
-  Copy ssh keys then :
+  Copy ssh keys then in a **bash terminal** :
   
   ```bash
 sudo chmod 700 ~/.ssh/ -R # remove 'sudo' on windows
 # mkdir ~/.npm-global # if not using nvm
 # npm config set prefix '~/.npm-global' # if not using nvm
-npm i pnpm bun -g
+npm i pnpm bun nx -g
 mkdir ~/Projects/github -p
 cd ~/Projects/github
 git clone git@github.com:Shuunen/c-est-donne.git
