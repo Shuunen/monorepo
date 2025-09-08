@@ -1,15 +1,12 @@
 import { FloatingMenu } from '@monorepo/components'
 import { Credentials } from '../components/credentials'
-import { Intro } from '../components/intro'
-import { Title } from '../components/title'
 import { useActions } from '../utils/pages.utils'
 
 export function PageSettings() {
   const actions = useActions()
   return (
-    <div className="flex flex-col justify-center grow gap-4 mx-auto max-w-fit" data-testid="page-settings">
-      <Title subtitle="Settings" />
-      <Intro />
+    <div className="flex flex-col grow justify-center items-center" data-testid="page-settings">
+      <h1>Settings</h1>
       <Credentials />
       <FloatingMenu actions={actions} />
     </div>

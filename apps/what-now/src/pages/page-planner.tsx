@@ -203,8 +203,7 @@ function PlannerMetrics({ tasks, modifications }: { tasks: Task[]; modifications
 
   return (
     <div className="bg-gray-800/30 rounded-lg shadow-sm border border-gray-600/30 p-4 mt-4">
-      <h2 className="text-lg font-semibold mb-3 text-gray-200">Planner Metrics</h2>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="text-center">
           <div className="text-2xl font-bold text-blue-400">{metrics.activeTasksCount}</div>
           <div className="text-sm text-gray-400">Active Tasks</div>
@@ -343,31 +342,36 @@ function usePlannerTasks() {
  * @returns JSX element for the planner header
  */
 function PlannerHeader({ onTasksUpload, onTasksDispatch, onSaveModifications, hasModifications, saving }: { onTasksUpload: () => void; onTasksDispatch: () => void; onSaveModifications: () => void; hasModifications: boolean; saving: boolean }) {
+  const showDispatch = false
   return (
     <header className="sticky rounded-lg top-0 z-10 backdrop-blur-sm border-b border-gray-600/30">
-      <div className="py-4 flex items-center gap-6">
+      <div className="flex flex-col md:flex-row py-4 items-center gap-6">
         <div className="flex items-center gap-3 mr-auto">
-          <CalendarIcon className="size-8 text-primary" />
-          <h1 className="text-2xl font-bold">What-Now Planner</h1>
+          <CalendarIcon className="size-8" />
+          <h3 className="mt-0 mb-0">Planner</h3>
         </div>
-        <Button onClick={onTasksUpload} variant="outline">
-          <UploadIcon className="size-4" />
-          Upload tasks
-        </Button>
-        <Button onClick={downloadData} variant="outline">
-          <DownloadIcon className="size-4" />
-          Download tasks
-        </Button>
-        <Button onClick={onTasksDispatch} variant="outline">
-          <ArrowLeftRightIcon className="size-4" />
-          Dispatch tasks
-        </Button>
-        {hasModifications && (
-          <Button disabled={saving} onClick={onSaveModifications}>
-            <SaveIcon className="size-4" />
-            {saving ? 'Saving...' : 'Save modifications'}
+        <div className="flex gap-3">
+          <Button onClick={onTasksUpload} variant="outline">
+            <UploadIcon className="size-4" />
+            Upload tasks
           </Button>
-        )}
+          <Button onClick={downloadData} variant="outline">
+            <DownloadIcon className="size-4" />
+            Download tasks
+          </Button>
+          {showDispatch && (
+            <Button onClick={onTasksDispatch} variant="outline">
+              <ArrowLeftRightIcon className="size-4" />
+              Dispatch tasks
+            </Button>
+          )}
+          {hasModifications && (
+            <Button disabled={saving} onClick={onSaveModifications}>
+              <SaveIcon className="size-4" />
+              {saving ? 'Saving...' : 'Save modifications'}
+            </Button>
+          )}
+        </div>
       </div>
     </header>
   )
@@ -411,7 +415,7 @@ export function PagePlanner() {
   const tasksByDay = createTaskDistribution(tasksWithModifications, modifications.frequency || {})
 
   return (
-    <div className="min-h-screen bg-gradient-to-br">
+    <div className="flex flex-col justify-center grow" data-testid="page-planner">
       <PlannerHeader hasModifications={hasModifications} onSaveModifications={handleSaveModifications} onTasksDispatch={handleTasksDispatch} onTasksUpload={handleTasksUploadAndReload} saving={saving} />
       <PlannerContent modifications={modifications.frequency || {}} onDateChange={handleDateChange} onFrequencyChange={handleFrequencyChange} tasksByDay={tasksByDay} />
       <PlannerMetrics modifications={modifications.frequency || {}} tasks={tasks} />

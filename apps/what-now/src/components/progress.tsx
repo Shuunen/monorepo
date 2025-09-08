@@ -81,5 +81,5 @@ export function Progress({ tasks }: { tasks: Task[] }) {
   const remaining = tasks.filter(task => isTaskActive(task)).length
   const percent = nbPercentMax - Math.round((remaining / total) * nbPercentMax)
   showProgress(percent)
-  return <hr className="border-dashed border border-white" data-testid="progress" style={{ width: `${percent}%` }} />
+  return <div className="border-dashed border border-white" data-testid="progress" style={{ width: `${percent}%` }} />
 }

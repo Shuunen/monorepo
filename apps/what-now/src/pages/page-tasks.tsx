@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { Progress } from '../components/progress'
 import { Status } from '../components/status'
 import { Tasks } from '../components/tasks'
-import { Title } from '../components/title'
 import { useActions } from '../utils/pages.utils'
 import { state, watchState } from '../utils/state.utils'
 
@@ -18,8 +17,10 @@ export function PageTasks() {
   watchState('statusInfo', () => setInfo(state.statusInfo))
   watchState('statusProgress', () => setProgress(state.statusProgress))
   return (
-    <div className="flex flex-col justify-center grow gap-4 mx-auto max-w-fit" data-testid="page-tasks">
-      <Title />
+    <div className="flex flex-col gap-4 py-24 mx-auto" data-testid="page-tasks">
+      <h1 className="-ml-2 font-bold mb-2">
+        <span className="opacity-80">What</span> Now <span className="opacity-10 font-light">?</span>
+      </h1>
       <Status error={error} info={info} progress={progress} />
       <Progress tasks={tasks} />
       <Tasks tasks={tasks} />
