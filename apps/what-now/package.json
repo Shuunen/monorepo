@@ -2,6 +2,7 @@
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
     "@capacitor-community/electron": "^5.0.1",
+    "@capacitor/android": "^7.4.3",
     "@capacitor/core": "latest",
     "@capacitor/splash-screen": "latest",
     "@monorepo/components": "workspace:*",

@@ -278,12 +278,15 @@ importers:
       '@capacitor-community/electron':
         specifier: ^5.0.1
         version: 5.0.1
+      '@capacitor/android':
+        specifier: ^7.4.3
+        version: 7.4.3(@capacitor/core@7.4.3)
       '@capacitor/core':
         specifier: latest
         version: 7.4.3
       '@capacitor/splash-screen':
         specifier: latest
-        version: 7.0.2(@capacitor/core@7.4.3)
+        version: 7.0.3(@capacitor/core@7.4.3)
       '@monorepo/components':
         specifier: workspace:*
         version: link:../../libs/components
@@ -1106,6 +1109,11 @@ packages:
   '@capacitor-community/electron@5.0.1':
     resolution: {integrity: sha512-4/x12ycTq0Kq8JIn/BmIBdFVP5Cqw8iA6SU6YfFjmONfjW3OELwsB3zwLxOwAjLxnjyCMOBHl4ci9E5jLgZgAQ==}
 
+  '@capacitor/android@7.4.3':
+    resolution: {integrity: sha512-VpjvnOcmYGPLgvXRhe3CGLs62Cg7sxOyp77NddCr+Y06qqgnoaj6OGeBVTc2DZlqZ6bSmh15JvFu82pkvmdgfQ==}
+    peerDependencies:
+      '@capacitor/core': ^7.4.0
+
   '@capacitor/cli@7.4.3':
     resolution: {integrity: sha512-SWozpdDgrbQ/ry1nIapugDFvE9z+l22BmU/+fpgL2Zv5487hGdXvCX5+1SluuFBP3IPpx6b4LjsKnBigyJoUWg==}
     engines: {node: '>=20.0.0'}
@@ -1114,8 +1122,8 @@ packages:
   '@capacitor/core@7.4.3':
     resolution: {integrity: sha512-wCWr8fQ9Wxn0466vPg7nMn0tivbNVjNy1yL4GvDSIZuZx7UpU2HeVGNe9QjN/quEd+YLRFeKEBLBw619VqUiNg==}
 
-  '@capacitor/splash-screen@7.0.2':
-    resolution: {integrity: sha512-bchh4F73CnVONm6XFEgXKEhbSEDQh2CQ0rNSoasIeJ5pf9JqHkkPS3t0Fnm33qHkLVFcaPoKPW69Y9zMpT5Vxg==}
+  '@capacitor/splash-screen@7.0.3':
+    resolution: {integrity: sha512-coAw2de3rRX0EfneK0/D9IZaDAUOtsPaE9ZNbSdCs2UtmXp0hdcr5Tsil01Kve707nQfLsd03pmvaesJYD60EA==}
     peerDependencies:
       '@capacitor/core': '>=7.0.0'
 
@@ -8373,6 +8381,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@capacitor/android@7.4.3(@capacitor/core@7.4.3)':
+    dependencies:
+      '@capacitor/core': 7.4.3
+
   '@capacitor/cli@7.4.3':
     dependencies:
       '@ionic/cli-framework-output': 2.2.8
@@ -8399,7 +8411,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@capacitor/splash-screen@7.0.2(@capacitor/core@7.4.3)':
+  '@capacitor/splash-screen@7.0.3(@capacitor/core@7.4.3)':
     dependencies:
       '@capacitor/core': 7.4.3
 
