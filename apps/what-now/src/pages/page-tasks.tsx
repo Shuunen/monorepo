@@ -1,4 +1,5 @@
 import { FloatingMenu } from '@monorepo/components'
+import { cn } from '@monorepo/utils'
 import { useState } from 'react'
 import { Progress } from '../components/progress'
 import { Status } from '../components/status'
@@ -17,7 +18,7 @@ export function PageTasks() {
   watchState('statusInfo', () => setInfo(state.statusInfo))
   watchState('statusProgress', () => setProgress(state.statusProgress))
   return (
-    <div className="flex flex-col gap-4 py-24 mx-auto" data-testid="page-tasks">
+    <div className={cn('flex flex-col justify-center grow gap-4 py-24 mx-auto', state.isSetup ? '' : 'text-center')} data-testid="page-tasks">
       <h1 className="-ml-2 font-bold mb-2">
         <span className="opacity-80">What</span> Now <span className="opacity-10 font-light">?</span>
       </h1>
@@ -25,7 +26,7 @@ export function PageTasks() {
       <Progress tasks={tasks} />
       <Tasks tasks={tasks} />
       <Progress tasks={tasks} />
-      <FloatingMenu actions={actions} />
+      <FloatingMenu actions={actions} isSettingsRequired={!state.isSetup} />
     </div>
   )
 }
