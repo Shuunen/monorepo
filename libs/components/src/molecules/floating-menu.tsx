@@ -1,3 +1,4 @@
+import { cn } from '@monorepo/utils'
 import { LoaderCircleIcon, type LucideProps, PackageIcon, PackageOpenIcon } from 'lucide-react'
 import { createElement, type ForwardRefExoticComponent, type RefAttributes, useEffect, useMemo, useState } from 'react'
 import { Command, CommandEmpty, CommandItem, CommandList } from '../shadcn/command'
@@ -24,7 +25,7 @@ export function FloatingMenu({ actions = [], isLoading = false, isSettingsRequir
     <>
       {isOpen && <div className="absolute fixed bottom-0 right-0 z-10 size-full bg-linear-to-tl bg-black/20" data-component="speed-dial-backdrop" />}
       <Popover onOpenChange={setOpen}>
-        <PopoverTrigger className="cursor-pointer transition-all opacity-50 hover:opacity-100 bottom-5 right-5 fixed bg-primary p-4 rounded-full">{icon}</PopoverTrigger>
+        <PopoverTrigger className={cn('cursor-pointer transition-all bottom-5 right-5 fixed bg-primary p-4 rounded-full', isSettingsRequired ? 'animate-pulse' : 'opacity-50 hover:opacity-100')}>{icon}</PopoverTrigger>
         <PopoverContent className="p-1 mr-5 mb-2 w-fit">
           <Command>
             <CommandList>
