@@ -11,9 +11,9 @@ export function parseClipboard(clipboard: string) {
   // clipboard can contains something like : "appABC
   // patXYZ.123
   // https://zob.com"
-  const regex = /"(?<apiDatabase>[\w-]{1,36})\n(?<apiCollection>[\w-]{1,36})\n(?<hueEndpoint>http[^\n]+)\n(?<trmnlWebhook>https[^"]+)"/u
-  const { apiCollection = '', apiDatabase = '', hueEndpoint = '', trmnlWebhook = '' } = regex.exec(clipboard)?.groups ?? {}
-  return { apiCollection, apiDatabase, hueEndpoint, trmnlWebhook } satisfies Record<CredentialField, string>
+  const regex = /"(?<apiDatabase>[\w-]{1,36})\n(?<apiCollection>[\w-]{1,36})\n(?<webhook>http[^"]+)"/u
+  const { apiCollection = '', apiDatabase = '', webhook = '' } = regex.exec(clipboard)?.groups ?? {}
+  return { apiCollection, apiDatabase, webhook } satisfies Record<CredentialField, string>
 }
 
 /**

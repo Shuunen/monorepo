@@ -7,25 +7,24 @@ const invalidUuid = '12345678-90ab-cdef-ffff-ffffffffffff!'
 const validUrl = 'https://zob.com'
 
 it('parseClipboard A empty', () => {
-  const { apiCollection, apiDatabase, hueEndpoint } = parseClipboard('')
+  const { apiCollection, apiDatabase, webhook } = parseClipboard('')
   expect(apiCollection).toBe('')
   expect(apiDatabase).toBe('')
-  expect(hueEndpoint).toBe('')
+  expect(webhook).toBe('')
 })
 
-it('parseClipboard B invalid', () => {
-  const { apiCollection, apiDatabase, hueEndpoint } = parseClipboard(`"${invalidUuid}\n${validUuid}\n${validUrl}"`)
+it('parseClipboard B one is invalid', () => {
+  const { apiCollection, apiDatabase, webhook } = parseClipboard(`"${invalidUuid}\n${validUuid}\n${validUrl}"`)
   expect(apiCollection).toBe('')
   expect(apiDatabase).toBe('')
-  expect(hueEndpoint).toBe('')
+  expect(webhook).toBe('')
 })
 
-it('parseClipboard C valid', () => {
-  const { apiCollection, apiDatabase, hueEndpoint, trmnlWebhook } = parseClipboard(`"${validUuid}\n${validUuid}\n${validUrl}\n${validUrl}"`)
+it('parseClipboard C all are valid', () => {
+  const { apiCollection, apiDatabase, webhook } = parseClipboard(`"${validUuid}\n${validUuid}\n${validUrl}"`)
   expect(apiCollection).toBe(validUuid)
   expect(apiDatabase).toBe(validUuid)
-  expect(hueEndpoint).toBe(validUrl)
-  expect(trmnlWebhook).toBe(validUrl)
+  expect(webhook).toBe(validUrl)
 })
 
 it('validateCredentials A', () => {

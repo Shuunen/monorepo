@@ -18,6 +18,8 @@ function setup() {
   if (storage.prefix === prefix) return
   logger.info('app setup')
   storage.prefix = prefix
+  const previousWebhook = storage.get('hueEndpoint', '') // remove me in few months
+  if (state.webhook === '' && previousWebhook.length > 0) state.webhook = previousWebhook // remove me in few months
   const loadTasksDebounced = debounce(loadTasks, nbHueMax)
   on('user-activity', () => loadTasksDebounced('user-activity'))
   watchState('showErrorToast', () => toastError(state.showErrorToast))

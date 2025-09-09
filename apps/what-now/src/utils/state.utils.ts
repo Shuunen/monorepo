@@ -7,7 +7,6 @@ export const { state, watchState } = createState(
   {
     apiCollection: '',
     apiDatabase: '',
-    hueEndpoint: '',
     isLoading: false,
     /** true if the app is ready to use */
     isSetup: false,
@@ -20,11 +19,11 @@ export const { state, watchState } = createState(
     tasks,
     /** timestamp of the last time tasks were fetched, in milliseconds */
     tasksTimestamp: 0,
-    /** the webhook URL for the terminal */
-    trmnlWebhook: '',
+    /** the webhook URL to connect the app with external services */
+    webhook: '',
   },
   storage,
-  /* c8 ignore next */ ['apiDatabase', 'apiCollection', 'hueEndpoint', 'tasks', 'tasksTimestamp', 'trmnlWebhook'],
+  /* c8 ignore next */ ['apiDatabase', 'apiCollection', 'tasks', 'tasksTimestamp', 'webhook'],
 )
 
-export type CredentialField = keyof Pick<typeof state, 'apiCollection' | 'apiDatabase' | 'hueEndpoint' | 'trmnlWebhook'>
+export type CredentialField = keyof Pick<typeof state, 'apiCollection' | 'apiDatabase' | 'webhook'>

@@ -1,7 +1,7 @@
-import { debounce, fetchJson, fetchRaw, nbHueMax, nbMsInHour, nbPercentMax, throttle } from '@monorepo/utils'
+import { debounce, fetchRaw, nbHueMax, nbPercentMax } from '@monorepo/utils'
 import type { Task } from '../types'
 import { logger } from '../utils/logger.utils'
-import { trmnlPayload } from '../utils/progress.utils'
+import { webhookPayload } from '../utils/progress.utils'
 import { state } from '../utils/state.utils'
 import { isTaskActive } from '../utils/tasks.utils'
 
@@ -17,15 +17,15 @@ function counterText(percent = 0) {
   /* oxlint-enable no-magic-numbers */
 }
 
-async function emitToHue(percent: number) {
+async function emitToWebhook(progress: number) {
   const options = {
-    body: `progress=${percent}`,
+    body: webhookPayload(progress),
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     method: 'POST',
     mode: 'no-cors',
   } as const
-  const result = await fetchRaw(state.hueEndpoint, options)
-  logger.info('hue response', result)
+  const result = await fetchRaw(state.webhook, options)
+  logger.info('webhook response', result)
 }
 
 function getProgressBackground(percent: number) {
@@ -49,29 +49,13 @@ function showProgressBackground(percent: number) {
   document.body.className = document.body.className.replace(/from-\w+-\d+ to-\w+-\d+/giu, target)
 }
 
-async function emitToTrmnlSync(progress: number) {
-  const options = {
-    body: trmnlPayload(progress),
-    headers: { 'content-type': 'application/json' },
-    method: 'POST',
-    // mode: 'no-cors', // can't use no-cors, that will prevent us from making the correct request (it mess up the accept header and the response is failing)
-  } as const
-  const result = await fetchJson(state.trmnlWebhook, options)
-  logger.info('trmnl response', result)
-}
-
-const maxCallsPerHour = 12
-const throttleDelay = Math.round(nbMsInHour / maxCallsPerHour)
-const emitToTrmnl = throttle(emitToTrmnlSync, throttleDelay)
-
 function showProgressSync(percent: number) {
   if (document.body.dataset.progress === String(percent)) return
   logger.info('show progress', { percent })
   document.body.dataset.progress = String(percent)
   state.statusProgress = counterText(percent)
   showProgressBackground(percent)
-  if (state.hueEndpoint !== '') void emitToHue(percent)
-  if (state.trmnlWebhook !== '') emitToTrmnl(percent)
+  if (state.webhook !== '') void emitToWebhook(percent)
 }
 
 const showProgress = debounce(showProgressSync, nbHueMax)

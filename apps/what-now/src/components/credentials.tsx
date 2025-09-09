@@ -1,5 +1,5 @@
 import { Button } from '@monorepo/components'
-import { nbFirst, nbSecond, nbThird, on, readClipboard } from '@monorepo/utils'
+import { nbFirst, nbSecond, on, readClipboard } from '@monorepo/utils'
 import { ExternalLinkIcon } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { parseClipboard, validateCredentials } from '../utils/credentials.utils'
@@ -9,29 +9,25 @@ import { type CredentialField, state } from '../utils/state.utils'
 const fields = [
   { href: 'https://cloud.appwrite.io/', label: 'AppWrite database id', link: 'dashboard', maxlength: 100, name: 'appwrite-database-id', pattern: String.raw`^\w+$` },
   { href: 'https://cloud.appwrite.io/', label: 'AppWrite collection id', link: 'dashboard', maxlength: 100, name: 'appwrite-collection-id', pattern: String.raw`^\w+$` },
-  { href: 'https://developers.meethue.com/develop/get-started-2/', label: 'Hue status light', link: 'endpoint', maxlength: 150, name: 'hue-status-light', pattern: '^https://.+$' },
-  { href: 'https://usetrmnl.com/', label: 'Trmnl Webhook', link: 'webhook', maxlength: 150, name: 'trmnl-webhook', pattern: '^https://.+$' },
+  { href: 'https://github.com/Shuunen/monorepo/blob/master/apps/what-now/docs/webhook.md', label: 'Webhook', link: 'webhook', maxlength: 150, name: 'webhook', pattern: '^https://.+$' },
 ] as const
 
 type FormData = {
   apiCollection: string
   apiDatabase: string
-  hueEndpoint: string
-  trmnlWebhook: string
+  webhook: string
 }
 
 function getFieldValue(index: number, formData: FormData): string {
   if (index === nbFirst) return formData.apiDatabase
   if (index === nbSecond) return formData.apiCollection
-  if (index === nbThird) return formData.hueEndpoint
-  return formData.trmnlWebhook
+  return formData.webhook
 }
 
 function getFieldKey(index: number): keyof FormData {
   if (index === nbFirst) return 'apiDatabase'
   if (index === nbSecond) return 'apiCollection'
-  if (index === nbThird) return 'hueEndpoint'
-  return 'trmnlWebhook'
+  return 'webhook'
 }
 
 type CredentialsFormProps = {
@@ -82,8 +78,7 @@ function useCredentialsLogic() {
   const [formData, setFormData] = useState<FormData>({
     apiCollection: state.apiCollection,
     apiDatabase: state.apiDatabase,
-    hueEndpoint: state.hueEndpoint,
-    trmnlWebhook: state.trmnlWebhook,
+    webhook: state.webhook,
   })
 
   const fillForm = useCallback((data: Readonly<Record<CredentialField, string>>) => {
@@ -91,8 +86,7 @@ function useCredentialsLogic() {
     setFormData({
       apiCollection: data.apiCollection || '',
       apiDatabase: data.apiDatabase || '',
-      hueEndpoint: data.hueEndpoint || '',
-      trmnlWebhook: data.trmnlWebhook || '',
+      webhook: data.webhook || '',
     })
   }, [])
 
@@ -103,18 +97,17 @@ function useCredentialsLogic() {
   const handleSubmit = useCallback(
     (event: React.FormEvent) => {
       event.preventDefault()
-      const { apiCollection, apiDatabase, hueEndpoint, trmnlWebhook } = formData
+      const { apiCollection, apiDatabase, webhook } = formData
       const isOk = validateCredentials(apiDatabase, apiCollection)
       state.statusError = isOk ? '' : 'Invalid credentials'
-
       if (!isOk) return
-
-      logger.info('credentials submitted', { apiCollection, apiDatabase, hueEndpoint, trmnlWebhook })
+      logger.info('credentials submitted', { apiCollection, apiDatabase, webhook })
       state.apiDatabase = apiDatabase
       state.apiCollection = apiCollection
-      state.hueEndpoint = hueEndpoint
-      state.trmnlWebhook = trmnlWebhook
+      state.webhook = webhook
       state.isSetup = true
+      // navigate to home to see the tasks
+      globalThis.location.href = '/'
     },
     [formData],
   )
