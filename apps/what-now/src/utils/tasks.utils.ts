@@ -66,8 +66,8 @@ export function byActive(taskA: Task, taskB: Task) {
   return 0
 }
 
-export async function fetchList() {
-  logger.info('fetch list')
+export async function fetchList(reason: string) {
+  logger.info('fetch list, reason :', reason)
   state.statusInfo = 'Loading tasks, please wait...'
   const result = await getTasks()
   if (!result.ok) return result
@@ -86,10 +86,10 @@ export function isDataOlderThan(milliseconds: number) {
   return age >= milliseconds
 }
 
-export async function loadTasks() {
+export async function loadTasks(reason: string) {
   if (!state.isSetup) return Result.error('not setup, cannot load tasks')
   if (state.tasks.length > 0 && !isDataOlderThan(Number(nbMsInMinute))) return Result.ok(`tasks are fresh (${readableTimeAgo(Date.now() - state.tasksTimestamp)})`)
-  const result = await fetchList()
+  const result = await fetchList(reason)
   if (!result.ok) return result
   logger.info('found', result.value.length, 'task(s)')
   state.isLoading = false

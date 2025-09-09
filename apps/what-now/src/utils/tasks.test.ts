@@ -160,7 +160,7 @@ it('fetch list via triggering isSetup without base & token in state', () => {
 it('fetch list via fetchList with base & token in state', async () => {
   state.apiDatabase = 'app12345654987123'
   state.apiCollection = 'pat12345654987123azdazdzadazdzadaz465465468479649646azd46az465azdazd'
-  await fetchList()
+  await fetchList('unit-test')
   expect(state.isSetup).toBe(true)
 })
 
@@ -226,7 +226,7 @@ it('loadTasks A fresh tasks in a setup state', async () => {
   state.isSetup = true
   state.tasksTimestamp = Date.now()
   state.tasks = [taskMock({ completedOn: yesterday, once: 'day' })]
-  expect(await loadTasks()).toMatchInlineSnapshot(`
+  expect(await loadTasks('unit-test')).toMatchInlineSnapshot(`
     Ok {
       "ok": true,
       "value": "tasks are fresh (now)",
@@ -236,7 +236,7 @@ it('loadTasks A fresh tasks in a setup state', async () => {
 
 it('loadTasks B state is not setup', async () => {
   state.isSetup = false
-  expect(await loadTasks()).toMatchInlineSnapshot(`
+  expect(await loadTasks('unit-test')).toMatchInlineSnapshot(`
     Err {
       "error": "not setup, cannot load tasks",
       "ok": false,
@@ -248,7 +248,7 @@ it('loadTasks C failed to fetch tasks', async () => {
   state.apiDatabase = 'fail-trigger'
   state.isSetup = true
   state.tasksTimestamp = daysFromNow(-1).getTime()
-  expect(await loadTasks()).toMatchInlineSnapshot(`
+  expect(await loadTasks('unit-test')).toMatchInlineSnapshot(`
     Err {
       "error": [Error: fail-trigger],
       "ok": false,
@@ -263,7 +263,7 @@ it('loadTasks D should successfully fetch and load tasks', async () => {
   state.tasksTimestamp = daysFromNow(-1).getTime()
   state.apiDatabase = 'test-database'
   state.apiCollection = 'test-collection'
-  expect(await loadTasks()).toMatchInlineSnapshot(`
+  expect(await loadTasks('unit-test')).toMatchInlineSnapshot(`
     Ok {
       "ok": true,
       "value": "tasks loaded",

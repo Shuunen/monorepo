@@ -1,5 +1,5 @@
 // oxlint-disable no-unassigned-import
-import { on, storage, toastError } from '@monorepo/utils'
+import { debounce, nbHueMax, on, storage, toastError } from '@monorepo/utils'
 import { checkUrlCredentials } from './utils/credentials.utils'
 import './utils/database.utils'
 import './utils/idle.utils'
@@ -12,12 +12,17 @@ import { logger } from './utils/logger.utils'
 import { state, watchState } from './utils/state.utils'
 import { loadTasks } from './utils/tasks.utils'
 
+const prefix = 'what-now_'
+
 function setup() {
-  storage.prefix = 'what-now_'
-  on('user-activity', () => loadTasks())
+  if (storage.prefix === prefix) return
+  logger.info('app setup')
+  storage.prefix = prefix
+  const loadTasksDebounced = debounce(loadTasks, nbHueMax)
+  on('user-activity', () => loadTasksDebounced('user-activity'))
   watchState('showErrorToast', () => toastError(state.showErrorToast))
   on('error', (error: Readonly<Error>) => toastError(`global error catch : ${error.message}`))
-  watchState('isSetup', () => loadTasks())
+  watchState('isSetup', () => loadTasksDebounced('is-setup'))
   checkUrlCredentials(document.location.hash)
 }
 
