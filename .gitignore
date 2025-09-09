@@ -8,6 +8,7 @@
 *.bak
 *.crt
 *.endpoint
+*.env
 *.key
 *.local.json
 *.log
