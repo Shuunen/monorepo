@@ -65,6 +65,7 @@ const throttleDelay = Math.round(nbMsInHour / maxCallsPerHour)
 const emitToTrmnl = throttle(emitToTrmnlSync, throttleDelay)
 
 function showProgressSync(percent: number) {
+  if (document.body.dataset.progress === String(percent)) return
   logger.info('show progress', { percent })
   document.body.dataset.progress = String(percent)
   state.statusProgress = counterText(percent)
