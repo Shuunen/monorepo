@@ -85,11 +85,7 @@ function getEnvEndpoints(string $envPath): array {
  * @param string $nextTask the next task name
  * @return void
  */
-function setProgress(string $progressString = '', $remaining = null, $nextTask = null): void {
-  if (empty($progressString)) {
-    echo jsonResponse(false, 'Progress value is empty', $progressString, null, null, $remaining, $nextTask);
-    return;
-  }
+function setProgress(string $progressString = '0', $remaining = null, $nextTask = null): void {
   $progress = intval($progressString);
   if (!is_numeric($progressString) || $progress < 0 || $progress > 100) {
     echo jsonResponse(false, 'Invalid progress value. It must be an integer between 0 and 100.', $progress, null, null, $remaining, $nextTask);
