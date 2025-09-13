@@ -173,7 +173,7 @@ function PlannerContent({
           const realDate = formatDate(columnDate, 'dd MMMM')
           const isToday = columnDate.toDateString() === today.toDateString()
           return (
-            <div className="min-w-48 flex-shrink-0" key={dayName}>
+            <div className="min-w-48 flex-shrink-0" key={realDate}>
               <DayColumn dayName={dayName} isToday={isToday} modifications={modifications} onDateChange={onDateChange} onFrequencyChange={onFrequencyChange} realDate={realDate} tasks={tasksByDay[index]} />
             </div>
           )
