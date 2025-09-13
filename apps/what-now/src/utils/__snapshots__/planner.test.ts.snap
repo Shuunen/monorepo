@@ -55,19 +55,19 @@ exports[`planner utils > validFrequencies A should be in ascending order 1`] = `
 
 exports[`planner utils > weekDays A should contain all fourteen days 1`] = `
 [
-  "Mon W1",
-  "Tue W1",
-  "Wed W1",
-  "Thu W1",
-  "Fri W1",
-  "Sat W1",
-  "Sun W1",
-  "Mon W2",
-  "Tue W2",
-  "Wed W2",
-  "Thu W2",
-  "Fri W2",
-  "Sat W2",
-  "Sun W2",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
 ]
 `;
