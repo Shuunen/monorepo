@@ -1,6 +1,6 @@
 // oxlint-disable max-dependencies, max-lines
 import { Button, FloatingMenu } from '@monorepo/components'
-import { dateIso10 } from '@monorepo/utils'
+import { dateIso10, formatDate } from '@monorepo/utils'
 import { ArrowLeftRightIcon, CalendarIcon, DownloadIcon, MinusIcon, MoveLeftIcon, MoveRightIcon, PlusIcon, SaveIcon, UploadIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Task } from '../types'
@@ -105,15 +105,36 @@ function TaskCard({ task, modifications, onFrequencyChange, onDateChange }: { ta
  * @param properties.modifications - Current modifications to tasks
  * @param properties.onFrequencyChange - Handler for frequency changes
  * @param properties.onDateChange - Handler for date changes
+ * @param properties.realDate - Real date string for the day
+ * @param properties.isToday - Whether this day is today
  * @returns JSX element for the day column
  */
-function DayColumn({ dayName, tasks, modifications, onFrequencyChange, onDateChange }: { dayName: string; tasks: Task[]; modifications: Record<string, number>; onFrequencyChange: (taskId: string, newDays: number) => void; onDateChange: (taskId: string, direction: 'before' | 'after') => void }) {
+function DayColumn({
+  dayName,
+  tasks,
+  modifications,
+  onFrequencyChange,
+  onDateChange,
+  realDate,
+  isToday,
+}: {
+  dayName: string
+  tasks: Task[]
+  modifications: Record<string, number>
+  onFrequencyChange: (taskId: string, newDays: number) => void
+  onDateChange: (taskId: string, direction: 'before' | 'after') => void
+  realDate: string
+  isToday?: boolean
+}) {
   return (
-    <div className="flex flex-col border-r border-gray-600/30 last:border-r-0 min-h-96 w-full">
-      <div className="bg-gray-800/40 p-3 border-b border-gray-600/30 text-center font-medium text-gray-200">{dayName}</div>
+    <div className={`flex flex-col border-r border-gray-600/30 last:border-r-0 min-h-96 w-full ${isToday ? 'bg-yellow-100/10' : ''}`}>
+      <div className="flex flex-col leading-6 bg-gray-800/40 p-3 border-b border-gray-600/30 text-center font-medium text-gray-200">
+        {dayName}
+        <span className="ml-2 opacity-75">{realDate}</span>
+      </div>
       <div className="flex flex-col gap-2 p-3 flex-grow">
         {tasks.map(task => (
-          <TaskCard key={`${task.id}-${dayName}`} modifications={modifications} onDateChange={onDateChange} onFrequencyChange={onFrequencyChange} task={task} />
+          <TaskCard key={`${task.id}-${realDate}`} modifications={modifications} onDateChange={onDateChange} onFrequencyChange={onFrequencyChange} task={task} />
         ))}
       </div>
     </div>
@@ -140,14 +161,23 @@ function PlannerContent({
   onFrequencyChange: (taskId: string, newDays: number) => void
   onDateChange: (taskId: string, direction: 'before' | 'after') => void
 }) {
+  const today = new Date()
+  const monday = new Date(today)
+  monday.setDate(today.getDate() - today.getDay() + 1)
   return (
     <div className="bg-gray-800/30 rounded-lg shadow-sm border border-gray-600/30 overflow-hidden">
       <div className="flex min-h-96 overflow-x-auto">
-        {weekDays.map((dayName, index) => (
-          <div className="min-w-48 flex-shrink-0" key={dayName}>
-            <DayColumn dayName={dayName} modifications={modifications} onDateChange={onDateChange} onFrequencyChange={onFrequencyChange} tasks={tasksByDay[index]} />
-          </div>
-        ))}
+        {weekDays.map((dayName, index) => {
+          const columnDate = new Date(monday)
+          columnDate.setDate(monday.getDate() + index)
+          const realDate = formatDate(columnDate, 'dd MMMM')
+          const isToday = columnDate.toDateString() === today.toDateString()
+          return (
+            <div className="min-w-48 flex-shrink-0" key={dayName}>
+              <DayColumn dayName={dayName} isToday={isToday} modifications={modifications} onDateChange={onDateChange} onFrequencyChange={onFrequencyChange} realDate={realDate} tasks={tasksByDay[index]} />
+            </div>
+          )
+        })}
       </div>
     </div>
   )

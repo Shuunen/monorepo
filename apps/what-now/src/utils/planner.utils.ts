@@ -3,7 +3,7 @@ import type { Task } from '../types'
 import { updateTask } from './database.utils'
 import { daysRecurrence, daysSinceCompletion } from './tasks.utils'
 
-export const weekDays = ['Mon W1', 'Tue W1', 'Wed W1', 'Thu W1', 'Fri W1', 'Sat W1', 'Sun W1', 'Mon W2', 'Tue W2', 'Wed W2', 'Thu W2', 'Fri W2', 'Sat W2', 'Sun W2']
+export const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 export const daysInWeek = 14
 // oxlint-disable-next-line no-magic-numbers
 export const allDayIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
