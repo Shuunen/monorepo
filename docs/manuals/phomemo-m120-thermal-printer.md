@@ -31,9 +31,10 @@
 
 1. Turn on the printer
 2. Connect it via USB
-3. Download & execute `QY_Printer Driver Setup v1.2.10.exe` from [Phomemo](https://phomemo.com/en-fr/pages/download-for-phomemo-m120-label-printer), [direct link](https://oss.qu-in.life/app/M120-win.zip)
-4. Open `Printers & scanners` Windows settings, you should see the `M120 Printer`
-5. Click on it, then click on `Manage`
+3. Download & execute `QY_Printer Driver Setup v2.11.0.004.exe` from [Phomemo](https://phomemo.com/en-fr/pages/download-for-phomemo-m120-label-printer), [direct link](https://oss.qu-in.life/app/M120-win.zip)
+4. Restart your computer
+5. Open `Printers & scanners` Windows settings, you should see the `M120 Printer`
+6. Click on it, then click on `Printing preferences`
 
 Now :
 
