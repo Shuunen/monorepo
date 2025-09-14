@@ -91,8 +91,7 @@ export function RecipeMenu() {
         ))}
         <Divider />
       </div>
-      {/** biome-ignore lint/correctness/useUniqueElementIds: unique mark need this id */}
-      <span className="text-sm text-center block w-full text-gray-500 italic -mt-4 mb-8" id="unique-mark"></span>
+      <span className="text-sm text-center block w-full text-gray-500 italic text-shadow-md text-shadow-white mb-8">__unique-mark__</span>
     </div>
   )
 }

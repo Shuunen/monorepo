@@ -1,4 +1,5 @@
-import { HomeIcon } from 'lucide-react'
+import { Button } from '@monorepo/components'
+import { HomeIcon, MoveLeftIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Divider } from './divider'
@@ -74,12 +75,13 @@ export function RecipeViewer() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen" data-testid="recipe">
-      <Link className="flex fixed bottom-4 w-full" to="/">
-        <span className="flex mx-auto w-fit rounded-full border-2 bg-white text-primary border-primary shadow-lg items-center gap-4 px-4 py-2">
+      <Button asChild className="flex fixed bottom-4 z-10 rounded-xl border-2 border-orange-800" variant="outline">
+        <Link to="/">
+          <MoveLeftIcon />
           Retour à l'accueil
           <HomeIcon />
-        </span>
-      </Link>
+        </Link>
+      </Button>
       <div className="card">
         <RecipeComponent />
         <Divider />
