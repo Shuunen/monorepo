@@ -321,7 +321,7 @@ class Shuutils {
   /**
    * Wait for location.href to change and call a callback
    * @param {Function} callback the callback to call when location.href changes
-   * @param {string} last the last location.href, don't use it
+   * @param {string} last the last location.href, dont use it
    * @param {number} wait the time to wait between each try
    * @returns {Promise<void>} nothing
    * @example utils.onPageChange((url) => { console.log('new url :', url) })
@@ -525,7 +525,7 @@ class Shuutils {
    * WaitToDetect will wait for an element to be detected in the DOM and return it
    * @param {string} selector the css selector to detect
    * @param {number} wait in ms, the time to wait between each try, defaults to 500ms
-   * @param {number} nbTries the number of tries already done, don't use it
+   * @param {number} nbTries the number of tries already done, dont use it
    * @returns {Promise<HTMLElement|undefined>} the element found or undefined
    */
   async waitToDetect(selector, wait = 500, nbTries = 0) {

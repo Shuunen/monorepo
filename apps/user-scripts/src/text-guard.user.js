@@ -54,7 +54,7 @@ function TextGuard() {
   }
   /**
    * Finds elements in the document that contain a specific word
-   * @param {string} word - The word to search for in the elements' text content.
+   * @param {string} word - The word to search for in the elements text content.
    * @returns {HTMLElement[]} An array of HTMLElements that match the XPath expression and contain the specified word.
    */
   function findElementsByXpath(word) {

@@ -30,7 +30,7 @@ function LolKpm() {
    * Calculates and displays the kills per minute (KPM) for a given row element,
    * appends the result as a styled div, and marks the row as handled.
    *
-   * Extracts the number of kills and match duration from the row's child elements,
+   * Extracts the number of kills and match duration from the row child elements,
    * computes the KPM, and uses the `coolPercents` function to determine a "score".
    * The KPM and score are displayed with dynamic styling and a tooltip.
    *

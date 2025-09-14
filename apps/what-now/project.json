@@ -3,12 +3,15 @@
   "targets": {
     "build-desktop": {
       "cache": true,
+      "dependsOn": [
+        "build"
+      ],
       "executor": "nx:run-commands",
       "metadata": {
         "description": "Build WhatNow electron desktop app"
       },
       "options": {
-        "command": "nx build what-now && cd electron && pnpm install --dir . && pnpm electron:make && cd .. && pnpm install",
+        "command": "cd electron && npm install && pnpm electron:make",
         "cwd": "{projectRoot}"
       },
       "outputs": [
@@ -19,12 +22,15 @@
     },
     "dev-desktop": {
       "continuous": true,
+      "dependsOn": [
+        "build"
+      ],
       "executor": "nx:run-commands",
       "metadata": {
         "description": "Start WhatNow electron desktop app in dev mode"
       },
       "options": {
-        "command": "nx build what-now && cd electron && pnpm electron:start",
+        "command": "cd electron && pnpm electron:start",
         "cwd": "{projectRoot}"
       }
     },

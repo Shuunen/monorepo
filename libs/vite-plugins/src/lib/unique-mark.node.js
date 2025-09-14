@@ -35,7 +35,7 @@ export function generateMark({ commit = '', date = new Date().toISOString(), ver
 }
 
 /**
- * Injects a unique mark into the provided asset's content at the specified placeholder.
+ * Injects a unique mark into the provided asset content at the specified placeholder.
  * @param {object} params - The parameters for injection.
  * @param {Record<string,string>} params.asset - The asset record containing the content to modify.
  * @param {string} params.fileName - The name of the file being processed.

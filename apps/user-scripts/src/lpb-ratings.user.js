@@ -422,7 +422,7 @@ const ratings = ratingsCsv.split('\n').map(line => {
 })
 
 /**
- * Creates a styled review element representing a user's rating.
+ * Creates a styled review element representing a user rating
  * @param {string} name - The name of the reviewer.
  * @param {number} rating - The rating given by the reviewer (typically between 1 and 5).
  * @returns {HTMLDivElement} The styled review div element.

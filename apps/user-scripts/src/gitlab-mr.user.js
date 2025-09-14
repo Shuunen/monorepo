@@ -22,7 +22,7 @@ function GitlabMr() {
    *
    * @param {HTMLElement} element - The DOM element to clone as a template for the button.
    * @param {string} label - The text label to display on the button.
-   * @param {string} href - The URL to set for the button's link and to fetch for counting merge requests.
+   * @param {string} href - The URL to set for the button link and to fetch for counting merge requests.
    * @returns {HTMLElement} The newly created button element.
    */
   function addButton(element, label, href) {
