@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { Divider } from './divider'
 
 const RECIPE_PATH_REGEX = /\.\.\/recipes\/([^/]+)\/([^/]+)\.md$/
 
@@ -68,22 +69,30 @@ export function RecipeMenu() {
   const categories = Object.keys(groupedRecipes).sort()
 
   return (
-    <div className="-mt-12 mb-8 pt-8">
-      {categories.map(category => (
-        <section className="mb-8" key={category}>
-          <h2 className="text-2xl font-bold text-gray-800">{categoryMap[category] /* c8 ignore next */ || 'missing-mapping'}</h2>
-          <ol className="gap-x-6 gap-y-2 grid sm:grid-cols-2 md:grid-cols-3 md:max-w-fit!">
-            {groupedRecipes[category].map((recipe, index) => (
-              <li className="flex items-center" key={`${recipe.category}/${recipe.name}`}>
-                <span className="mr-2 text-muted-foreground">{index + 1}.</span>
-                <NavLink className="text-yellow-700! hover:underline transition-colors" to={`/recipes/${recipe.category}/${recipe.name}`}>
-                  {recipe.name}
-                </NavLink>
-              </li>
-            ))}
-          </ol>
-        </section>
-      ))}
+    <div className="flex flex-col grow items-center justify-center py-24">
+      <div className="card">
+        <h1>
+          Les recettes de
+          <br />
+          <span className="text-amber-100">Romain</span> !
+        </h1>
+        {categories.map(category => (
+          <section className="w-full" key={category}>
+            <h2>{categoryMap[category]}</h2>
+            <ol className="grid sm:grid-cols-2 pl-0!">
+              {groupedRecipes[category].map((recipe, index) => (
+                <li className="flex items-center" key={`${recipe.category}/${recipe.name}`}>
+                  <span className="mr-2">{index + 1}.</span>
+                  <NavLink to={`/recipes/${recipe.category}/${recipe.name}`}>{recipe.name}</NavLink>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
+        <Divider />
+      </div>
+      {/** biome-ignore lint/correctness/useUniqueElementIds: unique mark need this id */}
+      <span className="text-sm text-center block w-full text-gray-500 italic -mt-4 mb-8" id="unique-mark"></span>
     </div>
   )
 }

@@ -13,11 +13,11 @@ describe('App', () => {
   })
 
   it('should have a greeting', () => {
-    const { getAllByText } = render(
+    const { getByRole } = render(
       <BrowserRouter>
         <App />
       </BrowserRouter>,
     )
-    expect(getAllByText('Les recettes de Shuunen').length > 0).toBeTruthy()
+    expect(getByRole('heading', { level: 1 }).textContent).toContain('Les recettes deRomain !')
   })
 })

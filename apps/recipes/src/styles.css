@@ -2,70 +2,23 @@
 @source "../../../libs/components/src";
 
 @theme inline {
-  /* Override the default theme with built-in colors or use your own */
-  --color-primary: var(--warning);
+  --color-primary: darkred;
+  --color-info: darkred;
+  --color-info-light: darkorange;
 }
 
-html,
-body,
-#root {
-  @apply h-full;
-}
-
-body {
-  @apply leading-9;
-}
-
-h1 {
-  @apply text-3xl shrink-0 md:text-5xl font-bold shadow-lg mt-6 py-4 px-8 -rotate-2 mb-12 transition-transform bg-white truncate max-w-full block;
-}
-
-h2 {
-  @apply text-2xl md:text-3xl pb-4 pt-6 font-semibold;
-}
-
-ul {
-  @apply list-disc pb-4;
-}
-
-ol {
-  @apply list-decimal pb-4;
-}
-
-h2,
-ul,
-ol,
-p {
-  @apply bg-white/95 w-full shadow-lg px-6 max-w-2xl;
-}
-
-[data-component="recipe"] > div {
-  @apply justify-center items-center align-middle grow flex flex-col pb-12;
-}
-
-.bg-pasta,
-[data-component="recipe"] > div {
+.bg-pasta {
   background-image: url("/background.svg");
 }
 
-h1 + h2,
-h1 + p {
-  @apply pt-8 -mt-14;
-}
+.card {
+  @apply bg-white/95 w-full shadow-lg px-8 max-w-2xl my-24;
 
-ul {
-  @apply pl-12;
-}
+  h1 {
+    @apply text-white text-center shadow-lg -mt-6 py-4 px-8 -rotate-2 transition-transform bg-orange-800/95 max-w-fit mx-auto block;
+  }
 
-ol {
-  @apply pl-11;
-}
-
-div > p:last-child {
-  background-image: url("/divider.svg");
-  @apply pb-18 bg-bottom bg-no-repeat bg-blend-color;
-}
-
-a {
-  @apply text-primary hover:underline truncate max-w-full block;
+  h2 {
+    @apply text-orange-700 mt-6 mb-2;
+  }
 }

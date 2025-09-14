@@ -1,6 +1,7 @@
 import { HomeIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { Divider } from './divider'
 
 type RecipeParams = {
   category: string
@@ -72,14 +73,17 @@ export function RecipeViewer() {
   if (!RecipeComponent) return <ErrorMessage error="Composant de recette non disponible" />
 
   return (
-    <div className="flex flex-col min-h-screen" data-testid="recipe">
-      <Link className="flex fixed bottom-4 w-full  " to="/">
+    <div className="flex flex-col justify-center items-center min-h-screen" data-testid="recipe">
+      <Link className="flex fixed bottom-4 w-full" to="/">
         <span className="flex mx-auto w-fit rounded-full border-2 bg-white text-primary border-primary shadow-lg items-center gap-4 px-4 py-2">
           Retour à l'accueil
           <HomeIcon />
         </span>
       </Link>
-      <RecipeComponent />
+      <div className="card">
+        <RecipeComponent />
+        <Divider />
+      </div>
     </div>
   )
 }
