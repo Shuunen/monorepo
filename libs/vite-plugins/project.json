@@ -5,8 +5,8 @@
       "cache": true,
       "executor": "nx:run-commands",
       "options": {
-        "command": "node src/list.cli.js",
-        "cwd": "libs/vite-plugins"
+        "command": "bun ../../../apps/one-file/barrel-maker.cli.ts --target=./lib/*.js --index=index.js --avoid=.test.",
+        "cwd": "libs/vite-plugins/src"
       },
       "outputs": [
         "{projectRoot}/src/index.js"
