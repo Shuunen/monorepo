@@ -1,4 +1,5 @@
 /* c8 ignore start */
+import { Textarea } from '@monorepo/components'
 import { useState } from 'react'
 import { sampleInput } from './constants'
 import { Rules } from './rules'
@@ -21,7 +22,8 @@ export function Converter() {
   const [rules, setRules] = useState([
     { enabled: true, pattern: '\\.', replacement: '🐱' },
     { enabled: true, pattern: 'right', replacement: '' },
-    { enabled: false, pattern: '([A-Z])', replacement: '-$1' },
+    { enabled: false, pattern: '([A-Z])', replacement: '- $1' },
+    { enabled: false, pattern: '', replacement: '' },
   ])
   const output = applyRules(input, rules)
 
@@ -29,12 +31,12 @@ export function Converter() {
     <div className="flex flex-col">
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <h2 className="mb-2 text-blue-700">input</h2>
-          <textarea className="w-full h-80 p-3 border rounded bg-white shadow" onChange={event => setInput(event.target.value)} placeholder="Paste your text here..." value={input} />
+          <h2 className="mb-2 mt-2">input</h2>
+          <Textarea className="w-full h-80 p-3 border rounded-xl bg-white shadow" onChange={event => setInput(event.target.value)} placeholder="Paste your text here..." value={input} />
         </div>
         <div>
-          <h2 className="mb-2 text-purple-700">output</h2>
-          <textarea className="w-full h-80 p-3 border rounded bg-white shadow" readOnly value={output} />
+          <h2 className="mb-2 mt-2 text-primary">output</h2>
+          <Textarea className="w-full h-80 p-3 border rounded-xl bg-white shadow" readOnly value={output} />
         </div>
       </div>
       <div className="col-span-2 mt-8">
