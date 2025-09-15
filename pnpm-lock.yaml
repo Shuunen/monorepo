@@ -358,9 +358,6 @@ importers:
       esbuild:
         specifier: ^0.25.5
         version: 0.25.9
-      tiny-glob:
-        specifier: ^0.2.9
-        version: 0.2.9
 
   libs/vite-plugins: {}
 
