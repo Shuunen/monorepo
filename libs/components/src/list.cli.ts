@@ -8,7 +8,7 @@ const options = {
   avoid: '.stories.',
   ext: '',
   index: 'index.ts',
-  target: './{atoms,molecules}/*.tsx',
+  target: './{atoms,icons,molecules}/*.tsx',
 }
 
 /**

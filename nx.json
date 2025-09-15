@@ -97,6 +97,11 @@
     }
   ],
   "targetDefaults": {
+    "dev": {
+      "dependsOn": [
+        "^list"
+      ]
+    },
     "test": {
       "options": {
         "coverage": true,

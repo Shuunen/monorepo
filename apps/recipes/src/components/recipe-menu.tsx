@@ -1,3 +1,4 @@
+import { OwlIcon } from '@monorepo/components'
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Divider } from './divider'
@@ -92,6 +93,7 @@ export function RecipeMenu() {
         <Divider />
       </div>
       <span className="text-sm text-center block w-full text-gray-500 italic text-shadow-md text-shadow-white mb-8">__unique-mark__</span>
+      <OwlIcon className="w-12 text-yellow-400" />
     </div>
   )
 }
