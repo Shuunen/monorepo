@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Regex Converter</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+</head>
+
+<body>
+  <div id="app" class="col center p pt h100">
+    <h1>Regex Converter</h1>
+    <div class="row h50">
+      <div class="col w50 m">
+        <h2>input</h2>
+        <textarea class="grow w100 mts" name="in" rows="14" onkeyup="app.applyRules()"></textarea>
+      </div>
+      <div class="col w50 m">
+        <h2>output</h2>
+        <textarea class="grow w100 mts" name="out" rows="14"></textarea>
+      </div>
+    </div>
+    <div class="row center mt">
+      <h2 style="margin-right: 0;">rules</h2>
+      <button title="add rule" class="round ml" style="margin-right: auto;" onclick="app.addRule(false)">+</button>
+    </div>
+    <ul class="rules mt" onclick="app.onRuleClick(event)"></ul>
+  </div>
+  <script src='main.js'></script>
+</body>
+
+<template name="rule">
+  <li>
+    <div class="rule row" data-rule-id="0" data-rule-active="true">
+      <input type="checkbox" name="enable" checked>
+      <input type="text" name="replace-in" placeholder="replace in" onkeyup="app.applyRules()">
+      <input type="text" name="replace-out" placeholder="replace out" onkeyup="app.applyRules()">
+    </div>
+  </li>
+</template>
+
+</html>

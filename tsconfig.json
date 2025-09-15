@@ -11,6 +11,9 @@
       "path": "./apps/recipes"
     },
     {
+      "path": "./apps/regex-converter"
+    },
+    {
       "path": "./apps/sample-web-app"
     },
     {
@@ -23,6 +26,9 @@
       "path": "./apps/user-scripts"
     },
     {
+      "path": "./apps/what-now/electron"
+    },
+    {
       "path": "./libs/components"
     },
     {
@@ -30,9 +36,6 @@
     },
     {
       "path": "./libs/vite-plugins"
-    },
-    {
-      "path": "./apps/what-now/electron"
     }
   ],
   "ts-node": {
