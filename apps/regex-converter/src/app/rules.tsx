@@ -1,37 +1,44 @@
-/* c8 ignore start */
 import { Button, Card, Input, Switch } from '@monorepo/components'
+import { clsx } from 'clsx'
 import { DeleteIcon, PlusCircleIcon } from 'lucide-react'
+import type { Rule } from './types'
 
-export function Rules({ rules, setRules }: { rules: { enabled: boolean; pattern: string; replacement: string }[]; setRules: (rules: { enabled: boolean; pattern: string; replacement: string }[]) => void }) {
-  function updateRule(index: number, key: string, value: unknown) {
-    setRules(rules.map((rule, ruleIndex) => (ruleIndex === index ? { ...rule, [key]: value } : rule)))
+export function RuleLine({ rule, onChange, onRemove }: { rule: Rule; onChange: (key: keyof Rule, value: string | boolean) => void; onRemove: () => void }) {
+  const inputClasses = clsx('grow', rule.enabled ? 'border-primary/50' : 'bg-muted/50 opacity-75')
+  return (
+    <div className="flex items-center gap-4">
+      <Switch checked={rule.enabled} onCheckedChange={checked => onChange('enabled', checked)} />
+      <Input className={inputClasses} onChange={event => onChange('pattern', event.target.value)} placeholder="replace in" value={rule.pattern} />
+      <Input className={inputClasses} onChange={event => onChange('replacement', event.target.value)} placeholder="replace out" value={rule.replacement} />
+      <Button className={clsx('hover:text-red-500 -ml-2', rule.enabled ? 'text-primary' : 'text-muted-foreground/50')} onClick={onRemove} size="icon" variant="ghost">
+        <DeleteIcon className="size-5" />
+      </Button>
+    </div>
+  )
+}
+
+export function Rules({ rules, setRules }: { rules: Rule[]; setRules: (rules: Rule[]) => void }) {
+  function updateRule(id: string, key: keyof Rule, value: string | boolean) {
+    /* c8 ignore next */
+    setRules(rules.map(rule => (rule.id === id ? { ...rule, [key]: value } : rule)))
   }
   function addRule() {
-    setRules([...rules, { enabled: false, pattern: '', replacement: '' }])
+    setRules([...rules, { enabled: false, id: `«r${rules.length}»`, pattern: '', replacement: '' }])
   }
-  function removeRule(index: number) {
-    // oxlint-disable-next-line id-length
-    setRules(rules.filter((_, ruleIndex) => ruleIndex !== index))
+  function removeRule(id: string) {
+    setRules(rules.filter(rule => rule.id !== id))
   }
   return (
     <div>
       <div className="flex justify-center items-center gap-2 mb-2">
-        <h2 className="text-info mt-0 mb-1.5">rules</h2>
-        <Button className="rounded-full " onClick={addRule} size="icon" variant="ghost">
+        <h2 className="text-primary mt-0 mb-1.5">rules</h2>
+        <Button className="rounded-full " onClick={() => addRule()} size="icon" variant="ghost">
           <PlusCircleIcon className="size-7 text-primary" />
         </Button>
       </div>
       <Card className="flex flex-col gap-2 bg-white p-6">
-        {rules.map((rule, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: fix me later ^^'
-          <div className="flex items-center gap-4" key={index}>
-            <Switch checked={rule.enabled} onCheckedChange={checked => updateRule(index, 'enabled', checked)} />
-            <Input className="grow border rounded px-2" onChange={event => updateRule(index, 'pattern', event.target.value)} placeholder="replace in" value={rule.pattern} />
-            <Input className="grow border rounded px-2" onChange={event => updateRule(index, 'replacement', event.target.value)} placeholder="replace out" value={rule.replacement} />
-            <Button className="text-primary hover:text-red-500" onClick={() => removeRule(index)} size="icon" variant="ghost">
-              <DeleteIcon className="size-5" />
-            </Button>
-          </div>
+        {rules.map(rule => (
+          <RuleLine key={rule.id} onChange={(key, value) => updateRule(rule.id, key, value)} onRemove={() => removeRule(rule.id)} rule={rule} />
         ))}
       </Card>
     </div>

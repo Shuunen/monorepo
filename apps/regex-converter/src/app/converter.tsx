@@ -1,10 +1,10 @@
-/* c8 ignore start */
 import { Textarea } from '@monorepo/components'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { sampleInput } from './constants'
 import { Rules } from './rules'
+import type { Rule } from './types'
 
-export function applyRules(text: string, rules: { enabled: boolean; pattern: string; replacement: string }[]) {
+export function applyRules(text: string, rules: Rule[]) {
   let result = text
   for (const rule of rules) {
     if (!rule.enabled) continue
@@ -19,11 +19,11 @@ export function applyRules(text: string, rules: { enabled: boolean; pattern: str
 
 export function Converter() {
   const [input, setInput] = useState(sampleInput)
-  const [rules, setRules] = useState([
-    { enabled: true, pattern: '\\.', replacement: '🐱' },
-    { enabled: true, pattern: 'right', replacement: '' },
-    { enabled: false, pattern: '([A-Z])', replacement: '- $1' },
-    { enabled: false, pattern: '', replacement: '' },
+  const [rules, setRules] = useState<Rule[]>([
+    { enabled: true, id: useId(), pattern: '\\.', replacement: '🐱' },
+    { enabled: true, id: useId(), pattern: 'right', replacement: '' },
+    { enabled: false, id: useId(), pattern: '([A-Z])', replacement: '- $1' },
+    { enabled: false, id: useId(), pattern: '', replacement: '' },
   ])
   const output = applyRules(input, rules)
 
@@ -32,10 +32,11 @@ export function Converter() {
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <h2 className="mb-2 mt-2">input</h2>
+          {/* c8 ignore next */}
           <Textarea className="w-full h-80 p-3 border rounded-xl bg-white shadow" onChange={event => setInput(event.target.value)} placeholder="Paste your text here..." value={input} />
         </div>
         <div>
-          <h2 className="mb-2 mt-2 text-primary">output</h2>
+          <h2 className="mb-2 mt-2 text-secondary">output</h2>
           <Textarea className="w-full h-80 p-3 border rounded-xl bg-white shadow" readOnly value={output} />
         </div>
       </div>

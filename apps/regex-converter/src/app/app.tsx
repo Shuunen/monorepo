@@ -7,7 +7,7 @@ export function App() {
       text: 'Regex',
     },
     {
-      className: 'text-primary',
+      className: 'text-secondary',
       text: 'Converter',
     },
   ]
