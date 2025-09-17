@@ -7,3 +7,6 @@ The last sample rule prefix each lines with dashes :) but you'll have to enable 
 Pretty neat right ?
 
 Tutorial is over, paste your own text, customize the rules, you can have more rules by adding them with the (+) button below :)`
+
+// oxlint-disable-next-line no-null
+export const emptyHistory = null

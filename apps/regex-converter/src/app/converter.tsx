@@ -1,30 +1,39 @@
 import { Textarea } from '@monorepo/components'
-import { useId, useState } from 'react'
-import { sampleInput } from './constants'
+import { decodeFromUrl, encodeForUrl } from '@monorepo/utils'
+import { useEffect, useId, useState } from 'react'
+import { emptyHistory, sampleInput } from './constants'
 import { Rules } from './rules'
 import type { Rule } from './types'
+import { applyRules } from './utils'
 
-export function applyRules(text: string, rules: Rule[]) {
-  let result = text
-  for (const rule of rules) {
-    if (!rule.enabled) continue
-    try {
-      result = result.replace(new RegExp(rule.pattern, 'g'), rule.replacement)
-    } catch {
-      // ignore invalid regex
-    }
-  }
-  return result
+function getSearchParams(): URLSearchParams {
+  /* c8 ignore next */
+  return globalThis.URLSearchParams === undefined ? new globalThis.window.URLSearchParams(globalThis.location.search) : new globalThis.URLSearchParams(globalThis.location.search)
 }
 
 export function Converter() {
   const [input, setInput] = useState(sampleInput)
-  const [rules, setRules] = useState<Rule[]>([
+  const defaultRules: Rule[] = [
     { enabled: true, id: useId(), pattern: '\\.', replacement: '🐱' },
     { enabled: true, id: useId(), pattern: 'right', replacement: '' },
     { enabled: false, id: useId(), pattern: '([A-Z])', replacement: '- $1' },
     { enabled: false, id: useId(), pattern: '', replacement: '' },
-  ])
+  ]
+  const [rules, setRules] = useState<Rule[]>(() => {
+    const params = getSearchParams()
+    const rulesParam = params.get('rules')
+    if (rulesParam) {
+      const loaded = decodeFromUrl(rulesParam)
+      if (Array.isArray(loaded) && loaded.length > 0) return loaded
+    }
+    return defaultRules
+  })
+  useEffect(() => {
+    const params = getSearchParams()
+    params.set('rules', encodeForUrl(rules))
+    const newUrl = `${globalThis.location.pathname}?${params.toString()}`
+    globalThis.history.replaceState(emptyHistory, '', newUrl)
+  }, [rules])
   const output = applyRules(input, rules)
 
   return (
