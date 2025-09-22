@@ -2,6 +2,8 @@
 // @name         Dev script - To have some kind of auto-reload
 // @author       Romain Racamier-Lafon
 // @description  Let's you play with your scripts
+// @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/dev.user.js
+// @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/dev.user.js
 // @grant        none
 // @match        https://www.__HEY_CHANGE_ME__.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
@@ -11,6 +13,11 @@
 // @version      2.2.2
 // ==/UserScript==
 
-// oxlint-disable no-console
-// biome-ignore lint/suspicious/noConsole: it's ok here
-console.log('hello from dev script, loading __HEY_CHANGE_ME__')
+function Dev() {
+  // oxlint-disable no-console
+  // biome-ignore lint/suspicious/noConsole: it's ok here
+  console.log('hello from dev script, loading __HEY_CHANGE_ME__')
+}
+
+if (globalThis.window) Dev()
+else module.exports = {}
