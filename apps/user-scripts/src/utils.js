@@ -1,4 +1,4 @@
-// oxlint-disable no-console,unambiguous,max-lines,no-magic-numbers
+// oxlint-disable no-console,unambiguous,max-lines,no-magic-numbers, class-methods-use-this
 
 /**
  * Collection of utility functions to help with common tasks in my user scripts.

@@ -1,4 +1,4 @@
-// oxlint-disable max-lines
+// oxlint-disable class-methods-use-this, max-lines
 import { daysAgoIso10, daysFromNow, functionReturningVoid, sleep } from '@monorepo/utils'
 import { expect, it, vi } from 'vitest'
 import { addTask, localToRemoteTask } from './database.utils'

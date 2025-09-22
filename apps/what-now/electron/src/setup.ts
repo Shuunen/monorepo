@@ -1,4 +1,4 @@
-// oxlint-disable no-magic-numbers, id-length, no-console, max-nested-callbacks, no-explicit-any, max-lines-per-function, no-null
+// oxlint-disable no-magic-numbers, id-length, no-console, max-nested-callbacks, no-explicit-any, max-lines-per-function, no-null, class-methods-use-this
 /** biome-ignore-all lint/correctness/noNodejsModules: we can use node here */
 /** biome-ignore-all lint/style/useNamingConvention: it's Electron conventions */
 import { join } from 'node:path'

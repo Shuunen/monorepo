@@ -1,3 +1,4 @@
+// oxlint-disable no-accumulating-spread
 import { objectEqual } from '@monorepo/utils'
 
 type FormFieldType = 'checkbox' | 'select' | 'text'

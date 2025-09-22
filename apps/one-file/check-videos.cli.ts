@@ -4,16 +4,12 @@ import { exec } from 'node:child_process'
 import { readdir, readFile, renameSync, stat, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { inspect } from 'node:util'
-import { blue, Logger, red, slugify } from '@monorepo/utils'
+import { blue, Logger, parseJson, red, slugify } from '@monorepo/utils'
+import type { FfProbeOutput, FfProbeOutputStream } from './take-screenshot.types'
 
 // use me like :
 //  node ~/Projects/github/monorepo/apps/one-file/check-videos.js "/u/A Voir/" --set-title
 //  node ~/Projects/github/monorepo/apps/one-file/check-videos.js "/m/A Voir/Movies"
-
-/**
- * @typedef {import('./take-screenshot.types').FfProbeOutput} FfProbeOutput
- * @typedef {import('./take-screenshot.types').FfProbeOutputStream} FfProbeOutputStream
- */
 
 const { argv } = process
 const expectedNbParameters = 2
@@ -36,11 +32,47 @@ const regex = {
   setVideoTitle: /\.[^.]+$/u,
 }
 
+/**
+ * Detect if a video should be renamed
+ * @param actual The actual name of the video
+ * @param expected The expected name
+ * @returns true if the video should be renamed
+ */
+function shouldRename(actual = '', expected = '') {
+  if (!willRename) return false
+  if (expected === '') return false
+  if (actual === expected) return false
+  if (expected.length > actual.length) return true
+  const diff = Math.abs(actual.length - expected.length)
+  const toleratedDiff = Math.round(actual.length / 10)
+  if (diff <= toleratedDiff) return true
+  logger.info(`Avoid renaming, too much diff between : \n - actual filename : ${actual} \n - expected filename : ${expected}`)
+  return false
+}
+
+/**
+ * @param string
+ * @returns the value extracted from the string
+ */
+function getReportValue(string: string) {
+  const matches = regex.getReportValue.exec(string) ?? []
+  return matches[1] === undefined ? 0 : Number.parseInt(matches[1], 10)
+}
+
+/**
+ * @param valueA
+ * @param valueB
+ * @returns the difference between the two values
+ */
+function byValueAsc(valueA: string, valueB: string) {
+  return getReportValue(valueA) - getReportValue(valueB)
+}
+
 const utils = {
   /**
    *
    * @param title
-   * @returns {string} the cleaned title
+   * @returns the cleaned title
    */
   cleanTitle: (title = '') => title.replace('PSArips.com | ', '').replace(regex.cleanTitle, ' ').replace(regex.cleanTitleSpaces, ' ').trim(),
   /**
@@ -56,30 +88,31 @@ const utils = {
   folderName: (filepath = '') => regex.folderName.exec(filepath)?.[1] ?? '',
   /**
    * Get the size of a file in megabytes
-   * @param {string} filepath
-   * @returns {Promise<number>} size in mb
+   * @param filepath
+   * @returns size in mb
    */
-  getFileSizeInMb: filepath =>
+  getFileSizeInMb: (filepath: string): Promise<number> =>
     new Promise((resolve, reject) => {
-      stat(filepath, (/** @type {Error|null} */ error, /** @type {{ size: number; }} */ stats) => {
+      stat(filepath, (error: Error | null, stats: { size: number }) => {
         if (error) reject(error)
         else resolve(Math.round(stats.size / 1_000_000))
       })
     }),
   /**
    * Get the video metadata from a filepath
-   * @param {string} filepath
+   * @param filepath
    */
   // oxlint-disable-next-line max-lines-per-function
-  getVideoMetadata: async filepath => {
+  getVideoMetadata: async (filepath: string) => {
     const output = await utils.shellCommand(`ffprobe -show_format -show_streams -print_format json -v quiet -i "${filepath}" `)
+    if (typeof output !== 'string') throw new Error('ffprobe output is not a string')
     if (!output.startsWith('{')) throw new Error(`ffprobe output should be JSON but got :${output}`)
-    /** @type {FfProbeOutput} */
-    const data = JSON.parse(output)
+    const result = parseJson<FfProbeOutput>(output)
+    if (!result.ok) throw new Error(`ffprobe output is not valid JSON : ${result.error}`)
     // logger.info(utils.prettyPrint(data))
-    const media = data.format
+    const media = result.value.format
     // biome-ignore lint/style/useNamingConvention: ffprobe uses snake_case
-    const video = data.streams?.find((/** @type {{ codec_type: string; }} */ stream) => stream.codec_type === 'video') ?? { avg_frame_rate: '', codec_name: '', codec_type: '', color_transfer: '', duration: '', height: 0, width: 0 }
+    const video = result.value.streams?.find((/** @type {{ codec_type: string; }} */ stream) => stream.codec_type === 'video') ?? { avg_frame_rate: '', codec_name: '', codec_type: '', color_transfer: '', duration: '', height: 0, width: 0 }
     const title = utils.cleanTitle(media?.tags?.title)
     const extension = path.extname(filepath).slice(1)
     const filename = title.length > 0 ? `${title}.${extension}` : ''
@@ -107,7 +140,7 @@ const utils = {
    * @param video the video stream
    * @returns {boolean} true if the video is HDR
    */
-  isHdrVideo: (/** @type {FfProbeOutputStream | undefined} */ video) => {
+  isHdrVideo: (video: FfProbeOutputStream | undefined) => {
     if (video?.codec_type === undefined) return false
     const hasPq = video.color_transfer === 'smpte2084'
     const hasHlg = video.color_transfer === 'arib-std-b67'
@@ -117,10 +150,10 @@ const utils = {
   },
   /**
    * List the files in a directory
-   * @param {string} filepath The directory to list
-   * @returns {Promise<string[]>} the list of files in the directory
+   * @param filepath The directory to list
+   * @returns the list of files in the directory
    */
-  listFiles: filepath =>
+  listFiles: (filepath: string): Promise<string[]> =>
     new Promise((resolve, reject) => {
       readdir(filepath, (/** @type {Error|null} */ error, /** @type {string[]} */ filenames) => {
         if (error) reject(error)
@@ -129,15 +162,14 @@ const utils = {
     }),
   /**
    * Display a pretty-printed JSON object
-   * @param {{}} object
    */
-  prettyPrint: object => inspect(object, { colors: true, depth: 2 }),
+  prettyPrint: (object: Record<string, unknown>) => inspect(object, { colors: true, depth: 2 }),
   /**
    * Read the contents of a file
-   * @param {string} filepath
-   * @returns {Promise<string>} the contents of the file
+   * @param filepath
+   * @returns the contents of the file
    */
-  readFile: filepath =>
+  readFile: (filepath: string): Promise<string> =>
     new Promise(resolve => {
       readFile(filepath, 'utf8', (/** @type {Error|null} */ error, /** @type {string} */ content) => {
         if (error) resolve('')
@@ -146,11 +178,10 @@ const utils = {
     }),
   /**
    * Set the title of a video in its metadata
-   * @param {string} filepath The filepath of the video
-   * @param {string} filename The filename of the video
-   * @returns {Promise<void>}
+   * @param filepath The filepath of the video
+   * @param filename The filename of the video
    */
-  setVideoTitle: async (filepath, filename) => {
+  setVideoTitle: async (filepath: string, filename: string) => {
     if (filepath.includes('.mp4') || filepath.includes('.avi')) return
     const title = utils.cleanTitle(filename.replace(regex.setVideoTitle, ''))
     if (willDryRun) logger.info(`Would set title to ${blue(title)}\n`)
@@ -158,10 +189,10 @@ const utils = {
   },
   /**
    * Execute a command and return the output
-   * @param {string} cmd
-   * @returns {Promise<string>} the output of the command
+   * @param cmd
+   * @returns the output of the command
    */
-  shellCommand: cmd =>
+  shellCommand: (cmd: string) =>
     new Promise(resolve => {
       exec(cmd, (/** @type {Error|null} */ error, /** @type {string} */ stdout, /** @type {string} */ stderr) => {
         if (error) logger.error(error)
@@ -176,22 +207,13 @@ const utils = {
 class CheckVideos {
   /**
    * The incorrect videos detected
-   * @type {Record<string, string[]>}
    */
-  detected = {}
+  detected: Record<string, string[]> = {}
   /**
    * The files to check
-   * @type {string[]}
    */
-  files = []
-  /**
-   * @param {string} valueA
-   * @param {string} valueB
-   * @returns {number} the difference between the two values
-   */
-  byValueAsc(valueA, valueB) {
-    return this.getReportValue(valueA) - this.getReportValue(valueB)
-  }
+  files: string[] = []
+
   /**
    *
    */
@@ -211,15 +233,14 @@ class CheckVideos {
   }
   /**
    * Check one video
-   * @param {string} filename
-   * @returns {Promise<void>}
+   * @param filename
    */
-  async checkOne(filename) {
+  async checkOne(filename: string) {
     const filepath = path.join(videosPath, path.normalize(filename))
     const meta = await utils.getVideoMetadata(filepath)
     if (willSetTitle && filename !== meta.filename) await utils.setVideoTitle(filepath, filename.length > meta.filename.length ? filename : meta.filename)
     // oxlint-disable-next-line no-unused-expressions
-    if (this.shouldRename(filename, meta.filename)) willDryRun ? logger.info(`Would rename file to ${red(meta.filename)}\n`) : renameSync(filepath, path.join(videosPath, path.normalize(meta.filename)))
+    if (shouldRename(filename, meta.filename)) willDryRun ? logger.info(`Would rename file to ${red(meta.filename)}\n`) : renameSync(filepath, path.join(videosPath, path.normalize(meta.filename)))
     listing += `${filename},${meta.title}\n`
     const entry = `${utils.ellipsis(filename, 50).padEnd(50)}  ${(String(meta.sizeGb)).padStart(4)} Gb  ${(meta.codec).padEnd(5)} ${(String(meta.height)).padStart(4)}p  ${(String(meta.bitrateKbps)).padStart(4)} kbps  ${(String(meta.fps)).padStart(2)} fps`
     if (meta.isDvdRip ? this.checkDvdRip(meta, entry) : this.checkBlurayRip(meta, entry)) return
@@ -228,11 +249,11 @@ class CheckVideos {
 
   /**
    * Check DVD rip specific conditions
-   * @param {any} meta - expects {height:number, bitrateKbps:number}
-   * @param {string} entry
-   * @returns {boolean} true if a problem was detected
+   * @param meta - expects {height:number, bitrateKbps:number}
+   * @param entry
+   * @returns true if a problem was detected
    */
-  checkDvdRip(meta, entry) {
+  checkDvdRip(meta: { height: number; bitrateKbps: number }, entry: string) {
     if (meta.height < 300) {
       this.detect('DvdRip under 300p', entry, meta.height)
       return true
@@ -250,11 +271,11 @@ class CheckVideos {
 
   /**
    * Check Bluray rip specific conditions
-   * @param {any} meta - expects {height:number, bitrateKbps:number, isHdr:boolean}
-   * @param {string} entry
-   * @returns {boolean} true if a problem was detected
+   * @param meta - expects {height:number, bitrateKbps:number, isHdr:boolean}
+   * @param entry
+   * @returns true if a problem was detected
    */
-  checkBlurayRip(meta, entry) {
+  checkBlurayRip(meta: { height: number; bitrateKbps: number; isHdr: boolean }, entry: string) {
     if (meta.height < 800) {
       this.detect('BlurayRip under 800p', entry, meta.height)
       return true
@@ -276,11 +297,11 @@ class CheckVideos {
 
   /**
    * Check FPS conditions
-   * @param {any} meta - expects {fps:number}
-   * @param {string} entry
-   * @returns {boolean} true if a problem was detected
+   * @param meta - expects {fps:number}
+   * @param entry the video entry
+   * @returns true if a problem was detected
    */
-  checkFps(meta, entry) {
+  checkFps(meta: { fps: number }, entry: string) {
     if (meta.fps < 24) {
       this.detect('Low fps', entry, meta.fps)
       return true
@@ -291,19 +312,18 @@ class CheckVideos {
     }
     return false
   }
-
   /**
    * Add a video to the list of detected videos
-   * @param {string} type The type of problem detected
-   * @param {string} entry
-   * @param {string|number} value
+   * @param type The type of problem detected
+   * @param entry
+   * @param value
    */
-  detect(type, entry, value) {
+  detect(type: string, entry: string, value: string | number) {
     this.detected[type] ??= []
     this.detected[type].push(`${entry}  [${value}]`)
   }
   /**
-   *
+   * Find the videos to check
    */
   async find() {
     logger.info(`Scanning dir ${videosPath}`)
@@ -321,16 +341,7 @@ class CheckVideos {
     this.files = [first]
   }
   /**
-   * @param {string} string
-   * @returns {number} the value extracted from the string
-   */
-  getReportValue(string) {
-    const matches = regex.getReportValue.exec(string) ?? []
-    return matches[1] === undefined ? 0 : Number.parseInt(matches[1], 10)
-  }
-  /**
-   *
-   * @returns {void}
+   * Report the findings
    */
   // oxlint-disable-next-line max-lines-per-function
   report() {
@@ -344,7 +355,7 @@ class CheckVideos {
     for (const type of types) {
       logger.info('\u001B[100m%s\u001B[0m', `\n${type} :`)
       const videos = this.detected[type] ?? []
-      for (const [index, file] of videos.sort((videoA, videoB) => this.byValueAsc(videoA, videoB)).entries()) {
+      for (const [index, file] of videos.sort((videoA, videoB) => byValueAsc(videoA, videoB)).entries()) {
         const isEven = !(index % 2)
         const line = ` - ${file}`
         total += 1
@@ -359,23 +370,7 @@ class CheckVideos {
     logger.info(`║${line}║`)
     logger.info(`╚${'═'.repeat(line.length)}╝`)
   }
-  /**
-   * Detect if a video should be renamed
-   * @param {string} actual The actual name of the video
-   * @param {string} expected The expected name
-   * @returns {boolean} true if the video should be renamed
-   */
-  shouldRename(actual = '', expected = '') {
-    if (!willRename) return false
-    if (expected === '') return false
-    if (actual === expected) return false
-    if (expected.length > actual.length) return true
-    const diff = Math.abs(actual.length - expected.length)
-    const toleratedDiff = Math.round(actual.length / 10)
-    if (diff <= toleratedDiff) return true
-    logger.info(`Avoid renaming, too much diff between : \n - actual filename : ${actual} \n - expected filename : ${expected}`)
-    return false
-  }
+
   /**
    *
    */

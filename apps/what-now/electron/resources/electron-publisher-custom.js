@@ -3,6 +3,7 @@
 const electronPublish = require('electron-publish')
 
 class Publisher extends electronPublish.Publisher {
+  // oxlint-disable-next-line class-methods-use-this
   upload(task) {
     console.log('electron-publisher-custom', task.file)
   }

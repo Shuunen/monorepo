@@ -1,5 +1,5 @@
 /* c8 ignore start */
-// oxlint-disable no-magic-numbers
+// oxlint-disable no-magic-numbers, class-methods-use-this
 import { readdir, stat } from 'node:fs/promises'
 import path from 'node:path'
 import { Logger } from '@monorepo/utils'
@@ -22,7 +22,6 @@ class CheckDuplicates {
      */
     this.results = {}
   }
-
   args() {
     if (process.argv.length < 4) throw new Error(String.raw`this script need a path as argument like : find-duplicates.js "U:\Movies\"`)
     this.target = path.normalize(process.argv[3] || '')
