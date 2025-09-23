@@ -260,6 +260,26 @@ class Shuutils {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
   /**
+   * Console.groupCollapsed stuff with app id
+   * @param {...any} stuff the stuff to log
+   * @returns {void} nothing
+   * @example utils.groupCollapsed('hello world')
+   */
+  groupCollapsed(...stuff) {
+    if (this.id.length > 0) stuff.unshift(`${this.id} :`)
+    // biome-ignore lint/suspicious/noConsole: it's ok here :)
+    console.groupCollapsed(...stuff)
+  }
+  /**
+   * Console.groupEnd stuff with app id
+   * @returns {void} nothing
+   * @example utils.groupEnd()
+   */
+  groupEnd() {
+    // biome-ignore lint/suspicious/noConsole: it's ok here :)
+    console.groupEnd()
+  }
+  /**
    * Hide an element for a reason
    * @param {HTMLElement} element the element to hide
    * @param {string} reason the reason why the element is hidden
@@ -341,7 +361,7 @@ class Shuutils {
   /**
    * Parse a price from a string
    * @param {string} input the string to parse, like "12,34 €" or "$12.34"
-   * @returns {{amount: number, currency: string}} the parsed price, like { amount: 12.34, currency: '€' } or { amount: -12.34, currency: '$' }
+   * @returns {{amount: number, currency: string, normalizedInput: string}} the parsed price, like { amount: 12.34, currency: '€' } or { amount: -12.34, currency: '$' }
    */
   parsePrice(input) {
     // Normalize all space-like characters to regular space
@@ -352,7 +372,7 @@ class Shuutils {
     const fraction = decimals ? decimals.slice(1) : '00'
     const currency = currencyStart ?? currencyEnd ?? ''
     const amount = Number.parseFloat(`${sign + integer}.${fraction}`)
-    return { amount, currency }
+    return { amount, currency, normalizedInput }
   }
   /**
    * Pick a random element from an array
