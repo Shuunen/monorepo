@@ -2,7 +2,13 @@
   "dependencies": {
     "@monorepo/components": "workspace:*",
     "@monorepo/utils": "workspace:*",
-    "@monorepo/vite-plugins": "workspace:*"
+    "@monorepo/vite-plugins": "workspace:*",
+    "@tanstack/react-router": "^1.132.25",
+    "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "@tanstack/react-router-devtools": "^1.132.25",
+    "@tanstack/router-plugin": "^1.132.25"
   },
   "name": "vet-web",
   "private": true,

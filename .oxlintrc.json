@@ -161,8 +161,8 @@
     },
     {
       "files": [
-        "src/routes/**/*.ts",
-        "src/routes/**/*.tsx"
+        "**/routes/**/*.ts",
+        "**/routes/**/*.tsx"
       ],
       "rules": {
         "unicorn/filename-case": "off"

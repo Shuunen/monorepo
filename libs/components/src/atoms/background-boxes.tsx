@@ -1,8 +1,8 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: fix me later */
 // oxlint-disable id-length, no-magic-numbers, max-lines-per-function
+import { cn } from '@monorepo/utils'
 import { motion } from 'motion/react'
 import React from 'react'
-import { cn } from '../shadcn/utils'
 
 // source : https://ui.aceternity.com/components/background-boxes
 

@@ -1,6 +1,6 @@
+import { cn } from '@monorepo/utils'
 import { motion } from 'motion/react'
 import type React from 'react'
-import { cn } from '../shadcn/utils'
 
 // source : https://ui.aceternity.com/components/background-gradient
 

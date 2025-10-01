@@ -1,9 +1,9 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: not my code */
 /** biome-ignore-all lint/correctness/useExhaustiveDependencies: not my code */
 // oxlint-disable no-magic-numbers, arrow-body-style, max-lines-per-function
+import { cn } from '@monorepo/utils'
 import { motion, stagger, useAnimate, useInView } from 'motion/react'
 import { useEffect } from 'react'
-import { cn } from '../shadcn/utils'
 
 // source : https://ui.aceternity.com/components/typewriter-effect
 

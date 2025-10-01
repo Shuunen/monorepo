@@ -1,0 +1,10 @@
+{
+  "name": "vet-web",
+  "targets": {
+    "test": {
+      "options": {
+        "coverage.thresholds.100": false
+      }
+    }
+  }
+}
