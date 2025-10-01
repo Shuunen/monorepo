@@ -67,7 +67,7 @@ export function RecipeMenu() {
 
   if (isLoading) return <Loading />
 
-  const categories = Object.keys(groupedRecipes).sort()
+  const categories = Object.keys(groupedRecipes).toSorted()
 
   return (
     <div className="flex flex-col grow items-center justify-center py-24">

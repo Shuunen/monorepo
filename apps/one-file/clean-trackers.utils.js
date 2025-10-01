@@ -11,6 +11,6 @@ function isNotTracker(line) {
  * @returns {string} the cleaned list
  */
 export function cleanTrackers(input) {
-  const lines = isolateLines(input).filter(isNotTracker)
+  const lines = isolateLines(input).filter(line => isNotTracker(line))
   return linesToList(lines)
 }

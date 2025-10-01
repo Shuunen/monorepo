@@ -31,7 +31,14 @@ function base64CharToPercentEncoded(char: string) {
  * @returns Decoded string
  */
 export function fromBase64(b64: string) {
-  const result = trySafe(() => decodeURIComponent(Array.from(globalThis.atob(b64)).map(base64CharToPercentEncoded).join('')))
+  const result = trySafe(() =>
+    decodeURIComponent(
+      Array.from(globalThis.atob(b64))
+        // oxlint-disable-next-line max-nested-callbacks
+        .map(char => base64CharToPercentEncoded(char))
+        .join(''),
+    ),
+  )
   return result.ok ? result.value : ''
 }
 

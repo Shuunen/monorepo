@@ -36,7 +36,7 @@ class CheckDuplicates {
   report() {
     const list = Object.keys(this.results)
       .map(key => this.results[key])
-      .sort()
+      .toSorted()
     logger.info(list.splice(0, maxResults))
   }
   async start() {

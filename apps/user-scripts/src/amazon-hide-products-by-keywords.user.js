@@ -67,7 +67,7 @@ function AmazonHideProductsByKeywords() {
     // add .map(key => `${key} (${app.suggestions[key]})`)
     // to see ["silicone (5)", "decoration (4)", "support (4)", "cheveux (3)",
     // instead of ["silicone", "decoration", "support", "cheveux",
-    let suggestions = Object.keys(app.suggestions).sort((suggestionA, suggestionB) => app.suggestions[suggestionB] - app.suggestions[suggestionA])
+    let suggestions = Object.keys(app.suggestions).toSorted((suggestionA, suggestionB) => app.suggestions[suggestionB] - app.suggestions[suggestionA])
     // limit displayed suggestions
     suggestions = suggestions.splice(0, app.maxSuggestions)
     // build html

@@ -283,7 +283,7 @@ function AmazonAio() {
       product.dataset.amzAioScore = Math.round(score * score * scoreByCurrency * 70).toString()
     }
     // sort by score & apply position
-    for (const [index, product] of products.sort((productA, productB) => Number.parseFloat(productB.dataset.amzAioScore ?? '0') - Number.parseFloat(productA.dataset.amzAioScore ?? '0')).entries()) product.style.order = index.toString()
+    for (const [index, product] of products.toSorted((productA, productB) => Number.parseFloat(productB.dataset.amzAioScore ?? '0') - Number.parseFloat(productA.dataset.amzAioScore ?? '0')).entries()) product.style.order = index.toString()
   }
   /**
    * Process the page

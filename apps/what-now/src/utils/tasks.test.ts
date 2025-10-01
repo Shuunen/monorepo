@@ -325,7 +325,7 @@ it('unComplete A', async () => {
 
 it('should sort tasks by active A', () => {
   const tasks = [taskMock({ completedOn: today, name: 'b', once: 'day' }), taskMock({ completedOn: yesterday, name: 'a', once: 'day' }), taskMock({ name: 'c', once: 'month' })]
-  const sortedTasks = Array.from(tasks).sort(byActive)
+  const sortedTasks = Array.from(tasks).toSorted(byActive)
   expect(sortedTasks[0]?.name).toBe('a')
 })
 

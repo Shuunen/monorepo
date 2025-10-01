@@ -173,7 +173,7 @@ export function PageMetrics({ ...properties }: Readonly<Record<string, unknown>>
           <MetricCardMissingPriceList metrics={metrics} />
           <MetricCard color={tw('text-blue-700')} title="Storage locations">
             {Object.entries(metrics.boxAnalysis)
-              .sort((entryA, entryB) => entryA[0].localeCompare(entryB[0]))
+              .toSorted((entryA, entryB) => entryA[0].localeCompare(entryB[0]))
               .map(([box, data]) => (
                 <MetricCardEntry key={box} subtitle={`${data.count} items`} title={box || 'No box specified'} value={formatCurrency(data.totalValue)} />
               ))}

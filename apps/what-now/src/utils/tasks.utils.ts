@@ -73,7 +73,7 @@ export async function fetchList(reason: string) {
   if (!result.ok) return result
   state.statusInfo = ''
   state.tasksTimestamp = Date.now()
-  const list = result.value.filter(task => isTaskActive(task, true)).sort(byActive)
+  const list = result.value.filter(task => isTaskActive(task, true)).toSorted(byActive)
   return Result.ok(list)
 }
 

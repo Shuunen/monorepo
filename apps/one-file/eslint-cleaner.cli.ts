@@ -10,11 +10,11 @@ const ignored = gitIgnore
   .filter(line => line && !line.startsWith('#'))
   .filter(line => !line.includes('*'))
 
-function isNotIgnored(file) {
+function isNotIgnored(file: string) {
   return !ignored.some(string => file.includes(string))
 }
 
-function removeEslintComments(content) {
+function removeEslintComments(content: string) {
   // Remove single-line eslint comments
   let updated = content.replace(/\s*\/\/\s*eslint-.*$/gm, '')
   // Remove block eslint comments
@@ -24,7 +24,7 @@ function removeEslintComments(content) {
 
 const logger = new Logger()
 const allFiles = await glob('**/*.{js,ts,jsx,tsx}', { filesOnly: true })
-const files = allFiles.filter(isNotIgnored)
+const files = allFiles.filter(file => isNotIgnored(file))
 let nbFix = 0
 logger.info(`Scan ${files.length} files`)
 

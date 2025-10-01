@@ -22,7 +22,7 @@ export async function make({ target, index = 'index.ts', avoid = 'azerty-foobar'
   logger.info('Listing entries', target)
   const files = await glob(target, { filesOnly: true })
   const list = files.filter(file => !file.includes(avoid)).map(file => `export ${file.includes('types') ? 'type ' : ''}* from './${ext === undefined ? file : file.split('.')[0] + ext}'`.replace(path.sep, '/'))
-  const content = `${list.sort().join('\n')}\n`
+  const content = `${list.toSorted().join('\n')}\n`
   writeFileSync(out, content)
   logger.success(`${out} has been updated !`)
   return Result.ok({ content, files, out })

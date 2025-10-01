@@ -355,7 +355,7 @@ class CheckVideos {
     for (const type of types) {
       logger.info('\u001B[100m%s\u001B[0m', `\n${type} :`)
       const videos = this.detected[type] ?? []
-      for (const [index, file] of videos.sort((videoA, videoB) => byValueAsc(videoA, videoB)).entries()) {
+      for (const [index, file] of videos.toSorted((videoA, videoB) => byValueAsc(videoA, videoB)).entries()) {
         const isEven = !(index % 2)
         const line = ` - ${file}`
         total += 1

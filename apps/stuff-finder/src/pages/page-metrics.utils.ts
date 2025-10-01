@@ -40,7 +40,7 @@ export function calculateBoxAnalysis(items: Item[]): BoxAnalysis {
 export function getTopValueItems(items: Item[]): Item[] {
   return items
     .filter(item => item.price > 0)
-    .sort((itemA, itemB) => itemB.price - itemA.price)
+    .toSorted((itemA, itemB) => itemB.price - itemA.price)
     .slice(0, topValueItems)
 }
 

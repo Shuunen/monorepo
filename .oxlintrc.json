@@ -260,6 +260,7 @@
         "ignoreDefaultValues": true
       }
     ],
+    "no-named-export": "off",
     "no-rest-spread-properties": "off",
     "no-ternary": "off",
     "no-void": "off",
