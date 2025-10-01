@@ -1,3 +1,3 @@
-import { Logger } from 'shuutils'
+import { Logger } from '@monorepo/utils'
 
 export const logger = new Logger()
