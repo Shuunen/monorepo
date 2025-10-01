@@ -85,16 +85,16 @@ const users = [
   { age: 11, name: 'Birgit' },
 ]
 it('sort byProperty A without order does not sort', () => {
-  expect(users.sort(byProperty('name'))[0]?.name).toBe('John')
+  expect(users.toSorted(byProperty('name'))[0]?.name).toBe('John')
 })
 it('sort byProperty B with asc order does sort', () => {
-  expect(users.sort(byProperty('name', 'asc'))[0]?.name).toBe('Albert')
+  expect(users.toSorted(byProperty('name', 'asc'))[0]?.name).toBe('Albert')
 })
 it('sort byProperty C with desc order does sort', () => {
-  expect(users.sort(byProperty('name', 'desc'))[0]?.name).toBe('Sam')
+  expect(users.toSorted(byProperty('name', 'desc'))[0]?.name).toBe('Sam')
 })
 it('sort byProperty D even if some does not have it', () => {
-  expect(users.sort(byProperty('pic', 'asc'))[0]?.pic).toBe('wow.png')
+  expect(users.toSorted(byProperty('pic', 'asc'))[0]?.pic).toBe('wow.png')
 })
 
 const object3 = { notFun: false, 'pretty-good': true, size: 'large', superFun: true }
@@ -191,7 +191,7 @@ it('objectSum F on a large object', () => {
       propJ: 10,
       users,
     }),
-  ).toMatchInlineSnapshot(`-1217505438`)
+  ).toMatchInlineSnapshot(`-876202366`)
 })
 
 it('objectSum G is the same on two equals objects', () => {

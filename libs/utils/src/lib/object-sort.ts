@@ -34,7 +34,7 @@ export function arraySort<ArrayType extends unknown[]>(subject: ArrayType, compa
  */
 export function objectSort<ObjectType extends IndexedObject>(subject: ObjectType, comparator?: KeyComparator) {
   const result: IndexedObject = {} as ObjectType
-  const sortedKeys = Object.keys(subject).sort(comparator)
+  const sortedKeys = Object.keys(subject).toSorted(comparator)
   for (const key of sortedKeys) {
     let value = subject[key]
     if (value !== null && value !== undefined)

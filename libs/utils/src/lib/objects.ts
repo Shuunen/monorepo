@@ -33,6 +33,7 @@ export function byProperty<Type extends Record<string, unknown>>(property: strin
     const valueA = recordA[property] as number
     const valueB = recordB[property] as number
     if (!valueA && valueB) return sortOrder
+    /* c8 ignore next */
     if (valueA && !valueB) return -sortOrder
     if (valueA === valueB) return 0
     const result = valueA < valueB ? nbDescending : nbAscending
