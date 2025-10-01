@@ -285,6 +285,18 @@ importers:
         specifier: latest
         version: 0.5.1
 
+  apps/vet-web:
+    dependencies:
+      '@monorepo/components':
+        specifier: workspace:*
+        version: link:../../libs/components
+      '@monorepo/utils':
+        specifier: workspace:*
+        version: link:../../libs/utils
+      '@monorepo/vite-plugins':
+        specifier: workspace:*
+        version: link:../../libs/vite-plugins
+
   apps/what-now:
     dependencies:
       '@capacitor-community/electron':

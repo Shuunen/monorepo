@@ -26,6 +26,9 @@
       "path": "./apps/user-scripts"
     },
     {
+      "path": "./apps/vet-web"
+    },
+    {
       "path": "./apps/what-now/electron"
     },
     {

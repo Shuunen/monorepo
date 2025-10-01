@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@monorepo/components": "workspace:*",
+    "@monorepo/utils": "workspace:*",
+    "@monorepo/vite-plugins": "workspace:*"
+  },
+  "name": "vet-web",
+  "private": true,
+  "type": "module",
+  "version": "0.0.1"
+}
