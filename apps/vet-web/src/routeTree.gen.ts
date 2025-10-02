@@ -13,6 +13,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BookAppointmentRouteImport } from './routes/book-appointment'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BookCleaningIndexRouteImport } from './routes/book-cleaning/index'
 import { Route as BookAppointmentStep3RouteImport } from './routes/book-appointment/step-3'
 import { Route as BookAppointmentStep1RouteImport } from './routes/book-appointment/step-1'
 import { Route as StatusStatusTypeRouteImport } from './routes/status.$status.$type'
@@ -37,6 +38,11 @@ const AboutRoute = AboutRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookCleaningIndexRoute = BookCleaningIndexRouteImport.update({
+  id: '/book-cleaning/',
+  path: '/book-cleaning/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookAppointmentStep3Route = BookAppointmentStep3RouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/book-appointment/step-1': typeof BookAppointmentStep1Route
   '/book-appointment/step-3': typeof BookAppointmentStep3Route
+  '/book-cleaning': typeof BookCleaningIndexRoute
   '/book-appointment/cat/step-2': typeof BookAppointmentCatStep2Route
   '/book-appointment/dog/step-2': typeof BookAppointmentDogStep2Route
   '/status/$status/$type': typeof StatusStatusTypeRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/book-appointment/step-1': typeof BookAppointmentStep1Route
   '/book-appointment/step-3': typeof BookAppointmentStep3Route
+  '/book-cleaning': typeof BookCleaningIndexRoute
   '/book-appointment/cat/step-2': typeof BookAppointmentCatStep2Route
   '/book-appointment/dog/step-2': typeof BookAppointmentDogStep2Route
   '/status/$status/$type': typeof StatusStatusTypeRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/book-appointment/step-1': typeof BookAppointmentStep1Route
   '/book-appointment/step-3': typeof BookAppointmentStep3Route
+  '/book-cleaning/': typeof BookCleaningIndexRoute
   '/book-appointment/cat/step-2': typeof BookAppointmentCatStep2Route
   '/book-appointment/dog/step-2': typeof BookAppointmentDogStep2Route
   '/status/$status/$type': typeof StatusStatusTypeRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/book-appointment/step-1'
     | '/book-appointment/step-3'
+    | '/book-cleaning'
     | '/book-appointment/cat/step-2'
     | '/book-appointment/dog/step-2'
     | '/status/$status/$type'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/book-appointment/step-1'
     | '/book-appointment/step-3'
+    | '/book-cleaning'
     | '/book-appointment/cat/step-2'
     | '/book-appointment/dog/step-2'
     | '/status/$status/$type'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/book-appointment/step-1'
     | '/book-appointment/step-3'
+    | '/book-cleaning/'
     | '/book-appointment/cat/step-2'
     | '/book-appointment/dog/step-2'
     | '/status/$status/$type'
@@ -140,6 +152,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   BookAppointmentRoute: typeof BookAppointmentRouteWithChildren
   ContactRoute: typeof ContactRoute
+  BookCleaningIndexRoute: typeof BookCleaningIndexRoute
   StatusStatusTypeRoute: typeof StatusStatusTypeRoute
 }
 
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book-cleaning/': {
+      id: '/book-cleaning/'
+      path: '/book-cleaning'
+      fullPath: '/book-cleaning'
+      preLoaderRoute: typeof BookCleaningIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book-appointment/step-3': {
@@ -234,6 +254,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   BookAppointmentRoute: BookAppointmentRouteWithChildren,
   ContactRoute: ContactRoute,
+  BookCleaningIndexRoute: BookCleaningIndexRoute,
   StatusStatusTypeRoute: StatusStatusTypeRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { BookAppointmentCard } from '../components/molecules/book-appointment-card'
+import { BookCleaningCard } from '../components/molecules/book-cleaning-card'
 
 function Index() {
   return (
@@ -9,8 +10,9 @@ function Index() {
         <p className="mt-4 text-xl text-gray-600 text-center max-w-2xl">Providing the best care for your furry friends with our dedicated veterinary services</p>
       </div>
 
-      <div className="flex justify-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <BookAppointmentCard />
+        <BookCleaningCard />
       </div>
 
       <div className="mt-16 text-center text-gray-500">
