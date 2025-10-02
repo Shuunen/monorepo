@@ -253,7 +253,7 @@ Install these deb :
 - [Stretchly](https://github.com/hovancik/stretchly/releases)
 
 ```bash  
-sudo apt install -y neofetch git aria2 nano curl -y
+sudo apt install -y neofetch btop tldr git aria2 nano curl -y
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 bash # reload shell to be able to invoke nvm
 nvm install 20
