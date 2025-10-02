@@ -1,5 +1,6 @@
 import { uniqueMark } from '@monorepo/vite-plugins'
 import tailwindcss from '@tailwindcss/vite'
+import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
@@ -13,7 +14,16 @@ export default defineConfig({
     reportCompressedSize: true,
   },
   cacheDir: '../../node_modules/.vite/apps/vet-web',
-  plugins: [react(), tailwindcss(), uniqueMark()],
+  plugins: [
+    // @ts-expect-error type issue
+    tanstackRouter({
+      autoCodeSplitting: true,
+      target: 'react',
+    }),
+    react(),
+    tailwindcss(),
+    uniqueMark(),
+  ],
   preview: {
     host: 'localhost',
     port: 4300,
