@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, SourceCode } from '@monorepo/components'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import { Form } from './-form'
 
 function RouteComponent() {
   return (
@@ -14,7 +15,7 @@ function RouteComponent() {
             <CardDescription>Get ready for a sparkling clean!</CardDescription>
           </CardHeader>
           <CardContent>
-            <Outlet />
+            <Form />
           </CardContent>
           <CardFooter />
         </Card>

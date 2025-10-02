@@ -1,7 +1,12 @@
 {
-  "name": "EPOMAKER Split65",
-  "vendorProductId": 875422918,
-  "macros": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+  "encoders": [
+    [
+      ["KC_VOLD", "KC_VOLU"],
+      ["KC_VOLD", "KC_VOLU"],
+      ["KC_VOLD", "KC_VOLU"],
+      ["KC_VOLD", "KC_VOLU"]
+    ]
+  ],
   "layers": [
     [
       "KC_NO",
@@ -444,12 +449,7 @@
       "RGB_SPI"
     ]
   ],
-  "encoders": [
-    [
-      ["KC_VOLD", "KC_VOLU"],
-      ["KC_VOLD", "KC_VOLU"],
-      ["KC_VOLD", "KC_VOLU"],
-      ["KC_VOLD", "KC_VOLU"]
-    ]
-  ]
+  "macros": ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+  "name": "EPOMAKER Split65",
+  "vendorProductId": 875422918
 }
