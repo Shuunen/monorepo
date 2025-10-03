@@ -1,7 +1,7 @@
 // oxlint-disable no-magic-numbers
+import { AutoForm } from '@monorepo/components'
 import { useMemo } from 'react'
 import { z } from 'zod'
-import { AutoForm } from '../../components/molecules/auto-form'
 import { logger } from '../../utils/logger.utils'
 
 const step1Schema = z.object({
@@ -70,7 +70,7 @@ const initialData = {
   age: 30,
   agree: true,
   color: 'blue',
-  description: 'This is a long description that exceeds 100 characters. '.repeat(3),
+  description: 'This is a long description that exceeds 10 characters',
   disabledField: 'Cannot change this',
   email: 'john@example.com',
   name: 'John Doe',

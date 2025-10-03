@@ -17,6 +17,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     placeholder: 'Enter text here',
+    testId: 'input-default',
   },
 }
 
@@ -24,5 +25,6 @@ export const Disabled: Story = {
   args: {
     disabled: true,
     placeholder: 'Disabled input',
+    testId: 'input-disabled',
   },
 }

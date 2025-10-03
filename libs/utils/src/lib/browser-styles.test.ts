@@ -5,6 +5,5 @@ it('cn A', () => {
 })
 
 it('cn B', () => {
-  // @ts-expect-error testing
   expect(cn('a', null, 'b', 'c', undefined)).toMatchInlineSnapshot(`"a b c"`)
 })

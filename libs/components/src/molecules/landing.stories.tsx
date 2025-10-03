@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { within } from '@storybook/testing-library'
 import { expect } from 'storybook/test'
 import { Landing } from './landing'
 
@@ -17,7 +18,8 @@ export const Basic: Story = {
     subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     title: 'Welcome to Landing',
   },
-  play: async ({ canvas }) => {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
     await expect(canvas.getByText('Welcome to Landing')).toBeTruthy()
   },
 }

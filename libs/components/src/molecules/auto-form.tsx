@@ -1,31 +1,28 @@
-// oxlint-disable max-lines-per-function
-/** biome-ignore-all lint/a11y/noLabelWithoutControl: temporary workaround */
-/** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: temporary workaround */
-// oxlint-disable id-length
-// oxlint-disable no-explicit-any
-/** biome-ignore-all lint/suspicious/noExplicitAny: temporary workaround */
-
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Checkbox, Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, Input, Select, SelectContent, SelectItem, SelectTrigger } from '@monorepo/components'
-import { nbPercentMax } from '@monorepo/utils'
+import { Logger, nbPercentMax } from '@monorepo/utils'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { logger } from '../../utils/logger.utils'
+import { Button } from '../atoms/button'
+import { Checkbox } from '../atoms/checkbox'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../atoms/form'
+import { Input } from '../atoms/input'
+import { Select, SelectContent, SelectItem, SelectTrigger } from '../atoms/select'
 import { checkZodEnum } from './auto-form.utils'
 
 // oxlint-disable-next-line consistent-type-definitions
-interface AutoFormProps<T extends z.ZodRawShape> {
-  schemas: z.ZodObject<T>[]
-  onSubmit: (data: any) => void
-  onChange?: (data: any) => void
-  initialData?: Partial<any>
+interface AutoFormProps<Type extends z.ZodRawShape> {
+  logger?: Logger
+  schemas: z.ZodObject<Type>[]
+  onSubmit?: (data: Record<string, unknown>) => void
+  onChange?: (data: Record<string, unknown>) => void
+  initialData?: Record<string, unknown>
 }
 
 // oxlint-disable-next-line max-lines-per-function
-export function AutoForm<T extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {} }: AutoFormProps<T>) {
+export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger = new Logger() }: AutoFormProps<Type>) {
   const [currentStep, setCurrentStep] = useState(0)
-  const [formData, setFormData] = useState<Record<string, any>>(initialData)
+  const [formData, setFormData] = useState<Record<string, unknown>>(initialData)
 
   const currentSchema = schemas[currentStep]
   const isLastStep = currentStep === schemas.length - 1
@@ -43,10 +40,10 @@ export function AutoForm<T extends z.ZodRawShape>({ schemas, onSubmit, onChange,
     reset(formData)
   }, [formData, reset])
 
-  const onStepSubmit = (data: any) => {
+  const onStepSubmit = (data: Record<string, unknown>) => {
     logger.info('Step form submitted', data)
     const updatedData = { ...formData, ...data }
-    if (isLastStep) onSubmit(updatedData)
+    if (isLastStep && onSubmit) onSubmit(updatedData)
     else setCurrentStep(prev => prev + 1)
   }
 
@@ -61,6 +58,7 @@ export function AutoForm<T extends z.ZodRawShape>({ schemas, onSubmit, onChange,
     if (currentStep > 0) setCurrentStep(prev => prev - 1)
   }
 
+  // oxlint-disable-next-line max-lines-per-function
   const renderField = (fieldName: string, fieldSchema: z.ZodTypeAny) => {
     logger.info('Rendering field', fieldName)
     const metadata = fieldSchema.meta() as { label?: string; placeholder?: string; state?: 'editable' | 'readonly' | 'disabled' } | undefined
@@ -73,6 +71,7 @@ export function AutoForm<T extends z.ZodRawShape>({ schemas, onSubmit, onChange,
       return (
         <FormItem key={fieldName}>
           <FormLabel>{label}</FormLabel>
+          {/* @ts-expect-error type issue */}
           <div className="text-gray-900 py-2">{formData[fieldName] || '—'}</div>
         </FormItem>
       )
@@ -121,7 +120,7 @@ export function AutoForm<T extends z.ZodRawShape>({ schemas, onSubmit, onChange,
                 {!isOptional && <span className="text-red-500 ml-1">*</span>}
               </FormLabel>
               <FormControl>
-                <Input type="number" {...field} disabled={isDisabled} placeholder={placeholder} />
+                <Input type="number" {...field} disabled={isDisabled} placeholder={placeholder} testId={fieldName} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -150,8 +149,6 @@ export function AutoForm<T extends z.ZodRawShape>({ schemas, onSubmit, onChange,
         />
       )
     // String/email/textarea
-    const inputType = fieldSchema instanceof z.ZodString && (fieldSchema._def as any).checks?.some((c: any) => c.kind === 'email') ? 'email' : 'text'
-
     return (
       <FormField
         key={fieldName}
@@ -163,7 +160,7 @@ export function AutoForm<T extends z.ZodRawShape>({ schemas, onSubmit, onChange,
               {!isOptional && <span className="text-red-500 ml-1">*</span>}
             </FormLabel>
             <FormControl>
-              <Input type={inputType} {...field} disabled={isDisabled} placeholder={placeholder} />
+              <Input {...field} disabled={isDisabled} placeholder={placeholder} testId={fieldName} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -192,7 +189,8 @@ export function AutoForm<T extends z.ZodRawShape>({ schemas, onSubmit, onChange,
             </div>
           )}
           {/* Render fields */}
-          <div className="space-y-4">{Object.keys(shape).map(fieldName => renderField(fieldName, shape[fieldName] as any))}</div>
+          {/** biome-ignore lint/suspicious/noExplicitAny: fix me */}
+          <div className="space-y-4">{Object.keys(shape).map(fieldName => renderField(fieldName, shape[fieldName] as any) /* oxlint-disable-line no-explicit-any */)}</div>
           {/* Navigation buttons */}
           <div className="flex justify-between pt-6 border-t border-gray-200">
             {currentStep > 0 ? (
