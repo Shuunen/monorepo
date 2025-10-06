@@ -150,6 +150,18 @@
     },
     {
       "includes": [
+        "**/*.stories.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "performance": {
+            "useTopLevelRegex": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
         "**/*.test.ts",
         "**/*.test.js"
       ],
