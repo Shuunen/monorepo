@@ -13,7 +13,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  title: 'UI/Checkbox',
+  title: 'atoms/Checkbox',
 } satisfies Meta<typeof Checkbox>
 
 export default meta
