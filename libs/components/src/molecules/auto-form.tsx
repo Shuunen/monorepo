@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from '../atoms/selec
 import { checkZodEnum } from './auto-form.utils'
 
 // oxlint-disable-next-line consistent-type-definitions
-interface AutoFormProps<Type extends z.ZodRawShape> {
+export interface AutoFormProps<Type extends z.ZodRawShape> {
   logger?: Logger
   schemas: z.ZodObject<Type>[]
   onSubmit?: (data: Record<string, unknown>) => void

@@ -155,6 +155,7 @@
         "max-params": "off",
         "no-magic-numbers": "off",
         "no-null": "off",
+        "require-param": "off",
         "sort-keys": "off",
         "unicorn/numeric-separators-style": "off"
       }
