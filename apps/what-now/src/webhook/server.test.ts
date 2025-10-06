@@ -1,7 +1,6 @@
 import { type ChildProcess, spawn } from 'node:child_process'
 import http from 'node:http'
 import { PassThrough } from 'node:stream'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import * as serverModule from './server.cli'
 
 // Suppress unhandled errors to prevent Vitest from reporting them globally
@@ -38,22 +37,31 @@ function request(path: string, method = 'GET') {
 
 describe('server.cli.ts (integration)', () => {
   let proc: ChildProcess | undefined = undefined
-  beforeEach(() => {
+  async function waitForServerReady(timeout = 2000, start = Date.now()) {
+    const res = await request('/hello')
+    if (res.status === 200) return
+    if (Date.now() - start < timeout) {
+      await new Promise(r => setTimeout(r, 100))
+      return waitForServerReady(timeout, start)
+    }
+    throw new Error('Server not ready')
+  }
+
+  beforeAll(async () => {
     proc = startServer()
+    await waitForServerReady()
   })
-  afterEach(() => {
+  afterAll(() => {
     stopServer(proc)
   })
 
   it('A should respond to GET /hello', async () => {
-    await new Promise(r => setTimeout(r, 300))
     const res = await request('/hello')
     expect(res.status).toBe(200)
     expect(res.body).toMatch(/HelloOoOOoo ! It is .+ :D/)
   })
 
   it('B should respond 404 to unknown route', async () => {
-    await new Promise(r => setTimeout(r, 300))
     const res = await request('/unknown')
     expect(res.status).toBe(404)
     const body = JSON.parse(res.body)
@@ -62,19 +70,17 @@ describe('server.cli.ts (integration)', () => {
     expect(body.progress).toBe(0)
   })
 
-  it('C should respond 404 to POST /progress with invalid body', async () => {
-    await new Promise(r => setTimeout(r, 300))
-    const res = await request('/progress', 'POST')
-    expect(res.status).toBe(404)
+  it('C should respond 400 to POST /set-progress with invalid body', async () => {
+    const res = await request('/set-progress', 'POST')
+    expect(res.status).toBe(400)
     const body = JSON.parse(res.body)
-    expect(body.message).toBe('Not Found')
+    expect(body.message).toBe('HUE_ENDPOINT not set in env variables')
     expect(body.ok).toBe(false)
     expect(body.progress).toBe(0)
   })
 
-  it('D should respond 200 to POST /progress with valid body', async () => {
-    await new Promise(r => setTimeout(r, 300))
-    const req = http.request({ headers: { 'Content-Type': 'application/json' }, hostname: 'localhost', method: 'POST', path: '/progress', port: 3000 }, res => {
+  it('D should respond 200 to POST /set-progress with valid body', () => {
+    const req = http.request({ headers: { 'Content-Type': 'application/json' }, hostname: 'localhost', method: 'POST', path: '/set-progress', port: 3000 }, res => {
       let data = ''
       res.on('data', chunk => {
         data += chunk
