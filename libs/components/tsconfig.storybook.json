@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "jsx": "preserve",
+    "lib": [
+      "dom",
+      "es2022"
+    ],
     "module": "esnext",
     "moduleResolution": "bundler",
     "outDir": "out-tsc/storybook"
