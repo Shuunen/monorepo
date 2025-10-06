@@ -92,7 +92,7 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
               </FormLabel>
               <FormControl>
                 <Select {...field} disabled={isDisabled}>
-                  <SelectTrigger>{placeholder || `Select ${label}`}</SelectTrigger>
+                  <SelectTrigger testId={`${camelToKebabCase(fieldName)}-trigger`}>{placeholder || `Select ${label}`}</SelectTrigger>
                   <SelectContent>
                     {enumOptions?.map(option => (
                       <SelectItem key={option} value={option}>
