@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Logger, nbPercentMax } from '@monorepo/utils'
+import { camelToKebabCase, Logger, nbPercentMax } from '@monorepo/utils'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -8,7 +8,7 @@ import { Checkbox } from '../atoms/checkbox'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../atoms/form'
 import { Input } from '../atoms/input'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '../atoms/select'
-import { checkZodEnum } from './auto-form.utils'
+import { checkZodBoolean, checkZodEnum, readonlyValue } from './auto-form.utils'
 
 // oxlint-disable-next-line consistent-type-definitions
 export interface AutoFormProps<Type extends z.ZodRawShape> {
@@ -71,8 +71,9 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
       return (
         <FormItem key={fieldName}>
           <FormLabel>{label}</FormLabel>
-          {/* @ts-expect-error type issue */}
-          <div className="text-gray-900 py-2">{formData[fieldName] || '—'}</div>
+          <div className="text-gray-900 py-2" data-testid={camelToKebabCase(fieldName)}>
+            {readonlyValue(fieldSchema, formData[fieldName])}
+          </div>
         </FormItem>
       )
     // Enum/select
@@ -101,7 +102,7 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
                   </SelectContent>
                 </Select>
               </FormControl>
-              <FormMessage />
+              <FormMessage testId={`${camelToKebabCase(fieldName)}-error`} />
             </FormItem>
           )}
         />
@@ -120,15 +121,16 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
                 {!isOptional && <span className="text-red-500 ml-1">*</span>}
               </FormLabel>
               <FormControl>
-                <Input type="number" {...field} disabled={isDisabled} placeholder={placeholder} testId={fieldName} />
+                <Input type="number" {...field} disabled={isDisabled} placeholder={placeholder} />
               </FormControl>
-              <FormMessage />
+              <FormMessage testId={`${camelToKebabCase(fieldName)}-error`} />
             </FormItem>
           )}
         />
       )
     // Boolean/checkbox
-    if (fieldSchema instanceof z.ZodBoolean || fieldSchema instanceof z.ZodLiteral)
+    const { booleanLiteralValue, isBoolean, isBooleanLiteral: isLiteral } = checkZodBoolean(fieldSchema)
+    if (isBoolean)
       return (
         <FormField
           key={fieldName}
@@ -139,11 +141,9 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
                 {label}
                 {!isOptional && <span className="text-red-500 ml-1">*</span>}
               </FormLabel>
-              <FormControl>
-                <Checkbox {...field} defaultChecked={field.value} disabled={isDisabled} />
-              </FormControl>
+              <FormControl>{isLiteral ? <Checkbox {...field} checked={booleanLiteralValue === true} disabled /> : <Checkbox {...field} checked={!!field.value} disabled={isDisabled} onCheckedChange={val => field.onChange(val)} />}</FormControl>
               {placeholder && <FormDescription>{placeholder}</FormDescription>}
-              <FormMessage />
+              <FormMessage testId={`${camelToKebabCase(fieldName)}-error`} />
             </FormItem>
           )}
         />
@@ -160,9 +160,9 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
               {!isOptional && <span className="text-red-500 ml-1">*</span>}
             </FormLabel>
             <FormControl>
-              <Input {...field} disabled={isDisabled} placeholder={placeholder} testId={fieldName} />
+              <Input {...field} disabled={isDisabled} placeholder={placeholder} />
             </FormControl>
-            <FormMessage />
+            <FormMessage testId={`${camelToKebabCase(fieldName)}-error`} />
           </FormItem>
         )}
       />
