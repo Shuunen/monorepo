@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Form, SourceCode } from '@monorepo/components'
+import { Button, DebugData, Form } from '@monorepo/components'
 import { sleep } from '@monorepo/utils'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
@@ -48,7 +48,7 @@ function FormFileUploadStoryWrapper({ defaultValues, shouldFail = false, accept 
           </Button>
         </form>
       </Form>
-      <SourceCode code={{ accept, fileNameSelected: value?.name, formSubmitted, formValid: form.formState.isValid }} />
+      <DebugData data={{ accept, fileNameSelected: value?.name, formSubmitted, formValid: form.formState.isValid }} />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, SourceCode } from '@monorepo/components'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, DebugData } from '@monorepo/components'
 import { createFileRoute } from '@tanstack/react-router'
 import { Form } from './-form'
 
@@ -20,7 +20,7 @@ function RouteComponent() {
           <CardFooter />
         </Card>
       </div>
-      <SourceCode className="mt-4" code={{}} />
+      <DebugData className="mt-4" data={{}} />
     </div>
   )
 }

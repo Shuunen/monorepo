@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, SourceCode } from '@monorepo/components'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, DebugData } from '@monorepo/components'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { Stepper } from './book-appointment/-stepper'
 import { bookingSteps } from './book-appointment/-steps.const'
@@ -25,7 +25,7 @@ function RouteComponent() {
           <CardFooter />
         </Card>
       </div>
-      <SourceCode className="mt-4" code={data} />
+      <DebugData className="mt-4" data={data} />
     </div>
   )
 }

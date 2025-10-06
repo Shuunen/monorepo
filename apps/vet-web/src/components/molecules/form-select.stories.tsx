@@ -1,4 +1,4 @@
-import { SourceCode } from '@monorepo/components'
+import { DebugData } from '@monorepo/components'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useEffect, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
@@ -39,7 +39,7 @@ function FormSelectWrapper({ name, options, id, placeholder, ...rest }: FormSele
       <FormProvider {...methods}>
         <Controller control={methods.control} name={name} render={({ field }) => <FormSelect {...rest} field={field} form={methods} isRequired={false} name={name} options={options} placeholder={placeholder} testId={id} />} />
       </FormProvider>
-      <SourceCode code={formValues} />
+      <DebugData data={formValues} />
     </div>
   )
 }
