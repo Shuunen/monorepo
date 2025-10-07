@@ -61,7 +61,7 @@ export const Basic: Story = {
     const nameInput = canvas.getByTestId('name')
     await userEvent.type(nameInput, 'John Doe')
     await userEvent.click(submitButton)
-    const debug = canvas.getByRole('document')
+    const debug = canvas.getByTestId('debug-data')
     await expect(debug).toContainHTML(stringify({ email: 'example-email@email.com', name: 'John Doe' }))
   },
 }
