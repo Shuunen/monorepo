@@ -3,7 +3,7 @@
  * @returns true if the environment is a test environment
  */
 export function isTestEnvironment() {
-  const properties = ['jest', 'mocha', '__vitest_environment__', '__vitest_required__']
+  const properties = ['jest', 'mocha', '__vitest_environment__', '__vitest_required__', '__vitest_browser_runner__', '__vitest_browser__', '__vitest_worker__', '__coverage__', 'STORYBOOK_ENV', '__STORYBOOK_ADDONS_CHANNEL__']
   const hasTestBin = properties.some(property => property in globalThis)
   /* c8 ignore next 3 */
   if (hasTestBin) return true
@@ -18,9 +18,9 @@ export function isTestEnvironment() {
  * @returns true if the environment is a browser environment
  */
 export function isBrowserEnvironment(userAgent = globalThis.navigator?.userAgent) {
-  /* c8 ignore next */
+  /* c8 ignore next 3 */
   if (!userAgent) return false
-  const isHappyDom = userAgent.includes('HappyDOM')
-  if (isHappyDom) return false
+  if (userAgent.includes('HappyDOM')) return false
+  if (userAgent.includes('Headless')) return false
   return typeof document !== 'undefined' && globalThis.matchMedia !== undefined
 }
