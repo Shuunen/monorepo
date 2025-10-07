@@ -399,10 +399,66 @@ export const ExhaustiveFilled: Story = {
   },
 }
 
+const step1Schema = z.object({
+  email: z.email('Invalid email address').meta({
+    label: 'Email Address',
+    placeholder: "We'll never share your email",
+  }),
+  name: z.string().min(2, 'Name is required').meta({
+    label: 'Full Name',
+    placeholder: 'Enter your legal name',
+  }),
+})
+
+const step2Schema = z.object({
+  age: z.number().min(0).max(120).meta({
+    label: 'Age',
+    placeholder: 'Enter your age',
+  }),
+  subscribe: z.boolean().meta({
+    label: 'Subscribe to newsletter',
+    placeholder: 'Check to subscribe',
+  }),
+})
+
+/**
+ * Multi-step form with basic fields
+ */
+export const MultiStep: Story = {
+  args: {
+    schemas: [step1Schema, step2Schema],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    await step('step 1', async () => {
+      const nameInput = canvas.getByTestId('name')
+      await userEvent.type(nameInput, 'John Doe')
+      const emailInput = canvas.getByTestId('email')
+      await userEvent.type(emailInput, 'john.doe@example.com')
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      await userEvent.click(nextButton)
+    })
+    await step('step 2', async () => {
+      const ageInput = canvas.getByTestId('age')
+      await userEvent.type(ageInput, '30')
+      const subscribeCheckbox = canvas.getByTestId('subscribe')
+      await userEvent.click(subscribeCheckbox)
+    })
+    await step('submit form', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+      const debug = canvas.getByTestId('debug-data')
+      await expect(debug).toContainHTML('"email": "john.doe@example.com"')
+      await expect(debug).toContainHTML('"name": "John Doe"')
+      await expect(debug).toContainHTML('"age": 30')
+      await expect(debug).toContainHTML('"subscribe": true')
+    })
+  },
+}
+
 /* TODO :
 - ExhaustiveFilled Story should have 0 errors, but currently has 2 (the literal booleans)
 - The select component does not show the selected value after selection
-- Add a Story with multiple schemas (steps)
 - Handle optional sections
 - Add a vertical stepper on the left side
 */
