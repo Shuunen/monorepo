@@ -16,8 +16,8 @@ export function DebugData({ className, data, isFloating = false, isScrollable = 
   const json = stringify(data)
   const classes = cn('bg-stone-100 p-6 border-stone-300 border rounded-lg shadow-lg max-w-full shrink-0', className, isFloating && 'fixed right-5 top-28', isScrollable && 'overflow-y-auto max-h-96')
   return (
-    <pre className={classes} data-testid="debug-data" role="document">
-      <code>{json}</code>
+    <pre className={classes}>
+      <code data-testid="debug-data">{json}</code>
     </pre>
   )
 }
