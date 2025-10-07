@@ -104,6 +104,12 @@ it('objectSerialize K', () => {
   expect(serialized).toMatchInlineSnapshot(String.raw`""{\"keyA\":{\"__strUndefined__\":true},\"keyB\":2,\"keyC\":3}""`)
 })
 
+it('objectSerialize L circular reference', () => {
+  const obj: Record<string, unknown> = { name: 'John' }
+  obj.self = obj
+  expect(objectSerialize(obj)).toMatchInlineSnapshot('"{"name":"John","self":"__circular__"}"')
+})
+
 it('objectDeserialize A string', () => {
   expect(objectDeserialize('{"name":"John"}')).toMatchInlineSnapshot(`
   {

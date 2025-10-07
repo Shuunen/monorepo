@@ -19,6 +19,7 @@ import { objectSort } from './object-sort.js'
 
 /**
  * Replacer function for JSON.stringify
+ * @param this the context object
  * @param key the key of the object
  * @param value the value of the object
  * @returns the value of the object
@@ -31,6 +32,25 @@ function replacer(this: unknown, key: string, value?: Readonly<unknown>) {
   // @ts-expect-error type issue
   if (this[key] instanceof Date) return { __strDate__: this[key].toISOString() }
   return value
+}
+
+const createCircularReplacer = () => {
+  const seen = new WeakSet<object>()
+  /**
+   * Replacer function for JSON.stringify with circular reference handling
+   * @param this the context object
+   * @param key the key being stringified
+   * @param value the value being stringified
+   * @returns the value to serialize
+   */
+  function circularReplacer(this: unknown, key: string, value?: Readonly<unknown>) {
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value as object)) return '__circular__'
+      seen.add(value as object)
+    }
+    return replacer.call(this, key, value)
+  }
+  return circularReplacer
 }
 
 /**
@@ -58,7 +78,7 @@ function reviver(_key: string, value?: unknown) {
  * @returns the serialized object as a string
  */
 export function objectSerialize(object: Readonly<Record<string, unknown>>, willSortKeys = false) {
-  return JSON.stringify(willSortKeys ? objectSort(object) : object, replacer)
+  return JSON.stringify(willSortKeys ? objectSort(object) : object, createCircularReplacer())
 }
 
 /**
