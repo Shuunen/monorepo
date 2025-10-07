@@ -182,7 +182,7 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   const shape = currentSchema.shape
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="mx-auto p-6 bg-white rounded-lg shadow-md w-full">
       <Form {...methods}>
         <form onChange={handleChange} onSubmit={handleSubmit(onStepSubmit)}>
           {/* Step indicator */}
