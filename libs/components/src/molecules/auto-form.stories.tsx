@@ -459,6 +459,90 @@ export const MultiStep: Story = {
 /* TODO :
 - ExhaustiveFilled Story should have 0 errors, but currently has 2 (the literal booleans)
 - The select component does not show the selected value after selection
-- Handle optional sections
 - Add a vertical stepper on the left side
 */
+
+// biome-ignore assist/source/useSortedKeys: we need a specific key order here
+const optionalSectionStep1Schema = z.object({
+  name: z.string().min(2, 'Name is required').meta({
+    label: 'Full Name',
+    placeholder: 'Enter your legal name',
+  }),
+  age: z.number().min(0).max(120).optional().meta({
+    label: 'Age',
+    placeholder: 'Enter your age',
+  }),
+})
+
+// biome-ignore assist/source/useSortedKeys: we need a specific key order here
+const optionalSectionStep2Schema = z.object({
+  _hasPet: z.boolean().optional().meta({
+    label: 'Do you have a pet ?',
+    placeholder: 'Check if you have a pet',
+  }),
+  // biome-ignore lint/style/useNamingConvention: needed for optional section
+  _hasPet_petName: z.string().min(2, 'Pet name is required').meta({
+    label: 'Pet Name',
+    placeholder: 'Enter your pet name',
+  }),
+  // biome-ignore lint/style/useNamingConvention: needed for optional section
+  _hasPet_petAge: z.number().min(0).max(50).optional().meta({
+    label: 'Pet Age',
+    placeholder: 'Enter your pet age if you know it',
+  }),
+})
+
+/**
+ * Schema with an optional section
+ * The "_hasPet" is detected as a boolean that controls the visibility of other fields because of the naming convention starting with an underscore
+ * This "_hasPet" key will control the visibility of all fields starting with "_hasPet_"
+ * Here "_hasPet" boolean controls the visibility of the "_hasPet_petName" field
+ * If "_hasPet" is checked/true, "_hasPet_petName" becomes visible and required
+ * If "_hasPet" is unchecked/false, "_hasPet_petName" is hidden and not required
+ * The "_hasPet" field is not part of the final data submitted as it is only used for controlling the form UI
+ * Also the prefix "_hasPet_" is removed from the keys of the fields it controls in the final submitted data
+ * In this example, the final submitted data will either be { name: "John" } or { name: "John", petName: "Fido" }
+ */
+export const OptionalSection: Story = {
+  args: {
+    schemas: [optionalSectionStep1Schema, optionalSectionStep2Schema],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    await step('fill name', async () => {
+      const nameInput = canvas.getByTestId('name')
+      await userEvent.type(nameInput, 'John Doe')
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      await userEvent.click(nextButton)
+    })
+    await step('succeed at submitting without pet', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+      const debug = canvas.queryByTestId('debug-data')
+      expect(debug).toContainHTML('"name": "John Doe"')
+    })
+    await step('show pet name field', async () => {
+      const hasPetCheckbox = canvas.getByTestId('has-pet')
+      await userEvent.click(hasPetCheckbox)
+      const petNameInput = await canvas.findByTestId('has-pet-pet-name')
+      expect(petNameInput).toBeVisible()
+    })
+    await step('fail at submitting with pet but no pet name', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+      const issue = await canvas.findByText('Invalid input: expected string, received undefined')
+      expect(issue).toBeVisible()
+    })
+    await step('fill pet name', async () => {
+      const petNameInput = await canvas.findByTestId('has-pet-pet-name')
+      await userEvent.type(petNameInput, 'Fido')
+    })
+    await step('succeed at submitting with pet and pet name', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+      const debug = canvas.queryByTestId('debug-data')
+      expect(debug).toContainHTML('"name": "John Doe"')
+      expect(debug).toContainHTML('"petName": "Fido"')
+    })
+  },
+}

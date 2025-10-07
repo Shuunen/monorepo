@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { camelToKebabCase, Logger, nbPercentMax } from '@monorepo/utils'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '../atoms/button'
@@ -23,15 +23,41 @@ export interface AutoFormProps<Type extends z.ZodRawShape> {
 export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger = new Logger() }: AutoFormProps<Type>) {
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState<Record<string, unknown>>(initialData)
-
   const currentSchema = schemas[currentStep]
+
+  // --- Optional Section Logic ---
+  // Find all controller fields (boolean, start with _ and not _<prefix>_<prefix>)
+  const shape = currentSchema.shape
+  const controllerFields = useMemo(() => Object.keys(shape).filter(key => key.startsWith('_') && (shape[key] instanceof z.ZodBoolean || (shape[key] instanceof z.ZodOptional && shape[key]._def.innerType instanceof z.ZodBoolean)) && !key.slice(1).includes('_')), [shape])
+
+  // Helper: is a field controlled by a controller?
+  const getControllerForField = useCallback(
+    (fieldName: string): string | undefined => {
+      for (const ctrl of controllerFields) if (fieldName.startsWith(`${ctrl}_`)) return ctrl
+      return undefined
+    },
+    [controllerFields],
+  )
+
   const isLastStep = currentStep === schemas.length - 1
+
+  // Dynamically filter schema to exclude hidden controlled fields
+  const filteredSchema = useMemo(() => {
+    const visibleShape = {}
+    for (const key of Object.keys(shape)) {
+      const ctrl = getControllerForField(key)
+      if (ctrl && !formData[ctrl]) continue // skip hidden controlled fields
+      // @ts-expect-error type issue
+      visibleShape[key] = shape[key]
+    }
+    return z.object(visibleShape)
+  }, [shape, formData, getControllerForField])
 
   const methods = useForm({
     defaultValues: formData,
     mode: 'onBlur',
-    // @ts-expect-error type issue
-    resolver: zodResolver(currentSchema),
+    // @ts-expect-error type issue with zod and react-hook-form
+    resolver: zodResolver(filteredSchema),
   })
   const { handleSubmit, reset, getValues } = methods
 
@@ -40,10 +66,27 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
     reset(formData)
   }, [formData, reset])
 
+  // Clean up data: remove controller fields and strip controller prefix from controlled fields
+  function cleanSubmittedData(data: Record<string, unknown>) {
+    const result: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(data)) {
+      // Remove controller fields
+      if (controllerFields.includes(key)) continue
+      // If controlled, only include if controller is true
+      const ctrl = getControllerForField(key)
+      if (ctrl) {
+        if (!data[ctrl]) continue // controller is false/unchecked
+        // Remove prefix
+        result[key.replace(`${ctrl}_`, '')] = value
+      } else result[key] = value
+    }
+    return result
+  }
+
   const onStepSubmit = (data: Record<string, unknown>) => {
     logger.info('Step form submitted', data)
     const updatedData = { ...formData, ...data }
-    if (isLastStep && onSubmit) onSubmit(updatedData)
+    if (isLastStep && onSubmit) onSubmit(cleanSubmittedData(updatedData))
     else setCurrentStep(prev => prev + 1)
   }
 
@@ -51,7 +94,7 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
     const updatedData = { ...formData, ...getValues() }
     logger.info('Form changed', updatedData)
     setFormData(updatedData)
-    if (onChange) onChange(updatedData)
+    if (onChange) onChange(cleanSubmittedData(updatedData))
   }
 
   const handleBack = () => {
@@ -60,6 +103,9 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
 
   // oxlint-disable-next-line max-lines-per-function
   const renderField = (fieldName: string, fieldSchema: z.ZodTypeAny) => {
+    // Optional section: hide controlled fields if controller is not checked
+    const controller = getControllerForField(fieldName)
+    if (controller && !formData[controller]) return undefined
     logger.info('Rendering field', fieldName)
     const metadata = fieldSchema.meta() as { label?: string; placeholder?: string; state?: 'editable' | 'readonly' | 'disabled' } | undefined
     const isOptional = fieldSchema instanceof z.ZodOptional
@@ -179,8 +225,6 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
     )
   }
 
-  const shape = currentSchema.shape
-
   return (
     <div className="mx-auto p-6 bg-white rounded-lg shadow-md w-full">
       <Form {...methods}>
@@ -198,9 +242,8 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
               </div>
             </div>
           )}
-          {/* Render fields */}
-          {/** biome-ignore lint/suspicious/noExplicitAny: fix me */}
-          <div className="space-y-4">{Object.keys(shape).map(fieldName => renderField(fieldName, shape[fieldName] as any) /* oxlint-disable-line no-explicit-any */)}</div>
+          {/* Render fields, skipping controlled fields if controller is not checked */}
+          <div className="space-y-4">{Object.keys(shape).map(fieldName => renderField(fieldName, shape[fieldName] as z.ZodTypeAny))}</div>
           {/* Navigation buttons */}
           <div className="flex justify-between pt-6 border-t border-gray-200">
             {currentStep > 0 ? (
