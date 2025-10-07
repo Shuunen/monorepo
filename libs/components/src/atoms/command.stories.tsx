@@ -34,7 +34,7 @@ const meta = {
     </Command>
   ),
   tags: ['autodocs'],
-  title: 'shadcn/Command',
+  title: 'atoms/Command',
 } satisfies Meta<typeof Command>
 
 export default meta
