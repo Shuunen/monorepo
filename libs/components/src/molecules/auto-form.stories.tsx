@@ -1,4 +1,4 @@
-import { sleep } from '@monorepo/utils'
+import { isBrowserEnvironment, Logger, sleep } from '@monorepo/utils'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { within } from '@storybook/testing-library'
 import { useState } from 'react'
@@ -6,6 +6,9 @@ import { expect, userEvent } from 'storybook/test'
 import { z } from 'zod'
 import { AutoForm } from './auto-form'
 import { DebugData, stringify } from './debug-data'
+
+// allow dev to see logs in the browser console when running storybook dev but not in headless tests
+const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? '3-info' : '5-warn' })
 
 const meta = {
   component: AutoForm,
@@ -15,8 +18,8 @@ const meta = {
   render: args => {
     const [submittedData, setSubmittedData] = useState<Record<string, unknown> | undefined>(undefined)
     return (
-      <div className="grid gap-4 mt-6">
-        <AutoForm {...args} onSubmit={data => setSubmittedData(data)} />
+      <div className="grid gap-4 mt-6 w-lg">
+        <AutoForm {...args} logger={logger} onSubmit={data => setSubmittedData(data)} />
         <DebugData data={submittedData} />
       </div>
     )
