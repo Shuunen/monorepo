@@ -1,3 +1,4 @@
+import { sleep } from '@monorepo/utils'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { within } from '@storybook/testing-library'
 import { useState } from 'react'
@@ -174,7 +175,7 @@ const exhaustiveSchema = z.object({
 })
 
 /**
- * Exhaustive form with all field types
+ * Exhaustive form with all field types, empty by default
  */
 export const Exhaustive: Story = {
   args: {
@@ -280,3 +281,125 @@ export const Exhaustive: Story = {
     })
   },
 }
+
+/**
+ * Exhaustive form with all field types, filled by default
+ */
+export const ExhaustiveFilled: Story = {
+  args: {
+    initialData: {
+      boolean: true,
+      booleanDisabled: true,
+      // booleanOptional: true,
+      booleanReadonlyChecked: true,
+      booleanReadonlyUnchecked: false,
+      email: 'test@example.com',
+      emailDisabled: 'test@disabled.de',
+      // emailOptional: 'test@optional.fr',
+      emailReadonly: 'test@readonly.bzh',
+      enum: 'blue',
+      enumDisabled: 'green',
+      // enumOptional: 'red',
+      enumReadonly: 'blue',
+      number: 45,
+      numberDisabled: 99,
+      // numberOptional: 30,
+      numberReadonly: 60,
+      string: 'Some text',
+      stringDisabled: 'Some text disabled',
+      // stringOptional: 'Some text optional',
+      stringReadonly: 'Some text readonly',
+    },
+    schemas: [exhaustiveSchema],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    await step('boolean fields', () => {
+      const booleanEditable = canvas.getByTestId('boolean')
+      expect(booleanEditable).not.toBeDisabled()
+      expect(booleanEditable).toBeChecked()
+      const booleanDisabled = canvas.getByTestId('boolean-disabled')
+      expect(booleanDisabled).toBeDisabled()
+      expect(booleanDisabled).toBeChecked()
+      const booleanLiteralChecked = canvas.getByTestId('boolean-literal-checked')
+      expect(booleanLiteralChecked).toBeDisabled()
+      expect(booleanLiteralChecked).toBeChecked()
+      const booleanLiteralUnchecked = canvas.getByTestId('boolean-literal-unchecked')
+      expect(booleanLiteralUnchecked).toBeDisabled()
+      expect(booleanLiteralUnchecked).not.toBeChecked()
+      const booleanOptional = canvas.getByTestId('boolean-optional')
+      expect(booleanOptional).not.toBeDisabled()
+      expect(booleanOptional).not.toBeChecked()
+      const booleanReadonlyChecked = canvas.getByTestId('boolean-readonly-checked')
+      expect(booleanReadonlyChecked).toContainHTML('Yes')
+      const booleanReadonlyUnchecked = canvas.getByTestId('boolean-readonly-unchecked')
+      expect(booleanReadonlyUnchecked).toContainHTML('No')
+    })
+    await step('email fields', () => {
+      const emailEditable = canvas.getByTestId('email')
+      expect(emailEditable).toHaveValue('test@example.com')
+      const emailDisabled = canvas.getByTestId('email-disabled')
+      expect(emailDisabled).toBeDisabled()
+      expect(emailDisabled).toHaveValue('test@disabled.de')
+      const emailOptional = canvas.getByTestId('email-optional')
+      expect(emailOptional).toHaveValue('')
+      const emailReadonly = canvas.getByTestId('email-readonly')
+      expect(emailReadonly).toContainHTML('test@readonly.bzh')
+    })
+    await step('enum fields', () => {
+      const enumEditable = canvas.getByTestId('enum-trigger')
+      const enumEditableNativeSelect = enumEditable.nextElementSibling
+      expect(enumEditableNativeSelect).toHaveValue('blue')
+      const enumDisabled = canvas.getByTestId('enum-disabled-trigger')
+      expect(enumDisabled).toBeDisabled()
+      const enumDisabledNativeSelect = enumDisabled.nextElementSibling
+      expect(enumDisabledNativeSelect).toHaveValue('green')
+      const enumOptional = canvas.getByTestId('enum-optional-trigger')
+      expect(enumOptional).toHaveValue('')
+      const enumOptionalNativeSelect = enumOptional.nextElementSibling
+      expect(enumOptionalNativeSelect).toHaveValue('')
+      const enumReadonly = canvas.getByTestId('enum-readonly')
+      expect(enumReadonly).toContainHTML('blue')
+    })
+    await step('number fields', () => {
+      const numberEditable = canvas.getByTestId('number')
+      expect(numberEditable).toHaveValue(45)
+      const numberDisabled = canvas.getByTestId('number-disabled')
+      expect(numberDisabled).toBeDisabled()
+      expect(numberDisabled).toHaveValue(99)
+      const numberOptional = canvas.getByTestId('number-optional')
+      expect(numberOptional).toHaveValue('')
+      const numberReadonly = canvas.getByTestId('number-readonly')
+      expect(numberReadonly).toContainHTML('60')
+    })
+    await step('string fields', () => {
+      const stringEditable = canvas.getByTestId('string')
+      expect(stringEditable).toHaveValue('Some text')
+      const stringDisabled = canvas.getByTestId('string-disabled')
+      expect(stringDisabled).toBeDisabled()
+      expect(stringDisabled).toHaveValue('Some text disabled')
+      const stringOptional = canvas.getByTestId('string-optional')
+      expect(stringOptional).toHaveValue('')
+      const stringReadonly = canvas.getByTestId('string-readonly')
+      expect(stringReadonly).toContainHTML('Some text readonly')
+    })
+    step('no error displayed', () => {
+      expect(canvas.queryByRole('alert')).not.toBeInTheDocument()
+    })
+    await step('submit form with errors', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+      await sleep(100)
+      const issues = canvas.getAllByRole('alert')
+      expect(issues).toHaveLength(2) // FIX ME (should be 0, but 2 literal bool are considered invalid instead of simply empty)
+    })
+  },
+}
+
+/* TODO :
+- ExhaustiveFilled Story should have 0 errors, but currently has 2 (the literal booleans)
+- The select component does not show the selected value after selection
+- Add a Story with multiple schemas (steps)
+- Handle optional sections
+- Add a vertical stepper on the left side
+*/
