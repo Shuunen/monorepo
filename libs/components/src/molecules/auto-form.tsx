@@ -121,7 +121,17 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
                 {!isOptional && <span className="text-red-500 ml-1">*</span>}
               </FormLabel>
               <FormControl>
-                <Input type="number" {...field} disabled={isDisabled} placeholder={placeholder} />
+                <Input
+                  type="number"
+                  {...field}
+                  disabled={isDisabled}
+                  onChange={event => {
+                    const value = event.target.value
+                    field.onChange(value === '' ? undefined : Number(value))
+                  }}
+                  placeholder={placeholder}
+                  value={field.value === undefined ? '' : field.value}
+                />
               </FormControl>
               <FormMessage testId={`${camelToKebabCase(fieldName)}-error`} />
             </FormItem>

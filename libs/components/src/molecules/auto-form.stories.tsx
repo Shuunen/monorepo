@@ -280,7 +280,7 @@ export const Exhaustive: Story = {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
       const issues = canvas.getAllByRole('alert')
-      expect(issues).toHaveLength(12)
+      expect(issues).toHaveLength(11)
     })
   },
 }
