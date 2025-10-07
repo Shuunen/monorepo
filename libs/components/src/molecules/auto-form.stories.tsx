@@ -456,12 +456,6 @@ export const MultiStep: Story = {
   },
 }
 
-/* TODO :
-- ExhaustiveFilled Story should have 0 errors, but currently has 2 (the literal booleans)
-- The select component does not show the selected value after selection
-- Add a vertical stepper on the left side
-*/
-
 // biome-ignore assist/source/useSortedKeys: we need a specific key order here
 const optionalSectionStep1Schema = z.object({
   name: z.string().min(2, 'Name is required').meta({
@@ -546,3 +540,10 @@ export const OptionalSection: Story = {
     })
   },
 }
+
+/* TODO :
+- ExhaustiveFilled Story should have 0 errors, but currently has 2 (the literal booleans)
+- The select component does not show the selected value after selection
+- Add a vertical stepper on the left side
+- Typing a number in an optional number field causes a validation error (should be valid) zod says "Invalid input: expected number, received string"
+*/
