@@ -25,9 +25,8 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      // enabled: false, // it's not overridden by the command line, so we do the below trick ^^'
-      exclude: ['src'],
-      include: ['src'],
+      exclude: ['src/**/*.tsx'],
+      include: ['src/molecules/**/*.ts', 'src/atoms/**/*.ts'],
       provider: 'v8' as const,
       reportsDirectory: './test-output/vitest/coverage',
     },

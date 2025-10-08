@@ -224,7 +224,7 @@ export const Exhaustive: Story = {
       await userEvent.type(emailOptional, 'invalid-email')
       expect(emailOptional).toHaveValue('invalid-email')
       const emailReadonly = canvas.getByTestId('email-readonly')
-      expect(emailReadonly).toContainHTML('undefined')
+      expect(emailReadonly).toContainHTML('—')
     })
     await step('enum fields', async () => {
       const enumEditable = canvas.getByTestId('enum-trigger')
@@ -243,7 +243,7 @@ export const Exhaustive: Story = {
       const enumOptionalNativeSelect = enumOptional.nextElementSibling
       expect(enumOptionalNativeSelect).toHaveValue('green')
       const enumReadonly = canvas.getByTestId('enum-readonly')
-      expect(enumReadonly).toContainHTML('undefined')
+      expect(enumReadonly).toContainHTML('—')
     })
     await step('number fields', async () => {
       const numberEditable = canvas.getByTestId('number')
@@ -257,7 +257,7 @@ export const Exhaustive: Story = {
       await userEvent.type(numberOptional, '30')
       expect(numberOptional).toHaveValue('30')
       const numberReadonly = canvas.getByTestId('number-readonly')
-      expect(numberReadonly).toContainHTML('undefined')
+      expect(numberReadonly).toContainHTML('—')
     })
     await step('string fields', async () => {
       const stringEditable = canvas.getByTestId('string')
@@ -271,7 +271,7 @@ export const Exhaustive: Story = {
       await userEvent.type(stringOptional, 'Some text')
       expect(stringOptional).toHaveValue('Some text')
       const stringReadonly = canvas.getByTestId('string-readonly')
-      expect(stringReadonly).toContainHTML('undefined')
+      expect(stringReadonly).toContainHTML('—')
     })
     step('no error displayed', () => {
       expect(canvas.queryByRole('alert')).not.toBeInTheDocument()

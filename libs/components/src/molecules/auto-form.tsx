@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { camelToKebabCase, Logger, nbPercentMax } from '@monorepo/utils'
+import { camelToKebabCase, nbPercentMax } from '@monorepo/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -8,99 +8,52 @@ import { Checkbox } from '../atoms/checkbox'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../atoms/form'
 import { Input } from '../atoms/input'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '../atoms/select'
-import { checkZodBoolean, checkZodEnum, readonlyValue } from './auto-form.utils'
+// oxlint-disable-next-line max-dependencies
+import { type AutoFormFieldMetadata, type AutoFormProps, checkZodBoolean, checkZodEnum, cleanSubmittedData, filterSchema, isFieldVisible, readonlyValue } from './auto-form.utils'
 
-// oxlint-disable-next-line consistent-type-definitions
-export interface AutoFormProps<Type extends z.ZodRawShape> {
-  logger?: Logger
-  schemas: z.ZodObject<Type>[]
-  onSubmit?: (data: Record<string, unknown>) => void
-  onChange?: (data: Record<string, unknown>) => void
-  initialData?: Record<string, unknown>
-}
-
-type FieldMetadata = {
-  label?: string
-  placeholder?: string
-  state?: 'editable' | 'readonly' | 'disabled'
-  dependsOn?: string
-  excluded?: boolean
-}
+// run this command to check e2e tests  `nx run components:test-storybook --skip-nx-cache`
+// run this command to check unit tests `nx run components:test`
 
 // oxlint-disable-next-line max-lines-per-function
-export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger = new Logger() }: AutoFormProps<Type>) {
+export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger }: AutoFormProps<Type>) {
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState<Record<string, unknown>>(initialData)
   const currentSchema = schemas[currentStep]
-  const shape = currentSchema.shape
   const isLastStep = currentStep === schemas.length - 1
-  // Determine if a field should be visible based on 'dependsOn' meta
-  const isFieldVisible = useCallback(
-    (fieldSchema: z.ZodTypeAny) => {
-      const metadata = typeof fieldSchema?.meta === 'function' ? (fieldSchema.meta() as FieldMetadata) : undefined
-      if (metadata?.dependsOn && !(formData as Record<string, unknown>)[metadata.dependsOn]) return false
-      return true
-    },
-    [formData],
-  )
-  // Filter schema to only include visible fields (dependsOn logic)
-  const filteredSchema = useMemo(() => {
-    const visibleShape: Record<string, z.ZodTypeAny> = {}
-    for (const key of Object.keys(shape)) {
-      const fieldSchema = shape[key] as z.ZodTypeAny
-      if (!isFieldVisible(fieldSchema)) continue // skip hidden fields
-      visibleShape[key] = fieldSchema
-    }
-    return z.object(visibleShape)
-  }, [shape, isFieldVisible])
-  // Initialize react-hook-form
-  const methods = useForm({
+  const filteredSchema = useMemo(() => filterSchema(currentSchema, formData), [currentSchema, formData])
+  const form = useForm({
     defaultValues: formData,
     mode: 'onBlur',
     resolver: zodResolver(filteredSchema),
   })
-  // Only reset when schema changes, not on every step change
   useEffect(() => {
-    methods.reset(formData)
-  }, [formData, methods])
+    form.reset(formData)
+  }, [formData, form])
   // Remove excluded fields from the submitted data
-  const cleanSubmittedData = useCallback(
-    (data: Record<string, unknown>) => {
-      const result: Record<string, unknown> = {}
-      for (const [key, value] of Object.entries(data)) {
-        const fieldSchema = shape[key] as z.ZodTypeAny
-        const metadata = typeof fieldSchema?.meta === 'function' ? fieldSchema.meta() : undefined
-        if (!isFieldVisible(fieldSchema)) continue
-        if (metadata?.excluded) continue
-        result[key] = value
-      }
-      return result
-    },
-    [shape, isFieldVisible],
-  )
+  const cleanData = useCallback((data: Record<string, unknown>) => cleanSubmittedData(currentSchema, data, formData), [currentSchema, formData])
   // Handle step submission
-  const handleStepSubmit = (data: Record<string, unknown>) => {
-    logger.info('Step form submitted', data)
+  function handleStepSubmit(data: Record<string, unknown>) {
+    logger?.info('Step form submitted', data)
     const updatedData = { ...formData, ...data }
-    if (isLastStep && onSubmit) onSubmit(cleanSubmittedData(updatedData))
+    if (isLastStep && onSubmit) onSubmit(cleanData(updatedData))
     else setCurrentStep(prev => prev + 1)
   }
   // Handle form change
-  const handleChange = () => {
-    const updatedData = { ...formData, ...methods.getValues() }
-    logger.info('Form changed', updatedData)
+  function handleChange() {
+    const updatedData = { ...formData, ...form.getValues() }
+    logger?.info('Form changed', updatedData)
     setFormData(updatedData)
-    if (onChange) onChange(cleanSubmittedData(updatedData))
+    if (onChange) onChange(cleanData(updatedData))
   }
   // Handle back button
-  const handleBack = () => {
+  function handleBack() {
     if (currentStep > 0) setCurrentStep(prev => prev - 1)
   }
   // oxlint-disable-next-line max-lines-per-function
-  const renderField = (fieldName: string, fieldSchema: z.ZodTypeAny) => {
-    if (!isFieldVisible(fieldSchema)) return
-    logger.info('Rendering field', fieldName)
-    const metadata = fieldSchema.meta() as FieldMetadata | undefined
+  function renderField(fieldName: string, fieldSchema: z.ZodTypeAny) {
+    if (!isFieldVisible(fieldSchema, formData)) return
+    logger?.info('Rendering field', fieldName)
+    const metadata = fieldSchema.meta() as AutoFormFieldMetadata | undefined
     if (!metadata) throw new Error(`Field "${fieldName}" is missing metadata (label, placeholder, state)`)
     const { label = '', placeholder, state = 'editable' } = metadata
     const isOptional = fieldSchema instanceof z.ZodOptional
@@ -119,8 +72,7 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
       )
     // Enum/Select field
     const { enumOptions, isEnum } = checkZodEnum(fieldSchema)
-    if (isEnum) {
-      logger.info('Rendering enum field', fieldName, enumOptions)
+    if (isEnum)
       return (
         <FormField
           key={fieldName}
@@ -148,7 +100,6 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
           )}
         />
       )
-    }
     // Number field
     if (fieldSchema instanceof z.ZodNumber)
       return (
@@ -213,8 +164,8 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   const progressPercent = ((currentStep + 1) / schemas.length) * nbPercentMax
   return (
     <div className="mx-auto p-6 bg-white rounded-lg shadow-md w-full">
-      <Form {...methods}>
-        <form onChange={handleChange} onSubmit={methods.handleSubmit(handleStepSubmit)}>
+      <Form {...form}>
+        <form onChange={handleChange} onSubmit={form.handleSubmit(handleStepSubmit)}>
           {/* Step indicator */}
           {schemas.length > 1 && (
             <div className="mb-6">
@@ -229,7 +180,7 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
             </div>
           )}
           {/* Render fields, skipping controlled fields if controller is not checked */}
-          <div className="space-y-4">{Object.keys(shape).map(fieldName => renderField(fieldName, shape[fieldName] as z.ZodTypeAny))}</div>
+          <div className="space-y-4">{Object.keys(currentSchema.shape).map(fieldName => renderField(fieldName, currentSchema.shape[fieldName] as z.ZodTypeAny))}</div>
           {/* Navigation buttons */}
           <div className="flex justify-between pt-6 border-t border-gray-200">
             {currentStep > 0 ? (
