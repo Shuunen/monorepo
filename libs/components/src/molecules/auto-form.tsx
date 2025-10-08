@@ -1,15 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { camelToKebabCase, nbPercentMax } from '@monorepo/utils'
+import { nbPercentMax } from '@monorepo/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import type { z } from 'zod'
 import { Button } from '../atoms/button'
-import { Checkbox } from '../atoms/checkbox'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../atoms/form'
-import { Input } from '../atoms/input'
-import { Select, SelectContent, SelectItem, SelectTrigger } from '../atoms/select'
-// oxlint-disable-next-line max-dependencies
-import { type AutoFormFieldMetadata, type AutoFormProps, checkZodBoolean, checkZodEnum, cleanSubmittedData, filterSchema, isFieldVisible, readonlyValue } from './auto-form.utils'
+import { Form } from '../atoms/form'
+import { type AutoFormProps, cleanSubmittedData, filterSchema } from './auto-form.utils'
+import { AutoFormField } from './auto-form-field'
 
 // run this command to check e2e tests  `nx run components:test-storybook --skip-nx-cache`
 // run this command to check unit tests `nx run components:test`
@@ -49,117 +46,6 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   function handleBack() {
     if (currentStep > 0) setCurrentStep(prev => prev - 1)
   }
-  // oxlint-disable-next-line max-lines-per-function
-  function renderField(fieldName: string, fieldSchema: z.ZodTypeAny) {
-    if (!isFieldVisible(fieldSchema, formData)) return
-    logger?.info('Rendering field', fieldName)
-    const metadata = fieldSchema.meta() as AutoFormFieldMetadata | undefined
-    if (!metadata) throw new Error(`Field "${fieldName}" is missing metadata (label, placeholder, state)`)
-    const { label = '', placeholder, state = 'editable' } = metadata
-    const isOptional = fieldSchema instanceof z.ZodOptional
-    const isDisabled = state === 'disabled'
-    const testId = camelToKebabCase(fieldName)
-    const requiredMark = !isOptional && <span className="text-red-500 ml-1">*</span>
-    // Readonly field - display as text
-    if (state === 'readonly')
-      return (
-        <FormItem key={fieldName}>
-          <FormLabel>{label}</FormLabel>
-          <div className="text-gray-900 py-2" data-testid={testId}>
-            {readonlyValue(fieldSchema, formData[fieldName])}
-          </div>
-        </FormItem>
-      )
-    // Enum/Select field
-    const { enumOptions, isEnum } = checkZodEnum(fieldSchema)
-    if (isEnum)
-      return (
-        <FormField
-          key={fieldName}
-          name={fieldName}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                {label}
-                {requiredMark}
-              </FormLabel>
-              <FormControl>
-                <Select {...field} disabled={isDisabled}>
-                  <SelectTrigger testId={`${testId}-trigger`}>{placeholder || `Select ${label}`}</SelectTrigger>
-                  <SelectContent>
-                    {enumOptions?.map(option => (
-                      <SelectItem key={option} value={option}>
-                        {option.charAt(0).toUpperCase() + option.slice(1)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage testId={`${testId}-error`} />
-            </FormItem>
-          )}
-        />
-      )
-    // Number field
-    if (fieldSchema instanceof z.ZodNumber)
-      return (
-        <FormField
-          key={fieldName}
-          name={fieldName}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                {label}
-                {requiredMark}
-              </FormLabel>
-              <FormControl>
-                <Input type="number" {...field} disabled={isDisabled} onChange={event => field.onChange(event.target.value === '' ? undefined : Number(event.target.value))} placeholder={placeholder} value={field.value === undefined ? '' : field.value} />
-              </FormControl>
-              <FormMessage testId={`${testId}-error`} />
-            </FormItem>
-          )}
-        />
-      )
-    // Boolean/Checkbox field
-    const { booleanLiteralValue, isBoolean, isBooleanLiteral } = checkZodBoolean(fieldSchema)
-    if (isBoolean)
-      return (
-        <FormField
-          key={fieldName}
-          name={fieldName}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                {label}
-                {requiredMark}
-              </FormLabel>
-              <FormControl>{isBooleanLiteral ? <Checkbox {...field} checked={booleanLiteralValue === true} disabled /> : <Checkbox {...field} checked={!!field.value} disabled={isDisabled} onCheckedChange={field.onChange} />}</FormControl>
-              {placeholder && <FormDescription>{placeholder}</FormDescription>}
-              <FormMessage testId={`${testId}-error`} />
-            </FormItem>
-          )}
-        />
-      )
-    // String field (default)
-    return (
-      <FormField
-        key={fieldName}
-        name={fieldName}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>
-              {label}
-              {requiredMark}
-            </FormLabel>
-            <FormControl>
-              <Input {...field} disabled={isDisabled} placeholder={placeholder} />
-            </FormControl>
-            <FormMessage testId={`${testId}-error`} />
-          </FormItem>
-        )}
-      />
-    )
-  }
   // Progress percentage for step indicator
   const progressPercent = ((currentStep + 1) / schemas.length) * nbPercentMax
   return (
@@ -180,7 +66,17 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
             </div>
           )}
           {/* Render fields, skipping controlled fields if controller is not checked */}
-          <div className="space-y-4">{Object.keys(currentSchema.shape).map(fieldName => renderField(fieldName, currentSchema.shape[fieldName] as z.ZodTypeAny))}</div>
+          <div className="space-y-4">
+            {Object.keys(currentSchema.shape).map(fieldName => (
+              <AutoFormField
+                key={fieldName}
+                fieldName={fieldName}
+                fieldSchema={currentSchema.shape[fieldName] as z.ZodTypeAny}
+                formData={formData}
+                logger={logger}
+              />
+            ))}
+          </div>
           {/* Navigation buttons */}
           <div className="flex justify-between pt-6 border-t border-gray-200">
             {currentStep > 0 ? (
