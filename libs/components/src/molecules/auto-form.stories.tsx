@@ -470,17 +470,18 @@ const optionalSectionStep1Schema = z.object({
 
 // biome-ignore assist/source/useSortedKeys: we need a specific key order here
 const optionalSectionStep2Schema = z.object({
-  _hasPet: z.boolean().optional().meta({
+  hasPet: z.boolean().optional().meta({
+    excluded: true, // avoid including this field in the final submitted data
     label: 'Do you have a pet ?',
     placeholder: 'Check if you have a pet',
   }),
-  // biome-ignore lint/style/useNamingConvention: needed for optional section
-  _hasPet_petName: z.string().min(2, 'Pet name is required').meta({
+  petName: z.string().min(2, 'Pet name is required').meta({
+    dependsOn: 'hasPet', // this field depends on the truthiness of "hasPet" field
     label: 'Pet Name',
     placeholder: 'Enter your pet name',
   }),
-  // biome-ignore lint/style/useNamingConvention: needed for optional section
-  _hasPet_petAge: z.number().min(0).max(50).optional().meta({
+  petAge: z.number().min(0).max(50).optional().meta({
+    dependsOn: 'hasPet', // this field depends on the truthiness of "hasPet" field
     label: 'Pet Age',
     placeholder: 'Enter your pet age if you know it',
   }),
@@ -488,13 +489,9 @@ const optionalSectionStep2Schema = z.object({
 
 /**
  * Schema with an optional section
- * The "_hasPet" is detected as a boolean that controls the visibility of other fields because of the naming convention starting with an underscore
- * This "_hasPet" key will control the visibility of all fields starting with "_hasPet_"
- * Here "_hasPet" boolean controls the visibility of the "_hasPet_petName" field
- * If "_hasPet" is checked/true, "_hasPet_petName" becomes visible and required
- * If "_hasPet" is unchecked/false, "_hasPet_petName" is hidden and not required
- * The "_hasPet" field is not part of the final data submitted as it is only used for controlling the form UI
- * Also the prefix "_hasPet_" is removed from the keys of the fields it controls in the final submitted data
+ * If hasPet is checked/true, petName & petAge becomes visible and active (required if not optional)
+ * If hasPet is unchecked/false, petName & petAge are hidden and inactive (not part of the final submitted data)
+ * The hasPet field is not part of the final data submitted as it is marked with meta: { excluded: true }
  * In this example, the final submitted data will either be { name: "John" } or { name: "John", petName: "Fido" }
  */
 export const OptionalSection: Story = {
@@ -509,16 +506,25 @@ export const OptionalSection: Story = {
       const nextButton = canvas.getByRole('button', { name: 'Next' })
       await userEvent.click(nextButton)
     })
+    await step('go back to step 1 to fix the name', async () => {
+      const backButton = canvas.getByRole('button', { name: 'Back' })
+      await userEvent.click(backButton)
+      const nameInput = canvas.getByTestId('name')
+      await userEvent.clear(nameInput)
+      await userEvent.type(nameInput, 'John Doughy')
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      await userEvent.click(nextButton)
+    })
     await step('succeed at submitting without pet', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
       const debug = canvas.queryByTestId('debug-data')
-      expect(debug).toContainHTML('"name": "John Doe"')
+      expect(debug).toContainHTML('"name": "John Doughy"')
     })
     await step('show pet name field', async () => {
       const hasPetCheckbox = canvas.getByTestId('has-pet')
       await userEvent.click(hasPetCheckbox)
-      const petNameInput = await canvas.findByTestId('has-pet-pet-name')
+      const petNameInput = await canvas.findByTestId('pet-name')
       expect(petNameInput).toBeVisible()
     })
     await step('fail at submitting with pet but no pet name', async () => {
@@ -528,15 +534,27 @@ export const OptionalSection: Story = {
       expect(issue).toBeVisible()
     })
     await step('fill pet name', async () => {
-      const petNameInput = await canvas.findByTestId('has-pet-pet-name')
+      const petNameInput = await canvas.findByTestId('pet-name')
       await userEvent.type(petNameInput, 'Fido')
     })
     await step('succeed at submitting with pet and pet name', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
       const debug = canvas.queryByTestId('debug-data')
-      expect(debug).toContainHTML('"name": "John Doe"')
+      expect(debug).toContainHTML('"name": "John Doughy"')
       expect(debug).toContainHTML('"petName": "Fido"')
+    })
+    await step('uncheck hasPet to hide pet fields', async () => {
+      const hasPetCheckbox = canvas.getByTestId('has-pet')
+      await userEvent.click(hasPetCheckbox)
+      expect(canvas.queryByTestId('pet-name')).not.toBeInTheDocument()
+      expect(canvas.queryByTestId('pet-age')).not.toBeInTheDocument()
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+      const debug = canvas.queryByTestId('debug-data')
+      expect(debug).toContainHTML('"name": "John Doughy"')
+      expect(debug).not.toContainHTML('petName')
+      expect(debug).not.toContainHTML('petAge')
     })
   },
 }

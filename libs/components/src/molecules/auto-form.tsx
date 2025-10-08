@@ -19,7 +19,13 @@ export interface AutoFormProps<Type extends z.ZodRawShape> {
   initialData?: Record<string, unknown>
 }
 
-type FieldMetadata = { label?: string; placeholder?: string; state?: 'editable' | 'readonly' | 'disabled' }
+type FieldMetadata = {
+  label?: string
+  placeholder?: string
+  state?: 'editable' | 'readonly' | 'disabled'
+  dependsOn?: string
+  excluded?: boolean
+}
 
 // oxlint-disable-next-line max-lines-per-function
 export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger = new Logger() }: AutoFormProps<Type>) {
@@ -28,58 +34,49 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   const currentSchema = schemas[currentStep]
   const shape = currentSchema.shape
   const isLastStep = currentStep === schemas.length - 1
-  // Find all controller fields (boolean, start with _ and not _<prefix>_<prefix>)
-  const controllerFields = useMemo(
-    () =>
-      Object.keys(shape).filter(key => {
-        if (!key.startsWith('_') || key.slice(1).includes('_')) return false
-        const field = shape[key]
-        return field instanceof z.ZodBoolean || (field instanceof z.ZodOptional && field._def.innerType instanceof z.ZodBoolean)
-      }),
-    [shape],
+  // Determine if a field should be visible based on 'dependsOn' meta
+  const isFieldVisible = useCallback(
+    (fieldSchema: z.ZodTypeAny) => {
+      const metadata = typeof fieldSchema?.meta === 'function' ? (fieldSchema.meta() as FieldMetadata) : undefined
+      if (metadata?.dependsOn && !(formData as Record<string, unknown>)[metadata.dependsOn]) return false
+      return true
+    },
+    [formData],
   )
-  // Find controller for a given field (e.g., _optional_field → _optional)
-  const getControllerForField = useCallback((fieldName: string) => controllerFields.find(ctrl => fieldName.startsWith(`${ctrl}_`)), [controllerFields])
-  // Filter schema to only include visible fields
+  // Filter schema to only include visible fields (dependsOn logic)
   const filteredSchema = useMemo(() => {
-    const visibleShape = {}
+    const visibleShape: Record<string, z.ZodTypeAny> = {}
     for (const key of Object.keys(shape)) {
-      const ctrl = getControllerForField(key)
-      if (ctrl && !formData[ctrl]) continue // skip hidden controlled fields
-      // @ts-expect-error type issue
-      visibleShape[key] = shape[key]
+      const fieldSchema = shape[key] as z.ZodTypeAny
+      if (!isFieldVisible(fieldSchema)) continue // skip hidden fields
+      visibleShape[key] = fieldSchema
     }
     return z.object(visibleShape)
-  }, [shape, formData, getControllerForField])
-
+  }, [shape, isFieldVisible])
+  // Initialize react-hook-form
   const methods = useForm({
     defaultValues: formData,
     mode: 'onBlur',
-    // @ts-expect-error type issue with zod and react-hook-form
     resolver: zodResolver(filteredSchema),
   })
   // Only reset when schema changes, not on every step change
   useEffect(() => {
     methods.reset(formData)
   }, [formData, methods])
-  // Remove controller fields and strip controller prefixes
+  // Remove excluded fields from the submitted data
   const cleanSubmittedData = useCallback(
     (data: Record<string, unknown>) => {
       const result: Record<string, unknown> = {}
       for (const [key, value] of Object.entries(data)) {
-        // Remove controller fields
-        if (controllerFields.includes(key)) continue
-        // If controlled, only include if controller is true
-        const ctrl = getControllerForField(key)
-        if (ctrl) {
-          if (!data[ctrl]) continue // controller is false/unchecked
-          // Remove prefix
-          result[key.replace(`${ctrl}_`, '')] = value
-        } else result[key] = value
+        const fieldSchema = shape[key] as z.ZodTypeAny
+        const metadata = typeof fieldSchema?.meta === 'function' ? fieldSchema.meta() : undefined
+        if (!isFieldVisible(fieldSchema)) continue
+        if (metadata?.excluded) continue
+        result[key] = value
       }
       return result
     },
-    [controllerFields, getControllerForField],
+    [shape, isFieldVisible],
   )
   // Handle step submission
   const handleStepSubmit = (data: Record<string, unknown>) => {
@@ -101,8 +98,7 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   }
   // oxlint-disable-next-line max-lines-per-function
   const renderField = (fieldName: string, fieldSchema: z.ZodTypeAny) => {
-    const controller = getControllerForField(fieldName)
-    if (controller && !formData[controller]) return
+    if (!isFieldVisible(fieldSchema)) return
     logger.info('Rendering field', fieldName)
     const metadata = fieldSchema.meta() as FieldMetadata | undefined
     if (!metadata) throw new Error(`Field "${fieldName}" is missing metadata (label, placeholder, state)`)
