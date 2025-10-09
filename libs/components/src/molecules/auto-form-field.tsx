@@ -17,15 +17,9 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fi
   const isDisabled = state === 'disabled'
   const testId = camelToKebabCase(fieldName)
   const requiredMark = !isOptional && <span className="text-red-500 ml-1">*</span>
-  const stepLabel = metadata.step ? (
-    <h3 className="text-lg font-medium mb-4" data-testid="step-title">
-      {metadata.step}
-    </h3>
-  ) : undefined
   if (state === 'readonly')
     return (
       <FormItem key={fieldName}>
-        {stepLabel}
         <FormLabel>{label}</FormLabel>
         <div className="text-gray-900 py-2" data-testid={testId}>
           {readonlyValue(fieldSchema, formData[fieldName])}
@@ -40,7 +34,6 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fi
         name={fieldName}
         render={({ field }) => (
           <FormItem>
-            {stepLabel}
             <FormLabel>
               {label}
               {requiredMark}
@@ -70,7 +63,6 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fi
         name={fieldName}
         render={({ field }) => (
           <FormItem>
-            {stepLabel}
             <FormLabel>
               {label}
               {requiredMark}
@@ -91,7 +83,6 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fi
         name={fieldName}
         render={({ field }) => (
           <FormItem>
-            {stepLabel}
             <FormLabel>
               {label}
               {requiredMark}
@@ -111,7 +102,6 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fi
       name={fieldName}
       render={({ field }) => (
         <FormItem>
-          {stepLabel}
           <FormLabel>
             {label}
             {requiredMark}

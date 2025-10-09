@@ -403,7 +403,6 @@ const step1Schema = z.object({
   email: z.email('Invalid email address').meta({
     label: 'Email Address',
     placeholder: "We'll never share your email",
-    step: 'Contact',
   }),
   name: z.string().min(2, 'Name is required').meta({
     label: 'Full Name',
@@ -415,7 +414,6 @@ const step2Schema = z.object({
   age: z.number().min(0).max(120).optional().meta({
     label: 'Age',
     placeholder: 'Enter your age',
-    step: 'Profile',
   }),
   subscribe: z.boolean().meta({
     label: 'Subscribe to newsletter',
@@ -433,8 +431,6 @@ export const MultiStep: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     await step('step 1', async () => {
-      const step1Title = canvas.getByTestId('step-title')
-      expect(step1Title).toHaveTextContent('Contact')
       const nameInput = canvas.getByTestId('name')
       await userEvent.type(nameInput, 'John Doe')
       const emailInput = canvas.getByTestId('email')
@@ -443,22 +439,16 @@ export const MultiStep: Story = {
       await userEvent.click(nextButton)
     })
     await step('step 2', async () => {
-      const step2Title = canvas.getByTestId('step-title')
-      expect(step2Title).toHaveTextContent('Profile')
       const ageInput = canvas.getByTestId('age')
       await userEvent.type(ageInput, '30')
       const subscribeCheckbox = canvas.getByTestId('subscribe')
       await userEvent.click(subscribeCheckbox)
     })
     await step('get back to step via stepper', async () => {
-      const step1Button = canvas.getByRole('button', { name: 'Contact' })
+      const step1Button = canvas.getByRole('button', { name: 'Step 1' })
       await userEvent.click(step1Button)
-      const step1Title = canvas.getByTestId('step-title')
-      expect(step1Title).toHaveTextContent('Contact')
-      const nextButton = canvas.getByRole('button', { name: 'Profile' })
+      const nextButton = canvas.getByRole('button', { name: 'Step 2' })
       await userEvent.click(nextButton)
-      const step2Title = canvas.getByTestId('step-title')
-      expect(step2Title).toHaveTextContent('Profile')
     })
     await step('submit form', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
@@ -478,12 +468,14 @@ const optionalSectionStep1Schema = z
     name: z.string().min(2, 'Name is required').meta({
       label: 'Full Name',
       placeholder: 'Enter your legal name',
-      step: 'My infos',
     }),
     age: z.number().min(0).max(120).optional().meta({
       label: 'Age',
       placeholder: 'Enter your age',
     }),
+  })
+  .meta({
+    step: 'My infos',
   })
 
 const optionalSectionStep2Schema = z
@@ -493,7 +485,6 @@ const optionalSectionStep2Schema = z
       excluded: true, // avoid including this field in the final submitted data
       label: 'Do you have a pet ?',
       placeholder: 'Check if you have a pet',
-      step: 'My pet',
     }),
     petName: z.string().min(2, 'Pet name is required').meta({
       dependsOn: 'hasPet', // this field depends on the truthiness of "hasPet" field
@@ -505,6 +496,9 @@ const optionalSectionStep2Schema = z
       label: 'Pet Age',
       placeholder: 'Enter your pet age if you know it',
     }),
+  })
+  .meta({
+    step: 'My pet',
   })
 
 /**
@@ -522,10 +516,14 @@ export const OptionalSection: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     await step('fill name', async () => {
+      const step1Title = canvas.getByTestId('step-title')
+      expect(step1Title).toHaveTextContent('My infos')
       const nameInput = canvas.getByTestId('name')
       await userEvent.type(nameInput, 'John Doe')
       const nextButton = canvas.getByRole('button', { name: 'Next' })
       await userEvent.click(nextButton)
+      const step2Title = canvas.getByTestId('step-title')
+      expect(step2Title).toHaveTextContent('My pet')
     })
     await step('go back to step 1 to fix the name', async () => {
       const backButton = canvas.getByRole('button', { name: 'Back' })
@@ -584,5 +582,4 @@ export const OptionalSection: Story = {
 - ExhaustiveFilled Story should have 0 errors, but currently has 2 (the literal booleans)
 - The select component does not show the selected value after selection
 - Show icon in stepper when step has errors, when the whole step is readonly, when the step updatable and when the step is completed
-- Move the meta from first field of the step to the parent schema (step label, step icon, step isUpdatable, step isCompleted, etc.)
 */

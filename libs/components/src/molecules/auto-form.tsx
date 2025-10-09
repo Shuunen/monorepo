@@ -8,7 +8,7 @@ import { type AutoFormProps, cleanSubmittedData, filterSchema } from './auto-for
 import { AutoFormField } from './auto-form-field'
 import { Stepper } from './auto-form-stepper'
 
-// run this command to check e2e tests `nx run components:test-storybook --skip-nx-cache` and run this command to check unit tests `nx run components:test`
+// run this command to check e2e tests `nx run components:test-storybook --skip-nx-cache` and run this command to check unit tests `nx run components:test --skip-nx-cache`
 
 // oxlint-disable-next-line max-lines-per-function
 export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger }: AutoFormProps<Type>) {
@@ -49,20 +49,25 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   function handleStepClick(idx: number) {
     setCurrentStep(idx)
   }
-  // Step labels (try to use schema meta label, fallback to Step N)
+  // Step labels (use schema meta.step, fallback to "Step N")
   const stepLabels = schemas.map((schema, idx) => {
-    const shape = schema.shape
-    const firstField = Object.keys(shape)[0]
-    // @ts-expect-error type issue
-    const meta = shape[firstField].meta()
-    return meta.step ?? meta.label ?? `Step ${idx + 1}`
+    const schemaMeta = typeof schema.meta === 'function' ? schema.meta() : undefined
+    return schemaMeta?.step ? String(schemaMeta.step) : `Step ${idx + 1}`
   })
+  // Get current step label for rendering above fields
+  const currentStepLabel = (typeof currentSchema.meta === 'function' ? currentSchema.meta()?.step : undefined) ?? undefined
+  const stepTitle = typeof currentStepLabel === 'string' ? currentStepLabel : ''
   return (
     <div className="mx-auto p-6 bg-white rounded-lg shadow-md w-full flex">
       {schemas.length > 1 && <Stepper currentStep={currentStep} onStepClick={handleStepClick} steps={stepLabels} />}
       <div className="flex-1">
         <Form {...form}>
           <form onChange={handleChange} onSubmit={form.handleSubmit(handleStepSubmit)}>
+            {stepTitle && (
+              <h3 className="text-lg font-medium mb-4" data-testid="step-title">
+                {stepTitle}
+              </h3>
+            )}
             <div className="space-y-4">
               {Object.keys(currentSchema.shape).map(fieldName => (
                 <AutoFormField fieldName={fieldName} fieldSchema={currentSchema.shape[fieldName] as z.ZodTypeAny} formData={formData} key={fieldName} logger={logger} />
