@@ -19,6 +19,7 @@
 *.tsbuildinfo
 connect.lock
 coverage
+devfile.yaml
 dist
 node_modules
 out-tsc
