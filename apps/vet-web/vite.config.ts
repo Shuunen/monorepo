@@ -30,6 +30,7 @@ export default defineConfig({
   },
   root: __dirname,
   server: {
+    allowedHosts: process.env.ALLOWED_HOSTS?.split(','),
     host: 'localhost',
     port: 4200,
   },
