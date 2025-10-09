@@ -1,5 +1,5 @@
 import type { Logger } from '@monorepo/utils'
-import { z } from 'zod'
+import { ZodNumber, z } from 'zod'
 
 /**
  * Props for the AutoForm component, which generates a form based on provided Zod schemas.
@@ -32,6 +32,8 @@ export type AutoFormFieldMetadata = {
   dependsOn?: string
   /** Whether the field should be excluded from the form. */
   excluded?: boolean
+  /** An optional step name if the form is multi-step. */
+  step?: string
 }
 
 /**
@@ -73,6 +75,15 @@ export function checkZodBoolean(fieldSchema: z.ZodTypeAny) {
   // @ts-expect-error zod type issue
   if (fieldSchema._def?.innerType instanceof z.ZodBoolean) isBoolean = true
   return { booleanLiteralValue, isBoolean, isBooleanLiteral }
+}
+
+export function checkZodNumber(fieldSchema: z.ZodTypeAny) {
+  let isNumber = false
+  if (fieldSchema instanceof ZodNumber) isNumber = true
+  // below could be an optional z.ZodNumber
+  // @ts-expect-error zod type issue
+  if (fieldSchema._def?.innerType instanceof ZodNumber) isNumber = true
+  return { isNumber }
 }
 
 /**

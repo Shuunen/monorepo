@@ -253,9 +253,9 @@ export const Exhaustive: Story = {
       expect(numberDisabled).toBeDisabled()
       expect(numberDisabled).toHaveValue(null)
       const numberOptional = canvas.getByTestId('number-optional')
-      expect(numberOptional).toHaveValue('')
+      expect(numberDisabled).toHaveValue(null)
       await userEvent.type(numberOptional, '30')
-      expect(numberOptional).toHaveValue('30')
+      expect(numberOptional).toHaveValue(30)
       const numberReadonly = canvas.getByTestId('number-readonly')
       expect(numberReadonly).toContainHTML('—')
     })
@@ -280,7 +280,7 @@ export const Exhaustive: Story = {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
       const issues = canvas.getAllByRole('alert')
-      expect(issues).toHaveLength(11)
+      expect(issues).toHaveLength(10)
     })
   },
 }
@@ -371,7 +371,7 @@ export const ExhaustiveFilled: Story = {
       expect(numberDisabled).toBeDisabled()
       expect(numberDisabled).toHaveValue(99)
       const numberOptional = canvas.getByTestId('number-optional')
-      expect(numberOptional).toHaveValue('')
+      expect(numberOptional).toHaveValue(null)
       const numberReadonly = canvas.getByTestId('number-readonly')
       expect(numberReadonly).toContainHTML('60')
     })
@@ -403,6 +403,7 @@ const step1Schema = z.object({
   email: z.email('Invalid email address').meta({
     label: 'Email Address',
     placeholder: "We'll never share your email",
+    step: 'Contact',
   }),
   name: z.string().min(2, 'Name is required').meta({
     label: 'Full Name',
@@ -411,9 +412,10 @@ const step1Schema = z.object({
 })
 
 const step2Schema = z.object({
-  age: z.number().min(0).max(120).meta({
+  age: z.number().min(0).max(120).optional().meta({
     label: 'Age',
     placeholder: 'Enter your age',
+    step: 'Profile',
   }),
   subscribe: z.boolean().meta({
     label: 'Subscribe to newsletter',
@@ -431,6 +433,8 @@ export const MultiStep: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     await step('step 1', async () => {
+      const step1Title = canvas.getByTestId('step-title')
+      expect(step1Title).toHaveTextContent('Contact')
       const nameInput = canvas.getByTestId('name')
       await userEvent.type(nameInput, 'John Doe')
       const emailInput = canvas.getByTestId('email')
@@ -439,10 +443,22 @@ export const MultiStep: Story = {
       await userEvent.click(nextButton)
     })
     await step('step 2', async () => {
+      const step2Title = canvas.getByTestId('step-title')
+      expect(step2Title).toHaveTextContent('Profile')
       const ageInput = canvas.getByTestId('age')
       await userEvent.type(ageInput, '30')
       const subscribeCheckbox = canvas.getByTestId('subscribe')
       await userEvent.click(subscribeCheckbox)
+    })
+    await step('get back to step via stepper', async () => {
+      const step1Button = canvas.getByRole('button', { name: 'Contact' })
+      await userEvent.click(step1Button)
+      const step1Title = canvas.getByTestId('step-title')
+      expect(step1Title).toHaveTextContent('Contact')
+      const nextButton = canvas.getByRole('button', { name: 'Profile' })
+      await userEvent.click(nextButton)
+      const step2Title = canvas.getByTestId('step-title')
+      expect(step2Title).toHaveTextContent('Profile')
     })
     await step('submit form', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
@@ -456,36 +472,40 @@ export const MultiStep: Story = {
   },
 }
 
-// biome-ignore assist/source/useSortedKeys: we need a specific key order here
-const optionalSectionStep1Schema = z.object({
-  name: z.string().min(2, 'Name is required').meta({
-    label: 'Full Name',
-    placeholder: 'Enter your legal name',
-  }),
-  age: z.number().min(0).max(120).optional().meta({
-    label: 'Age',
-    placeholder: 'Enter your age',
-  }),
-})
+const optionalSectionStep1Schema = z
+  // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+  .object({
+    name: z.string().min(2, 'Name is required').meta({
+      label: 'Full Name',
+      placeholder: 'Enter your legal name',
+      step: 'My infos',
+    }),
+    age: z.number().min(0).max(120).optional().meta({
+      label: 'Age',
+      placeholder: 'Enter your age',
+    }),
+  })
 
-// biome-ignore assist/source/useSortedKeys: we need a specific key order here
-const optionalSectionStep2Schema = z.object({
-  hasPet: z.boolean().optional().meta({
-    excluded: true, // avoid including this field in the final submitted data
-    label: 'Do you have a pet ?',
-    placeholder: 'Check if you have a pet',
-  }),
-  petName: z.string().min(2, 'Pet name is required').meta({
-    dependsOn: 'hasPet', // this field depends on the truthiness of "hasPet" field
-    label: 'Pet Name',
-    placeholder: 'Enter your pet name',
-  }),
-  petAge: z.number().min(0).max(50).optional().meta({
-    dependsOn: 'hasPet', // this field depends on the truthiness of "hasPet" field
-    label: 'Pet Age',
-    placeholder: 'Enter your pet age if you know it',
-  }),
-})
+const optionalSectionStep2Schema = z
+  // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+  .object({
+    hasPet: z.boolean().optional().meta({
+      excluded: true, // avoid including this field in the final submitted data
+      label: 'Do you have a pet ?',
+      placeholder: 'Check if you have a pet',
+      step: 'My pet',
+    }),
+    petName: z.string().min(2, 'Pet name is required').meta({
+      dependsOn: 'hasPet', // this field depends on the truthiness of "hasPet" field
+      label: 'Pet Name',
+      placeholder: 'Enter your pet name',
+    }),
+    petAge: z.number().min(0).max(50).optional().meta({
+      dependsOn: 'hasPet', // this field depends on the truthiness of "hasPet" field
+      label: 'Pet Age',
+      placeholder: 'Enter your pet age if you know it',
+    }),
+  })
 
 /**
  * Schema with an optional section
@@ -496,6 +516,7 @@ const optionalSectionStep2Schema = z.object({
  */
 export const OptionalSection: Story = {
   args: {
+    initialData: { age: 28, name: 'Jane Doe' },
     schemas: [optionalSectionStep1Schema, optionalSectionStep2Schema],
   },
   play: async ({ canvasElement, step }) => {
@@ -562,6 +583,6 @@ export const OptionalSection: Story = {
 /* TODO :
 - ExhaustiveFilled Story should have 0 errors, but currently has 2 (the literal booleans)
 - The select component does not show the selected value after selection
-- Add a vertical stepper on the left side
-- Typing a number in an optional number field causes a validation error (should be valid) zod says "Invalid input: expected number, received string"
+- Show icon in stepper when step has errors, when the whole step is readonly, when the step updatable and when the step is completed
+- Move the meta from first field of the step to the parent schema (step label, step icon, step isUpdatable, step isCompleted, etc.)
 */

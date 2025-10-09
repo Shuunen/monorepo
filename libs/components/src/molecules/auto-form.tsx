@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { nbPercentMax } from '@monorepo/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import type { z } from 'zod'
@@ -7,9 +6,9 @@ import { Button } from '../atoms/button'
 import { Form } from '../atoms/form'
 import { type AutoFormProps, cleanSubmittedData, filterSchema } from './auto-form.utils'
 import { AutoFormField } from './auto-form-field'
+import { Stepper } from './auto-form-stepper'
 
-// run this command to check e2e tests  `nx run components:test-storybook --skip-nx-cache`
-// run this command to check unit tests `nx run components:test`
+// run this command to check e2e tests `nx run components:test-storybook --skip-nx-cache` and run this command to check unit tests `nx run components:test`
 
 // oxlint-disable-next-line max-lines-per-function
 export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger }: AutoFormProps<Type>) {
@@ -46,50 +45,42 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   function handleBack() {
     if (currentStep > 0) setCurrentStep(prev => prev - 1)
   }
-  // Progress percentage for step indicator
-  const progressPercent = ((currentStep + 1) / schemas.length) * nbPercentMax
+  // Handle stepper click
+  function handleStepClick(idx: number) {
+    setCurrentStep(idx)
+  }
+  // Step labels (try to use schema meta label, fallback to Step N)
+  const stepLabels = schemas.map((schema, idx) => {
+    const shape = schema.shape
+    const firstField = Object.keys(shape)[0]
+    // @ts-expect-error type issue
+    const meta = shape[firstField].meta()
+    return meta.step ?? meta.label ?? `Step ${idx + 1}`
+  })
   return (
-    <div className="mx-auto p-6 bg-white rounded-lg shadow-md w-full">
-      <Form {...form}>
-        <form onChange={handleChange} onSubmit={form.handleSubmit(handleStepSubmit)}>
-          {/* Step indicator */}
-          {schemas.length > 1 && (
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-600">
-                  Step {currentStep + 1} of {schemas.length}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-blue-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }} />
-              </div>
+    <div className="mx-auto p-6 bg-white rounded-lg shadow-md w-full flex">
+      {schemas.length > 1 && <Stepper currentStep={currentStep} onStepClick={handleStepClick} steps={stepLabels} />}
+      <div className="flex-1">
+        <Form {...form}>
+          <form onChange={handleChange} onSubmit={form.handleSubmit(handleStepSubmit)}>
+            <div className="space-y-4">
+              {Object.keys(currentSchema.shape).map(fieldName => (
+                <AutoFormField fieldName={fieldName} fieldSchema={currentSchema.shape[fieldName] as z.ZodTypeAny} formData={formData} key={fieldName} logger={logger} />
+              ))}
             </div>
-          )}
-          {/* Render fields, skipping controlled fields if controller is not checked */}
-          <div className="space-y-4">
-            {Object.keys(currentSchema.shape).map(fieldName => (
-              <AutoFormField
-                key={fieldName}
-                fieldName={fieldName}
-                fieldSchema={currentSchema.shape[fieldName] as z.ZodTypeAny}
-                formData={formData}
-                logger={logger}
-              />
-            ))}
-          </div>
-          {/* Navigation buttons */}
-          <div className="flex justify-between pt-6 border-t border-gray-200">
-            {currentStep > 0 ? (
-              <Button onClick={handleBack} type="button" variant="outline">
-                Back
-              </Button>
-            ) : (
-              <div />
-            )}
-            <Button type="submit">{isLastStep ? 'Submit' : 'Next'}</Button>
-          </div>
-        </form>
-      </Form>
+            <div className="flex justify-between pt-6">
+              {currentStep > 0 ? (
+                <Button onClick={handleBack} type="button" variant="outline">
+                  Back
+                </Button>
+              ) : (
+                <div />
+              )}
+              <Button type="submit">{isLastStep ? 'Submit' : 'Next'}</Button>
+            </div>
+          </form>
+        </Form>
+      </div>
     </div>
   )
 }

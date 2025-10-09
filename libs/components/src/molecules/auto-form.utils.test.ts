@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { checkZodBoolean, checkZodEnum, cleanSubmittedData, filterSchema, isFieldVisible, readonlyValue } from './auto-form.utils'
+import { checkZodBoolean, checkZodEnum, checkZodNumber, cleanSubmittedData, filterSchema, isFieldVisible, readonlyValue } from './auto-form.utils'
 
 describe('auto-form.utils', () => {
   // checkZodEnum
@@ -42,6 +42,23 @@ describe('auto-form.utils', () => {
     const schema = z.boolean().optional()
     const { isBoolean } = checkZodBoolean(schema)
     expect(isBoolean).toBe(true)
+  })
+
+  // checkZodNumber
+  it('checkZodNumber A should detect ZodNumber', () => {
+    const schema = z.number()
+    const { isNumber } = checkZodNumber(schema)
+    expect(isNumber).toBe(true)
+  })
+  it('checkZodNumber B should detect optional ZodNumber', () => {
+    const schema = z.number().optional()
+    const { isNumber } = checkZodNumber(schema)
+    expect(isNumber).toBe(true)
+  })
+  it('checkZodNumber C should return false for non-number', () => {
+    const schema = z.string()
+    const { isNumber } = checkZodNumber(schema)
+    expect(isNumber).toBe(false)
   })
 
   // readonlyValue

@@ -1,10 +1,10 @@
 import { camelToKebabCase } from '@monorepo/utils'
-import { ZodNumber, ZodOptional, type z } from 'zod'
+import { ZodOptional, type z } from 'zod'
 import { Checkbox } from '../atoms/checkbox'
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../atoms/form'
 import { Input } from '../atoms/input'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '../atoms/select'
-import { type AutoFormFieldMetadata, checkZodBoolean, checkZodEnum, isFieldVisible, readonlyValue } from './auto-form.utils'
+import { type AutoFormFieldMetadata, checkZodBoolean, checkZodEnum, checkZodNumber, isFieldVisible, readonlyValue } from './auto-form.utils'
 
 // oxlint-disable-next-line max-lines-per-function
 export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fieldName: string; fieldSchema: z.ZodTypeAny; formData: Record<string, unknown>; logger?: { info: (...args: unknown[]) => void } }) {
@@ -17,9 +17,15 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fi
   const isDisabled = state === 'disabled'
   const testId = camelToKebabCase(fieldName)
   const requiredMark = !isOptional && <span className="text-red-500 ml-1">*</span>
+  const stepLabel = metadata.step ? (
+    <h3 className="text-lg font-medium mb-4" data-testid="step-title">
+      {metadata.step}
+    </h3>
+  ) : undefined
   if (state === 'readonly')
     return (
       <FormItem key={fieldName}>
+        {stepLabel}
         <FormLabel>{label}</FormLabel>
         <div className="text-gray-900 py-2" data-testid={testId}>
           {readonlyValue(fieldSchema, formData[fieldName])}
@@ -34,6 +40,7 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fi
         name={fieldName}
         render={({ field }) => (
           <FormItem>
+            {stepLabel}
             <FormLabel>
               {label}
               {requiredMark}
@@ -55,13 +62,15 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fi
         )}
       />
     )
-  if (fieldSchema instanceof ZodNumber)
+  const { isNumber } = checkZodNumber(fieldSchema)
+  if (isNumber)
     return (
       <FormField
         key={fieldName}
         name={fieldName}
         render={({ field }) => (
           <FormItem>
+            {stepLabel}
             <FormLabel>
               {label}
               {requiredMark}
@@ -82,12 +91,15 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fi
         name={fieldName}
         render={({ field }) => (
           <FormItem>
+            {stepLabel}
             <FormLabel>
               {label}
               {requiredMark}
             </FormLabel>
-            <FormControl>{isBooleanLiteral ? <Checkbox {...field} checked={booleanLiteralValue === true} disabled /> : <Checkbox {...field} checked={!!field.value} disabled={isDisabled} onCheckedChange={field.onChange} />}</FormControl>
-            {placeholder && <FormDescription>{placeholder}</FormDescription>}
+            <div className="flex gap-2 mt-2">
+              <FormControl>{isBooleanLiteral ? <Checkbox {...field} checked={booleanLiteralValue === true} disabled /> : <Checkbox {...field} checked={!!field.value} disabled={isDisabled} onCheckedChange={field.onChange} />}</FormControl>
+              {placeholder && <FormDescription>{placeholder}</FormDescription>}
+            </div>
             <FormMessage testId={`${testId}-error`} />
           </FormItem>
         )}
@@ -99,6 +111,7 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fi
       name={fieldName}
       render={({ field }) => (
         <FormItem>
+          {stepLabel}
           <FormLabel>
             {label}
             {requiredMark}
