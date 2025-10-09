@@ -578,8 +578,72 @@ export const OptionalSection: Story = {
   },
 }
 
+const editableStep1Schema = z
+  // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+  .object({
+    name: z.string().min(2, 'Name is required').meta({
+      label: 'Full Name',
+      placeholder: 'Enter your legal name',
+    }),
+    age: z.number().min(0).max(120).meta({
+      label: 'Age',
+      placeholder: 'Enter your age',
+      state: 'readonly',
+    }),
+  })
+  .meta({
+    step: 'My infos',
+  })
+
+const readonlyStep2Schema = z
+  // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+  .object({
+    petName: z.string().min(2, 'Pet name is required').meta({
+      label: 'Pet Name',
+      placeholder: 'Enter your pet name',
+      state: 'readonly',
+    }),
+    petAge: z.number().min(0).max(50).optional().meta({
+      label: 'Pet Age',
+      placeholder: 'Enter your pet age',
+      state: 'readonly',
+    }),
+  })
+  .meta({
+    step: 'My pet',
+  })
+
+/**
+ * Story to test stepper icons in different states (editable, readonly, completed)
+ */
+export const StepperStates: Story = {
+  args: {
+    initialData: { age: 28, name: 'Jane Doe', petName: 'Fido' },
+    schemas: [editableStep1Schema, readonlyStep2Schema],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const currentStepButton = canvas.getByTestId('step-my-infos')
+    expect(currentStepButton).toHaveAttribute('data-state', 'editable')
+    const nameInput = canvas.getByTestId('name')
+    expect(nameInput).toHaveValue('Jane Doe')
+    await userEvent.type(nameInput, '-Rollin')
+    await userEvent.tab()
+    expect(currentStepButton).toHaveAttribute('data-state', 'success')
+    const secondStepButton = canvas.getByTestId('step-my-pet')
+    expect(secondStepButton).toHaveAttribute('data-state', 'readonly')
+    await userEvent.click(secondStepButton)
+    const petNameInput = canvas.getByTestId('pet-name')
+    expect(petNameInput).toContainHTML('Fido')
+  },
+}
+
 /* TODO :
 - ExhaustiveFilled Story should have 0 errors, but currently has 2 (the literal booleans)
-- The select component does not show the selected value after selection
-- Show icon in stepper when step has errors, when the whole step is readonly, when the step updatable and when the step is completed
+- The select component does not show the selected value after selection => the ShadCN Select component does not have this issue
+- Extract steps logic to utils and add unit tests
+- What about the hidden steps like submission and summary ?
+- Stepper should contains links and not buttons
+- Validate that we will not show error icons
+- Write a story where we feed the AutoForm a whole new schema after a variant change (for dynamic schemas)
 */

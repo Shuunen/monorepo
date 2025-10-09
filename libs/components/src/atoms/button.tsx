@@ -4,7 +4,7 @@ import { type buttonVariants, Button as ShadButton } from '../shadcn/button'
 
 type ButtonProps = ComponentProps<typeof ShadButton> &
   VariantProps<typeof buttonVariants> & {
-    testId?: string
+    testId: string
   }
 
 export function Button({ children, className = '', disabled, testId, ...props }: ButtonProps) {

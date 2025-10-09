@@ -1,12 +1,25 @@
-import { CircleDotIcon, CircleIcon } from 'lucide-react'
+import { slugify } from '@monorepo/utils'
 import { Button } from '../atoms/button'
 
-export function Stepper({ steps, currentStep, onStepClick }: { steps: string[]; currentStep: number; onStepClick: (step: number) => void }) {
+type AutoFormStepperStep = {
+  label: string
+  icon: React.ReactNode
+  active: boolean
+  idx: number
+  state: 'readonly' | 'success' | 'editable'
+}
+
+type AutoFormStepperProps = {
+  steps: AutoFormStepperStep[]
+  onStepClick: (step: number) => void
+}
+
+export function AutoFormStepper({ steps, onStepClick }: AutoFormStepperProps) {
   return (
     <div className="flex flex-col gap-4 pr-8 border-r border-gray-200 mr-8">
-      {steps.map((label, idx) => (
-        <Button key={label} onClick={() => onStepClick(idx)} variant={idx === currentStep ? 'default' : 'ghost'}>
-          {idx === currentStep ? <CircleDotIcon /> : <CircleIcon />}
+      {steps.map(({ label, icon, active, idx, state }) => (
+        <Button data-state={state} key={label} onClick={() => onStepClick(idx)} testId={`step-${slugify(label)}`} variant={active ? 'default' : 'ghost'}>
+          {icon}
           <span className="grow text-start">{label}</span>
         </Button>
       ))}
