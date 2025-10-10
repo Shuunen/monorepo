@@ -3,7 +3,7 @@ import { ZodOptional, type z } from 'zod'
 import { Checkbox } from '../atoms/checkbox'
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../atoms/form'
 import { Input } from '../atoms/input'
-import { Select, SelectContent, SelectItem, SelectTrigger } from '../atoms/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../atoms/select'
 import { type AutoFormFieldMetadata, checkZodBoolean, checkZodEnum, checkZodNumber, isFieldVisible, readonlyValue } from './auto-form.utils'
 
 // oxlint-disable-next-line max-lines-per-function
@@ -39,8 +39,10 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fi
               {requiredMark}
             </FormLabel>
             <FormControl>
-              <Select {...field} disabled={isDisabled}>
-                <SelectTrigger testId={`${testId}-trigger`}>{placeholder || `Select ${label}`}</SelectTrigger>
+              <Select {...field} disabled={isDisabled} onValueChange={field.onChange}>
+                <SelectTrigger testId={`${testId}-trigger`}>
+                  <SelectValue placeholder={placeholder || `Select ${label}`} />
+                </SelectTrigger>
                 <SelectContent>
                   {enumOptions?.map(option => (
                     <SelectItem key={option} value={option}>

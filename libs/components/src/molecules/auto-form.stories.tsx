@@ -640,7 +640,6 @@ export const StepperStates: Story = {
 
 /* TODO :
 - ExhaustiveFilled Story should have 0 errors, but currently has 2 (the literal booleans)
-- The select component does not show the selected value after selection => the ShadCN Select component does not have this issue
 - Extract steps logic to utils and add unit tests
 - What about the hidden steps like submission and summary ?
 - Stepper should contains links and not buttons
