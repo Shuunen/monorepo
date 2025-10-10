@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CheckCircle2Icon, EyeIcon, PencilIcon } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import type { z } from 'zod'
 import { Button } from '../atoms/button'
@@ -23,9 +23,10 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
     mode: 'onBlur',
     resolver: zodResolver(filteredSchema),
   })
-  useEffect(() => {
-    form.reset(formData)
-  }, [formData, form])
+  // Find a way to reset the form when schema changes.
+  // useEffect(() => {
+  //   form.reset(formData)
+  // }, [formData, form])
   // Remove excluded fields from the submitted data
   const cleanData = useCallback((data: Record<string, unknown>) => cleanSubmittedData(currentSchema, data, formData), [currentSchema, formData])
   // Handle step submission
