@@ -638,11 +638,24 @@ export const StepperStates: Story = {
   },
 }
 
-/* TODO :
+/*
+TODO :
 - ExhaustiveFilled Story should have 0 errors, but currently has 2 (the literal booleans)
 - Extract steps logic to utils and add unit tests
 - What about the hidden steps like submission and summary ?
 - Stepper should contains links and not buttons
-- Validate that we will not show error icons
+- Display an error icon if touched
+- Let the user go next step even if there are errors in the current step
+- Use complex components as fields like upload, multi-lingual text
+- Integrate with a store
 - Write a story where we feed the AutoForm a whole new schema after a variant change (for dynamic schemas)
+
+Future architecture :
+- AutoForm
+  - AutoFormStepper
+  - AutoFormNavigation
+  - AutoFormSummaryStep
+  - AutoFormSubmissionStep
+  - AutoFormFields
+    - AutoFormField
 */
