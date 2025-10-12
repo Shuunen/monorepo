@@ -1,6 +1,6 @@
 // oxlint-disable max-lines, max-nested-callbacks
-import { createServer, request as httpRequest, type IncomingMessage, type ServerResponse } from 'node:http'
-import { request as httpsRequest } from 'node:https'
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http'
+import { request } from 'node:https'
 import type { PassThrough } from 'node:stream'
 
 export const options = {
@@ -61,10 +61,9 @@ export function sendCorsHeaders(res: ServerResponse) {
 }
 
 // oxlint-disable-next-line max-lines-per-function
-export function makeRequest({ url, method, payload, isHttps }: { url: string; method: string; payload: string; isHttps: boolean }): Promise<{ result: unknown; error: string | undefined }> {
+export function makeRequest({ url, method, payload }: { url: string; method: string; payload: string }): Promise<{ result: unknown; error: string | undefined }> {
   return new Promise(resolve => {
-    const reqFn = isHttps ? httpsRequest : httpRequest
-    const req = reqFn(url, {
+    const req = request(url, {
       headers: {
         'Content-Length': Buffer.byteLength(payload),
         'Content-Type': 'application/json',
@@ -85,17 +84,16 @@ export function makeRequest({ url, method, payload, isHttps }: { url: string; me
 
 export function flattenResponse(resolve: (value: { result: unknown; error: string | undefined }) => void, getData: () => string) {
   return (res: IncomingMessage | PassThrough) => {
+    let data = getData()
     res.on('data', (chunk: Buffer) => {
-      let current = getData()
-      current += chunk.toString()
-      getData = () => current
+      data += chunk.toString()
     })
     res.once('end', () => {
       let result: unknown = ''
       try {
-        result = JSON.parse(getData())
+        result = JSON.parse(data)
       } catch {
-        result = getData()
+        result = data
       }
       resolve({ error: undefined, result })
     })
@@ -147,6 +145,17 @@ export function handlePostSetProgress(req: IncomingMessage, res: ServerResponse)
         res,
       })
     })
+}
+
+// Parse application/x-www-form-urlencoded string to object
+export function parseFormUrlEncoded(body: string): Record<string, string> {
+  const result: Record<string, string> = {}
+  const pairs = body.split('&')
+  for (const pair of pairs) {
+    const [key, value] = pair.split('=')
+    if (key) result[decodeURIComponent(key)] = decodeURIComponent(value ?? '')
+  }
+  return result
 }
 
 export function collectRequestBody(req: IncomingMessage | PassThrough): Promise<string> {
@@ -211,13 +220,18 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
   log('info', context, `Parsed progress body: progress=${progress}, nextTask=${nextTask}, remaining=${remaining}, error=${error}`)
   if (error) {
     log('warn', context, `Progress body error: ${error}`)
-    respondBadRequest({
-      message: error,
-      nextTask,
-      progress,
-      remaining,
-      res,
-    })
+    res.writeHead(options.codes.badRequest, { 'Content-Type': 'application/json' })
+    res.end(
+      jsonResponse({
+        data: undefined,
+        message: error,
+        nextTask,
+        ok: false,
+        progress,
+        remaining,
+        response: undefined,
+      }),
+    )
     return
   }
   const hueEndpoint = process.env.HUE_ENDPOINT ?? ''
@@ -257,7 +271,7 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
   const hueIsHttps = hueEndpoint.startsWith('https')
   const trmnlIsHttps = trmnlEndpoint.startsWith('https')
   log('info', context, `Making requests: hueIsHttps=${hueIsHttps}, trmnlIsHttps=${trmnlIsHttps}`)
-  const [hueResult, trmnlResult] = await Promise.all([makeRequest({ isHttps: hueIsHttps, method: 'PUT', payload: hueBody, url: hueEndpoint }), makeRequest({ isHttps: trmnlIsHttps, method: 'POST', payload: trmnlPayload, url: trmnlEndpoint })])
+  const [hueResult, trmnlResult] = await Promise.all([makeRequest({ method: 'PUT', payload: hueBody, url: hueEndpoint }), makeRequest({ method: 'POST', payload: trmnlPayload, url: trmnlEndpoint })])
   log('info', context, `Hue result: error=${hueResult.error}, result=${JSON.stringify(hueResult.result)}`)
   log('info', context, `Trmnl result: error=${trmnlResult.error}, result=${JSON.stringify(trmnlResult.result)}`)
   const ok = !hueResult.error && !trmnlResult.error
@@ -284,22 +298,28 @@ export function parseProgressBody(body: string) {
   let progress = 0
   let remaining: unknown = undefined
   let nextTask: unknown = undefined
-  let error: string | undefined = undefined
+  let parseError: string | undefined = undefined
   const context = 'parseProgressBody'
   try {
-    const parsed = JSON.parse(body)
-    log('info', context, `Parsing progress body: ${body}`)
-    progress = Number.parseInt(parsed.progress ?? '0', 10)
-    remaining = parsed.remaining ?? undefined
-    nextTask = parsed.nextTask ?? undefined
+    log('info', context, `Parsing progress body : ${body}`)
+    const parsedBody = parseFormUrlEncoded(body)
+    if (typeof parsedBody !== 'object' || parsedBody === null || Array.isArray(parsedBody) || (parsedBody as Record<string, unknown>).progress === undefined) {
+      parseError = `Invalid body : must be an object with a progress property, got "${body}"`
+      return { error: parseError, nextTask, progress, remaining }
+    }
+    progress = Number.parseInt(parsedBody.progress ?? '0', 10)
+    remaining = parsedBody.remaining ?? undefined
+    nextTask = parsedBody.nextTask ?? undefined
     if (!Number.isInteger(progress) || progress < 0 || progress > MAX_PROGRESS) {
-      error = 'Invalid progress value. It must be an integer between 0 and 100.'
+      parseError = 'Invalid progress value. It must be an integer between 0 and 100.'
       log('warn', context, `Progress value invalid: ${progress}`)
     }
   } catch (error) {
-    log('error', context, `Error parsing progress body: ${error instanceof Error ? error.message : error}`)
+    const errMsg = `Error parsing progress body : ${error instanceof Error ? error.message : error}`
+    parseError = errMsg
+    log('error', context, errMsg)
   }
-  return { error, nextTask, progress, remaining }
+  return { error: parseError, nextTask, progress, remaining }
 }
 
 if (globalThis.window === undefined)

@@ -1,6 +1,8 @@
 import { type ChildProcess, spawn } from 'node:child_process'
-import http from 'node:http'
+import type http from 'node:http'
 import { PassThrough } from 'node:stream'
+import { alignForSnap, Result } from '@monorepo/utils'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import * as serverModule from './server.cli'
 
 // Suppress unhandled errors to prevent Vitest from reporting them globally
@@ -21,30 +23,28 @@ function stopServer(proc: ChildProcess | undefined) {
   if (proc) proc.kill()
 }
 
-function request(path: string, method = 'GET') {
-  return new Promise<{ status?: number; body: string }>(resolve => {
-    const req = http.request({ hostname: 'localhost', method, path, port: 3000 }, res => {
-      let data = ''
-      res.on('data', chunk => {
-        data += chunk
-      })
-      res.on('end', () => resolve({ body: data, status: res.statusCode }))
-    })
-    req.on('error', () => resolve({ body: '', status: 0 }))
-    req.end()
-  })
+async function request(path: string, method: 'GET' | 'POST' = 'GET', body?: RequestInit['body'], headers?: RequestInit['headers']) {
+  const url = `http://localhost:3000${path}`
+  const options = { body, headers, method } satisfies RequestInit
+  try {
+    const res = await fetch(url, options)
+    const text = await (method === 'GET' ? res.text() : res.json())
+    return Result.ok({ response: text, status: res.status })
+  } catch (error) {
+    return Result.error(error instanceof Error ? error.message : error)
+  }
 }
 
 describe('server.cli.ts (integration)', () => {
   let proc: ChildProcess | undefined = undefined
   async function waitForServerReady(timeout = 2000, start = Date.now()) {
-    const res = await request('/hello')
-    if (res.status === 200) return
+    const result = await request('/hello')
+    if (result.ok) return
     if (Date.now() - start < timeout) {
       await new Promise(r => setTimeout(r, 100))
       return waitForServerReady(timeout, start)
     }
-    throw new Error('Server not ready')
+    throw new Error('Server startup timed out')
   }
 
   beforeAll(async () => {
@@ -56,45 +56,89 @@ describe('server.cli.ts (integration)', () => {
   })
 
   it('A should respond to GET /hello', async () => {
-    const res = await request('/hello')
-    expect(res.status).toBe(200)
-    expect(res.body).toMatch(/HelloOoOOoo ! It is .+ :D/)
+    const result = await request('/hello')
+    if (!result.ok) throw new Error(`Request A failed : ${result.error}`)
+    const { status, response } = result.value
+    expect(status).toBe(200)
+    expect(alignForSnap(response)).toMatchInlineSnapshot(`"HelloOoOOoo ! It is xxxx-xx-xx xx:xx:xx :D"`)
   })
 
   it('B should respond 404 to unknown route', async () => {
-    const res = await request('/unknown')
-    expect(res.status).toBe(404)
-    const body = JSON.parse(res.body)
-    expect(body.message).toBe('Not Found')
-    expect(body.ok).toBe(false)
-    expect(body.progress).toBe(0)
+    const result = await request('/unknown')
+    if (!result.ok) throw new Error(`Request B failed : ${result.error}`)
+    const { status, response } = result.value
+    expect(status).toBe(404)
+    expect(alignForSnap(response)).toMatchInlineSnapshot(`"{"datetime":"xxxx-xx-xx xx:xx:xx","message":"Not Found","ok":false,"progress":0}"`)
   })
 
-  it('C should respond 400 to POST /set-progress with invalid body', async () => {
-    const res = await request('/set-progress', 'POST')
-    expect(res.status).toBe(400)
-    const body = JSON.parse(res.body)
-    expect(body.message).toBe('HUE_ENDPOINT not set in env variables')
-    expect(body.ok).toBe(false)
-    expect(body.progress).toBe(0)
+  it('C should respond 400 to POST /set-progress with empty body', async () => {
+    const result = await request('/set-progress', 'POST', '', { 'Content-Type': 'application/x-www-form-urlencoded' })
+    if (!result.ok) throw new Error(`Request C failed : ${result.error}`)
+    const { status, response } = result.value
+    expect(status).toBe(400)
+    expect(alignForSnap(response)).toMatchInlineSnapshot(`
+      "{
+        "datetime": "xxxx-xx-xx xx:xx:xx",
+        "message": "Invalid body : must be an object with a progress property, got \\"\\"",
+        "ok": false,
+        "progress": 0
+      }"
+    `)
   })
 
-  it('D should respond 200 to POST /set-progress with valid body', () => {
-    const req = http.request({ headers: { 'Content-Type': 'application/json' }, hostname: 'localhost', method: 'POST', path: '/set-progress', port: 3000 }, res => {
-      let data = ''
-      res.on('data', chunk => {
-        data += chunk
-      })
-      res.on('end', () => {
-        expect(res.statusCode).toBe(200)
-        const body = JSON.parse(data)
-        expect(body.message).toBe('Progress updated')
-        expect(body.ok).toBe(true)
-        expect(body.progress).toBe(50)
-      })
-    })
-    req.write(JSON.stringify({ progress: 50 }))
-    req.end()
+  it('D should respond 200 to POST /set-progress with valid body', async () => {
+    const result = await request('/set-progress', 'POST', 'progress=75&remaining=30&nextTask=Review code', { 'Content-Type': 'application/x-www-form-urlencoded' })
+    if (!result.ok) throw new Error(`Request D failed : ${result.error}`)
+    const { status, response } = result.value
+    expect(status).toBe(200)
+    expect(alignForSnap(response)).toMatchInlineSnapshot(`
+      "{
+        "data": {
+          "bri": 255,
+          "hue": 15000,
+          "on": true,
+          "sat": 255
+        },
+        "datetime": "xxxx-xx-xx xx:xx:xx",
+        "message": "Emitted hue and trmnl color successfully",
+        "nextTask": "Review code",
+        "ok": true,
+        "progress": 75,
+        "remaining": "30",
+        "response": {
+          "hue": [
+            {
+              "success": {
+                "/lights/1/state/on": true
+              }
+            },
+            {
+              "success": {
+                "/lights/1/state/hue": 15000
+              }
+            },
+            {
+              "success": {
+                "/lights/1/state/sat": 254
+              }
+            },
+            {
+              "success": {
+                "/lights/1/state/bri": 254
+              }
+            }
+          ],
+          "trmnl": {
+            "message": "[PluginSetting ID: 131044] Must be nested inside a merge_variables payload object",
+            "merge_variables": {
+              "progress": 87,
+              "nextTitle": "méditation du calme ou sourire",
+              "remaining": "5 min to take care"
+            }
+          }
+        }
+      }"
+    `)
   })
 })
 
@@ -126,13 +170,22 @@ describe('server.cli.ts (unit)', () => {
   })
 
   it('parseProgressBody A should handle valid input', () => {
-    expect(serverModule.parseProgressBody(JSON.stringify({ progress: 50 }))).toMatchObject({ error: undefined, progress: 50 })
+    expect(serverModule.parseProgressBody('progress=0&remaining=15&nextTask=Clean workspace')).toMatchInlineSnapshot(`
+      {
+        "error": undefined,
+        "nextTask": "Clean workspace",
+        "progress": 0,
+        "remaining": "15",
+      }
+    `)
   })
-  it('parseProgressBody B should handle invalid JSON', () => {
-    expect(serverModule.parseProgressBody('notjson')).toMatchObject({ error: undefined })
+  it('parseProgressBody B should handle invalid content', () => {
+    const { error } = serverModule.parseProgressBody('not-valid')
+    expect(error).toMatchInlineSnapshot(`"Invalid body : must be an object with a progress property, got "not-valid""`)
   })
-  it('parseProgressBody C should handle out of bounds', () => {
-    expect(serverModule.parseProgressBody(JSON.stringify({ progress: 101 }))).toMatchObject({ error: expect.any(String) })
+  it('parseProgressBody C should handle empty body', () => {
+    const { error } = serverModule.parseProgressBody('')
+    expect(error).toMatchInlineSnapshot(`"Invalid body : must be an object with a progress property, got """`)
   })
 
   it('respondNotFound A should write 404', () => {
