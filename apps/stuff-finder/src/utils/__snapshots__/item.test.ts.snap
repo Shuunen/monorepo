@@ -100,6 +100,10 @@ exports[`item.utils > itemToForm A mocked item 1`] = `
           "value": "B (usb & audio)",
         },
         {
+          "label": "Blue",
+          "value": "Blue",
+        },
+        {
           "label": "Bureau",
           "value": "Bureau",
         },
@@ -134,6 +138,10 @@ exports[`item.utils > itemToForm A mocked item 1`] = `
         {
           "label": "G (brico & sport)",
           "value": "G (brico & sport)",
+        },
+        {
+          "label": "Green",
+          "value": "Green",
         },
         {
           "label": "Garage",
@@ -206,6 +214,10 @@ exports[`item.utils > itemToForm A mocked item 1`] = `
         {
           "label": "X (commode malm)",
           "value": "X (commode malm)",
+        },
+        {
+          "label": "Yellow",
+          "value": "Yellow",
         },
         {
           "label": "Z (poches zip)",
@@ -433,6 +445,10 @@ exports[`item.utils > itemToForm C no item 1`] = `
           "value": "B (usb & audio)",
         },
         {
+          "label": "Blue",
+          "value": "Blue",
+        },
+        {
           "label": "Bureau",
           "value": "Bureau",
         },
@@ -467,6 +483,10 @@ exports[`item.utils > itemToForm C no item 1`] = `
         {
           "label": "G (brico & sport)",
           "value": "G (brico & sport)",
+        },
+        {
+          "label": "Green",
+          "value": "Green",
         },
         {
           "label": "Garage",
@@ -539,6 +559,10 @@ exports[`item.utils > itemToForm C no item 1`] = `
         {
           "label": "X (commode malm)",
           "value": "X (commode malm)",
+        },
+        {
+          "label": "Yellow",
+          "value": "Yellow",
         },
         {
           "label": "Z (poches zip)",
