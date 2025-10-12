@@ -1,6 +1,7 @@
 export const itemBoxes = [
   'A (apple)',
   'B (usb & audio)',
+  'Blue',
   'Bureau',
   'C (couteau)',
   'Chambre',
@@ -10,6 +11,7 @@ export const itemBoxes = [
   'Entrée',
   'F (périphériques)',
   'G (brico & sport)',
+  'Green',
   'Garage',
   'H (hardware)',
   'J (à donner)',
@@ -28,6 +30,7 @@ export const itemBoxes = [
   'Terrasse',
   'V (violet)',
   'X (commode malm)',
+  'Yellow',
   'Z (poches zip)',
 ] as const
 
