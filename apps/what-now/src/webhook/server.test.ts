@@ -16,7 +16,8 @@ process.on('unhandledRejection', err => {
 const serverPath = require.resolve('./server.cli.ts')
 
 function startServer() {
-  return spawn(process.execPath, ['--experimental-strip-types', serverPath], { stdio: 'ignore' })
+  // node --experimental-transform-types apps/what-now/src/webhook/server.cli.ts
+  return spawn(process.execPath, ['--experimental-transform-types', serverPath], { stdio: 'ignore' })
 }
 
 function stopServer(proc: ChildProcess | undefined) {
