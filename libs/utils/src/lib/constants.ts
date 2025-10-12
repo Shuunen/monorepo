@@ -34,6 +34,9 @@ export const nbFourth = 3
 export const nbFifth = 4
 export const nbSixth = 5
 export const nbSeventh = 6
+export const nbEighth = 7
+export const nbNinth = 8
+export const nbTenth = 9
 // ratios
 export const nbOneSixth = 0.16
 export const nbOneQuarter = 0.25
