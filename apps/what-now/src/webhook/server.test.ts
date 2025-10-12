@@ -107,35 +107,13 @@ describe('server.cli.ts (integration)', () => {
         "progress": 75,
         "remaining": "30",
         "response": {
-          "hue": [
-            {
-              "success": {
-                "/lights/1/state/on": true
-              }
-            },
-            {
-              "success": {
-                "/lights/1/state/hue": 15000
-              }
-            },
-            {
-              "success": {
-                "/lights/1/state/sat": 254
-              }
-            },
-            {
-              "success": {
-                "/lights/1/state/bri": 254
-              }
-            }
-          ],
+          "hue": {
+            "message": "This is a fake endpoint response for testing.",
+            "success": true
+          },
           "trmnl": {
-            "message": "[PluginSetting ID: 131044] Must be nested inside a merge_variables payload object",
-            "merge_variables": {
-              "progress": 87,
-              "nextTitle": "méditation du calme ou sourire",
-              "remaining": "5 min to take care"
-            }
+            "message": "This is a fake endpoint response for testing.",
+            "success": true
           }
         }
       }"

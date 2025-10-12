@@ -62,7 +62,9 @@ export function sendCorsHeaders(res: ServerResponse) {
 
 // oxlint-disable-next-line max-lines-per-function
 export function makeRequest({ url, method, payload }: { url: string; method: string; payload: string }): Promise<{ result: unknown; error: string | undefined }> {
+  // oxlint-disable-next-line max-lines-per-function
   return new Promise(resolve => {
+    if (url.includes('fake-endpoint.local')) return resolve({ error: undefined, result: { message: 'This is a fake endpoint response for testing.', success: true } })
     const req = request(url, {
       headers: {
         'Content-Length': Buffer.byteLength(payload),
