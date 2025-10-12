@@ -1,7 +1,21 @@
 // oxlint-disable max-lines, max-nested-callbacks
+import { readFileSync } from 'node:fs'
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http'
 import { request } from 'node:https'
+import path from 'node:path'
 import type { PassThrough } from 'node:stream'
+import { fileURLToPath } from 'node:url'
+
+// populate .env variables from .env file if process.env.HUE_ENDPOINT or process.env.TRMNL_ENDPOINT not set
+if (!process.env.HUE_ENDPOINT || !process.env.TRMNL_ENDPOINT) {
+  const dirname = typeof __dirname === 'undefined' ? path.dirname(fileURLToPath(import.meta.url)) : __dirname
+  const dotenv = readFileSync(`${dirname}/.env`, 'utf8')
+  const lines = dotenv.toString().split('\n')
+  for (const line of lines) {
+    const [key, value] = line.split('=')
+    if (key && value && !process.env[key]) process.env[key] = value
+  }
+}
 
 export const options = {
   codes: {
