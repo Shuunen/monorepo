@@ -13,6 +13,7 @@ const root = document.querySelector('#app')
 if (root) createRoot(root).render(<App />)
 else logger.error('root not found')
 
+// oxlint-disable-next-line prefer-top-level-await
 getItems()
   .then(result => {
     state.status = result.ok ? 'ready' : 'settings-required'

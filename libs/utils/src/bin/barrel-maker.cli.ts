@@ -38,7 +38,6 @@ export async function main(argv: string[]) {
   return await make(options)
 }
 
-/* c8 ignore start */
-if (import.meta.main)
-  // oxlint-disable-next-line prefer-top-level-await
-  void main(process.argv)
+/* c8 ignore next 2 */
+// oxlint-disable-next-line prefer-top-level-await
+if (import.meta.main) void main(process.argv)

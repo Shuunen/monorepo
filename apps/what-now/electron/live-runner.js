@@ -1,3 +1,4 @@
+// oxlint-disable prefer-top-level-await
 // oxlint-disable no-process-exit, max-lines-per-function, max-nested-callbacks, no-null, no-require-imports, no-undef, no-commonjs
 /** biome-ignore-all lint/correctness/noNodejsModules: we can use node here */
 const cp = require('node:child_process')

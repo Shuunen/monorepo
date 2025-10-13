@@ -36,6 +36,7 @@ if (electronIsDev)
   setupReloadWatcher(myCapacitorApp)
 
   // Run Application
+  // oxlint-disable-next-line prefer-top-level-await
 ;(async () => {
   // Wait for electron app to be ready.
   await app.whenReady()

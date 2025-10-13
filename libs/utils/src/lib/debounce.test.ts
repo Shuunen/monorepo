@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/nursery/noFloatingPromises: it's a test file */
 import { debounce } from './debounce.js'
 import { expectEqualTypes } from './expect-type.js'
 import { sleep } from './sleep.js'
