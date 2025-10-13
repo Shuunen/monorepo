@@ -25,6 +25,7 @@ export const options = {
   },
   dateTimeSlice: 19,
   hueMax: 20_000,
+  maxProgress: 100,
   port: 3000,
   severityPadding: 7,
 } as const
@@ -42,30 +43,16 @@ export function datetime() {
 }
 
 export function getHueColor(percent: number): number {
-  return Math.round((percent * options.hueMax) / MAX_PROGRESS)
+  return Math.round((percent * options.hueMax) / options.maxProgress)
 }
 
 export function getHueColorBody(percent: number) {
-  const isEverythingDone = percent === MAX_PROGRESS
-  return JSON.stringify({
-    bri: 255,
-    hue: getHueColor(percent),
-    on: !isEverythingDone,
-    sat: 255,
-  })
+  const isEverythingDone = percent === options.maxProgress
+  return JSON.stringify({ bri: 255, hue: getHueColor(percent), on: !isEverythingDone, sat: 255 })
 }
 
 export function jsonResponse({ ok, message, progress, response, data, remaining, nextTask }: { ok: boolean; message: string; progress: number; response: unknown; data: unknown; remaining: unknown; nextTask: unknown }) {
-  return JSON.stringify({
-    data,
-    datetime: datetime(),
-    message,
-    nextTask,
-    ok,
-    progress,
-    remaining,
-    response,
-  })
+  return JSON.stringify({ data, datetime: datetime(), message, nextTask, ok, progress, remaining, response })
 }
 
 export function sendCorsHeaders(res: ServerResponse) {
@@ -74,19 +61,10 @@ export function sendCorsHeaders(res: ServerResponse) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 }
 
-// oxlint-disable-next-line max-lines-per-function
 export function makeRequest({ url, method, payload }: { url: string; method: string; payload: string }): Promise<{ result: unknown; error: string | undefined }> {
-  // oxlint-disable-next-line max-lines-per-function
   return new Promise(resolve => {
     if (url.includes('fake-endpoint.local')) return resolve({ error: undefined, result: { message: 'This is a fake endpoint response for testing.', success: true } })
-    const req = request(url, {
-      headers: {
-        'Content-Length': Buffer.byteLength(payload),
-        'Content-Type': 'application/json',
-      },
-      method,
-      rejectUnauthorized: false,
-    })
+    const req = request(url, { headers: { 'Content-Length': Buffer.byteLength(payload), 'Content-Type': 'application/json' }, method, rejectUnauthorized: false })
     const data = ''
     req.on(
       'response',
@@ -115,8 +93,6 @@ export function flattenResponse(resolve: (value: { result: unknown; error: strin
     })
   }
 }
-
-export const MAX_PROGRESS = 100
 
 // oxlint-disable-next-line max-lines-per-function
 export const server = createServer((req: IncomingMessage, res: ServerResponse) => {
@@ -153,13 +129,7 @@ export function handlePostSetProgress(req: IncomingMessage, res: ServerResponse)
     })
     .catch(error => {
       log('error', context, `Error collecting request body: ${error?.message ?? error}`)
-      respondBadRequest({
-        message: 'Failed to read request body',
-        nextTask: undefined,
-        progress: 0,
-        remaining: undefined,
-        res,
-      })
+      respondBadRequest({ message: 'Failed to read request body', nextTask: undefined, progress: 0, remaining: undefined, res })
     })
 }
 
@@ -194,38 +164,15 @@ export function collectRequestBody(req: IncomingMessage | PassThrough): Promise<
 }
 
 export function respondNotFound(res: ServerResponse) {
-  const context = 'respondNotFound'
-  log('warn', context, 'Responding with 404 Not Found')
+  log('warn', 'respondNotFound', 'Responding with 404 Not Found')
   res.writeHead(options.codes.notFound, { 'Content-Type': 'application/json' })
-  res.end(
-    jsonResponse({
-      data: undefined,
-      message: 'Not Found',
-      nextTask: undefined,
-      ok: false,
-      progress: 0,
-      remaining: undefined,
-      response: undefined,
-    }),
-  )
+  res.end(jsonResponse({ data: undefined, message: 'Not Found', nextTask: undefined, ok: false, progress: 0, remaining: undefined, response: undefined }))
 }
 
 export function respondBadRequest({ res, message, progress, nextTask, remaining }: { res: ServerResponse; message: string; progress: number; nextTask: unknown; remaining: unknown }) {
-  const context = 'respondBadRequest'
-  log('warn', context, `Bad request, message : ${message}`)
-  log('warn', context, 'Responding with 400 Bad Request')
+  log('warn', 'respondBadRequest', `Bad request, message : ${message}`)
   res.writeHead(options.codes.badRequest, { 'Content-Type': 'application/json' })
-  res.end(
-    jsonResponse({
-      data: undefined,
-      message,
-      nextTask,
-      ok: false,
-      progress,
-      remaining,
-      response: undefined,
-    }),
-  )
+  res.end(jsonResponse({ data: undefined, message, nextTask, ok: false, progress, remaining, response: undefined }))
 }
 
 // oxlint-disable-next-line max-lines-per-function
@@ -237,42 +184,18 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
   if (error) {
     log('warn', context, `Progress body error: ${error}`)
     res.writeHead(options.codes.badRequest, { 'Content-Type': 'application/json' })
-    res.end(
-      jsonResponse({
-        data: undefined,
-        message: error,
-        nextTask,
-        ok: false,
-        progress,
-        remaining,
-        response: undefined,
-      }),
-    )
+    res.end(jsonResponse({ data: undefined, message: error, nextTask, ok: false, progress, remaining, response: undefined }))
     return
   }
   const hueEndpoint = process.env.HUE_ENDPOINT ?? ''
   if (!hueEndpoint) {
     log('error', context, 'HUE_ENDPOINT not set in env variables')
-    respondBadRequest({
-      message: 'HUE_ENDPOINT not set in env variables',
-      nextTask,
-      progress,
-      remaining,
-      res,
-    })
-    return
+    return respondBadRequest({ message: 'HUE_ENDPOINT not set in env variables', nextTask, progress, remaining, res })
   }
   const trmnlEndpoint = process.env.TRMNL_ENDPOINT ?? ''
   if (!trmnlEndpoint) {
     log('error', context, 'TRMNL_ENDPOINT not set in env variables')
-    respondBadRequest({
-      message: 'TRMNL_ENDPOINT not set in env variables',
-      nextTask,
-      progress,
-      remaining,
-      res,
-    })
-    return
+    return respondBadRequest({ message: 'TRMNL_ENDPOINT not set in env variables', nextTask, progress, remaining, res })
   }
   const hueBody = getHueColorBody(progress)
   log('info', context, `Prepared hue body: ${hueBody}`)
@@ -284,9 +207,6 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
     },
   })
   log('info', context, `Prepared trmnl payload: ${trmnlPayload}`)
-  const hueIsHttps = hueEndpoint.startsWith('https')
-  const trmnlIsHttps = trmnlEndpoint.startsWith('https')
-  log('info', context, `Making requests: hueIsHttps=${hueIsHttps}, trmnlIsHttps=${trmnlIsHttps}`)
   const [hueResult, trmnlResult] = await Promise.all([makeRequest({ method: 'PUT', payload: hueBody, url: hueEndpoint }), makeRequest({ method: 'POST', payload: trmnlPayload, url: trmnlEndpoint })])
   log('info', context, `Hue result: error=${hueResult.error}, result=${JSON.stringify(hueResult.result)}`)
   log('info', context, `Trmnl result: error=${trmnlResult.error}, result=${JSON.stringify(trmnlResult.result)}`)
@@ -326,14 +246,13 @@ export function parseProgressBody(body: string) {
     progress = Number.parseInt(parsedBody.progress ?? '0', 10)
     remaining = parsedBody.remaining ?? undefined
     nextTask = parsedBody.nextTask ?? undefined
-    if (!Number.isInteger(progress) || progress < 0 || progress > MAX_PROGRESS) {
+    if (!Number.isInteger(progress) || progress < 0 || progress > options.maxProgress) {
       parseError = 'Invalid progress value. It must be an integer between 0 and 100.'
       log('warn', context, `Progress value invalid: ${progress}`)
     }
   } catch (error) {
-    const errMsg = `Error parsing progress body : ${error instanceof Error ? error.message : error}`
-    parseError = errMsg
-    log('error', context, errMsg)
+    parseError = `Error parsing progress body : ${error instanceof Error ? error.message : error}`
+    log('error', context, parseError)
   }
   return { error: parseError, nextTask, progress, remaining }
 }

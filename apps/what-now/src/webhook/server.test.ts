@@ -127,7 +127,7 @@ describe('server.cli.ts (unit)', () => {
   })
 
   it('getHueColor A should map percent to hue', () => {
-    expect(serverModule.getHueColor(50)).toBe(Math.round((50 * serverModule.options.hueMax) / serverModule.MAX_PROGRESS))
+    expect(serverModule.getHueColor(50)).toBe(Math.round((50 * serverModule.options.hueMax) / serverModule.options.maxProgress))
   })
 
   it('getHueColorBody A should return correct JSON for 100', () => {
