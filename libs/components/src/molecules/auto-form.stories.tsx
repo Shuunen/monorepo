@@ -278,6 +278,19 @@ export const Exhaustive: Story = {
       await userEvent.click(submitButton)
       const issues = canvas.getAllByRole('alert')
       expect(issues).toHaveLength(9)
+      const expectedErrorMessages = [
+        "Invalid input: expected boolean, received undefined",
+        "Invalid input: expected true",
+        "Invalid input: expected false",
+        "Email editable required",
+        "Email disabled required",
+        "Email optional",
+        "Invalid option: expected one of \"red\"|\"green\"|\"blue\"",
+        "Invalid input: expected number, received undefined",
+        "Invalid input: expected string, received undefined",
+      ];
+      const errorMessages = issues.map(i => i.textContent?.trim());
+      expect(errorMessages).toEqual(expectedErrorMessages);
     })
   },
 }
