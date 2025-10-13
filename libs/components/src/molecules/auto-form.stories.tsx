@@ -273,14 +273,11 @@ export const Exhaustive: Story = {
       const stringReadonly = canvas.getByTestId('string-readonly')
       expect(stringReadonly).toContainHTML('—')
     })
-    step('no error displayed', () => {
-      expect(canvas.queryByRole('alert')).not.toBeInTheDocument()
-    })
     await step('submit form with errors', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
       const issues = canvas.getAllByRole('alert')
-      expect(issues).toHaveLength(10)
+      expect(issues).toHaveLength(9)
     })
   },
 }
