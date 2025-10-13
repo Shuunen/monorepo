@@ -57,7 +57,7 @@ export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
       .decodeFromVideoDevice(null, videoReference.current, (result, error) => {
         if (status === 'loading')
           // oxlint-disable-next-line max-nested-callbacks
-          sleep(waitDelay).then(() => {
+          void sleep(waitDelay).then(() => {
             setStatus('ready')
           })
         // oxlint-disable-next-line max-nested-callbacks

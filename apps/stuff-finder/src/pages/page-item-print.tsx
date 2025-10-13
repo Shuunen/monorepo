@@ -53,7 +53,7 @@ export function PageItemPrint() {
   // trigger print directly on page load
   // biome-ignore lint/correctness/useExhaustiveDependencies: we want to run this only once
   useEffect(() => {
-    sleep(waitDelay).then(() => onPrint())
+    void sleep(waitDelay).then(() => onPrint())
   }, [])
 
   return (
