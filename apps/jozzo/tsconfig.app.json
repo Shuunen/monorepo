@@ -3,42 +3,19 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
-    "lib": [
-      "dom"
-    ],
+    "lib": ["dom"],
     "outDir": "dist",
     "paths": {
-      "react": [
-        "./node_modules/preact/compat/"
-      ],
-      "react-dom": [
-        "./node_modules/preact/compat/"
-      ]
+      "react": ["./node_modules/preact/compat/"],
+      "react-dom": ["./node_modules/preact/compat/"]
     },
     "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
-    "types": [
-      "node",
-      "@nx/react/typings/cssmodule.d.ts",
-      "@nx/react/typings/image.d.ts",
-      "vite/client",
-      "vite-plugin-svgr/client"
-    ]
+    "types": ["node", "@nx/react/typings/cssmodule.d.ts", "@nx/react/typings/image.d.ts", "vite/client", "vite-plugin-svgr/client"]
   },
-  "exclude": [
-    "out-tsc",
-    "dist",
-    "src/**/*.test.ts",
-    "src/**/*.test.tsx",
-    "vite.config.ts"
-  ],
+  "exclude": ["out-tsc", "dist", "src/**/*.test.ts", "src/**/*.test.tsx", "vite.config.ts"],
   "extends": "../../tsconfig.base.json",
-  "include": [
-    "src/**/*.js",
-    "src/**/*.jsx",
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ],
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
       "path": "../../libs/vite-plugins/tsconfig.lib.json"

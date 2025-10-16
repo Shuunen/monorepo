@@ -2,25 +2,15 @@
   "compilerOptions": {
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
+    "lib": ["ESNext", "DOM"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "exclude": [
-    "vite.config.ts",
-    "src/**/*.test.ts"
-  ],
+  "exclude": ["vite.config.ts", "src/**/*.test.ts"],
   "extends": "../../tsconfig.base.json",
-  "include": [
-    "src/**/*.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "references": []
 }

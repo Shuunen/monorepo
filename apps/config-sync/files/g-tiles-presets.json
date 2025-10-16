@@ -1,577 +1,527 @@
 {
-    "__md5__": "023326e8e29c63ee52d314522a737d56",
-    "animation": {
-        "default": "true",
-        "description": "Animation",
-        "type": "checkbox",
-        "value": "true"
+  "__md5__": "023326e8e29c63ee52d314522a737d56",
+  "animation": {
+    "default": "true",
+    "description": "Animation",
+    "type": "checkbox",
+    "value": "true"
+  },
+  "aspect-ratio": {
+    "default": "true",
+    "description": "Use monitor aspect ratio",
+    "tooltip": "Should the popup's grid reflect the current monitor's aspect ratio or not.",
+    "type": "checkbox",
+    "value": "true"
+  },
+  "autoclose": {
+    "default": "true",
+    "description": "Auto-Close",
+    "type": "checkbox",
+    "value": "true"
+  },
+  "columns": {
+    "description": "Columns",
+    "type": "label"
+  },
+  "grid1NameOverride": {
+    "default": "",
+    "description": "Name Override on the UI",
+    "type": "entry",
+    "value": "121"
+  },
+  "grid1x": {
+    "columns": [
+      {
+        "id": "span",
+        "max": 1000,
+        "min": 0,
+        "step": 0.01,
+        "title": "Span",
+        "type": "float"
+      }
+    ],
+    "default": [
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      }
+    ],
+    "description": "Columns",
+    "tooltip": "Each row represents a column. Span is how much space a column should take up compared to the other columns. Default is 1.",
+    "type": "list",
+    "value": [
+      {
+        "span": 0.01
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 0.01000000000000001
+      },
+      {
+        "span": 2
+      },
+      {
+        "span": 0.01000000000000001
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 0.01
+      }
+    ]
+  },
+  "grid1y": {
+    "columns": [
+      {
+        "id": "span",
+        "max": 1000,
+        "min": 0,
+        "step": 0.01,
+        "title": "Span",
+        "type": "float"
+      }
+    ],
+    "default": [
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      }
+    ],
+    "description": "Rows",
+    "tooltip": "Each row represents a row. Span is how much space a row should take up compared to the other columns. Default is 1.",
+    "type": "list",
+    "value": [
+      {
+        "span": 0.01
+      },
+      {
+        "span": 3
+      },
+      {
+        "span": 0.01
+      }
+    ]
+  },
+  "grid2NameOverride": {
+    "default": "",
+    "description": "Name Override",
+    "type": "entry",
+    "value": ""
+  },
+  "grid2x": {
+    "columns": [
+      {
+        "id": "span",
+        "max": 1000,
+        "min": 0,
+        "step": 0.01,
+        "title": "Span",
+        "type": "float"
+      }
+    ],
+    "default": [
+      {
+        "span": 1
+      },
+      {
+        "span": 2
+      },
+      {
+        "span": 1
+      }
+    ],
+    "description": "Columns",
+    "tooltip": "Each row represents a column. Span is how much space a column should take up compared to the other columns. Default is 1.",
+    "type": "list",
+    "value": [
+      {
+        "span": 1
+      },
+      {
+        "span": 2
+      },
+      {
+        "span": 1
+      }
+    ]
+  },
+  "grid2y": {
+    "columns": [
+      {
+        "id": "span",
+        "max": 1000,
+        "min": 0,
+        "step": 0.01,
+        "title": "Span",
+        "type": "float"
+      }
+    ],
+    "default": [
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      }
+    ],
+    "description": "Rows",
+    "tooltip": "Each row represents a row. Span is how much space a row should take up compared to the other columns. Default is 1.",
+    "type": "list",
+    "value": [
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      }
+    ]
+  },
+  "grid3NameOverride": {
+    "default": "",
+    "description": "Name Override",
+    "type": "entry",
+    "value": ""
+  },
+  "grid3x": {
+    "columns": [
+      {
+        "id": "span",
+        "max": 1000,
+        "min": 0,
+        "step": 0.01,
+        "title": "Span",
+        "type": "float"
+      }
+    ],
+    "default": [
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      }
+    ],
+    "description": "Columns",
+    "tooltip": "Each row represents a column. Span is how much space a column should take up compared to the other columns. Default is 1.",
+    "type": "list",
+    "value": [
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      }
+    ]
+  },
+  "grid3y": {
+    "columns": [
+      {
+        "id": "span",
+        "max": 1000,
+        "min": 0,
+        "step": 0.01,
+        "title": "Span",
+        "type": "float"
+      }
+    ],
+    "default": [
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      }
+    ],
+    "description": "Rows",
+    "tooltip": "Each row represents a row. Span is how much space a row should take up compared to the other columns. Default is 1.",
+    "type": "list",
+    "value": [
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      }
+    ]
+  },
+  "grid4NameOverride": {
+    "default": "",
+    "description": "Name Override",
+    "type": "entry",
+    "value": ""
+  },
+  "grid4x": {
+    "columns": [
+      {
+        "id": "span",
+        "max": 1000,
+        "min": 0,
+        "step": 0.01,
+        "title": "Span",
+        "type": "float"
+      }
+    ],
+    "default": [
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      }
+    ],
+    "description": "Columns",
+    "tooltip": "Each row represents a column. Span is how much space a column should take up compared to the other columns. Default is 1.",
+    "type": "list",
+    "value": [
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      }
+    ]
+  },
+  "grid4y": {
+    "columns": [
+      {
+        "id": "span",
+        "max": 1000,
+        "min": 0,
+        "step": 0.01,
+        "title": "Span",
+        "type": "float"
+      }
+    ],
+    "default": [
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      }
+    ],
+    "description": "Rows",
+    "tooltip": "Each row represents a row. Span is how much space a row should take up compared to the other columns. Default is 1.",
+    "type": "list",
+    "value": [
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 1
+      }
+    ]
+  },
+  "hotkey": {
+    "default": "<Super>g",
+    "description": "Global Hotkey for gTile",
+    "type": "keybinding",
+    "value": "<Super>g"
+  },
+  "hotkeys-legend": {
+    "description": "Escape:\t\t\tHide gTile\nEnter or Space:\tCommit current selection\nLeft:\t\t\tMove Left inside Grid\nRight:\t\t\tMove Right inside Grid\nUp:\t\t\t\tMove Up inside Grid\nDown:\t\t\tMove Down inside Grid\n<Shift>Left:\t\tInclude column to the Left in selection\n<Shift>Right:\t\tInclude column to the Right in selection\n<Shift>Up:\t\tInclude row Above in selection\n<Shift>Down:\tInclude row Below in selection\n<Alt>Left:\t\tMove to the monitor on the Left\n<Alt>Right:\t\tMove to the monitor on the Right\n<Alt>Up:\t\t\tMove to the monitor Above\n<Alt>Down:\t\tMove to the monitor Below\n1:\t\t\t\tSelect the first grid layout\n2:\t\t\t\tSelect the second grid layout\n3:\t\t\t\tSelect the third grid layout\n4:\t\t\t\tSelect the fourth grid layout",
+    "type": "label"
+  },
+  "lastGridCols": {
+    "default": null,
+    "type": "generic",
+    "value": [
+      {
+        "span": 0.01
+      },
+      {
+        "span": 3
+      },
+      {
+        "span": 0.01
+      }
+    ]
+  },
+  "lastGridRows": {
+    "default": null,
+    "type": "generic",
+    "value": [
+      {
+        "span": 0.01
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 0.01000000000000001
+      },
+      {
+        "span": 2
+      },
+      {
+        "span": 0.01000000000000001
+      },
+      {
+        "span": 1
+      },
+      {
+        "span": 0.01
+      }
+    ]
+  },
+  "layout": {
+    "behaviour-section": {
+      "keys": ["animation", "autoclose", "aspect-ratio", "useMonitorCenter", "showGridOnAllMonitors"],
+      "title": "Behavior",
+      "type": "section"
     },
-    "aspect-ratio": {
-        "default": "true",
-        "description": "Use monitor aspect ratio",
-        "tooltip": "Should the popup's grid reflect the current monitor's aspect ratio or not.",
-        "type": "checkbox",
-        "value": "true"
+    "behaviour-tab": {
+      "sections": ["behaviour-section"],
+      "title": "Behavior",
+      "type": "page"
     },
-    "autoclose": {
-        "default": "true",
-        "description": "Auto-Close",
-        "type": "checkbox",
-        "value": "true"
+    "grid1-section": {
+      "keys": ["grid1NameOverride", "columns", "grid1x", "rows", "grid1y"],
+      "title": "Layout For Button 1",
+      "type": "section"
     },
-    "columns": {
-        "description": "Columns",
-        "type": "label"
+    "grid2-section": {
+      "keys": ["grid2NameOverride", "columns", "grid2x", "rows", "grid2y"],
+      "title": "Layout For Button 2",
+      "type": "section"
     },
-    "grid1NameOverride": {
-        "default": "",
-        "description": "Name Override on the UI",
-        "type": "entry",
-        "value": "121"
+    "grid3-section": {
+      "keys": ["grid3NameOverride", "columns", "grid3x", "rows", "grid3y"],
+      "title": "Layout For Button 3",
+      "type": "section"
     },
-    "grid1x": {
-        "columns": [
-            {
-                "id": "span",
-                "max": 1000,
-                "min": 0,
-                "step": 0.01,
-                "title": "Span",
-                "type": "float"
-            }
-        ],
-        "default": [
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            }
-        ],
-        "description": "Columns",
-        "tooltip": "Each row represents a column. Span is how much space a column should take up compared to the other columns. Default is 1.",
-        "type": "list",
-        "value": [
-            {
-                "span": 0.01
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 0.01000000000000001
-            },
-            {
-                "span": 2
-            },
-            {
-                "span": 0.01000000000000001
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 0.01
-            }
-        ]
+    "grid4-section": {
+      "keys": ["grid4NameOverride", "columns", "grid4x", "rows", "grid4y"],
+      "title": "Layout For Button 4",
+      "type": "section"
     },
-    "grid1y": {
-        "columns": [
-            {
-                "id": "span",
-                "max": 1000,
-                "min": 0,
-                "step": 0.01,
-                "title": "Span",
-                "type": "float"
-            }
-        ],
-        "default": [
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            }
-        ],
-        "description": "Rows",
-        "tooltip": "Each row represents a row. Span is how much space a row should take up compared to the other columns. Default is 1.",
-        "type": "list",
-        "value": [
-            {
-                "span": 0.01
-            },
-            {
-                "span": 3
-            },
-            {
-                "span": 0.01
-            }
-        ]
+    "help": {
+      "sections": ["help-section"],
+      "title": "Help",
+      "type": "page"
     },
-    "grid2NameOverride": {
-        "default": "",
-        "description": "Name Override",
-        "type": "entry",
-        "value": ""
+    "help-section": {
+      "keys": [],
+      "title": "More Info",
+      "type": "section"
     },
-    "grid2x": {
-        "columns": [
-            {
-                "id": "span",
-                "max": 1000,
-                "min": 0,
-                "step": 0.01,
-                "title": "Span",
-                "type": "float"
-            }
-        ],
-        "default": [
-            {
-                "span": 1
-            },
-            {
-                "span": 2
-            },
-            {
-                "span": 1
-            }
-        ],
-        "description": "Columns",
-        "tooltip": "Each row represents a column. Span is how much space a column should take up compared to the other columns. Default is 1.",
-        "type": "list",
-        "value": [
-            {
-                "span": 1
-            },
-            {
-                "span": 2
-            },
-            {
-                "span": 1
-            }
-        ]
+    "hotkey-section": {
+      "keys": ["hotkey"],
+      "title": "Global Hotkey",
+      "type": "section"
     },
-    "grid2y": {
-        "columns": [
-            {
-                "id": "span",
-                "max": 1000,
-                "min": 0,
-                "step": 0.01,
-                "title": "Span",
-                "type": "float"
-            }
-        ],
-        "default": [
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            }
-        ],
-        "description": "Rows",
-        "tooltip": "Each row represents a row. Span is how much space a row should take up compared to the other columns. Default is 1.",
-        "type": "list",
-        "value": [
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            }
-        ]
+    "hotkeys-tab": {
+      "sections": ["hotkey-section", "keybindings-legend-section"],
+      "title": "Hotkeys",
+      "type": "page"
     },
-    "grid3NameOverride": {
-        "default": "",
-        "description": "Name Override",
-        "type": "entry",
-        "value": ""
+    "keybindings-legend-section": {
+      "keys": ["hotkeys-legend"],
+      "title": "Keybindings Legend (when open)",
+      "type": "section"
     },
-    "grid3x": {
-        "columns": [
-            {
-                "id": "span",
-                "max": 1000,
-                "min": 0,
-                "step": 0.01,
-                "title": "Span",
-                "type": "float"
-            }
-        ],
-        "default": [
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            }
-        ],
-        "description": "Columns",
-        "tooltip": "Each row represents a column. Span is how much space a column should take up compared to the other columns. Default is 1.",
-        "type": "list",
-        "value": [
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            }
-        ]
+    "layout-tab": {
+      "sections": ["grid1-section", "grid2-section", "grid3-section", "grid4-section"],
+      "title": "Layout",
+      "type": "page"
     },
-    "grid3y": {
-        "columns": [
-            {
-                "id": "span",
-                "max": 1000,
-                "min": 0,
-                "step": 0.01,
-                "title": "Span",
-                "type": "float"
-            }
-        ],
-        "default": [
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            }
-        ],
-        "description": "Rows",
-        "tooltip": "Each row represents a row. Span is how much space a row should take up compared to the other columns. Default is 1.",
-        "type": "list",
-        "value": [
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            }
-        ]
-    },
-    "grid4NameOverride": {
-        "default": "",
-        "description": "Name Override",
-        "type": "entry",
-        "value": ""
-    },
-    "grid4x": {
-        "columns": [
-            {
-                "id": "span",
-                "max": 1000,
-                "min": 0,
-                "step": 0.01,
-                "title": "Span",
-                "type": "float"
-            }
-        ],
-        "default": [
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            }
-        ],
-        "description": "Columns",
-        "tooltip": "Each row represents a column. Span is how much space a column should take up compared to the other columns. Default is 1.",
-        "type": "list",
-        "value": [
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            }
-        ]
-    },
-    "grid4y": {
-        "columns": [
-            {
-                "id": "span",
-                "max": 1000,
-                "min": 0,
-                "step": 0.01,
-                "title": "Span",
-                "type": "float"
-            }
-        ],
-        "default": [
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            }
-        ],
-        "description": "Rows",
-        "tooltip": "Each row represents a row. Span is how much space a row should take up compared to the other columns. Default is 1.",
-        "type": "list",
-        "value": [
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 1
-            }
-        ]
-    },
-    "hotkey": {
-        "default": "<Super>g",
-        "description": "Global Hotkey for gTile",
-        "type": "keybinding",
-        "value": "<Super>g"
-    },
-    "hotkeys-legend": {
-        "description": "Escape:\t\t\tHide gTile\nEnter or Space:\tCommit current selection\nLeft:\t\t\tMove Left inside Grid\nRight:\t\t\tMove Right inside Grid\nUp:\t\t\t\tMove Up inside Grid\nDown:\t\t\tMove Down inside Grid\n<Shift>Left:\t\tInclude column to the Left in selection\n<Shift>Right:\t\tInclude column to the Right in selection\n<Shift>Up:\t\tInclude row Above in selection\n<Shift>Down:\tInclude row Below in selection\n<Alt>Left:\t\tMove to the monitor on the Left\n<Alt>Right:\t\tMove to the monitor on the Right\n<Alt>Up:\t\t\tMove to the monitor Above\n<Alt>Down:\t\tMove to the monitor Below\n1:\t\t\t\tSelect the first grid layout\n2:\t\t\t\tSelect the second grid layout\n3:\t\t\t\tSelect the third grid layout\n4:\t\t\t\tSelect the fourth grid layout",
-        "type": "label"
-    },
-    "lastGridCols": {
-        "default": null,
-        "type": "generic",
-        "value": [
-            {
-                "span": 0.01
-            },
-            {
-                "span": 3
-            },
-            {
-                "span": 0.01
-            }
-        ]
-    },
-    "lastGridRows": {
-        "default": null,
-        "type": "generic",
-        "value": [
-            {
-                "span": 0.01
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 0.01000000000000001
-            },
-            {
-                "span": 2
-            },
-            {
-                "span": 0.01000000000000001
-            },
-            {
-                "span": 1
-            },
-            {
-                "span": 0.01
-            }
-        ]
-    },
-    "layout": {
-        "behaviour-section": {
-            "keys": [
-                "animation",
-                "autoclose",
-                "aspect-ratio",
-                "useMonitorCenter",
-                "showGridOnAllMonitors"
-            ],
-            "title": "Behavior",
-            "type": "section"
-        },
-        "behaviour-tab": {
-            "sections": [
-                "behaviour-section"
-            ],
-            "title": "Behavior",
-            "type": "page"
-        },
-        "grid1-section": {
-            "keys": [
-                "grid1NameOverride",
-                "columns",
-                "grid1x",
-                "rows",
-                "grid1y"
-            ],
-            "title": "Layout For Button 1",
-            "type": "section"
-        },
-        "grid2-section": {
-            "keys": [
-                "grid2NameOverride",
-                "columns",
-                "grid2x",
-                "rows",
-                "grid2y"
-            ],
-            "title": "Layout For Button 2",
-            "type": "section"
-        },
-        "grid3-section": {
-            "keys": [
-                "grid3NameOverride",
-                "columns",
-                "grid3x",
-                "rows",
-                "grid3y"
-            ],
-            "title": "Layout For Button 3",
-            "type": "section"
-        },
-        "grid4-section": {
-            "keys": [
-                "grid4NameOverride",
-                "columns",
-                "grid4x",
-                "rows",
-                "grid4y"
-            ],
-            "title": "Layout For Button 4",
-            "type": "section"
-        },
-        "help": {
-            "sections": [
-                "help-section"
-            ],
-            "title": "Help",
-            "type": "page"
-        },
-        "help-section": {
-            "keys": [],
-            "title": "More Info",
-            "type": "section"
-        },
-        "hotkey-section": {
-            "keys": [
-                "hotkey"
-            ],
-            "title": "Global Hotkey",
-            "type": "section"
-        },
-        "hotkeys-tab": {
-            "sections": [
-                "hotkey-section",
-                "keybindings-legend-section"
-            ],
-            "title": "Hotkeys",
-            "type": "page"
-        },
-        "keybindings-legend-section": {
-            "keys": [
-                "hotkeys-legend"
-            ],
-            "title": "Keybindings Legend (when open)",
-            "type": "section"
-        },
-        "layout-tab": {
-            "sections": [
-                "grid1-section",
-                "grid2-section",
-                "grid3-section",
-                "grid4-section"
-            ],
-            "title": "Layout",
-            "type": "page"
-        },
-        "pages": [
-            "hotkeys-tab",
-            "behaviour-tab",
-            "layout-tab"
-        ],
-        "type": "layout"
-    },
-    "rows": {
-        "description": "Rows",
-        "type": "label"
-    },
-    "showGridOnAllMonitors": {
-        "default": "false",
-        "description": "Show UI and all monitors at the same time",
-        "type": "checkbox",
-        "value": "false"
-    },
-    "useMonitorCenter": {
-        "default": "false",
-        "description": "UI always centered to monitor",
-        "tooltip": "By default the grid UI shows up in the middle of the active window. With this, it always displays in the middle of the monitor.",
-        "type": "checkbox",
-        "value": "false"
-    }
+    "pages": ["hotkeys-tab", "behaviour-tab", "layout-tab"],
+    "type": "layout"
+  },
+  "rows": {
+    "description": "Rows",
+    "type": "label"
+  },
+  "showGridOnAllMonitors": {
+    "default": "false",
+    "description": "Show UI and all monitors at the same time",
+    "type": "checkbox",
+    "value": "false"
+  },
+  "useMonitorCenter": {
+    "default": "false",
+    "description": "UI always centered to monitor",
+    "tooltip": "By default the grid UI shows up in the middle of the active window. With this, it always displays in the middle of the monitor.",
+    "type": "checkbox",
+    "value": "false"
+  }
 }

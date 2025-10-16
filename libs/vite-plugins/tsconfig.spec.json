@@ -2,18 +2,10 @@
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
     "outDir": "./out-tsc/vitest",
-    "types": [
-      "vitest/globals",
-      "vitest/importMeta",
-      "vite/client",
-      "node",
-      "vitest"
-    ]
+    "types": ["vitest/globals", "vitest/importMeta", "vite/client", "node", "vitest"]
   },
   "extends": "../../tsconfig.base.json",
-  "include": [
-    "src/**/*.test.js"
-  ],
+  "include": ["src/**/*.test.js"],
   "references": [
     {
       "path": "./tsconfig.lib.json"

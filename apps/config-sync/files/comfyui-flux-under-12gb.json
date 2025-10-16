@@ -2,10 +2,7 @@
   "config": {},
   "extra": {
     "ds": {
-      "offset": [
-        -756.4565573837936,
-        -158.04091226927113
-      ],
+      "offset": [-756.4565573837936, -158.04091226927113],
       "scale": 1.9487171000000034
     },
     "frontendVersion": "1.23.4"
@@ -15,110 +12,19 @@
   "last_link_id": 89,
   "last_node_id": 51,
   "links": [
-    [
-      10,
-      11,
-      0,
-      6,
-      0,
-      "CLIP"
-    ],
-    [
-      12,
-      10,
-      0,
-      8,
-      1,
-      "VAE"
-    ],
-    [
-      19,
-      16,
-      0,
-      13,
-      2,
-      "SAMPLER"
-    ],
-    [
-      24,
-      13,
-      0,
-      8,
-      0,
-      "LATENT"
-    ],
-    [
-      30,
-      22,
-      0,
-      13,
-      1,
-      "GUIDER"
-    ],
-    [
-      38,
-      12,
-      0,
-      17,
-      0,
-      "MODEL"
-    ],
-    [
-      39,
-      12,
-      0,
-      22,
-      0,
-      "MODEL"
-    ],
-    [
-      40,
-      6,
-      0,
-      22,
-      1,
-      "CONDITIONING"
-    ],
-    [
-      59,
-      17,
-      0,
-      38,
-      0,
-      "SIGMAS"
-    ],
-    [
-      60,
-      38,
-      1,
-      13,
-      3,
-      "SIGMAS"
-    ],
-    [
-      86,
-      50,
-      0,
-      13,
-      0,
-      "NOISE"
-    ],
-    [
-      88,
-      8,
-      0,
-      9,
-      0,
-      "IMAGE"
-    ],
-    [
-      89,
-      51,
-      0,
-      13,
-      4,
-      "LATENT"
-    ]
+    [10, 11, 0, 6, 0, "CLIP"],
+    [12, 10, 0, 8, 1, "VAE"],
+    [19, 16, 0, 13, 2, "SAMPLER"],
+    [24, 13, 0, 8, 0, "LATENT"],
+    [30, 22, 0, 13, 1, "GUIDER"],
+    [38, 12, 0, 17, 0, "MODEL"],
+    [39, 12, 0, 22, 0, "MODEL"],
+    [40, 6, 0, 22, 1, "CONDITIONING"],
+    [59, 17, 0, 38, 0, "SIGMAS"],
+    [60, 38, 1, 13, 3, "SIGMAS"],
+    [86, 50, 0, 13, 0, "NOISE"],
+    [88, 8, 0, 9, 0, "IMAGE"],
+    [89, 51, 0, 13, 4, "LATENT"]
   ],
   "nodes": [
     {
@@ -130,34 +36,21 @@
       "outputs": [
         {
           "label": "CLIP",
-          "links": [
-            10
-          ],
+          "links": [10],
           "name": "CLIP",
           "slot_index": 0,
           "type": "CLIP"
         }
       ],
-      "pos": [
-        131,
-        238
-      ],
+      "pos": [131, 238],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "DualCLIPLoader",
         "ver": "0.3.44"
       },
-      "size": [
-        315,
-        130
-      ],
+      "size": [315, 130],
       "type": "DualCLIPLoader",
-      "widgets_values": [
-        "t5xxl_fp8_e4m3fn.safetensors",
-        "clip_l.safetensors",
-        "flux",
-        "default"
-      ]
+      "widgets_values": ["t5xxl_fp8_e4m3fn.safetensors", "clip_l.safetensors", "flux", "default"]
     },
     {
       "flags": {},
@@ -168,31 +61,21 @@
       "outputs": [
         {
           "label": "VAE",
-          "links": [
-            12
-          ],
+          "links": [12],
           "name": "VAE",
           "slot_index": 0,
           "type": "VAE"
         }
       ],
-      "pos": [
-        71,
-        509
-      ],
+      "pos": [71, 509],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "VAELoader",
         "ver": "0.3.44"
       },
-      "size": [
-        315,
-        58
-      ],
+      "size": [315, 58],
       "type": "VAELoader",
-      "widgets_values": [
-        "ae.safetensors"
-      ]
+      "widgets_values": ["ae.safetensors"]
     },
     {
       "flags": {},
@@ -203,33 +86,21 @@
       "outputs": [
         {
           "label": "MODEL",
-          "links": [
-            38,
-            39
-          ],
+          "links": [38, 39],
           "name": "MODEL",
           "slot_index": 0,
           "type": "MODEL"
         }
       ],
-      "pos": [
-        151,
-        14
-      ],
+      "pos": [151, 14],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "UNETLoader",
         "ver": "0.3.44"
       },
-      "size": [
-        315,
-        82
-      ],
+      "size": [315, 82],
       "type": "UNETLoader",
-      "widgets_values": [
-        "flux1-schnell-fp8.safetensors",
-        "fp8_e4m3fn"
-      ]
+      "widgets_values": ["flux1-schnell-fp8.safetensors", "fp8_e4m3fn"]
     },
     {
       "flags": {},
@@ -240,30 +111,20 @@
       "outputs": [
         {
           "label": "SAMPLER",
-          "links": [
-            19
-          ],
+          "links": [19],
           "name": "SAMPLER",
           "type": "SAMPLER"
         }
       ],
-      "pos": [
-        660.9400024414062,
-        -218.0799560546875
-      ],
+      "pos": [660.9400024414062, -218.0799560546875],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "KSamplerSelect",
         "ver": "0.3.44"
       },
-      "size": [
-        315,
-        58
-      ],
+      "size": [315, 58],
       "type": "KSamplerSelect",
-      "widgets_values": [
-        "euler"
-      ]
+      "widgets_values": ["euler"]
     },
     {
       "flags": {},
@@ -287,27 +148,19 @@
       "outputs": [
         {
           "label": "GUIDER",
-          "links": [
-            30
-          ],
+          "links": [30],
           "name": "GUIDER",
           "slot_index": 0,
           "type": "GUIDER"
         }
       ],
-      "pos": [
-        645.7691650390625,
-        22.909997940063477
-      ],
+      "pos": [645.7691650390625, 22.909997940063477],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "BasicGuider",
         "ver": "0.3.44"
       },
-      "size": [
-        241.79998779296875,
-        46
-      ],
+      "size": [241.79998779296875, 46],
       "type": "BasicGuider",
       "widgets_values": []
     },
@@ -351,9 +204,7 @@
       "outputs": [
         {
           "label": "output",
-          "links": [
-            24
-          ],
+          "links": [24],
           "name": "output",
           "slot_index": 0,
           "type": "LATENT"
@@ -365,19 +216,13 @@
           "type": "LATENT"
         }
       ],
-      "pos": [
-        1100.50048828125,
-        -134.81993103027344
-      ],
+      "pos": [1100.50048828125, -134.81993103027344],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "SamplerCustomAdvanced",
         "ver": "0.3.44"
       },
-      "size": [
-        355.20001220703125,
-        106
-      ],
+      "size": [355.20001220703125, 106],
       "type": "SamplerCustomAdvanced",
       "widgets_values": []
     },
@@ -390,31 +235,20 @@
       "outputs": [
         {
           "label": "NOISE",
-          "links": [
-            86
-          ],
+          "links": [86],
           "name": "NOISE",
           "type": "NOISE"
         }
       ],
-      "pos": [
-        1325.080078125,
-        54.09996032714844
-      ],
+      "pos": [1325.080078125, 54.09996032714844],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "RandomNoise",
         "ver": "0.3.44"
       },
-      "size": [
-        315,
-        82
-      ],
+      "size": [315, 82],
       "type": "RandomNoise",
-      "widgets_values": [
-        322995706468175,
-        "randomize"
-      ]
+      "widgets_values": [322995706468175, "randomize"]
     },
     {
       "flags": {},
@@ -438,27 +272,19 @@
       "outputs": [
         {
           "label": "IMAGE",
-          "links": [
-            88
-          ],
+          "links": [88],
           "name": "IMAGE",
           "slot_index": 0,
           "type": "IMAGE"
         }
       ],
-      "pos": [
-        1514.2001953125,
-        -81.70999145507812
-      ],
+      "pos": [1514.2001953125, -81.70999145507812],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "VAEDecode",
         "ver": "0.3.44"
       },
-      "size": [
-        210,
-        46
-      ],
+      "size": [210, 46],
       "type": "VAEDecode",
       "widgets_values": []
     },
@@ -485,31 +311,21 @@
         },
         {
           "label": "low_sigmas",
-          "links": [
-            60
-          ],
+          "links": [60],
           "name": "low_sigmas",
           "slot_index": 1,
           "type": "SIGMAS"
         }
       ],
-      "pos": [
-        954.2493896484375,
-        46.709693908691406
-      ],
+      "pos": [954.2493896484375, 46.709693908691406],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "SplitSigmas",
         "ver": "0.3.44"
       },
-      "size": [
-        315,
-        78
-      ],
+      "size": [315, 78],
       "type": "SplitSigmas",
-      "widgets_values": [
-        0
-      ]
+      "widgets_values": [0]
     },
     {
       "flags": {},
@@ -527,27 +343,19 @@
       "outputs": [
         {
           "label": "CONDITIONING",
-          "links": [
-            40
-          ],
+          "links": [40],
           "name": "CONDITIONING",
           "slot_index": 0,
           "type": "CONDITIONING"
         }
       ],
-      "pos": [
-        535.2697143554688,
-        241.45997619628906
-      ],
+      "pos": [535.2697143554688, 241.45997619628906],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "CLIPTextEncode",
         "ver": "0.3.44"
       },
-      "size": [
-        422.84503173828125,
-        164.31304931640625
-      ],
+      "size": [422.84503173828125, 164.31304931640625],
       "type": "CLIPTextEncode",
       "widgets_values": [
         "An ancient Roman-style fresco mural set against a vibrant, crackled blue background. The composition is symmetrically balanced and richly decorated with gold ornamental borders. On the left, two small mythological pale semi-nude female figures with beautiful faces are painted in delicate detail: one plays a lyre, the other carries a tray of fruit and a sickle. In the center, a lush green tree with birds, one perched and one in the fountain, frames a white, scalloped stone birdbath with a bubbling fountain. To the right, a larger mythological pale female, topless with small breasts, with a beautiful face, holds a tray of grapes and a staff, standing beside a red architectural niche adorned with classical columns and ornate carvings. The entire fresco is aged, with visible cracks and subtle fading, evoking the timeless elegance of Pompeii wall paintings."
@@ -562,33 +370,21 @@
       "outputs": [
         {
           "label": "LATENT",
-          "links": [
-            89
-          ],
+          "links": [89],
           "name": "LATENT",
           "slot_index": 0,
           "type": "LATENT"
         }
       ],
-      "pos": [
-        199,
-        -195
-      ],
+      "pos": [199, -195],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "EmptyLatentImage",
         "ver": "0.3.44"
       },
-      "size": [
-        315,
-        106
-      ],
+      "size": [315, 106],
       "type": "EmptyLatentImage",
-      "widgets_values": [
-        1152,
-        480,
-        1
-      ]
+      "widgets_values": [1152, 480, 1]
     },
     {
       "flags": {},
@@ -604,22 +400,14 @@
       "mode": 0,
       "order": 12,
       "outputs": [],
-      "pos": [
-        1368.51953125,
-        209.1798095703125
-      ],
+      "pos": [1368.51953125, 209.1798095703125],
       "properties": {
         "cnr_id": "comfy-core",
         "ver": "0.3.44"
       },
-      "size": [
-        1076.5494384765625,
-        653.81591796875
-      ],
+      "size": [1076.5494384765625, 653.81591796875],
       "type": "SaveImage",
-      "widgets_values": [
-        "flux1-schnell"
-      ]
+      "widgets_values": ["flux1-schnell"]
     },
     {
       "flags": {},
@@ -637,33 +425,21 @@
       "outputs": [
         {
           "label": "SIGMAS",
-          "links": [
-            59
-          ],
+          "links": [59],
           "name": "SIGMAS",
           "slot_index": 0,
           "type": "SIGMAS"
         }
       ],
-      "pos": [
-        1016.789794921875,
-        251.9801788330078
-      ],
+      "pos": [1016.789794921875, 251.9801788330078],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "BasicScheduler",
         "ver": "0.3.44"
       },
-      "size": [
-        315,
-        106
-      ],
+      "size": [315, 106],
       "type": "BasicScheduler",
-      "widgets_values": [
-        "normal",
-        5,
-        1
-      ]
+      "widgets_values": ["normal", 5, 1]
     }
   ],
   "revision": 0,

@@ -54,17 +54,7 @@
     "rmdir": false,
     "wget": false
   },
-  "colorize.languages": [
-    "css",
-    "html",
-    "javascript",
-    "json",
-    "markdown",
-    "php",
-    "scss",
-    "typescript",
-    "vue"
-  ],
+  "colorize.languages": ["css", "html", "javascript", "json", "markdown", "php", "scss", "typescript", "vue"],
   "console-ninja.featureSet": "Community",
   "coverage-gutters.customizable.context-menu": false,
   "cSpell.language": "en,fr",
@@ -462,13 +452,7 @@
   "editor.minimap.enabled": false,
   "editor.minimap.maxColumn": 300,
   "editor.tabSize": 2,
-  "eslint.validate": [
-    "html",
-    "vue",
-    "javascript",
-    "javascriptreact",
-    "typescript"
-  ],
+  "eslint.validate": ["html", "vue", "javascript", "javascriptreact", "typescript"],
   "explorer.compactFolders": false,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
@@ -478,31 +462,8 @@
   "extensions.ignoreRecommendations": true,
   "files.autoSave": "onFocusChange",
   "files.eol": "\n",
-  "formatAll.excludeFolders": [
-    ".cache",
-    ".data",
-    ".next",
-    ".nitro",
-    ".nuxt",
-    ".output",
-    "coverage",
-    "dist",
-    "node_modules",
-    "out"
-  ],
-  "formatAll.includeFileExtensions": [
-    ".cjs",
-    ".css",
-    ".html",
-    ".js",
-    ".json",
-    ".jsx",
-    ".md",
-    ".mjs",
-    ".ts",
-    ".tsx",
-    ".vue"
-  ],
+  "formatAll.excludeFolders": [".cache", ".data", ".next", ".nitro", ".nuxt", ".output", "coverage", "dist", "node_modules", "out"],
+  "formatAll.includeFileExtensions": [".cjs", ".css", ".html", ".js", ".json", ".jsx", ".md", ".mjs", ".ts", ".tsx", ".vue"],
   "git.autofetch": true,
   "git.confirmSync": false,
   "git.defaultBranchName": "master",
@@ -587,13 +548,7 @@
     "utils\\.tw\\(['`]([^'`]*)",
     "h\\d\\(['`]([^'`]*)"
   ],
-  "tailwindCSS.files.exclude": [
-    "**/.git/**",
-    "**/node_modules/**",
-    "**/.hg/**",
-    "**/.svn/**",
-    "**/pnpm-lock.yaml"
-  ],
+  "tailwindCSS.files.exclude": ["**/.git/**", "**/node_modules/**", "**/.hg/**", "**/.svn/**", "**/pnpm-lock.yaml"],
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.cursorStyle": "line",
@@ -607,9 +562,7 @@
       "path": "C:\\Windows\\System32\\cmd.exe"
     },
     "Git Bash": {
-      "args": [
-        "--login"
-      ],
+      "args": ["--login"],
       "path": "C:\\Program Files\\Git\\bin\\bash.exe",
       "source": "Git Bash"
     },

@@ -2,10 +2,7 @@
   "config": {},
   "extra": {
     "ds": {
-      "offset": [
-        -1133.4863768998002,
-        683.3644082083451
-      ],
+      "offset": [-1133.4863768998002, 683.3644082083451],
       "scale": 1.3513057093103975
     },
     "frontendVersion": "1.23.4"
@@ -14,80 +11,7 @@
   "id": "fe0e3d8e-8e07-44b9-a7a4-519e1e4c1bb9",
   "last_link_id": 33,
   "last_node_id": 16,
-  "links": [
-    [
-      7,
-      8,
-      0,
-      9,
-      1,
-      "IMAGE"
-    ],
-    [
-      8,
-      9,
-      0,
-      10,
-      0,
-      "IMAGE"
-    ],
-    [
-      18,
-      13,
-      0,
-      8,
-      0,
-      "IMAGE"
-    ],
-    [
-      20,
-      13,
-      1,
-      8,
-      2,
-      "FACE_MODEL"
-    ],
-    [
-      22,
-      7,
-      0,
-      8,
-      3,
-      "FACE_BOOST"
-    ],
-    [
-      27,
-      9,
-      0,
-      16,
-      0,
-      "IMAGE"
-    ],
-    [
-      31,
-      14,
-      0,
-      13,
-      0,
-      "IMAGE"
-    ],
-    [
-      32,
-      14,
-      0,
-      9,
-      0,
-      "IMAGE"
-    ],
-    [
-      33,
-      3,
-      0,
-      13,
-      1,
-      "IMAGE"
-    ]
-  ],
+  "links": [[7, 8, 0, 9, 1, "IMAGE"], [8, 9, 0, 10, 0, "IMAGE"], [18, 13, 0, 8, 0, "IMAGE"], [20, 13, 1, 8, 2, "FACE_MODEL"], [22, 7, 0, 8, 3, "FACE_BOOST"], [27, 9, 0, 16, 0, "IMAGE"], [31, 14, 0, 13, 0, "IMAGE"], [32, 14, 0, 9, 0, "IMAGE"], [33, 3, 0, 13, 1, "IMAGE"]],
   "nodes": [
     {
       "flags": {},
@@ -102,19 +26,13 @@
       "mode": 0,
       "order": 7,
       "outputs": [],
-      "pos": [
-        3087.49560546875,
-        -385.9154968261719
-      ],
+      "pos": [3087.49560546875, -385.9154968261719],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "PreviewImage",
         "ver": "0.3.27"
       },
-      "size": [
-        442.12152099609375,
-        359.55291748046875
-      ],
+      "size": [442.12152099609375, 359.55291748046875],
       "type": "PreviewImage",
       "widgets_values": []
     },
@@ -131,22 +49,14 @@
       "mode": 0,
       "order": 8,
       "outputs": [],
-      "pos": [
-        3138.866943359375,
-        -719.5173950195312
-      ],
+      "pos": [3138.866943359375, -719.5173950195312],
       "properties": {
         "cnr_id": "comfy-core",
         "ver": "0.3.27"
       },
-      "size": [
-        315,
-        270
-      ],
+      "size": [315, 270],
       "type": "SaveImage",
-      "widgets_values": [
-        "ComfyUI"
-      ]
+      "widgets_values": ["ComfyUI"]
     },
     {
       "flags": {},
@@ -174,37 +84,25 @@
       "order": 4,
       "outputs": [
         {
-          "links": [
-            18
-          ],
+          "links": [18],
           "name": "INPUT_IMAGE",
           "type": "IMAGE"
         },
         {
-          "links": [
-            20
-          ],
+          "links": [20],
           "name": "FACE_MODEL",
           "type": "FACE_MODEL"
         }
       ],
-      "pos": [
-        1717.2923583984375,
-        -339.7931823730469
-      ],
+      "pos": [1717.2923583984375, -339.7931823730469],
       "properties": {
         "cnr_id": "comfyui-reactor",
         "Node name for S&R": "ReActorSetWeight",
         "ver": "d901609a1d5d1942a6b069b2f8f3778fee3a7134"
       },
-      "size": [
-        390.5999755859375,
-        98
-      ],
+      "size": [390.5999755859375, 98],
       "type": "ReActorSetWeight",
-      "widgets_values": [
-        "100%"
-      ]
+      "widgets_values": ["100%"]
     },
     {
       "flags": {},
@@ -231,10 +129,7 @@
       "order": 6,
       "outputs": [
         {
-          "links": [
-            8,
-            27
-          ],
+          "links": [8, 27],
           "name": "IMAGE",
           "type": "IMAGE"
         },
@@ -254,37 +149,15 @@
           "type": "IMAGE"
         }
       ],
-      "pos": [
-        2662.91455078125,
-        -397.6191101074219
-      ],
+      "pos": [2662.91455078125, -397.6191101074219],
       "properties": {
         "cnr_id": "comfyui-reactor",
         "Node name for S&R": "ReActorMaskHelper",
         "ver": "d901609a1d5d1942a6b069b2f8f3778fee3a7134"
       },
-      "size": [
-        330,
-        454
-      ],
+      "size": [330, 454],
       "type": "ReActorMaskHelper",
-      "widgets_values": [
-        "bbox/face_yolov8m.pt",
-        0.5,
-        10,
-        3,
-        10,
-        "sam_vit_l_0b3195.pth",
-        0,
-        0.93,
-        0,
-        0.7,
-        "False",
-        "open",
-        6,
-        15,
-        1
-      ]
+      "widgets_values": ["bbox/face_yolov8m.pt", 0.5, 10, 3, 10, "sam_vit_l_0b3195.pth", 0, 0.93, 0, 0.7, "False", "open", 6, 15, 1]
     },
     {
       "flags": {},
@@ -299,23 +172,15 @@
           "type": "FACE_MODEL"
         }
       ],
-      "pos": [
-        1238.881103515625,
-        -128.0310516357422
-      ],
+      "pos": [1238.881103515625, -128.0310516357422],
       "properties": {
         "cnr_id": "comfyui-reactor",
         "Node name for S&R": "ReActorLoadFaceModel",
         "ver": "d901609a1d5d1942a6b069b2f8f3778fee3a7134"
       },
-      "size": [
-        327.5999755859375,
-        58
-      ],
+      "size": [327.5999755859375, 58],
       "type": "ReActorLoadFaceModel",
-      "widgets_values": [
-        "none"
-      ]
+      "widgets_values": ["none"]
     },
     {
       "flags": {},
@@ -349,9 +214,7 @@
       "order": 5,
       "outputs": [
         {
-          "links": [
-            7
-          ],
+          "links": [7],
           "name": "SWAPPED_IMAGE",
           "type": "IMAGE"
         },
@@ -366,33 +229,15 @@
           "type": "IMAGE"
         }
       ],
-      "pos": [
-        2242.50439453125,
-        -297.2186279296875
-      ],
+      "pos": [2242.50439453125, -297.2186279296875],
       "properties": {
         "cnr_id": "comfyui-reactor",
         "Node name for S&R": "ReActorFaceSwap",
         "ver": "d901609a1d5d1942a6b069b2f8f3778fee3a7134"
       },
-      "size": [
-        315,
-        358
-      ],
+      "size": [315, 358],
       "type": "ReActorFaceSwap",
-      "widgets_values": [
-        true,
-        "inswapper_128.onnx",
-        "retinaface_resnet50",
-        "codeformer-v0.1.0.pth",
-        1,
-        0.5,
-        "female",
-        "female",
-        "0",
-        "0",
-        1
-      ]
+      "widgets_values": [true, "inswapper_128.onnx", "retinaface_resnet50", "codeformer-v0.1.0.pth", 1, 0.5, "female", "female", "0", "0", 1]
     },
     {
       "flags": {},
@@ -402,35 +247,20 @@
       "order": 1,
       "outputs": [
         {
-          "links": [
-            22
-          ],
+          "links": [22],
           "name": "FACE_BOOST",
           "type": "FACE_BOOST"
         }
       ],
-      "pos": [
-        1765.6851806640625,
-        -72.0870132446289
-      ],
+      "pos": [1765.6851806640625, -72.0870132446289],
       "properties": {
         "cnr_id": "comfyui-reactor",
         "Node name for S&R": "ReActorFaceBoost",
         "ver": "d901609a1d5d1942a6b069b2f8f3778fee3a7134"
       },
-      "size": [
-        315,
-        178
-      ],
+      "size": [315, 178],
       "type": "ReActorFaceBoost",
-      "widgets_values": [
-        true,
-        "GPEN-BFR-512.onnx",
-        "Bicubic",
-        0.5000000000000001,
-        0.5,
-        true
-      ]
+      "widgets_values": [true, "GPEN-BFR-512.onnx", "Bicubic", 0.5000000000000001, 0.5, true]
     },
     {
       "flags": {},
@@ -440,10 +270,7 @@
       "order": 2,
       "outputs": [
         {
-          "links": [
-            31,
-            32
-          ],
+          "links": [31, 32],
           "name": "IMAGE",
           "type": "IMAGE"
         },
@@ -453,24 +280,15 @@
           "type": "MASK"
         }
       ],
-      "pos": [
-        1246.3336181640625,
-        -14.998480796813965
-      ],
+      "pos": [1246.3336181640625, -14.998480796813965],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "LoadImage",
         "ver": "0.3.27"
       },
-      "size": [
-        315,
-        314
-      ],
+      "size": [315, 314],
       "type": "LoadImage",
-      "widgets_values": [
-        "f1 (1).png",
-        "image"
-      ]
+      "widgets_values": ["f1 (1).png", "image"]
     },
     {
       "flags": {},
@@ -480,9 +298,7 @@
       "order": 3,
       "outputs": [
         {
-          "links": [
-            33
-          ],
+          "links": [33],
           "name": "IMAGE",
           "type": "IMAGE"
         },
@@ -492,24 +308,15 @@
           "type": "MASK"
         }
       ],
-      "pos": [
-        1237.024658203125,
-        -498.4002685546875
-      ],
+      "pos": [1237.024658203125, -498.4002685546875],
       "properties": {
         "cnr_id": "comfy-core",
         "Node name for S&R": "LoadImage",
         "ver": "0.3.27"
       },
-      "size": [
-        315,
-        314
-      ],
+      "size": [315, 314],
       "type": "LoadImage",
-      "widgets_values": [
-        "andreea savastre-2-face-bg.jpg",
-        "image"
-      ]
+      "widgets_values": ["andreea savastre-2-face-bg.jpg", "image"]
     }
   ],
   "revision": 0,

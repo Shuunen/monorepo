@@ -5,21 +5,15 @@
     "checkJs": true,
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
+    "lib": ["esnext"],
     "outDir": "types",
     "rootDir": "src",
     "sourceMap": false,
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "exclude": [
-    "vite.config.ts",
-    "src/**/*.test.js"
-  ],
+  "exclude": ["vite.config.ts", "src/**/*.test.js"],
   "extends": "../../tsconfig.base.json",
-  "include": [
-    "src/**/*.js"
-  ],
+  "include": ["src/**/*.js"],
   "references": []
 }

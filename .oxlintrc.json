@@ -40,55 +40,45 @@
     "URL": "readonly",
     "window": "readonly"
   },
-  "ignorePatterns": [
-    ".git",
-    ".nx",
-    "*.d.ts",
-    "coverage",
-    "dist",
-    "node_modules",
-    "out-tsc",
-    "routeTree.gen.ts",
-    "shadcn",
-    "storybook-static",
-    "test-output"
-  ],
+  "ignorePatterns": [".git", ".nx", "*.d.ts", "coverage", "dist", "node_modules", "out-tsc", "routeTree.gen.ts", "shadcn", "storybook-static", "test-output"],
   "overrides": [
     {
-      "files": [
-        "*.tsx"
-      ],
+      "files": ["*.tsx"],
       "rules": {
-        "max-lines-per-function": [
-          "error",
-          50
-        ],
-        "max-nested-callbacks": [
-          "error",
-          2
-        ]
+        "max-lines-per-function": ["error", 50],
+        "max-nested-callbacks": ["error", 2]
       }
     },
     {
-      "files": [
-        "*.ts",
-        "*.js"
-      ],
+      "files": ["**/icons/icon-*.tsx"],
+      "name": "wui-icons-overrides",
       "rules": {
-        "max-lines-per-function": [
-          "error",
-          20
-        ],
-        "max-nested-callbacks": [
-          "error",
-          1
-        ]
+        "no-restricted-imports": "off"
       }
     },
     {
-      "files": [
-        "*.user.js"
-      ],
+      "files": ["**/components/src/shadcn/*.tsx"],
+      "rules": {
+        "arrow-body-style": "off",
+        "consistent-type-imports": "off",
+        "curly": "off",
+        "no-magic-numbers": "off",
+        "no-namespace": "off",
+        "no-negated-condition": "off",
+        "no-null": "off",
+        "no-restricted-imports": "off",
+        "sort-keys": "off"
+      }
+    },
+    {
+      "files": ["*.ts", "*.js"],
+      "rules": {
+        "max-lines-per-function": ["error", 20],
+        "max-nested-callbacks": ["error", 1]
+      }
+    },
+    {
+      "files": ["*.user.js"],
       "globals": {
         "addMbField": "readonly",
         "addMbSubmit": "readonly",
@@ -108,11 +98,7 @@
       }
     },
     {
-      "files": [
-        "*.config.{js,ts}",
-        "*.{cli,node}.{js,ts}",
-        "*.test.{js,ts}"
-      ],
+      "files": ["*.config.{js,ts}", "*.{cli,node}.{js,ts}", "*.test.{js,ts}"],
       "globals": {
         "__filename": "readonly",
         "Blob": "readonly",
@@ -124,9 +110,7 @@
       }
     },
     {
-      "files": [
-        "*.test.{js,ts,tsx}"
-      ],
+      "files": ["*.test.{js,ts,tsx}"],
       "globals": {
         "afterAll": "readonly",
         "afterEach": "readonly",
@@ -140,10 +124,7 @@
       }
     },
     {
-      "files": [
-        "*.stories.tsx",
-        "*.test.{js,ts,tsx}"
-      ],
+      "files": ["*.stories.tsx", "*.test.{js,ts,tsx}"],
       "rules": {
         "eslint/no-negated-condition": "off",
         "id-length": "off",
@@ -163,19 +144,13 @@
       }
     },
     {
-      "files": [
-        "**/routes/**/*.ts",
-        "**/routes/**/*.tsx"
-      ],
+      "files": ["**/routes/**/*.ts", "**/routes/**/*.tsx"],
       "rules": {
         "unicorn/filename-case": "off"
       }
     },
     {
-      "files": [
-        "*.config.ts",
-        "*.workspace.ts"
-      ],
+      "files": ["*.config.ts", "*.workspace.ts"],
       "rules": {
         "max-lines-per-function": "off",
         "no-anonymous-default-export": "off",
@@ -184,52 +159,32 @@
       }
     },
     {
-      "files": [
-        "**/index.ts"
-      ],
+      "files": ["**/index.ts"],
       "rules": {
         "no-barrel-file": "off"
       }
     },
     {
-      "files": [
-        "**/*.cli.{js,ts}"
-      ],
+      "files": ["**/*.cli.{js,ts}"],
       "rules": {
         "unicorn/no-process-exit": "off"
       }
     },
     {
-      "files": [
-        "libs/vite-plugins/**/*",
-        "libs/components/.storybook/**/*"
-      ],
+      "files": ["libs/vite-plugins/**/*", "libs/components/.storybook/**/*"],
       "rules": {
         "no-console": "off"
       }
     }
   ],
-  "plugins": [
-    "import",
-    "jsdoc",
-    "oxc",
-    "typescript",
-    "unicorn",
-    "vitest"
-  ],
+  "plugins": ["import", "jsdoc", "oxc", "typescript", "unicorn", "vitest"],
   "rules": {
     "@typescript-eslint/array-type": "off",
     "@typescript-eslint/consistent-indexed-object-style": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "consistent-type-definitions": [
-      "error",
-      "type"
-    ],
+    "consistent-type-definitions": ["error", "type"],
     "consistent-type-specifier-style": "off",
-    "curly": [
-      "error",
-      "multi"
-    ],
+    "curly": ["error", "multi"],
     "eslint/no-undefined": "off",
     "eslint/yoda": "off",
     "explicit-module-boundary-types": "off",
@@ -245,26 +200,33 @@
     "import/group-exports": "off",
     "jsdoc/require-param-type": "off",
     "jsdoc/require-returns-type": "off",
-    "max-dependencies": [
-      "error",
-      30
-    ],
+    "max-dependencies": ["error", 30],
     "no-async-await": "off",
+    "no-console": "error",
     "no-continue": "off",
+    "no-default-export": "error",
     "no-magic-numbers": [
       "error",
       {
-        "ignore": [
-          -1,
-          0,
-          1
-        ],
+        "ignore": [-1, 0, 1],
         "ignoreClassFieldInitialValues": true,
         "ignoreDefaultValues": true
       }
     ],
+    "no-map-spread": "off",
     "no-named-export": "off",
     "no-rest-spread-properties": "off",
+    "no-restricted-imports": [
+      "error",
+      {
+        "message": "Use an generic icon from \"@monorepo/components\" or create a new one",
+        "name": "lucide-react"
+      },
+      {
+        "message": "Don't directly use the react-query hooks, use the hooks from api.ts instead",
+        "name": "@tanstack/react-query"
+      }
+    ],
     "no-ternary": "off",
     "no-void": "off",
     "number-literal-case": "off",

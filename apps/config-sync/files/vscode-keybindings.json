@@ -31,11 +31,7 @@
   },
   {
     "args": {
-      "commands": [
-        "typescript.restartTsServer",
-        "oxc.restartServer",
-        "biome.restart"
-      ]
+      "commands": ["typescript.restartTsServer", "oxc.restartServer", "biome.restart"]
     },
     "command": "runCommands",
     "key": "ctrl+oem_8"

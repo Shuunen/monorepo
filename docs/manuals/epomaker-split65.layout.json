@@ -1,12 +1,5 @@
 {
-  "encoders": [
-    [
-      ["KC_VOLD", "KC_VOLU"],
-      ["KC_VOLD", "KC_VOLU"],
-      ["KC_VOLD", "KC_VOLU"],
-      ["KC_VOLD", "KC_VOLU"]
-    ]
-  ],
+  "encoders": [[["KC_VOLD", "KC_VOLU"], ["KC_VOLD", "KC_VOLU"], ["KC_VOLD", "KC_VOLU"], ["KC_VOLD", "KC_VOLU"]]],
   "layers": [
     [
       "KC_NO",

@@ -5,12 +5,10 @@
       "cache": true,
       "executor": "nx:run-commands",
       "options": {
-        "command": "bun ../../../apps/one-file/barrel-maker.cli.ts --target=\"./{atoms,icons,molecules}/*.tsx\" --avoid=\".stories.\" --ext=",
+        "command": "bun ../../utils/src/bin/barrel-maker.cli.ts --target=\"./{atoms,icons,molecules}/*.tsx\" --avoid=\".stories.\" --ext=",
         "cwd": "libs/components/src"
       },
-      "outputs": [
-        "{projectRoot}/src/index.ts"
-      ]
+      "outputs": ["{projectRoot}/src/index.ts"]
     },
     "run-storybook": {
       "executor": "nx:run-commands",
@@ -22,15 +20,7 @@
     "test-storybook": {
       "cache": true,
       "executor": "nx:run-commands",
-      "inputs": [
-        "{projectRoot}/src/**/*.{ts,tsx,js,jsx}",
-        "{projectRoot}/src/**/*.stories.{ts,tsx,js,jsx}",
-        "{projectRoot}/.storybook/**/*",
-        "{projectRoot}/vitest.storybook.config.ts",
-        "{projectRoot}/vite.config.ts",
-        "{projectRoot}/package.json",
-        "{workspaceRoot}/package.json"
-      ],
+      "inputs": ["{projectRoot}/src/**/*.{ts,tsx,js,jsx}", "{projectRoot}/src/**/*.stories.{ts,tsx,js,jsx}", "{projectRoot}/.storybook/**/*", "{projectRoot}/vitest.storybook.config.ts", "{projectRoot}/vite.config.ts", "{projectRoot}/package.json", "{workspaceRoot}/package.json"],
       "options": {
         "command": "vitest --config=vitest.storybook.config.ts --run",
         "cwd": "libs/components"
@@ -38,12 +28,7 @@
       "outputs": []
     },
     "typecheck": {
-      "outputs": [
-        "{projectRoot}/out-tsc/vitest/**/*.d.ts",
-        "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo",
-        "{projectRoot}/out-tsc/storybook/**/*.d.ts",
-        "{projectRoot}/out-tsc/storybook/tsconfig.tsbuildinfo"
-      ]
+      "outputs": ["{projectRoot}/out-tsc/vitest/**/*.d.ts", "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo", "{projectRoot}/out-tsc/storybook/**/*.d.ts", "{projectRoot}/out-tsc/storybook/tsconfig.tsbuildinfo"]
     }
   }
 }

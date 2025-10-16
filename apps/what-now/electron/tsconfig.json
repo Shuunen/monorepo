@@ -11,14 +11,8 @@
     "rootDir": ".",
     "skipLibCheck": true,
     "target": "ES2017",
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
+    "typeRoots": ["./node_modules/@types"],
     "types": []
   },
-  "include": [
-    "./src/**/*",
-    "./capacitor.config.ts",
-    "./capacitor.config.js"
-  ]
+  "include": ["./src/**/*", "./capacitor.config.ts", "./capacitor.config.js"]
 }

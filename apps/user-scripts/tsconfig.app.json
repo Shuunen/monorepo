@@ -2,29 +2,15 @@
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
-    "lib": [
-      "dom",
-      "ESNext"
-    ],
+    "lib": ["dom", "ESNext"],
     "outDir": "dist",
     "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
-    "types": [
-      "node",
-      "vite/client"
-    ]
+    "types": ["node", "vite/client"]
   },
-  "exclude": [
-    "out-tsc",
-    "dist",
-    "src/**/*.test.ts",
-    "vite.config.ts"
-  ],
+  "exclude": ["out-tsc", "dist", "src/**/*.test.ts", "vite.config.ts"],
   "extends": "../../tsconfig.base.json",
-  "include": [
-    "src/**/*.js",
-    "src/**/*.ts"
-  ],
+  "include": ["src/**/*.js", "src/**/*.ts"],
   "references": [
     {
       "path": "../../libs/utils/tsconfig.lib.json"

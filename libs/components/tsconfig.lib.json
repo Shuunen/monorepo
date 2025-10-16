@@ -1,32 +1,15 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "lib": [
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "outDir": "dist",
     "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
-    "types": [
-      "node",
-      "@nx/react/typings/cssmodule.d.ts",
-      "@nx/react/typings/image.d.ts",
-      "vite/client"
-    ]
+    "types": ["node", "@nx/react/typings/cssmodule.d.ts", "@nx/react/typings/image.d.ts", "vite/client"]
   },
-  "exclude": [
-    "out-tsc",
-    "dist",
-    "src/**/*.test.ts",
-    "src/**/*.test.tsx",
-    "src/**/*.stories.tsx",
-    "vite.config.ts"
-  ],
+  "exclude": ["out-tsc", "dist", "src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.stories.tsx", "vite.config.ts"],
   "extends": "../../tsconfig.base.json",
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "references": [
     {
       "path": "../vite-plugins/tsconfig.lib.json"

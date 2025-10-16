@@ -11,32 +11,9 @@
     }
   },
   "files": {
-    "experimentalScannerIgnores": [
-      ".git",
-      ".nx",
-      "coverage",
-      "dist",
-      "node_modules",
-      "out-tsc",
-      "shadcn",
-      "storybook-static",
-      "test-output"
-    ],
+    "experimentalScannerIgnores": [".git", ".nx", "coverage", "dist", "node_modules", "out-tsc", "shadcn", "storybook-static", "test-output"],
     "ignoreUnknown": false,
-    "includes": [
-      "**",
-      "!**/.git",
-      "!**/.nx",
-      "!**/coverage",
-      "!**/dist",
-      "!**/node_modules",
-      "!**/out-tsc",
-      "!**/routeTree.gen.ts",
-      "!**/shadcn",
-      "!**/storybook-static",
-      "!**/test-output",
-      "!**/types/**/*.d.ts"
-    ]
+    "includes": ["**", "!**/.git", "!**/.nx", "!**/coverage", "!**/dist", "!**/node_modules", "!**/out-tsc", "!**/routeTree.gen.ts", "!**/shadcn", "!**/storybook-static", "!**/test-output", "!**/types/**/*.d.ts"]
   },
   "formatter": {
     "enabled": true,
@@ -55,7 +32,7 @@
   },
   "json": {
     "formatter": {
-      "enabled": false
+      "enabled": true
     },
     "parser": {
       "allowComments": false,
@@ -102,9 +79,7 @@
   },
   "overrides": [
     {
-      "includes": [
-        "**/index.ts"
-      ],
+      "includes": ["**/index.ts"],
       "linter": {
         "rules": {
           "performance": {
@@ -115,31 +90,13 @@
       }
     },
     {
-      "includes": [
-        "**/*.user.js"
-      ],
+      "includes": ["**/*.user.js"],
       "javascript": {
-        "globals": [
-          "atob",
-          "addMbField",
-          "KeyboardEvent",
-          "addMbSubmit",
-          "FormData",
-          "insertMbForm",
-          "localStorage",
-          "createMbForm",
-          "module",
-          "MutationObserver",
-          "Shuutils",
-          "textFromSelector"
-        ]
+        "globals": ["atob", "addMbField", "KeyboardEvent", "addMbSubmit", "FormData", "insertMbForm", "localStorage", "createMbForm", "module", "MutationObserver", "Shuutils", "textFromSelector"]
       }
     },
     {
-      "includes": [
-        "**/*.jsx",
-        "**/*.tsx"
-      ],
+      "includes": ["**/*.jsx", "**/*.tsx"],
       "linter": {
         "rules": {
           "suspicious": {
@@ -149,9 +106,7 @@
       }
     },
     {
-      "includes": [
-        "**/*.stories.tsx"
-      ],
+      "includes": ["**/*.stories.tsx"],
       "linter": {
         "rules": {
           "performance": {
@@ -161,21 +116,9 @@
       }
     },
     {
-      "includes": [
-        "**/*.test.ts",
-        "**/*.test.js"
-      ],
+      "includes": ["**/*.test.ts", "**/*.test.js"],
       "javascript": {
-        "globals": [
-          "describe",
-          "mock",
-          "it",
-          "beforeEach",
-          "afterEach",
-          "navigator",
-          "expect",
-          "vi"
-        ]
+        "globals": ["describe", "mock", "it", "beforeEach", "afterEach", "navigator", "expect", "vi"]
       },
       "linter": {
         "rules": {
@@ -189,12 +132,7 @@
       }
     },
     {
-      "includes": [
-        "**/*.config.*",
-        "**/*.cli.*",
-        "**/*.node.*",
-        "**/*.test.*"
-      ],
+      "includes": ["**/*.config.*", "**/*.cli.*", "**/*.node.*", "**/*.test.*"],
       "linter": {
         "rules": {
           "correctness": {
@@ -205,10 +143,7 @@
       }
     },
     {
-      "includes": [
-        "**/*.config.*",
-        "**/*.workspace.*"
-      ],
+      "includes": ["**/*.config.*", "**/*.workspace.*"],
       "linter": {
         "rules": {
           "style": {
@@ -218,10 +153,7 @@
       }
     },
     {
-      "includes": [
-        "libs/vite-plugins/**",
-        "libs/components/.storybook/**"
-      ],
+      "includes": ["libs/vite-plugins/**", "libs/components/.storybook/**"],
       "linter": {
         "rules": {
           "suspicious": {
@@ -238,9 +170,7 @@
           }
         }
       },
-      "includes": [
-        "libs/**/package.json"
-      ]
+      "includes": ["libs/**/package.json"]
     }
   ],
   "vcs": {
