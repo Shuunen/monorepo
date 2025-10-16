@@ -71,6 +71,30 @@
       }
     },
     {
+      "files": ["**/components/src/molecules/*.tsx", "**/components/src/organisms/*.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["lucide-react"],
+                "message": "Use an icon from ../icons or create a new one"
+              },
+              {
+                "group": ["@monorepo/components"],
+                "message": "Don't import from yourself to avoid circular dependencies, use relative imports instead like ../atoms/button or ../icons/icon-error"
+              },
+              {
+                "group": ["../shadcn/!(*utils)"],
+                "message": "Don't import from ShadCn in molecules, import from ../atoms instead"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
       "files": ["*.ts", "*.js"],
       "rules": {
         "max-lines-per-function": ["error", 20],
@@ -219,12 +243,16 @@
     "no-restricted-imports": [
       "error",
       {
-        "message": "Use an generic icon from \"@monorepo/components\" or create a new one",
-        "name": "lucide-react"
-      },
-      {
-        "message": "Don't directly use the react-query hooks, use the hooks from api.ts instead",
-        "name": "@tanstack/react-query"
+        "patterns": [
+          {
+            "group": ["lucide-react"],
+            "message": "Use an generic icon from \"@monorepo/components\" or create a new one"
+          },
+          {
+            "group": ["@tanstack/react-query"],
+            "message": "Don't directly use the react-query hooks, use the hooks from api.ts instead"
+          }
+        ]
       }
     ],
     "no-ternary": "off",

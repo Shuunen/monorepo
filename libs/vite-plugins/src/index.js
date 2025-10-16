@@ -1,1 +1,1 @@
-export * from "./lib/unique-mark.node.js";
+export * from './lib/unique-mark.node.js'

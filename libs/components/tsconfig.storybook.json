@@ -1,15 +1,25 @@
 {
   "compilerOptions": {
     "jsx": "preserve",
-    "lib": ["dom", "es2022"],
+    "lib": [
+      "dom",
+      "es2022"
+    ],
     "module": "esnext",
     "moduleResolution": "bundler",
     "outDir": "out-tsc/storybook"
   },
-  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx"
+  ],
   "extends": "../../tsconfig.base.json",
-  "files": ["../../node_modules/@nx/react/typings/styled-jsx.d.ts", "../../node_modules/@nx/react/typings/cssmodule.d.ts", "../../node_modules/@nx/react/typings/image.d.ts"],
-  "include": ["src/**/*.stories.tsx", "src/**/*.stories.mdx", ".storybook/*.ts"],
+  "include": [
+    "src/**/*.stories.tsx",
+    "src/**/*.stories.mdx",
+    ".storybook/*.ts",
+    ".storybook/*.tsx"
+  ],
   "references": [
     {
       "path": "./tsconfig.lib.json"
