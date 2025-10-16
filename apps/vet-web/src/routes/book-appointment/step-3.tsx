@@ -1,5 +1,6 @@
 import { Button } from '@monorepo/components'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+// oxlint-disable-next-line no-restricted-imports
 import { ArrowLeftIcon, Calendar1Icon } from 'lucide-react'
 import { useEffect } from 'react'
 import { logger } from '../../utils/logger.utils'

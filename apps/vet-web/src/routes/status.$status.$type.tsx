@@ -1,5 +1,6 @@
 import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@monorepo/components'
 import { createFileRoute, Link } from '@tanstack/react-router'
+// oxlint-disable-next-line no-restricted-imports
 import { AlertCircle, CheckCircle, Home, Info } from 'lucide-react'
 
 const statusIcons = {

@@ -1,3 +1,4 @@
+// oxlint-disable-next-line no-restricted-imports
 import { Brush, CalendarCheck2, Sparkles } from 'lucide-react'
 import { BookCard } from './book-card'
 

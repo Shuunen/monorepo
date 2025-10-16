@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@monorepo/components'
+import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, IconArrowRight, Input } from '@monorepo/components'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { ArrowRightIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { FormSelect } from '../../components/molecules/form-select'
@@ -44,7 +43,7 @@ function BaseDataForm() {
               <FormControl>
                 <Input placeholder="Enter pet ID or microchip number" {...field} data-testid="identifier" />
               </FormControl>
-              <FormMessage />
+              <FormMessage testId="identifier-message" />
             </FormItem>
           )}
         />
@@ -58,7 +57,7 @@ function BaseDataForm() {
               <FormControl>
                 <Input placeholder="Enter pet name" {...field} data-testid="name" />
               </FormControl>
-              <FormMessage />
+              <FormMessage testId="name-message" />
             </FormItem>
           )}
         />
@@ -72,7 +71,7 @@ function BaseDataForm() {
               <FormControl>
                 <FormSelect field={field} form={form} isRequired={false} name="age" options={ages} placeholder="Select the age range" testId="age" />
               </FormControl>
-              <FormMessage />
+              <FormMessage testId="age-me" />
             </FormItem>
           )}
         />
@@ -84,7 +83,7 @@ function BaseDataForm() {
             <FormItem>
               <FormLabel>Breed</FormLabel>
               <FormSelect field={field} form={form} isRequired={false} name="breed" options={breeds} placeholder="Select a breed" testId="breed" />
-              <FormMessage />
+              <FormMessage testId="breed-message" />
             </FormItem>
           )}
         />
@@ -96,14 +95,14 @@ function BaseDataForm() {
               <FormControl>
                 <Input placeholder="Enter pet ID or microchip number" {...field} data-testid="parent-identifier" value={(field.value as string) || ''} />
               </FormControl>
-              <FormMessage />
+              <FormMessage testId="parent-message" />
             </FormItem>
           )}
         </OptionalSection>
 
         <div className="flex justify-center mt-6">
           <Button data-testid="next" testId="goto" type="submit">
-            Go to complementary data <ArrowRightIcon />
+            Go to complementary data <IconArrowRight />
           </Button>
         </div>
       </form>

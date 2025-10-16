@@ -1,4 +1,5 @@
 import { Button } from '@monorepo/components'
+// oxlint-disable-next-line no-restricted-imports
 import { HomeIcon, MoveLeftIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -75,7 +76,7 @@ export function RecipeViewer() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen" data-testid="recipe">
-      <Button asChild className="flex fixed bottom-4 z-10 rounded-xl border-2 border-orange-800" variant="outline">
+      <Button asChild className="flex fixed bottom-4 z-10 rounded-xl border-2 border-orange-800" testId="back-home" variant="outline">
         <Link to="/">
           <MoveLeftIcon />
           Retour à l'accueil

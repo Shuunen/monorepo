@@ -1,6 +1,7 @@
 // oxlint-disable max-dependencies, max-lines
 import { Button, FloatingMenu } from '@monorepo/components'
 import { dateIso10, formatDate } from '@monorepo/utils'
+// oxlint-disable-next-line no-restricted-imports
 import { ArrowLeftRightIcon, CalendarIcon, DownloadIcon, MinusIcon, MoveLeftIcon, MoveRightIcon, PlusIcon, SaveIcon, UploadIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Task } from '../types'
@@ -33,16 +34,16 @@ function TaskCardControls({ canIncrease, canDecrease, canMove, onIncrease, onDec
   const iconClasses = 'size-3'
   return (
     <div className="absolute right-0.5 top-0.5 grid grid-cols-2 gap-1.5 opacity-10 sepia hover:opacity-100 hover:sepia-0">
-      <Button className={btnClasses} disabled={!canIncrease} onClick={onIncrease} variant={canIncrease ? 'destructive' : 'ghost'}>
+      <Button className={btnClasses} disabled={!canIncrease} onClick={onIncrease} testId="btn-increase" variant={canIncrease ? 'destructive' : 'ghost'}>
         <PlusIcon className={iconClasses} />
       </Button>
-      <Button className={btnClasses} disabled={!canDecrease} onClick={onDecrease} variant={canDecrease ? 'secondary' : 'ghost'}>
+      <Button className={btnClasses} disabled={!canDecrease} onClick={onDecrease} testId="btn-decrease" variant={canDecrease ? 'secondary' : 'ghost'}>
         <MinusIcon className={iconClasses} />
       </Button>
-      <Button className={btnClasses} disabled={!canMove} onClick={onBefore} variant={canMove ? 'default' : 'ghost'}>
+      <Button className={btnClasses} disabled={!canMove} onClick={onBefore} testId="btn-before" variant={canMove ? 'default' : 'ghost'}>
         <MoveLeftIcon className={iconClasses} />
       </Button>
-      <Button className={btnClasses} disabled={!canMove} onClick={onAfter} variant={canMove ? 'default' : 'ghost'}>
+      <Button className={btnClasses} disabled={!canMove} onClick={onAfter} testId="btn-after" variant={canMove ? 'default' : 'ghost'}>
         <MoveRightIcon className={iconClasses} />
       </Button>
     </div>
@@ -381,22 +382,22 @@ function PlannerHeader({ onTasksUpload, onTasksDispatch, onSaveModifications, ha
           <h3 className="mt-0 mb-0">Planner</h3>
         </div>
         <div className="flex gap-3">
-          <Button onClick={onTasksUpload} variant="outline">
+          <Button onClick={onTasksUpload} testId="btn-upload" variant="outline">
             <UploadIcon className="size-4" />
             Upload tasks
           </Button>
-          <Button onClick={downloadData} variant="outline">
+          <Button onClick={downloadData} testId="btn-download" variant="outline">
             <DownloadIcon className="size-4" />
             Download tasks
           </Button>
           {showDispatch && (
-            <Button onClick={onTasksDispatch} variant="outline">
+            <Button onClick={onTasksDispatch} testId="btn-dispatch" variant="outline">
               <ArrowLeftRightIcon className="size-4" />
               Dispatch tasks
             </Button>
           )}
           {hasModifications && (
-            <Button disabled={saving} onClick={onSaveModifications}>
+            <Button disabled={saving} onClick={onSaveModifications} testId="btn-save">
               <SaveIcon className="size-4" />
               {saving ? 'Saving...' : 'Save modifications'}
             </Button>

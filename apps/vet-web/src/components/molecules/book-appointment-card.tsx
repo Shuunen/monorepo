@@ -1,3 +1,4 @@
+// oxlint-disable-next-line no-restricted-imports
 import { BoxIcon, Calendar, Clock, PawPrint } from 'lucide-react'
 import { BookCard } from './book-card'
 

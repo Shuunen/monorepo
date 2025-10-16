@@ -1,5 +1,6 @@
 import { Button, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, FormControl, Popover, PopoverContent, PopoverTrigger } from '@monorepo/components'
 import { cn } from '@monorepo/utils'
+// oxlint-disable-next-line no-restricted-imports
 import { Check, ChevronsUpDown, Command } from 'lucide-react'
 import { useState } from 'react'
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form'

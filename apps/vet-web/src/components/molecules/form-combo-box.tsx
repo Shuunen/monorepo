@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, Popover, PopoverContent, PopoverTrigger, Textarea } from '@monorepo/components'
 import { cn } from '@monorepo/utils'
+// oxlint-disable-next-line no-restricted-imports
 import { Check, ChevronsUpDown, Command } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -57,7 +58,7 @@ export function ComboboxForm() {
               <FormControl>
                 <Textarea data-testid={field.name} placeholder="Type your message here." {...field} />
               </FormControl>
-              <FormMessage />
+              <FormMessage testId="message" />
             </FormItem>
           )}
         />
@@ -102,7 +103,7 @@ export function ComboboxForm() {
                 </PopoverContent>
               </Popover>
               <FormDescription>This is the language that will be used in the dashboard.</FormDescription>
-              <FormMessage />
+              <FormMessage testId="language-message" />
             </FormItem>
           )}
         />

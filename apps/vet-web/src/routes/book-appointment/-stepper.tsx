@@ -1,6 +1,7 @@
 import { Button } from '@monorepo/components'
-import { cn, Result, unwrap } from '@monorepo/utils'
+import { cn, Result } from '@monorepo/utils'
 import { Link } from '@tanstack/react-router'
+// oxlint-disable-next-line no-restricted-imports
 import { CatIcon, CheckCircleIcon, CircleIcon, DogIcon } from 'lucide-react'
 import { bookingSteps } from './-steps.const'
 import { useBookAppointmentStore } from './-steps.store'
@@ -25,7 +26,7 @@ export function Stepper() {
     {
       completed: complementaryValid && baseValid,
       // eslint-disable-next-line no-magic-numbers
-      disabled: unwrap(hasAccess(2, variant, data)).error !== undefined,
+      disabled: Result.unwrap(hasAccess(2, variant, data)).error !== undefined,
       path: '/book-appointment/step-3',
     },
   ]

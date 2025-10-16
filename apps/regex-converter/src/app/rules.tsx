@@ -1,5 +1,6 @@
 import { Button, Card, Input, Switch } from '@monorepo/components'
 import { clsx } from 'clsx'
+// oxlint-disable-next-line no-restricted-imports
 import { DeleteIcon, PlusCircleIcon } from 'lucide-react'
 import type { Rule } from './types'
 
@@ -10,7 +11,7 @@ export function RuleLine({ rule, onChange, onRemove }: { rule: Rule; onChange: (
       <Switch checked={rule.enabled} onCheckedChange={checked => onChange('enabled', checked)} />
       <Input className={inputClasses} onChange={event => onChange('pattern', event.target.value)} placeholder="replace in" value={rule.pattern} />
       <Input className={inputClasses} onChange={event => onChange('replacement', event.target.value)} placeholder="replace out" value={rule.replacement} />
-      <Button className={clsx('hover:text-red-500 -ml-2', rule.enabled ? 'text-primary' : 'text-muted-foreground/50')} onClick={onRemove} size="icon" variant="ghost">
+      <Button className={clsx('hover:text-red-500 -ml-2', rule.enabled ? 'text-primary' : 'text-muted-foreground/50')} onClick={onRemove} size="icon" testId="button-delete" variant="ghost">
         <DeleteIcon className="size-5" />
       </Button>
     </div>
@@ -32,7 +33,7 @@ export function Rules({ rules, setRules }: { rules: Rule[]; setRules: (rules: Ru
     <div>
       <div className="flex justify-center items-center gap-2 mb-2">
         <h2 className="text-primary mt-0 mb-1.5">rules</h2>
-        <Button className="rounded-full " onClick={() => addRule()} size="icon" variant="ghost">
+        <Button className="rounded-full " onClick={() => addRule()} size="icon" testId="button-add" variant="ghost">
           <PlusCircleIcon className="size-7 text-primary" />
         </Button>
       </div>

@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, Textarea } from '@monorepo/components'
+import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, IconArrowLeft, Input, Textarea } from '@monorepo/components'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { ArrowLeftIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { FormFileUpload } from '../../../components/molecules/form-file-upload'
@@ -47,7 +46,7 @@ function DogComplementaryDataForm() {
               <FormControl>
                 <Input placeholder="Enter dog color" {...field} data-testid="color" />
               </FormControl>
-              <FormMessage />
+              <FormMessage testId="color-message" />
             </FormItem>
           )}
         />
@@ -61,7 +60,7 @@ function DogComplementaryDataForm() {
               <FormControl>
                 <Input placeholder="Enter dog weight" type="number" {...field} data-testid="weight" />
               </FormControl>
-              <FormMessage />
+              <FormMessage testId="weight-message" />
             </FormItem>
           )}
         />
@@ -77,7 +76,7 @@ function DogComplementaryDataForm() {
               <FormControl>
                 <Textarea placeholder="Describe your dog's exercise routine" {...field} data-testid="exerciseRoutine" />
               </FormControl>
-              <FormMessage />
+              <FormMessage testId="exerciseRoutine-message" />
             </FormItem>
           )}
         />
@@ -85,7 +84,7 @@ function DogComplementaryDataForm() {
         <div className="flex justify-between space-x-4 pt-4">
           <Link to="/book-appointment/step-1">
             <Button data-testid="back" testId="back" type="button" variant="link">
-              <ArrowLeftIcon /> Back
+              <IconArrowLeft /> Back
             </Button>
           </Link>
 

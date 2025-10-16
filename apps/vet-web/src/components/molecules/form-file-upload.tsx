@@ -1,5 +1,6 @@
 import { Button, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, Progress } from '@monorepo/components'
 import { cn, slugify } from '@monorepo/utils'
+// oxlint-disable-next-line no-restricted-imports
 import { CircleXIcon, FileCheckIcon, FileTextIcon, FileUpIcon, FileXIcon, RotateCcwIcon, TrashIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import type { FieldValues, Path } from 'react-hook-form'
@@ -196,7 +197,7 @@ export function FormFileUpload<TypeFieldValues extends FieldValues>({ accept, fo
               )}
             </FormControl>
 
-            <FormMessage data-testid={`error-msg-${slugify(id)}`} />
+            <FormMessage testId={`error-msg-${slugify(id)}`} />
           </FormItem>
         )
       }

@@ -1,5 +1,6 @@
 import { Button } from '@monorepo/components'
 import { nbFirst, nbSecond, on, readClipboard } from '@monorepo/utils'
+// oxlint-disable-next-line no-restricted-imports
 import { ExternalLinkIcon } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { parseClipboard, validateCredentials } from '../utils/credentials.utils'
@@ -68,7 +69,9 @@ function CredentialsForm({ formData, onInputChange, onSubmit }: CredentialsFormP
       })}
 
       <div className="flex gap-4 justify-center">
-        <Button type="submit">Save Credentials</Button>
+        <Button testId="save-credentials-btn" type="submit">
+          Save Credentials
+        </Button>
       </div>
     </form>
   )

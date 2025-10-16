@@ -1,6 +1,7 @@
 /* c8 ignore start */
 import { Button } from '@monorepo/components'
 import { Link } from '@tanstack/react-router'
+// oxlint-disable-next-line no-restricted-imports
 import { HeadsetIcon, PawPrint } from 'lucide-react'
 
 const routes = [

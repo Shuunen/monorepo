@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, RadioGroup, RadioGroupItem, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@monorepo/components'
+import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, IconArrowLeft, Input, RadioGroup, RadioGroupItem, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@monorepo/components'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { ArrowLeftIcon } from 'lucide-react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { FormFileUpload } from '../../../components/molecules/form-file-upload.js'
@@ -67,7 +66,7 @@ function CatComplementaryDataForm() {
                   </FormItem>
                 </RadioGroup>
               </FormControl>
-              <FormMessage />
+              <FormMessage testId="environment-message" />
             </FormItem>
           )}
         />
@@ -81,7 +80,7 @@ function CatComplementaryDataForm() {
               <FormControl>
                 <Input type="date" {...field} data-testid="lastFleaTreatment" />
               </FormControl>
-              <FormMessage />
+              <FormMessage testId="lastFleaTreatment-message" />
             </FormItem>
           )}
         />
@@ -108,7 +107,7 @@ function CatComplementaryDataForm() {
                   ))}
                 </SelectContent>
               </Select>
-              <FormMessage />
+              <FormMessage testId="vaccinationStatus-message" />
             </FormItem>
           )}
         />
@@ -116,7 +115,7 @@ function CatComplementaryDataForm() {
         <div className="flex gap-24 mt-4">
           <Link to="/book-appointment/step-1">
             <Button data-testid="back" testId="back" type="button" variant="link">
-              <ArrowLeftIcon /> Back
+              <IconArrowLeft /> Back
             </Button>
           </Link>
           <Button data-testid="next" testId="submit" type="submit">
