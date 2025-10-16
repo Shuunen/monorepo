@@ -200,7 +200,8 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
   const hueBody = getHueColorBody(progress)
   log('info', context, `Prepared hue body: ${hueBody}`)
   const trmnlPayload = JSON.stringify({
-    mergeVariables: {
+    // biome-ignore lint/style/useNamingConvention: cannot change external API
+    merge_variables: {
       nextTitle: nextTask,
       progress,
       remaining: remaining ? `${remaining} min to take care` : undefined,
