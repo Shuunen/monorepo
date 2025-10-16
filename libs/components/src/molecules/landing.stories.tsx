@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { within } from '@storybook/testing-library'
-import { expect } from 'storybook/test'
+import { expect, within } from 'storybook/test'
 import { Landing } from './landing'
 
 const meta: Meta<typeof Landing> = {
