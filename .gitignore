@@ -3,6 +3,7 @@
 .DS_Store
 .env
 .github/instructions/nx.instructions.md
+.idea
 .nx/cache
 .nx/workspace-data
 *.bak
@@ -14,7 +15,12 @@
 *.log
 *.map
 *.mp4
+*.njsproj
+*.ntvs*
 *.pem
+*.sln
+*.suo
+*.sw?
 *.tgz
 *.tsbuildinfo
 connect.lock
@@ -27,6 +33,7 @@ sample.*
 storybook-static
 test-output
 Thumbs.db
+*.tsbuildinfo
 tmp
 typings
 vite.config.*.timestamp*
