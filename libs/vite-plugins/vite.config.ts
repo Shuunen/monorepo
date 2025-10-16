@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 
-export default defineConfig(() => ({
+export default defineConfig({
   cacheDir: '../../node_modules/.vite/libs/vite-plugins',
   plugins: [],
   root: __dirname,
@@ -9,6 +9,7 @@ export default defineConfig(() => ({
       exclude: ['src/index.js', '*.config.ts', 'src/**/*.d.ts'],
       include: ['src'],
       provider: 'v8' as const,
+      reporter: [['text', { maxCols: 120 }], 'lcov'],
       reportsDirectory: './test-output/vitest/coverage',
     },
     environment: 'node',
@@ -21,4 +22,4 @@ export default defineConfig(() => ({
   // worker: {
   //  plugins: [ nxViteTsPaths() ],
   // },
-}))
+})

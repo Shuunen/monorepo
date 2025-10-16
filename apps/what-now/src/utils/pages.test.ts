@@ -1,3 +1,4 @@
+// oxlint-disable-next-line no-restricted-imports
 import { CalendarIcon, CircleQuestionMarkIcon, HomeIcon, SettingsIcon } from 'lucide-react'
 import { expect, it, vi } from 'vitest'
 import { useActions } from './pages.utils'

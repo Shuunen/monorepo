@@ -30,7 +30,7 @@ export function injectMark(content, placeholder, mark) {
 export function generateMark({ commit = '', date = new Date().toISOString(), version = '' }) {
   let finalCommit = commit
   /* c8 ignore next */
-  if (commit === '') finalCommit = execSync('git rev-parse --short HEAD', { cwd: process.cwd() }).toString().trim()
+  if (commit === '') finalCommit = execSync('git rev-parse --short HEAD', { cwd: process.cwd() }).toString().trim() //NOSONAR
   return `${version} - ${finalCommit} - ${date}`
 }
 

@@ -1,4 +1,66 @@
-import { err as error, ok, trySafe, unwrap } from './resultx.js'
+// MIT License Copyright (c) 2023-PRESENT Johann Schopplich
+// I had to get sources from https://github.com/johannschopplich/resultx/blob/main/src/index.ts to be able to have a cjs working version of the library
+// oxlint-disable max-classes-per-file, consistent-type-definitions, curly, sort-keys, id-length
+
+type Result<T, E> = Ok<T> | Err<E>
+
+interface UnwrappedOk<T> {
+  value: T
+  error: undefined
+}
+interface UnwrappedErr<E> {
+  value: undefined
+  error: E
+}
+
+export type UnwrappedResult<T, E> = UnwrappedOk<T> | UnwrappedErr<E>
+
+class Ok<T> {
+  readonly value: T
+  readonly ok = true
+  constructor(value: T) {
+    this.value = value
+  }
+}
+
+class Err<E> {
+  readonly error: E
+  readonly ok = false
+  constructor(error: E) {
+    this.error = error
+  }
+}
+
+function ok<T>(value: T): Ok<T> {
+  return new Ok(value)
+}
+
+function err<E extends string = string>(error: E): Err<E>
+function err<E = unknown>(error: E): Err<E>
+function err<E = unknown>(error: E): Err<E> {
+  return new Err(error)
+}
+
+function trySafe<T, E = unknown>(fn: () => T): Result<T, E>
+function trySafe<T, E = unknown>(promise: Promise<T>): Promise<Result<T, E>>
+function trySafe<T, E = unknown>(fnOrPromise: (() => T) | Promise<T>): Result<T, E> | Promise<Result<T, E>> {
+  if (fnOrPromise instanceof Promise) {
+    return fnOrPromise.then(ok).catch(err as (error: unknown) => Err<E>)
+  }
+
+  try {
+    return ok(fnOrPromise())
+  } catch (error) {
+    return err(error as E)
+  }
+}
+
+function unwrap<T>(result: Ok<T>): UnwrappedOk<T>
+function unwrap<E>(result: Err<E>): UnwrappedErr<E>
+function unwrap<T, E>(result: Result<T, E>): UnwrappedResult<T, E>
+function unwrap<T, E>(result: Result<T, E>): UnwrappedResult<T, E> {
+  return result.ok ? { error: undefined, value: result.value } : { error: result.error, value: undefined }
+}
 
 /**
  * A `Result` collection of functions from Johann Schopplich to handle errors and successes.
@@ -10,7 +72,7 @@ export const Result = {
    * Create a failing `Result` with an error message.
    * @example if (shitHappen) return Result.error('File not found')
    */
-  error,
+  error: err,
   /**
    * Create a successful `Result` with a value.
    * @example return Result.ok(42)
@@ -36,3 +98,6 @@ export const Result = {
    */
   unwrap,
 }
+
+// oxlint-disable-next-line id-length
+export type ResultType<T, E> = Result<T, E>

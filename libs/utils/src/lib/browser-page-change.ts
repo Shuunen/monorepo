@@ -1,5 +1,5 @@
 import { consoleLog } from './browser-console.js'
-import { sleep } from './functions.js'
+import { sleep } from './sleep.js'
 
 /**
  * Default callback for onPageChange

@@ -1,4 +1,5 @@
 import type { FloatingMenuAction } from '@monorepo/components'
+// oxlint-disable-next-line no-restricted-imports
 import { CalendarIcon, CircleQuestionMarkIcon, HomeIcon, SettingsIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 

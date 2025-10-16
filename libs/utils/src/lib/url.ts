@@ -1,5 +1,5 @@
 import { parseJson } from './json.js'
-import { trySafe } from './resultx.js'
+import { Result } from './result.js'
 
 /**
  * Encode a string to base64
@@ -31,7 +31,7 @@ function base64CharToPercentEncoded(char: string) {
  * @returns Decoded string
  */
 export function fromBase64(b64: string) {
-  const result = trySafe(() =>
+  const result = Result.trySafe(() =>
     decodeURIComponent(
       Array.from(globalThis.atob(b64))
         // oxlint-disable-next-line max-nested-callbacks

@@ -1,4 +1,4 @@
-import { sleep } from './functions.js'
+import { sleep } from './sleep.js'
 import { throttle } from './throttle.js'
 
 let times = 0

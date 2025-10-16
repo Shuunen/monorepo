@@ -1,4 +1,4 @@
-import { CircleQuestionMarkIcon } from 'lucide-react'
+import { IconTooltip } from '../icons/icon-tooltip'
 import { Alert, AlertDescription } from '../shadcn/alert'
 
 type LandingProps = {
@@ -20,7 +20,7 @@ export function Landing({ children, title, subtitle, status }: LandingProps) {
         <div>
           {status && (
             <Alert className="w-fit mx-auto border-info/50 bg-info/5">
-              <CircleQuestionMarkIcon />
+              <IconTooltip />
               <AlertDescription>
                 <p className="text-foreground">{status}</p>
               </AlertDescription>

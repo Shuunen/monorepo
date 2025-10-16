@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"
@@ -129,6 +127,7 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-description"
       id={formDescriptionId}
+      data-testid={`form-description-${formDescriptionId}`}
       className={cn("text-muted-foreground text-sm", className)}
       {...props}
     />

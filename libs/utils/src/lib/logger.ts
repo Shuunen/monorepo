@@ -2,7 +2,8 @@ import { consoleLog } from './browser-console.js'
 import { toastError, toastInfo, toastSuccess } from './browser-toast.js'
 import { bgGreen, bgRed, blue, cyan, gray, green, red, yellow } from './colors.js'
 import { nbFourth, nbSpacesIndent } from './constants.js'
-import { formatDate, readableTime } from './dates.js'
+import { readableTime } from './date-readable-time.js'
+import { formatDate } from './dates.js'
 import { isBrowserEnvironment } from './environment.js'
 import { isVerbose } from './flags.js'
 
@@ -13,16 +14,17 @@ import { isVerbose } from './flags.js'
  * @example clean(['Hello', { name: "world" }, 42]) // "Hello { "name": "world" } 42"
  */
 function clean(...stuff: Readonly<unknown[]>) {
-  // oxlint-disable no-control-regex
-  return (
-    stuff
-      .map(thing => (typeof thing === 'object' ? JSON.stringify(thing) : String(thing)))
-      .join(' ')
-      // biome-ignore lint/suspicious/noControlCharactersInRegex: it's ok, daddy is here
-      .replace(/[\u001B\u009B][#();?[]*(?:\d{1,4}(?:;\d{0,4})*)?[\d<=>A-ORZcf-nqry]/gu, '')
-      .replace(/"/gu, "'")
+  // ANSI escape sequence regex - using String.fromCharCode to avoid linter complaints
+  const ansiEscapeRegex = new RegExp(
+    // oxlint-disable-next-line no-magic-numbers
+    `[${String.fromCodePoint(0x1b)}${String.fromCodePoint(0x9b)}][#();?[]*(?:\\d{1,4}(?:;\\d{0,4})*)?[\\d<=>A-ORZcf-nqry]`,
+    'gu',
   )
-  // oxlint-enable no-control-regex
+  return stuff
+    .map(thing => (typeof thing === 'object' ? JSON.stringify(thing) : String(thing)))
+    .join(' ')
+    .replace(ansiEscapeRegex, '')
+    .replace(/"/gu, "'")
 }
 
 type LogLevel = '1-debug' | '2-test' | '3-info' | '4-fix' | '5-warn' | '6-good' | '7-error'
@@ -231,7 +233,7 @@ export class Logger {
    */
   public showError(...stuff: Readonly<unknown[]>) {
     this.error(...stuff)
-    /* c8 ignore next */
+    /* c8 ignore next 3 */
     if (isBrowserEnvironment()) toastError(clean(...stuff))
   }
 
@@ -242,7 +244,7 @@ export class Logger {
    */
   public showInfo(...stuff: Readonly<unknown[]>) {
     this.info(...stuff)
-    /* c8 ignore next */
+    /* c8 ignore next 3 */
     if (isBrowserEnvironment()) toastInfo(clean(...stuff))
   }
 
@@ -253,7 +255,7 @@ export class Logger {
    */
   public showSuccess(...stuff: Readonly<unknown[]>) {
     this.success(...stuff)
-    /* c8 ignore next */
+    /* c8 ignore next 3 */
     if (isBrowserEnvironment()) toastSuccess(clean(...stuff))
   }
 

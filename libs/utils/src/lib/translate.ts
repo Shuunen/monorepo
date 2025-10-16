@@ -1,6 +1,6 @@
 import { getPath } from './browser-routing.js'
 import { Result } from './result.js'
-import { fillTemplate } from './strings.js'
+import { fillTemplate } from './string-template.js'
 
 const handledLangs = ['en', 'fr'] as const
 

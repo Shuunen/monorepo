@@ -1,5 +1,5 @@
 import { SearchCheckIcon } from 'lucide-react'
 
-export function IconSearchCheck() {
-  return <SearchCheckIcon className="size-4" />
+export function IconSearchCheck({ className }: Readonly<{ className?: string }>) {
+  return <SearchCheckIcon className={className} strokeWidth={3} />
 }

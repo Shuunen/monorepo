@@ -1,5 +1,6 @@
 import { toastInfo } from '@monorepo/utils'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+// oxlint-disable-next-line no-restricted-imports
 import { BanIcon, CogIcon, TvIcon } from 'lucide-react'
 import { FloatingMenu } from './floating-menu'
 

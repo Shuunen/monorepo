@@ -1,19 +1,4 @@
-import { capitalize, crc32, createCrc32Table, ellipsis, ellipsisWords, fillTemplate, injectMark, isBase64, isHtml, isString, parseBase64, sanitize, slugify, stringSum } from './strings.js'
-
-const data = {
-  details: {
-    pinCode: 3544,
-  },
-  // biome-ignore lint/style/useNamingConvention: for testing purposes
-  key_ToHappiness: 'Roo-doo-doot-da-doo',
-  name: 'Wick',
-  quote: 'Bears. Beets. Battlestar Galactica.',
-}
-// biome-ignore lint/style/useNamingConvention: for testing purposes
-const objectIn = { Andy: '{{ key_ToHappiness }} !' }
-const stringOut = `{
-  "Andy": "${data.key_ToHappiness} !"
-}`
+import { capitalize, crc32, createCrc32Table, ellipsis, ellipsisWords, injectMark, isString, sanitize, slugify, stringSum } from './strings.js'
 
 it('sanitize A basic word', () => {
   expect(sanitize('Superbe')).toBe('superbe')
@@ -46,34 +31,6 @@ it('slugify D expected is expected', () => {
 })
 it('slugify E OMG o_O', () => {
   expect(slugify('  -Oh mà  dârling .?! --')).toBe(expected)
-})
-
-it('fill a template string without mustaches and data', () => {
-  expect(fillTemplate(data.quote)).toBe(data.quote)
-})
-it('fill an empty template string', () => {
-  expect(fillTemplate('')).toBe('')
-})
-it('fill an empty template string with data', () => {
-  expect(fillTemplate('', data)).toBe('')
-})
-it('fill a template string with data', () => {
-  expect(fillTemplate('John {name}', data)).toBe('John Wick')
-})
-it('fill a template string with long key data', () => {
-  expect(fillTemplate('Andy : {{ key_ToHappiness }} !', data)).toBe(`Andy : ${data.key_ToHappiness} !`)
-})
-it('fill a template string with unknown key', () => {
-  expect(fillTemplate('John {unknown_key}', data)).toBe('John {unknown_key}')
-})
-it('fill a template object with data', () => {
-  expect(fillTemplate(objectIn, data)).toBe(stringOut)
-})
-it('fill a template string with deep data', () => {
-  expect(fillTemplate('My code is {{details.pinCode}}', data)).toBe('My code is 3544')
-})
-it('fill template string with missing data', () => {
-  expect(fillTemplate('J’aime les {membre}', {})).toBe('J’aime les {membre}')
 })
 
 it('capitalize an empty string', () => {
@@ -122,56 +79,11 @@ it('string sum should be the same on the same string', () => {
   expect(true).toBe(true)
 })
 
-it('isBase64 valid with data', () => {
-  expect(isBase64('data:image/png;base64,iVBORw0KGgoYII=')).toBe(true)
-})
-it('isBase64 valid with data & double equal', () => {
-  expect(isBase64('data:image/png;base64,iVBORw0KGgoYII==')).toBe(true)
-})
-it('isBase64 valid without data', () => {
-  expect(isBase64('image/jpg;base64,iVBORw0KGgoYII=')).toBe(true)
-})
-it('isBase64 invalid, missing first char', () => {
-  expect(isBase64('ata:image/png;base64,iVBORw0KGgoYII=')).toBe(false)
-})
-it('isBase64 invalid because empty', () => {
-  expect(isBase64('')).toBe(false)
-})
-
-it('parseBase64 png image', () => {
-  expect(parseBase64('data:image/png;base64,iVBORw0KGgoYII=')).toStrictEqual({ base64: 'iVBORw0KGgoYII=', size: 11, type: 'image/png' })
-})
-it('parseBase64 jpg image', () => {
-  expect(parseBase64('image/jpg;base64,iVBORw0KGgoYII=')).toStrictEqual({ base64: 'iVBORw0KGgoYII=', size: 11, type: 'image/jpg' })
-})
-it('parseBase64 jpeg image', () => {
-  expect(parseBase64('image/jpeg;base64,iVBORw0KGgoYII=')).toStrictEqual({ base64: 'iVBORw0KGgoYII=', size: 11, type: 'image/jpeg' })
-})
-it('parseBase64 invalid, missing type', () => {
-  expect(parseBase64(';base64,iVBORw0KGgoYII')).toStrictEqual({ base64: '', size: 0, type: '' })
-})
-it('parseBase64 invalid because empty', () => {
-  expect(parseBase64('')).toStrictEqual({ base64: '', size: 0, type: '' })
-})
-
 it('isString valid', () => {
   expect(isString('plop')).toBe(true)
 })
 it('isString invalid', () => {
   expect(isString(123)).toBe(false)
-})
-
-it('isHtml on html', () => {
-  expect(isHtml('<lyf-wc-icon name="logo"></lyf-wc-icon>')).toBe(true)
-})
-it('isHtml valid on malformed html', () => {
-  expect(isHtml('<lyf-wc-icon name="logo"></i')).toBe(true)
-})
-it('isHtml valid on bad html', () => {
-  expect(isHtml('<lyf-wc-icon name="logo"')).toBe(false)
-})
-it('isHtml on text', () => {
-  expect(isHtml('Hello')).toBe(false)
 })
 
 it('injectMark on empty string', () => {

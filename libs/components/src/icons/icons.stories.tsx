@@ -7,15 +7,17 @@ import { IconArrowLeft } from './icon-arrow-left'
 import { IconArrowRight } from './icon-arrow-right'
 import { IconArrowUp } from './icon-arrow-up'
 import { IconCheck } from './icon-check'
+import { IconEdit } from './icon-edit'
 import { IconError } from './icon-error'
 import { IconHome } from './icon-home'
 import { IconLoading } from './icon-loading'
+import { IconReadonly } from './icon-readonly'
 import { IconSelect } from './icon-select'
 import { IconSuccess } from './icon-success'
 import { IconTooltip } from './icon-tooltip'
 import { IconWarning } from './icon-warning'
 
-const icons = [IconAdd, IconArrowDown, IconArrowLeft, IconArrowRight, IconArrowUp, IconCheck, IconError, IconHome, IconLoading, IconSelect, IconSuccess, IconTooltip, IconWarning]
+const icons = [IconAdd, IconArrowDown, IconArrowLeft, IconArrowRight, IconArrowUp, IconCheck, IconEdit, IconError, IconHome, IconLoading, IconReadonly, IconSelect, IconSuccess, IconTooltip, IconWarning]
 
 type Props = { component: ({ className }: { className?: string | undefined }) => JSX.Element }
 

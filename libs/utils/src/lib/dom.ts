@@ -1,6 +1,6 @@
 import { nbDaysInWeek, nbSpacesIndent } from './constants.js'
-import { sleep } from './functions.js'
 import { Result } from './result.js'
+import { sleep } from './sleep.js'
 
 type DomContent = Node | Node[] | string
 

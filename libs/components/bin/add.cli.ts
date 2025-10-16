@@ -43,6 +43,7 @@ function setupComponent() {
   // TODO : add the related story if it exists
   // https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry/ui
   logger.success(`Component ${green(component)} is ready to use in libs/components 🚀`)
+  logger.info('You can use a pre-defined story from https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry/ui')
 }
 
 function downloadComponent() {
@@ -50,7 +51,7 @@ function downloadComponent() {
   const args = ['dlx', 'shadcn@latest', 'add', '--yes', '--overwrite', `--cwd=libs/components`, component]
   const command = [`pnpm`, ...args].join(' ')
   logger.debug('Executing download command :', yellow(command))
-  const child = spawn('pnpm', args, { stdio: 'pipe' })
+  const child = spawn('pnpm', args, { stdio: 'pipe' }) //NOSONAR
   child.stderr.on('data', data => logger.debug('ShadCn cli', data.toString().trim().slice(nbThird).toLowerCase()))
   child.on('close', code => {
     if (code === 0) setupComponent()

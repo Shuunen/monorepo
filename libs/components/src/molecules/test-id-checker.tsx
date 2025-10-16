@@ -1,9 +1,11 @@
 /* c8 ignore start */
-import { cn } from '@monorepo/utils'
-import { AlertTriangle, XIcon } from 'lucide-react'
+// oxlint-disable-next-line no-restricted-imports
+import { XIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '../atoms/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../atoms/card'
+import { IconWarning } from '../icons/icon-warning'
+import { cn } from '../shadcn/utils'
 
 const STORAGE_KEY = 'showTestIdChecker'
 const INTERVAL = 1000
@@ -21,7 +23,7 @@ type TestIdInfo = {
 const getAllTestIds = () =>
   Array.from(document.querySelectorAll<HTMLElement>('[data-testid]'))
     .map(el => el.dataset.testid)
-    // eslint-disable-next-line prefer-native-coercion-functions
+    // oxlint-disable-next-line prefer-native-coercion-functions
     .filter((id): id is string => Boolean(id))
 
 // biome-ignore lint/performance/useTopLevelRegex: Fix later
@@ -31,9 +33,9 @@ const isValidTestId = (testId: string) => /^[a-zA-Z0-9-]+$/u.test(testId)
 const arraysEqual = (arrayA: string[], arrayB: string[]) => {
   if (arrayA.length !== arrayB.length) return false
   // oxlint-disable-next-line no-array-sort
-  const sortedA = [...arrayA].sort()
+  const sortedA = [...arrayA].sort((itemA, itemB) => itemA.localeCompare(itemB))
   // oxlint-disable-next-line no-array-sort
-  const sortedB = [...arrayB].sort()
+  const sortedB = [...arrayB].sort((itemA, itemB) => itemA.localeCompare(itemB))
   return sortedA.every((val, index) => val === sortedB[index])
 }
 
@@ -94,7 +96,7 @@ function useTestIds(visible: boolean) {
     }
   }, [visible])
 
-  // eslint-disable-next-line no-array-reduce
+  // oxlint-disable-next-line no-array-reduce
   const processedTestIds = testIds.reduce<TestIdInfo[]>((acc, id) => {
     const existing = acc.find(item => item.id === id)
     if (existing) existing.occurrences += INDEX_INCREMENT
@@ -121,7 +123,7 @@ function TestIdListItem({ id, index, occurrences, isValid }: TestIdInfo & { inde
       <span className="opacity-50">{index + INDEX_INCREMENT}.</span>
       {id}
       {occurrences >= MIN_OCCURRENCES && ` (${occurrences.toString()} occurrences)`}
-      {!isValid && <AlertTriangle className="size-4" />}
+      {!isValid && <IconWarning className="size-4" />}
     </li>
   )
 }
@@ -165,4 +167,3 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
     </Card>
   )
 }
-/* c8 ignore stop */

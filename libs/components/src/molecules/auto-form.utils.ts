@@ -1,5 +1,5 @@
 import type { Logger } from '@monorepo/utils'
-import { ZodNumber, z } from 'zod'
+import { z } from 'zod'
 
 /**
  * Props for the AutoForm component, which generates a form based on provided Zod schemas.
@@ -44,12 +44,17 @@ export type AutoFormFieldMetadata = {
  *   - `enumOptions`: The array of enum option strings if found, otherwise undefined.
  *   - `isEnum`: A boolean indicating if the schema is (or contains) a ZodEnum.
  */
-export function checkZodEnum(fieldSchema: z.ZodTypeAny) {
-  if (fieldSchema instanceof z.ZodEnum) return { enumOptions: fieldSchema.options as string[], isEnum: true }
-  // below could be an optional z.ZodEnum
-  // @ts-expect-error zod type issue
-  const enumOptions = fieldSchema.def?.innerType?.options as string[]
-  return { enumOptions, isEnum: Array.isArray(enumOptions) }
+export function checkZodEnum(fieldSchema: z.ZodEnum | z.ZodOptional<z.ZodEnum>) {
+  let isEnum = false
+  let enumOptions: string[] = []
+  if (fieldSchema.type === 'enum') {
+    isEnum = true
+    enumOptions = fieldSchema.options as string[]
+  } else if (fieldSchema.type === 'optional' && fieldSchema.def.innerType.type === 'enum') {
+    isEnum = true
+    enumOptions = fieldSchema.def.innerType.options as string[]
+  }
+  return { enumOptions, isEnum }
 }
 
 /**
@@ -60,29 +65,22 @@ export function checkZodEnum(fieldSchema: z.ZodTypeAny) {
  *   - `isBooleanLiteral`: `true` if the schema is a boolean literal (`true` or `false`), otherwise `false`.
  *   - `booleanLiteralValue`: The value of the boolean literal if applicable, otherwise `false`.
  */
-export function checkZodBoolean(fieldSchema: z.ZodTypeAny) {
+export function checkZodBoolean(fieldSchema: z.ZodBoolean | z.ZodLiteral | z.ZodOptional<z.ZodBoolean>) {
   let isBoolean = false
   let isBooleanLiteral = false
   let booleanLiteralValue = false
-  if (fieldSchema instanceof z.ZodBoolean) isBoolean = true
-  // below could be a z.ZodLiteral containing true/false
-  if (fieldSchema instanceof z.ZodLiteral && (fieldSchema.value === true || fieldSchema.value === false)) {
-    isBooleanLiteral = true
-    isBoolean = true
-    booleanLiteralValue = fieldSchema.value
-  }
-  // below could be an optional z.ZodBoolean
-  // @ts-expect-error zod type issue
-  if (fieldSchema._def?.innerType instanceof z.ZodBoolean) isBoolean = true
+  if (fieldSchema.type === 'boolean') isBoolean = true
+  else if (fieldSchema.type === 'literal') {
+    isBooleanLiteral = fieldSchema.value === true || fieldSchema.value === false
+    isBoolean = isBooleanLiteral
+    booleanLiteralValue = Boolean(fieldSchema.value)
+  } else if (fieldSchema.type === 'optional' && fieldSchema.def.innerType.type === 'boolean') isBoolean = true
   return { booleanLiteralValue, isBoolean, isBooleanLiteral }
 }
 
-export function checkZodNumber(fieldSchema: z.ZodTypeAny) {
+export function checkZodNumber(fieldSchema: z.ZodNumber | z.ZodOptional<z.ZodNumber>) {
   let isNumber = false
-  if (fieldSchema instanceof ZodNumber) isNumber = true
-  // below could be an optional z.ZodNumber
-  // @ts-expect-error zod type issue
-  if (fieldSchema._def?.innerType instanceof ZodNumber) isNumber = true
+  if (fieldSchema.type === 'number' || (fieldSchema.type === 'optional' && fieldSchema.def.innerType.type === 'number')) isNumber = true
   return { isNumber }
 }
 
@@ -92,7 +90,8 @@ export function checkZodNumber(fieldSchema: z.ZodTypeAny) {
  * @param value the value to be represented as a string
  * @returns a human-readable string representation of the value
  */
-export function readonlyValue(fieldSchema: z.ZodTypeAny, value: unknown): string {
+export function readonlyValue(fieldSchema: z.ZodUnknown, value: unknown): string {
+  // @ts-expect-error zod type issue
   const { isBoolean, isBooleanLiteral, booleanLiteralValue } = checkZodBoolean(fieldSchema)
   if (isBooleanLiteral) return booleanLiteralValue ? 'Yes' : 'No'
   if (isBoolean) return value ? 'Yes' : 'No'

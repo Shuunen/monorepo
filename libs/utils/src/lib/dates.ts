@@ -1,4 +1,4 @@
-import { nbMsInDay, nbMsInHour, nbMsInMinute, nbMsInMonth, nbMsInSecond, nbMsInYear } from './constants.js'
+import { nbMsInMinute } from './constants.js'
 
 /**
  * Convert a date into iso string
@@ -52,24 +52,4 @@ export function formatDate(date: Readonly<Date>, format: string, locale = 'en-US
     if (match === 'ss') return date.getSeconds().toString().padStart(match.length, '0')
     return match
   })
-}
-
-/**
- * Make a date readable for us, poor humans
- * @param input a date or a number of milliseconds
- * @param isLong true to return a short version like "3d" instead of "3 days"
- * @returns "1 minute", "4 months" or "1min", "4mon"
- * @example readableTime(3 * nbMsInDay) // "3 days"
- * @example readableTime(3 * nbMsInDay, false) // "3d"
- */
-export function readableTime(input: number | Readonly<Date>, isLong = true) {
-  const ms = typeof input === 'number' ? input : Date.now() - input.getTime()
-  const format = (value: number, long: string, short: string) => `${Math.floor(value)}${isLong ? ` ${long + (Math.floor(value) > 1 ? 's' : '')}` : short}`
-  if (ms < nbMsInSecond) return format(ms, 'millisecond', 'ms')
-  if (ms < nbMsInMinute) return format(ms / nbMsInSecond, 'second', 's')
-  if (ms < nbMsInHour) return format(ms / nbMsInMinute, 'minute', 'min')
-  if (ms < nbMsInDay) return format(ms / nbMsInHour, 'hour', 'h')
-  if (ms < nbMsInMonth) return format(ms / nbMsInDay, 'day', 'd')
-  if (ms < nbMsInYear) return format(ms / nbMsInMonth, 'month', 'mon')
-  return format(ms / nbMsInYear, 'year', 'y')
 }

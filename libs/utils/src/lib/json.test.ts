@@ -1,5 +1,5 @@
 import { isJson, parseJson } from './json.js'
-import { unwrap } from './resultx.js'
+import { Result } from './result.js'
 
 it('valid JSON', () => {
   expect(isJson('{ "name": "John Doe" }')).toBe(true)
@@ -23,7 +23,7 @@ it('parse json valid object string', () => {
   `)
 })
 it('parse json invalid object string', () => {
-  const { error } = unwrap(parseJson('{ xyz "name": "John Cena" }'))
+  const { error } = Result.unwrap(parseJson('{ xyz "name": "John Cena" }'))
   expect(error).toContain('Invalid JSON string')
 })
 it('parse json valid array string', () => {

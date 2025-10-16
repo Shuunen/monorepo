@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react'
 import { FormMessage as ShadFormMessage } from '../shadcn/form'
 
-export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '../shadcn/form'
+export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, useFormField } from '../shadcn/form'
 
 type FormMessageProps = ComponentProps<typeof ShadFormMessage> & {
   testId: string

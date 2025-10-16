@@ -1,5 +1,5 @@
-import { sleep } from './functions.js'
 import { randomNumber } from './random.js'
+import { sleep } from './sleep.js'
 
 /**
  * Fill an input like a human would do

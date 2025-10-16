@@ -1,4 +1,4 @@
-import { functionReturningUndefined, functionReturningVoid, hasOwn, sleep } from './functions.js'
+import { functionReturningUndefined, functionReturningVoid, hasOwn } from './functions.js'
 
 it('hasOwn A', () => {
   expect(hasOwn({ propA: 1 }, 'propA')).toBe(true)
@@ -11,13 +11,6 @@ it('hasOwn C', () => {
 })
 it('hasOwn D', () => {
   expect(hasOwn({ propA: 1 }, 'hasOwnProperty')).toBe(false)
-})
-
-it('sleep A', async () => {
-  expect(await sleep(5)).toBe(5)
-})
-it('sleep B', async () => {
-  expect(await sleep(7)).toBe(7)
 })
 
 it('functionReturningVoid A', () => {

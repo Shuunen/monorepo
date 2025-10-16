@@ -1,6 +1,6 @@
 import { GlobalRegistrator } from '@happy-dom/global-registrator'
 import { toastError, toastInfo, toastSuccess } from './browser-toast.js'
-import { sleep } from './functions.js'
+import { sleep } from './sleep.js'
 
 if (!GlobalRegistrator.isRegistered) GlobalRegistrator.register()
 

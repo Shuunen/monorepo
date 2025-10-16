@@ -1,6 +1,5 @@
-import { nbMsInDay, nbMsInHour, nbMsInMinute, nbMsInSecond, nbMsInYear } from './constants.js'
 import { daysAgo, daysAgoIso10, readableTimeAgo } from './date-relative.js'
-import { dateIso10, dateToIsoString, formatDate, readableTime } from './dates.js'
+import { dateIso10, dateToIsoString, formatDate } from './dates.js'
 
 const today = new Date()
 
@@ -113,53 +112,4 @@ it('format date as yyyy (space)', () => {
 })
 it('format date as yyyy', () => {
   expect(formatDate(date, 'yyyy')).toBe('2021')
-})
-
-it('readable time A', () => {
-  expect(readableTime(0)).toBe('0 millisecond')
-})
-it('readable time B', () => {
-  expect(readableTime(nbMsInSecond)).toBe('1 second')
-})
-it('readable time C', () => {
-  expect(readableTime(3 * nbMsInSecond)).toBe('3 seconds')
-})
-it('readable time D', () => {
-  expect(readableTime(nbMsInMinute)).toBe('1 minute')
-})
-it('readable time E', () => {
-  expect(readableTime(2 * nbMsInMinute)).toBe('2 minutes')
-})
-it('readable time F', () => {
-  expect(readableTime(nbMsInHour)).toBe('1 hour')
-})
-it('readable time G', () => {
-  expect(readableTime(3 * nbMsInDay, false)).toBe('3d')
-})
-it('readable time H', () => {
-  expect(readableTime(nbMsInDay)).toBe('1 day')
-})
-it('readable time I', () => {
-  expect(readableTime(42, false)).toBe('42ms')
-})
-it('readable time J', () => {
-  expect(readableTime(42)).toBe('42 milliseconds')
-})
-it('readable time K', () => {
-  expect(readableTime(2 * nbMsInHour)).toBe('2 hours')
-})
-it('readable time L', () => {
-  expect(readableTime(3 * nbMsInDay)).toBe('3 days')
-})
-it('readable time M', () => {
-  expect(readableTime(32 * nbMsInDay)).toBe('1 month')
-})
-it('readable time N', () => {
-  expect(readableTime(2 * nbMsInYear)).toBe('2 years')
-})
-it('readable time O', () => {
-  expect(readableTime(daysAgo(2))).toBe('2 days')
-})
-it('readable time P', () => {
-  expect(readableTime(daysAgo(4), false)).toBe('4d')
 })

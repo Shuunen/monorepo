@@ -1,9 +1,18 @@
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "./utils"
+import clsx from "clsx";
+import { cn } from "./utils";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+type InputProps = React.ComponentProps<"input"> & {
+  Icon?: React.ElementType<{ className?: string; }>;
+};
+
+function Input({ className, type, Icon, ...props }: InputProps) {
   return (
+    <div className="relative">
+      {Icon &&  <div className="absolute bg-transparent top-[8px] left-[8px]">
+        <Icon className={clsx("w-[20px] h-[20px]", props.disabled && "text-gray-400 stroke-current")} />
+      </div> }
     <input
       type={type}
       data-slot="input"
@@ -14,8 +23,9 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
         className
       )}
       {...props}
-    />
+    /></div>
   )
 }
 
-export { Input }
+export { Input };
+

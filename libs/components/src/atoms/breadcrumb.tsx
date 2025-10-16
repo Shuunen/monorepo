@@ -1,8 +1,8 @@
 import { BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator, Breadcrumb as ShadBreadcrumb } from '../shadcn/breadcrumb'
 
-type Props = {
+type Props = Readonly<{
   items: { label: string; link: string }[]
-}
+}>
 
 export function Breadcrumb({ items }: Props) {
   return (

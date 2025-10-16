@@ -1,6 +1,6 @@
 import { debounce } from './debounce.js'
 import { expectEqualTypes } from './expect-type.js'
-import { sleep } from './functions.js'
+import { sleep } from './sleep.js'
 
 let times = 0
 

@@ -1,10 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CheckCircle2Icon, EyeIcon, PencilIcon } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import type { z } from 'zod'
 import { Button } from '../atoms/button'
 import { Form } from '../atoms/form'
+import { IconEdit } from '../icons/icon-edit'
+import { IconReadonly } from '../icons/icon-readonly'
+import { IconSuccess } from '../icons/icon-success'
 import { type AutoFormProps, cleanSubmittedData, filterSchema } from './auto-form.utils'
 import { AutoFormField } from './auto-form-field'
 import { AutoFormStepper } from './auto-form-stepper'
@@ -55,16 +57,18 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   const steps = schemas.map((schema, idx) => {
     const schemaMeta = typeof schema.meta === 'function' ? schema.meta() : undefined
     const label = schemaMeta?.step ? String(schemaMeta.step) : `Step ${idx + 1}`
-    // @ts-expect-error type issue
-    const allReadonly = Object.values(schema.shape).every((zodField: { meta: () => AutoFormFieldMetadata }) => zodField.meta()?.state === 'readonly')
+    const allReadonly = Object.values(schema.shape).every(
+      // @ts-expect-error type issue
+      (zodField: { meta: () => AutoFormFieldMetadata }) => zodField.meta()?.state === 'readonly',
+    )
     const filtered = filterSchema(schema, formData)
     const stepFieldsTouched = Object.keys(schema.shape).some(fieldName => form.formState.touchedFields[fieldName])
     const isStepValid = filtered.safeParse(formData).success
     const isSuccess = isStepValid && stepFieldsTouched
-    // oxlint-disable-next-line no-nested-ternary
+    /* oxlint-disable no-nested-ternary */
     const state = allReadonly ? ('readonly' as const) : isSuccess ? ('success' as const) : ('editable' as const)
-    // oxlint-disable-next-line no-nested-ternary
-    const icon = allReadonly ? <EyeIcon key="eye" /> : isSuccess ? <CheckCircle2Icon key="success" /> : <PencilIcon key="pencil" />
+    const icon = allReadonly ? <IconReadonly key="readonly" /> : isSuccess ? <IconSuccess key="success" /> : <IconEdit key="editable" />
+    /* oxlint-enable no-nested-ternary */
     return {
       active: idx === currentStep,
       icon,
