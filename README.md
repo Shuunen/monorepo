@@ -24,6 +24,7 @@
 - [V8](https://github.com/demurgos/v8-coverage) : simple & effective cli for code coverage
 - [Vite](https://github.com/vitejs/vite) : super fast frontend tooling
 - [Vitest](https://github.com/vitest-dev/vitest) : super fast vite-native testing framework
+- [Zod](https://github.com/colinhacks/zod) : typeScript-first schema validation
 
 ## Page views
 
