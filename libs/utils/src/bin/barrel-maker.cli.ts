@@ -1,13 +1,12 @@
 import { writeFileSync } from 'node:fs'
 import path from 'node:path'
 import glob from 'tiny-glob'
+import { nbThird } from '../lib/constants.js'
 import { Logger } from '../lib/logger.js'
 import { Result } from '../lib/result.js'
 
 /* c8 ignore next */
 const logger = new Logger({ minimumLevel: import.meta.main ? '3-info' : '7-error' })
-const doubleDashRegex = /^--/
-const ARG_START_INDEX = 2
 
 /**
  * Creates a barrel file (index.ts) exporting all modules matching the target glob
@@ -31,7 +30,7 @@ export async function make({ target, index = 'index.ts', avoid = 'azerty-foobar'
 
 export async function main(argv: string[]) {
   logger.debug('barrel-maker.cli.ts started')
-  const args = Object.fromEntries(argv.slice(ARG_START_INDEX).map(arg => arg.replace(doubleDashRegex, '').split('=')))
+  const args = Object.fromEntries(argv.slice(nbThird).map(arg => arg.replace('--', '').split('=')))
   if (!args.target) return Result.error('missing target argument')
   const options = { avoid: args.avoid, ext: args.ext, index: args.index, target: args.target }
   logger.debug('options', options)
