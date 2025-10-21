@@ -12,14 +12,24 @@ import { Result } from '../lib/result.js'
 /* c8 ignore next */
 const logger = new Logger({ minimumLevel: import.meta.main ? '3-info' : '7-error' })
 const metrics = {
+  /** Number of files that already have the header */
   hasHeader: 0,
+  /** Number of files that were fixed (header added) */
   nbFixed: 0,
+  /** Number of files that do not have the header */
   noHeader: 0,
+  /** Number of files that could not be read */
   readError: 0,
+  /** Number of files that could not be written */
   writeError: 0,
 }
 type Metrics = typeof metrics
 
+/**
+ * Entry point for the header-injector CLI
+ * @param argv the command-line arguments to parse (for testing purposes)
+ * @returns metrics or error
+ */
 export async function main(argv: string[]) {
   const stats = clone(metrics)
   const args = parseArgs(argv)
@@ -31,10 +41,22 @@ export async function main(argv: string[]) {
   return Result.ok(stats)
 }
 
+/**
+ * Parse command-line arguments into a key-value object
+ * @param argv the command-line arguments
+ * @returns parsed arguments as key-value pairs
+ */
 function parseArgs(argv: string[]) {
   return Object.fromEntries(argv.slice(nbThird).map(arg => arg.replace('--', '').split('=')))
 }
 
+/**
+ * Process a single file to check and inject header if missing
+ * @param file the file path to process
+ * @param header the header string to inject
+ * @param stats the metrics object to update
+ * @returns void
+ */
 function processFile(file: string, header: string, stats: Metrics) {
   const readResult = Result.trySafe(() => readFileSync(file, 'utf8'))
   if (!readResult.ok) return (stats.readError += 1)
@@ -48,6 +70,11 @@ function processFile(file: string, header: string, stats: Metrics) {
   return (stats.nbFixed += 1)
 }
 
+/**
+ * Generate a report string from the metrics
+ * @param metrics the metrics object
+ * @returns formatted report string
+ */
 export function report(metrics: Metrics): string {
   return `Header Injector report :
   - Files with header : ${metrics.hasHeader === 0 ? gray('0') : green(metrics.hasHeader.toString())}
