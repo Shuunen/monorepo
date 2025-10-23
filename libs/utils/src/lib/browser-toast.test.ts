@@ -27,3 +27,13 @@ it('toastError A', () => {
   expect(toast.length).toBe(3) // because of the previous tests ^^'
   expect(toast[2]?.textContent).toMatchInlineSnapshot(`"xThis is an error message"`)
 })
+
+it('toastSuccess B should trigger show animation', async () => {
+  toastSuccess('Animation test', 0)
+  const toasts = document.querySelectorAll<HTMLElement>('.shu-toast')
+  const lastToast = Array.from(toasts).at(-1)
+  expect(lastToast?.style.opacity).toBe('0')
+  await sleep(150)
+  expect(lastToast?.style.opacity).toBe('1')
+  expect(lastToast?.style.transform).toBe('translateX(0)')
+})

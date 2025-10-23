@@ -1,4 +1,3 @@
-/* c8 ignore start */
 // oxlint-disable no-plusplus, no-magic-numbers, max-lines-per-function
 import { gray, green } from '@monorepo/utils'
 import { logger } from './repo-banner.utils'
@@ -34,6 +33,7 @@ export class HtmlReporter {
   onScanComplete() {
     this.setState(states.scanComplete)
     const expectedTotal = this.tags + this.attr + this.text + this.styles + this.css
+    /* v8 ignore if -- @preserve */
     if (this.total !== expectedTotal) throw new Error(`Total length (${this.total}) does not match the sum of sub-stats (${expectedTotal})`)
   }
 
@@ -59,6 +59,7 @@ export class HtmlReporter {
       this.onScanComplete()
       return
     }
+    /* v8 ignore else -- @preserve */
     if (char === '>') {
       this.tags++
       this.setState(states.lookingForTag)

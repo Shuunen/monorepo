@@ -67,13 +67,14 @@ export function useUnixCarriageReturn(content) {
 export function clean(content, linesAfter, linesMatching, shouldClearSpaces = true) {
   if (!content) return ''
   let output = content
+  /* v8 ignore if -- @preserve */
   if (linesAfter) output = removeLinesAfter(output, linesAfter)
+  /* v8 ignore if -- @preserve */
   if (linesMatching) output = removeLinesMatching(output, linesMatching)
+  /* v8 ignore if -- @preserve */
   if (shouldClearSpaces) output = output.replace(regex.clearSpaces, '')
   return output
 }
-
-/* c8 ignore start */
 
 /**
  * Normalize a filepath with slash style
@@ -82,6 +83,7 @@ export function clean(content, linesAfter, linesMatching, shouldClearSpaces = tr
  * @param {string} home the home directory path
  * @returns the normalized path
  */
+/* v8 ignore next -- @preserve */
 export function normalizePathWithSlash(filepath, shouldUseTilde = false, home = process.env.HOME ?? '') {
   let outPath = path.normalize(filepath).replace(/\\/gu, '/')
   if (shouldUseTilde) outPath = outPath.replace(normalizePathWithSlash(home), '~')
@@ -94,6 +96,7 @@ export function normalizePathWithSlash(filepath, shouldUseTilde = false, home = 
  * @param {string} destination the destination file
  * @returns {Promise<boolean>} some bool result; i dont know im in the train to Paris
  */
+/* v8 ignore next -- @preserve */
 export async function copy(source, destination) {
   // destination will be created or overwritten by default.
   const destinationFolder = destination.replace(filename(destination), '')

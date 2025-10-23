@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { execSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'

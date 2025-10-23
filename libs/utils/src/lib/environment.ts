@@ -1,14 +1,13 @@
 /**
  * Check if the environment is a test environment
+ * @param glob optional, the global object to check, default is globalThis
  * @returns true if the environment is a test environment
  */
-export function isTestEnvironment() {
+export function isTestEnvironment(glob = globalThis) {
   const properties = ['jest', 'mocha', '__vitest_environment__', '__vitest_required__', '__vitest_browser_runner__', '__vitest_browser__', '__vitest_worker__', '__coverage__', 'STORYBOOK_ENV', '__STORYBOOK_ADDONS_CHANNEL__']
-  const hasTestBin = properties.some(property => property in globalThis)
-  /* c8 ignore next 5 */
-  if (hasTestBin) return true
-  // @ts-expect-error globalThis.Bun is not defined in some environments
-  const useBunTest = 'Bun' in globalThis && globalThis?.Bun?.argv.join(' ').includes('.test.')
+  const hasTestProp = properties.some(property => property in glob)
+  if (hasTestProp) return true
+  const useBunTest = 'Bun' in glob && glob?.Bun?.argv.join(' ').includes('.test.')
   return useBunTest
 }
 
@@ -18,7 +17,6 @@ export function isTestEnvironment() {
  * @returns true if the environment is a browser environment
  */
 export function isBrowserEnvironment(userAgent = globalThis.navigator?.userAgent) {
-  /* c8 ignore start */
   if (!userAgent) return false
   if (userAgent.includes('HappyDOM')) return false
   if (userAgent.includes('Headless')) return false

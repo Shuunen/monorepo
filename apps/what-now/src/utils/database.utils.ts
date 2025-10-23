@@ -93,11 +93,11 @@ export async function getTasks() {
   return Result.ok(tasks)
 }
 
-/* c8 ignore start */
 /**
  * Download the data from the database
  * @returns the result of the operation
  */
+/* v8 ignore next -- @preserve */
 export async function downloadData() {
   const result = await Result.trySafe(database.listDocuments<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, [Query.limit(nbPercentMax)]))
   if (!result.ok) {

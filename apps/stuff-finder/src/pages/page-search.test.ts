@@ -10,11 +10,19 @@ vi.mock('../utils/navigation.utils', () => ({
 }))
 
 // Mock fuse.js/basic
-vi.mock('fuse.js/basic', () => ({
-  default: vi.fn().mockImplementation(() => ({
-    search: vi.fn().mockReturnValue([{ item: { $id: '1', name: 'Test Item 1' } }, { item: { $id: '2', name: 'Test Item 2' } }]),
-  })),
-}))
+vi.mock('fuse.js/basic', () => {
+  class MockFuse {
+    items: unknown[]
+    constructor(items: unknown[]) {
+      this.items = items
+    }
+    search() {
+      void this.items
+      return [{ item: { $id: '1', name: 'Test Item 1' } }, { item: { $id: '2', name: 'Test Item 2' } }]
+    }
+  }
+  return { default: MockFuse }
+})
 
 describe('page-search.const', () => {
   const mockItems = [

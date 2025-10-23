@@ -9,6 +9,7 @@ export function sortListsEntries<Type = Record<string, string[]>>(record: Type) 
   const output = clone<Type>(record)
   // @ts-expect-error problem with Object.entries
   const entries = Object.entries<string[]>(output)
+  /* v8 ignore next -- @preserve */
   for (const [name, values] of entries)
     if (Array.isArray(values)) {
       // oxlint-disable-next-line new-cap

@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { extractData, logger, replaceAndCheck, replaceAndCheckById } from './repo-banner.utils.js'

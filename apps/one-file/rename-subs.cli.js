@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { copyFileSync, readdirSync, readFileSync, renameSync, statSync, unlinkSync } from 'node:fs'
 import path from 'node:path'
 import { Logger } from '@monorepo/utils'

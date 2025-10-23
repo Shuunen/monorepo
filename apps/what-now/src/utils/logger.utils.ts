@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore file -- @preserve */
 import { isBrowserEnvironment, Logger } from '@monorepo/utils'
 import { state } from './state.utils'
 
@@ -21,4 +21,3 @@ class CustomLogger extends Logger {
 const logger = new CustomLogger({ minimumLevel: '3-info', willOutputToConsole: isBrowserEnvironment() })
 
 export { logger, stuffToMessage }
-/* c8 ignore end */

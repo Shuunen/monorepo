@@ -55,7 +55,7 @@ export const Basic: Story = {
     await userEvent.type(emailInput, 'example-email@email.com')
     const submitButton = canvas.getByRole('button', { name: 'Submit' })
     await userEvent.click(submitButton)
-    const errorElement = await canvas.findByText('Invalid input')
+    const errorElement = await canvas.findByText('Invalid input: expected string, received undefined')
     if (!errorElement) throw new Error('Error message not found')
     const nameInput = canvas.getByTestId('name')
     await userEvent.type(nameInput, 'John Doe')
@@ -277,7 +277,17 @@ export const Exhaustive: Story = {
       await userEvent.click(submitButton)
       const issues = canvas.getAllByRole('alert')
       expect(issues).toHaveLength(9)
-      const expectedErrorMessages = ['Invalid input', 'Invalid input', 'Invalid input', 'Email editable required', 'Email disabled required', 'Email optional', 'Invalid input', 'Invalid input', 'Invalid input']
+      const expectedErrorMessages = [
+        'Invalid input: expected boolean, received undefined',
+        'Invalid input: expected true',
+        'Invalid input: expected false',
+        'Email editable required',
+        'Email disabled required',
+        'Email optional',
+        'Invalid option: expected one of "red"|"green"|"blue"',
+        'Invalid input: expected number, received undefined',
+        'Invalid input: expected string, received undefined',
+      ]
       const errorMessages = issues.map(i => i.textContent?.trim())
       expect(errorMessages).toEqual(expectedErrorMessages)
     })
@@ -548,7 +558,7 @@ export const OptionalSection: Story = {
     await step('fail at submitting with pet but no pet name', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
-      const issue = await canvas.findByText('Invalid input')
+      const issue = await canvas.findByText('Invalid input: expected string, received undefined')
       expect(issue).toBeVisible()
     })
     await step('fill pet name', async () => {

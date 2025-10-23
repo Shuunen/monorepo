@@ -24,7 +24,7 @@ export class Machine {
    */
   #checkWin() {
     const { bottles } = this.#context
-    /* c8 ignore next 2 */
+    /* v8 ignore next 2 -- @preserve */
     // oxlint-disable-next-line max-nested-callbacks
     if (bottles.every(bottle => bottle.every(color => color === bottle[0]))) this.#transition('ready', 'win')
   }
@@ -57,9 +57,9 @@ export class Machine {
    * Get the icon for the current state
    * @returns the icon
    */
+  /* v8 ignore next -- @preserve */
   public icon() {
     const state = this.state
-    /* c8 ignore next 7 */
     if (state === 'initial') return '🎬'
     if (state === 'ready') return '🏎️'
     if (state === 'selected') return '🏹'
@@ -80,7 +80,7 @@ export class Machine {
     await sleep(600)
     const from = bottles[selected]
     const to = bottles[index]
-    /* c8 ignore next */
+    /* v8 ignore next -- @preserve */
     if (!from || !to) throw new Error('bottle from/to not found')
     const [fromUpdated, toUpdated] = pour(from, to)
     bottles[selected] = fromUpdated

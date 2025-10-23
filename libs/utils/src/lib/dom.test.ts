@@ -132,6 +132,12 @@ it('wait to detect a non-existing element', async () => {
   expect(result.value).toMatchInlineSnapshot(`undefined`)
 })
 
+it('wait to detect with max tries exceeded', async () => {
+  const result = await waitToDetect('.never-exists', 1, 0, 0)
+  expect(result.ok).toBe(false)
+  if (!result.ok) expect(result.error).toContain('stop searching after')
+})
+
 it('scroll to height', async () => {
   const element = dom('textarea')
   element.textContent = 'Hello World'

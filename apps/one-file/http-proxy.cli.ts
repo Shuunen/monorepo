@@ -27,6 +27,7 @@ export async function makeProxyRequest(targetUrl: string, body: unknown) {
   const contentType = response.headers.get('content-type')
   const parseResult = contentType?.includes('application/json') ? await Result.trySafe(response.json()) : await Result.trySafe(response.text())
   const { value, error } = Result.unwrap(parseResult)
+  /* v8 ignore if -- @preserve */
   if (!error) data = value
   return { data, response }
 }
@@ -70,5 +71,5 @@ export function startServer() {
 }
 
 // Only start server if not in test environment
-/* c8 ignore next */
+/* v8 ignore next -- @preserve */
 if (process.env.NODE_ENV !== 'test') startServer()

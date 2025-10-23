@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { createRoot } from 'react-dom/client'
 import { KitchenSink } from './molecules/kitchen-sink'
 

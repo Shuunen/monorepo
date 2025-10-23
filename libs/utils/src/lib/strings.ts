@@ -97,7 +97,7 @@ export function crc32(text: string) {
   const crcTable = createCrc32Table()
   let crc = -1
   for (let index = 0; index < text.length; index += 1) {
-    /* c8 ignore next */
+    /* v8 ignore next -- @preserve */
     const code = text.codePointAt(index) ?? 0
     // oxlint-disable no-bitwise, no-magic-numbers
     const key: number = (code ^ crc) & 0xff

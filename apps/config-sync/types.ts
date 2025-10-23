@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 
 export type FileDetails = {
   /** the file content */ content: string

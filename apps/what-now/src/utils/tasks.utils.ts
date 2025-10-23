@@ -81,7 +81,7 @@ export function isDataOlderThan(milliseconds: number) {
   if (!state.tasksTimestamp) return true
   const age = Date.now() - state.tasksTimestamp
   const minutes = Math.round(age / nbMsInMinute)
-  /* c8 ignore next */
+  /* v8 ignore next -- @preserve */
   if (minutes > 0) logger.info('last activity', minutes, 'minute(s) ago')
   return age >= milliseconds
 }

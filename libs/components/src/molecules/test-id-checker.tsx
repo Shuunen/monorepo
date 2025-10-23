@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 // oxlint-disable-next-line no-restricted-imports
 import { XIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'

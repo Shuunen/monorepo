@@ -78,19 +78,19 @@ export function FormFileUpload<TypeFieldValues extends FieldValues>({ accept, fo
   useEffect(() => () => uploadIntervalRef.current && clearInterval(uploadIntervalRef.current), [])
 
   function resetUpload() {
-    /* c8 ignore next 3 */
+    /* v8 ignore next 3 -- @preserve */
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     uploadIntervalRef.current && clearInterval(uploadIntervalRef.current)
     setSelectedFile(undefined)
     setUploadState('idle')
     setUploadProgress(0)
-    /* c8 ignore next */
+    /* v8 ignore next -- @preserve */
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   function removeFile() {
     resetUpload()
-    /* c8 ignore next 2 */
+    /* v8 ignore next 2 -- @preserve */
     onFileChange?.(undefined)
     onFileRemove?.()
     // @ts-expect-error type mismatch
@@ -99,7 +99,7 @@ export function FormFileUpload<TypeFieldValues extends FieldValues>({ accept, fo
   }
 
   function startUpload(file: File) {
-    /* c8 ignore next 4 */
+    /* v8 ignore next 4 -- @preserve */
     const { success, error } = schema?.safeParse(file) ?? { success: true }
     if (!success) {
       onFileUploadError?.(error.message)
@@ -121,7 +121,7 @@ export function FormFileUpload<TypeFieldValues extends FieldValues>({ accept, fo
         if (newProgress >= maxPercent) {
           clearInterval(uploadIntervalRef.current)
           setUploadState('success')
-          /* c8 ignore next */
+          /* v8 ignore next -- @preserve */
           onFileUploadComplete?.(file)
           // @ts-expect-error type mismatch
           form.setValue(name, file)
@@ -131,7 +131,7 @@ export function FormFileUpload<TypeFieldValues extends FieldValues>({ accept, fo
         if (shouldFail && newProgress >= uploadPercentFail) {
           clearInterval(uploadIntervalRef.current)
           setUploadState('error')
-          /* c8 ignore next */
+          /* v8 ignore next -- @preserve */
           onFileUploadError?.('Upload failed')
           return newProgress
         }
@@ -142,7 +142,7 @@ export function FormFileUpload<TypeFieldValues extends FieldValues>({ accept, fo
 
   function handleFileSelect(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
-    /* c8 ignore next 3 */
+    /* v8 ignore next 3 -- @preserve */
     if (!file) return
     setSelectedFile(file)
     onFileChange?.(file)
@@ -188,7 +188,7 @@ export function FormFileUpload<TypeFieldValues extends FieldValues>({ accept, fo
                       {uploadState !== 'idle' && (
                         <div className="flex items-center">
                           <Progress className={cn('h-1 flex-1', uploadState === 'success' && '[&>div]:bg-success', uploadState === 'error' && '[&>div]:bg-destructive')} value={uploadProgress} />
-                          <span className={cn('text-sm font-medium min-w-[3rem] text-right', uploadState === 'success' && 'text-success', uploadState === 'error' && 'text-destructive')}>{Math.round(uploadProgress)}%</span>
+                          <span className={cn('text-sm font-medium min-w-12 text-right', uploadState === 'success' && 'text-success', uploadState === 'error' && 'text-destructive')}>{Math.round(uploadProgress)}%</span>
                         </div>
                       )}
                     </main>

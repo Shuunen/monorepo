@@ -33,7 +33,7 @@ export function ComboboxForm() {
     resolver: zodResolver(FormSchema),
   })
 
-  /* c8 ignore start */
+  /* v8 ignore start -- @preserve */
   // eslint-disable-next-line consistent-function-scoping
   // oxlint-disable-next-line explicit-module-boundary-types
   // oxlint-disable-next-line consistent-function-scoping
@@ -44,7 +44,7 @@ export function ComboboxForm() {
   const onChange = () => {
     logger.info('onChange', form.getValues())
   }
-  /* c8 ignore end */
+  /* v8 ignore stop -- @preserve */
 
   return (
     <Form {...form}>
@@ -88,7 +88,7 @@ export function ComboboxForm() {
                             data-testid={`language-option-${language.value}`}
                             key={language.value}
                             onSelect={() => {
-                              /* c8 ignore next 2 */
+                              /* v8 ignore next 2 -- @preserve */
                               form.setValue('language', language.value)
                             }}
                             value={language.label}

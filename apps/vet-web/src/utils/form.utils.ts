@@ -12,7 +12,7 @@ import type { Option } from './form.types.ts'
  * @param callback - A function that takes the form values
  */
 export function useFormChangeDetector<InputValues extends FieldValues>(form: UseFormReturn<InputValues>, callback: (values: InputValues) => void) {
-  /* c8 ignore start */
+  /* v8 ignore start -- @preserve */
   // eslint-disable-next-line no-magic-numbers
   const debouncedCallback = debounce(callback, 300)
   useEffect(() => {
@@ -24,7 +24,7 @@ export function useFormChangeDetector<InputValues extends FieldValues>(form: Use
       subscription.unsubscribe()
     }
   }, [form, debouncedCallback])
-  /* c8 ignore end */
+  /* v8 ignore stop -- @preserve */
 }
 
 export function optionToSchema<Type extends Option>(list: Type[]) {

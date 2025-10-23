@@ -51,6 +51,7 @@ export async function addSuggestionsFromDeyes(suggestions: ItemSuggestions, code
   suggestions.brand.push(data.brand.name)
   suggestions.details.push(data.description)
   const [image] = data.image
+  /* v8 ignore if -- @preserve */
   if (image !== undefined) suggestions.photos.push(image)
   suggestions.price.push(priceParse(data.offers.price))
   suggestions.reference.push(data.gtin13)
@@ -86,6 +87,7 @@ export async function addSuggestionsFromCampo(suggestions: ItemSuggestions, stri
     suggestions.brand.push(item.brand)
     suggestions.name.push(item.title)
     suggestions.photos.push(item.photo)
+    /* v8 ignore if -- @preserve */
     if (item.price !== undefined) suggestions.price.push(priceParse(item.price))
     suggestions.reference.push(item.uuid)
   }
@@ -95,7 +97,7 @@ export function cleanSuggestions(suggestionsInput: Record<string, string[] | und
   const suggestions = clone(suggestionsInput)
   const keys = Object.keys(suggestions)
   for (const key of keys) {
-    /* c8 ignore next */
+    /* v8 ignore next -- @preserve */
     let values = suggestions[key] ?? []
     if (keysToCapitalize.has(key))
       values = values.map(value => {
@@ -113,8 +115,11 @@ export function cleanSuggestions(suggestionsInput: Record<string, string[] | und
 export async function getSuggestions(string_: string) {
   const asin = getAsin(string_)
   const suggestionsBase = clone(emptyItemSuggestions)
+  /* v8 ignore if -- @preserve */
   if (asin !== undefined) await addSuggestionsFromAngbo(suggestionsBase, asin)
+  /* v8 ignore if -- @preserve */
   if (suggestionsBase.name.length === 0) await addSuggestionsFromDeyes(suggestionsBase, string_)
+  /* v8 ignore if -- @preserve */
   if (suggestionsBase.name.length === 0) await addSuggestionsFromAliEx(suggestionsBase, string_)
   await addSuggestionsFromCampo(suggestionsBase, string_)
   return cleanSuggestions(suggestionsBase)

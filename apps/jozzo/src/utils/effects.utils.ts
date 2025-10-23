@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore file -- @preserve */
 const pouringSoundDurationMs = 1000
 const pouringSoundTotalSegments = 8 // 0-1, 1-2, ..., 7-8
 

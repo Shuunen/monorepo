@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { Logger, nbPercentMax } from '@monorepo/utils'

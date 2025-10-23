@@ -62,7 +62,7 @@ type BrowserContext = Readonly<{
  * @returns the user agent string
  */
 export function getUserAgent() {
-  /* c8 ignore next */
+  /* v8 ignore next -- @preserve */
   return isBrowserEnvironment() ? globalThis.navigator.userAgent : 'Unknown user agent'
 }
 
@@ -72,7 +72,7 @@ export function getUserAgent() {
  * @returns the browser version
  */
 export function getVersion(userAgent = getUserAgent()) {
-  /* c8 ignore next */
+  /* v8 ignore next -- @preserve */
   for (const [browser, regex] of Object.entries(versions)) if (regex.test(userAgent)) return regex.exec(userAgent)?.groups?.version ?? `Unknown ${browser} version`
   return 'Unknown version'
 }
@@ -83,7 +83,6 @@ export function getVersion(userAgent = getUserAgent()) {
  * @returns the browser name
  */
 export function getBrowser(userAgent = getUserAgent()) {
-  /* c8 ignore next 3 */
   for (const [browser, regex] of Object.entries(browsers)) if (regex.test(userAgent)) return browser as keyof typeof browsers
   return 'Unknown browser'
 }
@@ -94,7 +93,6 @@ export function getBrowser(userAgent = getUserAgent()) {
  * @returns the operating system name
  */
 export function getOperatingSystem(userAgent = getUserAgent()) {
-  /* c8 ignore next 3 */
   for (const [os, regex] of Object.entries(operatingSystems)) if (regex.test(userAgent)) return os as keyof typeof operatingSystems
   return 'Unknown OS'
 }
@@ -140,8 +138,7 @@ export function browserContext() {
   const isBrowser = isBrowserEnvironment()
   const userAgent = getUserAgent()
   const browser = getBrowser(userAgent)
-  /* c8 ignore start */
-  return {
+  return /* v8 ignore next */ {
     browser,
     isInternetExplorer: browser === 'Internet Explorer',
     isMobile: isMobile(userAgent),
@@ -154,5 +151,4 @@ export function browserContext() {
     userAgent,
     version: getVersion(userAgent),
   } satisfies BrowserContext
-  /* c8 ignore stop */
 }

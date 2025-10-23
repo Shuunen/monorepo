@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { Logger } from '@monorepo/utils'
 import dashBtn from 'node-dash-button'
 

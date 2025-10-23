@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 // oxlint-disable no-console, no-magic-numbers, no-undef, prefer-rest-params, no-extend-native
 const lastRequest = { method: '', url: '' }
 

@@ -14,7 +14,7 @@ function createColorCycler() {
     const color = colors[currentIndex]
     currentIndex = (currentIndex + 1) % colors.length
     if (!canBeTransparent && color === '') return getNextColor(canBeTransparent)
-    /* c8 ignore next */
+    /* v8 ignore next -- @preserve */
     return color ?? 'blue'
   }
 }

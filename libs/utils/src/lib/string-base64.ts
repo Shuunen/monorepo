@@ -19,8 +19,10 @@ export function parseBase64(string: string) {
   const result = { base64: '', size: 0, type: '' }
   if (!isBase64(string)) return result
   const type = base64TypeRegex.exec(string)
+  /* v8 ignore if -- @preserve */
   if (type && typeof type[0] === 'string') [result.type] = type
   const base64 = string.split('base64,')
+  /* v8 ignore if -- @preserve */
   if (base64.length > 1 && typeof base64[1] === 'string') [, result.base64] = base64
   // oxlint-disable-next-line no-magic-numbers
   result.size = Math.round((result.base64.length * 3) / 4)

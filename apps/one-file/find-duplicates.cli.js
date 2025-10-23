@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 // oxlint-disable no-magic-numbers, class-methods-use-this
 import { readdir, stat } from 'node:fs/promises'
 import path from 'node:path'

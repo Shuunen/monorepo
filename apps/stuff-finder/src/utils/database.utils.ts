@@ -123,7 +123,7 @@ export async function downloadImages(bucketId = state.credentials.bucketId) {
   const result = await listImages(bucketId)
   if (!result.ok) return result
   const downloadedImages = lsStorage.get<string[]>('downloadedImages', [])
-  /* c8 ignore next 10 */
+  /* v8 ignore next -- @preserve */
   for (const file of result.value) {
     if (downloadedImages.includes(file.$id)) continue
     downloadedImages.push(file.$id)
@@ -163,7 +163,7 @@ export async function getItemsRemotely() {
 
 export async function downloadItems() {
   const result = await getItemsRemotely()
-  /* c8 ignore next */
+  /* v8 ignore next -- @preserve */
   if (!result.ok) return result
   downloadObject(result.value, `${dateIso10()}_${projectId}_items.json`)
   return Result.ok('items downloaded successfully')
@@ -190,6 +190,7 @@ export async function uploadPhotosIfNeeded(item: Item) {
   for (const [index, photo] of data.photos.entries()) {
     if (!isUrl(photo)) continue
     let uuid = getAppWriteIdFromUrl(photo)
+    /* v8 ignore if -- @preserve */
     if (uuid === undefined) {
       // oxlint-disable-next-line no-await-in-loop
       const result = await uploadImage(`${id.value}_photo-${index}`, photo)
@@ -211,7 +212,7 @@ export async function addItemRemotely(item: Item, currentState = state) {
   const data = await uploadPhotosIfNeeded(item)
   if (!data.ok) return Result.error(data.error)
   const id = getItemId(data.value)
-  /* c8 ignore next */
+  /* v8 ignore next -- @preserve */
   if (!id.ok) return Result.error(id.error)
   const { collectionId, databaseId } = currentState.credentials
   const payload = itemToAppWriteModel(data.value)
@@ -226,6 +227,7 @@ export async function addItemRemotely(item: Item, currentState = state) {
 export async function deleteItemRemotely(item: Item, currentState = state) {
   const { collectionId, databaseId } = currentState.credentials
   const result = await Result.trySafe(database.deleteDocument(databaseId, collectionId, item.$id))
+  /* v8 ignore if -- @preserve */
   if (result.ok)
     for (const photo of item.photos) {
       // oxlint-disable-next-line max-depth

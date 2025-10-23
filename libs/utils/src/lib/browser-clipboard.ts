@@ -20,8 +20,8 @@ export async function copyToClipboard(stuff: number | Readonly<Record<string, un
     // oxlint-disable-next-line no-undef
     await navigator.clipboard.writeText(text)
     return Result.ok(`copied to clipboard : ${ellipsis(text)}`)
-    /* c8 ignore next 4 */
   } catch {
+    /* v8 ignore next -- @preserve */
     return Result.error('clipboard not available')
   }
 }
@@ -34,7 +34,7 @@ export async function copyToClipboard(stuff: number | Readonly<Record<string, un
  */
 // oxlint-disable-next-line no-undef
 export async function readClipboard(willLog = false, clipboard = navigator.clipboard) {
-  /* c8 ignore next */
+  /* v8 ignore next -- @preserve */
   if (!clipboard) return Result.error('clipboard not available')
   if (willLog) consoleLog('reading clipboard...')
   const text = await clipboard.readText()

@@ -71,7 +71,7 @@ export function extractData(folderPath = process.cwd()) {
   const infos = [safeRead('.vscode/settings.json', folderPath), safeRead('package.json', folderPath)].join('\n')
   const packageName = regex.packageName.exec(infos)?.groups?.name?.split('/')?.toReversed?.()[0]
   const scopeAndName = regex.scopeAndName.exec(infos)?.groups
-  const name = packageName ?? /* c8 ignore next */ scopeAndName?.name ?? defaults.name
+  const name = packageName ?? /* v8 ignore next -- @preserve */ scopeAndName?.name ?? defaults.name
   const scope = scopeAndName?.scope ?? defaults.scope
   if (name === defaults.name) logger.error('Could not find a name for the project, using the default one :', name)
   const description = regex.description.exec(infos)?.groups?.description ?? defaults.description

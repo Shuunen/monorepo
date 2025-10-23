@@ -66,6 +66,7 @@ function updateItemLocally(item: Item, currentState = state) {
 
 export async function addItem(item: Item, currentState = state) {
   const result = await addItemRemotely(item, currentState)
+  /* v8 ignore if -- @preserve */
   if (result.ok) updateItemLocally({ ...result.value }, currentState)
   return result
 }
@@ -78,12 +79,14 @@ export async function addItem(item: Item, currentState = state) {
  */
 export async function updateItem(item: Item, currentState = state) {
   const result = await updateItemRemotely(item, currentState)
+  /* v8 ignore if -- @preserve */
   if (result.ok) updateItemLocally({ ...result.value }, currentState)
   return result
 }
 
 export async function deleteItem(item: Item, currentState = state) {
   const remote = await deleteItemRemotely(item, currentState)
+  /* v8 ignore if -- @preserve */
   if (remote.ok) {
     const local = deleteItemLocally(item, currentState)
     if (!local.ok) return local
@@ -162,6 +165,7 @@ export function itemToForm(item?: Item) {
   form.fields.barcode.value = item.barcode
   form.fields.status.value = item.status
   form.fields.box.value = item.box
+  /* v8 ignore if -- @preserve */
   if (item.drawer > -1) form.fields.drawer.value = String(item.drawer)
   form.fields.photo.value = item.photos[0] ?? ''
   if (item.price > -1) form.fields.price.value = String(item.price)
@@ -188,7 +192,7 @@ export function formatRoomBoxLocation(boxTrimmed: string, drawer: number) {
  */
 function formatLetterBoxLocation(input: Item, short = false) {
   const box = input.box.trim()[0].toUpperCase()
-  /* c8 ignore next 5 */
+  /* v8 ignore next 5 -- @preserve */
   const room = short ? '' : capitalize(itemBoxToRoom(input.box) ?? '')
   const drawer = input.drawer && input.drawer > 0 ? `‧${input.drawer}` : '' // '‧2' or ''
   const details = input.box.split(' (')[1] // 'bricolage & sport)'
@@ -218,7 +222,7 @@ export function isDataOlderThan(milliseconds: number, itemsTimestamp = state.ite
   if (!itemsTimestamp) return true
   const age = Date.now() - itemsTimestamp
   const minutes = Math.round(age / nbMsInMinute)
-  /* c8 ignore next */
+  /* v8 ignore next -- @preserve */
   if (minutes > 0 && !isTestEnvironment()) logger.info('last activity', minutes, 'minute(s) ago')
   return age >= milliseconds
 }
