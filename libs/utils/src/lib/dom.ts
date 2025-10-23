@@ -205,7 +205,7 @@ export async function waitToDetect(selector: string, wait = 500, nbTries = 0, ma
   await sleep(wait)
   const element = findOne(selector)
   if (element) return Result.ok(element)
-  /* c8 ignore next 3 */
+  /* v8 ignore next 3 -- @preserve */
   if (nbTries > maxTry) return Result.error(`stop searching after 5 fails to detect : "${selector}"`)
   return waitToDetect(selector, wait, nbTries + 1, maxTry)
 }

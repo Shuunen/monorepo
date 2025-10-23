@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { lstatSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 

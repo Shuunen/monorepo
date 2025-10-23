@@ -44,4 +44,10 @@ describe('date-readable-time', () => {
   it('readableTime N', () => {
     expect(readableTime(2 * nbMsInYear)).toBe('2 years')
   })
+  it('readableTime O should handle exactly 1 year', () => {
+    expect(readableTime(nbMsInYear)).toBe('1 year')
+  })
+  it('readableTime P should handle exactly 1 year short', () => {
+    expect(readableTime(nbMsInYear, false)).toBe('1y')
+  })
 })

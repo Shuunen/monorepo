@@ -183,3 +183,35 @@ it('getOperatingSystem J', () => {
 it('isMobile J', () => {
   expect(isMobile(userAgentJ)).toBe(false)
 })
+
+it('getVersion K should handle regex match without version group', () => {
+  const userAgentK = 'TestBrowser/NoVersion'
+  expect(getVersion(userAgentK)).toBe('Unknown version')
+})
+
+it('getBrowser with no match returns Unknown browser', () => {
+  // An empty string should match the catch-all /./u regex
+  const result = getBrowser('')
+  expect(result).toBe('Unknown browser')
+})
+
+it('getOperatingSystem with no match returns Unknown OS', () => {
+  // An empty string should match the catch-all /./u regex
+  const result = getOperatingSystem('')
+  expect(result).toBe('Unknown OS')
+})
+
+it('browserContext should return valid context object', () => {
+  const ctx = browserContext()
+  expect(ctx).toHaveProperty('browser')
+  expect(ctx).toHaveProperty('isInternetExplorer')
+  expect(ctx).toHaveProperty('isMobile')
+  expect(ctx).toHaveProperty('language')
+  expect(ctx).toHaveProperty('os')
+  expect(ctx).toHaveProperty('platform')
+  expect(ctx).toHaveProperty('screenHeight')
+  expect(ctx).toHaveProperty('screenWidth')
+  expect(ctx).toHaveProperty('url')
+  expect(ctx).toHaveProperty('userAgent')
+  expect(ctx).toHaveProperty('version')
+})

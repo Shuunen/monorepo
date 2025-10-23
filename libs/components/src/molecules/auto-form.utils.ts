@@ -47,6 +47,7 @@ export type AutoFormFieldMetadata = {
 export function checkZodEnum(fieldSchema: z.ZodEnum | z.ZodOptional<z.ZodEnum>) {
   let isEnum = false
   let enumOptions: string[] = []
+  /* v8 ignore else -- @preserve */
   if (fieldSchema.type === 'enum') {
     isEnum = true
     enumOptions = fieldSchema.options as string[]

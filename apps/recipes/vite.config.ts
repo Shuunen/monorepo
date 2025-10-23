@@ -16,7 +16,6 @@ export default defineConfig({
   cacheDir: '../../node_modules/.vite/apps/recipes',
   plugins: [
     react(),
-    // @ts-expect-error type issue with vite-plugin-markdown
     md({
       mode: [Mode.REACT, Mode.TOC],
     }),
@@ -34,6 +33,7 @@ export default defineConfig({
   },
   test: {
     coverage: {
+      exclude: ['**/*.md'],
       provider: 'v8' as const,
       reportsDirectory: './test-output/vitest/coverage',
     },

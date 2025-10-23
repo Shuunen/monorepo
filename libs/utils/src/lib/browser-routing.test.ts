@@ -79,3 +79,9 @@ it('getPath J should remove lang from path', () => {
 it('getPath K should add lang to path', () => {
   expect(getPath('/contact', 'fr')).toBe('/fr/contact')
 })
+
+it('getPage L should handle path with only dots', () => {
+  // This tests the edge case where split('.')[0] could be undefined
+  // getPage('.') returns 'index' because getPath('.') returns '' which is the index page
+  expect(getPage('.')).toBe('index')
+})

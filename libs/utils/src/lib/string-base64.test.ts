@@ -32,4 +32,36 @@ describe('string-base64', () => {
   it('parseBase64 invalid because empty', () => {
     expect(parseBase64('')).toStrictEqual({ base64: '', size: 0, type: '' })
   })
+  it('parseBase64 G invalid format without base64 part', () => {
+    expect(parseBase64('image/png;iVBORw0KGgoYII=')).toStrictEqual({ base64: '', size: 0, type: '' })
+  })
+  it('parseBase64 H edge case with split but no valid content', () => {
+    expect(parseBase64('data:;base64,')).toMatchInlineSnapshot(`
+      {
+        "base64": "",
+        "size": 0,
+        "type": "",
+      }
+    `)
+  })
+  it('parseBase64 I edge case when regex doesnt match type', () => {
+    // This tests the typeof type[0] === 'string' check
+    // When the string doesn't match the base64 pattern, it returns empty result
+    expect(parseBase64('not-a-base64-string')).toStrictEqual({ base64: '', size: 0, type: '' })
+  })
+  it('parseBase64 J edge case when split doesnt find base64 data', () => {
+    // This tests the typeof base64[1] === 'string' check
+    // When split doesn't find a second part after 'base64,'
+    expect(parseBase64('data:image/png;base64')).toStrictEqual({ base64: '', size: 0, type: '' })
+  })
+  it('parseBase64 K valid base64 without type prefix', () => {
+    // Valid base64 format without 'data:' prefix - tests typeMatch being null
+    expect(parseBase64('image/jpeg;base64,ABC123DEF456')).toMatchInlineSnapshot(`
+      {
+        "base64": "ABC123DEF456",
+        "size": 9,
+        "type": "image/jpeg",
+      }
+    `)
+  })
 })

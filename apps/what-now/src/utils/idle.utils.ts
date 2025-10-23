@@ -1,5 +1,5 @@
+/* v8 ignore file -- @preserve */
 // oxlint-disable no-new
-/* c8 ignore start */
 import { debounce, emit, nbMsInMinute } from '@monorepo/utils'
 import { logger } from './logger.utils'
 ;new (class IdleService {
@@ -64,4 +64,3 @@ import { logger } from './logger.utils'
     }, this.checkInactivityEvery * nbMsInMinute)
   }
 })()
-/* c8 ignore end */

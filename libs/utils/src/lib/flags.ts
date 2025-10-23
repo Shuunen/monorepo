@@ -4,7 +4,7 @@
  * @returns true if the option is present, false otherwise
  */
 export function hasOption(name: string) {
-  /* c8 ignore next 4 */
+  /* v8 ignore next 4 -- @preserve */
   // could be nice to check for environment variables too
   if (typeof process === 'undefined') return false
   // oxlint-disable-next-line no-undef

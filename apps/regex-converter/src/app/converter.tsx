@@ -7,7 +7,7 @@ import type { Rule } from './types'
 import { applyRules } from './utils'
 
 function getSearchParams(): URLSearchParams {
-  /* c8 ignore next */
+  /* v8 ignore next -- @preserve */
   return globalThis.URLSearchParams === undefined ? new globalThis.window.URLSearchParams(globalThis.location.search) : new globalThis.URLSearchParams(globalThis.location.search)
 }
 
@@ -24,6 +24,7 @@ export function Converter() {
     const rulesParam = params.get('rules')
     if (rulesParam) {
       const loaded = decodeFromUrl(rulesParam)
+      /* v8 ignore if -- @preserve */
       if (Array.isArray(loaded) && loaded.length > 0) return loaded
     }
     return defaultRules
@@ -35,13 +36,12 @@ export function Converter() {
     globalThis.history.replaceState(emptyHistory, '', newUrl)
   }, [rules])
   const output = applyRules(input, rules)
-
+  /* v8 ignore next -- @preserve */
   return (
     <div className="flex flex-col">
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <h2 className="mb-2 mt-2">input</h2>
-          {/* c8 ignore next */}
           <Textarea className="w-full h-80 p-3 border rounded-xl bg-white shadow" onChange={event => setInput(event.target.value)} placeholder="Paste your text here..." value={input} />
         </div>
         <div>

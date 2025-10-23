@@ -257,6 +257,7 @@
     ],
     "no-ternary": "off",
     "no-void": "off",
+    "no-warning-comments": "off",
     "number-literal-case": "off",
     "oxc/no-optional-chaining": "off",
     "prefer-default-export": "off",

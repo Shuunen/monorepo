@@ -5,7 +5,7 @@ import { nbThird } from '../lib/constants.js'
 import { Logger } from '../lib/logger.js'
 import { Result } from '../lib/result.js'
 
-/* c8 ignore next */
+/* v8 ignore next -- @preserve */
 const logger = new Logger({ minimumLevel: import.meta.main ? '3-info' : '7-error' })
 
 /**
@@ -37,6 +37,6 @@ export async function main(argv: string[]) {
   return await make(options)
 }
 
-/* c8 ignore next 2 */
+/* v8 ignore next 2 -- @preserve */
 // oxlint-disable-next-line prefer-top-level-await
 if (import.meta.main) void main(process.argv)

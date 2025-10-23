@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { gray, green, red, yellow } from '@monorepo/utils'
 import { backupPath, files } from './files.node.js'
 import { copy, filename, logger, normalizePathWithSlash } from './utils.node.js'

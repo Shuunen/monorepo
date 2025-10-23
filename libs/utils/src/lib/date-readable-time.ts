@@ -9,7 +9,7 @@ import { nbMsInDay, nbMsInHour, nbMsInMinute, nbMsInMonth, nbMsInSecond, nbMsInY
  * @example readableTime(3 * nbMsInDay, false) // "3d"
  */
 export function readableTime(input: number | Readonly<Date>, isLong = true) {
-  /* c8 ignore next */
+  /* v8 ignore next -- @preserve */
   const ms = typeof input === 'number' ? input : Date.now() - input.getTime()
   const format = (value: number, long: string, short: string) => {
     const floor = Math.floor(value)

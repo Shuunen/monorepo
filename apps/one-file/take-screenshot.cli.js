@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 // oxlint-disable no-await-in-loop
 import { exec } from 'node:child_process'
 import { promises as fs } from 'node:fs'

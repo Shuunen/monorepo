@@ -180,6 +180,6 @@ export function start() {
   logger.success('Clean is done')
 }
 
-/* c8 ignore next 2 */
+/* v8 ignore next 2 -- @preserve */
 // avoid running this script if it's imported for testing
 if (process.argv[1]?.includes('clean-ytdl.cli.ts')) start()

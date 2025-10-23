@@ -23,6 +23,7 @@ function randomNumber(min = 0, max = 100) {
 
 // <stdin>
 console.log("tree-shaking test A, only using randomNumber", randomNumber(1, 10));
+/* v8 ignore start -- @preserve */
   ╔══════════════════════════╗
   ║  Output end              ║
   ╚══════════════════════════╝"
@@ -61,6 +62,7 @@ function randomNumber(min = 0, max = 100) {
 
 // <stdin>
 console.log("tree-shaking test B, using randomNumber and randomString", randomNumber(1, 10), randomString(10));
+/* v8 ignore start -- @preserve */
   ╔══════════════════════════╗
   ║  Output end              ║
   ╚══════════════════════════╝"
@@ -109,6 +111,7 @@ function readableTimeAgo(input, language = "en") {
 
 // <stdin>
 console.log("tree-shaking test C, only using readableTimeAgo", readableTimeAgo());
+/* v8 ignore start -- @preserve */
   ╔══════════════════════════╗
   ║  Output end              ║
   ╚══════════════════════════╝"
@@ -171,6 +174,9 @@ function toastSuccess(message, delay = 2e3) {
 
 // <stdin>
 console.log("tree-shaking test D, using toastSuccess", toastSuccess("my message"));
+/* v8 ignore start -- @preserve */
+/* v8 ignore next -- @preserve */
+/* v8 ignore next 2 -- @preserve */
   ╔══════════════════════════╗
   ║  Output end              ║
   ╚══════════════════════════╝"

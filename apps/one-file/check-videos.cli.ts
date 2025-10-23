@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 // oxlint-disable max-lines, no-eval, require-returns, no-magic-numbers, max-nested-callbacks, require-param-description
 import { exec } from 'node:child_process'
 import { readdir, readFile, renameSync, stat, writeFileSync } from 'node:fs'

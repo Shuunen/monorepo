@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 // oxlint-disable no-undef
 // @ts-expect-error missing types
 import { Logger } from '@monorepo/utils'

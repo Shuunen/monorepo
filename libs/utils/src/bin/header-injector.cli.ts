@@ -9,7 +9,7 @@ import { Result } from '../lib/result.js'
 
 // use me like : bun libs/utils/src/bin/header-injector.cli.ts --header="// Copyright 2025 ACME"
 
-/* c8 ignore next */
+/* v8 ignore next -- @preserve */
 const logger = new Logger({ minimumLevel: import.meta.main ? '3-info' : '7-error' })
 const metrics = {
   /** Number of files that already have the header */
@@ -85,7 +85,7 @@ export function report(metrics: Metrics): string {
   `.trim()
 }
 
-/* c8 ignore start */
+/* v8 ignore if -- @preserve */
 if (import.meta.main) {
   const result = await main(process.argv)
   if (result.ok) logger.info(report(result.value))

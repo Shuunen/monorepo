@@ -20,7 +20,7 @@ export function RuleLine({ rule, onChange, onRemove }: { rule: Rule; onChange: (
 
 export function Rules({ rules, setRules }: { rules: Rule[]; setRules: (rules: Rule[]) => void }) {
   function updateRule(id: string, key: keyof Rule, value: string | boolean) {
-    /* c8 ignore next */
+    /* v8 ignore next -- @preserve */
     setRules(rules.map(rule => (rule.id === id ? { ...rule, [key]: value } : rule)))
   }
   function addRule() {

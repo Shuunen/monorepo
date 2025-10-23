@@ -77,3 +77,11 @@ it('safe assign I does not overwrite with empty object', () => {
 it('safe assign J does handle non existing sub object', () => {
   expect(safeAssign({ name: 'John' }, { details: { age: 42, type: 'years' } })).toStrictEqual({ details: { age: 42, type: 'years' }, name: 'John' })
 })
+
+it('safe assign K with multiple sources', () => {
+  expect(safeAssign({ name: 'John' }, { age: 30 }, { city: 'Paris' })).toStrictEqual({ age: 30, city: 'Paris', name: 'John' })
+})
+
+it('safe assign L does not crash with non-record values', () => {
+  expect(safeAssign({ name: 'John' }, { age: 30 }, null as unknown as Record<string, unknown>)).toStrictEqual({ age: 30, name: 'John' })
+})

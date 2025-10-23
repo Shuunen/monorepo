@@ -27,7 +27,7 @@ function parseRecipesFromPaths(recipeModules: Record<string, () => Promise<unkno
     const match = path.match(RECIPE_PATH_REGEX)
     if (!match) continue
     const [, category, name] = match
-    /* c8 ignore next */
+    /* v8 ignore next -- @preserve */
     if (name === 'template') continue
     recipes.push({ category, name })
   }
@@ -57,7 +57,7 @@ export function RecipeMenu() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    /* c8 ignore next */
+    /* v8 ignore next -- @preserve */
     const recipeModules = import.meta.glob('../recipes/**/*.md')
     const parsedRecipes = parseRecipesFromPaths(recipeModules)
     const grouped = groupRecipesByCategory(parsedRecipes)

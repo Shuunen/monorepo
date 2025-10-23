@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { Logger } from '@monorepo/utils'
 import clipboard from 'clipboardy'
 import { isolateLines, linesToList } from './isolate-lines.utils.js' // js extension is required here

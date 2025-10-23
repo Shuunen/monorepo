@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 /** biome-ignore-all lint/suspicious/noConsole: old POC */
 // oxlint-disable no-console, no-undef
 

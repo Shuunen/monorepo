@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 // oxlint-disable max-depth, no-bitwise, no-magic-numbers, max-nested-callbacks, max-lines-per-function
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'

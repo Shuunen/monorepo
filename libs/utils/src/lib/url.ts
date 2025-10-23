@@ -20,7 +20,7 @@ function base64CharToPercentEncoded(char: string) {
   const hexRadix = 16
   const padLength = 2
   const code = char.codePointAt(0)
-  /* c8 ignore next */
+  /* v8 ignore next -- @preserve */
   if (code === undefined) return ''
   return `%${code.toString(hexRadix).padStart(padLength, '0')}`
 }

@@ -7,8 +7,6 @@ import { type Display, defaultTheme } from '../types/theme.types'
 import { navigate } from './navigation.utils'
 import { storage } from './storage.utils'
 
-/* c8 ignore start */
-
 /**
  * Handle the status change
  * @param status the new status
@@ -21,9 +19,8 @@ function onStatusChangeSync(status: AppStatus) {
 
 const laptopWidth = 1500
 
+/* v8 ignore next */
 const defaultDisplay: Display = isBrowserEnvironment() && globalThis.screen.width < laptopWidth ? 'list' : 'card'
-
-/* c8 ignore stop */
 
 export const { state, watchState } = createState(
   {

@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { readFile, writeFile } from 'node:fs/promises'
 import { Logger } from '@monorepo/utils'
 import glob from 'tiny-glob'

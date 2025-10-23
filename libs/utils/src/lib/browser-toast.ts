@@ -6,8 +6,9 @@
 function toastHide(element: HTMLElement, delay = 200) {
   element.style.opacity = '0'
   element.style.transform = 'translateX(300px)'
+  /* v8 ignore next -- @preserve */
   setTimeout(() => {
-    /* c8 ignore next */
+    /* v8 ignore next -- @preserve */
     element.remove()
   }, delay)
 }
@@ -20,7 +21,7 @@ function toastHide(element: HTMLElement, delay = 200) {
 function toastShow(element: HTMLElement, delay = 100) {
   document.body.append(element)
   setTimeout(() => {
-    /* c8 ignore next 2 */
+    /* v8 ignore next 2 -- @preserve */
     element.style.opacity = '1'
     element.style.transform = 'translateX(0)'
   }, delay)

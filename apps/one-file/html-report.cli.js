@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { readFile } from 'node:fs/promises'
 import { blue, gray, Logger, nbPercentMax, nbThird, yellow } from '@monorepo/utils'
 import { HtmlReporter } from './html-reporter.mjs'

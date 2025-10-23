@@ -7,7 +7,7 @@ exports[`http-proxy > makeProxyRequest A should make POST request with JSON body
   },
   "response": {
     "headers": {
-      "get": [MockFunction spy] {
+      "get": [MockFunction] {
         "calls": [
           [
             "content-type",
@@ -21,7 +21,7 @@ exports[`http-proxy > makeProxyRequest A should make POST request with JSON body
         ],
       },
     },
-    "json": [MockFunction spy] {
+    "json": [MockFunction] {
       "calls": [
         [],
       ],

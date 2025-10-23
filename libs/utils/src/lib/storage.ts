@@ -57,9 +57,7 @@ export const storage = {
   clear,
   get,
   has,
-  /* c8 ignore next 2 */
-  // oxlint-disable-next-line no-undef
-  media: typeof localStorage === 'undefined' ? ({} as Storage) : localStorage,
+  media: /* v8 ignore next */ typeof localStorage === 'undefined' ? ({} as Storage) : localStorage,
   prefix: '', // prefix all keys in the storage with a custom string
   set,
 }

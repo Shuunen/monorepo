@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { Logger, nbMsInSecond } from '@monorepo/utils'
 // @ts-expect-error missing types
 import notifier from 'node-notifier'

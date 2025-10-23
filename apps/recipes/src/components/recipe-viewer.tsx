@@ -34,6 +34,7 @@ function LoadingMessage() {
   )
 }
 
+/* v8 ignore next -- @preserve */
 // oxlint-disable-next-line max-lines-per-function
 export function RecipeViewer() {
   const { category, recipe } = useParams<RecipeParams>()
@@ -53,7 +54,6 @@ export function RecipeViewer() {
     setRecipeComponent(undefined)
 
     // Dynamically import the recipe markdown file
-    /* c8 ignore start */
     import(`../recipes/${category}/${recipe}.md`)
       .then((module: RecipeModule) => {
         // oxlint-disable-next-line max-nested-callbacks
@@ -64,14 +64,13 @@ export function RecipeViewer() {
         setError(`La recette "${recipe}" dans la catégorie "${category}" n'existe pas.`)
         setIsLoading(false)
       })
-    /* c8 ignore end */
   }, [category, recipe])
 
   if (!category || !recipe || error) return <ErrorMessage error={error} />
 
   if (isLoading) return <LoadingMessage />
 
-  /* c8 ignore next */
+  /* v8 ignore next -- @preserve */
   if (!RecipeComponent) return <ErrorMessage error="Composant de recette non disponible" />
 
   return (

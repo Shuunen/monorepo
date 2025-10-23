@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start -- @preserve */
 import { Button } from '@monorepo/components'
 import { Link } from '@tanstack/react-router'
 // oxlint-disable-next-line no-restricted-imports
@@ -32,4 +32,4 @@ export function Header() {
     </div>
   )
 }
-/* c8 ignore stop */
+/* v8 ignore stop -- @preserve */

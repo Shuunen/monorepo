@@ -29,7 +29,7 @@ export function injectMark(content, placeholder, mark) {
  */
 export function generateMark({ commit = '', date = new Date().toISOString(), version = '' }) {
   let finalCommit = commit
-  /* c8 ignore next */
+  /* v8 ignore next -- @preserve */
   if (commit === '') finalCommit = execSync('git rev-parse --short HEAD', { cwd: process.cwd() }).toString().trim() //NOSONAR
   return `${version} - ${finalCommit} - ${date}`
 }
@@ -76,10 +76,11 @@ export function injectMarkInAssets(assets, placeholder, version) {
  * @param {string} projectRoot - The root directory of the project.
  * @returns {string} The version specified in package.json, or an empty string if not found or on error.
  */
+/* v8 ignore next -- @preserve */
 export function getProjectVersion(projectRoot) {
   try {
     const pkg = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'))
-    /* c8 ignore next */ return pkg.version || ''
+    return pkg.version || ''
   } catch (error) {
     if (error instanceof Error) console.error('Could not read project package.json for version', error.message)
     return ''
