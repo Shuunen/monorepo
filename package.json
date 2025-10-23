@@ -80,11 +80,6 @@
   ],
   "license": "MIT",
   "name": "@monorepo/source",
-  "pnpm": {
-    "overrides": {
-      "vite": "6.3.6"
-    }
-  },
   "private": true,
   "repository": {
     "type": "git",
