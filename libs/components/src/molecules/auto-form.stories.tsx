@@ -649,12 +649,19 @@ TODO :
 - Integrate with a store
 - Write a story where we feed the AutoForm a whole new schema after a variant change (for dynamic schemas)
 
-Future architecture :
-- AutoForm
-  - AutoFormStepper
-  - AutoFormNavigation
-  - AutoFormSummaryStep
-  - AutoFormSubmissionStep
-  - AutoFormFields
-    - AutoFormField
+Future architecture (indentation is the hierarchy of components, who uses who) :
+- AutoForm : already exists at libs\components\src\molecules\auto-form.tsx
+  - AutoFormStepper : already exists at libs\components\src\molecules\auto-form-stepper.tsx
+  - AutoFormNavigation : to be created at libs\components\src\molecules\auto-form-navigation.tsx
+  - AutoFormSummaryStep : already exists at libs\components\src\molecules\auto-form-summary-step.tsx
+  - AutoFormSubmissionStep : already exists at libs\components\src\molecules\auto-form-submission-step.tsx
+  - AutoFormFields : to be created at libs\components\src\molecules\auto-form-fields.tsx
+    - AutoFormField : already exists at libs\components\src\molecules\auto-form-field.tsx
+
+We want to be able to use <AutoForm /> as a black box, he will take care of everything regarding the form :
+- AutoFormStepper : display the vertical menu on the left with the steps and their states (editable, readonly, completed, error)
+- AutoFormFields : display the fields of the current step
+- AutoFormNavigation : display the navigation buttons (next, back, submit)
+- AutoFormSummaryStep : display a summary of the data to be submitted and ask for confirmation
+- AutoFormSubmissionStep : display the submission state (submitting, success, error)
 */
