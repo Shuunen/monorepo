@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@monorepo/components": "workspace:*",
+    "@monorepo/utils": "workspace:*",
+    "@monorepo/vite-plugins": "workspace:*",
+    "framer-motion": "^12.23.24"
+  },
+  "name": "image-compare",
+  "private": true,
+  "type": "module",
+  "version": "0.0.1"
+}

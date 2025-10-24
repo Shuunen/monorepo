@@ -21,6 +21,7 @@
     "document": "readonly",
     "Event": "readonly",
     "File": "readonly",
+    "FileReader": "readonly",
     "FormData": "readonly",
     "fetch": "readonly",
     "HTMLAnchorElement": "readonly",

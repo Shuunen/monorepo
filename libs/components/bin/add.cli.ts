@@ -42,8 +42,9 @@ function setupComponent() {
   fixImports()
   // TODO : add the related story if it exists
   // https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry/ui
-  logger.success(`Component ${green(component)} is ready to use in libs/components 🚀`)
-  logger.info('You can use a pre-defined story from https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry/ui')
+  logger.success(`ShadCn component ${green(component)} is now available to use 🚀`)
+  logger.info('Next steps : create an atom that will expose it to monorepo apps, then create a story for it.')
+  logger.info('Check for an existing story online https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry/ui')
 }
 
 function downloadComponent() {
