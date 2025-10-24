@@ -16,9 +16,13 @@ const meta = {
   },
   render: args => {
     const [submittedData, setSubmittedData] = useState<Record<string, unknown> | undefined>(undefined)
+    function onSubmit(data: Record<string, unknown>) {
+      setSubmittedData(data)
+      logger.showSuccess('Form submitted successfully')
+    }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <AutoForm {...args} logger={logger} onSubmit={data => setSubmittedData(data)} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} />
       </div>
     )
@@ -51,14 +55,17 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const submitButton = canvas.getByRole('button', { name: 'Submit' })
+    // Initially submit button should be disabled (form is empty)
+    expect(submitButton).toBeDisabled()
     const emailInput = canvas.getByTestId('email')
     await userEvent.type(emailInput, 'example-email@email.com')
-    const submitButton = canvas.getByRole('button', { name: 'Submit' })
-    await userEvent.click(submitButton)
-    const errorElement = await canvas.findByText('Invalid input: expected string, received undefined')
-    if (!errorElement) throw new Error('Error message not found')
+    // Still disabled - name is missing
+    expect(submitButton).toBeDisabled()
     const nameInput = canvas.getByTestId('name')
     await userEvent.type(nameInput, 'John Doe')
+    // Now enabled - form is valid
+    expect(submitButton).not.toBeDisabled()
     await userEvent.click(submitButton)
     const debug = canvas.getByTestId('debug-data')
     await expect(debug).toContainHTML(stringify({ email: 'example-email@email.com', name: 'John Doe' }))
@@ -272,22 +279,12 @@ export const Exhaustive: Story = {
       const stringReadonly = canvas.getByTestId('string-readonly')
       expect(stringReadonly).toContainHTML('—')
     })
-    await step('submit form with errors', async () => {
+    step('submit button is disabled because form is invalid', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
-      await userEvent.click(submitButton)
+      expect(submitButton).toBeDisabled()
       const issues = canvas.getAllByRole('alert')
-      expect(issues).toHaveLength(9)
-      const expectedErrorMessages = [
-        'Invalid input: expected boolean, received undefined',
-        'Invalid input: expected true',
-        'Invalid input: expected false',
-        'Email editable required',
-        'Email disabled required',
-        'Email optional',
-        'Invalid option: expected one of "red"|"green"|"blue"',
-        'Invalid input: expected number, received undefined',
-        'Invalid input: expected string, received undefined',
-      ]
+      expect(issues).toHaveLength(2)
+      const expectedErrorMessages = ['Email editable required', 'Email optional']
       const errorMessages = issues.map(i => i.textContent?.trim())
       expect(errorMessages).toEqual(expectedErrorMessages)
     })
@@ -302,6 +299,8 @@ export const ExhaustiveFilled: Story = {
     initialData: {
       boolean: true,
       booleanDisabled: true,
+      booleanLiteralChecked: true,
+      booleanLiteralUnchecked: false,
       // booleanOptional: true,
       booleanReadonlyChecked: true,
       booleanReadonlyUnchecked: false,
@@ -398,12 +397,11 @@ export const ExhaustiveFilled: Story = {
     step('no error displayed', () => {
       expect(canvas.queryByRole('alert')).not.toBeInTheDocument()
     })
-    await step('submit form with errors', async () => {
+    await step('submit button is enabled because form is valid', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
       await sleep(100)
-      const issues = canvas.getAllByRole('alert')
-      expect(issues).toHaveLength(2) // FIX ME (should be 0, but 2 literal bool are considered invalid instead of simply empty)
     })
   },
 }
@@ -430,43 +428,91 @@ const step2Schema = z.object({
   }),
 })
 
+const step3Schema = z.object({
+  address: z.string().min(5, 'Address is required').meta({
+    label: 'Street Address',
+    placeholder: 'Enter your street address',
+  }),
+  city: z.string().min(2, 'City is required').meta({
+    label: 'City',
+    placeholder: 'Enter your city',
+  }),
+})
+
 /**
- * Multi-step form with basic fields
+ * 3 steps form with basic fields.
+ * Tests navigation between steps (Next button bypasses validation).
  */
 export const MultiStep: Story = {
   args: {
-    schemas: [step1Schema, step2Schema],
+    schemas: [step1Schema, step2Schema, step3Schema],
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    await step('step 1', async () => {
+    await step('navigate to step 2 without filling step 1 (validation bypassed)', async () => {
+      // Click Next without filling any fields - should work
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      await userEvent.click(nextButton)
+      // We should be on step 2 now
+      const ageInput = canvas.getByTestId('age')
+      expect(ageInput).toBeInTheDocument()
+    })
+    await step('navigate to step 3 without filling step 2 (validation bypassed)', async () => {
+      // Click Next without filling step 2 fields - should work
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      await userEvent.click(nextButton)
+      // We should be on step 3 now - verify all fields are present
+      const addressInput = canvas.getByTestId('address')
+      expect(addressInput).toBeInTheDocument()
+      const cityInput = canvas.getByTestId('city')
+      expect(cityInput).toBeInTheDocument()
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      expect(submitButton).toBeInTheDocument()
+      expect(submitButton).toBeDisabled()
+    })
+    await step('go back to step 1 and fill fields', async () => {
+      const step1Button = canvas.getByRole('button', { name: 'Step 1' })
+      await userEvent.click(step1Button)
       const nameInput = canvas.getByTestId('name')
       await userEvent.type(nameInput, 'John Doe')
       const emailInput = canvas.getByTestId('email')
       await userEvent.type(emailInput, 'john.doe@example.com')
-      const nextButton = canvas.getByRole('button', { name: 'Next' })
-      await userEvent.click(nextButton)
     })
-    await step('step 2', async () => {
+    await step('submit button still disabled - step 2 & 3 not filled', async () => {
+      const step3Button = canvas.getByRole('button', { name: 'Step 3' })
+      await userEvent.click(step3Button)
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      expect(submitButton).toBeDisabled()
+    })
+    await step('step 2 - fill fields', async () => {
+      const stepBackButton = canvas.getByRole('button', { name: 'Step 2' })
+      await userEvent.click(stepBackButton)
       const ageInput = canvas.getByTestId('age')
       await userEvent.type(ageInput, '30')
       const subscribeCheckbox = canvas.getByTestId('subscribe')
       await userEvent.click(subscribeCheckbox)
-    })
-    await step('get back to step via stepper', async () => {
-      const step1Button = canvas.getByRole('button', { name: 'Step 1' })
-      await userEvent.click(step1Button)
-      const nextButton = canvas.getByRole('button', { name: 'Step 2' })
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
       await userEvent.click(nextButton)
     })
-    await step('submit form', async () => {
+    step('submit button still disabled - step 3 not filled', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      expect(submitButton).toBeDisabled()
+    })
+    await step('step 3 - fill fields and submit', async () => {
+      const addressInput = canvas.getByTestId('address')
+      await userEvent.type(addressInput, '123 Main St')
+      const cityInput = canvas.getByTestId('city')
+      await userEvent.type(cityInput, 'Metropolis')
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
       const debug = canvas.getByTestId('debug-data')
       await expect(debug).toContainHTML('"email": "john.doe@example.com"')
       await expect(debug).toContainHTML('"name": "John Doe"')
       await expect(debug).toContainHTML('"age": 30')
       await expect(debug).toContainHTML('"subscribe": true')
+      await expect(debug).toContainHTML('"address": "123 Main St"')
+      await expect(debug).toContainHTML('"city": "Metropolis"')
     })
   },
 }
@@ -555,18 +601,17 @@ export const OptionalSection: Story = {
       const petNameInput = await canvas.findByTestId('pet-name')
       expect(petNameInput).toBeVisible()
     })
-    await step('fail at submitting with pet but no pet name', async () => {
+    step('submit button disabled when pet checked but no pet name', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
-      await userEvent.click(submitButton)
-      const issue = await canvas.findByText('Invalid input: expected string, received undefined')
-      expect(issue).toBeVisible()
+      expect(submitButton).toBeDisabled()
     })
     await step('fill pet name', async () => {
       const petNameInput = await canvas.findByTestId('pet-name')
       await userEvent.type(petNameInput, 'Fido')
     })
-    await step('succeed at submitting with pet and pet name', async () => {
+    await step('submit button enabled and submit successfully', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
       const debug = canvas.queryByTestId('debug-data')
       expect(debug).toContainHTML('"name": "John Doughy"')
@@ -649,24 +694,13 @@ export const StepperStates: Story = {
 
 /*
 TODO :
-- ExhaustiveFilled Story should have 0 errors, but currently has 2 (the literal booleans)
 - Extract steps logic to utils and add unit tests
 - What about the hidden steps like submission and summary ?
 - Stepper should contains links and not buttons
 - Display an error icon if touched
-- Let the user go next step even if there are errors in the current step
 - Use complex components as fields like upload, multi-lingual text
 - Integrate with a store
 - Write a story where we feed the AutoForm a whole new schema after a variant change (for dynamic schemas)
-
-Future architecture (indentation is the hierarchy of components, who uses who) :
-- AutoForm : already exists at libs\components\src\molecules\auto-form.tsx
-  - AutoFormStepper : already exists at libs\components\src\molecules\auto-form-stepper.tsx
-  - AutoFormNavigation : to be created at libs\components\src\molecules\auto-form-navigation.tsx
-  - AutoFormSummaryStep : already exists at libs\components\src\molecules\auto-form-summary-step.tsx
-  - AutoFormSubmissionStep : already exists at libs\components\src\molecules\auto-form-submission-step.tsx
-  - AutoFormFields : to be created at libs\components\src\molecules\auto-form-fields.tsx
-    - AutoFormField : already exists at libs\components\src\molecules\auto-form-field.tsx
 
 We want to be able to use <AutoForm /> as a black box, he will take care of everything regarding the form :
 - AutoFormStepper : display the vertical menu on the left with the steps and their states (editable, readonly, completed, error)

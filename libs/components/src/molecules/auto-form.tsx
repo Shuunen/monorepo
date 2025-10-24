@@ -1,14 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useMemo, useState } from 'react'
+import { type MouseEvent, useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import type { z } from 'zod'
-import { Button } from '../atoms/button'
 import { Form } from '../atoms/form'
 import { IconEdit } from '../icons/icon-edit'
 import { IconReadonly } from '../icons/icon-readonly'
 import { IconSuccess } from '../icons/icon-success'
 import { type AutoFormProps, cleanSubmittedData, filterSchema } from './auto-form.utils'
-import { AutoFormField } from './auto-form-field'
+import { AutoFormFields } from './auto-form-fields'
+import { AutoFormNavigation } from './auto-form-navigation'
 import { AutoFormStepper } from './auto-form-stepper'
 
 // run this command to check e2e tests `nx run components:test-storybook --skip-nx-cache` and run this command to check unit tests `nx run components:test --skip-nx-cache`
@@ -45,6 +45,15 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
     setFormData(updatedData)
     if (onChange) onChange(cleanData(updatedData))
   }
+  // Handle next button (bypass validation)
+  function handleNext(event?: MouseEvent) {
+    event?.preventDefault() // Prevent any default button behavior
+    const currentValues = form.getValues()
+    const updatedData = { ...formData, ...currentValues }
+    setFormData(updatedData)
+    if (onChange) onChange(cleanData(updatedData))
+    setCurrentStep(prev => prev + 1)
+  }
   // Handle back button
   function handleBack() {
     if (currentStep > 0) setCurrentStep(prev => prev - 1)
@@ -80,34 +89,24 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   // Get current step label for rendering above fields
   const currentStepLabel = (typeof currentSchema.meta === 'function' ? currentSchema.meta()?.step : undefined) ?? undefined
   const stepTitle = typeof currentStepLabel === 'string' ? currentStepLabel : ''
+  // Check if all schemas are valid to enable/disable submit button
+  const isFormValid = useMemo(
+    () =>
+      schemas.every(schema => {
+        const filtered = filterSchema(schema, formData)
+        return filtered.safeParse(formData).success
+      }),
+    [schemas, formData],
+  )
+  const isSubmitDisabled = !isFormValid
   return (
     <div className="mx-auto p-6 bg-white rounded-lg shadow-md w-full flex">
       {schemas.length > 1 && <AutoFormStepper onStepClick={handleStepClick} steps={steps} />}
       <div className="flex-1">
         <Form {...form}>
           <form onChange={handleChange} onSubmit={form.handleSubmit(handleStepSubmit)}>
-            {stepTitle && (
-              <h3 className="text-lg font-medium mb-4" data-testid="step-title">
-                {stepTitle}
-              </h3>
-            )}
-            <div className="space-y-4">
-              {Object.keys(currentSchema.shape).map(fieldName => (
-                <AutoFormField fieldName={fieldName} fieldSchema={currentSchema.shape[fieldName] as z.ZodTypeAny} formData={formData} key={fieldName} logger={logger} />
-              ))}
-            </div>
-            <div className="flex justify-between pt-6">
-              {currentStep > 0 ? (
-                <Button onClick={handleBack} testId="step-back" type="button" variant="outline">
-                  Back
-                </Button>
-              ) : (
-                <div />
-              )}
-              <Button testId={`step-${isLastStep ? 'submit' : 'next'}`} type="submit">
-                {isLastStep ? 'Submit' : 'Next'}
-              </Button>
-            </div>
+            <AutoFormFields formData={formData} logger={logger} schema={currentSchema} stepTitle={stepTitle} />
+            <AutoFormNavigation currentStep={currentStep} isLastStep={isLastStep} isSubmitDisabled={isSubmitDisabled} onBack={handleBack} onNext={handleNext} />
           </form>
         </Form>
       </div>
