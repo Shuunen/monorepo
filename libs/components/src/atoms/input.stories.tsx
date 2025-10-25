@@ -28,3 +28,11 @@ export const Disabled: Story = {
     testId: 'input-disabled',
   },
 }
+
+export const Readonly: Story = {
+  args: {
+    placeholder: 'Readonly input',
+    readOnly: true,
+    testId: 'input-readonly',
+  },
+}

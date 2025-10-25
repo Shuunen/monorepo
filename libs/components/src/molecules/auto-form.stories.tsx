@@ -214,9 +214,9 @@ export const Exhaustive: Story = {
       await userEvent.click(booleanOptional)
       expect(booleanOptional).toBeChecked()
       const booleanReadonlyChecked = canvas.getByTestId('boolean-readonly-checked')
-      expect(booleanReadonlyChecked).toContainHTML('Yes')
+      expect(booleanReadonlyChecked).toBeChecked()
       const booleanReadonlyUnchecked = canvas.getByTestId('boolean-readonly-unchecked')
-      expect(booleanReadonlyUnchecked).toContainHTML('No')
+      expect(booleanReadonlyUnchecked).not.toBeChecked()
     })
     await step('email fields', async () => {
       const emailEditable = canvas.getByTestId('email')
@@ -230,7 +230,7 @@ export const Exhaustive: Story = {
       await userEvent.type(emailOptional, 'invalid-email')
       expect(emailOptional).toHaveValue('invalid-email')
       const emailReadonly = canvas.getByTestId('email-readonly')
-      expect(emailReadonly).toContainHTML('—')
+      expect(emailReadonly).toHaveValue('')
     })
     await step('enum fields', async () => {
       const enumEditable = canvas.getByTestId('enum-trigger')
@@ -248,8 +248,8 @@ export const Exhaustive: Story = {
       await userEvent.click(enumOptionalOptions[1])
       const enumOptionalNativeSelect = enumOptional.nextElementSibling
       expect(enumOptionalNativeSelect).toHaveValue('green')
-      const enumReadonly = canvas.getByTestId('enum-readonly')
-      expect(enumReadonly).toContainHTML('—')
+      const enumReadonly = canvas.getByTestId('enum-readonly-trigger')
+      expect(enumReadonly).toHaveValue('')
     })
     await step('number fields', async () => {
       const numberEditable = canvas.getByTestId('number')
@@ -263,7 +263,7 @@ export const Exhaustive: Story = {
       await userEvent.type(numberOptional, '30')
       expect(numberOptional).toHaveValue(30)
       const numberReadonly = canvas.getByTestId('number-readonly')
-      expect(numberReadonly).toContainHTML('—')
+      expect(numberReadonly).toHaveValue(null)
     })
     await step('string fields', async () => {
       const stringEditable = canvas.getByTestId('string')
@@ -277,7 +277,7 @@ export const Exhaustive: Story = {
       await userEvent.type(stringOptional, 'Some text')
       expect(stringOptional).toHaveValue('Some text')
       const stringReadonly = canvas.getByTestId('string-readonly')
-      expect(stringReadonly).toContainHTML('—')
+      expect(stringReadonly).toHaveValue('')
     })
     step('submit button is disabled because form is invalid', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
@@ -342,9 +342,9 @@ export const ExhaustiveFilled: Story = {
       expect(booleanOptional).not.toBeDisabled()
       expect(booleanOptional).not.toBeChecked()
       const booleanReadonlyChecked = canvas.getByTestId('boolean-readonly-checked')
-      expect(booleanReadonlyChecked).toContainHTML('Yes')
+      expect(booleanReadonlyChecked).toBeChecked()
       const booleanReadonlyUnchecked = canvas.getByTestId('boolean-readonly-unchecked')
-      expect(booleanReadonlyUnchecked).toContainHTML('No')
+      expect(booleanReadonlyUnchecked).not.toBeChecked()
     })
     await step('email fields', () => {
       const emailEditable = canvas.getByTestId('email')
@@ -355,7 +355,7 @@ export const ExhaustiveFilled: Story = {
       const emailOptional = canvas.getByTestId('email-optional')
       expect(emailOptional).toHaveValue('')
       const emailReadonly = canvas.getByTestId('email-readonly')
-      expect(emailReadonly).toContainHTML('test@readonly.bzh')
+      expect(emailReadonly).toHaveValue('test@readonly.bzh')
     })
     await step('enum fields', () => {
       const enumEditable = canvas.getByTestId('enum-trigger')
@@ -369,8 +369,9 @@ export const ExhaustiveFilled: Story = {
       expect(enumOptional).toHaveValue('')
       const enumOptionalNativeSelect = enumOptional.nextElementSibling
       expect(enumOptionalNativeSelect).toHaveValue('')
-      const enumReadonly = canvas.getByTestId('enum-readonly')
-      expect(enumReadonly).toContainHTML('blue')
+      const enumReadonly = canvas.getByTestId('enum-readonly-trigger')
+      const enumReadonlyNativeSelect = enumReadonly.nextElementSibling
+      expect(enumReadonlyNativeSelect).toHaveValue('blue')
     })
     await step('number fields', () => {
       const numberEditable = canvas.getByTestId('number')
@@ -381,7 +382,7 @@ export const ExhaustiveFilled: Story = {
       const numberOptional = canvas.getByTestId('number-optional')
       expect(numberOptional).toHaveValue(null)
       const numberReadonly = canvas.getByTestId('number-readonly')
-      expect(numberReadonly).toContainHTML('60')
+      expect(numberReadonly).toHaveValue(60)
     })
     await step('string fields', () => {
       const stringEditable = canvas.getByTestId('string')
@@ -392,7 +393,7 @@ export const ExhaustiveFilled: Story = {
       const stringOptional = canvas.getByTestId('string-optional')
       expect(stringOptional).toHaveValue('')
       const stringReadonly = canvas.getByTestId('string-readonly')
-      expect(stringReadonly).toContainHTML('Some text readonly')
+      expect(stringReadonly).toHaveValue('Some text readonly')
     })
     step('no error displayed', () => {
       expect(canvas.queryByRole('alert')).not.toBeInTheDocument()
@@ -402,6 +403,32 @@ export const ExhaustiveFilled: Story = {
       expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
       await sleep(100)
+    })
+    step('verify submitted data', () => {
+      const debug = canvas.getByTestId('debug-data')
+      expect(debug).toContainHTML('"boolean": true')
+      expect(debug).toContainHTML('"booleanDisabled": true')
+      expect(debug).toContainHTML('"booleanLiteralChecked": true')
+      expect(debug).toContainHTML('"booleanLiteralUnchecked": false')
+      expect(debug).not.toContainHTML('"booleanOptional"')
+      expect(debug).toContainHTML('"booleanReadonlyChecked": true')
+      expect(debug).toContainHTML('"booleanReadonlyUnchecked": false')
+      expect(debug).toContainHTML('"email": "test@example.com"')
+      expect(debug).toContainHTML('"emailDisabled": "test@disabled.de"')
+      expect(debug).not.toContainHTML('"emailOptional"')
+      expect(debug).toContainHTML('"emailReadonly": "test@readonly.bzh"')
+      expect(debug).toContainHTML('"enum": "blue"')
+      expect(debug).toContainHTML('"enumDisabled": "green"')
+      expect(debug).not.toContainHTML('"enumOptional"')
+      expect(debug).toContainHTML('"enumReadonly": "blue"')
+      expect(debug).toContainHTML('"number": 45')
+      expect(debug).toContainHTML('"numberDisabled": 99')
+      expect(debug).not.toContainHTML('"numberOptional"')
+      expect(debug).toContainHTML('"numberReadonly": 60')
+      expect(debug).toContainHTML('"string": "Some text"')
+      expect(debug).toContainHTML('"stringDisabled": "Some text disabled"')
+      expect(debug).not.toContainHTML('"stringOptional"')
+      expect(debug).toContainHTML('"stringReadonly": "Some text readonly"')
     })
   },
 }
@@ -506,13 +533,15 @@ export const MultiStep: Story = {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
+    })
+    step('verify submitted data', () => {
       const debug = canvas.getByTestId('debug-data')
-      await expect(debug).toContainHTML('"email": "john.doe@example.com"')
-      await expect(debug).toContainHTML('"name": "John Doe"')
-      await expect(debug).toContainHTML('"age": 30')
-      await expect(debug).toContainHTML('"subscribe": true')
-      await expect(debug).toContainHTML('"address": "123 Main St"')
-      await expect(debug).toContainHTML('"city": "Metropolis"')
+      expect(debug).toContainHTML('"email": "john.doe@example.com"')
+      expect(debug).toContainHTML('"name": "John Doe"')
+      expect(debug).toContainHTML('"age": 30')
+      expect(debug).toContainHTML('"subscribe": true')
+      expect(debug).toContainHTML('"address": "123 Main St"')
+      expect(debug).toContainHTML('"city": "Metropolis"')
     })
   },
 }
@@ -624,10 +653,13 @@ export const OptionalSection: Story = {
       expect(canvas.queryByTestId('pet-age')).not.toBeInTheDocument()
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
+    })
+    step('verify submitted data', () => {
       const debug = canvas.queryByTestId('debug-data')
-      expect(debug).toContainHTML('"name": "John Doughy"')
       expect(debug).not.toContainHTML('petName')
       expect(debug).not.toContainHTML('petAge')
+      expect(debug).toContainHTML('"age": 28')
+      expect(debug).toContainHTML('"name": "John Doughy"')
     })
   },
 }
@@ -675,20 +707,33 @@ export const StepperStates: Story = {
     initialData: { age: 28, name: 'Jane Doe', petName: 'Fido' },
     schemas: [editableStep1Schema, readonlyStep2Schema],
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const currentStepButton = canvas.getByTestId('step-my-infos')
-    expect(currentStepButton).toHaveAttribute('data-state', 'editable')
-    const nameInput = canvas.getByTestId('name')
-    expect(nameInput).toHaveValue('Jane Doe')
-    await userEvent.type(nameInput, '-Rollin')
-    await userEvent.tab()
-    expect(currentStepButton).toHaveAttribute('data-state', 'success')
-    const secondStepButton = canvas.getByTestId('step-my-pet')
-    expect(secondStepButton).toHaveAttribute('data-state', 'readonly')
-    await userEvent.click(secondStepButton)
-    const petNameInput = canvas.getByTestId('pet-name')
-    expect(petNameInput).toContainHTML('Fido')
+    await step('fill step 1', async () => {
+      const currentStepButton = canvas.getByTestId('step-my-infos')
+      expect(currentStepButton).toHaveAttribute('data-state', 'editable')
+      const nameInput = canvas.getByTestId('name')
+      expect(nameInput).toHaveValue('Jane Doe')
+      await userEvent.type(nameInput, '-Rollin')
+      await userEvent.tab()
+      expect(currentStepButton).toHaveAttribute('data-state', 'success')
+      const secondStepButton = canvas.getByTestId('step-my-pet')
+      expect(secondStepButton).toHaveAttribute('data-state', 'readonly')
+    })
+    await step('verify step 2 readonly fields', async () => {
+      const secondStepButton = canvas.getByRole('button', { name: 'My pet' })
+      await userEvent.click(secondStepButton)
+      const petNameInput = canvas.getByTestId('pet-name')
+      expect(petNameInput).toContainHTML('Fido')
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+    })
+    step('verify submitted data', () => {
+      const debug = canvas.queryByTestId('debug-data')
+      expect(debug).toContainHTML('"age": 28')
+      expect(debug).toContainHTML('"name": "Jane Doe-Rollin"')
+      expect(debug).toContainHTML('"petName": "Fido"')
+    })
   },
 }
 
