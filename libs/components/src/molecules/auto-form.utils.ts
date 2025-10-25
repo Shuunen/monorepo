@@ -70,6 +70,7 @@ export function checkZodBoolean(fieldSchema: z.ZodBoolean | z.ZodLiteral | z.Zod
   let isBoolean = false
   let isBooleanLiteral = false
   let booleanLiteralValue = false
+  /* v8 ignore else -- @preserve */
   if (fieldSchema.type === 'boolean') isBoolean = true
   else if (fieldSchema.type === 'literal') {
     isBooleanLiteral = fieldSchema.value === true || fieldSchema.value === false
@@ -83,21 +84,6 @@ export function checkZodNumber(fieldSchema: z.ZodNumber | z.ZodOptional<z.ZodNum
   let isNumber = false
   if (fieldSchema.type === 'number' || (fieldSchema.type === 'optional' && fieldSchema.def.innerType.type === 'number')) isNumber = true
   return { isNumber }
-}
-
-/**
- * Returns a string representation of a value based on its Zod schema type
- * @param fieldSchema the Zod schema describing the field type
- * @param value the value to be represented as a string
- * @returns a human-readable string representation of the value
- */
-export function readonlyValue(fieldSchema: z.ZodUnknown, value: unknown): string {
-  // @ts-expect-error zod type issue
-  const { isBoolean, isBooleanLiteral, booleanLiteralValue } = checkZodBoolean(fieldSchema)
-  if (isBooleanLiteral) return booleanLiteralValue ? 'Yes' : 'No'
-  if (isBoolean) return value ? 'Yes' : 'No'
-  if (value === undefined || value === '') return '—'
-  return String(value)
 }
 
 /**

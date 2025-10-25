@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { checkZodBoolean, checkZodEnum, checkZodNumber, cleanSubmittedData, filterSchema, isFieldVisible, readonlyValue } from './auto-form.utils'
+import { checkZodBoolean, checkZodEnum, checkZodNumber, cleanSubmittedData, filterSchema, isFieldVisible } from './auto-form.utils'
 
 describe('auto-form.utils', () => {
   // checkZodEnum
@@ -57,35 +57,9 @@ describe('auto-form.utils', () => {
   })
   it('checkZodNumber C should return false for non-number', () => {
     const schema = z.string()
+    // @ts-expect-error testing invalid input
     const { isNumber } = checkZodNumber(schema)
     expect(isNumber).toBe(false)
-  })
-
-  // readonlyValue
-  it('readonlyValue A should return Yes/No for boolean', () => {
-    const schema = z.boolean()
-    expect(readonlyValue(schema, true)).toBe('Yes')
-    expect(readonlyValue(schema, false)).toBe('No')
-  })
-  it('readonlyValue B should return Yes/No for literal', () => {
-    const schema = z.literal(true)
-    expect(readonlyValue(schema, true)).toBe('Yes')
-    expect(readonlyValue(schema, false)).toBe('Yes') // because isBooleanLiteral is true and booleanLiteralValue is true
-  })
-  it('readonlyValue C should return string for other', () => {
-    const schema = z.string()
-    expect(readonlyValue(schema, 'foo')).toBe('foo')
-    expect(readonlyValue(schema, '')).toBe('—')
-    expect(readonlyValue(schema, undefined)).toBe('—')
-  })
-  it('readonlyValue D should handle undefined and empty string for boolean', () => {
-    const schema = z.boolean()
-    expect(readonlyValue(schema, undefined)).toBe('No')
-    expect(readonlyValue(schema, '')).toBe('No')
-  })
-  it('readonlyValue E should handle literal false', () => {
-    const schema = z.literal(false)
-    expect(readonlyValue(schema, false)).toBe('No')
   })
 
   // isFieldVisible
