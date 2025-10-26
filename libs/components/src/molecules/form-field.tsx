@@ -1,4 +1,4 @@
-import { camelToKebabCase } from '@monorepo/utils'
+import { camelToKebabCase, type Logger } from '@monorepo/utils'
 import type { ControllerRenderProps } from 'react-hook-form'
 import type { z } from 'zod'
 import { FormField, FormItem, FormLabel, FormMessage } from '../atoms/form'
@@ -11,7 +11,7 @@ export type FormFieldBaseProps = {
   formData: Record<string, unknown>
   isOptional: boolean
   readonly?: boolean
-  logger?: { info: (...args: unknown[]) => void }
+  logger?: Logger
 }
 
 export function FormFieldBase(props: FormFieldBaseProps) {

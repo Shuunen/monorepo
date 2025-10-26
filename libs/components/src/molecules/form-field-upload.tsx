@@ -88,12 +88,12 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
-  function removeFile(field: ControllerRenderProps) {
+  function removeFile(onChange: ControllerRenderProps['onChange']) {
     resetUpload()
     /* c8 ignore next 2 */
     onFileChange?.(undefined)
     onFileRemove?.()
-    field.onChange?.(undefined)
+    onChange(undefined)
   }
 
   function startUpload(file: File) {
@@ -167,7 +167,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
 
                     <div className="flex ml-8">
                       {currentState.buttons.map(button => (
-                        <Button key={`button-${button.label}`} onClick={() => button.action(field)} size="sm" testId={`upload-action-${slugify(button.label)}`} title={button.label} variant="ghost">
+                        <Button key={`button-${button.label}`} onClick={() => button.action(field.onChange)} size="sm" testId={`upload-action-${slugify(button.label)}`} title={button.label} variant="ghost">
                           {button.label}
                           <button.icon className="size-4" />
                         </Button>

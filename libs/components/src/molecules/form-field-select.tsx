@@ -19,7 +19,7 @@ export function FormFieldSelect({ fieldName, fieldSchema, formData, isOptional, 
         <FormControl>
           <Select {...field} disabled={isDisabled} onValueChange={field.onChange}>
             <SelectTrigger testId={`${testId}-trigger`}>
-              <SelectValue placeholder={placeholder || `Select ${label}`} />
+              <SelectValue placeholder={placeholder ?? `Select ${label}`} />
             </SelectTrigger>
             <SelectContent>
               {options.value?.map(option => (
