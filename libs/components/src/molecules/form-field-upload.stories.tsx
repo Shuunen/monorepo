@@ -20,15 +20,15 @@ const meta = {
   },
   render: args => {
     type FormData = { document?: File } | undefined
-    const [submittedData, setSubmittedData] = useState<FormData>(undefined)
     const [formData, setFormData] = useState<Partial<FormData>>({})
-    function onSubmit(data: FormData) {
-      setSubmittedData(data)
-      logger.showSuccess('Form submitted successfully')
-    }
     function onChange(data: Partial<FormData>) {
       setFormData(data)
       logger.info('Form data changed', data)
+    }
+    const [submittedData, setSubmittedData] = useState<FormData>(undefined)
+    function onSubmit(data: FormData) {
+      setSubmittedData(data)
+      logger.showSuccess('Form submitted successfully')
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">

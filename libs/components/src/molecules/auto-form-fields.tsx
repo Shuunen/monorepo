@@ -1,3 +1,4 @@
+import type { Logger } from '@monorepo/utils'
 import type { z } from 'zod'
 import { AutoFormField } from './auto-form-field'
 
@@ -5,7 +6,7 @@ type AutoFormFieldsProps = {
   schema: z.ZodObject
   formData: Record<string, unknown>
   stepTitle?: string
-  logger?: { info: (...args: unknown[]) => void }
+  logger?: Logger
 }
 
 export function AutoFormFields({ schema, formData, stepTitle, logger }: AutoFormFieldsProps) {

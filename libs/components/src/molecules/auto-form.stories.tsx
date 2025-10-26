@@ -15,15 +15,22 @@ const meta = {
     layout: 'centered',
   },
   render: args => {
-    const [submittedData, setSubmittedData] = useState<Record<string, unknown> | undefined>(undefined)
-    function onSubmit(data: Record<string, unknown>) {
+    type FormData = Record<string, unknown> | undefined
+    const [formData, setFormData] = useState<Partial<FormData>>({})
+    function onChange(data: Partial<FormData>) {
+      setFormData(data)
+      logger.info('Form data changed', data)
+    }
+    const [submittedData, setSubmittedData] = useState<FormData>({})
+    function onSubmit(data: FormData) {
       setSubmittedData(data)
       logger.showSuccess('Form submitted successfully')
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
-        <DebugData data={submittedData} />
+        <DebugData data={formData} title="Form data" />
+        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <DebugData data={submittedData} title="Submitted data" />
       </div>
     )
   },
@@ -55,6 +62,8 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const formData = canvas.getByTestId('debug-data-form-data')
+    const submittedData = canvas.getByTestId('debug-data-submitted-data')
     const submitButton = canvas.getByRole('button', { name: 'Submit' })
     // Initially submit button should be disabled (form is empty)
     expect(submitButton).toBeDisabled()
@@ -67,8 +76,8 @@ export const Basic: Story = {
     // Now enabled - form is valid
     expect(submitButton).not.toBeDisabled()
     await userEvent.click(submitButton)
-    const debug = canvas.getByTestId('debug-data')
-    await expect(debug).toContainHTML(stringify({ email: 'example-email@email.com', name: 'John Doe' }))
+    await expect(formData).toContainHTML(stringify({ email: 'example-email@email.com', name: 'John Doe' }))
+    await expect(submittedData).toContainHTML(stringify({ email: 'example-email@email.com', name: 'John Doe' }))
   },
 }
 
@@ -193,6 +202,8 @@ export const Exhaustive: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     const canvasBody = within(canvasElement.ownerDocument.body)
+    const formData = canvas.getByTestId('debug-data-form-data')
+    const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('boolean fields', async () => {
       const booleanEditable = canvas.getByTestId('boolean')
       expect(booleanEditable).not.toBeDisabled()
@@ -288,6 +299,23 @@ export const Exhaustive: Story = {
       const errorMessages = issues.map(i => i.textContent?.trim())
       expect(errorMessages).toEqual(expectedErrorMessages)
     })
+    step('check form data and submitted data', () => {
+      expect(formData).toContainHTML(
+        stringify({
+          boolean: true,
+          booleanOptional: true,
+          email: 'invalid-email',
+          emailOptional: 'invalid-email',
+          enum: 'red',
+          enumOptional: 'green',
+          number: 25,
+          numberOptional: 30,
+          string: 'Some text',
+          stringOptional: 'Some text',
+        }),
+      )
+      expect(submittedData).toContainHTML('{}')
+    })
   },
 }
 
@@ -325,6 +353,8 @@ export const ExhaustiveFilled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
+    const formData = canvas.getByTestId('debug-data-form-data')
+    const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('boolean fields', () => {
       const booleanEditable = canvas.getByTestId('boolean')
       expect(booleanEditable).not.toBeDisabled()
@@ -405,30 +435,28 @@ export const ExhaustiveFilled: Story = {
       await sleep(100)
     })
     step('verify submitted data', () => {
-      const debug = canvas.getByTestId('debug-data')
-      expect(debug).toContainHTML('"boolean": true')
-      expect(debug).toContainHTML('"booleanDisabled": true')
-      expect(debug).toContainHTML('"booleanLiteralChecked": true')
-      expect(debug).toContainHTML('"booleanLiteralUnchecked": false')
-      expect(debug).not.toContainHTML('"booleanOptional"')
-      expect(debug).toContainHTML('"booleanReadonlyChecked": true')
-      expect(debug).toContainHTML('"booleanReadonlyUnchecked": false')
-      expect(debug).toContainHTML('"email": "test@example.com"')
-      expect(debug).toContainHTML('"emailDisabled": "test@disabled.de"')
-      expect(debug).not.toContainHTML('"emailOptional"')
-      expect(debug).toContainHTML('"emailReadonly": "test@readonly.bzh"')
-      expect(debug).toContainHTML('"enum": "blue"')
-      expect(debug).toContainHTML('"enumDisabled": "green"')
-      expect(debug).not.toContainHTML('"enumOptional"')
-      expect(debug).toContainHTML('"enumReadonly": "blue"')
-      expect(debug).toContainHTML('"number": 45')
-      expect(debug).toContainHTML('"numberDisabled": 99')
-      expect(debug).not.toContainHTML('"numberOptional"')
-      expect(debug).toContainHTML('"numberReadonly": 60')
-      expect(debug).toContainHTML('"string": "Some text"')
-      expect(debug).toContainHTML('"stringDisabled": "Some text disabled"')
-      expect(debug).not.toContainHTML('"stringOptional"')
-      expect(debug).toContainHTML('"stringReadonly": "Some text readonly"')
+      const expectedData = {
+        boolean: true,
+        booleanDisabled: true,
+        booleanLiteralChecked: true,
+        booleanLiteralUnchecked: false,
+        booleanReadonlyChecked: true,
+        booleanReadonlyUnchecked: false,
+        email: 'test@example.com',
+        emailDisabled: 'test@disabled.de',
+        emailReadonly: 'test@readonly.bzh',
+        enum: 'blue',
+        enumDisabled: 'green',
+        enumReadonly: 'blue',
+        number: 45,
+        numberDisabled: 99,
+        numberReadonly: 60,
+        string: 'Some text',
+        stringDisabled: 'Some text disabled',
+        stringReadonly: 'Some text readonly',
+      }
+      expect(formData).toContainHTML(stringify(expectedData))
+      expect(submittedData).toContainHTML(stringify(expectedData))
     })
   },
 }
@@ -476,6 +504,8 @@ export const MultiStep: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
+    const formData = canvas.getByTestId('debug-data-form-data')
+    const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('navigate to step 2 without filling step 1 (validation bypassed)', async () => {
       // Click Next without filling any fields - should work
       const nextButton = canvas.getByRole('button', { name: 'Next' })
@@ -535,13 +565,17 @@ export const MultiStep: Story = {
       await userEvent.click(submitButton)
     })
     step('verify submitted data', () => {
-      const debug = canvas.getByTestId('debug-data')
-      expect(debug).toContainHTML('"email": "john.doe@example.com"')
-      expect(debug).toContainHTML('"name": "John Doe"')
-      expect(debug).toContainHTML('"age": 30')
-      expect(debug).toContainHTML('"subscribe": true')
-      expect(debug).toContainHTML('"address": "123 Main St"')
-      expect(debug).toContainHTML('"city": "Metropolis"')
+      // biome-ignore assist/source/useSortedKeys: should not sort keys here
+      const expectedData = {
+        email: 'john.doe@example.com',
+        name: 'John Doe',
+        age: 30,
+        subscribe: true,
+        address: '123 Main St',
+        city: 'Metropolis',
+      }
+      expect(formData).toContainHTML(stringify(expectedData))
+      expect(submittedData).toContainHTML(stringify(expectedData))
     })
   },
 }
@@ -599,6 +633,8 @@ export const OptionalSection: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
+    const formData = canvas.getByTestId('debug-data-form-data')
+    const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('fill name', async () => {
       const step1Title = canvas.getByTestId('step-title')
       expect(step1Title).toHaveTextContent('My infos')
@@ -621,8 +657,13 @@ export const OptionalSection: Story = {
     await step('succeed at submitting without pet', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
-      const debug = canvas.queryByTestId('debug-data')
-      expect(debug).toContainHTML('"name": "John Doughy"')
+      // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+      const expectedData = {
+        name: 'John Doughy',
+        age: 28,
+      }
+      expect(formData).toContainHTML(stringify(expectedData))
+      expect(submittedData).toContainHTML(stringify(expectedData))
     })
     await step('show pet name field', async () => {
       const hasPetCheckbox = canvas.getByTestId('has-pet')
@@ -642,9 +683,14 @@ export const OptionalSection: Story = {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
-      const debug = canvas.queryByTestId('debug-data')
-      expect(debug).toContainHTML('"name": "John Doughy"')
-      expect(debug).toContainHTML('"petName": "Fido"')
+      // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+      const expectedData = {
+        name: 'John Doughy',
+        age: 28,
+        petName: 'Fido',
+      }
+      expect(formData).toContainHTML(stringify(expectedData))
+      expect(submittedData).toContainHTML(stringify(expectedData))
     })
     await step('uncheck hasPet to hide pet fields', async () => {
       const hasPetCheckbox = canvas.getByTestId('has-pet')
@@ -655,11 +701,21 @@ export const OptionalSection: Story = {
       await userEvent.click(submitButton)
     })
     step('verify submitted data', () => {
-      const debug = canvas.queryByTestId('debug-data')
-      expect(debug).not.toContainHTML('petName')
-      expect(debug).not.toContainHTML('petAge')
-      expect(debug).toContainHTML('"age": 28')
-      expect(debug).toContainHTML('"name": "John Doughy"')
+      expect(formData).toContainHTML(
+        // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+        stringify({
+          name: 'John Doughy',
+          age: 28,
+          petName: 'Fido',
+        }),
+      )
+      expect(submittedData).toContainHTML(
+        // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+        stringify({
+          name: 'John Doughy',
+          age: 28,
+        }),
+      )
     })
   },
 }
@@ -709,6 +765,8 @@ export const StepperStates: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
+    const formData = canvas.getByTestId('debug-data-form-data')
+    const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('fill step 1', async () => {
       const currentStepButton = canvas.getByTestId('step-my-infos')
       expect(currentStepButton).toHaveAttribute('data-state', 'editable')
@@ -724,15 +782,73 @@ export const StepperStates: Story = {
       const secondStepButton = canvas.getByRole('button', { name: 'My pet' })
       await userEvent.click(secondStepButton)
       const petNameInput = canvas.getByTestId('pet-name')
-      expect(petNameInput).toContainHTML('Fido')
+      expect(petNameInput).toBeInTheDocument()
+      expect(petNameInput).toHaveAttribute('readonly')
+      expect(petNameInput).toHaveValue('Fido')
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
     })
     step('verify submitted data', () => {
-      const debug = canvas.queryByTestId('debug-data')
-      expect(debug).toContainHTML('"age": 28')
-      expect(debug).toContainHTML('"name": "Jane Doe-Rollin"')
-      expect(debug).toContainHTML('"petName": "Fido"')
+      // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+      const expectedFormData = {
+        name: 'Jane Doe-Rollin',
+        age: 28,
+        petName: 'Fido',
+      }
+      expect(formData).toContainHTML(stringify(expectedFormData))
+      expect(submittedData).toContainHTML(stringify(expectedFormData))
+    })
+  },
+}
+
+/**
+ * Key mapping with key, keyIn and keyOut properties
+ */
+export const KeyMapping: Story = {
+  args: {
+    initialData: {
+      // biome-ignore lint/style/useNamingConvention: we use snake_case for testing purposes
+      email_address: 'jane.doe@example.com',
+      'userName-Input': 'Jane Doe',
+    },
+    schemas: [
+      z.object({
+        userEmail: z.email('Invalid email address').meta({
+          key: 'email_address', // Maps initialData.email_address to userEmail field and back to email_address in output
+          label: 'Email Address',
+          placeholder: "We'll never share your email",
+        }),
+        userName: z.string().min(2, 'Name is required').meta({
+          keyIn: 'userName-Input', // Maps initialData.full_name to userName field
+          keyOut: 'user-name-output', // Maps userName field back to full_name in output
+          label: 'Full Name',
+          placeholder: 'Enter your legal name',
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const formData = canvas.getByTestId('debug-data-form-data')
+    const submittedData = canvas.getByTestId('debug-data-submitted-data')
+    step('verify initial data was mapped correctly', () => {
+      const emailInput = canvas.getByTestId('user-email')
+      expect(emailInput).toHaveValue('jane.doe@example.com')
+      const nameInput = canvas.getByTestId('user-name')
+      expect(nameInput).toHaveValue('Jane Doe')
+    })
+    await step('submit and verify output uses mapped keys', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+    })
+    step('verify submitted data', () => {
+      const expectedData = {
+        // biome-ignore lint/style/useNamingConvention: we use snake_case for testing purposes
+        email_address: 'jane.doe@example.com',
+        'user-name-output': 'Jane Doe',
+      }
+      expect(formData).toContainHTML(stringify(expectedData))
+      expect(submittedData).toContainHTML(stringify(expectedData))
     })
   },
 }
@@ -743,7 +859,6 @@ TODO :
 - What about the hidden steps like submission and summary ?
 - Stepper should contains links and not buttons
 - Display an error icon if touched
-- Use complex components as fields like upload, multi-lingual text
 - Integrate with a store
 - Write a story where we feed the AutoForm a whole new schema after a variant change (for dynamic schemas)
 

@@ -34,6 +34,12 @@ export type AutoFormFieldMetadata = {
   excluded?: boolean
   /** An optional step name if the form is multi-step. */
   step?: string
+  /** Key mapping for both input and output data. Equivalent to setting both keyIn and keyOut. */
+  key?: string
+  /** Key to map initial data input. Used when loading data from external sources. */
+  keyIn?: string
+  /** Key to map submitted data output. Used when submitting data to external sources. */
+  keyOut?: string
 }
 
 /**
@@ -146,21 +152,59 @@ export function filterSchema(schema: z.ZodObject, formData: Record<string, unkno
 }
 
 /**
+ * Gets the effective key mapping for a field by resolving key, keyIn, and keyOut metadata.
+ * @param metadata - The field metadata object
+ * @returns An object with keyIn and keyOut properties
+ */
+export function getKeyMapping(metadata?: AutoFormFieldMetadata): { keyIn: string | undefined; keyOut: string | undefined } {
+  if (!metadata) return { keyIn: undefined, keyOut: undefined }
+  // If key is provided, use it for both in and out
+  if (metadata.key) return { keyIn: metadata.key, keyOut: metadata.key }
+  // Otherwise use keyIn and keyOut if provided
+  return { keyIn: metadata.keyIn, keyOut: metadata.keyOut }
+}
+
+/**
+ * Maps initial data using keyIn from schema metadata to match field names.
+ * @param schema - The Zod schema object describing the form fields
+ * @param externalData - The external data object with potentially different key names
+ * @returns A new object with data mapped to schema field names using keyIn mappings
+ */
+export function mapExternalDataToFormFields(schema: z.ZodObject, externalData: Record<string, unknown>): Record<string, unknown> {
+  const shape = schema.shape
+  const result: Record<string, unknown> = {}
+  for (const fieldName of Object.keys(shape)) {
+    const fieldSchema = shape[fieldName] as z.ZodTypeAny
+    /* v8 ignore next -- @preserve: fieldSchema from shape iteration cannot be null/undefined */
+    const metadata = typeof fieldSchema?.meta === 'function' ? (fieldSchema.meta() as AutoFormFieldMetadata) : undefined
+    const { keyIn } = getKeyMapping(metadata)
+    // Use keyIn if provided, otherwise use field name
+    const sourceKey = keyIn ?? fieldName
+    if (sourceKey in externalData) result[fieldName] = externalData[sourceKey]
+  }
+  return result
+}
+
+/**
  * Cleans the submitted form data by filtering out fields that are not visible or are marked as excluded in the schema metadata.
+ * Also applies keyOut mapping to convert field names back to external data format.
  * @param schema - The Zod schema object describing the form fields.
  * @param data - The submitted data object to be cleaned.
  * @param formData - The current form data, used to determine field visibility.
- * @returns A new object containing only the fields that are visible and not excluded according to the schema.
+ * @returns A new object containing only the fields that are visible and not excluded according to the schema, with keyOut mappings applied.
  */
 export function cleanSubmittedData(schema: z.ZodObject, data: Record<string, unknown>, formData: Record<string, unknown>): Record<string, unknown> {
   const shape = schema.shape
   const result: Record<string, unknown> = {}
   for (const [key, value] of Object.entries(data)) {
     const fieldSchema = shape[key] as z.ZodTypeAny
-    const metadata = typeof fieldSchema?.meta === 'function' ? fieldSchema.meta() : undefined
+    const metadata = typeof fieldSchema?.meta === 'function' ? (fieldSchema.meta() as AutoFormFieldMetadata) : undefined
     if (!isFieldVisible(fieldSchema, formData)) continue
     if (metadata?.excluded) continue
-    result[key] = value
+    // Apply keyOut mapping if provided
+    const { keyOut } = getKeyMapping(metadata)
+    const outputKey = keyOut ?? key
+    result[outputKey] = value
   }
   return result
 }
