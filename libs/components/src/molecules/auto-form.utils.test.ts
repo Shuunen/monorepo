@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { checkZodBoolean, cleanSubmittedData, filterSchema, getZodEnumOptions, isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber } from './auto-form.utils'
+import { checkZodBoolean, cleanSubmittedData, filterSchema, getKeyMapping, getZodEnumOptions, isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber, mapExternalDataToFormFields } from './auto-form.utils'
 import { imageSchemaOptional, imageSchemaRequired } from './form-field-upload.const'
 
 describe('auto-form.utils', () => {
@@ -186,5 +186,146 @@ describe('auto-form.utils', () => {
     const schema = z.object({})
     const data = { x: 1 }
     expect(cleanSubmittedData(schema, data, {})).toEqual({ x: 1 })
+  })
+  it('cleanSubmittedData C should apply keyOut mapping when provided', () => {
+    const schema = z.object({
+      anotherField: z.string().meta({ label: 'Another' }),
+      internalName: z.string().meta({ keyOut: 'externalName', label: 'Name' }),
+    })
+    const data = { anotherField: 'bar', internalName: 'foo' }
+    const cleaned = cleanSubmittedData(schema, data, {})
+    expect(cleaned).toMatchInlineSnapshot(`
+      {
+        "anotherField": "bar",
+        "externalName": "foo",
+      }
+    `)
+  })
+  it('cleanSubmittedData D should use key mapping for both in and out when key is provided', () => {
+    const schema = z.object({
+      internalName: z.string().meta({ key: 'mappedName', label: 'Name' }),
+    })
+    const data = { internalName: 'foo' }
+    const cleaned = cleanSubmittedData(schema, data, {})
+    expect(cleaned).toMatchInlineSnapshot(`
+      {
+        "mappedName": "foo",
+      }
+    `)
+  })
+
+  // getKeyMapping
+  it('getKeyMapping A should return undefined for both when no metadata', () => {
+    const result = getKeyMapping()
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "keyIn": undefined,
+        "keyOut": undefined,
+      }
+    `)
+  })
+  it('getKeyMapping B should use key for both keyIn and keyOut when key is provided', () => {
+    const result = getKeyMapping({ key: 'mappedKey' })
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "keyIn": "mappedKey",
+        "keyOut": "mappedKey",
+      }
+    `)
+  })
+  it('getKeyMapping C should use keyIn and keyOut when provided separately', () => {
+    const result = getKeyMapping({ keyIn: 'inputKey', keyOut: 'outputKey' })
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "keyIn": "inputKey",
+        "keyOut": "outputKey",
+      }
+    `)
+  })
+  it('getKeyMapping D should prioritize key over keyIn and keyOut', () => {
+    const result = getKeyMapping({ key: 'mappedKey', keyIn: 'inputKey', keyOut: 'outputKey' })
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "keyIn": "mappedKey",
+        "keyOut": "mappedKey",
+      }
+    `)
+  })
+
+  // mapExternalDataToFormFields
+  it('mapExternalDataToFormFields A should map data using keyIn metadata', () => {
+    const schema = z.object({
+      age: z.number().meta({ label: 'Age' }),
+      internalName: z.string().meta({ keyIn: 'externalName', label: 'Name' }),
+    })
+    const externalData = { age: 30, externalName: 'John' }
+    const result = mapExternalDataToFormFields(schema, externalData)
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "age": 30,
+        "internalName": "John",
+      }
+    `)
+  })
+  it('mapExternalDataToFormFields B should use field name when no keyIn provided', () => {
+    const schema = z.object({
+      age: z.number().meta({ label: 'Age' }),
+      name: z.string().meta({ label: 'Name' }),
+    })
+    const externalData = { age: 30, name: 'John' }
+    const result = mapExternalDataToFormFields(schema, externalData)
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "age": 30,
+        "name": "John",
+      }
+    `)
+  })
+  it('mapExternalDataToFormFields C should skip fields not in external data', () => {
+    const schema = z.object({
+      age: z.number().meta({ label: 'Age' }),
+      name: z.string().meta({ label: 'Name' }),
+    })
+    const externalData = { name: 'John' }
+    const result = mapExternalDataToFormFields(schema, externalData)
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "name": "John",
+      }
+    `)
+  })
+  it('mapExternalDataToFormFields D should use key mapping for input when key is provided', () => {
+    const schema = z.object({
+      internalName: z.string().meta({ key: 'mappedName', label: 'Name' }),
+    })
+    const externalData = { mappedName: 'John' }
+    const result = mapExternalDataToFormFields(schema, externalData)
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "internalName": "John",
+      }
+    `)
+  })
+  it('mapExternalDataToFormFields E should handle fields without meta function', () => {
+    const schema = z.object({
+      age: z.number(),
+      name: z.string(),
+    })
+    const externalData = { age: 30, name: 'John' }
+    const result = mapExternalDataToFormFields(schema, externalData)
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "age": 30,
+        "name": "John",
+      }
+    `)
+  })
+  it('mapExternalDataToFormFields F should handle empty external data', () => {
+    const schema = z.object({
+      name: z.string().meta({ label: 'Name' }),
+    })
+    const externalData = {}
+    const result = mapExternalDataToFormFields(schema, externalData)
+    expect(result).toMatchInlineSnapshot(`{}`)
   })
 })

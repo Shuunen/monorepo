@@ -1,3 +1,4 @@
+import type { Logger } from '@monorepo/utils'
 import { z } from 'zod'
 import { isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber } from './auto-form.utils'
 import { FormFieldBoolean } from './form-field-boolean'
@@ -6,7 +7,14 @@ import { FormFieldSelect } from './form-field-select'
 import { FormFieldText } from './form-field-text'
 import { FormFieldUpload } from './form-field-upload'
 
-export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fieldName: string; fieldSchema: z.ZodTypeAny; formData: Record<string, unknown>; logger?: { info: (...args: unknown[]) => void } }) {
+type AutoFormFieldProps = {
+  fieldName: string
+  fieldSchema: z.ZodTypeAny
+  formData: Record<string, unknown>
+  logger?: Logger
+}
+
+export function AutoFormField({ fieldName, fieldSchema, formData, logger }: AutoFormFieldProps) {
   if (!isFieldVisible(fieldSchema, formData)) return
   logger?.info('Rendering field', fieldName)
   const isOptional = fieldSchema instanceof z.ZodOptional

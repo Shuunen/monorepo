@@ -13,7 +13,7 @@ describe('environment utils', () => {
     ['E should detect a bun test environment', { Bun: { argv: ['script.test.js'] } }, true],
     ['F should not detect a bun test environment', { Bun: { argv: ['script.js'] } }, false],
     ['G should not detect any test environment', {}, false],
-  ]
+  ] as const
 
   for (const [letter, sample, expected] of testSamples)
     it(`isTestEnvironment ${letter}`, () => {
@@ -25,7 +25,7 @@ describe('environment utils', () => {
     ['B by skipping the isHappyDom guard, the dev env is indeed detected as browser', 'hey', true],
     ['C headless browser should not be detected as browser', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/121.0.0.0 Safari/537.36', false],
     ['D empty userAgent should not be detected as browser', '', false],
-  ]
+  ] as const
 
   for (const [letter, sample, expected] of browserSamples)
     it(`isBrowserEnvironment ${letter}`, () => {

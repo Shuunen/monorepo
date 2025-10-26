@@ -80,7 +80,7 @@ describe('object-cap-nesting utils', () => {
     const obj = Object.create(proto)
     obj.own = 'ownValue'
     obj.nested = { deep: 'deepValue' }
-    const result = capNesting(obj, 2)
+    const result = capNesting(obj, 2) as Record<string, unknown>
     expect(result).toHaveProperty('own')
     expect(result).toHaveProperty('nested')
     // Should not have inherited property

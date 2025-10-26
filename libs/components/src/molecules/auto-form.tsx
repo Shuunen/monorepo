@@ -6,7 +6,7 @@ import { Form } from '../atoms/form'
 import { IconEdit } from '../icons/icon-edit'
 import { IconReadonly } from '../icons/icon-readonly'
 import { IconSuccess } from '../icons/icon-success'
-import { type AutoFormProps, cleanSubmittedData, filterSchema } from './auto-form.utils'
+import { type AutoFormProps, cleanSubmittedData, filterSchema, mapExternalDataToFormFields } from './auto-form.utils'
 import { AutoFormFields } from './auto-form-fields'
 import { AutoFormNavigation } from './auto-form-navigation'
 import { AutoFormStepper } from './auto-form-stepper'
@@ -16,7 +16,15 @@ import { AutoFormStepper } from './auto-form-stepper'
 // oxlint-disable-next-line max-lines-per-function
 export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger }: AutoFormProps<Type>) {
   const [currentStep, setCurrentStep] = useState(0)
-  const [formData, setFormData] = useState<Record<string, unknown>>(initialData)
+  const mappedInitialData = useMemo(() => {
+    const allMappedData: Record<string, unknown> = {}
+    for (const schema of schemas) {
+      const schemaMappedData = mapExternalDataToFormFields(schema, initialData)
+      Object.assign(allMappedData, schemaMappedData)
+    }
+    return allMappedData
+  }, [schemas, initialData])
+  const [formData, setFormData] = useState<Record<string, unknown>>(mappedInitialData)
   const currentSchema = schemas[currentStep]
   const isLastStep = currentStep === schemas.length - 1
   const filteredSchema = useMemo(() => filterSchema(currentSchema, formData), [currentSchema, formData])
