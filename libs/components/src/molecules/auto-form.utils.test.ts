@@ -1,21 +1,64 @@
 import { z } from 'zod'
-import { checkZodBoolean, checkZodEnum, checkZodNumber, cleanSubmittedData, filterSchema, isFieldVisible } from './auto-form.utils'
+import { checkZodBoolean, cleanSubmittedData, filterSchema, getZodEnumOptions, isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber } from './auto-form.utils'
+import { imageSchemaOptional, imageSchemaRequired } from './form-field-upload.const'
 
 describe('auto-form.utils', () => {
-  // checkZodEnum
-  it('checkZodEnum A should detect ZodEnum and return options', () => {
+  // isZodEnum
+  it('isZodEnum A should detect ZodEnum', () => {
     const schema = z.enum(['foo', 'bar'])
-    const { enumOptions, isEnum } = checkZodEnum(schema)
-    expect(enumOptions).toEqual(['foo', 'bar'])
-    expect(isEnum).toBe(true)
+    expect(isZodEnum(schema)).toBe(true)
   })
-  it('checkZodEnum B should detect optional ZodEnum', () => {
+  it('isZodEnum B should detect optional ZodEnum', () => {
     const schema = z.enum(['foo', 'bar']).optional()
-    const { enumOptions, isEnum } = checkZodEnum(schema)
-    expect(enumOptions).toEqual(['foo', 'bar'])
-    expect(isEnum).toBe(true)
+    expect(isZodEnum(schema)).toBe(true)
   })
-
+  it('isZodEnum C should return false for non-enum', () => {
+    const schema = z.string()
+    expect(isZodEnum(schema)).toBe(false)
+  })
+  // getZodEnumOptions
+  it('getZodEnumOptions A should detect ZodEnum and return options', () => {
+    const schema = z.enum(['foo', 'bar'])
+    const result = getZodEnumOptions(schema)
+    if (!result.ok) throw new Error('Expected success but got error')
+    expect(result.value).toEqual(['foo', 'bar'])
+  })
+  it('getZodEnumOptions B should also works with optional ZodEnum', () => {
+    const schema = z.enum(['foo', 'bar']).optional()
+    const result = getZodEnumOptions(schema)
+    if (!result.ok) throw new Error('Expected success but got error')
+    expect(result.value).toEqual(['foo', 'bar'])
+  })
+  it('getZodEnumOptions C should return error for non-enum', () => {
+    const schema = z.string()
+    const result = getZodEnumOptions(schema)
+    expect(result.ok).toBe(false)
+  })
+  // isZodBoolean
+  it('isZodBoolean A should detect ZodBoolean', () => {
+    const schema = z.boolean()
+    expect(isZodBoolean(schema)).toBe(true)
+  })
+  it('isZodBoolean B should detect optional ZodBoolean', () => {
+    const schema = z.boolean().optional()
+    expect(isZodBoolean(schema)).toBe(true)
+  })
+  it('isZodBoolean C should return false for non-boolean', () => {
+    const schema = z.string()
+    expect(isZodBoolean(schema)).toBe(false)
+  })
+  it('isZodBoolean D should handle ZodLiteral true', () => {
+    const schema = z.literal(true)
+    expect(isZodBoolean(schema)).toBe(true)
+  })
+  it('isZodBoolean E should handle ZodLiteral false', () => {
+    const schema = z.literal(false)
+    expect(isZodBoolean(schema)).toBe(true)
+  })
+  it('isZodBoolean D should handle ZodLiteral non-boolean', () => {
+    const schema = z.literal('foo')
+    expect(isZodBoolean(schema)).toBe(false)
+  })
   // checkZodBoolean
   it('checkZodBoolean A should detect ZodBoolean', () => {
     const schema = z.boolean()
@@ -43,23 +86,40 @@ describe('auto-form.utils', () => {
     const { isBoolean } = checkZodBoolean(schema)
     expect(isBoolean).toBe(true)
   })
-
   // checkZodNumber
   it('checkZodNumber A should detect ZodNumber', () => {
     const schema = z.number()
-    const { isNumber } = checkZodNumber(schema)
-    expect(isNumber).toBe(true)
+    expect(isZodNumber(schema)).toBe(true)
   })
   it('checkZodNumber B should detect optional ZodNumber', () => {
     const schema = z.number().optional()
-    const { isNumber } = checkZodNumber(schema)
-    expect(isNumber).toBe(true)
+    expect(isZodNumber(schema)).toBe(true)
   })
   it('checkZodNumber C should return false for non-number', () => {
     const schema = z.string()
-    // @ts-expect-error testing invalid input
-    const { isNumber } = checkZodNumber(schema)
-    expect(isNumber).toBe(false)
+    expect(isZodNumber(schema)).toBe(false)
+  })
+
+  // checkZodFile
+  it('checkZodFile A should detect ZodFile', () => {
+    const schema = z.file()
+    expect(isZodFile(schema)).toBe(true)
+  })
+  it('checkZodFile B should detect optional ZodFile', () => {
+    const schema = z.file().optional()
+    expect(isZodFile(schema)).toBe(true)
+  })
+  it('checkZodFile C should detect ZodEffects wrapping ZodFile', () => {
+    const schema = imageSchemaRequired
+    expect(isZodFile(schema)).toBe(true)
+  })
+  it('checkZodFile D should detect optional ZodEffects wrapping ZodFile', () => {
+    const schema = imageSchemaOptional
+    expect(isZodFile(schema)).toBe(true)
+  })
+  it('checkZodFile E should return false for non-file', () => {
+    const schema = z.string()
+    expect(isZodFile(schema)).toBe(false)
   })
 
   // isFieldVisible

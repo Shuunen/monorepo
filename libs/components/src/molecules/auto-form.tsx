@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type MouseEvent, useCallback, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { type MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import type { z } from 'zod'
 import { Form } from '../atoms/form'
 import { IconEdit } from '../icons/icon-edit'
@@ -31,6 +31,15 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   // }, [formData, form])
   // Remove excluded fields from the submitted data
   const cleanData = useCallback((data: Record<string, unknown>) => cleanSubmittedData(currentSchema, data, formData), [currentSchema, formData])
+  // Watch all form values and sync with formData
+  const watchedValues = useWatch({ control: form.control })
+  // biome-ignore lint/correctness/useExhaustiveDependencies: cannot add all dependencies because it causes infinite loop
+  useEffect(() => {
+    if (!watchedValues) return
+    const updatedData = { ...formData, ...watchedValues }
+    setFormData(updatedData)
+    if (onChange) onChange(cleanData(updatedData))
+  }, [watchedValues])
   // Handle step submission
   function handleStepSubmit(data: Record<string, unknown>) {
     logger?.info('Step form submitted', data)
