@@ -22,6 +22,7 @@ const currentFolder = import.meta.dirname
 const nbSpaces = 2
 const archivesExtensions = new Set(['7z', 'exe', 'rar', 'zip'])
 const readableExtensions = new Set(['7z', 'zip'])
+const checkArchives = parameters.includes('--check')
 
 /**
  * Calculate the similarity between two strings
@@ -194,7 +195,7 @@ async function checkMissingArchive(items, groupName) {
   if (groupName.startsWith('_')) return
   const archive = items.find(item => archivesExtensions.has(getExtension(item)))
   if (archive === undefined) logger.warn(`Missing archive for ${color(groupName)}`)
-  else await checkArchive(archive)
+  else if (checkArchives) await checkArchive(archive)
   const maxItems = 2 // one folder and one archive
   if (items.length > maxItems) logger.warn(`Too many archives for ${color(groupName)}`)
 }
