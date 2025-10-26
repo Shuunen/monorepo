@@ -1,9 +1,10 @@
 import { z } from 'zod'
-import { checkZodBoolean, checkZodEnum, checkZodNumber, isFieldVisible } from './auto-form.utils'
+import { isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber } from './auto-form.utils'
 import { FormFieldBoolean } from './form-field-boolean'
 import { FormFieldNumber } from './form-field-number'
 import { FormFieldSelect } from './form-field-select'
 import { FormFieldText } from './form-field-text'
+import { FormFieldUpload } from './form-field-upload'
 
 export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fieldName: string; fieldSchema: z.ZodTypeAny; formData: Record<string, unknown>; logger?: { info: (...args: unknown[]) => void } }) {
   if (!isFieldVisible(fieldSchema, formData)) return
@@ -13,11 +14,9 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: { fi
   const state = metadata?.state ?? 'editable'
   const readonly = state === 'readonly'
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly }
-  const { isEnum } = checkZodEnum(fieldSchema as z.ZodEnum | z.ZodOptional<z.ZodEnum>)
-  if (isEnum) return <FormFieldSelect {...props} />
-  const { isNumber } = checkZodNumber(fieldSchema as z.ZodNumber | z.ZodOptional<z.ZodNumber>)
-  if (isNumber) return <FormFieldNumber {...props} />
-  const { isBoolean } = checkZodBoolean(fieldSchema as z.ZodBoolean | z.ZodLiteral | z.ZodOptional<z.ZodBoolean>)
-  if (isBoolean) return <FormFieldBoolean {...props} />
+  if (isZodFile(fieldSchema)) return <FormFieldUpload {...props} />
+  if (isZodEnum(fieldSchema)) return <FormFieldSelect {...props} />
+  if (isZodNumber(fieldSchema)) return <FormFieldNumber {...props} />
+  if (isZodBoolean(fieldSchema)) return <FormFieldBoolean {...props} />
   return <FormFieldText {...props} />
 }

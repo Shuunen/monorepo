@@ -1,4 +1,4 @@
-import type { Logger } from '@monorepo/utils'
+import { type Logger, Result } from '@monorepo/utils'
 import { z } from 'zod'
 
 /**
@@ -37,25 +37,25 @@ export type AutoFormFieldMetadata = {
 }
 
 /**
- * Checks if the provided Zod schema is a ZodEnum or contains a ZodEnum as its inner type (e.g., optional enum).
- * Returns an object indicating whether the schema is an enum and, if so, provides the enum options.
- * @param fieldSchema the Zod schema to check.
- * @returns An object with:
- *   - `enumOptions`: The array of enum option strings if found, otherwise undefined.
- *   - `isEnum`: A boolean indicating if the schema is (or contains) a ZodEnum.
+ * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
+ * @param fieldSchema the Zod schema to check
+ * @returns the array of enum options, or an empty array by default
  */
-export function checkZodEnum(fieldSchema: z.ZodEnum | z.ZodOptional<z.ZodEnum>) {
-  let isEnum = false
-  let enumOptions: string[] = []
-  /* v8 ignore else -- @preserve */
-  if (fieldSchema.type === 'enum') {
-    isEnum = true
-    enumOptions = fieldSchema.options as string[]
-  } else if (fieldSchema.type === 'optional' && fieldSchema.def.innerType.type === 'enum') {
-    isEnum = true
-    enumOptions = fieldSchema.def.innerType.options as string[]
-  }
-  return { enumOptions, isEnum }
+export function getZodEnumOptions(fieldSchema: z.ZodType) {
+  if (fieldSchema.type === 'enum') return Result.ok((fieldSchema as z.ZodEnum).options as string[])
+  else if (fieldSchema.type === 'optional' && (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.type === 'enum') return Result.ok((fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.options as string[])
+  return Result.error('failed to get enum options from schema')
+}
+
+/**
+ * Checks if the provided Zod schema is a ZodEnum or contains a ZodEnum as its inner type (e.g., optional enum).
+ * @param fieldSchema the Zod schema to check
+ * @returns true if the schema is (or contains) a ZodEnum; otherwise, false.
+ */
+export function isZodEnum(fieldSchema: z.ZodType) {
+  if (fieldSchema.type === 'enum') return true
+  else if (fieldSchema.type === 'optional' && (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.type === 'enum') return true
+  return false
 }
 
 /**
@@ -66,24 +66,54 @@ export function checkZodEnum(fieldSchema: z.ZodEnum | z.ZodOptional<z.ZodEnum>) 
  *   - `isBooleanLiteral`: `true` if the schema is a boolean literal (`true` or `false`), otherwise `false`.
  *   - `booleanLiteralValue`: The value of the boolean literal if applicable, otherwise `false`.
  */
-export function checkZodBoolean(fieldSchema: z.ZodBoolean | z.ZodLiteral | z.ZodOptional<z.ZodBoolean>) {
+export function checkZodBoolean(fieldSchema: z.ZodType) {
   let isBoolean = false
   let isBooleanLiteral = false
   let booleanLiteralValue = false
   /* v8 ignore else -- @preserve */
   if (fieldSchema.type === 'boolean') isBoolean = true
   else if (fieldSchema.type === 'literal') {
-    isBooleanLiteral = fieldSchema.value === true || fieldSchema.value === false
+    isBooleanLiteral = (fieldSchema as z.ZodLiteral).value === true || (fieldSchema as z.ZodLiteral).value === false
     isBoolean = isBooleanLiteral
-    booleanLiteralValue = Boolean(fieldSchema.value)
-  } else if (fieldSchema.type === 'optional' && fieldSchema.def.innerType.type === 'boolean') isBoolean = true
+    booleanLiteralValue = Boolean((fieldSchema as z.ZodLiteral).value)
+  } else if (fieldSchema.type === 'optional' && (fieldSchema as z.ZodOptional<z.ZodBoolean>).def.innerType.type === 'boolean') isBoolean = true
   return { booleanLiteralValue, isBoolean, isBooleanLiteral }
 }
 
-export function checkZodNumber(fieldSchema: z.ZodNumber | z.ZodOptional<z.ZodNumber>) {
-  let isNumber = false
-  if (fieldSchema.type === 'number' || (fieldSchema.type === 'optional' && fieldSchema.def.innerType.type === 'number')) isNumber = true
-  return { isNumber }
+/**
+ * Checks if the provided Zod schema is a ZodBoolean or contains a ZodBoolean as its inner type (e.g., optional boolean).
+ * @param fieldSchema the Zod schema to check
+ * @returns true if the schema is (or contains) a ZodBoolean; otherwise, false.
+ */
+export function isZodBoolean(fieldSchema: z.ZodType) {
+  if (fieldSchema.type === 'boolean') return true
+  else if (fieldSchema.type === 'literal') {
+    const value = (fieldSchema as z.ZodLiteral).value
+    if (value === true || value === false) return true
+  } else if (fieldSchema.type === 'optional' && (fieldSchema as z.ZodOptional<z.ZodBoolean>).def.innerType.type === 'boolean') return true
+  return false
+}
+
+/**
+ * Checks if the provided Zod schema is a ZodNumber or contains a ZodNumber as its inner type (e.g., optional number).
+ * @param fieldSchema the Zod schema to check
+ * @returns true if the schema is (or contains) a ZodNumber; otherwise, false.
+ */
+export function isZodNumber(fieldSchema: z.ZodType) {
+  if (fieldSchema.type === 'number') return true
+  else if (fieldSchema.type === 'optional' && (fieldSchema as z.ZodOptional<z.ZodNumber>).def.innerType.type === 'number') return true
+  return false
+}
+
+/**
+ * Checks if the provided Zod schema is a ZodFile or contains a ZodFile as its inner type (e.g., optional file).
+ * @param fieldSchema the Zod schema to check
+ * @returns true if the schema is (or contains) a ZodFile; otherwise, false.
+ */
+export function isZodFile(fieldSchema: z.ZodType) {
+  if (fieldSchema.type === 'file') return true
+  else if (fieldSchema.type === 'optional' && (fieldSchema as z.ZodOptional<z.ZodFile>).def.innerType.type === 'file') return true
+  return false
 }
 
 /**
@@ -92,7 +122,7 @@ export function checkZodNumber(fieldSchema: z.ZodNumber | z.ZodOptional<z.ZodNum
  * @param formData the current form data as a record of field names to values.
  * @returns `true` if the field should be visible; `false` otherwise.
  */
-export function isFieldVisible(fieldSchema: z.ZodTypeAny, formData: Record<string, unknown>): boolean {
+export function isFieldVisible(fieldSchema: z.ZodType, formData: Record<string, unknown>): boolean {
   const metadata = typeof fieldSchema?.meta === 'function' ? (fieldSchema.meta() as AutoFormFieldMetadata) : undefined
   if (metadata?.dependsOn && !formData[metadata.dependsOn]) return false
   return true
