@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { expect, userEvent, within } from 'storybook/test'
 import { z } from 'zod'
 import { AutoForm } from './auto-form'
-import { DebugData } from './debug-data'
+import { DebugData, stringify } from './debug-data'
+import { fileSchema } from './form-field-upload.const'
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? '3-info' : '5-warn' })
 
@@ -134,6 +135,48 @@ export const ExistingFile: Story = {
       await userEvent.click(submitButton)
       expect(formData).toContainHTML('test.txt')
       expect(submittedData).toContainHTML('test.txt')
+    })
+  },
+}
+
+export const FileSchemaValidation: Story = {
+  args: {
+    schemas: [
+      z.object({
+        document: fileSchema(['pdf', 'jpg', 'png'], true).meta({
+          label: 'Image or PDF document',
+          placeholder: 'Select a PDF or image file',
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const formData = canvas.getByTestId('debug-data-form-data')
+    const submittedData = canvas.getByTestId('debug-data-submitted-data')
+    await step('accepts valid pdf', async () => {
+      const input = canvas.getByTestId('document-upload-idle') as HTMLInputElement
+      const file = new File(['test'], 'document.pdf', { type: 'application/pdf' })
+      await userEvent.upload(input, file)
+      await sleep(nbHueMax)
+      expect(formData).toContainHTML('document.pdf')
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      expect(submitButton).not.toBeDisabled()
+      await userEvent.click(submitButton)
+      expect(submittedData).toContainHTML('document.pdf')
+    })
+    await step('rejects invalid txt file', async () => {
+      const removeButton = canvas.getByRole('button', { name: 'Remove' })
+      await userEvent.click(removeButton)
+      const input = canvas.getByTestId('document-upload-idle') as HTMLInputElement
+      const file = new File(['test'], 'document.txt', { type: 'text/plain' })
+      await userEvent.upload(input, file)
+      await sleep(nbHueMax)
+      const errorMessage = canvas.getByTestId('document-error')
+      expect(errorMessage).toHaveTextContent('File extension not allowed, accepted : pdf, jpg, png')
+      expect(formData).toContainHTML(stringify({ fileNameSelected: 'document.txt' }))
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      expect(submitButton).toBeDisabled()
     })
   },
 }
