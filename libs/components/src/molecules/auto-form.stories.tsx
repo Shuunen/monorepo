@@ -853,9 +853,78 @@ export const KeyMapping: Story = {
   },
 }
 
+/**
+ * Nested key mapping with key, keyIn and keyOut properties
+ */
+export const NestedKeyMapping: Story = {
+  args: {
+    initialData: {
+      user: {
+        // biome-ignore lint/style/useNamingConvention: we use snake_case for testing purposes
+        contact_info: {
+          // biome-ignore lint/style/useNamingConvention: we use snake_case for testing purposes
+          email_address: 'jane.doe@example.com',
+        },
+        'personal-Info': {
+          fullName: 'Jane Doe',
+        },
+      },
+    },
+    schemas: [
+      z.object({
+        userEmail: z.email('Invalid email address').meta({
+          keyIn: 'user.contact_info.email_address',
+          keyOut: 'userInfos.email',
+          label: 'Email Address',
+          placeholder: "We'll never share your email",
+        }),
+        userName: z.string().min(2, 'Name is required').meta({
+          keyIn: 'user.personal-Info.fullName',
+          keyOut: 'userInfos.fullName',
+          label: 'Full Name',
+          placeholder: 'Enter your legal name',
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const formData = canvas.getByTestId('debug-data-form-data')
+    const submittedData = canvas.getByTestId('debug-data-submitted-data')
+    step('verify initial data was mapped correctly', () => {
+      const emailInput = canvas.getByTestId('user-email')
+      expect(emailInput).toHaveValue('jane.doe@example.com')
+      const nameInput = canvas.getByTestId('user-name')
+      expect(nameInput).toHaveValue('Jane Doe')
+      expect(formData).toContainHTML('"email": "jane.doe@example.com"')
+      expect(formData).toContainHTML('"fullName": "Jane Doe"')
+      expect(submittedData).toContainHTML('{}')
+    })
+    await step('modify the fields', async () => {
+      const emailInput = canvas.getByTestId('user-email')
+      await userEvent.clear(emailInput)
+      await userEvent.type(emailInput, 'new.email@example.com')
+      expect(emailInput).toHaveValue('new.email@example.com')
+      const nameInput = canvas.getByTestId('user-name')
+      await userEvent.clear(nameInput)
+      await userEvent.type(nameInput, 'John Smith')
+      expect(nameInput).toHaveValue('John Smith')
+    })
+    await step('submit the form', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      expect(submitButton).not.toBeDisabled()
+      await userEvent.click(submitButton)
+    })
+    step('verify submitted data uses nested output paths', () => {
+      const expectedData = { userInfos: { email: 'new.email@example.com', fullName: 'John Smith' } }
+      expect(formData).toContainHTML(stringify(expectedData))
+      expect(submittedData).toContainHTML(stringify(expectedData))
+    })
+  },
+}
+
 /*
 TODO, ordered by priority :
-- Use delve for key, keyIn, keyOut
 - Handle submission  and summary steps
 - Stepper should contains links and not buttons
 - Display an error icon if touched

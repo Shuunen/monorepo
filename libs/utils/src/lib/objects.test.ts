@@ -2,7 +2,7 @@ import { clone } from './object-clone.js'
 import { objectEqual } from './object-equal.js'
 import { flatten } from './object-flatten.js'
 import { objectSort } from './object-sort.js'
-import { access, byProperty, genClass, isRecord, objectSum } from './objects.js'
+import { byProperty, genClass, isRecord, objectSum } from './objects.js'
 
 const person = {
   age: 21,
@@ -50,22 +50,6 @@ it('clone H cloned values keep their type', () => {
 })
 it('clone I debug', () => {
   expect({ person, personCopy: personCloneModified }).toMatchSnapshot()
-})
-
-it('access A nested existing property access', () => {
-  expect(access(person, 'details.favoriteFood')).toBe('sushi')
-})
-it('access B nested non-existing property access', () => {
-  expect(typeof access(person, 'details.favoriteDrink')).toBe('undefined')
-})
-it('access C non-nested property', () => {
-  expect(access({ name: 'John Cena' }, 'name')).toBe('John Cena')
-})
-it('access D non-existing non-nested property', () => {
-  expect(typeof access({ name: 'John Cena' }, 'age')).toBe('undefined')
-})
-it('access E non-nested property after an undefined property', () => {
-  expect(access({ age: undefined, name: 'John Cena' }, 'name')).toBe('John Cena')
 })
 
 it('flatten A object', () => {

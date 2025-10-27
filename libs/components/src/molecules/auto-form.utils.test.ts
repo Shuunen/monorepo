@@ -369,4 +369,105 @@ describe('auto-form.utils', () => {
     const result = mapExternalDataToFormFields(schema, externalData)
     expect(result).toMatchInlineSnapshot(`{}`)
   })
+  it('mapExternalDataToFormFields G should handle nested key mapping with dots in keyIn', () => {
+    const schema = z.object({
+      userEmail: z.string().meta({ keyIn: 'user.contact.email', label: 'Email' }),
+      userName: z.string().meta({ keyIn: 'user.info.name', label: 'Name' }),
+    })
+    const externalData = {
+      user: {
+        contact: {
+          email: 'jane@example.com',
+        },
+        info: {
+          name: 'Jane Doe',
+        },
+      },
+    }
+    const result = mapExternalDataToFormFields(schema, externalData)
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "userEmail": "jane@example.com",
+        "userName": "Jane Doe",
+      }
+    `)
+  })
+  it('mapExternalDataToFormFields H should handle mixed nested and flat key mappings', () => {
+    const schema = z.object({
+      age: z.number().meta({ label: 'Age' }),
+      userEmail: z.string().meta({ keyIn: 'user.email', label: 'Email' }),
+    })
+    const externalData = {
+      age: 30,
+      user: {
+        email: 'test@example.com',
+      },
+    }
+    const result = mapExternalDataToFormFields(schema, externalData)
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "age": 30,
+        "userEmail": "test@example.com",
+      }
+    `)
+  })
+  it('mapExternalDataToFormFields I should skip nested fields with undefined values', () => {
+    const schema = z.object({
+      userEmail: z.string().meta({ keyIn: 'user.email', label: 'Email' }),
+      userName: z.string().meta({ keyIn: 'user.name', label: 'Name' }),
+    })
+    const externalData = {
+      user: {
+        email: 'test@example.com',
+      },
+    }
+    const result = mapExternalDataToFormFields(schema, externalData)
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "userEmail": "test@example.com",
+      }
+    `)
+  })
+  it('cleanSubmittedData E should handle nested key mapping with dots in keyOut', () => {
+    const schema = z.object({
+      userEmail: z.string().meta({ keyOut: 'user.contact.email', label: 'Email' }),
+      userName: z.string().meta({ keyOut: 'user.info.name', label: 'Name' }),
+    })
+    const data = {
+      userEmail: 'jane@example.com',
+      userName: 'Jane Doe',
+    }
+    const result = cleanSubmittedData(schema, data, {})
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "user": {
+          "contact": {
+            "email": "jane@example.com",
+          },
+          "info": {
+            "name": "Jane Doe",
+          },
+        },
+      }
+    `)
+  })
+  it('cleanSubmittedData F should handle mixed nested and flat key mappings', () => {
+    const schema = z.object({
+      age: z.number().meta({ label: 'Age' }),
+      userEmail: z.string().meta({ keyOut: 'user.email', label: 'Email' }),
+    })
+    const data = {
+      age: 30,
+      userEmail: 'test@example.com',
+    }
+    const result = cleanSubmittedData(schema, data, {})
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "age": 30,
+        "user": {
+          "email": "test@example.com",
+        },
+      }
+    `)
+  })
 })

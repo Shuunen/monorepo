@@ -1,21 +1,10 @@
 import { arrayUnique } from './array-unique.js'
 import { nbAscending, nbDescending } from './constants.js'
 import { clone } from './object-clone.js'
-import { flatten } from './object-flatten.js'
 import { objectSerialize } from './object-serializer.js'
 import { stringSum } from './strings.js'
 
 type GenClassTypes = boolean | null | number | string | string[] | undefined
-
-/**
- * Access nested property
- * @param object the base object to search into
- * @param path the full path to access nested property
- * @returns the nested property value
- */
-export function access(object: Readonly<Record<string, unknown>>, path: string) {
-  return flatten(object)[path]
-}
 
 /**
  * Sort an array of objects by a specific property of theses objects, example :

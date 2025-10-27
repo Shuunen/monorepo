@@ -1,4 +1,4 @@
-import { type Logger, Result } from '@monorepo/utils'
+import { getNested, type Logger, Result, setNested } from '@monorepo/utils'
 import { z } from 'zod'
 
 /**
@@ -196,7 +196,11 @@ export function mapExternalDataToFormFields(schema: z.ZodObject, externalData: R
     const { keyIn } = getKeyMapping(metadata)
     // Use keyIn if provided, otherwise use field name
     const sourceKey = keyIn ?? fieldName
-    if (sourceKey in externalData) result[fieldName] = externalData[sourceKey]
+    // Check if sourceKey contains a dot (nested path)
+    if (sourceKey.includes('.')) {
+      const value = getNested(externalData, sourceKey)
+      if (value !== undefined) result[fieldName] = value
+    } else if (sourceKey in externalData) result[fieldName] = externalData[sourceKey]
   }
   return result
 }
@@ -220,7 +224,9 @@ export function cleanSubmittedData(schema: z.ZodObject, data: Record<string, unk
     // Apply keyOut mapping if provided
     const { keyOut } = getKeyMapping(metadata)
     const outputKey = keyOut ?? key
-    result[outputKey] = value
+    // Check if outputKey contains a dot (nested path)
+    if (outputKey.includes('.')) setNested(result, outputKey, value)
+    else result[outputKey] = value
   }
   return result
 }
