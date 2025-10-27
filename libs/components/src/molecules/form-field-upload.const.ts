@@ -6,6 +6,7 @@ const bytesInMb = bytesInKb * bytesInKb
 const decimalPrecisionLimit = 10
 const oneSecond = 1000
 const twoSeconds = 2000
+const fileExtensionRegex = /\.([^.]+)$/
 
 export const uploadDurationFail = /* c8 ignore next */ isTestEnvironment() ? 1 : oneSecond // ms
 export const uploadDurationSuccess = /* c8 ignore next */ isTestEnvironment() ? 1 : twoSeconds // ms
@@ -25,40 +26,42 @@ export function formatFileSize(bytes: number, addUnit = true): string {
 }
 
 // oxlint-disable-next-line max-lines-per-function
-export const fileSchema = (extensions: readonly string[], isRequired: boolean) =>
-  z
-    .file()
-    // oxlint-disable-next-line max-lines-per-function
-    .check(ctx => {
-      if (!isRequired && ctx.value.name === '') return
-      if (isRequired && ctx.value.name === '') {
-        ctx.issues.push({
-          code: 'custom',
-          continue: false,
-          input: ctx.value,
-          message: 'File is required',
-        })
-        return
-      }
-      // biome-ignore lint/performance/useTopLevelRegex: fix me later
-      const ext = /\.([^.]+)$/.exec(ctx.value.name)?.[1]?.toLowerCase() ?? ''
-      if (ext === '') {
-        ctx.issues.push({
-          code: 'custom',
-          continue: false,
-          input: ctx.value,
-          message: 'File has no extension',
-        })
-        return
-      }
-      if (!extensions.includes(ext.toLowerCase()))
-        ctx.issues.push({
-          code: 'custom',
-          continue: false,
-          input: ctx.value,
-          message: `File extension not allowed, accepted : ${extensions.join(', ')}`,
-        })
-    })
+export function fileSchema(extensions: readonly string[], isRequired: boolean) {
+  return (
+    z
+      .file()
+      // oxlint-disable-next-line max-lines-per-function
+      .check(ctx => {
+        if (!isRequired && ctx.value.name === '') return
+        if (isRequired && ctx.value.name === '') {
+          ctx.issues.push({
+            code: 'custom',
+            continue: false,
+            input: ctx.value,
+            message: 'File is required',
+          })
+          return
+        }
+        const ext = fileExtensionRegex.exec(ctx.value.name)?.[1]?.toLowerCase() ?? ''
+        if (ext === '') {
+          ctx.issues.push({
+            code: 'custom',
+            continue: false,
+            input: ctx.value,
+            message: 'File has no extension',
+          })
+          return
+        }
+        if (!extensions.includes(ext.toLowerCase()))
+          ctx.issues.push({
+            code: 'custom',
+            continue: false,
+            input: ctx.value,
+            message: `File extension not allowed, accepted : ${extensions.join(', ')}`,
+          })
+      })
+  )
+}
 
 export const imageExtensions = ['jpg', 'jpeg', 'png', 'pdf'] as const
 export const imageAccept = `.${imageExtensions.join(',.')}`
