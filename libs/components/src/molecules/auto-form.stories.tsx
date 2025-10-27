@@ -854,18 +854,12 @@ export const KeyMapping: Story = {
 }
 
 /*
-TODO :
-- Extract steps logic to utils and add unit tests
-- What about the hidden steps like submission and summary ?
+TODO, ordered by priority :
+- Use delve for key, keyIn, keyOut
+- Handle submission  and summary steps
 - Stepper should contains links and not buttons
 - Display an error icon if touched
-- Integrate with a store
 - Write a story where we feed the AutoForm a whole new schema after a variant change (for dynamic schemas)
-
-We want to be able to use <AutoForm /> as a black box, he will take care of everything regarding the form :
-- AutoFormStepper : display the vertical menu on the left with the steps and their states (editable, readonly, completed, error)
-- AutoFormFields : display the fields of the current step
-- AutoFormNavigation : display the navigation buttons (next, back, submit)
-- AutoFormSummaryStep : display a summary of the data to be submitted and ask for confirmation
-- AutoFormSubmissionStep : display the submission state (submitting, success, error)
+- Allow overriding the mapping of auto-form-field.tsx
+- Design with title and navigation on the top right with arrow icons
 */

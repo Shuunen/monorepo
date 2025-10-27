@@ -1,4 +1,4 @@
-import { camelToKebabCase } from '@monorepo/utils'
+import { camelToKebabCase, cn } from '@monorepo/utils'
 import { FormControl } from '../atoms/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../atoms/select'
 import { type AutoFormFieldMetadata, getZodEnumOptions } from './auto-form.utils'
@@ -17,14 +17,14 @@ export function FormFieldSelect({ fieldName, fieldSchema, formData, isOptional, 
     <FormFieldBase {...props}>
       {field => (
         <FormControl>
-          <Select {...field} disabled={isDisabled} onValueChange={field.onChange}>
-            <SelectTrigger testId={`${testId}-trigger`}>
+          <Select {...field} disabled={isDisabled || readonly} onValueChange={field.onChange}>
+            <SelectTrigger className={cn({ '!opacity-100': readonly })} testId={`${testId}-trigger`}>
               <SelectValue placeholder={placeholder ?? `Select ${label}`} />
             </SelectTrigger>
             <SelectContent>
               {options.value?.map(option => (
-                <SelectItem key={option} value={option}>
-                  {option.charAt(0).toUpperCase() + option.slice(1)}
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
                 </SelectItem>
               ))}
             </SelectContent>

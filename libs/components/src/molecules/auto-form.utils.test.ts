@@ -21,18 +21,59 @@ describe('auto-form.utils', () => {
     const schema = z.enum(['foo', 'bar'])
     const result = getZodEnumOptions(schema)
     if (!result.ok) throw new Error('Expected success but got error')
-    expect(result.value).toEqual(['foo', 'bar'])
+    expect(result.value).toEqual([
+      { label: 'Foo', value: 'foo' },
+      { label: 'Bar', value: 'bar' },
+    ])
   })
   it('getZodEnumOptions B should also works with optional ZodEnum', () => {
     const schema = z.enum(['foo', 'bar']).optional()
     const result = getZodEnumOptions(schema)
     if (!result.ok) throw new Error('Expected success but got error')
-    expect(result.value).toEqual(['foo', 'bar'])
+    expect(result.value).toEqual([
+      { label: 'Foo', value: 'foo' },
+      { label: 'Bar', value: 'bar' },
+    ])
   })
   it('getZodEnumOptions C should return error for non-enum', () => {
     const schema = z.string()
     const result = getZodEnumOptions(schema)
     expect(result.ok).toBe(false)
+  })
+  it('getZodEnumOptions D should use custom options from metadata', () => {
+    const schema = z.enum(['us', 'uk', 'fr']).meta({
+      options: [
+        { label: '🇺🇸 United States', value: 'us' },
+        { label: '🇬🇧 United Kingdom', value: 'uk' },
+        { label: '🇫🇷 France', value: 'fr' },
+      ],
+    })
+    const result = getZodEnumOptions(schema)
+    if (!result.ok) throw new Error('Expected success but got error')
+    expect(result.value).toEqual([
+      { label: '🇺🇸 United States', value: 'us' },
+      { label: '🇬🇧 United Kingdom', value: 'uk' },
+      { label: '🇫🇷 France', value: 'fr' },
+    ])
+  })
+  it('getZodEnumOptions E should handle optional enum with custom options', () => {
+    const schema = z
+      .enum(['xs', 'sm', 'md'])
+      .optional()
+      .meta({
+        options: [
+          { label: 'Extra Small', value: 'xs' },
+          { label: 'Small', value: 'sm' },
+          { label: 'Medium', value: 'md' },
+        ],
+      })
+    const result = getZodEnumOptions(schema)
+    if (!result.ok) throw new Error('Expected success but got error')
+    expect(result.value).toEqual([
+      { label: 'Extra Small', value: 'xs' },
+      { label: 'Small', value: 'sm' },
+      { label: 'Medium', value: 'md' },
+    ])
   })
   // isZodBoolean
   it('isZodBoolean A should detect ZodBoolean', () => {

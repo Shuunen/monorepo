@@ -40,17 +40,33 @@ export type AutoFormFieldMetadata = {
   keyIn?: string
   /** Key to map submitted data output. Used when submitting data to external sources. */
   keyOut?: string
+  /** Custom options for select/enum fields with label/value pairs. */
+  options?: SelectOption[]
 }
+
+export type SelectOption = { label: string; value: string }
 
 /**
  * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
+ * Returns an array of {label, value} objects. If custom options are provided in metadata, they are used.
+ * Otherwise, enum values are converted to label/value pairs with capitalized labels.
  * @param fieldSchema the Zod schema to check
- * @returns the array of enum options, or an empty array by default
+ * @returns the array of enum options as {label, value} objects
  */
 export function getZodEnumOptions(fieldSchema: z.ZodType) {
-  if (fieldSchema.type === 'enum') return Result.ok((fieldSchema as z.ZodEnum).options as string[])
-  else if (fieldSchema.type === 'optional' && (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.type === 'enum') return Result.ok((fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.options as string[])
-  return Result.error('failed to get enum options from schema')
+  let metadata: AutoFormFieldMetadata | undefined = undefined
+  /* v8 ignore else -- @preserve */
+  if (typeof fieldSchema.meta === 'function') metadata = fieldSchema.meta() as AutoFormFieldMetadata | undefined
+  if (metadata?.options) return Result.ok(metadata.options)
+  let rawOptions: string[] = []
+  if (fieldSchema.type === 'enum') rawOptions = (fieldSchema as z.ZodEnum).options as string[]
+  else if (fieldSchema.type === 'optional' && (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.type === 'enum') rawOptions = (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.options as string[]
+  else return Result.error('failed to get enum options from schema')
+  const options: SelectOption[] = rawOptions.map(option => ({
+    label: option.charAt(0).toUpperCase() + option.slice(1),
+    value: option,
+  }))
+  return Result.ok(options)
 }
 
 /**

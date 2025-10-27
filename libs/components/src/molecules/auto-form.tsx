@@ -13,6 +13,21 @@ import { AutoFormStepper } from './auto-form-stepper'
 
 // run this command to check e2e tests `nx run components:test-storybook --skip-nx-cache` and run this command to check unit tests `nx run components:test --skip-nx-cache`
 
+/**
+ * AutoForm is a black box, all in one form generator, takes Zod schemas in and build the ui, handle validation, state management, navigation, submission, etc.:
+ *  - AutoFormStepper : display the vertical menu on the left with the steps and their states (editable, readonly, completed, error)
+ *  - AutoFormFields : display the fields of the current step
+ *  - AutoFormNavigation : display the navigation buttons (next, back, submit)
+ *  - AutoFormSummaryStep : display a summary of the data to be submitted and ask for confirmation
+ *  - AutoFormSubmissionStep : display the submission state (submitting, success, error)
+ * @param props the AutoForm props
+ * @param props.schemas the Zod schemas for each step
+ * @param props.onSubmit the function to call on form submission
+ * @param props.onChange the function to call on form data change
+ * @param props.initialData the initial form data
+ * @param props.logger optional logger for logging form events
+ * @returns the AutoForm component
+ */
 // oxlint-disable-next-line max-lines-per-function
 export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger }: AutoFormProps<Type>) {
   const [currentStep, setCurrentStep] = useState(0)
@@ -48,21 +63,31 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
     setFormData(updatedData)
     if (onChange) onChange(cleanData(updatedData))
   }, [watchedValues])
-  // Handle step submission
+
+  /**
+   * Handle submission for the current step of a multi-step form
+   * @param data partial form values for the current step as a Record<string, unknown>
+   * @returns void
+   */
   function handleStepSubmit(data: Record<string, unknown>) {
     logger?.info('Step form submitted', data)
     const updatedData = { ...formData, ...data }
     if (isLastStep && onSubmit) onSubmit(cleanData(updatedData))
     else setCurrentStep(prev => prev + 1)
   }
-  // Handle form change
+  /**
+   * Handle form data change
+   */
   function handleChange() {
     const updatedData = { ...formData, ...form.getValues() }
     logger?.info('Form changed', updatedData)
     setFormData(updatedData)
     if (onChange) onChange(cleanData(updatedData))
   }
-  // Handle next button (bypass validation)
+  /**
+   * Handle next button click
+   * @param event optional mouse event
+   */
   function handleNext(event?: MouseEvent) {
     event?.preventDefault() // Prevent any default button behavior
     const currentValues = form.getValues()
@@ -75,9 +100,12 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   function handleBack() {
     if (currentStep > 0) setCurrentStep(prev => prev - 1)
   }
-  // Handle stepper click
-  function handleStepClick(idx: number) {
-    setCurrentStep(idx)
+  /**
+   * Handle step click
+   * @param stepIndex the step index
+   */
+  function handleStepClick(stepIndex: number) {
+    setCurrentStep(stepIndex)
   }
   // Step states and icons
   const steps = schemas.map((schema, idx) => {
