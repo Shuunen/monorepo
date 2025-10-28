@@ -5,7 +5,7 @@
       "cache": true,
       "executor": "nx:run-commands",
       "options": {
-        "command": "bun ../../utils/src/bin/barrel-maker.cli.ts --target=\"./{atoms,icons,molecules}/*.tsx\" --avoid=\".stories.\" --ext=",
+        "command": "bun ../../utils/src/bin/barrel-maker.cli.ts --target=\"./{atoms,icons,molecules}/*.tsx\" --ext=",
         "cwd": "libs/components/src"
       },
       "outputs": ["{projectRoot}/src/index.ts"]

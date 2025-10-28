@@ -1,7 +1,7 @@
 import { alignForSnap, Result } from '@monorepo/utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const mockFiles = ['atoms/Button.tsx', 'atoms/types.ts', 'icons/Icon.tsx', 'molecules/Card.tsx', 'molecules/Card.stories.tsx']
+const mockFiles = ['atoms/Button.tsx', 'atoms/types.ts', 'atoms/types.d.ts', 'icons/Icon.tsx', 'molecules/Card.tsx', 'molecules/Card.test.tsx', 'molecules/Card.stories.tsx']
 
 describe('barrel-maker cli', () => {
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe('barrel-maker cli', () => {
   it('make A ext empty and default index.ts', async () => {
     // @ts-expect-error import issue
     const { make } = await import('./barrel-maker.cli')
-    const { value } = await make({ avoid: '.stories.', ext: '', target: './{atoms,icons,molecules}/*.tsx' })
+    const { value } = await make({ ext: '', target: './{atoms,icons,molecules}/*.tsx' })
     expect(value.content).toMatchSnapshot()
     expect(value.files).toMatchSnapshot()
     expect(alignForSnap(value.out)).toContain(`libs/utils/index.ts`)
@@ -22,7 +22,7 @@ describe('barrel-maker cli', () => {
   it('make B index.js and ext .js', async () => {
     // @ts-expect-error import issue
     const { make } = await import('./barrel-maker.cli')
-    const { value } = await make({ avoid: '.test.ts', ext: '.js', index: 'index.js', target: './lib/*.ts' })
+    const { value } = await make({ ext: '.js', index: 'index.js', target: './lib/*.ts' })
     expect(value.content).toMatchSnapshot()
     expect(value.files).toMatchSnapshot()
     expect(alignForSnap(value.out)).toContain(`libs/utils/index.js`)
@@ -31,7 +31,7 @@ describe('barrel-maker cli', () => {
   it('make C undefined ext', async () => {
     // @ts-expect-error import issue
     const { make } = await import('./barrel-maker.cli')
-    const { value } = await make({ avoid: '.stories.', ext: undefined, target: './{atoms,icons,molecules}/*.tsx' })
+    const { value } = await make({ ext: undefined, target: './{atoms,icons,molecules}/*.tsx' })
     expect(value.content).toMatchSnapshot()
     expect(value.files).toMatchSnapshot()
     expect(alignForSnap(value.out)).toContain(`libs/utils/index.ts`)
@@ -47,7 +47,7 @@ describe('barrel-maker cli', () => {
   it('main B with args', async () => {
     // @ts-expect-error import issue
     const { main } = await import('./barrel-maker.cli')
-    const { value } = Result.unwrap(await main(['node', 'script.ts', '--target=./{atoms,icons,molecules}/*.tsx', '--avoid=.stories.', '--ext=.js', '--index=index.js']))
+    const { value } = Result.unwrap(await main(['node', 'script.ts', '--target=./{atoms,icons,molecules}/*.tsx', '--ext=.js', '--index=index.js']))
     // @ts-expect-error import issue
     expect(value?.content).toMatchSnapshot()
     // @ts-expect-error import issue

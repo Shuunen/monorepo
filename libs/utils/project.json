@@ -5,7 +5,7 @@
       "cache": true,
       "executor": "nx:run-commands",
       "options": {
-        "command": "bun bin/barrel-maker.cli.ts --target=\"./lib/*.ts\" --avoid=\".test.ts\" --ext=\".js\"",
+        "command": "bun bin/barrel-maker.cli.ts --target=\"./lib/*.ts\" --ext=\".js\"",
         "cwd": "libs/utils/src"
       },
       "outputs": ["{projectRoot}/src/index.ts"]
