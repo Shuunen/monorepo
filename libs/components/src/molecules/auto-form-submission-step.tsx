@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { type ReactNode, useMemo } from 'react'
 import { Button } from '../atoms/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../atoms/tooltip'
+import { Title } from '../atoms/typography'
 import { IconError } from '../icons/icon-error'
 import { IconHome } from '../icons/icon-home'
 import { IconLoading } from '../icons/icon-loading'
@@ -75,7 +76,7 @@ export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetail
 
   return (
     <div className="grid gap-4" data-testid={`app-status-${status}`}>
-      <h1 className={cn('text-xl font-bold flex gap-3 items-center', color)}>
+      <Title className={cn('flex gap-3 items-center', color)} level={1}>
         {icon}
         {title}
         {tooltipDetailsList.length > 0 && (
@@ -94,7 +95,7 @@ export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetail
             </Tooltip>
           </TooltipProvider>
         )}
-      </h1>
+      </Title>
       {children}
       {detailsList.length > 0 && (
         <ul className="list-disc ml-6">
