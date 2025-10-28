@@ -1,10 +1,13 @@
 // oxlint-disable max-lines
+import { GlobalRegistrator } from '@happy-dom/global-registrator'
 import { alignForSnap, clone, nbMsInMinute, Result, sleep } from '@monorepo/utils'
 import { databaseMock } from './database.mock'
 import { removeAppWriteFields } from './database.utils'
 import { addItem, areItemsEquivalent, boxStringToBox, deleteItem, drawerStringToDrawer, formToItem, getItems, isDataOlderThan, itemBoxToRoom, itemForm, itemToForm, itemToLocation, statusStringToStatus, updateItem } from './item.utils'
 import { logger } from './logger.utils'
 import { mockFetch, mockItem, mockState } from './mock.utils'
+
+if (!GlobalRegistrator.isRegistered) GlobalRegistrator.register()
 
 vi.mock('appwrite', () => databaseMock.appwrite)
 
