@@ -1,18 +1,22 @@
-import { Alert } from '../atoms/alert'
-import { DebugData } from './debug-data'
+import { Paragraph, Title } from '../atoms/typography'
+import { FormSummary } from './form-summary'
 
 type Props = {
   data?: Record<string, unknown>
-  message: string
 }
 
 export function AutoFormSummaryStep(props: Props) {
   return (
-    <div className="grid gap-6" data-testid="auto-form-summary-step">
-      <Alert title="Coming soon" type="info">
-        {props.message}
-        {props.data && <DebugData data={props.data} />}
-      </Alert>
+    <div className="grid gap-3" data-testid="auto-form-summary-step">
+      <Title level={1}>Summary</Title>
+      {props.data ? (
+        <>
+          <Paragraph>This step provides a summary of your form submission.</Paragraph>
+          <FormSummary data={props.data} />
+        </>
+      ) : (
+        <Paragraph>No data available for summary.</Paragraph>
+      )}
     </div>
   )
 }
