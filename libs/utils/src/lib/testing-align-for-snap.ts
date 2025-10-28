@@ -1,14 +1,11 @@
 import { nbSpacesIndent } from './constants.js'
 
 /**
- * Align & clean dynamic data & operating system related stuff that can mess-up the snaps
- * @param content the string to clean
- * @returns the content aligned for snapshots
- * @example alignForSnap('Lu et approuvé le 16/05/2024 17:36:32') // => 'Lu et approuvé le xx/xx/xxxx xx:xx:xx'
- * @example alignForSnap({ value: '\\documents\\my-file.pdf' }) // => '{ "value": "/documents/my-file.pdf" }'
+ * Clean dynamic data from a string
+ * @param text the string to clean
+ * @returns the cleaned string
  */
-export function alignForSnap(content: unknown) {
-  const text = typeof content === 'string' ? content : JSON.stringify(content, undefined, nbSpacesIndent)
+function clean(text: string) {
   return (
     text
       // 16/05/2024 17:36:32 => xx/xx/xxxx xx:xx:xx
@@ -20,4 +17,22 @@ export function alignForSnap(content: unknown) {
       // \\documents\\file.pdf => /documents/file.pdf
       .replace(/\\+(?<letter>[^"])/gu, '/$<letter>')
   )
+}
+
+/**
+ * Align & clean dynamic data & operating system related stuff that can mess-up the snaps
+ * @param content the string to clean
+ * @returns the content aligned for snapshots
+ * @example alignForSnap('Lu et approuvé le 16/05/2024 17:36:32') // => 'Lu et approuvé le xx/xx/xxxx xx:xx:xx'
+ * @example alignForSnap({ value: '\\documents\\my-file.pdf' }) // => '{ "value": "/documents/my-file.pdf" }'
+ */
+export function alignForSnap(content: unknown): string {
+  if (typeof content === 'string') return clean(content)
+  if (content === null || content === undefined) return String(content)
+  if (content instanceof HTMLElement) return clean(content.textContent)
+  if (Array.isArray(content) || content instanceof NodeList || content instanceof HTMLCollection)
+    return Array.from(content)
+      .map(item => alignForSnap(item))
+      .join(' | ')
+  return clean(JSON.stringify(content, undefined, nbSpacesIndent))
 }
