@@ -74,7 +74,7 @@ const meta = {
   },
   render: args => <FormSelectWrapper {...args} />,
   tags: ['autodocs'],
-  title: 'Molecules/FormSelect',
+  title: 'molecules/FormSelect',
 } satisfies Meta<typeof FormSelectWrapper>
 
 export default meta

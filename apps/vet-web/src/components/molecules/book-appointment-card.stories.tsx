@@ -7,7 +7,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  title: 'Molecules/BookAppointmentCard',
+  title: 'molecules/BookAppointmentCard',
 } satisfies Meta<typeof BookAppointmentCard>
 
 export default meta

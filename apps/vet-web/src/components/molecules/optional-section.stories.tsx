@@ -48,7 +48,7 @@ function OptionalSectionDemo({ defaultChecked = false }: { defaultChecked?: bool
                 <FormControl>
                   <Input placeholder="Enter parent ID" {...field} data-testid="parent-identifier" value={(field.value as string) || ''} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage testId="parent-identifier-error" />
               </FormItem>
             )}
           </OptionalSection>
@@ -68,7 +68,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  title: 'Molecules/OptionalSection',
+  title: 'molecules/OptionalSection',
 } satisfies Meta<typeof OptionalSectionDemo>
 
 export default meta
