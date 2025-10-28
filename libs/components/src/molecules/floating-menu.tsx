@@ -2,8 +2,8 @@ import { cn } from '@monorepo/utils'
 // oxlint-disable-next-line no-restricted-imports
 import { LoaderCircleIcon, type LucideProps, PackageIcon, PackageOpenIcon } from 'lucide-react'
 import { createElement, type ForwardRefExoticComponent, type RefAttributes, useEffect, useMemo, useState } from 'react'
-import { Command, CommandEmpty, CommandItem, CommandList } from '../shadcn/command'
-import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover'
+import { Command, CommandEmpty, CommandItem, CommandList } from '../atoms/command'
+import { Popover, PopoverContent, PopoverTrigger } from '../atoms/popover'
 
 export type FloatingMenuAction = {
   disabled?: boolean

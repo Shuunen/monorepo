@@ -1,5 +1,4 @@
-import { IconTooltip } from '../icons/icon-tooltip'
-import { Alert, AlertDescription } from '../shadcn/alert'
+import { Alert } from '../atoms/alert'
 
 type LandingProps = {
   children?: React.ReactNode
@@ -17,16 +16,7 @@ export function Landing({ children, title, subtitle, status }: LandingProps) {
           <div className="w-24 h-0.5 mt-8 bg-slate-300 mx-auto"></div>
           <p className="text-xl md:text-2xl font-light leading-relaxed">{subtitle}</p>
         </div>
-        <div>
-          {status && (
-            <Alert className="w-fit mx-auto border-info/50 bg-info/5">
-              <IconTooltip />
-              <AlertDescription>
-                <p className="text-foreground">{status}</p>
-              </AlertDescription>
-            </Alert>
-          )}
-        </div>
+        <div>{status && <Alert type="info">{status}</Alert>}</div>
         {children}
       </div>
     </div>
