@@ -21,6 +21,15 @@ function filterFile(filename: string) {
 }
 
 /**
+ * Removes the file extension from a filename
+ * @param filename the name of the file, like "foobar.utils.ts"
+ * @returns the filename without its extension, like "foobar.utils"
+ */
+function removeExtension(filename: string) {
+  return filename.replace(/\.[^/.]+$/, '')
+}
+
+/**
  * Creates a barrel file (index.ts) exporting all modules matching the target glob
  * @param options configuration options
  * @param options.target glob pattern for files to include
@@ -33,7 +42,7 @@ export async function make({ target, index = 'index.ts', ext }: { target: string
   const out = path.join(process.cwd(), index)
   logger.info('Listing entries', target)
   const files = await glob(target, { filesOnly: true })
-  const list = files.filter(file => filterFile(file)).map(file => `export ${file.includes('types') ? 'type ' : ''}* from './${ext === undefined ? file : file.split('.')[0] + ext}'`.replace(path.sep, '/'))
+  const list = files.filter(file => filterFile(file)).map(file => `export ${file.includes('types') ? 'type ' : ''}* from './${ext === undefined ? file : removeExtension(file) + ext}'`.replace(path.sep, '/'))
   const content = `${list.toSorted().join('\n')}\n`
   writeFileSync(out, content)
   logger.success(`${out} has been updated !`)
