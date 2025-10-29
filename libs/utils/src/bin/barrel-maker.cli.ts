@@ -7,6 +7,7 @@ import { Result } from '../lib/result.js'
 
 /* v8 ignore next -- @preserve */
 const logger = new Logger({ minimumLevel: import.meta.main ? '3-info' : '7-error' })
+const extensionRegex = /\.[^/.]+$/
 
 /**
  * Filters out unwanted files based on naming conventions
@@ -26,7 +27,7 @@ function filterFile(filename: string) {
  * @returns the filename without its extension, like "foobar.utils"
  */
 function removeExtension(filename: string) {
-  return filename.replace(/\.[^/.]+$/, '')
+  return filename.replace(extensionRegex, '')
 }
 
 /**
