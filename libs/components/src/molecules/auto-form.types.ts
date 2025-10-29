@@ -14,18 +14,14 @@ export type AutoFormProps<Type extends z.ZodRawShape> = {
   initialData?: Record<string, unknown>
   /** Whether to include a summary step before submission */
   useSummaryStep?: boolean
-} & (
-  | {
-      useSubmissionStep: true
-      /** Callback function invoked when the form is submitted, returning the submission step props. */
-      onSubmit: (data: Record<string, unknown>) => Promise<{ submission: AutoFormSubmissionStepProps }>
-    }
-  | {
-      useSubmissionStep?: false
-      /** Callback function invoked when the form is submitted */
-      onSubmit?: (data: Record<string, unknown>) => unknown | Promise<unknown>
-    }
-)
+  /** Whether to include a submission step after form submission */
+  useSubmissionStep?: boolean
+  // oxlint-disable no-explicit-any
+  /** Callback function invoked when the form is submitted, returning the submission step props. */
+  // biome-ignore lint/suspicious/noExplicitAny: it is ok here
+  onSubmit?: (data: any) => any
+  // oxlint-enable no-explicit-any
+}
 
 /**
  * Metadata describing the configuration and behavior of a field in an auto-generated form.
