@@ -6,7 +6,8 @@ import { Form } from '../atoms/form'
 import { IconEdit } from '../icons/icon-edit'
 import { IconReadonly } from '../icons/icon-readonly'
 import { IconSuccess } from '../icons/icon-success'
-import { type AutoFormProps, cleanSubmittedData, filterSchema, mapExternalDataToFormFields } from './auto-form.utils'
+import type { AutoFormProps } from './auto-form.types'
+import { cleanSubmittedData, filterSchema, mapExternalDataToFormFields } from './auto-form.utils'
 import { AutoFormFields } from './auto-form-fields'
 import { AutoFormNavigation } from './auto-form-navigation'
 import { AutoFormStepper } from './auto-form-stepper'
@@ -22,7 +23,7 @@ import { AutoFormStepper } from './auto-form-stepper'
  *  - AutoFormSubmissionStep : display the submission state (submitting, success, error)
  * @param props the AutoForm props
  * @param props.schemas the Zod schemas for each step
- * @param props.onSubmit the function to call on form submission
+ * @param props.onSubmit the function to call on form submission after summary confirmation
  * @param props.onChange the function to call on form data change
  * @param props.initialData the initial form data
  * @param props.logger optional logger for logging form events
@@ -151,7 +152,10 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
         <Form {...form}>
           <form onChange={handleChange} onSubmit={form.handleSubmit(handleStepSubmit)}>
             <AutoFormFields formData={formData} logger={logger} schema={currentSchema} stepTitle={stepTitle} />
-            <AutoFormNavigation currentStep={currentStep} isLastStep={isLastStep} isSubmitDisabled={isSubmitDisabled} onBack={handleBack} onNext={handleNext} />
+            <AutoFormNavigation
+              leftButton={currentStep > 0 ? { disabled: false, onClick: handleBack } : undefined}
+              rightButton={isLastStep ? { disabled: isSubmitDisabled, label: 'Submit', testId: 'submit', type: 'submit' } : { disabled: false, label: 'Next', onClick: handleNext, testId: 'next' }}
+            />
           </form>
         </Form>
       </div>

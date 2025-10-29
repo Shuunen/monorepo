@@ -1,30 +1,32 @@
 import { Button } from '../atoms/button'
 
 type AutoFormNavigationProps = {
-  currentStep: number
-  isLastStep: boolean
-  isSubmitDisabled?: boolean
-  onBack: () => void
-  onNext: () => void
+  leftButton?: {
+    disabled?: boolean
+    onClick: () => void
+  }
+  rightButton?: {
+    label: string
+    disabled?: boolean
+    onClick?: () => void
+    type?: 'submit'
+    testId: string
+  }
 }
 
-export function AutoFormNavigation({ currentStep, isLastStep, isSubmitDisabled, onBack, onNext }: AutoFormNavigationProps) {
+export function AutoFormNavigation({ leftButton, rightButton }: AutoFormNavigationProps) {
   return (
     <div className="flex justify-between pt-6">
-      {currentStep > 0 ? (
-        <Button onClick={onBack} testId="step-back" type="button" variant="outline">
+      {leftButton ? (
+        <Button disabled={leftButton.disabled} onClick={leftButton.onClick} testId="step-back" type="button" variant="outline">
           Back
         </Button>
       ) : (
         <div />
       )}
-      {isLastStep ? (
-        <Button disabled={isSubmitDisabled} testId="step-submit" type="submit">
-          Submit
-        </Button>
-      ) : (
-        <Button onClick={onNext} testId="step-next" type="button">
-          Next
+      {rightButton && (
+        <Button disabled={rightButton.disabled} onClick={rightButton.onClick} testId={rightButton.testId} type={rightButton.type || 'button'}>
+          {rightButton.label}
         </Button>
       )}
     </div>
