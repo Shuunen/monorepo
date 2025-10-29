@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, within } from 'storybook/test'
+import { Paragraph } from '../atoms/typography'
 import { AutoFormSubmissionStep } from './auto-form-submission-step'
 
 const meta = {
@@ -17,9 +18,9 @@ type Story = StoryObj<typeof meta>
 export const Loading: Story = {
   args: {
     children: (
-      <p>
+      <Paragraph>
         Your order <strong className="font-medium">XX11234654</strong> is being submitted, please wait until the process is finished.
-      </p>
+      </Paragraph>
     ),
     status: 'loading',
   },
@@ -28,9 +29,9 @@ export const Loading: Story = {
 export const Success: Story = {
   args: {
     children: (
-      <p>
+      <Paragraph>
         Your order <strong className="font-medium">XX1123465111</strong> has been successfully submitted.
-      </p>
+      </Paragraph>
     ),
     status: 'success',
   },
@@ -39,9 +40,9 @@ export const Success: Story = {
 export const SuccessWithDetails: Story = {
   args: {
     children: (
-      <p>
+      <Paragraph>
         Your order <strong className="font-medium">XX112346545</strong> has been successfully submitted.
-      </p>
+      </Paragraph>
     ),
     detailsList: ['Your order was processed without issues.'],
     status: 'success',
@@ -52,9 +53,9 @@ export const SuccessWithDetails: Story = {
 export const WarningWithDetails: Story = {
   args: {
     children: (
-      <p>
+      <Paragraph>
         Your order <strong className="font-medium">XX1123465423</strong> has been successfully submitted with some warnings.
-      </p>
+      </Paragraph>
     ),
     detailsList: ['Some optional documents were missing.'],
     status: 'warning',
@@ -65,9 +66,9 @@ export const WarningWithDetails: Story = {
 export const ErrorWithDetails: Story = {
   args: {
     children: (
-      <p>
+      <Paragraph>
         Your order <strong className="font-medium">XX1123465433</strong> was not submitted, some errors prevent it from being processed:
-      </p>
+      </Paragraph>
     ),
     detailsList: ['Document X is invalid.', 'Please contact support.'],
     labels: {
@@ -92,9 +93,9 @@ export const ErrorWithDetails: Story = {
 export const UnknownErrorWithDetails: Story = {
   args: {
     children: (
-      <p>
+      <Paragraph>
         Your order <strong className="font-medium">XX1123465466</strong> was not submitted, an unknown error occurred.
-      </p>
+      </Paragraph>
     ),
     detailsList: ['An unexpected error occurred.'],
     status: 'unknown-error',
