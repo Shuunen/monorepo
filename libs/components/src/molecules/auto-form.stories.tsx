@@ -1,7 +1,7 @@
-import { isBrowserEnvironment, Logger, sleep } from '@monorepo/utils'
+import { isBrowserEnvironment, Logger, nbPercentMax, sleep } from '@monorepo/utils'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { z } from 'zod'
 import { Paragraph } from '../atoms/typography'
 import { AutoForm } from './auto-form'
@@ -925,32 +925,36 @@ export const NestedKeyMapping: Story = {
   },
 }
 
-const step1SummarySchema = z.object({
-  email: z.email('Invalid email address').meta({
-    label: 'Email Address',
-    placeholder: "We'll never share your email",
-  }),
-  name: z.string().min(2, 'Name is required').meta({
-    label: 'Full Name',
-    placeholder: 'Enter your legal name',
-  }),
-})
+const step1SummarySchema = z
+  .object({
+    email: z.email('Invalid email address').meta({
+      label: 'Email Address',
+      placeholder: "We'll never share your email",
+    }),
+    name: z.string().min(2, 'Name is required').meta({
+      label: 'Full Name',
+      placeholder: 'Enter your legal name',
+    }),
+  })
+  .meta({ step: 'Personal Information' })
 
-const step2SummarySchema = z.object({
-  age: z.number().min(0).max(120).optional().meta({
-    label: 'Age',
-    placeholder: 'Enter your age',
-  }),
-  subscribe: z.boolean().meta({
-    label: 'Subscribe to newsletter',
-    placeholder: 'Check to subscribe',
-  }),
-})
+const step2SummarySchema = z
+  .object({
+    age: z.number().min(0).max(120).optional().meta({
+      label: 'Age',
+      placeholder: 'Enter your age',
+    }),
+    subscribe: z.boolean().meta({
+      label: 'Subscribe to newsletter',
+      placeholder: 'Check to subscribe',
+    }),
+  })
+  .meta({ step: 'Additional Details' })
 
 /**
  * Multi-step form with summary step
  */
-export const WithSummaryStep: Story = {
+export const SummaryStep: Story = {
   args: {
     initialData: {
       age: 28,
@@ -961,57 +965,140 @@ export const WithSummaryStep: Story = {
     schemas: [step1SummarySchema, step2SummarySchema],
     useSummaryStep: true,
   },
-  // play: async ({ canvasElement, step }) => {
-  //   const canvas = within(canvasElement)
-  //   const formData = canvas.getByTestId('debug-data-form-data')
-  //   const submittedData = canvas.getByTestId('debug-data-submitted-data')
-  //   // biome-ignore assist/source/useSortedKeys: we need a specific key order here
-  //   const expectedData = {
-  //     email: 'jane.doe@example.com',
-  //     name: 'Jane Doe',
-  //     age: 28,
-  //     subscribe: true,
-  //   }
-  //   await step('navigate to summary step', async () => {
-  //     const nextButton = canvas.getByRole('button', { name: 'Next' })
-  //     await userEvent.click(nextButton)
-  //     const nextButton2 = canvas.getByRole('button', { name: 'Next' })
-  //     await userEvent.click(nextButton2)
-  //   })
-  //   step('verify data before summary', () => {
-  //     expect(formData).toContainHTML(stringify(expectedData))
-  //     expect(submittedData).toContainHTML('{}')
-  //   })
-  //   step('verify summary step displays all data', () => {
-  //     const summaryStepTitle = canvas.getByTestId('title-level-1')
-  //     expect(summaryStepTitle).toHaveTextContent('Summary')
-  //     expect(canvas.getByText('data.email')).toBeInTheDocument()
-  //     expect(canvas.getByText('jane.doe@example.com')).toBeInTheDocument()
-  //     expect(canvas.getByText('data.name')).toBeInTheDocument()
-  //     expect(canvas.getByText('Jane Doe')).toBeInTheDocument()
-  //     expect(canvas.getByText('data.age')).toBeInTheDocument()
-  //     expect(canvas.getByText('28')).toBeInTheDocument()
-  //     expect(canvas.getByText('data.subscribe')).toBeInTheDocument()
-  //     expect(canvas.getByText('true')).toBeInTheDocument()
-  //   })
-  //   step('verify data at summary', () => {
-  //     expect(formData).toContainHTML(stringify(expectedData))
-  //     expect(submittedData).toContainHTML('{}')
-  //   })
-  //   await step('submit from summary step', async () => {
-  //     const proceedButton = canvas.getByRole('button', { name: 'Proceed' })
-  //     await userEvent.click(proceedButton)
-  //   })
-  //   step('verify submitted data', () => {
-  //     expect(formData).toContainHTML(stringify(expectedData))
-  //     expect(submittedData).toContainHTML(stringify(expectedData))
-  //   })
-  // },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const formData = canvas.getByTestId('debug-data-form-data')
+    const submittedData = canvas.getByTestId('debug-data-submitted-data')
+    // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+    const expectedData = {
+      email: 'jane.doe@example.com',
+      name: 'Jane Doe',
+      age: 28,
+      subscribe: true,
+    }
+    await step('navigate to last step', async () => {
+      const step1Button = canvas.getByTestId('step-personal-information')
+      expect(step1Button).toBeInTheDocument()
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      await userEvent.click(nextButton)
+    })
+    step('verify data before summary', () => {
+      expect(formData).toContainHTML(stringify(expectedData))
+      expect(submittedData).toContainHTML('{}')
+    })
+    await step('submit to reach summary step', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+    })
+    await step('verify summary step displays', () => {
+      const summaryStep = canvas.getByTestId('auto-form-summary-step')
+      expect(summaryStep).toBeInTheDocument()
+      const summaryStepTitle = canvas.getByTestId('title-level-1')
+      expect(summaryStepTitle).toHaveTextContent('Summary')
+      expect(canvas.getByText('data.email')).toBeInTheDocument()
+      expect(canvas.getByText('jane.doe@example.com')).toBeInTheDocument()
+      expect(canvas.getByText('data.name')).toBeInTheDocument()
+      expect(canvas.getByText('Jane Doe')).toBeInTheDocument()
+      expect(canvas.getByText('data.age')).toBeInTheDocument()
+      expect(canvas.getByText('28')).toBeInTheDocument()
+      expect(canvas.getByText('data.subscribe')).toBeInTheDocument()
+      expect(canvas.getByText('true')).toBeInTheDocument()
+    })
+    await step('verify data before submission', async () => {
+      await sleep(nbPercentMax)
+      expect(formData).toContainHTML(stringify(expectedData))
+      expect(submittedData).toContainHTML('{}')
+    })
+    await step('submit from summary step', async () => {
+      const proceedButton = canvas.getByRole('button', { name: 'Proceed' })
+      await userEvent.click(proceedButton)
+      await sleep(nbPercentMax)
+    })
+    await step('verify submitted data', async () => {
+      await sleep(nbPercentMax)
+      expect(formData).toContainHTML(stringify(expectedData))
+      expect(submittedData).toContainHTML(stringify(expectedData))
+    })
+  },
+}
+
+/**
+ * Multi-step form with submission step (success scenario)
+ */
+export const SubmissionStepSuccess: Story = {
+  args: {
+    schemas: [basicSchema],
+    useSubmissionStep: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    await step('fill form', async () => {
+      const emailInput = canvas.getByTestId('email')
+      await userEvent.type(emailInput, 'test@example.com')
+      const nameInput = canvas.getByTestId('name')
+      await userEvent.type(nameInput, 'John Doe')
+    })
+    await step('submit form', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+      await sleep(nbPercentMax)
+      await sleep(nbPercentMax)
+    })
+    await step('verify submission step shows success', async () => {
+      await waitFor(() => {
+        const submissionStep = canvas.getByTestId('app-status-success')
+        expect(submissionStep).toBeInTheDocument()
+      })
+    })
+  },
+}
+
+/**
+ * Multi-step form with both summary and submission steps
+ */
+export const SummarySubmissionSuccess: Story = {
+  args: {
+    initialData: {
+      age: 28,
+      email: 'jane.doe@example.com',
+      name: 'Jane Doe',
+      subscribe: true,
+    },
+    schemas: [step1SummarySchema, step2SummarySchema],
+    useSubmissionStep: true,
+    useSummaryStep: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    await step('navigate to last step', async () => {
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      await userEvent.click(nextButton)
+    })
+    await step('submit to reach summary step', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+    })
+    await step('verify summary step displays', () => {
+      const summaryStep = canvas.getByTestId('auto-form-summary-step')
+      expect(summaryStep).toBeInTheDocument()
+    })
+    await step('proceed to submission', async () => {
+      const proceedButton = canvas.getByRole('button', { name: 'Proceed' })
+      await userEvent.click(proceedButton)
+      await sleep(nbPercentMax)
+      await sleep(nbPercentMax)
+    })
+    await step('verify submission step shows success', async () => {
+      await waitFor(() => {
+        const submissionStep = canvas.getByTestId('app-status-success')
+        expect(submissionStep).toBeInTheDocument()
+      })
+    })
+  },
 }
 
 /*
 TODO, ordered by priority :
-- Handle submission  and summary steps
 - Stepper should contains links and not buttons
 - Display an error icon if touched
 - Write a story where we feed the AutoForm a whole new schema after a variant change (for dynamic schemas)

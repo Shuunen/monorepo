@@ -6,11 +6,13 @@ import { Form } from '../atoms/form'
 import { IconEdit } from '../icons/icon-edit'
 import { IconReadonly } from '../icons/icon-readonly'
 import { IconSuccess } from '../icons/icon-success'
-import type { AutoFormProps } from './auto-form.types'
+import type { AutoFormProps, AutoFormSubmissionStepProps } from './auto-form.types'
 import { cleanSubmittedData, filterSchema, mapExternalDataToFormFields } from './auto-form.utils'
 import { AutoFormFields } from './auto-form-fields'
 import { AutoFormNavigation } from './auto-form-navigation'
 import { AutoFormStepper } from './auto-form-stepper'
+import { AutoFormSubmissionStep } from './auto-form-submission-step'
+import { AutoFormSummaryStep } from './auto-form-summary-step'
 
 // run this command to check e2e tests `nx run components:test-storybook --skip-nx-cache` and run this command to check unit tests `nx run components:test --skip-nx-cache`
 
@@ -27,11 +29,15 @@ import { AutoFormStepper } from './auto-form-stepper'
  * @param props.onChange the function to call on form data change
  * @param props.initialData the initial form data
  * @param props.logger optional logger for logging form events
+ * @param props.useSummaryStep whether to include a summary step before submission
+ * @param props.useSubmissionStep whether to include a submission step after form submission
  * @returns the AutoForm component
  */
 // oxlint-disable-next-line max-lines-per-function
-export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger }: AutoFormProps<Type>) {
+export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false }: AutoFormProps<Type>) {
   const [currentStep, setCurrentStep] = useState(0)
+  const [showSummary, setShowSummary] = useState(false)
+  const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined)
   const mappedInitialData = useMemo(() => {
     const allMappedData: Record<string, unknown> = {}
     for (const schema of schemas) {
@@ -73,8 +79,27 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   function handleStepSubmit(data: Record<string, unknown>) {
     logger?.info('Step form submitted', data)
     const updatedData = { ...formData, ...data }
-    if (isLastStep && onSubmit) onSubmit(cleanData(updatedData))
+    if (isLastStep && useSummaryStep) setShowSummary(true)
+    else if (isLastStep) void handleFinalSubmit(updatedData)
     else setCurrentStep(prev => prev + 1)
+  }
+  /**
+   * Handle final submission after all steps are complete
+   * @param data the complete form data
+   */
+  async function handleFinalSubmit(data: Record<string, unknown>) {
+    const cleanedData = cleanData(data)
+    if (!onSubmit) return
+    if (useSubmissionStep) {
+      const result = await onSubmit(cleanedData)
+      if (result?.submission) setSubmissionProps(result.submission)
+    } else await onSubmit(cleanedData)
+  }
+  /**
+   * Handle proceed button click in summary step
+   */
+  function handleSummaryProceed() {
+    void handleFinalSubmit(formData)
   }
   /**
    * Handle form data change
@@ -99,13 +124,18 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   }
   // Handle back button
   function handleBack() {
-    if (currentStep > 0) setCurrentStep(prev => prev - 1)
+    if (submissionProps) setSubmissionProps(undefined)
+    else if (showSummary) setShowSummary(false)
+    else if (currentStep > 0) setCurrentStep(prev => prev - 1)
   }
   /**
    * Handle step click
    * @param stepIndex the step index
    */
   function handleStepClick(stepIndex: number) {
+    if (submissionProps && (submissionProps.status === 'success' || submissionProps.status === 'warning')) return
+    if (submissionProps) setSubmissionProps(undefined)
+    if (showSummary) setShowSummary(false)
     setCurrentStep(stepIndex)
   }
   // Step states and icons
@@ -145,20 +175,36 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
     [schemas, formData],
   )
   const isSubmitDisabled = !isFormValid
+  const isNavigationDisabled = submissionProps && (submissionProps.status === 'success' || submissionProps.status === 'warning')
+  const isStepperDisabled = submissionProps?.status === 'success'
+  function renderContent() {
+    if (submissionProps)
+      return (
+        <>
+          <AutoFormSubmissionStep {...submissionProps} />
+          {!isNavigationDisabled && <AutoFormNavigation leftButton={{ disabled: false, onClick: handleBack }} />}
+        </>
+      )
+    if (showSummary)
+      return (
+        <>
+          <AutoFormSummaryStep data={cleanData(formData)} />
+          <AutoFormNavigation leftButton={{ disabled: false, onClick: handleBack }} rightButton={{ disabled: false, label: 'Proceed', onClick: handleSummaryProceed, testId: 'proceed' }} />
+        </>
+      )
+    return (
+      <Form {...form}>
+        <form onChange={handleChange} onSubmit={form.handleSubmit(handleStepSubmit)}>
+          <AutoFormFields formData={formData} logger={logger} schema={currentSchema} stepTitle={stepTitle} />
+          <AutoFormNavigation leftButton={currentStep > 0 ? { disabled: false, onClick: handleBack } : undefined} rightButton={isLastStep ? { disabled: isSubmitDisabled, label: 'Submit', testId: 'submit', type: 'submit' } : { disabled: false, label: 'Next', onClick: handleNext, testId: 'next' }} />
+        </form>
+      </Form>
+    )
+  }
   return (
     <div className="mx-auto p-6 bg-white rounded-lg shadow-md w-full flex">
-      {schemas.length > 1 && <AutoFormStepper onStepClick={handleStepClick} steps={steps} />}
-      <div className="flex-1">
-        <Form {...form}>
-          <form onChange={handleChange} onSubmit={form.handleSubmit(handleStepSubmit)}>
-            <AutoFormFields formData={formData} logger={logger} schema={currentSchema} stepTitle={stepTitle} />
-            <AutoFormNavigation
-              leftButton={currentStep > 0 ? { disabled: false, onClick: handleBack } : undefined}
-              rightButton={isLastStep ? { disabled: isSubmitDisabled, label: 'Submit', testId: 'submit', type: 'submit' } : { disabled: false, label: 'Next', onClick: handleNext, testId: 'next' }}
-            />
-          </form>
-        </Form>
-      </div>
+      {schemas.length > 1 && <AutoFormStepper disabled={isStepperDisabled} onStepClick={handleStepClick} steps={steps} />}
+      <div className="flex-1">{renderContent()}</div>
     </div>
   )
 }

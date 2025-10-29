@@ -10,15 +10,16 @@ type AutoFormStepperStep = {
 }
 
 type AutoFormStepperProps = {
-  steps: AutoFormStepperStep[]
+  disabled?: boolean
   onStepClick: (step: number) => void
+  steps: AutoFormStepperStep[]
 }
 
-export function AutoFormStepper({ steps, onStepClick }: AutoFormStepperProps) {
+export function AutoFormStepper({ steps, onStepClick, disabled = false }: AutoFormStepperProps) {
   return (
     <div className="flex flex-col gap-4 pr-8 border-r border-gray-200 mr-8">
       {steps.map(({ label, icon, active, idx, state }) => (
-        <Button data-state={state} key={label} onClick={() => onStepClick(idx)} testId={`step-${slugify(label)}`} variant={active ? 'default' : 'ghost'}>
+        <Button data-state={state} disabled={disabled} key={label} onClick={() => onStepClick(idx)} testId={`step-${slugify(label)}`} variant={active ? 'default' : 'ghost'}>
           {icon}
           <span className="grow text-start">{label}</span>
         </Button>
