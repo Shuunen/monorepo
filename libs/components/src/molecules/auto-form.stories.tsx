@@ -3,7 +3,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { expect, userEvent, within } from 'storybook/test'
 import { z } from 'zod'
+import { Paragraph } from '../atoms/typography'
 import { AutoForm } from './auto-form'
+import { mockSubmit } from './auto-form.utils'
 import { DebugData, stringify } from './debug-data'
 
 // allow dev to see logs in the browser console when running storybook dev but not in headless tests
@@ -24,7 +26,7 @@ const meta = {
     const [submittedData, setSubmittedData] = useState<FormData>({})
     function onSubmit(data: FormData) {
       setSubmittedData(data)
-      logger.showSuccess('Form submitted successfully')
+      return mockSubmit('success', <Paragraph>Form submitted successfully!</Paragraph>)
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
@@ -921,6 +923,90 @@ export const NestedKeyMapping: Story = {
       expect(submittedData).toContainHTML(stringify(expectedData))
     })
   },
+}
+
+const step1SummarySchema = z.object({
+  email: z.email('Invalid email address').meta({
+    label: 'Email Address',
+    placeholder: "We'll never share your email",
+  }),
+  name: z.string().min(2, 'Name is required').meta({
+    label: 'Full Name',
+    placeholder: 'Enter your legal name',
+  }),
+})
+
+const step2SummarySchema = z.object({
+  age: z.number().min(0).max(120).optional().meta({
+    label: 'Age',
+    placeholder: 'Enter your age',
+  }),
+  subscribe: z.boolean().meta({
+    label: 'Subscribe to newsletter',
+    placeholder: 'Check to subscribe',
+  }),
+})
+
+/**
+ * Multi-step form with summary step
+ */
+export const WithSummaryStep: Story = {
+  args: {
+    initialData: {
+      age: 28,
+      email: 'jane.doe@example.com',
+      name: 'Jane Doe',
+      subscribe: true,
+    },
+    schemas: [step1SummarySchema, step2SummarySchema],
+    useSummaryStep: true,
+  },
+  // play: async ({ canvasElement, step }) => {
+  //   const canvas = within(canvasElement)
+  //   const formData = canvas.getByTestId('debug-data-form-data')
+  //   const submittedData = canvas.getByTestId('debug-data-submitted-data')
+  //   // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+  //   const expectedData = {
+  //     email: 'jane.doe@example.com',
+  //     name: 'Jane Doe',
+  //     age: 28,
+  //     subscribe: true,
+  //   }
+  //   await step('navigate to summary step', async () => {
+  //     const nextButton = canvas.getByRole('button', { name: 'Next' })
+  //     await userEvent.click(nextButton)
+  //     const nextButton2 = canvas.getByRole('button', { name: 'Next' })
+  //     await userEvent.click(nextButton2)
+  //   })
+  //   step('verify data before summary', () => {
+  //     expect(formData).toContainHTML(stringify(expectedData))
+  //     expect(submittedData).toContainHTML('{}')
+  //   })
+  //   step('verify summary step displays all data', () => {
+  //     const summaryStepTitle = canvas.getByTestId('title-level-1')
+  //     expect(summaryStepTitle).toHaveTextContent('Summary')
+  //     expect(canvas.getByText('data.email')).toBeInTheDocument()
+  //     expect(canvas.getByText('jane.doe@example.com')).toBeInTheDocument()
+  //     expect(canvas.getByText('data.name')).toBeInTheDocument()
+  //     expect(canvas.getByText('Jane Doe')).toBeInTheDocument()
+  //     expect(canvas.getByText('data.age')).toBeInTheDocument()
+  //     expect(canvas.getByText('28')).toBeInTheDocument()
+  //     expect(canvas.getByText('data.subscribe')).toBeInTheDocument()
+  //     expect(canvas.getByText('true')).toBeInTheDocument()
+  //   })
+  //   step('verify data at summary', () => {
+  //     expect(formData).toContainHTML(stringify(expectedData))
+  //     expect(submittedData).toContainHTML('{}')
+  //   })
+  //   await step('submit from summary step', async () => {
+  //     const proceedButton = canvas.getByRole('button', { name: 'Proceed' })
+  //     await userEvent.click(proceedButton)
+  //   })
+  //   step('verify submitted data', () => {
+  //     expect(formData).toContainHTML(stringify(expectedData))
+  //     expect(submittedData).toContainHTML(stringify(expectedData))
+  //   })
+  // },
 }
 
 /*

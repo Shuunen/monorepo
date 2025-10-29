@@ -1,6 +1,6 @@
 import { FormControl } from '../atoms/form'
 import { Input } from '../atoms/input'
-import type { AutoFormFieldMetadata } from './auto-form.utils'
+import type { AutoFormFieldMetadata } from './auto-form.types'
 import { FormFieldBase, type FormFieldBaseProps } from './form-field'
 
 export function FormFieldText({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false }: FormFieldBaseProps) {

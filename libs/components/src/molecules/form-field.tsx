@@ -2,7 +2,7 @@ import { camelToKebabCase, type Logger } from '@monorepo/utils'
 import type { ControllerRenderProps } from 'react-hook-form'
 import type { z } from 'zod'
 import { FormField, FormItem, FormLabel, FormMessage } from '../atoms/form'
-import type { AutoFormFieldMetadata } from './auto-form.utils'
+import type { AutoFormFieldMetadata } from './auto-form.types'
 
 export type FormFieldBaseProps = {
   children?: (field: ControllerRenderProps) => React.ReactNode

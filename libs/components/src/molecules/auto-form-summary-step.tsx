@@ -2,6 +2,9 @@ import { Paragraph, Title } from '../atoms/typography'
 import { FormSummary } from './form-summary'
 
 type Props = {
+  /**
+   * The data to summarize
+   */
   data?: Record<string, unknown>
 }
 

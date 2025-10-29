@@ -8,7 +8,7 @@ import { FormControl } from '../atoms/form'
 import { Input } from '../atoms/input'
 import { Progress } from '../atoms/progress'
 import { cn } from '../shadcn/utils'
-import type { AutoFormFieldMetadata } from './auto-form.utils'
+import type { AutoFormFieldMetadata } from './auto-form.types'
 import { FormFieldBase, type FormFieldBaseProps } from './form-field'
 import { formatFileSize, maxPercent, uploadDurationFail, uploadDurationSuccess, uploadPercentFail } from './form-field-upload.const'
 

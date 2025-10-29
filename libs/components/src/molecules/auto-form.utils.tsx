@@ -1,50 +1,7 @@
-import { getNested, type Logger, Result, setNested } from '@monorepo/utils'
+import { getNested, Logger, nbPercentMax, Result, setNested, sleep } from '@monorepo/utils'
+import type { ReactNode } from 'react'
 import { z } from 'zod'
-
-/**
- * Props for the AutoForm component, which generates a form based on provided Zod schemas.
- */
-export type AutoFormProps<Type extends z.ZodRawShape> = {
-  /** Logger instance for logging form events, for debugging purposes. */
-  logger?: Logger
-  /** An array of Zod object schemas representing each step of the form. */
-  schemas: z.ZodObject<Type>[]
-  /** Callback function invoked when the form is submitted with the cleaned data. */
-  onSubmit?: (data: Record<string, unknown>) => void
-  /** Optional callback function invoked whenever the form data changes, providing the cleaned data. */
-  onChange?: (data: Record<string, unknown>) => void
-  /** Initial data to pre-fill the form fields. */
-  initialData?: Record<string, unknown>
-}
-
-/**
- * Metadata describing the configuration and behavior of a field in an auto-generated form.
- * example: `z.string().meta({ label: 'First Name', placeholder: 'Enter your first name', state: 'editable' })`
- */
-export type AutoFormFieldMetadata = {
-  /** The display label for the form field. */
-  label?: string
-  /** Placeholder text shown in the input when empty. */
-  placeholder?: string
-  /** The interaction state of the field. */
-  state?: 'editable' | 'readonly' | 'disabled'
-  /** The name of another field that this field depends on. */
-  dependsOn?: string
-  /** Whether the field should be excluded from the form. */
-  excluded?: boolean
-  /** An optional step name if the form is multi-step. */
-  step?: string
-  /** Key mapping for both input and output data. Equivalent to setting both keyIn and keyOut. */
-  key?: string
-  /** Key to map initial data input. Used when loading data from external sources. */
-  keyIn?: string
-  /** Key to map submitted data output. Used when submitting data to external sources. */
-  keyOut?: string
-  /** Custom options for select/enum fields with label/value pairs. */
-  options?: SelectOption[]
-}
-
-export type SelectOption = { label: string; value: string }
+import type { AutoFormFieldMetadata, AutoFormSubmissionStepProps, SelectOption } from './auto-form.types'
 
 /**
  * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
@@ -229,4 +186,31 @@ export function cleanSubmittedData(schema: z.ZodObject, data: Record<string, unk
     else result[outputKey] = value
   }
   return result
+}
+
+/**
+ * Mocks the submission of an auto-form to an external API
+ * @param status the status to simulate
+ * @param message the message to shows on submission step
+ * @returns the simulated submission result
+ */
+export async function mockSubmit(status: AutoFormSubmissionStepProps['status'], message: ReactNode): Promise<{ submission: AutoFormSubmissionStepProps }> {
+  const logger = new Logger()
+  await sleep(nbPercentMax) // simulate api/network delay
+  const submission: AutoFormSubmissionStepProps = {
+    children: message,
+    detailsList: [] as string[],
+    status,
+  }
+  if (status === 'warning') {
+    submission.detailsList = ['Some fields have warnings.', 'Submission is complete anyway.']
+    logger.showInfo('Form submitted with warnings.')
+  } else if (status === 'success') {
+    submission.detailsList = ['All data is valid.', 'No errors found.']
+    logger.showSuccess('Form submitted successfully!')
+  } else {
+    submission.detailsList = ['Network error occurred.', 'Please retry submission.']
+    logger.showError('Form submission failed.')
+  }
+  return { submission }
 }

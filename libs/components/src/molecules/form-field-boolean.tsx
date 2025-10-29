@@ -1,7 +1,8 @@
 import type { z } from 'zod'
 import { Checkbox } from '../atoms/checkbox'
 import { FormControl, FormDescription } from '../atoms/form'
-import { type AutoFormFieldMetadata, checkZodBoolean } from './auto-form.utils'
+import type { AutoFormFieldMetadata } from './auto-form.types'
+import { checkZodBoolean } from './auto-form.utils'
 import { FormFieldBase, type FormFieldBaseProps } from './form-field'
 
 export function FormFieldBoolean({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false }: FormFieldBaseProps) {

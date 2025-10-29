@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { type ReactNode, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Button } from '../atoms/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../atoms/tooltip'
 import { Title } from '../atoms/typography'
@@ -10,26 +10,10 @@ import { IconSuccess } from '../icons/icon-success'
 import { IconTooltip } from '../icons/icon-tooltip'
 import { IconWarning } from '../icons/icon-warning'
 import { cn } from '../shadcn/utils'
-
-type Props = {
-  /** The message or content to display in the step */
-  children: ReactNode
-  labels?: {
-    loading?: string
-    success?: string
-    warning?: string
-    error?: string
-  }
-  /** A list of details to add to the status message */
-  detailsList?: string[]
-  /** The actual status of the submission */
-  status: 'loading' | 'success' | 'warning' | 'error' | 'unknown-error'
-  /** A list of details to add to a tooltip to give some context to the user */
-  tooltipDetailsList?: string[]
-}
+import type { AutoFormSubmissionStepProps } from './auto-form.types'
 
 // oxlint-disable-next-line max-lines-per-function
-export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetailsList = [], children, labels }: Props) {
+export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetailsList = [], children, labels }: AutoFormSubmissionStepProps) {
   const title = useMemo(() => {
     if (status === 'loading') return 'Please wait...'
     if (status === 'success') return 'Success'

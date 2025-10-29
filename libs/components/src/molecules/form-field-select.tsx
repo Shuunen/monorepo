@@ -1,7 +1,8 @@
 import { camelToKebabCase, cn } from '@monorepo/utils'
 import { FormControl } from '../atoms/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../atoms/select'
-import { type AutoFormFieldMetadata, getZodEnumOptions } from './auto-form.utils'
+import type { AutoFormFieldMetadata } from './auto-form.types'
+import { getZodEnumOptions } from './auto-form.utils'
 import { FormFieldBase, type FormFieldBaseProps } from './form-field'
 
 export function FormFieldSelect({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false }: FormFieldBaseProps) {
