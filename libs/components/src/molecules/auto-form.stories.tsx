@@ -1,22 +1,28 @@
 import { isBrowserEnvironment, Logger, nbPercentMax, sleep } from '@monorepo/utils'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { z } from 'zod'
 import { Paragraph } from '../atoms/typography'
 import { AutoForm } from './auto-form'
+import type { AutoFormProps, AutoFormSubmissionStepProps } from './auto-form.types'
 import { mockSubmit } from './auto-form.utils'
 import { DebugData, stringify } from './debug-data'
 
 // allow dev to see logs in the browser console when running storybook dev but not in headless tests
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? '3-info' : '5-warn' })
 
+type ExtendedAutoFormProps = AutoFormProps<z.ZodRawShape> & {
+  mockSubmitMessage?: ReactNode
+  mockSubmitStatus?: AutoFormSubmissionStepProps['status']
+}
+
 const meta = {
   component: AutoForm,
   parameters: {
     layout: 'centered',
   },
-  render: args => {
+  render: (args: ExtendedAutoFormProps) => {
     type FormData = Record<string, unknown> | undefined
     const [formData, setFormData] = useState<Partial<FormData>>({})
     function onChange(data: Partial<FormData>) {
@@ -26,7 +32,9 @@ const meta = {
     const [submittedData, setSubmittedData] = useState<FormData>({})
     function onSubmit(data: FormData) {
       setSubmittedData(data)
-      return mockSubmit('success', <Paragraph>Form submitted successfully!</Paragraph>)
+      const status = args.mockSubmitStatus ?? 'success'
+      const message = args.mockSubmitMessage ?? <Paragraph>Form submitted successfully!</Paragraph>
+      return mockSubmit(status, message)
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
@@ -38,7 +46,7 @@ const meta = {
   },
   tags: ['autodocs'],
   title: 'molecules/AutoForm',
-} satisfies Meta<typeof AutoForm>
+} satisfies Meta<ExtendedAutoFormProps>
 
 export default meta
 
@@ -954,7 +962,7 @@ const step2SummarySchema = z
 /**
  * Multi-step form with summary step
  */
-export const SummaryStep: Story = {
+export const SummaryOnly: Story = {
   args: {
     initialData: {
       age: 28,
@@ -1025,18 +1033,28 @@ export const SummaryStep: Story = {
 /**
  * Multi-step form with submission step (success scenario)
  */
-export const SubmissionStepSuccess: Story = {
+export const SubmissionSuccess: Story = {
   args: {
-    schemas: [basicSchema],
+    schemas: [step1SummarySchema, step2SummarySchema],
     useSubmissionStep: true,
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    await step('fill form', async () => {
+    await step('fill step 1 form fields', async () => {
       const emailInput = canvas.getByTestId('email')
       await userEvent.type(emailInput, 'test@example.com')
       const nameInput = canvas.getByTestId('name')
       await userEvent.type(nameInput, 'John Doe')
+    })
+    await step('navigate to step 2', async () => {
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      await userEvent.click(nextButton)
+    })
+    await step('fill step 2 form fields', async () => {
+      const ageInput = canvas.getByTestId('age')
+      await userEvent.type(ageInput, '30')
+      const subscribeCheckbox = canvas.getByTestId('subscribe')
+      await userEvent.click(subscribeCheckbox)
     })
     await step('submit form', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
@@ -1061,18 +1079,30 @@ export const SubmissionStepSuccess: Story = {
 /**
  * Multi-step form with submission step (failure scenario)
  */
-export const SubmissionStepFailure: Story = {
+export const SubmissionError: Story = {
   args: {
-    schemas: [basicSchema],
+    mockSubmitMessage: <Paragraph>Form submission failed!</Paragraph>,
+    mockSubmitStatus: 'error',
+    schemas: [step1SummarySchema, step2SummarySchema],
     useSubmissionStep: true,
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    await step('fill form', async () => {
+    await step('fill step 1 form fields', async () => {
       const emailInput = canvas.getByTestId('email')
       await userEvent.type(emailInput, 'test@example.com')
       const nameInput = canvas.getByTestId('name')
       await userEvent.type(nameInput, 'John Doe')
+    })
+    await step('navigate to step 2', async () => {
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      await userEvent.click(nextButton)
+    })
+    await step('fill step 2 form fields', async () => {
+      const ageInput = canvas.getByTestId('age')
+      await userEvent.type(ageInput, '30')
+      const subscribeCheckbox = canvas.getByTestId('subscribe')
+      await userEvent.click(subscribeCheckbox)
     })
     await step('submit form', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
@@ -1086,26 +1116,6 @@ export const SubmissionStepFailure: Story = {
         expect(submissionStep).toBeInTheDocument()
       })
     })
-  },
-  render: args => {
-    type FormData = Record<string, unknown> | undefined
-    const [formData, setFormData] = useState<Partial<FormData>>({})
-    function onChange(data: Partial<FormData>) {
-      setFormData(data)
-      logger.info('Form data changed', data)
-    }
-    const [submittedData, setSubmittedData] = useState<FormData>({})
-    function onSubmit(data: FormData) {
-      setSubmittedData(data)
-      return mockSubmit('error', <Paragraph>Form submission failed!</Paragraph>)
-    }
-    return (
-      <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={formData} title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
-        <DebugData data={submittedData} title="Submitted data" />
-      </div>
-    )
   },
 }
 
@@ -1155,6 +1165,102 @@ export const SummarySubmissionSuccess: Story = {
       expect(homeButton).toBeInTheDocument()
       expect(homeButton).toHaveTextContent('Return to Homepage')
     })
+  },
+}
+
+/**
+ * Multi-step form with both summary and submission steps (failure scenario)
+ */
+export const SummarySubmissionError: Story = {
+  args: {
+    initialData: {
+      age: 28,
+      email: 'jane.doe@example.com',
+      name: 'Jane Doe',
+      subscribe: true,
+    },
+    mockSubmitMessage: <Paragraph>Form submission failed!</Paragraph>,
+    mockSubmitStatus: 'error',
+    schemas: [step1SummarySchema, step2SummarySchema],
+    useSubmissionStep: true,
+    useSummaryStep: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    await step('navigate to last step', async () => {
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      await userEvent.click(nextButton)
+    })
+    await step('submit to reach summary step', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+    })
+    await step('verify summary step displays', () => {
+      const summaryStep = canvas.getByTestId('auto-form-summary-step')
+      expect(summaryStep).toBeInTheDocument()
+    })
+    await step('proceed to submission', async () => {
+      const proceedButton = canvas.getByRole('button', { name: 'Proceed' })
+      await userEvent.click(proceedButton)
+      await sleep(nbPercentMax)
+      await sleep(nbPercentMax)
+    })
+    await step('verify submission step shows error', async () => {
+      await waitFor(() => {
+        const submissionStep = canvas.getByTestId('app-status-error')
+        expect(submissionStep).toBeInTheDocument()
+      })
+    })
+  },
+}
+
+/**
+ * Multi-step form with both summary and submission steps (warning scenario)
+ */
+export const SummarySubmissionWarning: Story = {
+  args: {
+    initialData: {
+      age: 28,
+      email: 'jane.doe@example.com',
+      name: 'Jane Doe',
+      subscribe: true,
+    },
+    mockSubmitMessage: <Paragraph>Form submission completed with warnings!</Paragraph>,
+    mockSubmitStatus: 'warning',
+    schemas: [step1SummarySchema, step2SummarySchema],
+    useSubmissionStep: true,
+    useSummaryStep: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    await step('navigate to last step', async () => {
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      await userEvent.click(nextButton)
+    })
+    await step('submit to reach summary step', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+    })
+    await step('verify summary step displays', () => {
+      const summaryStep = canvas.getByTestId('auto-form-summary-step')
+      expect(summaryStep).toBeInTheDocument()
+    })
+    await step('proceed to submission', async () => {
+      const proceedButton = canvas.getByRole('button', { name: 'Proceed' })
+      await userEvent.click(proceedButton)
+      await sleep(nbPercentMax)
+      await sleep(nbPercentMax)
+    })
+    await step('verify submission step shows warning', async () => {
+      await waitFor(() => {
+        const submissionStep = canvas.getByTestId('app-status-warning')
+        expect(submissionStep).toBeInTheDocument()
+      })
+    })
+    // step('verify buttons are disabled on warning submission step', () => {
+    //   const buttons = [canvas.getByTestId('step-personal-information'), canvas.getByTestId('step-additional-details')]
+    //   for (const button of buttons) expect(button).toBeDisabled()
+    // })
   },
 }
 
