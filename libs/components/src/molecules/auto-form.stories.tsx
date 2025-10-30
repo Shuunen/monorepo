@@ -1050,6 +1050,62 @@ export const SubmissionStepSuccess: Story = {
         expect(submissionStep).toBeInTheDocument()
       })
     })
+    await step('verify home button is displayed', () => {
+      const homeButton = canvas.getByTestId('btn-home')
+      expect(homeButton).toBeInTheDocument()
+      expect(homeButton).toHaveTextContent('Return to Homepage')
+    })
+  },
+}
+
+/**
+ * Multi-step form with submission step (failure scenario)
+ */
+export const SubmissionStepFailure: Story = {
+  args: {
+    schemas: [basicSchema],
+    useSubmissionStep: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    await step('fill form', async () => {
+      const emailInput = canvas.getByTestId('email')
+      await userEvent.type(emailInput, 'test@example.com')
+      const nameInput = canvas.getByTestId('name')
+      await userEvent.type(nameInput, 'John Doe')
+    })
+    await step('submit form', async () => {
+      const submitButton = canvas.getByRole('button', { name: 'Submit' })
+      await userEvent.click(submitButton)
+      await sleep(nbPercentMax)
+      await sleep(nbPercentMax)
+    })
+    await step('verify submission step shows error', async () => {
+      await waitFor(() => {
+        const submissionStep = canvas.getByTestId('app-status-error')
+        expect(submissionStep).toBeInTheDocument()
+      })
+    })
+  },
+  render: args => {
+    type FormData = Record<string, unknown> | undefined
+    const [formData, setFormData] = useState<Partial<FormData>>({})
+    function onChange(data: Partial<FormData>) {
+      setFormData(data)
+      logger.info('Form data changed', data)
+    }
+    const [submittedData, setSubmittedData] = useState<FormData>({})
+    function onSubmit(data: FormData) {
+      setSubmittedData(data)
+      return mockSubmit('error', <Paragraph>Form submission failed!</Paragraph>)
+    }
+    return (
+      <div className="grid gap-4 mt-6 w-lg">
+        <DebugData data={formData} title="Form data" />
+        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <DebugData data={submittedData} title="Submitted data" />
+      </div>
+    )
   },
 }
 
@@ -1093,6 +1149,11 @@ export const SummarySubmissionSuccess: Story = {
         const submissionStep = canvas.getByTestId('app-status-success')
         expect(submissionStep).toBeInTheDocument()
       })
+    })
+    await step('verify home button is displayed', () => {
+      const homeButton = canvas.getByTestId('btn-home')
+      expect(homeButton).toBeInTheDocument()
+      expect(homeButton).toHaveTextContent('Return to Homepage')
     })
   },
 }

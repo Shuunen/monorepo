@@ -62,13 +62,6 @@ export type SelectOption = {
 export type AutoFormSubmissionStepProps = {
   /** The message or content to display in the step, could be a paragraph for example. */
   children: ReactNode
-  /** Custom labels for different statuses */
-  labels?: {
-    loading?: string
-    success?: string
-    warning?: string
-    error?: string
-  }
   /** A list of details to add to the status message */
   detailsList?: string[]
   /** The actual status of the submission */

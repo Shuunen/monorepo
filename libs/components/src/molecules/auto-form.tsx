@@ -1,9 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Link } from '@tanstack/react-router'
 import { type MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import type { z } from 'zod'
+import { Button } from '../atoms/button'
 import { Form } from '../atoms/form'
 import { IconEdit } from '../icons/icon-edit'
+import { IconHome } from '../icons/icon-home'
 import { IconReadonly } from '../icons/icon-readonly'
 import { IconSuccess } from '../icons/icon-success'
 import type { AutoFormProps, AutoFormSubmissionStepProps } from './auto-form.types'
@@ -175,16 +178,27 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
     [schemas, formData],
   )
   const isSubmitDisabled = !isFormValid
-  const isNavigationDisabled = submissionProps && (submissionProps.status === 'success' || submissionProps.status === 'warning')
   const isStepperDisabled = submissionProps?.status === 'success'
   function renderContent() {
-    if (submissionProps)
+    if (submissionProps) {
+      const showBackButton = submissionProps.status === 'error' || submissionProps.status === 'unknown-error'
+      const showHomeButton = submissionProps.status === 'success' || submissionProps.status === 'warning'
       return (
         <>
           <AutoFormSubmissionStep {...submissionProps} />
-          {!isNavigationDisabled && <AutoFormNavigation leftButton={{ disabled: false, onClick: handleBack }} />}
+          {showBackButton && <AutoFormNavigation leftButton={{ disabled: false, onClick: handleBack }} />}
+          {showHomeButton && (
+            <div className="pt-6">
+              <Button asChild testId="btn-home">
+                <Link search={{ guard: false }} to="/">
+                  <IconHome /> Return to Homepage
+                </Link>
+              </Button>
+            </div>
+          )}
         </>
       )
+    }
     if (showSummary)
       return (
         <>

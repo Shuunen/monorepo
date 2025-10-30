@@ -1,63 +1,39 @@
-import { Link } from '@tanstack/react-router'
 import { useMemo } from 'react'
-import { Button } from '../atoms/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../atoms/tooltip'
 import { Title } from '../atoms/typography'
 import { IconError } from '../icons/icon-error'
-import { IconHome } from '../icons/icon-home'
-import { IconLoading } from '../icons/icon-loading'
 import { IconSuccess } from '../icons/icon-success'
 import { IconTooltip } from '../icons/icon-tooltip'
 import { IconWarning } from '../icons/icon-warning'
 import { cn } from '../shadcn/utils'
 import type { AutoFormSubmissionStepProps } from './auto-form.types'
 
-// oxlint-disable-next-line max-lines-per-function
-export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetailsList = [], children, labels }: AutoFormSubmissionStepProps) {
-  const title = useMemo(() => {
-    if (status === 'loading') return 'Please wait...'
-    if (status === 'success') return 'Success'
-    if (status === 'warning') return 'Warning'
-    if (status === 'error') return 'Error'
-    return 'Unknown error'
-  }, [status])
+function getTitleByStatus(status: AutoFormSubmissionStepProps['status']) {
+  if (status === 'loading') return 'Please wait...'
+  if (status === 'success') return 'Success'
+  if (status === 'warning') return 'Warning'
+  if (status === 'error') return 'Error'
+  return 'Unknown error'
+}
 
-  const icon = useMemo(() => {
-    if (status === 'loading') return
-    if (status === 'success') return <IconSuccess />
-    if (status === 'warning') return <IconWarning />
-    return <IconError />
-  }, [status])
+function getIconByStatus(status: AutoFormSubmissionStepProps['status']) {
+  if (status === 'loading') return
+  if (status === 'success') return <IconSuccess />
+  if (status === 'warning') return <IconWarning />
+  return <IconError />
+}
 
-  const color = useMemo(() => {
-    if (status === 'loading') return cn('text-inherit')
-    if (status === 'success') return cn('text-success')
-    if (status === 'warning') return cn('text-warning')
-    return cn('text-destructive')
-  }, [status])
+function getColorByStatus(status: AutoFormSubmissionStepProps['status']) {
+  if (status === 'loading') return cn('text-inherit')
+  if (status === 'success') return cn('text-success')
+  if (status === 'warning') return cn('text-warning')
+  return cn('text-destructive')
+}
 
-  const button = useMemo(() => {
-    if (status === 'loading')
-      return (
-        <Button disabled={true} testId="app-status-btn-loading">
-          {<IconLoading />} {labels?.loading ?? 'Submitting...'}
-        </Button>
-      )
-    if (status === 'success' || status === 'warning')
-      return (
-        <Button asChild testId="app-status-btn-home">
-          <Link search={{ guard: false }} to="/">
-            <IconHome /> {status === 'success' ? (labels?.success ?? 'Return to Homepage') : (labels?.warning ?? 'Return to Homepage')}
-          </Link>
-        </Button>
-      )
-    return (
-      <Button asChild testId="app-status-btn-cancel" variant="outline">
-        <Link to="/">{labels?.error ?? 'Cancel'}</Link>
-      </Button>
-    )
-  }, [status, labels])
-
+export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetailsList = [], children }: AutoFormSubmissionStepProps) {
+  const title = useMemo(() => getTitleByStatus(status), [status])
+  const icon = useMemo(() => getIconByStatus(status), [status])
+  const color = useMemo(() => getColorByStatus(status), [status])
   return (
     <div className="grid gap-4" data-testid={`app-status-${status}`}>
       <Title className={cn('flex gap-3 items-center', color)} level={1}>
@@ -88,7 +64,6 @@ export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetail
           ))}
         </ul>
       )}
-      <div className="pt-2">{button}</div>
     </div>
   )
 }

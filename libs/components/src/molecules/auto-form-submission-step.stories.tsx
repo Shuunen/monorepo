@@ -71,9 +71,6 @@ export const ErrorWithDetails: Story = {
       </Paragraph>
     ),
     detailsList: ['Document X is invalid.', 'Please contact support.'],
-    labels: {
-      error: 'Cancel order',
-    },
     status: 'error',
     tooltipDetailsList: ['Critical error encountered.'],
   },
@@ -85,8 +82,6 @@ export const ErrorWithDetails: Story = {
     expect(reference.textContent).toBe('XX1123465433')
     const tooltipTrigger = canvas.getByTestId('tooltip-details-list')
     expect(tooltipTrigger).toBeInTheDocument()
-    const button = canvas.getByRole('link', { name: 'Cancel order' })
-    expect(button).toBeInTheDocument()
   },
 }
 
