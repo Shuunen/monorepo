@@ -1267,7 +1267,9 @@ export const SummarySubmissionWarning: Story = {
 /*
 TODO, ordered by priority :
 - Stepper should contains links and not buttons
-- Display an error icon if touched
+- Display a red error step if issue
+- Display a green success step if valid
+- Optional sections based on values instead of just boolean
 - Write a story where we feed the AutoForm a whole new schema after a variant change (for dynamic schemas)
 - Allow overriding the mapping of auto-form-field.tsx
 - Design with title and navigation on the top right with arrow icons
