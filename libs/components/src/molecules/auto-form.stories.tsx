@@ -38,9 +38,9 @@ const meta = {
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={formData} title="Form data" />
+        <DebugData data={formData} isGhost title="Form data" />
         <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
-        <DebugData data={submittedData} title="Submitted data" />
+        <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     )
   },

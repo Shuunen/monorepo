@@ -33,9 +33,9 @@ const meta = {
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={{ fileNameSelected: formData?.document?.name }} title="Form data" />
+        <DebugData data={{ fileNameSelected: formData?.document?.name }} isGhost title="Form data" />
         <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
-        <DebugData data={{ fileNameSelected: submittedData?.document?.name }} title="Submitted data" />
+        <DebugData data={{ fileNameSelected: submittedData?.document?.name }} isGhost title="Submitted data" />
       </div>
     )
   },
