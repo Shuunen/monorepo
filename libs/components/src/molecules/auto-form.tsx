@@ -216,7 +216,7 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
     )
   }
   return (
-    <div className="mx-auto p-6 bg-white rounded-lg shadow-md w-full flex">
+    <div className="mx-auto p-6 bg-white rounded-lg shadow-md w-full flex min-w-2xl">
       {schemas.length > 1 && <AutoFormStepper disabled={isStepperDisabled} onStepClick={handleStepClick} steps={steps} />}
       <div className="flex-1">{renderContent()}</div>
     </div>
