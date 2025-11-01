@@ -1,4 +1,4 @@
-import { debounce, functionReturningVoid, off, on, parseJson, Result, readClipboard } from '@monorepo/utils'
+import { copyToClipboard, debounce, functionReturningVoid, objectSum, off, on, parseJson, Result, readClipboard } from '@monorepo/utils'
 import Button from '@mui/material/Button'
 import { type ReactNode, useCallback, useEffect, useState } from 'react'
 import { alignClipboard, type Form, validateForm } from '../utils/forms.utils'
@@ -79,7 +79,13 @@ export function AppForm<FormType extends Form>({ children, error: parentError = 
       if (actualField === undefined) continue // @ts-expect-error typing issue
       futureForm.fields[key] = { ...actualField, value }
     }
+    const hasChanged = objectSum(futureForm) !== objectSum(form)
+    if (!hasChanged) {
+      logger.info('no changes made')
+      return
+    }
     setForm(futureForm)
+    void copyToClipboard({})
   }, [form])
 
   useEffect(() => {
@@ -102,7 +108,7 @@ export function AppForm<FormType extends Form>({ children, error: parentError = 
   const canSubmit = form.isValid && form.isTouched && errorMessage.length === 0
 
   return (
-    <form autoComplete="off" className={`grid w-full gap-6 md:min-w-[44rem] ${gridClass(form.columns)}`} noValidate={true} onSubmit={onFormSubmit} spellCheck={false}>
+    <form autoComplete="off" className={`grid w-full gap-6 md:min-w-176 ${gridClass(form.columns)}`} noValidate={true} onSubmit={onFormSubmit} spellCheck={false}>
       {Object.entries(form.fields).map(([id, field]) => (
         <div className={`grid w-full ${field.isVisible ? '' : 'hidden'} ${colSpanClass(field.columns)}`} key={id}>
           {field.type === 'text' && <AppFormFieldText field={field} form={form} id={id} suggestions={suggestions} updateField={updateField} />}
