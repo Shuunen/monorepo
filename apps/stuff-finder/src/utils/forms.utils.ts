@@ -1,5 +1,5 @@
 // oxlint-disable no-accumulating-spread
-import { objectEqual } from '@monorepo/utils'
+import { objectEqual, objectSum } from '@monorepo/utils'
 
 type FormFieldType = 'checkbox' | 'select' | 'text'
 type FormFieldOptions = { label: string; value: string }[]
@@ -31,6 +31,32 @@ export type Form = {
   isValid: boolean
 }
 
+/**
+ * Updates the form with the given fields and values
+ * @param form the form to update
+ * @param updatedFields the fields to update with their new values
+ * @returns the updated form state
+ */
+export function updateForm<FormType extends Form>(form: FormType, updatedFields: Partial<Record<string, string>>) {
+  const updatedForm = structuredClone(form)
+  updatedForm.isTouched = true
+  const entries = Object.entries(updatedFields)
+  for (const [key, value] of entries) {
+    if (typeof key !== 'string' || typeof value !== 'string' || key === '' || value === '') continue
+    const actualField = updatedForm.fields[key]
+    if (actualField === undefined) continue
+    if (actualField.type === 'checkbox') updatedForm.fields[key] = { ...actualField, value: value === 'true' }
+    else updatedForm.fields[key] = { ...actualField, value }
+  }
+  const hasChanged = objectSum(updatedForm) !== objectSum(form)
+  return { hasChanged, updatedForm }
+}
+
+/**
+ * Validates the form fields and returns the updated form state
+ * @param form the form to validate
+ * @returns the updated form state
+ */
 export function validateForm<FormType extends Form>(form: FormType) {
   let errorMessage = ''
   // oxlint-disable-next-line no-accumulating-spread, no-array-reduce
