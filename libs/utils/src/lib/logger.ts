@@ -1,3 +1,4 @@
+// oxlint-disable max-lines
 import { consoleLog } from './browser-console.js'
 import { toastError, toastInfo, toastSuccess } from './browser-toast.js'
 import { bgGreen, bgRed, blue, cyan, gray, green, red, yellow } from './colors.js'
