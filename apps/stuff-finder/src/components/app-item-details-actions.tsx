@@ -42,7 +42,7 @@ export function AppItemDetailsActions({ item }: Readonly<{ item: Item }>) {
   }
 
   async function doClone() {
-    const data = { barcode: item.barcode, box: item.box, brand: item.brand, details: item.details, drawer: item.drawer, name: item.name, photos: item.photos, price: item.price.toString(), reference: item.reference, status: item.status }
+    const data = { barcode: item.barcode, box: item.box, brand: item.brand, details: item.details, drawer: item.drawer.toString(), name: item.name, photo: item.photos[0], price: item.price.toString(), reference: item.reference, status: item.status }
     logger.info('cloning item', data)
     await copyToClipboard(data)
     navigate('/item/add')
