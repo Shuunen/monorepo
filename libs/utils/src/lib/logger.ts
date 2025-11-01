@@ -6,6 +6,7 @@ import { readableTime } from './date-readable-time.js'
 import { formatDate } from './dates.js'
 import { isBrowserEnvironment } from './environment.js'
 import { isVerbose } from './flags.js'
+import type { ResultType } from './result.js'
 
 /**
  * Clean stuff to log
@@ -267,6 +268,21 @@ export class Logger {
    */
   public success(...stuff: Readonly<unknown[]>) {
     this.good(...stuff)
+  }
+
+  /**
+   * Log a Result with appropriate levels
+   * @param message the common message to log before the Result
+   * @param result the Result to log
+   * @param okLevel the log level to use if the Result is ok, default is 'info'
+   * @param errorLevel the log level to use if the Result is error, default is 'error'
+   * @example logger.result("update operation", result)
+   * @example logger.result("another operation", result, 'success', 'warn')
+   */
+  // oxlint-disable-next-line max-params
+  public result(message: string, result: ResultType<unknown, unknown>, okLevel: 'info' | 'success' = 'info', errorLevel: 'error' | 'warn' = 'error') {
+    if (result.ok) this[okLevel](message, 'result was ok and returned :', result.value)
+    else this[errorLevel](message, 'result was error and returned :', result.error)
   }
 
   /**

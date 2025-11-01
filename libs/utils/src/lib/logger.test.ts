@@ -1,5 +1,6 @@
 import { red } from './colors.js'
 import { Logger } from './logger.js'
+import { Result } from './result.js'
 
 it('logger A', () => {
   const loggerA = new Logger()
@@ -109,4 +110,32 @@ it('logger F show', () => {
   loggerF.options.minimumLevel = '3-info'
   loggerF.debug('This debug 10 should not be logged')
   expect(loggerF.inMemoryLogs, 'loggerF inMemoryLogs').toMatchSnapshot()
+})
+
+it('logger result A should log ok result with default levels', () => {
+  const loggerG = new Logger({ willLogDelay: false, willOutputToConsole: false, willOutputToMemory: true })
+  const okResult = Result.ok({ data: 'success' })
+  loggerG.result('test operation', okResult)
+  expect(loggerG.inMemoryLogs, 'loggerG inMemoryLogs').toMatchSnapshot()
+})
+
+it('logger result B should log error result with default levels', () => {
+  const loggerH = new Logger({ willLogDelay: false, willOutputToConsole: false, willOutputToMemory: true })
+  const errorResult = Result.error('something went wrong')
+  loggerH.result('test operation', errorResult)
+  expect(loggerH.inMemoryLogs, 'loggerH inMemoryLogs').toMatchSnapshot()
+})
+
+it('logger result C should log ok result with custom levels', () => {
+  const loggerI = new Logger({ willLogDelay: false, willOutputToConsole: false, willOutputToMemory: true })
+  const okResult = Result.ok(42)
+  loggerI.result('test operation', okResult, 'success', 'warn')
+  expect(loggerI.inMemoryLogs, 'loggerI inMemoryLogs').toMatchSnapshot()
+})
+
+it('logger result D should log error result with custom levels', () => {
+  const loggerJ = new Logger({ willLogDelay: false, willOutputToConsole: false, willOutputToMemory: true })
+  const errorResult = Result.error('custom error')
+  loggerJ.result('test operation', errorResult, 'success', 'warn')
+  expect(loggerJ.inMemoryLogs, 'loggerJ inMemoryLogs').toMatchSnapshot()
 })
