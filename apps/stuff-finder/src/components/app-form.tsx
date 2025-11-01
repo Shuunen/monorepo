@@ -1,7 +1,7 @@
-import { copyToClipboard, debounce, functionReturningVoid, objectSum, off, on, parseJson, Result, readClipboard } from '@monorepo/utils'
+import { copyToClipboard, debounce, functionReturningVoid, objectSerialize, off, on, parseJson, Result, readClipboard } from '@monorepo/utils'
 import Button from '@mui/material/Button'
 import { type ReactNode, useCallback, useEffect, useState } from 'react'
-import { alignClipboard, type Form, validateForm } from '../utils/forms.utils'
+import { alignClipboard, type Form, updateForm, validateForm } from '../utils/forms.utils'
 import { logger } from '../utils/logger.utils'
 import { colSpanClass, gridClass } from '../utils/theme.utils'
 import { AppFormFieldCheckbox } from './app-form-field-checkbox'
@@ -53,55 +53,25 @@ export function AppForm<FormType extends Form>({ children, error: parentError = 
   const updateDelay = 100
   const updateField = debounce(updateFieldSync, updateDelay)
 
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: to be refactored later
   const checkDataInClipboard = useCallback(async () => {
     const rawClip = await readClipboard()
-    if (!rawClip.ok) {
-      logger.error('error reading clipboard', rawClip.error)
-      return
-    }
-    if (rawClip.value === '') {
-      logger.info('clipboard is empty')
-      return
-    }
+    if (!rawClip.ok) return Result.error(`error reading clipboard : ${rawClip.error}`)
+    if (rawClip.value === '') return Result.ok('clipboard is empty')
     const clip = alignClipboard(rawClip.value)
     const { error, value } = Result.unwrap(parseJson(clip))
-    if (error || typeof value !== 'object' || value === null) {
-      logger.info('error or data not an object', { clip, error, rawClip, value })
-      return
-    }
-    const futureForm = structuredClone(form)
-    futureForm.isTouched = true
-    const entries = Object.entries(value)
-    for (const [key, value] of entries) {
-      if (typeof key !== 'string' || typeof value !== 'string' || key === '' || value === '') continue
-      const actualField = futureForm.fields[key]
-      if (actualField === undefined) continue // @ts-expect-error typing issue
-      futureForm.fields[key] = { ...actualField, value }
-    }
-    const hasChanged = objectSum(futureForm) !== objectSum(form)
-    if (!hasChanged) {
-      logger.info('no changes made')
-      return
-    }
-    setForm(futureForm)
+    if (error || typeof value !== 'object' || value === null) return Result.error(`error parsing clipboard data : ${objectSerialize({ clip, error, rawClip, value })}`)
+    const { hasChanged, updatedForm } = updateForm(form, value)
+    if (!hasChanged) return Result.ok('no changes made')
+    setForm(updatedForm)
     void copyToClipboard({})
+    return Result.ok('form updated from clipboard')
   }, [form])
 
   useEffect(() => {
-    const handler = on('focus', () => {
-      // oxlint-disable-next-line max-nested-callbacks
-      checkDataInClipboard().catch(error => {
-        logger.showError('error checking clipboard data on focus', error)
-      })
-    })
-    if (document.hasFocus())
-      checkDataInClipboard().catch(error => {
-        logger.showError('error checking clipboard data on initial focus', error)
-      })
-    return () => {
-      off(handler)
-    }
+    // oxlint-disable-next-line max-nested-callbacks
+    const handler = on('focus', () => checkDataInClipboard().then(result => logger.result('clipboard data checked on focus', result)))
+    if (document.hasFocus()) checkDataInClipboard().then(result => logger.result('clipboard data checked on initial focus', result))
+    return () => off(handler)
   }, [checkDataInClipboard])
 
   const errorMessage = parentError.length > 0 ? parentError : form.errorMessage
