@@ -1,7 +1,7 @@
 import { getNested, Logger, nbPercentMax, Result, setNested, sleep } from '@monorepo/utils'
 import type { ReactNode } from 'react'
 import { z } from 'zod'
-import type { AutoFormFieldMetadata, AutoFormSubmissionStepProps, SelectOption } from './auto-form.types'
+import type { AutoFormFieldMetadata, AutoFormProps, AutoFormSubmissionStepProps, SelectOption } from './auto-form.types'
 
 /**
  * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
@@ -214,3 +214,11 @@ export async function mockSubmit(status: AutoFormSubmissionStepProps['status'], 
   }
   return { submission }
 }
+
+export const defaultLabels = {
+  homeButton: 'Return to Homepage',
+  lastStepButton: 'Submit',
+  nextStep: 'Next',
+  previousStep: 'Back',
+  summaryStepButton: 'Proceed',
+} satisfies AutoFormProps['labels']

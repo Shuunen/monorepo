@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import type { z } from 'zod'
 
 /** Props for the AutoForm component, which generates a form based on provided Zod schemas. */
-export type AutoFormProps<Type extends z.ZodRawShape> = {
+export type AutoFormProps<Type extends z.ZodRawShape = z.ZodRawShape> = {
   /** Logger instance for logging form events, for debugging purposes. */
   logger?: Logger
   /** An array of Zod object schemas representing each step of the form. */
@@ -21,6 +21,21 @@ export type AutoFormProps<Type extends z.ZodRawShape> = {
   // biome-ignore lint/suspicious/noExplicitAny: it is ok here
   onSubmit?: (data: any) => any
   // oxlint-enable no-explicit-any
+  /** Whether to show the form inside a card layout, default is true */
+  showCard?: boolean
+  /** Custom labels for form buttons and actions */
+  labels?: {
+    /** Label for the back to home button on submission step, default is "Return to Homepage" */
+    homeButton?: string
+    /** Label for the button on final step to submit the form, default is "Submit" */
+    lastStepButton?: string
+    /** Label for the button to go to the next step, default is "Next" */
+    nextStep?: string
+    /** Label for the button to go to the previous step, default is "Back" */
+    previousStep?: string
+    /** Label for the button on the summary step to proceed, default is "Proceed" */
+    summaryStepButton?: string
+  }
 }
 
 /**

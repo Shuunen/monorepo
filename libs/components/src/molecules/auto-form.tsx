@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { cn } from '@monorepo/utils'
 import { Link } from '@tanstack/react-router'
 import { type MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -10,7 +11,7 @@ import { IconHome } from '../icons/icon-home'
 import { IconReadonly } from '../icons/icon-readonly'
 import { IconSuccess } from '../icons/icon-success'
 import type { AutoFormProps, AutoFormSubmissionStepProps } from './auto-form.types'
-import { cleanSubmittedData, filterSchema, mapExternalDataToFormFields } from './auto-form.utils'
+import { cleanSubmittedData, defaultLabels, filterSchema, mapExternalDataToFormFields } from './auto-form.utils'
 import { AutoFormFields } from './auto-form-fields'
 import { AutoFormNavigation } from './auto-form-navigation'
 import { AutoFormStepper } from './auto-form-stepper'
@@ -34,10 +35,12 @@ import { AutoFormSummaryStep } from './auto-form-summary-step'
  * @param props.logger optional logger for logging form events
  * @param props.useSummaryStep whether to include a summary step before submission
  * @param props.useSubmissionStep whether to include a submission step after form submission
+ * @param props.showCard whether to show the form inside a card layout
+ * @param props.labels custom labels for form buttons and actions
  * @returns the AutoForm component
  */
 // oxlint-disable-next-line max-lines-per-function
-export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false }: AutoFormProps<Type>) {
+export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, labels }: AutoFormProps<Type>) {
   const [currentStep, setCurrentStep] = useState(0)
   const [showSummary, setShowSummary] = useState(false)
   const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined)
@@ -53,6 +56,7 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
   const currentSchema = schemas[currentStep]
   const isLastStep = currentStep === schemas.length - 1
   const filteredSchema = useMemo(() => filterSchema(currentSchema, formData), [currentSchema, formData])
+  const finalLabels = { ...defaultLabels, ...labels }
   const form = useForm({
     defaultValues: formData,
     mode: 'onBlur',
@@ -191,7 +195,7 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
             <div className="pt-6">
               <Button asChild testId="btn-home">
                 <Link search={{ guard: false }} to="/">
-                  <IconHome /> Return to Homepage
+                  <IconHome /> {finalLabels.homeButton}
                 </Link>
               </Button>
             </div>
@@ -203,20 +207,23 @@ export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChan
       return (
         <>
           <AutoFormSummaryStep data={cleanData(formData)} />
-          <AutoFormNavigation leftButton={{ disabled: false, onClick: handleBack }} rightButton={{ disabled: false, label: 'Proceed', onClick: handleSummaryProceed, testId: 'proceed' }} />
+          <AutoFormNavigation leftButton={{ disabled: false, onClick: handleBack }} rightButton={{ disabled: false, label: finalLabels.summaryStepButton, onClick: handleSummaryProceed, testId: 'summary-proceed' }} />
         </>
       )
     return (
       <Form {...form}>
         <form onChange={handleChange} onSubmit={form.handleSubmit(handleStepSubmit)}>
           <AutoFormFields formData={formData} logger={logger} schema={currentSchema} stepTitle={stepTitle} />
-          <AutoFormNavigation leftButton={currentStep > 0 ? { disabled: false, onClick: handleBack } : undefined} rightButton={isLastStep ? { disabled: isSubmitDisabled, label: 'Submit', testId: 'submit', type: 'submit' } : { disabled: false, label: 'Next', onClick: handleNext, testId: 'next' }} />
+          <AutoFormNavigation
+            leftButton={currentStep > 0 ? { disabled: false, onClick: handleBack } : undefined}
+            rightButton={isLastStep ? { disabled: isSubmitDisabled, label: finalLabels.lastStepButton, testId: 'last-step-submit', type: 'submit' } : { disabled: false, label: finalLabels.nextStep, onClick: handleNext, testId: 'step-next' }}
+          />
         </form>
       </Form>
     )
   }
   return (
-    <div className="mx-auto p-6 bg-white rounded-lg shadow-md w-full flex min-w-2xl">
+    <div className={cn('mx-auto w-full flex min-w-2xl', { 'p-6 bg-white rounded-lg shadow-md': showCard })}>
       {schemas.length > 1 && <AutoFormStepper disabled={isStepperDisabled} onStepClick={handleStepClick} steps={steps} />}
       <div className="flex-1">{renderContent()}</div>
     </div>
