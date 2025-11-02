@@ -1,8 +1,11 @@
 @import "tailwindcss";
 @import "./mui-chip.css" layer(utilities);
+@import "../../../../libs/components/src/styles.css";
+@source "../../../../libs/components/src";
 
 @theme {
   --breakpoint-xs: 360px;
+  --color-primary: var(--color-purple-700);
 }
 
 /*

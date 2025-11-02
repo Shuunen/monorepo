@@ -1,4 +1,4 @@
-import Button from '@mui/material/Button'
+import { Button } from '@monorepo/components'
 import { ThemeProvider } from '@mui/material/styles'
 import { type CSSProperties, useCallback, useMemo, useState } from 'react'
 import { AppPrompter } from '../components/app-prompter'
@@ -11,7 +11,6 @@ import { state, watchState } from '../utils/state.utils'
 import { theme } from '../utils/theme.utils'
 
 const triggerColumnClasses = 'flex w-full flex-col gap-3 text-gray-400 transition-colors hover:text-purple-600 duration-400 disabled:opacity-50 disabled:pointer-events-none'
-const triggerButtonStyle = { fontSize: '1rem', height: '2.7rem', textTransform: 'none' }
 
 // oxlint-disable-next-line max-lines-per-function
 export function PageHome({ ...properties }: Readonly<Record<string, unknown>>) {
@@ -40,7 +39,7 @@ export function PageHome({ ...properties }: Readonly<Record<string, unknown>>) {
         <AppPrompter />
         <div className="grid gap-8 md:grid-cols-3 md:gap-6" style={ctaStyle}>
           <div className={triggerColumnClasses}>
-            <Button color="primary" fullWidth href="/scan" sx={triggerButtonStyle} variant="contained">
+            <Button className="py-5.5" onClick={() => navigate('/scan')} testId="scan">
               Scan it
             </Button>
             <svg className="h-8" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
@@ -58,7 +57,7 @@ export function PageHome({ ...properties }: Readonly<Record<string, unknown>>) {
             </svg>
           </div>
           <div className={triggerColumnClasses}>
-            <Button color="primary" fullWidth onClick={onSpeech} sx={triggerButtonStyle} variant="contained">
+            <Button className="py-5.5" onClick={onSpeech} testId="speech">
               Say it
             </Button>
             <svg className="h-8" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
