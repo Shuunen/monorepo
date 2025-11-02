@@ -37,7 +37,7 @@ const buttonVariants = cva(
 )
 
 export function Button({ children, variant, size, className = '', asChild = false, disabled, testId, ...props }: ButtonProps) {
-  const classes = `${className} ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`
+  const classes = `${className} ${disabled ? cn('cursor-not-allowed grayscale') : cn('cursor-pointer')}`
   return (
     <ShadButton asChild={asChild} className={cn(buttonVariants({ className, size, variant }), classes)} data-testid={testId} disabled={disabled} size={size} variant={variant} {...props}>
       {children}

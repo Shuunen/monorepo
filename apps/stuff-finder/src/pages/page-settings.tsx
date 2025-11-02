@@ -1,5 +1,5 @@
+import { Button } from '@monorepo/components'
 import TuneIcon from '@mui/icons-material/Tune'
-import { Button } from '@mui/material'
 import { useCallback } from 'react'
 import { AppForm } from '../components/app-form'
 import { AppPageCard } from '../components/app-page-card'
@@ -23,7 +23,7 @@ export function PageSettings({ ...properties }: Readonly<Record<string, unknown>
       <div className="flex flex-col">
         <p>Stuff-Finder need credentials to access your Airtable base, data will be saved in your browser local storage.</p>
         <AppForm initialForm={settingsForm} onSubmit={onSubmit}>
-          <Button onClick={downloadItems} type="button" variant="contained">
+          <Button onClick={downloadItems} testId="download" variant="secondary">
             Download items
           </Button>
         </AppForm>

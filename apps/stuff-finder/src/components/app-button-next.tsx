@@ -1,4 +1,4 @@
-import Button from '@mui/material/Button'
+import { Button } from '@monorepo/components'
 import { useCallback } from 'react'
 import { navigate } from '../utils/navigation.utils'
 
@@ -7,7 +7,7 @@ export function AppButtonNext({ label = 'Home', type = 'button', url = '/' }: Re
     navigate(url)
   }, [url])
   return (
-    <Button onClick={onClick} type={type} variant="contained">
+    <Button onClick={onClick} testId="next" type={type}>
       {label}
     </Button>
   )

@@ -1,5 +1,5 @@
+import { Button } from '@monorepo/components'
 import { copyToClipboard, debounce, functionReturningVoid, objectSerialize, off, on, parseJson, Result, readClipboard } from '@monorepo/utils'
-import Button from '@mui/material/Button'
 import { type ReactNode, useCallback, useEffect, useState } from 'react'
 import { alignClipboard, type Form, updateForm, validateForm } from '../utils/forms.utils'
 import { logger } from '../utils/logger.utils'
@@ -89,7 +89,7 @@ export function AppForm<FormType extends Form>({ children, error: parentError = 
       <div className="order-last flex justify-center md:col-span-full">
         {Boolean(errorMessage) && Boolean(form.isTouched) && <p className="text-red-500">{errorMessage}</p>}
         {onSubmit !== undefined && (
-          <Button disabled={!canSubmit} type="submit" variant="contained">
+          <Button disabled={!canSubmit} testId="submit" type="submit" variant={canSubmit ? 'ghost' : 'default'}>
             Save
           </Button>
         )}
