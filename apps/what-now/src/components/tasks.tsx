@@ -1,5 +1,5 @@
 import { Button } from '@monorepo/components'
-import { nbPercentMax, nbRgbMax, pickOne, sleep } from '@monorepo/utils'
+import { nbPercentMax, nbRgbMax, pickOne, sleep, slugify } from '@monorepo/utils'
 import confetti from 'canvas-confetti'
 import { useCallback, useEffect, useRef } from 'react'
 import type { Task } from '../types'
@@ -153,7 +153,7 @@ export function Tasks({ tasks }: { tasks: Task[] }) {
       {tasks.map(task => {
         const isActive = isTaskActive(task)
         return (
-          <Button className={`-ml-2 mr-auto max-w-full truncate pl-2 pr-3 py-1 text-start transition-transform duration-300 ease-out ${isActive ? '' : 'opacity-60'}`} key={task.id} onClick={event => onTaskClick(task, event)} type="button" variant="ghost">
+          <Button className={`-ml-2 mr-auto pl-2 pb-3 whitespace-normal text-start transition-transform duration-300 ease-out ${isActive ? '' : 'opacity-60'}`} key={task.id} onClick={event => onTaskClick(task, event)} testId={slugify(task.name)} type="button" variant="ghost">
             {isActive ? pickOne(emojis) : '✔️'}&nbsp; {task.name}
           </Button>
         )
