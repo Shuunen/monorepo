@@ -1,4 +1,4 @@
-import { hoursInDay, msInSecond, secondsInHour } from './date.const.ts'
+import { hoursInDay, msInSecond, secondsInHour } from './date.const'
 
 export function isOlderThan(date: Date, days: number): boolean {
   const now = new Date()

@@ -80,7 +80,7 @@ export function FormContact() {
               <FormControl>
                 <Textarea data-testid={field.name} placeholder="Type your message here." {...field} />
               </FormControl>
-              <FormMessage />
+              <FormMessage testId="form-message" />
             </FormItem>
           )}
         />

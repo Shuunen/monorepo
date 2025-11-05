@@ -23,7 +23,7 @@ export function FormUser<Form extends object>({ name }: { name: KeysWithUserForm
             <FormControl>
               <Input {...field} data-testid={field.name} />
             </FormControl>
-            <FormMessage />
+            <FormMessage testId="form-message" />
           </FormItem>
         )}
       />
@@ -36,7 +36,7 @@ export function FormUser<Form extends object>({ name }: { name: KeysWithUserForm
             <FormControl>
               <Input {...field} data-testid={field.name} />
             </FormControl>
-            <FormMessage />
+            <FormMessage testId="form-message" />
           </FormItem>
         )}
       />

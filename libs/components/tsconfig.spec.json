@@ -8,7 +8,10 @@
   "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.d.ts"],
   "references": [
     {
-      "path": "./tsconfig.lib.json"
+      "path": "../utils/tsconfig.lib.json"
+    },
+    {
+      "path": "../vite-plugins/tsconfig.lib.json"
     }
   ]
 }
