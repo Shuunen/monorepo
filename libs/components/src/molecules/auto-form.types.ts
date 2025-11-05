@@ -3,11 +3,11 @@ import type { ReactNode } from 'react'
 import type { z } from 'zod'
 
 /** Props for the AutoForm component, which generates a form based on provided Zod schemas. */
-export type AutoFormProps<Type extends z.ZodRawShape = z.ZodRawShape> = {
+export type AutoFormProps = {
   /** Logger instance for logging form events, for debugging purposes. */
   logger?: Logger
   /** An array of Zod object schemas representing each step of the form. */
-  schemas: z.ZodObject<Type>[]
+  schemas: z.ZodObject[]
   /** Optional callback function invoked whenever the form data changes, providing the cleaned data. */
   onChange?: (data: Record<string, unknown>) => void
   /** Initial data to pre-fill the form fields. */

@@ -3,7 +3,6 @@ import { cn } from '@monorepo/utils'
 import { Link } from '@tanstack/react-router'
 import { type MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import type { z } from 'zod'
 import { Button } from '../atoms/button'
 import { Form } from '../atoms/form'
 import { IconEdit } from '../icons/icon-edit'
@@ -40,7 +39,7 @@ import { AutoFormSummaryStep } from './auto-form-summary-step'
  * @returns the AutoForm component
  */
 // oxlint-disable-next-line max-lines-per-function
-export function AutoForm<Type extends z.ZodRawShape>({ schemas, onSubmit, onChange, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, labels }: AutoFormProps<Type>) {
+export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, labels }: AutoFormProps) {
   const [currentStep, setCurrentStep] = useState(0)
   const [showSummary, setShowSummary] = useState(false)
   const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined)

@@ -553,6 +553,7 @@ const schema = z.object({
 - `dependsOn: 'fieldName=value'` - Shows field when fieldName equals the exact string value
 
 Examples:
+
 - `dependsOn: 'knowsParent'` → hidden if knowsParent is false, empty, null, or undefined
 - `dependsOn: 'breed=dog'` → hidden unless breed field value equals "dog"
 - `dependsOn: 'breed=cat'` → hidden unless breed field value equals "cat"

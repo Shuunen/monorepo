@@ -12,7 +12,7 @@ import { DebugData } from './debug-data'
 // allow dev to see logs in the browser console when running storybook dev but not in headless tests
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? '3-info' : '5-warn' })
 
-type ExtendedAutoFormProps = AutoFormProps<z.ZodRawShape> & {
+type ExtendedAutoFormProps = AutoFormProps & {
   mockSubmitMessage?: ReactNode
   mockSubmitStatus?: AutoFormSubmissionStepProps['status']
 }
