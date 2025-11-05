@@ -42,7 +42,7 @@ it('objectSerialize F object with sort', () => {
 })
 it('objectSerialize G person', () => {
   expect(objectSerialize(person)).toMatchInlineSnapshot(
-    '"{"age":21,"canPush":null,"details":{"dateOfBirth":{"__strDate__":"2001-12-22T00:00:00.000Z"},"favoriteFood":"sushi","hatedFood":{"__strUndefined__":true}},"isNameValid":true,"name":"John","nameRegex":{"__strRegexFlags__":"iu","__strRegexSource__":"^jo"},"nameValidator":{"__strFunction__":"(input) => input.length > 3"},"pets":["Médoc","T-Rex","Angel"],"petsDetails":[{"age":3,"name":"Médoc"},{"age":5,"name":"T-Rex"},{"age":1,"name":"Angel"}]}"',
+    `"{"age":21,"canPush":null,"details":{"dateOfBirth":{"__strDate__":"2001-12-22T00:00:00.000Z"},"favoriteFood":"sushi"},"isNameValid":true,"name":"John","nameRegex":{"__strRegexFlags__":"iu","__strRegexSource__":"^jo"},"nameValidator":{"__strFunction__":"(input) => input.length > 3"},"pets":["Médoc","T-Rex","Angel"],"petsDetails":[{"age":3,"name":"Médoc"},{"age":5,"name":"T-Rex"},{"age":1,"name":"Angel"}]}"`,
   )
 })
 it('objectSerialize H person beautified', () => {
@@ -55,9 +55,6 @@ it('objectSerialize H person beautified', () => {
           "__strDate__": "2001-12-22T00:00:00.000Z",
         },
         "favoriteFood": "sushi",
-        "hatedFood": {
-          "__strUndefined__": true,
-        },
       },
       "isNameValid": true,
       "name": "John",
@@ -94,20 +91,37 @@ it('objectSerialize I handle null', () => {
   expect(objectSerialize({ nameNull: null })).toMatchInlineSnapshot('"{"nameNull":null}"')
 })
 it('objectSerialize J handle undefined', () => {
-  expect(objectSerialize({ nameUndefined: undefined })).toMatchInlineSnapshot('"{"nameUndefined":{"__strUndefined__":true}}"')
+  expect(objectSerialize({ nameUndefined: undefined })).toMatchInlineSnapshot(`"{}"`)
 })
 
-it('objectSerialize K', () => {
+it('objectSerialize K with sorted keys', () => {
   // biome-ignore assist/source/useSortedKeys: needed
   const object = { keyC: 3, keyA: undefined, keyB: 2 }
   const serialized = JSON.stringify(objectSerialize(object, true))
-  expect(serialized).toMatchInlineSnapshot(String.raw`""{\"keyA\":{\"__strUndefined__\":true},\"keyB\":2,\"keyC\":3}""`)
+  expect(serialized).toMatchInlineSnapshot(`""{\\"keyB\\":2,\\"keyC\\":3}""`)
 })
 
 it('objectSerialize L circular reference', () => {
   const obj: Record<string, unknown> = { name: 'John' }
   obj.self = obj
   expect(objectSerialize(obj)).toMatchInlineSnapshot('"{"name":"John","self":"__circular__"}"')
+})
+
+it('objectSerialize M with indentation', () => {
+  const obj = { a: 1, b: { c: 'text', d: [1, 2, 3] } }
+  expect(objectSerialize(obj, false, true)).toMatchInlineSnapshot(`
+    "{
+      "a": 1,
+      "b": {
+        "c": "text",
+        "d": [
+          1,
+          2,
+          3
+        ]
+      }
+    }"
+  `)
 })
 
 it('objectDeserialize A string', () => {
@@ -198,7 +212,7 @@ it('objectDeserialize G does not affect original object', () => {
 
 it('objectDeserialize H person', () => {
   const object = objectDeserialize(
-    '{"age":21,"canPush":null,"details":{"dateOfBirth":{"__strDate__":"2001-12-22T00:00:00.000Z"},"favoriteFood":"sushi","hatedFood":{"__strUndefined__":true}},"isNameValid":true,"name":"John","nameRegex":{"__strRegexFlags__":"iu","__strRegexSource__":"^jo"},"nameValidator":{"__strFunction__":"(input) => input.length > 3"},"pets":["Médoc","T-Rex","Angel"],"petsDetails":[{"age":3,"name":"Médoc"},{"age":5,"name":"T-Rex"},{"age":1,"name":"Angel"}]}',
+    '{"age":21,"canPush":null,"details":{"dateOfBirth":{"__strDate__":"2001-12-22T00:00:00.000Z"},"favoriteFood":"sushi","hatedFood":null},"isNameValid":true,"name":"John","nameRegex":{"__strRegexFlags__":"iu","__strRegexSource__":"^jo"},"nameValidator":{"__strFunction__":"(input) => input.length > 3"},"pets":["Médoc","T-Rex","Angel"],"petsDetails":[{"age":3,"name":"Médoc"},{"age":5,"name":"T-Rex"},{"age":1,"name":"Angel"}]}',
   )
   expect(object).toMatchInlineSnapshot(`
     {
@@ -207,6 +221,7 @@ it('objectDeserialize H person', () => {
       "details": {
         "dateOfBirth": 2001-12-22T00:00:00.000Z,
         "favoriteFood": "sushi",
+        "hatedFood": null,
       },
       "isNameValid": true,
       "name": "John",
@@ -241,7 +256,7 @@ it('objectDeserialize H person', () => {
   // @ts-expect-error type is unknown
   expect(object.details.favoriteFood).toBe('sushi')
   // @ts-expect-error type is unknown
-  expect(object.details.hatedFood).toBe(undefined)
+  expect(object.details.hatedFood).toBe(null)
   expect(object.nameRegex instanceof RegExp).toBe(true)
   // @ts-expect-error type is unknown
   expect(object.nameRegex.test('John')).toBe(true)
@@ -269,6 +284,9 @@ it('objectDeserialize I simple', () => {
   const object = objectDeserialize(serialized)
   expect(object).toMatchInlineSnapshot(`
     {
+      "keyA": {
+        "__strUndefined__": true,
+      },
       "keyB": 2,
       "keyC": 3,
     }

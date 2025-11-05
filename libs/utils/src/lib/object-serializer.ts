@@ -1,3 +1,4 @@
+import { nbSpacesIndent } from './constants.js'
 import { objectSort } from './object-sort.js'
 
 // currently handled :
@@ -25,7 +26,7 @@ import { objectSort } from './object-sort.js'
  * @returns the value of the object
  */
 function replacer(this: unknown, key: string, value?: Readonly<unknown>) {
-  if (value === undefined) return { __strUndefined__: true }
+  if (value === undefined) return value
   if (value instanceof RegExp) return { __strRegexFlags__: value.flags, __strRegexSource__: value.source }
   if (typeof value === 'function') return { __strFunction__: value.toString() }
   // cannot do this : if (value instanceof Date) { console.log('replacer return toISOString'); return { __strDate__: value.toISOString() } } // see note 1, instead we do this :
@@ -66,8 +67,6 @@ function reviver(_key: string, value?: unknown) {
   // oxlint-disable-next-line no-new-func
   if ('__strFunction__' in value) return new Function(`return ${value.__strFunction__}`)() /* @ts-expect-error non-standard properties */
   if ('__strDate__' in value) return new Date(value.__strDate__)
-  // here we return undefined but JSON.parse will just remove the key from the object, not great but in the end it's the same result, myObject.undefinedKey will be undefined either in { undefinedKey: undefined } or in { } ... ^^'
-  if ('__strUndefined__' in value) return undefined
   return value
 }
 
@@ -75,10 +74,11 @@ function reviver(_key: string, value?: unknown) {
  * Serializes an object to a string, using JSON.stringify with enhanced support for functions & regex
  * @param object the object to serialize to a string
  * @param willSortKeys if true, the order of keys will be sorted alpha before serialization
+ * @param willIndent if true, the output string will be indented for better readability
  * @returns the serialized object as a string
  */
-export function objectSerialize(object: Readonly<Record<string, unknown>>, willSortKeys = false) {
-  return JSON.stringify(willSortKeys ? objectSort(object) : object, createCircularReplacer())
+export function objectSerialize(object: Readonly<Record<string, unknown>>, willSortKeys = false, willIndent = false) {
+  return JSON.stringify(willSortKeys ? objectSort(object) : object, createCircularReplacer(), willIndent ? nbSpacesIndent : undefined)
 }
 
 /**
