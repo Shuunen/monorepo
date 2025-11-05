@@ -41,8 +41,8 @@
     "@nx/web": "~22.0.2",
     "@nx/workspace": "~22.0.2",
     "@playwright/test": "~1.56.1",
-    "@storybook/addon-vitest": "9.1.13",
-    "@storybook/react-vite": "9.1.13",
+    "@storybook/addon-vitest": "10.0.4",
+    "@storybook/react-vite": "10.0.4",
     "@swc-node/core": "^1.14.1",
     "@swc-node/register": "^1.11.1",
     "@testing-library/dom": "~10.4.1",
@@ -107,11 +107,13 @@
     "sb": "pnpm run storybook:run",
     "sbt": "pnpm run storybook:test",
     "storybook:build": "nx build-storybook components && echo storybook:build success",
+    "storybook:doctor": "pnpm exec storybook doctor && echo storybook:doctor success",
     "storybook:run": "nx run-storybook components",
     "storybook:test": "nx test-storybook components && echo storybook:test success",
     "test": "nx run-many -t test && echo test success",
     "test:update": "nx run-many -t test --update && echo test:update success",
-    "up:deps": "npx taze major --write"
+    "up:deps": "npx taze major --write && echo up:deps success",
+    "up:sb": "npx storybook@latest upgrade && echo up:sb success"
   },
   "version": "1.0.0"
 }
