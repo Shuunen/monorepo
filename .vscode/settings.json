@@ -1,4 +1,7 @@
 {
+  "[json][jsonc]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
   "cSpell.words": [
     "autodocs",
     "camwiegert",
@@ -38,7 +41,6 @@
   ],
   "javascript.format.insertSpaceAfterConstructor": false,
   "javascript.format.insertSpaceBeforeFunctionParenthesis": false,
-  "nxConsole.generateAiAgentRules": true,
   "typescript.format.insertSpaceAfterConstructor": false,
   "typescript.format.insertSpaceBeforeFunctionParenthesis": false
 }
