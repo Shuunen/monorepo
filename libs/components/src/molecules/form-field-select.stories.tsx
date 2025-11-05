@@ -1,10 +1,10 @@
-import { isBrowserEnvironment, Logger } from '@monorepo/utils'
+import { isBrowserEnvironment, Logger, stringify } from '@monorepo/utils'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { expect, userEvent, within } from 'storybook/test'
 import { z } from 'zod'
 import { AutoForm } from './auto-form'
-import { DebugData, stringify } from './debug-data'
+import { DebugData } from './debug-data'
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? '3-info' : '5-warn' })
 
@@ -140,8 +140,8 @@ export const LabelGeneration: Story = {
         priority: 'critical',
         size: 'large',
       }
-      expect(formData).toContainHTML(stringify(expectedData))
-      expect(submittedData).toContainHTML(stringify(expectedData))
+      expect(formData).toContainHTML(stringify(expectedData, true))
+      expect(submittedData).toContainHTML(stringify(expectedData, true))
     })
   },
 }
@@ -284,8 +284,8 @@ export const CustomLabels: Story = {
         country: 'fr',
         size: 'lg',
       }
-      expect(formData).toContainHTML(stringify(expectedData))
-      expect(submittedData).toContainHTML(stringify(expectedData))
+      expect(formData).toContainHTML(stringify(expectedData, true))
+      expect(submittedData).toContainHTML(stringify(expectedData, true))
     })
   },
 }

@@ -1,10 +1,10 @@
-import { isBrowserEnvironment, Logger, nbHueMax, sleep } from '@monorepo/utils'
+import { isBrowserEnvironment, Logger, nbHueMax, sleep, stringify } from '@monorepo/utils'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { expect, userEvent, within } from 'storybook/test'
 import { z } from 'zod'
 import { AutoForm } from './auto-form'
-import { DebugData, stringify } from './debug-data'
+import { DebugData } from './debug-data'
 import { fileSchema } from './form-field-upload.const'
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? '3-info' : '5-warn' })
@@ -174,7 +174,7 @@ export const FileSchemaValidation: Story = {
       await sleep(nbHueMax)
       const errorMessage = canvas.getByTestId('document-error')
       expect(errorMessage).toHaveTextContent('File extension not allowed, accepted : pdf, jpg, png')
-      expect(formData).toContainHTML(stringify({ fileNameSelected: 'document.txt' }))
+      expect(formData).toContainHTML(stringify({ fileNameSelected: 'document.txt' }, true))
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).toBeDisabled()
     })
