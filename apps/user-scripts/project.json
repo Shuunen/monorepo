@@ -1,6 +1,14 @@
 {
   "name": "user-scripts",
   "targets": {
+    "lint": {
+      "cache": true,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bun ./bin/lint.cli.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
     "test": {
       "options": {
         "coverage.thresholds.100": false

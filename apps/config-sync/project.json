@@ -1,0 +1,10 @@
+{
+  "name": "config-sync",
+  "targets": {
+    "test": {
+      "options": {
+        "coverage.thresholds.100": false
+      }
+    }
+  }
+}

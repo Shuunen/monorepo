@@ -42,6 +42,9 @@
     },
     {
       "path": "./libs/vite-plugins"
+    },
+    {
+      "path": "./apps/config-sync"
     }
   ],
   "ts-node": {

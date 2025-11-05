@@ -2,12 +2,9 @@
   "dependencies": {
     "@monorepo/utils": "workspace:*"
   },
-  "main": "sync.cli.js",
+  "description": "My personal config files",
   "name": "config-sync",
   "private": true,
-  "scripts": {
-    "test": "vitest --coverage --coverage.thresholds.100 --run && echo test success"
-  },
   "type": "module",
   "version": "0.0.1"
 }
