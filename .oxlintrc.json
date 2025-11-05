@@ -106,6 +106,12 @@
       }
     },
     {
+      "files": ["*.schemas.ts", "*.schema.ts"],
+      "rules": {
+        "sort-keys": "off"
+      }
+    },
+    {
       "files": ["*.user.js"],
       "globals": {
         "addMbField": "readonly",

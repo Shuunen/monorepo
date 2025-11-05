@@ -1,31 +1,15 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, DebugData } from '@monorepo/components'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { Stepper } from './book-appointment/-stepper'
-import { bookingSteps } from './book-appointment/-steps.const'
-import { useBookAppointmentStore } from './book-appointment/-steps.store'
+import { AutoForm, mockSubmit, Title } from '@monorepo/components'
+import { createFileRoute } from '@tanstack/react-router'
+import { step1Schema, step2Schema } from './book-appointment.schemas'
 
 function RouteComponent() {
-  const { currentStep, data } = useBookAppointmentStore()
-
+  const onSubmit = () => mockSubmit('success', 'Appointment booked successfully!')
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-3xl font-bold text-primary my-4 text-center" data-testid="title">
+      <Title className="text-center" variant="primary">
         Book an appointment with Dr. Nicolas Johnrom
-      </h1>
-      <div className="flex mt-4">
-        <Stepper />
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>{bookingSteps[currentStep].title}</CardTitle>
-            <CardDescription>{bookingSteps[currentStep].description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Outlet />
-          </CardContent>
-          <CardFooter />
-        </Card>
-      </div>
-      <DebugData className="mt-4" data={data} />
+      </Title>
+      <AutoForm onSubmit={onSubmit} schemas={[step1Schema, step2Schema]} useSubmissionStep useSummaryStep />
     </div>
   )
 }

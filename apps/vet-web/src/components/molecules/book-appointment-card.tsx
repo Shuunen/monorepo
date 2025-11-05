@@ -6,7 +6,7 @@ export function BookAppointmentCard() {
   return (
     <BookCard
       buttonText="Book Now"
-      buttonTo="/book-appointment/step-1"
+      buttonTo="/book-appointment"
       description="Schedule a visit with our veterinary specialists"
       features={[
         {

@@ -1,5 +1,6 @@
 /** biome-ignore-all lint/style/useNamingConvention: it'ok here */
 /** biome-ignore-all assist/source/useSortedKeys: conflict with oxlint */
+import { z } from 'zod'
 import type { CodeVersionLabel } from './cvl.types.ts'
 import { cvlToSchema } from './cvl.utils'
 
@@ -10,3 +11,9 @@ export const ages = [
 ] as const satisfies CodeVersionLabel[]
 
 export const ageSchema = cvlToSchema(ages)
+
+export const ageInput = z.enum(ages.map(age => age.Code)).meta({
+  label: 'Age',
+  options: ages.map(age => ({ label: age.label, value: age.Code })),
+  placeholder: 'Select the age range',
+})
