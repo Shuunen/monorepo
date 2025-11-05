@@ -517,6 +517,46 @@ const schema = z.object({
 - Hidden fields are excluded from validation and submission
 - Works with checkboxes, selects, text inputs
 
+**Field Value Comparison Syntax:**
+
+Show fields only when another field has a specific value:
+
+```typescript
+const schema = z.object({
+  petType: z.enum(['dog', 'cat']).meta({
+    label: 'Pet Type',
+  }),
+
+  // Only visible when petType === 'dog'
+  exerciseRoutine: z.string().meta({
+    label: 'Exercise Routine',
+    dependsOn: 'petType=dog',
+  }),
+
+  // Only visible when petType === 'cat'
+  indoorSpace: z.string().meta({
+    label: 'Indoor Space',
+    dependsOn: 'petType=cat',
+  }),
+
+  // Visible when ownsParent is truthy (boolean or non-empty value)
+  parentName: z.string().meta({
+    label: 'Parent Name',
+    dependsOn: 'ownsParent',
+  }),
+})
+```
+
+**Syntax Options:**
+
+- `dependsOn: 'fieldName'` - Shows field when fieldName is truthy
+- `dependsOn: 'fieldName=value'` - Shows field when fieldName equals the exact string value
+
+Examples:
+- `dependsOn: 'knowsParent'` → hidden if knowsParent is false, empty, null, or undefined
+- `dependsOn: 'breed=dog'` → hidden unless breed field value equals "dog"
+- `dependsOn: 'breed=cat'` → hidden unless breed field value equals "cat"
+
 ---
 
 ### 2. Data Key Mapping

@@ -1,4 +1,4 @@
-import { getNested, Logger, nbPercentMax, Result, setNested, sleep } from '@monorepo/utils'
+import { getNested, Logger, nbPercentMax, Result, setNested, sleep, stringify } from '@monorepo/utils'
 import type { ReactNode } from 'react'
 import { z } from 'zod'
 import type { AutoFormFieldMetadata, AutoFormProps, AutoFormSubmissionStepProps, SelectOption } from './auto-form.types'
@@ -96,6 +96,23 @@ export function isZodFile(fieldSchema: z.ZodType) {
 }
 
 /**
+ * Parses a dependsOn string to extract field name and optional expected value.
+ * Supports formats like:
+ * - 'fieldName' - checks if fieldName is truthy
+ * - 'fieldName=value' - checks if fieldName equals value
+ * @param dependsOn the dependsOn string to parse
+ * @returns an object with fieldName and optional expectedValue
+ */
+export function parseDependsOn(dependsOn: string): { fieldName: string; expectedValue?: string } {
+  const equalsIndex = dependsOn.indexOf('=')
+  if (equalsIndex === -1) return { fieldName: dependsOn }
+  return {
+    expectedValue: dependsOn.slice(equalsIndex + 1),
+    fieldName: dependsOn.slice(0, equalsIndex),
+  }
+}
+
+/**
  * Determines whether a form field should be visible based on its schema metadata and the current form data.
  * @param fieldSchema the Zod schema for the field, which may contain metadata describing dependencies.
  * @param formData the current form data as a record of field names to values.
@@ -103,8 +120,13 @@ export function isZodFile(fieldSchema: z.ZodType) {
  */
 export function isFieldVisible(fieldSchema: z.ZodType, formData: Record<string, unknown>): boolean {
   const metadata = typeof fieldSchema?.meta === 'function' ? (fieldSchema.meta() as AutoFormFieldMetadata) : undefined
-  if (metadata?.dependsOn && !formData[metadata.dependsOn]) return false
-  return true
+  if (!metadata?.dependsOn) return true
+  const { fieldName, expectedValue } = parseDependsOn(metadata.dependsOn)
+  const fieldValue = formData[fieldName]
+  // If expectedValue is specified, check for equality
+  if (expectedValue !== undefined) return stringify(fieldValue) === expectedValue
+  // Otherwise, check for truthiness
+  return Boolean(fieldValue)
 }
 
 /**

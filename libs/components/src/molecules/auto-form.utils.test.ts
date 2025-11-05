@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { checkZodBoolean, cleanSubmittedData, filterSchema, getKeyMapping, getZodEnumOptions, isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber, mapExternalDataToFormFields } from './auto-form.utils'
+import { checkZodBoolean, cleanSubmittedData, filterSchema, getKeyMapping, getZodEnumOptions, isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber, mapExternalDataToFormFields, parseDependsOn } from './auto-form.utils'
 import { imageSchemaOptional, imageSchemaRequired } from './form-field-upload.const'
 
 describe('auto-form.utils', () => {
@@ -183,6 +183,50 @@ describe('auto-form.utils', () => {
   it('isFieldVisible E should handle meta returning undefined', () => {
     const schema = z.string()
     expect(isFieldVisible(schema, {})).toBe(true)
+  })
+  it('isFieldVisible F should handle field=value syntax with matching value', () => {
+    const schema = z.string().meta({ dependsOn: 'breed=dog', label: 'A' })
+    expect(isFieldVisible(schema, { breed: 'dog' })).toBe(true)
+  })
+  it('isFieldVisible G should handle field=value syntax with non-matching value', () => {
+    const schema = z.string().meta({ dependsOn: 'breed=dog', label: 'A' })
+    expect(isFieldVisible(schema, { breed: 'cat' })).toBe(false)
+  })
+  it('isFieldVisible H should handle field=value syntax with missing field', () => {
+    const schema = z.string().meta({ dependsOn: 'breed=dog', label: 'A' })
+    expect(isFieldVisible(schema, {})).toBe(false)
+  })
+  it('isFieldVisible I should handle field=value syntax with numeric values', () => {
+    const schema = z.string().meta({ dependsOn: 'age=5', label: 'A' })
+    expect(isFieldVisible(schema, { age: 5 })).toBe(true)
+  })
+
+  // parseDependsOn
+  it('parseDependsOn A should parse simple field name', () => {
+    const result = parseDependsOn('fieldName')
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "fieldName": "fieldName",
+      }
+    `)
+  })
+  it('parseDependsOn B should parse field=value syntax', () => {
+    const result = parseDependsOn('breed=dog')
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "expectedValue": "dog",
+        "fieldName": "breed",
+      }
+    `)
+  })
+  it('parseDependsOn C should handle field names with special characters', () => {
+    const result = parseDependsOn('userEmail=test@example.com')
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "expectedValue": "test@example.com",
+        "fieldName": "userEmail",
+      }
+    `)
   })
 
   // filterSchema
