@@ -38,6 +38,15 @@ type TitleProps = VariantProps<typeof titleVariants> & {
   level?: 1 | 2 | 3
 }
 
+/**
+ * Title component for headings
+ * @param props the props for the Title component
+ * @param props.children the content of the title
+ * @param props.level the level of the title (1, 2, or 3), default is 1
+ * @param props.variant the variant of the title (default, muted, primary, secondary)
+ * @param props.className additional class names to apply to the title
+ * @returns a styled title component
+ */
 export function Title({ children, level = 1, variant = 'default', className = '' }: TitleProps) {
   const Tag = `h${level}` as keyof JSX.IntrinsicElements
   return (
