@@ -39,11 +39,24 @@ jobs:
           cache: "pnpm"
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps
+      - run: pnpm exec playwright install # --with-deps
       - uses: nrwl/nx-set-shas@v4
 
       # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
       # - run: pnpm exec nx-cloud record -- echo Hello World
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       # When you enable task distribution, run the e2e-ci task instead of e2e
+      - run: nx run components:typecheck --skip-nx-cache && echo components ok
+      - run: nx run config-sync:typecheck --skip-nx-cache && echo config-sync ok
+      - run: nx run image-compare:typecheck --skip-nx-cache && echo image-compare ok
+      - run: nx run jozzo:typecheck --skip-nx-cache && echo jozzo ok
+      - run: nx run recipes:typecheck --skip-nx-cache && echo recipes ok
+      - run: nx run regex-converter:typecheck --skip-nx-cache && echo regex-converter ok
+      - run: nx run sample-web-app-e2e:typecheck --skip-nx-cache && echo sample-web-app-e2e ok
+      - run: nx run sample-web-app:typecheck --skip-nx-cache && echo sample-web-app ok
+      - run: nx run stuff-finder:typecheck --skip-nx-cache && echo stuff-finder ok
+      - run: nx run user-scripts:typecheck --skip-nx-cache && echo user-scripts ok
+      - run: nx run utils:typecheck --skip-nx-cache && echo utils ok
+      - run: nx run vet-web:typecheck --skip-nx-cache && echo vet-web ok
+      - run: nx run vite-plugins:typecheck --skip-nx-cache && echo vite-plugins ok
       - run: pnpm check
