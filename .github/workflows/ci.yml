@@ -46,17 +46,17 @@ jobs:
       # - run: pnpm exec nx-cloud record -- echo Hello World
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       # When you enable task distribution, run the e2e-ci task instead of e2e
-      - run: pnpm exec nx run components:typecheck --skip-nx-cache && echo components ok
-      - run: pnpm exec nx run config-sync:typecheck --skip-nx-cache && echo config-sync ok
-      - run: pnpm exec nx run image-compare:typecheck --skip-nx-cache && echo image-compare ok
-      - run: pnpm exec nx run jozzo:typecheck --skip-nx-cache && echo jozzo ok
-      - run: pnpm exec nx run recipes:typecheck --skip-nx-cache && echo recipes ok
-      - run: pnpm exec nx run regex-converter:typecheck --skip-nx-cache && echo regex-converter ok
-      - run: pnpm exec nx run sample-web-app-e2e:typecheck --skip-nx-cache && echo sample-web-app-e2e ok
-      - run: pnpm exec nx run sample-web-app:typecheck --skip-nx-cache && echo sample-web-app ok
-      - run: pnpm exec nx run stuff-finder:typecheck --skip-nx-cache && echo stuff-finder ok
-      - run: pnpm exec nx run user-scripts:typecheck --skip-nx-cache && echo user-scripts ok
-      - run: pnpm exec nx run utils:typecheck --skip-nx-cache && echo utils ok
-      - run: pnpm exec nx run vet-web:typecheck --skip-nx-cache && echo vet-web ok
-      - run: pnpm exec nx run vite-plugins:typecheck --skip-nx-cache && echo vite-plugins ok
+      - run: pnpm exec nx run components:typecheck && echo typecheck components ok ✅
+      - run: pnpm exec nx run config-sync:typecheck && echo typecheck config-sync ok ✅
+      - run: pnpm exec nx run image-compare:typecheck && echo typecheck image-compare ok ✅
+      - run: pnpm exec nx run jozzo:typecheck && echo typecheck jozzo ok ✅
+      - run: pnpm exec nx run recipes:typecheck && echo typecheck recipes ok ✅
+      - run: pnpm exec nx run regex-converter:typecheck && echo typecheck regex-converter ok ✅
+      - run: pnpm exec nx run sample-web-app-e2e:typecheck && echo typecheck sample-web-app-e2e ok ✅
+      - run: pnpm exec nx run sample-web-app:typecheck && echo typecheck sample-web-app ok ✅
+      - run: pnpm exec nx run stuff-finder:typecheck && echo typecheck stuff-finder ok ✅
+      - run: pnpm exec nx run user-scripts:typecheck && echo typecheck user-scripts ok ✅
+      - run: pnpm exec nx run utils:typecheck && echo typecheck utils ok ✅
+      - run: pnpm exec nx run vet-web:typecheck && echo typecheck vet-web ok ✅
+      - run: pnpm exec nx run vite-plugins:typecheck && echo typecheck vite-plugins ok ✅
       - run: pnpm check
