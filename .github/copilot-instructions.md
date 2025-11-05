@@ -15,7 +15,7 @@
 
 ## Architecture Overview
 
-This is an **Nx monorepo** using **pnpm** workspace management with a mix of React/Preact web applications, Node.js utilities, and shared libraries. The core architectural pattern is:
+This is an **Nx monorepo** using **pnpm** workspace management with React web applications, Node.js utilities, and shared libraries. The core architectural pattern is:
 
 - **`libs/utils`**: Central utility library providing DOM helpers, state management, logging, and all kind of utilities
 - **`libs/vite-plugins`**: Custom Vite plugins for build tooling
@@ -28,18 +28,16 @@ This is an **Nx monorepo** using **pnpm** workspace management with a mix of Rea
 
 ```typescript
 // Always import from the workspace utils library
-import { Logger, createState, tw, dom } from '@monorepo/utils'
+import { Logger, createState, cn, dom } from '@monorepo/utils'
 
 // Use workspace protocol for internal dependencies
 "@monorepo/utils": "workspace:*"
 ```
 
-### Component Architecture (React/Preact Apps)
+### Component Architecture (React Apps)
 
-- **Preact** is preferred over React for smaller bundle sizes
 - Components use functional style with hooks: `useState`, `useCallback`, `useMemo`
-- Lazy loading pattern: `const AsyncPage = lazy(() => import('./page').then(({ Page }) => ({ default: Page })))`
-- **TailwindCSS** for styling with **ShadCn** components preferred over pre-built libraries like Material-UI
+- **TailwindCSS** for styling 
 - Page components follow `PageXxx` naming
 
 ### State Management
@@ -102,8 +100,7 @@ nx run-many -t build     # Build all projects
 ### Web Applications (`apps/stuff-finder`, `apps/jozzo`, etc.)
 
 - Use **Vite** for bundling with **@vitejs/plugin-react** 
-- **Preact** with **TailwindCSS** and **ShadCn** components
-- Router: `preact-router` with lazy-loaded pages
+- **React** with **TailwindCSS** and **ShadCn** components
 - Database: **Appwrite** for backend services
 - State: Custom lightweight state management via `@monorepo/utils`
 
@@ -139,7 +136,7 @@ nx run-many -t build     # Build all projects
 ### Internal Libraries
 
 - Import utilities from `@monorepo/utils` rather than implementing locally
-- Use `tw()` helper for TailwindCSS class composition
+- Use `cn()` helper for TailwindCSS class composition
 - Leverage `Logger` class for consistent logging across all projects
 - Use `createState()` for reactive state management in web apps
 - Use components from `@monorepo/components` for UI consistency
