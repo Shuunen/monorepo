@@ -27,7 +27,9 @@ It might be related to a corrupted node_modules folder, clean the related folder
 Here for example we will clean components node_modules and re-run the same command :
 
 ```bash
-rm libs/components/node_modules/ -rf
+rm ./node_modules/ -rf
+rm apps/*/node_modules/ -rf
+rm libs/*/node_modules/ -rf
 pnpm install
 nx run components:test
 ```
