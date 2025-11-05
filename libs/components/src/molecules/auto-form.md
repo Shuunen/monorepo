@@ -251,11 +251,6 @@ agreeTerms: z.boolean().meta({
   placeholder: 'Must be checked to continue',
 }),
 
-// Step name for multi-step forms
-email: z.email().meta({
-  label: 'Email Address',
-  step: 'Contact Information',  // Shows in stepper
-}),
 ```
 
 ---
@@ -439,33 +434,37 @@ z.object({
 Use an array of schemas to create multi-step forms with automatic navigation:
 
 ```typescript
+// Step 1: Personal Information
 const step1Schema = z.object({
   firstName: z.string().meta({
     label: 'First Name',
-    step: 'Personal Information',
   }),
   lastName: z.string().meta({
     label: 'Last Name',
-    step: 'Personal Information',
   }),
+}).meta({
+  step: '1. Personal Information',  // Step label on schema object
 })
 
+// Step 2: Contact Details
 const step2Schema = z.object({
   email: z.email().meta({
     label: 'Email Address',
-    step: 'Contact Details',
   }),
   phone: z.string().meta({
     label: 'Phone Number',
-    step: 'Contact Details',
   }),
+}).meta({
+  step: '2. Contact Details',  // Step label on schema object
 })
 
+// Step 3: Confirmation
 const step3Schema = z.object({
   agreeToTerms: z.boolean().meta({
     label: 'I agree to Terms & Conditions',
-    step: 'Confirmation',
   }),
+}).meta({
+  step: '3. Confirmation',  // Step label on schema object
 })
 
 <AutoForm

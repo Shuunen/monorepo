@@ -39,6 +39,16 @@ export type AutoFormProps = {
 }
 
 /**
+ * Metadata describing the configuration and behavior of a step in an auto-generated multi-step form.
+ * Applied to the schema object itself using `.meta()`.
+ * example: `z.object({ ... }).meta({ step: '1. Personal Information' })`
+ */
+export type AutoFormStepMetadata = {
+  /** The display label for this step, shown in the stepper and as the section heading. */
+  step: string
+}
+
+/**
  * Metadata describing the configuration and behavior of a field in an auto-generated form.
  * example: `z.string().meta({ label: 'First Name', placeholder: 'Enter your first name', state: 'editable' })`
  */
@@ -49,12 +59,10 @@ export type AutoFormFieldMetadata = {
   placeholder?: string
   /** The interaction state of the field. */
   state?: 'editable' | 'readonly' | 'disabled'
-  /** The name of another field that this field depends on. */
+  /** The name of another field that this field depends on. Supports field=value syntax for specific value checks. */
   dependsOn?: string
   /** Whether the field should be excluded from the form. */
   excluded?: boolean
-  /** An optional step name if the form is multi-step. */
-  step?: string
   /** Key mapping for both input and output data. Equivalent to setting both keyIn and keyOut. */
   key?: string
   /** Key to map initial data input. Used when loading data from external sources. */

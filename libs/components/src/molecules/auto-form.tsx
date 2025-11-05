@@ -9,7 +9,7 @@ import { IconEdit } from '../icons/icon-edit'
 import { IconHome } from '../icons/icon-home'
 import { IconReadonly } from '../icons/icon-readonly'
 import { IconSuccess } from '../icons/icon-success'
-import type { AutoFormProps, AutoFormSubmissionStepProps } from './auto-form.types'
+import type { AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps } from './auto-form.types'
 import { cleanSubmittedData, defaultLabels, filterSchema, mapExternalDataToFormFields } from './auto-form.utils'
 import { AutoFormFields } from './auto-form-fields'
 import { AutoFormNavigation } from './auto-form-navigation'
@@ -146,8 +146,8 @@ export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger
   }
   // Step states and icons
   const steps = schemas.map((schema, idx) => {
-    const schemaMeta = typeof schema.meta === 'function' ? schema.meta() : undefined
-    const label = schemaMeta?.step ? String(schemaMeta.step) : `Step ${idx + 1}`
+    const schemaMeta = typeof schema.meta === 'function' ? (schema.meta() as AutoFormStepMetadata) : undefined
+    const label = schemaMeta?.step ?? `Step ${idx + 1}`
     const allReadonly = Object.values(schema.shape).every(
       // @ts-expect-error type issue
       (zodField: { meta: () => AutoFormFieldMetadata }) => zodField.meta()?.state === 'readonly',
@@ -169,7 +169,7 @@ export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger
     }
   })
   // Get current step label for rendering above fields
-  const currentStepLabel = (typeof currentSchema.meta === 'function' ? currentSchema.meta()?.step : undefined) ?? undefined
+  const currentStepLabel = (typeof currentSchema.meta === 'function' ? (currentSchema.meta() as AutoFormStepMetadata | undefined)?.step : undefined) ?? undefined
   const stepTitle = typeof currentStepLabel === 'string' ? currentStepLabel : ''
   // Check if all schemas are valid to enable/disable submit button
   const isFormValid = useMemo(
