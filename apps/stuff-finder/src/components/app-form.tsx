@@ -70,7 +70,10 @@ export function AppForm<FormType extends Form>({ children, error: parentError = 
   useEffect(() => {
     // oxlint-disable-next-line max-nested-callbacks
     const handler = on('focus', () => checkDataInClipboard().then(result => logger.result('clipboard data checked on focus', result)))
-    if (document.hasFocus()) checkDataInClipboard().then(result => logger.result('clipboard data checked on initial focus', result))
+    if (document.hasFocus())
+      checkDataInClipboard()
+        .then(result => logger.result('clipboard data checked on initial focus', result))
+        .catch(error => logger.error(`failed to check clipboard data on initial focus :`, error))
     return () => off(handler)
   }, [checkDataInClipboard])
 

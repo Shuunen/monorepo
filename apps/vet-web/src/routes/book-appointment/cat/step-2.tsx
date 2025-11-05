@@ -7,6 +7,7 @@ import { FormFileUpload } from '../../../components/molecules/form-file-upload.j
 import { documentAccept, documentFileSchema } from '../../../components/molecules/form-file-upload.utils'
 import { useBookAppointmentStore } from '../../../routes/book-appointment/-steps.store'
 import { useFormChangeDetector } from '../../../utils/form.utils'
+import { logger } from '../../../utils/logger.utils.js'
 // oxlint-disable-next-line max-dependencies
 import { type CatComplementaryData, catComplementaryDataSchema, hasAccess, vaccinationStatuses } from '../-steps.utils'
 
@@ -18,7 +19,7 @@ function CatComplementaryDataForm() {
   useEffect(() => {
     const step = 1
     const check = hasAccess(step, 'cat', data)
-    if (!check.ok) navigate({ to: '/book-appointment/step-1' })
+    if (!check.ok) navigate({ to: '/book-appointment/step-1' }).catch(error => logger.error(`failed to navigate to /book-appointment/step-1 :`, error))
     setCurrentStep(step)
   }, [data, navigate, setCurrentStep])
 
@@ -30,7 +31,7 @@ function CatComplementaryDataForm() {
   })
 
   const onSubmit = () => {
-    navigate({ to: '/book-appointment/step-3' })
+    navigate({ to: '/book-appointment/step-3' }).catch(error => logger.error(`failed to navigate to /book-appointment/step-3 :`, error))
   }
 
   useFormChangeDetector(form, setCatComplementaryData)

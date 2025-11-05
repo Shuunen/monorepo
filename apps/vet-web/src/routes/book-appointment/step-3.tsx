@@ -15,7 +15,7 @@ function SummaryPage() {
   useEffect(() => {
     const step = 2
     const check = hasAccess(step, variant, data)
-    if (!check.ok) navigate({ to: `/book-appointment/${variant}/step-2` })
+    if (!check.ok) navigate({ to: `/book-appointment/${variant}/step-2` }).catch(error => logger.error(`failed to navigate to /book-appointment/${variant}/step-2 :`, error))
     setCurrentStep(step)
   }, [variant, data, navigate, setCurrentStep])
 

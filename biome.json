@@ -10,8 +10,15 @@
       }
     }
   },
+  "css": {
+    "formatter": {
+      "enabled": true
+    },
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
   "files": {
-    "experimentalScannerIgnores": [".git", ".nx", "coverage", "dist", "node_modules", "out-tsc", "shadcn", "storybook-static", "test-output"],
     "ignoreUnknown": false,
     "includes": ["**", "!**/.git", "!**/.nx", "!**/coverage", "!**/dist", "!**/node_modules", "!**/out-tsc", "!**/routeTree.gen.ts", "!**/shadcn", "!**/storybook-static", "!**/test-output", "!**/types/**/*.d.ts"]
   },
@@ -106,11 +113,24 @@
       }
     },
     {
+      "includes": ["**/routes/**/*.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useComponentExportOnlyModules": "off"
+          }
+        }
+      }
+    },
+    {
       "includes": ["**/*.stories.tsx"],
       "linter": {
         "rules": {
           "performance": {
             "useTopLevelRegex": "off"
+          },
+          "style": {
+            "useComponentExportOnlyModules": "off"
           }
         }
       }

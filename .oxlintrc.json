@@ -260,6 +260,7 @@
       }
     ],
     "no-ternary": "off",
+    "no-unassigned-import": "off",
     "no-void": "off",
     "no-warning-comments": "off",
     "number-literal-case": "off",

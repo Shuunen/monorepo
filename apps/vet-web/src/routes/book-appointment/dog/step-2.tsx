@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { FormFileUpload } from '../../../components/molecules/form-file-upload'
 import { documentAccept, documentFileSchema } from '../../../components/molecules/form-file-upload.utils'
 import { useFormChangeDetector } from '../../../utils/form.utils'
+import { logger } from '../../../utils/logger.utils'
 import { useBookAppointmentStore } from '../-steps.store'
 import { type DogComplementaryData, dogComplementaryDataSchema, hasAccess } from '../-steps.utils'
 
@@ -17,7 +18,7 @@ function DogComplementaryDataForm() {
   useEffect(() => {
     const step = 1
     const check = hasAccess(step, 'dog', data)
-    if (!check.ok) navigate({ to: '/book-appointment/step-1' })
+    if (!check.ok) navigate({ to: '/book-appointment/step-1' }).catch(error => logger.error(`failed to navigate to /book-appointment/step-1 :`, error))
     setCurrentStep(step)
   }, [data, navigate, setCurrentStep])
 
@@ -29,7 +30,7 @@ function DogComplementaryDataForm() {
   })
 
   const onSubmit = () => {
-    navigate({ to: '/book-appointment/step-3' })
+    navigate({ to: '/book-appointment/step-3' }).catch(error => logger.error(`failed to navigate to /book-appointment/step-3 :`, error))
   }
 
   useFormChangeDetector(form, setDogComplementaryData)
