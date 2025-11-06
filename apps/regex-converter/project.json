@@ -1,0 +1,6 @@
+{
+  "name": "regex-converter",
+  "targets": {
+    "tsgoc": {}
+  }
+}

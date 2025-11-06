@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "composite": true,
     "customConditions": ["development"],
     "declarationMap": true,
@@ -16,9 +15,9 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "paths": {
-      "@monorepo/components": ["libs/components/src/index.ts"],
-      "@monorepo/utils": ["libs/utils/src/index.ts"],
-      "@monorepo/vite-plugins": ["libs/vite-plugins/src/index.js"]
+      "@monorepo/components": ["./libs/components/src/index.ts"],
+      "@monorepo/utils": ["./libs/utils/src/index.ts"],
+      "@monorepo/vite-plugins": ["./libs/vite-plugins/src/index.js"]
     },
     "skipLibCheck": true,
     "strict": true,

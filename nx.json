@@ -22,9 +22,22 @@
     }
   },
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
-    "production": ["default", "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)", "!{projectRoot}/tsconfig.spec.json", "!{projectRoot}/src/test-setup.[jt]s", "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)", "!{projectRoot}/.storybook/**/*", "!{projectRoot}/tsconfig.storybook.json"],
-    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
+    "production": [
+      "default",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/src/test-setup.[jt]s",
+      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+      "!{projectRoot}/.storybook/**/*",
+      "!{projectRoot}/tsconfig.storybook.json"
+    ],
+    "sharedGlobals": [
+      "{workspaceRoot}/.github/workflows/ci.yml"
+    ]
   },
   "nxCloudId": "684693bbd6342c28b0159958",
   "plugins": [
@@ -85,12 +98,22 @@
   ],
   "targetDefaults": {
     "dev": {
-      "dependsOn": ["^list"]
+      "dependsOn": [
+        "^list"
+      ]
     },
     "test": {
       "options": {
         "coverage": true,
         "coverage.thresholds.100": true
+      }
+    },
+    "tsgoc": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "options": {
+        "command": "tsgo --noEmit --project tsconfig.app.json",
+        "cwd": "{projectRoot}"
       }
     }
   },
