@@ -1,7 +1,14 @@
+import { camelToKebabCase, slugify } from '@monorepo/utils'
+import type { ComponentProps } from 'react'
 import { Switch as ShadSwitch } from '../shadcn/switch'
 
-export function Switch(props: React.ComponentProps<typeof ShadSwitch>) {
+type SwitchProps = ComponentProps<typeof ShadSwitch> & {
+  testId?: string
+}
+
+export function Switch({ ...props }: SwitchProps) {
+  const testId = props.testId || slugify(camelToKebabCase(props.name || 'switch'))
   let classes = props.className ?? ''
   if (!props.disabled) classes = classes.concat(' cursor-pointer')
-  return <ShadSwitch {...props} className={classes} />
+  return <ShadSwitch data-testid={testId} {...props} className={classes} />
 }
