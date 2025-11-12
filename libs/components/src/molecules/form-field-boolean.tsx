@@ -1,6 +1,6 @@
 import type { z } from 'zod'
-import { Checkbox } from '../atoms/checkbox'
 import { FormControl, FormDescription } from '../atoms/form'
+import { Switch } from '../atoms/switch'
 import type { AutoFormFieldMetadata } from './auto-form.types'
 import { checkZodBoolean } from './auto-form.utils'
 import { FormFieldBase, type FormFieldBaseProps } from './form-field'
@@ -17,7 +17,7 @@ export function FormFieldBoolean({ fieldName, fieldSchema, formData, isOptional,
     <FormFieldBase {...props}>
       {field => (
         <div className="flex gap-2 mt-2">
-          <FormControl>{isBooleanLiteral ? <Checkbox {...field} checked={booleanLiteralValue === true} disabled /> : <Checkbox {...field} checked={!!field.value} disabled={isDisabled} onCheckedChange={field.onChange} />}</FormControl>
+          <FormControl>{isBooleanLiteral ? <Switch {...field} checked={booleanLiteralValue === true} disabled /> : <Switch {...field} checked={!!field.value} disabled={isDisabled} onCheckedChange={field.onChange} />}</FormControl>
           {placeholder && <FormDescription>{placeholder}</FormDescription>}
         </div>
       )}
