@@ -593,6 +593,26 @@ export const MultiStep: Story = {
   },
 }
 
+/**
+ * Multi-step form starting at the last step with showLastStep prop.
+ * Useful when you want users to review or modify the final step without going through previous steps.
+ */
+export const ShowLastStep: Story = {
+  args: {
+    initialData: {
+      email: 'mary.jane@example.com',
+      name: 'Mary Jane',
+    },
+    schemas: [step1Schema, step2Schema, step3Schema],
+    showLastStep: true,
+  },
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const firstStepTrigger = canvas.queryByRole('button', { name: 'Step 1' })
+    expect(firstStepTrigger).toHaveAttribute('data-state', 'success')
+  },
+}
+
 const optionalSectionStep1Schema = z
   // biome-ignore assist/source/useSortedKeys: we need a specific key order here
   .object({
@@ -600,9 +620,14 @@ const optionalSectionStep1Schema = z
       label: 'Full Name',
       placeholder: 'Enter your legal name',
     }),
-    age: z.number().min(0).max(120).optional().meta({
-      label: 'Age',
-      placeholder: 'Enter your age',
+    favoriteColor: z.enum(['red', 'green', 'blue']).optional().meta({
+      label: 'Favorite Color',
+      placeholder: 'Select your favorite color',
+    }),
+    isHacker: z.boolean().meta({
+      dependsOn: 'favoriteColor=green', // this field depends on favoriteColor being "green"
+      label: 'Are you a hacker ?',
+      placeholder: 'Check if you are a hacker',
     }),
   })
   .meta({
@@ -646,6 +671,7 @@ export const OptionalSection: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
+    const canvasBody = within(canvasElement.ownerDocument.body)
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('fill name', async () => {
@@ -653,6 +679,23 @@ export const OptionalSection: Story = {
       expect(step1Title).toHaveTextContent('My infos')
       const nameInput = canvas.getByTestId('name')
       await userEvent.type(nameInput, 'Austin Dow')
+    })
+    await step('filling favoriteColor to see if hacker question appears', async () => {
+      expect(canvas.queryByTestId('is-hacker')).not.toBeInTheDocument()
+      const favoriteColorTrigger = canvas.getByTestId('favorite-color-trigger')
+      await userEvent.click(favoriteColorTrigger)
+      const favoriteColorOptions = await canvasBody.findAllByRole('option')
+      await userEvent.click(favoriteColorOptions[1]) // select "green"
+      const isHackerCheckbox = await canvas.findByTestId('is-hacker')
+      expect(isHackerCheckbox).toBeVisible()
+      await userEvent.click(isHackerCheckbox)
+      expect(formData).toContainHTML('"isHacker": true')
+      await userEvent.click(favoriteColorTrigger)
+      // oxlint-disable-next-line no-await-expression-member
+      await userEvent.click((await canvasBody.findAllByRole('option'))[0]) // select "red"
+      expect(canvas.queryByTestId('is-hacker')).not.toBeInTheDocument()
+    })
+    await step('go to step 2', async () => {
       const nextButton = canvas.getByRole('button', { name: 'Next' })
       await userEvent.click(nextButton)
       const step2Title = canvas.getByTestId('step-title')
@@ -670,10 +713,10 @@ export const OptionalSection: Story = {
     await step('succeed at submitting without pet', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
-      // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+      // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
       const expectedData = {
         name: 'Paul Doughy',
-        age: 14,
+        favoriteColor: 'red',
       }
       expect(formData).toContainHTML(stringify(expectedData, true))
       expect(submittedData).toContainHTML(stringify(expectedData, true))
@@ -696,10 +739,10 @@ export const OptionalSection: Story = {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
-      // biome-ignore assist/source/useSortedKeys: we need a specific key order here
+      // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
       const expectedData = {
         name: 'Paul Doughy',
-        age: 14,
+        favoriteColor: 'red',
         petName: 'Fido',
       }
       expect(formData).toContainHTML(stringify(expectedData, true))
@@ -714,10 +757,10 @@ export const OptionalSection: Story = {
       await userEvent.click(submitButton)
     })
     step('verify submitted data', () => {
-      // biome-ignore assist/source/useSortedKeys: we need a specific key order here
-      expect(formData).toContainHTML(stringify({ name: 'Paul Doughy', age: 14, petName: 'Fido' }, true))
-      // biome-ignore assist/source/useSortedKeys: we need a specific key order here
-      expect(submittedData).toContainHTML(stringify({ name: 'Paul Doughy', age: 14 }, true))
+      // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
+      expect(formData).toContainHTML(stringify({ name: 'Paul Doughy', favoriteColor: 'red' }, true))
+      // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
+      expect(submittedData).toContainHTML(stringify({ name: 'Paul Doughy', favoriteColor: 'red' }, true))
     })
   },
 }
@@ -771,7 +814,7 @@ export const StepperStates: Story = {
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('fill step 1', async () => {
       const currentStepButton = canvas.getByTestId('step-my-infos')
-      expect(currentStepButton).toHaveAttribute('data-state', 'editable')
+      expect(currentStepButton).toHaveAttribute('data-state', 'success')
       const nameInput = canvas.getByTestId('name')
       expect(nameInput).toHaveValue('Jane Doe')
       await userEvent.type(nameInput, '-Rollin')

@@ -23,6 +23,10 @@ export type AutoFormProps = {
   // oxlint-enable no-explicit-any
   /** Whether to show the form inside a card layout, default is true */
   showCard?: boolean
+  /** Whether to automatically show the last available step on form load, default is false */
+  showLastStep?: boolean
+  /** Whether to force show the stepper menu. If undefined, shows menu only when multiple steps exist. If true, always shows menu. If false, never shows menu. */
+  showMenu?: boolean
   /** Custom labels for form buttons and actions */
   labels?: {
     /** Label for the back to home button on submission step, default is "Return to Homepage" */

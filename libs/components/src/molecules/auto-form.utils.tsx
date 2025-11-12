@@ -1,7 +1,7 @@
 import { getNested, Logger, nbPercentMax, Result, setNested, sleep, stringify } from '@monorepo/utils'
 import type { ReactNode } from 'react'
 import { z } from 'zod'
-import type { AutoFormFieldMetadata, AutoFormProps, AutoFormSubmissionStepProps, SelectOption } from './auto-form.types'
+import type { AutoFormFieldMetadata, AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps, SelectOption } from './auto-form.types'
 
 /**
  * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
@@ -11,9 +11,7 @@ import type { AutoFormFieldMetadata, AutoFormProps, AutoFormSubmissionStepProps,
  * @returns the array of enum options as {label, value} objects
  */
 export function getZodEnumOptions(fieldSchema: z.ZodType) {
-  let metadata: AutoFormFieldMetadata | undefined = undefined
-  /* v8 ignore else -- @preserve */
-  if (typeof fieldSchema.meta === 'function') metadata = fieldSchema.meta() as AutoFormFieldMetadata | undefined
+  const metadata = getFieldMetadata(fieldSchema)
   if (metadata?.options) return Result.ok(metadata.options)
   let rawOptions: string[] = []
   if (fieldSchema.type === 'enum') rawOptions = (fieldSchema as z.ZodEnum).options as string[]
@@ -119,7 +117,7 @@ export function parseDependsOn(dependsOn: string): { fieldName: string; expected
  * @returns `true` if the field should be visible; `false` otherwise.
  */
 export function isFieldVisible(fieldSchema: z.ZodType, formData: Record<string, unknown>): boolean {
-  const metadata = typeof fieldSchema?.meta === 'function' ? (fieldSchema.meta() as AutoFormFieldMetadata) : undefined
+  const metadata = getFieldMetadata(fieldSchema)
   if (!metadata?.dependsOn) return true
   const { fieldName, expectedValue } = parseDependsOn(metadata.dependsOn)
   const fieldValue = formData[fieldName]
@@ -170,8 +168,7 @@ export function mapExternalDataToFormFields(schema: z.ZodObject, externalData: R
   const result: Record<string, unknown> = {}
   for (const fieldName of Object.keys(shape)) {
     const fieldSchema = shape[fieldName] as z.ZodTypeAny
-    /* v8 ignore next -- @preserve: fieldSchema from shape iteration cannot be null/undefined */
-    const metadata = typeof fieldSchema?.meta === 'function' ? (fieldSchema.meta() as AutoFormFieldMetadata) : undefined
+    const metadata = getFieldMetadata(fieldSchema)
     const { keyIn } = getKeyMapping(metadata)
     // Use keyIn if provided, otherwise use field name
     const sourceKey = keyIn ?? fieldName
@@ -189,16 +186,15 @@ export function mapExternalDataToFormFields(schema: z.ZodObject, externalData: R
  * Also applies keyOut mapping to convert field names back to external data format.
  * @param schema - The Zod schema object describing the form fields.
  * @param data - The submitted data object to be cleaned.
- * @param formData - The current form data, used to determine field visibility.
  * @returns A new object containing only the fields that are visible and not excluded according to the schema, with keyOut mappings applied.
  */
-export function cleanSubmittedData(schema: z.ZodObject, data: Record<string, unknown>, formData: Record<string, unknown>): Record<string, unknown> {
+export function normalizeDataForSchema(schema: z.ZodObject, data: Record<string, unknown>): Record<string, unknown> {
   const shape = schema.shape
   const result: Record<string, unknown> = {}
   for (const [key, value] of Object.entries(data)) {
     const fieldSchema = shape[key] as z.ZodTypeAny
-    const metadata = typeof fieldSchema?.meta === 'function' ? (fieldSchema.meta() as AutoFormFieldMetadata) : undefined
-    if (!isFieldVisible(fieldSchema, formData)) continue
+    const metadata = getFieldMetadata(fieldSchema)
+    if (!isFieldVisible(fieldSchema, data)) continue
     if (metadata?.excluded) continue
     // Apply keyOut mapping if provided
     const { keyOut } = getKeyMapping(metadata)
@@ -208,6 +204,18 @@ export function cleanSubmittedData(schema: z.ZodObject, data: Record<string, unk
     else result[outputKey] = value
   }
   return result
+}
+
+/**
+ * Cleans form data across all schemas by removing invisible/excluded fields from each schema.
+ * @param schemas - Array of Zod schemas to clean data against
+ * @param data - The form data to clean
+ * @returns Cleaned data with invisible/excluded fields removed
+ */
+export function normalizeData(schemas: z.ZodObject[], data: Record<string, unknown>): Record<string, unknown> {
+  let cleanedData = data
+  for (const schema of schemas) cleanedData = normalizeDataForSchema(schema, cleanedData)
+  return cleanedData
 }
 
 /**
@@ -244,3 +252,23 @@ export const defaultLabels = {
   previousStep: 'Back',
   summaryStepButton: 'Proceed',
 } satisfies AutoFormProps['labels']
+
+/**
+ * Gets metadata from a Zod field schema if it exists.
+ * @param fieldSchema - The Zod schema to extract metadata from
+ * @returns The metadata object or undefined if not present
+ */
+export function getFieldMetadata(fieldSchema?: z.ZodType): AutoFormFieldMetadata | undefined {
+  if (!fieldSchema || typeof fieldSchema.meta !== 'function') return undefined
+  return fieldSchema.meta() as AutoFormFieldMetadata
+}
+
+/**
+ * Gets step metadata from a Zod object schema if it exists.
+ * @param stepSchema - The Zod object schema to extract metadata from
+ * @returns The step metadata object or undefined if not present
+ */
+export function getStepMetadata(stepSchema: z.ZodObject): AutoFormStepMetadata | undefined {
+  if (typeof stepSchema.meta !== 'function') return undefined
+  return stepSchema.meta() as AutoFormStepMetadata
+}
