@@ -10,14 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as BookCleaningRouteImport } from './routes/book-cleaning'
 import { Route as BookAppointmentRouteImport } from './routes/book-appointment'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BookCleaningIndexRouteImport } from './routes/book-cleaning/index'
 
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookCleaningRoute = BookCleaningRouteImport.update({
+  id: '/book-cleaning',
+  path: '/book-cleaning',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookAppointmentRoute = BookAppointmentRouteImport.update({
@@ -35,33 +40,28 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BookCleaningIndexRoute = BookCleaningIndexRouteImport.update({
-  id: '/book-cleaning/',
-  path: '/book-cleaning/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/book-appointment': typeof BookAppointmentRoute
+  '/book-cleaning': typeof BookCleaningRoute
   '/contact': typeof ContactRoute
-  '/book-cleaning': typeof BookCleaningIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/book-appointment': typeof BookAppointmentRoute
+  '/book-cleaning': typeof BookCleaningRoute
   '/contact': typeof ContactRoute
-  '/book-cleaning': typeof BookCleaningIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/book-appointment': typeof BookAppointmentRoute
+  '/book-cleaning': typeof BookCleaningRoute
   '/contact': typeof ContactRoute
-  '/book-cleaning/': typeof BookCleaningIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -69,25 +69,25 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/book-appointment'
-    | '/contact'
     | '/book-cleaning'
+    | '/contact'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/book-appointment' | '/contact' | '/book-cleaning'
+  to: '/' | '/about' | '/book-appointment' | '/book-cleaning' | '/contact'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/book-appointment'
+    | '/book-cleaning'
     | '/contact'
-    | '/book-cleaning/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   BookAppointmentRoute: typeof BookAppointmentRoute
+  BookCleaningRoute: typeof BookCleaningRoute
   ContactRoute: typeof ContactRoute
-  BookCleaningIndexRoute: typeof BookCleaningIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -97,6 +97,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book-cleaning': {
+      id: '/book-cleaning'
+      path: '/book-cleaning'
+      fullPath: '/book-cleaning'
+      preLoaderRoute: typeof BookCleaningRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book-appointment': {
@@ -120,13 +127,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/book-cleaning/': {
-      id: '/book-cleaning/'
-      path: '/book-cleaning'
-      fullPath: '/book-cleaning'
-      preLoaderRoute: typeof BookCleaningIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -134,8 +134,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   BookAppointmentRoute: BookAppointmentRoute,
+  BookCleaningRoute: BookCleaningRoute,
   ContactRoute: ContactRoute,
-  BookCleaningIndexRoute: BookCleaningIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

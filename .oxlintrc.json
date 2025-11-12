@@ -106,8 +106,17 @@
       }
     },
     {
-      "files": ["*.schemas.ts", "*.schema.ts"],
+      "files": ["*.schemas.ts", "schemas.ts"],
       "rules": {
+        "sort-keys": "off"
+      }
+    },
+    {
+      "files": ["*.machine.ts", "machine.ts"],
+      "rules": {
+        "ban-types": "off",
+        "func-names": "off",
+        "no-empty-object-type": "off",
         "sort-keys": "off"
       }
     },

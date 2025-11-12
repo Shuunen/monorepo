@@ -9,6 +9,7 @@
 - [Medical Interface for Lovable Furballs](#medical-interface-for-lovable-furballs)
   - [Goal](#goal)
   - [Demo](#demo)
+  - [Tools](#tools)
   - [Todo](#todo)
   - [Structure](#structure)
   - [Examples](#examples)
@@ -34,12 +35,20 @@ This webapp aims to enhance the daily operations of veterinary clinics, making p
 
 ![demo](docs/design-0.0.0.jpg)
 
+Online demo: [https://vet-web-app.netlify.app](https://vet-web-app.netlify.app/)
+
+## Tools
+
+- [XState visualizer & editor](https://stately.ai/registry/editor)
+
 ## Todo
 
-- [ ] TanStack routing, branching in forms, xstate ?
-- [ ] Test grpc-web
 - [ ] Compare Zustand with other state management libraries
 - [ ] Performance monitoring (lighthouse)
+- [ ] Enhance summary with labels instead of keys
+- [ ] Handle CVL format
+- [ ] Handle step metadata like : date: 'form.userDate => YYYY-MM-DD'
+- [ ] Handle step metadata like : { section: 'Section B', title: '2. Dog Details', subtitle: 'fill in your dog details' }
 
 ## Structure
 
