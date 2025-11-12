@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { cn } from '@monorepo/utils'
+import { cn, debounce } from '@monorepo/utils'
 import { Link } from '@tanstack/react-router'
-import { type MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { type MouseEvent, useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { Button } from '../atoms/button'
 import { Form } from '../atoms/form'
@@ -9,8 +9,8 @@ import { IconEdit } from '../icons/icon-edit'
 import { IconHome } from '../icons/icon-home'
 import { IconReadonly } from '../icons/icon-readonly'
 import { IconSuccess } from '../icons/icon-success'
-import type { AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps } from './auto-form.types'
-import { cleanSubmittedData, defaultLabels, filterSchema, mapExternalDataToFormFields } from './auto-form.utils'
+import type { AutoFormProps, AutoFormSubmissionStepProps } from './auto-form.types'
+import { defaultLabels, filterSchema, getFieldMetadata, getStepMetadata, mapExternalDataToFormFields, normalizeData } from './auto-form.utils'
 import { AutoFormFields } from './auto-form-fields'
 import { AutoFormNavigation } from './auto-form-navigation'
 import { AutoFormStepper } from './auto-form-stepper'
@@ -35,15 +35,17 @@ import { AutoFormSummaryStep } from './auto-form-summary-step'
  * @param props.useSummaryStep whether to include a summary step before submission
  * @param props.useSubmissionStep whether to include a submission step after form submission
  * @param props.showCard whether to show the form inside a card layout
+ * @param props.showLastStep whether to automatically show the last available step on form load
+ * @param props.showMenu whether to force show the stepper menu, if undefined shows menu only when multiple steps exist
  * @param props.labels custom labels for form buttons and actions
  * @returns the AutoForm component
  */
 // oxlint-disable-next-line max-lines-per-function
-export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, labels }: AutoFormProps) {
-  const [currentStep, setCurrentStep] = useState(0)
+export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, showLastStep = false, showMenu, labels }: AutoFormProps) {
+  const [currentStep, setCurrentStep] = useState(showLastStep ? schemas.length - 1 : 0)
   const [showSummary, setShowSummary] = useState(false)
   const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined)
-  const mappedInitialData = useMemo(() => {
+  const defaultValues = useMemo(() => {
     const allMappedData: Record<string, unknown> = {}
     for (const schema of schemas) {
       const schemaMappedData = mapExternalDataToFormFields(schema, initialData)
@@ -51,82 +53,61 @@ export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger
     }
     return allMappedData
   }, [schemas, initialData])
-  const [formData, setFormData] = useState<Record<string, unknown>>(mappedInitialData)
+  const [formData, setFormData] = useState<Record<string, unknown>>(defaultValues)
   const currentSchema = schemas[currentStep]
   const isLastStep = currentStep === schemas.length - 1
-  const filteredSchema = useMemo(() => filterSchema(currentSchema, formData), [currentSchema, formData])
   const finalLabels = { ...defaultLabels, ...labels }
-  const form = useForm({
-    defaultValues: formData,
-    mode: 'onBlur',
-    resolver: zodResolver(filteredSchema),
-  })
+  const form = useForm({ defaultValues, mode: 'onBlur', resolver: zodResolver(filterSchema(currentSchema, formData)) })
   // Find a way to reset the form when schema changes.
-  // useEffect(() => {
-  //   form.reset(formData)
-  // }, [formData, form])
-  // Remove excluded fields from the submitted data
-  const cleanData = useCallback((data: Record<string, unknown>) => cleanSubmittedData(currentSchema, data, formData), [currentSchema, formData])
+  // useEffect(() => { form.reset(formData) }, [formData, form])
   // Watch all form values and sync with formData
   const watchedValues = useWatch({ control: form.control })
   // biome-ignore lint/correctness/useExhaustiveDependencies: cannot add all dependencies because it causes infinite loop
   useEffect(() => {
     if (!watchedValues) return
-    const updatedData = { ...formData, ...watchedValues }
-    setFormData(updatedData)
-    if (onChange) onChange(cleanData(updatedData))
+    void updateFormData()
   }, [watchedValues])
-
+  /**
+   * Update form data state and call onChange callback if provided
+   */
+  function updateFormDataSync() {
+    const updatedData = { ...formData, ...form.getValues() }
+    logger?.info('updateFormData', updatedData)
+    setFormData(updatedData)
+    if (onChange) onChange(normalizeData(schemas, updatedData))
+  }
+  const updateFormData = debounce(updateFormDataSync, 1)
   /**
    * Handle submission for the current step of a multi-step form
    * @param data partial form values for the current step as a Record<string, unknown>
    * @returns void
    */
-  function handleStepSubmit(data: Record<string, unknown>) {
-    logger?.info('Step form submitted', data)
-    const updatedData = { ...formData, ...data }
+  function handleStepSubmit() {
+    logger?.info('Step form submitted')
     if (isLastStep && useSummaryStep) setShowSummary(true)
-    else if (isLastStep) void handleFinalSubmit(updatedData)
+    else if (isLastStep) void handleFinalSubmit()
     else setCurrentStep(prev => prev + 1)
   }
   /**
    * Handle final submission after all steps are complete
    * @param data the complete form data
    */
-  async function handleFinalSubmit(data: Record<string, unknown>) {
-    const cleanedData = cleanData(data)
+  async function handleFinalSubmit() {
     if (!onSubmit) return
-    if (useSubmissionStep) {
-      const result = await onSubmit(cleanedData)
-      if (result?.submission) setSubmissionProps(result.submission)
-    } else await onSubmit(cleanedData)
-  }
-  /**
-   * Handle proceed button click in summary step
-   */
-  function handleSummaryProceed() {
-    void handleFinalSubmit(formData)
-  }
-  /**
-   * Handle form data change
-   */
-  function handleChange() {
-    const updatedData = { ...formData, ...form.getValues() }
-    logger?.info('Form changed', updatedData)
-    setFormData(updatedData)
-    if (onChange) onChange(cleanData(updatedData))
+    const cleanedData = normalizeData(schemas, { ...formData, ...form.getValues() })
+    logger?.info('Final form submitted', cleanedData)
+    const result = await onSubmit(cleanedData)
+    if (useSubmissionStep) setSubmissionProps(result.submission)
   }
   /**
    * Handle next button click
    * @param event optional mouse event
+   * @returns Promise<void>
    */
   function handleNext(event?: MouseEvent) {
     event?.preventDefault() // Prevent any default button behavior
-    const currentValues = form.getValues()
-    const updatedData = { ...formData, ...currentValues }
-    setFormData(updatedData)
-    if (onChange) onChange(cleanData(updatedData))
     setCurrentStep(prev => prev + 1)
+    return updateFormData()
   }
   // Handle back button
   function handleBack() {
@@ -146,16 +127,11 @@ export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger
   }
   // Step states and icons
   const steps = schemas.map((schema, idx) => {
-    const schemaMeta = typeof schema.meta === 'function' ? (schema.meta() as AutoFormStepMetadata) : undefined
-    const label = schemaMeta?.step ?? `Step ${idx + 1}`
-    const allReadonly = Object.values(schema.shape).every(
-      // @ts-expect-error type issue
-      (zodField: { meta: () => AutoFormFieldMetadata }) => zodField.meta()?.state === 'readonly',
-    )
+    const stepMetadata = getStepMetadata(schema)
+    const label = stepMetadata?.step ?? `Step ${idx + 1}`
+    const allReadonly = Object.values(schema.shape).every(fieldSchema => getFieldMetadata(fieldSchema)?.state === 'readonly')
     const filtered = filterSchema(schema, formData)
-    const stepFieldsTouched = Object.keys(schema.shape).some(fieldName => form.formState.touchedFields[fieldName])
-    const isStepValid = filtered.safeParse(formData).success
-    const isSuccess = isStepValid && stepFieldsTouched
+    const isSuccess = filtered.safeParse(formData).success
     /* oxlint-disable no-nested-ternary */
     const state = allReadonly ? ('readonly' as const) : isSuccess ? ('success' as const) : ('editable' as const)
     const icon = allReadonly ? <IconReadonly key="readonly" /> : isSuccess ? <IconSuccess key="success" /> : <IconEdit key="editable" />
@@ -169,7 +145,7 @@ export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger
     }
   })
   // Get current step label for rendering above fields
-  const currentStepLabel = (typeof currentSchema.meta === 'function' ? (currentSchema.meta() as AutoFormStepMetadata | undefined)?.step : undefined) ?? undefined
+  const currentStepLabel = getStepMetadata(currentSchema)?.step
   const stepTitle = typeof currentStepLabel === 'string' ? currentStepLabel : ''
   // Check if all schemas are valid to enable/disable submit button
   const isFormValid = useMemo(
@@ -182,6 +158,7 @@ export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger
   )
   const isSubmitDisabled = !isFormValid
   const isStepperDisabled = submissionProps?.status === 'success'
+  const shouldShowStepper = showMenu === undefined ? schemas.length > 1 : showMenu
   function renderContent() {
     if (submissionProps) {
       const showBackButton = submissionProps.status === 'error' || submissionProps.status === 'unknown-error'
@@ -205,13 +182,13 @@ export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger
     if (showSummary)
       return (
         <>
-          <AutoFormSummaryStep data={cleanData(formData)} />
-          <AutoFormNavigation leftButton={{ disabled: false, onClick: handleBack }} rightButton={{ disabled: false, label: finalLabels.summaryStepButton, onClick: handleSummaryProceed, testId: 'summary-proceed' }} />
+          <AutoFormSummaryStep data={formData} />
+          <AutoFormNavigation leftButton={{ disabled: false, onClick: handleBack }} rightButton={{ disabled: false, label: finalLabels.summaryStepButton, onClick: handleFinalSubmit, testId: 'summary-proceed' }} />
         </>
       )
     return (
       <Form {...form}>
-        <form onChange={handleChange} onSubmit={form.handleSubmit(handleStepSubmit)}>
+        <form onChange={updateFormData} onSubmit={form.handleSubmit(handleStepSubmit)}>
           <AutoFormFields formData={formData} logger={logger} schema={currentSchema} stepTitle={stepTitle} />
           <AutoFormNavigation
             leftButton={currentStep > 0 ? { disabled: false, onClick: handleBack } : undefined}
@@ -223,7 +200,7 @@ export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger
   }
   return (
     <div className={cn('mx-auto w-full flex min-w-2xl', { 'p-6 bg-white rounded-lg shadow-md': showCard })}>
-      {schemas.length > 1 && <AutoFormStepper disabled={isStepperDisabled} onStepClick={handleStepClick} steps={steps} />}
+      {shouldShowStepper && <AutoFormStepper disabled={isStepperDisabled} onStepClick={handleStepClick} steps={steps} />}
       <div className="flex-1">{renderContent()}</div>
     </div>
   )

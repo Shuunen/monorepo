@@ -1,5 +1,6 @@
+import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { checkZodBoolean, cleanSubmittedData, filterSchema, getKeyMapping, getZodEnumOptions, isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber, mapExternalDataToFormFields, parseDependsOn } from './auto-form.utils'
+import { checkZodBoolean, filterSchema, getKeyMapping, getZodEnumOptions, isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber, mapExternalDataToFormFields, normalizeDataForSchema, parseDependsOn } from './auto-form.utils'
 import { imageSchemaOptional, imageSchemaRequired } from './form-field-upload.const'
 
 describe('auto-form.utils', () => {
@@ -244,8 +245,8 @@ describe('auto-form.utils', () => {
     expect(filtered2.shape).not.toHaveProperty('b')
   })
 
-  // cleanSubmittedData
-  it('cleanSubmittedData A should remove excluded fields and invisible fields', () => {
+  // normalizeDataForSchema
+  it('normalizeDataForSchema A should remove excluded fields and invisible fields', () => {
     const shape = {
       a: z.string().meta({ label: 'A' }),
       b: z.string().meta({ excluded: true, label: 'B' }),
@@ -253,32 +254,26 @@ describe('auto-form.utils', () => {
     }
     const schema = z.object(shape)
     const data = { a: 'foo', b: 'bar', c: 'baz' }
-    const cleaned = cleanSubmittedData(schema, data, { a: 'foo' })
+    const cleaned = normalizeDataForSchema(schema, data)
     expect(cleaned).toMatchInlineSnapshot(`
       {
         "a": "foo",
         "c": "baz",
       }
     `)
-    const cleaned2 = cleanSubmittedData(schema, data, {})
-    expect(cleaned2).toMatchInlineSnapshot(`
-      {
-        "a": "foo",
-      }
-    `)
   })
-  it('cleanSubmittedData B should handle missing fieldSchema and metadata', () => {
+  it('normalizeDataForSchema B should handle missing fieldSchema and metadata', () => {
     const schema = z.object({})
     const data = { x: 1 }
-    expect(cleanSubmittedData(schema, data, {})).toEqual({ x: 1 })
+    expect(normalizeDataForSchema(schema, data)).toEqual({ x: 1 })
   })
-  it('cleanSubmittedData C should apply keyOut mapping when provided', () => {
+  it('normalizeDataForSchema C should apply keyOut mapping when provided', () => {
     const schema = z.object({
       anotherField: z.string().meta({ label: 'Another' }),
       internalName: z.string().meta({ keyOut: 'externalName', label: 'Name' }),
     })
     const data = { anotherField: 'bar', internalName: 'foo' }
-    const cleaned = cleanSubmittedData(schema, data, {})
+    const cleaned = normalizeDataForSchema(schema, data)
     expect(cleaned).toMatchInlineSnapshot(`
       {
         "anotherField": "bar",
@@ -286,15 +281,57 @@ describe('auto-form.utils', () => {
       }
     `)
   })
-  it('cleanSubmittedData D should use key mapping for both in and out when key is provided', () => {
+  it('normalizeDataForSchema D should use key mapping for both in and out when key is provided', () => {
     const schema = z.object({
       internalName: z.string().meta({ key: 'mappedName', label: 'Name' }),
     })
     const data = { internalName: 'foo' }
-    const cleaned = cleanSubmittedData(schema, data, {})
+    const cleaned = normalizeDataForSchema(schema, data)
     expect(cleaned).toMatchInlineSnapshot(`
       {
         "mappedName": "foo",
+      }
+    `)
+  })
+  it('normalizeDataForSchema E should handle nested key mapping with dots in keyOut', () => {
+    const schema = z.object({
+      userEmail: z.string().meta({ keyOut: 'user.contact.email', label: 'Email' }),
+      userName: z.string().meta({ keyOut: 'user.info.name', label: 'Name' }),
+    })
+    const data = {
+      userEmail: 'jane@example.com',
+      userName: 'Jane Doe',
+    }
+    const result = normalizeDataForSchema(schema, data)
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "user": {
+          "contact": {
+            "email": "jane@example.com",
+          },
+          "info": {
+            "name": "Jane Doe",
+          },
+        },
+      }
+    `)
+  })
+  it('normalizeDataForSchema F should handle mixed nested and flat key mappings', () => {
+    const schema = z.object({
+      age: z.number().meta({ label: 'Age' }),
+      userEmail: z.string().meta({ keyOut: 'user.email', label: 'Email' }),
+    })
+    const data = {
+      age: 30,
+      userEmail: 'test@example.com',
+    }
+    const result = normalizeDataForSchema(schema, data)
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "age": 30,
+        "user": {
+          "email": "test@example.com",
+        },
       }
     `)
   })
@@ -469,48 +506,6 @@ describe('auto-form.utils', () => {
     expect(result).toMatchInlineSnapshot(`
       {
         "userEmail": "test@example.com",
-      }
-    `)
-  })
-  it('cleanSubmittedData E should handle nested key mapping with dots in keyOut', () => {
-    const schema = z.object({
-      userEmail: z.string().meta({ keyOut: 'user.contact.email', label: 'Email' }),
-      userName: z.string().meta({ keyOut: 'user.info.name', label: 'Name' }),
-    })
-    const data = {
-      userEmail: 'jane@example.com',
-      userName: 'Jane Doe',
-    }
-    const result = cleanSubmittedData(schema, data, {})
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "user": {
-          "contact": {
-            "email": "jane@example.com",
-          },
-          "info": {
-            "name": "Jane Doe",
-          },
-        },
-      }
-    `)
-  })
-  it('cleanSubmittedData F should handle mixed nested and flat key mappings', () => {
-    const schema = z.object({
-      age: z.number().meta({ label: 'Age' }),
-      userEmail: z.string().meta({ keyOut: 'user.email', label: 'Email' }),
-    })
-    const data = {
-      age: 30,
-      userEmail: 'test@example.com',
-    }
-    const result = cleanSubmittedData(schema, data, {})
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "age": 30,
-        "user": {
-          "email": "test@example.com",
-        },
       }
     `)
   })
