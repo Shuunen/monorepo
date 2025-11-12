@@ -33,12 +33,14 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.2",
-    "@storybook/addon-coverage": "^2.0.0",
-    "@vitest/browser": "^4.0.1",
-    "@vitest/browser-playwright": "^4.0.1",
+    "@storybook/addon-coverage": "^3.0.0",
+    "@vitest/browser": "^4.0.8",
+    "@vitest/browser-playwright": "^4.0.8",
+    "@storybook/addon-vitest": "10.0.7",
+    "@storybook/react-vite": "10.0.7",
     "playwright": "^1.56.1",
-    "storybook": "10.0.4",
-    "vitest": "~4.0.1"
+    "storybook": "^10.0.7",
+    "vitest": "^4.0.8"
   },
   "exports": {
     ".": "./src/index.ts",
