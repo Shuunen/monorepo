@@ -9,9 +9,9 @@ const titleVariants = cva('font-semibold tracking-tight', {
   },
   variants: {
     level: {
-      1: 'text-xl font-bold',
-      2: 'text-lg',
-      3: 'text-md',
+      1: 'text-2xl font-bold',
+      2: 'text-xl',
+      3: 'text-lg',
     },
     variant: {
       default: 'text-foreground',
