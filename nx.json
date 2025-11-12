@@ -92,6 +92,9 @@
         "coverage": true,
         "coverage.thresholds.100": true
       }
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
     }
   },
   "tui": {
