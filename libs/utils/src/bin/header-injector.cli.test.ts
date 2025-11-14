@@ -11,7 +11,7 @@ const fs = await import('node:fs')
 const mod = await import('./header-injector.cli.js')
 
 function mockFileContent(path: string): string {
-  if (path === 'a.ts') return '/* HEADER */\nconsole.log(1)'
+  if (path === 'a.ts') return '// HEADER\nconsole.log(1)'
   return 'console.log(2)'
 }
 
@@ -30,14 +30,14 @@ describe('header-injector.cli.ts', () => {
     vi.mocked(glob.default).mockResolvedValue(['a.ts', 'b.ts'])
     vi.mocked(fs.readFileSync).mockImplementation((...args: unknown[]) => mockFileContent(args[0] as string))
     const writeSpy = vi.mocked(fs.writeFileSync)
-    const result = await mod.main(['node', 'script', '--header=/* HEADER */'])
+    const result = await mod.main(['node', 'script', '--header=HEADER'])
     expect(result.ok).toBe(true)
     if (!result.ok) return
     const metrics = result.value
     expect(metrics.hasHeader, 'B hasHeader').toBe(1)
     expect(metrics.noHeader, 'B noHeader').toBe(1)
     expect(metrics.nbFixed, 'B nbFixed').toBe(1)
-    expect(writeSpy).toHaveBeenCalledWith('b.ts', '/* HEADER */\nconsole.log(2)')
+    expect(writeSpy).toHaveBeenCalledWith('b.ts', '// HEADER\nconsole.log(2)')
   })
 
   it('main C should count skipped when write fails', async () => {
