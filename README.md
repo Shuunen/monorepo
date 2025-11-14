@@ -4,6 +4,20 @@
 
 ![logo](docs/banner.svg)
 
+## Prerequisites
+
+- Enable pnpm once with `corepack enable pnpm`
+- Select the typescript version of the workspace (>=5.9.3)
+  - ctrl-shift-P: select typescript version: Use workspace version
+
+## Installing and starting the app
+
+```bash
+npm install nx --global
+pnpm install
+nx dev sample-web-app
+```
+
 ## Todo
 
 - [ ] remove `noUndeclaredDependencies: "off"` from `biome.json` when Biome supports monorepo, for no it's reporting falsy undeclared dependencies
