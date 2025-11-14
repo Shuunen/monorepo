@@ -99,20 +99,16 @@ export const WithInitialValue: Story = {
     const numberInput = canvas.getByTestId('quantity') as HTMLInputElement
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
-
     await step('verify initial value is displayed', () => {
       expect(numberInput).toHaveValue(10)
     })
-
     await step('verify form data shows initial number', () => {
       expect(formData).toContainHTML(stringify({ quantity: 10 }, true))
     })
-
     await step('submit form with initial value', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
     })
-
     await step('verify submitted data matches initial value', () => {
       expect(submittedData).toContainHTML(stringify({ quantity: 10 }, true))
     })

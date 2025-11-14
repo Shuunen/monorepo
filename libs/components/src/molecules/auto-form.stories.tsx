@@ -936,7 +936,7 @@ export const NestedKeyMapping: Story = {
     const canvas = within(canvasElement)
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
-    step('verify initial data was mapped correctly', () => {
+    await step('verify initial data was mapped correctly', () => {
       const emailInput = canvas.getByTestId('user-email')
       expect(emailInput).toHaveValue('jane.doe@example.com')
       const nameInput = canvas.getByTestId('user-name')
@@ -960,7 +960,7 @@ export const NestedKeyMapping: Story = {
       expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
     })
-    step('verify submitted data uses nested output paths', () => {
+    await step('verify submitted data uses nested output paths', () => {
       const expectedData = { userInfos: { email: 'new.email@example.com', fullName: 'John Smith' } }
       expect(formData).toContainHTML(stringify(expectedData, true))
       expect(submittedData).toContainHTML(stringify(expectedData, true))
