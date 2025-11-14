@@ -10,10 +10,10 @@ import { removeAccents } from './string-remove-accents.js'
 export function sanitize(sentence: string, willLower = true) {
   const text = removeAccents(sentence)
     .trim() // remove leading and trailing spaces
-    .replace(/<[^<>]*>/gu, ' ') // remove any tags
-    .replace(/[/'’.-]/gu, ' ') // replace separators with spaces
-    .replace(/[^\d\sa-z]/giu, '') // remove remaining non-alphanumeric characters
-    .replace(/\s+/gu, ' ') // replace multiple spaces with one
+    .replaceAll(/<[^<>]*>/gu, ' ') // remove any tags
+    .replaceAll(/[/'’.-]/gu, ' ') // replace separators with spaces
+    .replaceAll(/[^\d\sa-z]/giu, '') // remove remaining non-alphanumeric characters
+    .replaceAll(/\s+/gu, ' ') // replace multiple spaces with one
     .trim() // final trim
   return willLower ? text.toLowerCase() : text
 }
@@ -26,7 +26,7 @@ export function sanitize(sentence: string, willLower = true) {
 export function slugify(string: string) {
   return (
     sanitize(string) // Clean the string
-      .replace(/\W+/giu, '-') // Replace all non word with dash
+      .replaceAll(/\W+/giu, '-') // Replace all non word with dash
       // biome-ignore lint/performance/useTopLevelRegex: it's fine
       .replace(/^-*/u, '') // Trim dash from start
       // biome-ignore lint/performance/useTopLevelRegex: it's fine
@@ -136,8 +136,8 @@ export function isString(value: unknown) {
  */
 export function injectMark(content: string, placeholder: string, mark: string) {
   return content
-    .replace(new RegExp(`__${placeholder}__`, 'gu'), mark)
-    .replace(new RegExp(`{{1,2} ?${placeholder} ?}{1,2}`, 'g'), mark)
+    .replaceAll(new RegExp(`__${placeholder}__`, 'gu'), mark)
+    .replaceAll(new RegExp(`{{1,2} ?${placeholder} ?}{1,2}`, 'g'), mark)
     .replace(new RegExp(`(<[a-z]+ .*id="${placeholder}"[^>]*>)[^<]*(</[a-z]+>)`, 'u'), `$1${mark}$2`)
     .replace(new RegExp(`(<meta name="${placeholder}" content=")[^"]*(")`, 'u'), `$1${mark}$2`)
     .replace(new RegExp(`(<meta content=")[^"]*(") name="${placeholder}"`, 'u'), `$1${mark}$2`)

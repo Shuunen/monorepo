@@ -212,7 +212,7 @@ function base64ToString(string_) {
  * @returns {string} the cleaned CPU name
  */
 function cleanCpuName(name) {
-  return name.replace(/amd|ryzen \d|core i\d-|gold|intel|pentium|pro|silver/giu, '').trim()
+  return name.replaceAll(/amd|ryzen \d|core i\d-|gold|intel|pentium|pro|silver/giu, '').trim()
 }
 
 const data = `AMD Ryzen 3 5125C	3 %
@@ -446,7 +446,7 @@ function LaptopHelper() {
   function checkItems() {
     for (const descElement of utils.findAll(selectors.desc, document, true)) {
       descElement.classList.add(cls.mark)
-      descElement.innerHTML = descElement.innerHTML.replace(/&nbsp;/gu, '')
+      descElement.innerHTML = descElement.innerHTML.replaceAll('&nbsp;', '')
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       utils.log('checking :', text)
       descElement.innerHTML = descElement.innerHTML.replace(keywordRegex, match => `<span class="${cls.mark}" style="display: inline-block" data-keyword="${match.replace('"', '”')}">${match}</span>`)

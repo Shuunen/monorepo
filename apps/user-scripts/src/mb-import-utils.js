@@ -12,7 +12,7 @@ function textFromSelector(selector, context) {
   if (!element) return ''
   // @ts-expect-error it's ok
   const text = element.textContent || element.value || element.src || ''
-  return text.trim().replace(/^\W+/gu, '').replace(/\W+$/gu, '')
+  return text.trim().replaceAll(/^\W+/gu, '').replaceAll(/\W+$/gu, '')
 }
 
 /**

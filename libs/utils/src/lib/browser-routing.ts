@@ -6,7 +6,7 @@ import { isBrowserEnvironment } from './environment.js'
  * @returns Cleaned URL
  */
 function removeExtraSlashes(url: string) {
-  return url.replace(/\/{2,}/gu, '/')
+  return url.replaceAll(/\/{2,}/gu, '/')
 }
 
 /**

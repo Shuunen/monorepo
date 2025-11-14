@@ -46,7 +46,7 @@ function getProgressBackground(percent: number) {
 function showProgressBackground(percent: number) {
   logger.info(`show progress background for ${percent}%`)
   const target = getProgressBackground(percent)
-  document.body.className = document.body.className.replace(/from-\w+-\d+ to-\w+-\d+/giu, target)
+  document.body.className = document.body.className.replaceAll(/from-\w+-\d+ to-\w+-\d+/giu, target)
 }
 
 function showProgressSync(percent: number) {

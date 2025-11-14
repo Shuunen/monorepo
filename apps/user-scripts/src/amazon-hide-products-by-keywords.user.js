@@ -145,7 +145,7 @@ function AmazonHideProductsByKeywords() {
    * @param {MouseEvent} event - The click event
    */
   function onSuggestionClick(event) {
-    const suggestion = event.target.textContent.replace(/\W/gu, '') // regex avoid caching the plus sign
+    const suggestion = event.target.textContent.replaceAll(/\W/gu, '') // regex avoid caching the plus sign
     utils.log('user wants to add suggestion', suggestion)
     app.excluders.push(suggestion)
     onExcludersUpdate()

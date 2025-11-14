@@ -8,7 +8,7 @@ import { Result } from './result.js'
  */
 export function toBase64(str: string) {
   // oxlint-disable-next-line id-length
-  return globalThis.btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16))))
+  return globalThis.btoa(encodeURIComponent(str).replaceAll(/%([0-9A-F]{2})/g, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16))))
 }
 
 /**

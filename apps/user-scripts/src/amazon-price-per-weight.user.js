@@ -187,7 +187,7 @@ function AmazonPricePerWeight() {
       let value = data[key]
       if (key.includes('price') && value > 0) value = priceFloatToString(value)
       // utils.log('looking for', str)
-      tpl = tpl.replace(new RegExp(string, 'giu'), value)
+      tpl = tpl.replaceAll(new RegExp(string, 'giu'), value)
     }
     return tpl
   }

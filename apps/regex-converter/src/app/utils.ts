@@ -5,7 +5,7 @@ export function applyRules(text: string, rules: Rule[]) {
   for (const rule of rules) {
     if (!rule.enabled) continue
     try {
-      result = result.replace(new RegExp(rule.pattern, 'g'), rule.replacement)
+      result = result.replaceAll(new RegExp(rule.pattern, 'g'), rule.replacement)
     } catch {
       // ignore invalid regex
     }

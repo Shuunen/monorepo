@@ -11,7 +11,7 @@ function alignForSnap(content: string) {
   return (
     content
       // clear the hash from the file name
-      .replace(/(?<name>[a-z]{3,30})-[a-z\d]+(?<ext>\.js)/giu, '$<name>$<ext>')
+      .replaceAll(/(?<name>[a-z]{3,30})-[a-z\d]+(?<ext>\.js)/giu, '$<name>$<ext>')
       // align the location of the imports
       .replaceAll('libs/utils/', '')
   )

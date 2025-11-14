@@ -10,7 +10,7 @@ import { itemToLocation } from './item.utils'
 function itemToPrintText(item: Item) {
   return [item.name, item.brand, item.details]
     .join(' ')
-    .replace(/\s{2,}/gu, ' ')
+    .replaceAll(/\s{2,}/gu, ' ')
     .trim()
 }
 

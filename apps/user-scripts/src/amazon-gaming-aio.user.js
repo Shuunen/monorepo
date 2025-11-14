@@ -22,9 +22,9 @@ function cleanDlcName(name = '') {
   return (
     name
       .normalize('NFD')
-      .replace(/[\u0300-\u036F]/gu, '') // remove accents
-      .replace(/\W/gu, ' ') // remove non word characters
-      .replace(/\s+/gu, ' ') // remove multiple spaces
+      .replaceAll(/[\u0300-\u036F]/gu, '') // remove accents
+      .replaceAll(/\W/gu, ' ') // remove non word characters
+      .replaceAll(/\s+/gu, ' ') // remove multiple spaces
       .trim() // remove leading and trailing spaces
       .toLowerCase() || '' // lowercase
   )

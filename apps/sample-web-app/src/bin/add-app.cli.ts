@@ -13,7 +13,7 @@ const appName = process.argv.slice()[nbThird]
 
 function copyFile(sourceFile: string, targetFile: string, appName: string): void {
   const content = readFileSync(sourceFile, 'utf8')
-  const updatedContent = content.replace(/sample-web-app/g, appName)
+  const updatedContent = content.replaceAll('sample-web-app', appName)
   const dir = dirname(targetFile)
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true })
   writeFileSync(targetFile, updatedContent)

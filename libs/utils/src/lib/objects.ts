@@ -78,5 +78,5 @@ export function genClass(object: GenClassTypes | GenClassTypes[] | Record<string
   else if (typeof object !== 'object') list.unshift(...String(object).split(' '))
   else if (Array.isArray(object)) list.unshift(...object.filter(Boolean).join(' ').split(' '))
   else genClassObjectKeys(object, keys, list)
-  return arrayUnique(list.map(String)).join(' ').trim().replace(/\s+/gu, ' ')
+  return arrayUnique(list.map(String)).join(' ').trim().replaceAll(/\s+/gu, ' ')
 }

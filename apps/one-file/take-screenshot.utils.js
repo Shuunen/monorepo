@@ -65,7 +65,7 @@ export function parseUserInput(userInput) {
   const secondsBase = Number.parseInt(secondsMaybe || minutesOrSeconds, 10)
   const minutesBase = secondsMaybe === '' ? 0 : Number.parseInt(minutesOrSeconds, 10)
   // oxlint-disable-next-line no-nested-ternary, no-magic-numbers
-  const modulo = moduloMaybe === '' ? (moduloMarker === '' ? 0 : 5) : Number.parseInt(moduloMaybe.replace(/\D/gu, ''), 10)
+  const modulo = moduloMaybe === '' ? (moduloMarker === '' ? 0 : 5) : Number.parseInt(moduloMaybe.replaceAll(/\D/gu, ''), 10)
   return getTargets(modulo, minutesBase, secondsBase)
 }
 
@@ -100,10 +100,10 @@ export function readableSize(size) {
  */
 export function getScreenshotFilename(totalSeconds, metadata) {
   const { duration, height, size, title } = metadata
-  const screenName = `${[title.replace(/\./gu, ' '), readableDuration(totalSeconds), readableSize(size), `${height}p`, readableDuration(duration)].join(' ').trim()}.jpg`
+  const screenName = `${[title.replaceAll(String.raw`\.`, ' '), readableDuration(totalSeconds), readableSize(size), `${height}p`, readableDuration(duration)].join(' ').trim()}.jpg`
 
   // replace un-authorized characters in filename
-  return screenName.replace(/\s?["*/:<>?\\|]+\s?/gu, ' ').replace(/\s+/gu, ' ')
+  return screenName.replaceAll(/\s?["*/:<>?\\|]+\s?/gu, ' ').replaceAll(/\s+/gu, ' ')
 }
 
 /**

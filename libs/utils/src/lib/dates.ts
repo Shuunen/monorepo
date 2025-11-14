@@ -38,7 +38,7 @@ export function dateIso10(date: Readonly<Date> = new Date()) {
  */
 export function formatDate(date: Readonly<Date>, format: string, locale = 'en-US') {
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: cant be simplified ^^
-  return format.replace(/y{4}|yy|M{4}|MM|dd|d|e{4}|e{3}|HH|mm|ss|\s/gu, match => {
+  return format.replaceAll(/y{4}|yy|M{4}|MM|dd|d|e{4}|e{3}|HH|mm|ss|\s/gu, match => {
     if (match === 'yyyy') return date.toLocaleDateString(locale, { year: 'numeric' })
     if (match === 'yy') return date.toLocaleDateString(locale, { year: '2-digit' })
     if (match === 'MMMM') return date.toLocaleDateString(locale, { month: 'long' })

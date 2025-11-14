@@ -85,7 +85,7 @@ export function clean(content, linesAfter, linesMatching, shouldClearSpaces = tr
  */
 /* v8 ignore next -- @preserve */
 export function normalizePathWithSlash(filepath, shouldUseTilde = false, home = process.env.HOME ?? '') {
-  let outPath = path.normalize(filepath).replace(/\\/gu, '/')
+  let outPath = path.normalize(filepath).replaceAll('\\', '/')
   if (shouldUseTilde) outPath = outPath.replace(normalizePathWithSlash(home), '~')
   return outPath
 }

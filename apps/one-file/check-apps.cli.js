@@ -33,8 +33,8 @@ const checkArchives = parameters.includes('--check')
  */
 // oxlint-disable-next-line max-lines-per-function
 function stringsSimilarity(firstString, secondString) {
-  const first = firstString.replace(/\s+/gu, '')
-  const second = secondString.replace(/\s+/gu, '')
+  const first = firstString.replaceAll(/\s+/gu, '')
+  const second = secondString.replaceAll(/\s+/gu, '')
   if (first === second) return 1 // identical or empty
   if (first.length < nbThird || second.length < nbThird) return 0 // if either is a 0-letter or 1-letter string
   /** @type {Map<string, number>} */

@@ -25,8 +25,8 @@ function clean(...stuff: Readonly<unknown[]>) {
   return stuff
     .map(thing => (typeof thing === 'object' ? JSON.stringify(thing) : String(thing)))
     .join(' ')
-    .replace(ansiEscapeRegex, '')
-    .replace(/"/gu, "'")
+    .replaceAll(ansiEscapeRegex, '')
+    .replaceAll('"', "'")
 }
 
 type LogLevel = '1-debug' | '2-test' | '3-info' | '4-fix' | '5-warn' | '6-good' | '7-error'

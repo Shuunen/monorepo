@@ -66,7 +66,7 @@ export async function uploadImage(fileName: string, url: string) {
   const hasExtension = fileName.includes('.')
   const finalFileName = hasExtension ? fileName : `${fileName}.${extension.value}`
   const file = new File([blob], finalFileName, { type: blob.type })
-  const id = slugify(finalFileName.replace(/[_.]/gu, '-')).slice(0, uuidMaxLength)
+  const id = slugify(finalFileName.replaceAll(/[_.]/gu, '-')).slice(0, uuidMaxLength)
   let upload = await Result.trySafe(storage.createFile(state.credentials.bucketId, id, file))
   if (!upload.ok) {
     logger.error('uploadImage failed', upload.error)

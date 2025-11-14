@@ -197,7 +197,7 @@ function formatLetterBoxLocation(input: Item, short = false) {
   const drawer = input.drawer && input.drawer > 0 ? `‧${input.drawer}` : '' // '‧2' or ''
   const details = input.box.split(' (')[1] // 'bricolage & sport)'
   const infos = short || details === undefined ? '' : ` (${details}` // ' (bricolage & sport)'
-  return `${room}${room.length > 0 ? ' ' : ''}${box}${drawer} ${infos}`.trim().replace(/ {2,}/gu, ' ') // 'Salon G‧2 (bricolage & sport)' or 'Salon G‧2'
+  return `${room}${room.length > 0 ? ' ' : ''}${box}${drawer} ${infos}`.trim().replaceAll(/ {2,}/gu, ' ') // 'Salon G‧2 (bricolage & sport)' or 'Salon G‧2'
 }
 
 /**
