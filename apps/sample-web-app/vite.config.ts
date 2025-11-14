@@ -26,11 +26,13 @@ export default defineConfig({
   test: {
     coverage: {
       provider: 'v8' as const,
+      reporter: [['text', { maxCols: 120 }], 'lcov'],
       reportsDirectory: './test-output/vitest/coverage',
     },
     environment: 'happy-dom',
     globals: true,
     include: ['src/**/*.test.{ts,tsx}'],
+    pool: 'threads',
     reporters: ['default'],
     watch: false,
   },
