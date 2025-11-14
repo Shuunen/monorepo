@@ -289,6 +289,9 @@ This validates: lock file integrity, monorepo structure, Biome rules, oxlint rul
 - Don't implement custom state management - use `createState()` from utils
 - Don't use try/catch - use `Result.trySafe()` instead
 - Don't export objects with functions - export functions directly
+- Don't use switch statements - use if statements instead for better readability and error handling at the end
+- **Don't edit files in `shadcn/` folder** - these are third-party components managed by shadcn/ui, not part of the project codebase
+- **Don't delete failing tests** - always fix the root cause instead of removing tests that expose problems
 
 ## Practical Development Tasks
 
