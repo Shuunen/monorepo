@@ -1,5 +1,5 @@
-import { CheckIcon } from 'lucide-react'
+import { Check } from 'lucide-react'
 
-export function IconCheck() {
-  return <CheckIcon />
+export function IconCheck({ className }: { className?: string }) {
+  return <Check className={className} />
 }

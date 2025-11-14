@@ -2,6 +2,7 @@ import type { Logger } from '@monorepo/utils'
 import { z } from 'zod'
 import { Alert } from '../atoms/alert'
 import { getFieldMetadata, getFormFieldRender, isFieldVisible } from './auto-form.utils'
+import { FormFieldAccept } from './form-field-accept'
 import { FormFieldBoolean } from './form-field-boolean'
 import { FormFieldDate } from './form-field-date'
 import { FormFieldNumber } from './form-field-number'
@@ -28,6 +29,7 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: Auto
   if (render === 'select') return <FormFieldSelect {...props} />
   if (render === 'number') return <FormFieldNumber {...props} />
   if (render === 'boolean') return <FormFieldBoolean {...props} />
+  if (render === 'accept') return <FormFieldAccept {...props} />
   if (render === 'text') return <FormFieldText {...props} />
   return <Alert title={`Missing render for field "${fieldName}"`} type="error" />
 }
