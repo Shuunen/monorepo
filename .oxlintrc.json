@@ -18,6 +18,7 @@
     "clearInterval": "readonly",
     "clearTimeout": "readonly",
     "console": "readonly",
+    "DOMParser": "readonly",
     "document": "readonly",
     "Element": "readonly",
     "Event": "readonly",
@@ -49,8 +50,10 @@
     {
       "files": ["*.tsx"],
       "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "off",
         "max-lines-per-function": ["error", 50],
-        "max-nested-callbacks": ["error", 2]
+        "max-nested-callbacks": ["error", 2],
+        "require-returns": "off"
       }
     },
     {
@@ -180,6 +183,7 @@
         "max-params": "off",
         "no-magic-numbers": "off",
         "no-null": "off",
+        "no-restricted-imports": "off",
         "require-param": "off",
         "require-returns": "off",
         "sort-keys": "off",
