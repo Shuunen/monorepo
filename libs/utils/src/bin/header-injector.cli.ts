@@ -1,10 +1,8 @@
-/** biome-ignore-all lint/suspicious/noAssignInExpressions: it'ok here */
 import { readFileSync, writeFileSync } from 'node:fs'
 import glob from 'tiny-glob'
 import { gray, green, red, yellow } from '../lib/colors.js'
 import { nbThird } from '../lib/constants.js'
 import { Logger } from '../lib/logger.js'
-import { clone } from '../lib/object-clone.js'
 import { Result } from '../lib/result.js'
 
 // use me like : bun libs/utils/src/bin/header-injector.cli.ts --header="// Copyright 2025 ACME"
@@ -31,13 +29,14 @@ type Metrics = typeof metrics
  * @returns metrics or error
  */
 export async function main(argv: string[]) {
-  const stats = clone(metrics)
+  const stats = structuredClone(metrics)
   const args = parseArgs(argv)
   logger.info('header-injector.cli.ts started with args', yellow(JSON.stringify(args)))
   if (!args.header) return Result.error('missing header argument')
-  const files = await glob('**/*.ts', { filesOnly: true })
+  const files = await glob('**/!(*routeTree.gen|*.d).ts', { filesOnly: true })
+  const header = `// ${args.header}`
   logger.info(`Scanning headers of ${files.length} files...`)
-  for (const file of files) processFile(file, args.header, stats)
+  for (const file of files) processFile(file, header, stats)
   return Result.ok(stats)
 }
 
@@ -51,6 +50,28 @@ function parseArgs(argv: string[]) {
 }
 
 /**
+ * Check if a file has the header
+ * @param content the file content
+ * @param header the header string to check
+ * @returns true if the file has the header
+ */
+function hasHeader(content: string, header: string): boolean {
+  const firstLine = content.split('\n')[0]
+  return firstLine.includes(header)
+}
+
+/**
+ * Inject header into file content
+ * @param file the file path
+ * @param newContent the new content with header
+ * @returns true if write succeeded
+ */
+function writeFileWithHeader(file: string, newContent: string): boolean {
+  const writeResult = Result.trySafe(() => writeFileSync(file, newContent))
+  return writeResult.ok
+}
+
+/**
  * Process a single file to check and inject header if missing
  * @param file the file path to process
  * @param header the header string to inject
@@ -59,15 +80,23 @@ function parseArgs(argv: string[]) {
  */
 function processFile(file: string, header: string, stats: Metrics) {
   const readResult = Result.trySafe(() => readFileSync(file, 'utf8'))
-  if (!readResult.ok) return (stats.readError += 1)
+  if (!readResult.ok) {
+    stats.readError += 1
+    return
+  }
   const content = readResult.value as string
-  const firstLine = content.split('\n')[0]
-  if (firstLine.includes(header)) return (stats.hasHeader += 1)
+  if (hasHeader(content, header)) {
+    stats.hasHeader += 1
+    return
+  }
   stats.noHeader += 1
   const newContent = `${header}\n${content}`
-  const writeResult = Result.trySafe(() => writeFileSync(file, newContent))
-  if (!writeResult.ok) return (stats.writeError += 1)
-  return (stats.nbFixed += 1)
+  const writeSuccess = writeFileWithHeader(file, newContent)
+  if (!writeSuccess) {
+    stats.writeError += 1
+    return
+  }
+  stats.nbFixed += 1
 }
 
 /**
