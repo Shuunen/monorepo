@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/style/useNamingConvention: it's ok here */
 import { GlobalRegistrator } from '@happy-dom/global-registrator'
-import { isBrowserEnvironment, isTestEnvironment } from './environment.js'
+import { isBrowserEnvironment, isDevEnvironment, isTestEnvironment } from './environment.js'
 
 if (!GlobalRegistrator.isRegistered) GlobalRegistrator.register()
 
@@ -31,4 +31,21 @@ describe('environment utils', () => {
     it(`isBrowserEnvironment ${letter}`, () => {
       expect(isBrowserEnvironment(sample)).toBe(expected)
     })
+
+  describe('isDevEnvironment', () => {
+    beforeEach(() => {
+      vi.resetModules()
+      vi.unstubAllEnvs()
+    })
+
+    it('A should be true when import.meta.env.DEV is true', () => {
+      vi.stubEnv('DEV', true)
+      expect(isDevEnvironment()).toBe(true)
+    })
+
+    it('B should be false when import.meta.env.DEV is false', () => {
+      vi.stubEnv('DEV', false)
+      expect(isDevEnvironment()).toBe(false)
+    })
+  })
 })

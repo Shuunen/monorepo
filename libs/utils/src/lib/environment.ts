@@ -1,4 +1,13 @@
 /**
+ * Check if the environment is a dev environment
+ * @returns true if the environment is a dev environment
+ */
+export function isDevEnvironment() {
+  // @ts-expect-error meta.env is Vite specific
+  return import.meta.env.DEV === true
+}
+
+/**
  * Check if the environment is a test environment
  * @param glob optional, the global object to check, default is globalThis
  * @returns true if the environment is a test environment
