@@ -86,6 +86,13 @@
   },
   "overrides": [
     {
+      "assist": {
+        "actions": {
+          "source": {
+            "organizeImports": "off"
+          }
+        }
+      },
       "includes": ["**/index.ts"],
       "linter": {
         "rules": {
