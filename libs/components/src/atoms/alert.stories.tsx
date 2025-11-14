@@ -54,3 +54,10 @@ export const ErrorType: Story = {
     type: 'error',
   },
 }
+
+export const ErrorTitleOnly: Story = {
+  args: {
+    title: 'Failed to load data',
+    type: 'error',
+  },
+}

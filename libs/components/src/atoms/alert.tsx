@@ -10,7 +10,7 @@ type AlertProps = {
   /**
    * The content / description / message of the alert
    */
-  children: ReactNode
+  children?: ReactNode
   /**
    * The title of the alert, optional, will display "type" if no title provided
    * @example `title="Something went wrong"`
@@ -58,7 +58,7 @@ export function Alert({ type, title, children }: AlertProps) {
       <AlertTitle>
         <strong>{content.title}</strong>
       </AlertTitle>
-      <AlertDescription className={content.classes}>{children}</AlertDescription>
+      {children && <AlertDescription className={content.classes}>{children}</AlertDescription>}
     </ShadAlert>
   )
 }

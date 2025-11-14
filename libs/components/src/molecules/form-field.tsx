@@ -2,7 +2,7 @@ import { camelToKebabCase, type Logger } from '@monorepo/utils'
 import type { ControllerRenderProps } from 'react-hook-form'
 import type { z } from 'zod'
 import { FormField, FormItem, FormLabel, FormMessage } from '../atoms/form'
-import type { AutoFormFieldMetadata } from './auto-form.types'
+import { getFieldMetadata } from './auto-form.utils'
 
 export type FormFieldBaseProps = {
   children?: (field: ControllerRenderProps) => React.ReactNode
@@ -16,7 +16,7 @@ export type FormFieldBaseProps = {
 
 export function FormFieldBase(props: FormFieldBaseProps) {
   const { children, fieldName, fieldSchema, isOptional } = props
-  const metadata = fieldSchema.meta() as AutoFormFieldMetadata | undefined
+  const metadata = getFieldMetadata(fieldSchema)
   if (!metadata) throw new Error(`Field "${fieldName}" is missing metadata (label, placeholder, state)`)
   const { label = '' } = metadata
   const testId = camelToKebabCase(fieldName)

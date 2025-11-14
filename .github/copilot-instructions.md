@@ -12,6 +12,7 @@
 - always export directly each functions and variables (that need to be exported) instead of exporting an object with them
 - use `bun` to executes `.cli.js` or `.cli.ts` scripts
 - don't use blank lines inside functions, only use them to separate functions
+- **avoid switch statements**: use if statements instead for better readability and to ensure error handling at the end (e.g., return an Alert for unrecognized values)
 
 ## Architecture Overview
 

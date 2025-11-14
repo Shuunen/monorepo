@@ -1,7 +1,9 @@
 import type { Logger } from '@monorepo/utils'
 import { z } from 'zod'
-import { isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber } from './auto-form.utils'
+import { Alert } from '../atoms/alert'
+import { getFieldMetadata, getFormFieldRender, isFieldVisible } from './auto-form.utils'
 import { FormFieldBoolean } from './form-field-boolean'
+import { FormFieldDate } from './form-field-date'
 import { FormFieldNumber } from './form-field-number'
 import { FormFieldSelect } from './form-field-select'
 import { FormFieldText } from './form-field-text'
@@ -18,13 +20,14 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: Auto
   if (!isFieldVisible(fieldSchema, formData)) return
   logger?.info('Rendering field', fieldName)
   const isOptional = fieldSchema instanceof z.ZodOptional
-  const metadata = fieldSchema.meta()
-  const state = metadata?.state ?? 'editable'
-  const readonly = state === 'readonly'
-  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly }
-  if (isZodFile(fieldSchema)) return <FormFieldUpload {...props} />
-  if (isZodEnum(fieldSchema)) return <FormFieldSelect {...props} />
-  if (isZodNumber(fieldSchema)) return <FormFieldNumber {...props} />
-  if (isZodBoolean(fieldSchema)) return <FormFieldBoolean {...props} />
-  return <FormFieldText {...props} />
+  const { state = 'editable' } = getFieldMetadata(fieldSchema) ?? {}
+  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly: state === 'readonly' }
+  const render = getFormFieldRender(fieldSchema)
+  if (render === 'upload') return <FormFieldUpload {...props} />
+  if (render === 'date') return <FormFieldDate {...props} />
+  if (render === 'select') return <FormFieldSelect {...props} />
+  if (render === 'number') return <FormFieldNumber {...props} />
+  if (render === 'boolean') return <FormFieldBoolean {...props} />
+  if (render === 'text') return <FormFieldText {...props} />
+  return <Alert title={`Missing render for field "${fieldName}"`} type="error" />
 }

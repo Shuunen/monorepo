@@ -1,3 +1,4 @@
+// oxlint-disable max-lines
 import { getNested, Logger, nbPercentMax, Result, setNested, sleep, stringify } from '@monorepo/utils'
 import type { ReactNode } from 'react'
 import { z } from 'zod'
@@ -90,6 +91,28 @@ export function isZodNumber(fieldSchema: z.ZodType) {
 export function isZodFile(fieldSchema: z.ZodType) {
   if (fieldSchema.type === 'file') return true
   else if (fieldSchema.type === 'optional' && (fieldSchema as z.ZodOptional<z.ZodFile>).def.innerType.type === 'file') return true
+  return false
+}
+
+/**
+ * Checks if the provided Zod schema is a ZodDate or contains a ZodDate as its inner type (e.g., optional date).
+ * @param fieldSchema the Zod schema to check
+ * @returns true if the schema is (or contains) a ZodDate; otherwise, false.
+ */
+export function isZodDate(fieldSchema: z.ZodType) {
+  if (fieldSchema.type === 'date') return true
+  else if (fieldSchema.type === 'optional' && (fieldSchema as z.ZodOptional<z.ZodDate>).def.innerType.type === 'date') return true
+  return false
+}
+
+/**
+ * Checks if the provided Zod schema is a ZodString or contains a ZodString as its inner type (e.g., optional string).
+ * @param fieldSchema the Zod schema to check
+ * @returns true if the schema is (or contains) a ZodString; otherwise, false.
+ */
+export function isZodString(fieldSchema: z.ZodType) {
+  if (fieldSchema.type === 'string') return true
+  if (fieldSchema.type === 'optional' && (fieldSchema as z.ZodOptional<z.ZodString>).def.innerType.type === 'string') return true
   return false
 }
 
@@ -271,4 +294,22 @@ export function getFieldMetadata(fieldSchema?: z.ZodType): AutoFormFieldMetadata
 export function getStepMetadata(stepSchema: z.ZodObject): AutoFormStepMetadata | undefined {
   if (typeof stepSchema.meta !== 'function') return undefined
   return stepSchema.meta() as AutoFormStepMetadata
+}
+
+/**
+ * Determines which form field component should render the given field schema.
+ * Checks the explicit render property first, then falls back to schema type detection.
+ * @param fieldSchema the Zod schema for the field
+ * @returns the component name to render like 'text', 'number', 'date', etc... Undefined if no suitable component found.
+ */
+export function getFormFieldRender(fieldSchema: z.ZodType): AutoFormFieldMetadata['render'] {
+  const { render } = getFieldMetadata(fieldSchema) || {}
+  if (render) return render
+  if (isZodFile(fieldSchema)) return 'upload'
+  if (isZodDate(fieldSchema)) return 'date'
+  if (isZodEnum(fieldSchema)) return 'select'
+  if (isZodNumber(fieldSchema)) return 'number'
+  if (isZodBoolean(fieldSchema)) return 'boolean'
+  if (isZodString(fieldSchema)) return 'text'
+  return undefined
 }
