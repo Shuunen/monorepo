@@ -1,11 +1,11 @@
 import { Landing } from '@monorepo/components'
-import { randomPerson } from '@monorepo/utils'
+import { readableTime } from '@monorepo/utils'
 import { NavLink, Route, Routes } from 'react-router-dom'
 
 const navClasses = ({ isActive }: { isActive: boolean }) => `transition-colors ${isActive ? 'text-primary underline underline-offset-22' : 'text-gray-700 hover:text-primary'}`
 
 export function App() {
-  const person = randomPerson()
+  const createdOn = readableTime(new Date('2025-07-15'))
   return (
     <div>
       <nav className="absolute flex gap-6 text-2xl font-semibold justify-center w-full p-4 bg-white shadow-md">
@@ -18,7 +18,7 @@ export function App() {
       </nav>
       <Routes>
         <Route element={<Landing status="I'm a starter base project" subtitle="Web application built with React and TailwindCSS" title="sample-web-app" />} path="/" />
-        <Route element={<Landing subtitle={`This project is the great work of ${person.firstName} ${person.lastName} 😎`} title="About" />} path="/about" />
+        <Route element={<Landing subtitle={`This project exists since ${createdOn} 😎`} title="About" />} path="/about" />
       </Routes>
     </div>
   )
