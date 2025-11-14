@@ -6,7 +6,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "bun ../../utils/src/bin/barrel-maker.cli.ts --target=\"./{atoms,icons,molecules}/*.tsx\" --ext=",
-        "cwd": "libs/components/src"
+        "cwd": "{projectRoot}/src"
       },
       "outputs": ["{projectRoot}/src/index.ts"]
     },
@@ -14,7 +14,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "storybook dev --port 6006",
-        "cwd": "libs/components"
+        "cwd": "{projectRoot}"
       }
     },
     "test-storybook": {
@@ -23,7 +23,7 @@
       "inputs": ["{projectRoot}/src/**/*.{ts,tsx,js,jsx}", "{projectRoot}/src/**/*.stories.{ts,tsx,js,jsx}", "{projectRoot}/.storybook/**/*", "{projectRoot}/vitest.storybook.config.ts", "{projectRoot}/vite.config.ts", "{projectRoot}/package.json", "{workspaceRoot}/package.json"],
       "options": {
         "command": "vitest --config=vitest.storybook.config.ts --run",
-        "cwd": "libs/components"
+        "cwd": "{projectRoot}"
       },
       "outputs": []
     },
