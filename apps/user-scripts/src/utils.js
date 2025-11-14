@@ -365,10 +365,10 @@ class Shuutils {
    */
   parsePrice(input) {
     // Normalize all space-like characters to regular space
-    const normalizedInput = input.replace(/[\s\u00A0\u2000-\u200B\u202F\u205F\u3000]+/gu, ' ').trim()
+    const normalizedInput = input.replaceAll(/[\s\u00A0\u2000-\u200B\u202F\u205F\u3000]+/gu, ' ').trim()
     // biome-ignore lint/performance/useTopLevelRegex: FIX me later
     const { currencyEnd, currencyStart, decimals, integers, integersOnly, sign = '' } = /^(?<sign>-)?\+?(?<currencyStart>[$€])? ?(?:(?<integers>[\d .,]+)(?<decimals>[.,]\d{2})|(?<integersOnly>[\d .,]+)) ?(?<currencyEnd>[$€])?$/u.exec(normalizedInput)?.groups ?? {}
-    const integer = (integers ?? integersOnly ?? '').replace(/\D/gu, '')
+    const integer = (integers ?? integersOnly ?? '').replaceAll(/\D/gu, '')
     const fraction = decimals ? decimals.slice(1) : '00'
     const currency = currencyStart ?? currencyEnd ?? ''
     const amount = Number.parseFloat(`${sign + integer}.${fraction}`)
@@ -409,13 +409,13 @@ class Shuutils {
   readableString(string) {
     return string
       .trim()
-      .replace(/['’_.-]/gu, ' ')
+      .replaceAll(/['’_.-]/gu, ' ')
       .normalize('NFD')
-      .replace(/[^\d\sa-z]/giu, '')
-      .replace(/\s{2,}/gu, ' ') // from shuutils sanitize
-      .replace(/<.+?>/gu, ' ') // remove content in tags
-      .replace(/\W/gu, ' ') // remove non words
-      .replace(/\s+/gu, ' ') // replace spaces with single space
+      .replaceAll(/[^\d\sa-z]/giu, '')
+      .replaceAll(/\s{2,}/gu, ' ') // from shuutils sanitize
+      .replaceAll(/<.+?>/gu, ' ') // remove content in tags
+      .replaceAll(/\W/gu, ' ') // remove non words
+      .replaceAll(/\s+/gu, ' ') // replace spaces with single space
       .trim() // final trim
   }
   /**
@@ -437,7 +437,7 @@ class Shuutils {
    * @example utils.removeAccents('éàù') // returns 'eau'
    */
   removeAccents(string) {
-    return string.normalize('NFD').replace(/[\u0300-\u036F]/gu, '')
+    return string.normalize('NFD').replaceAll(/[\u0300-\u036F]/gu, '')
   }
   /**
    * Round a number to a given number of decimals

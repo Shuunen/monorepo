@@ -60,27 +60,27 @@ export function cleanFileName(file: string): string {
   return (
     file
       // remove (2160p_25fps_AV1-128kbit_AAC-French)
-      .replace(/\s*\(\d{3,4}p_\d{1,2}fps_[A-Z0-9-]+-?[\w-]*\)/g, '')
+      .replaceAll(/\s*\(\d{3,4}p_\d{1,2}fps_[A-Z0-9-]+-?[\w-]*\)/g, '')
       // replace " (English_ASR)" with "en"
-      .replace(/\s*\(English_ASR\)/g, '.en')
+      .replaceAll(/\s*\(English_ASR\)/g, '.en')
       // replace " (English)" with "en"
-      .replace(/\s*\(English\)/g, '.en')
+      .replaceAll(/\s*\(English\)/g, '.en')
       // replace ".English." with ".en."
-      .replace(/\.English\./g, '.en.')
+      .replaceAll('.English.', '.en.')
       // remove fake extensions
       .replace('.exe', '')
       // preserve apostrophes
-      .replace(/[’']/g, '@APOSTROPHE@')
+      .replaceAll(/[’']/g, '@APOSTROPHE@')
       // normalize separators
-      .replace(/[¦,:;]/g, ' - ')
+      .replaceAll(/[¦,:;]/g, ' - ')
       // remove parenthesis, brackets, exclamation marks, and other special characters
-      .replace(/[()[\]_'¿]/g, ' ')
+      .replaceAll(/[()[\]_'¿]/g, ' ')
       // remove emojis
-      .replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '')
+      .replaceAll(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '')
       // rollback apostrophes
-      .replace(/@APOSTROPHE@/g, '’')
+      .replaceAll('@APOSTROPHE@', '’')
       // remove extra spaces
-      .replace(/\s+/g, ' ')
+      .replaceAll(/\s+/g, ' ')
       // remove spaces before extension(s), like " .en.srt" => ".en.srt" or " .mp4" => ".mp4"
       // biome-ignore lint/performance/useTopLevelRegex: it's ok
       .replace(/\s+(\.(?:\w{2,4}\.)*\w{2,4})$/, '$1')

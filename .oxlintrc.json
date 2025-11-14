@@ -296,7 +296,6 @@
     ],
     "unicorn/no-useless-undefined": "off",
     "unicorn/prefer-spread": "off",
-    "unicorn/prefer-string-replace-all": "off",
     "vitest/prefer-to-be-falsy": "off",
     "vitest/prefer-to-be-truthy": "off"
   }

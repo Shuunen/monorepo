@@ -18,8 +18,8 @@ export function kebabToPascalCase(kebab: string, joinChar = '') {
  */
 export function camelToKebabCase(camel: string) {
   return camel
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
-    .replace(/[\s_]+/g, '-')
+    .replaceAll(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replaceAll(/([A-Z])([A-Z][a-z])/g, '$1-$2')
+    .replaceAll(/[\s_]+/g, '-')
     .toLowerCase()
 }

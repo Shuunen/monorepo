@@ -13,7 +13,7 @@ function mergeUnique(array) {
  * @returns {string[]} the isolated and sorted lines
  */
 export function isolateLines(list) {
-  let lines = list.replace(/ /gu, '').split('\n')
+  let lines = list.replaceAll(' ', '').split('\n')
   lines = mergeUnique(lines)
   lines = lines.filter(line => line.length > 0)
   return lines.toSorted((lineA, lineB) => lineA.localeCompare(lineB))

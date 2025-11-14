@@ -5,5 +5,5 @@
  * @example utils.removeAccents('éàù') // returns 'eau'
  */
 export function removeAccents(string: string) {
-  return string.normalize('NFD').replace(/[\u0300-\u036F]/gu, '')
+  return string.normalize('NFD').replaceAll(/[\u0300-\u036F]/gu, '')
 }

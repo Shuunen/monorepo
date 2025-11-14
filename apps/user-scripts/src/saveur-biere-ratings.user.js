@@ -21,15 +21,15 @@
  */
 function cleanTitle(title) {
   return title
-    .replace(/\([^(]+\)/gu, ' ') // remove parenthesis content(s)
+    .replaceAll(/\([^(]+\)/gu, ' ') // remove parenthesis content(s)
     .replace(' Can', ' ')
     .replace('Fût ', ' ')
-    .replace(/['’-]/gu, ' ')
+    .replaceAll(/['’-]/gu, ' ')
     .normalize('NFD')
-    .replace(/[^\d\sa-z]/giu, '')
+    .replaceAll(/[^\d\sa-z]/giu, '')
     .toLowerCase() // from shuutils sanitize
-    .replace(/\d+cl|\d+l|\d+L|pack \d+|pack de|\d+ bieres|pack|et \d+ verres/gu, ' ') // remove contenance or pack size
-    .replace(/\s+/gu, ' ')
+    .replaceAll(/\d+cl|\d+l|\d+L|pack \d+|pack de|\d+ bieres|pack|et \d+ verres/gu, ' ') // remove contenance or pack size
+    .replaceAll(/\s+/gu, ' ')
     .trim()
 }
 function SaveurBiereRatings() {

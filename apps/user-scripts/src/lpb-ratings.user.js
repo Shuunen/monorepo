@@ -402,14 +402,14 @@ gallo family vineyards summer red,1.0`
  */
 function cleanTitle(title) {
   return title
-    .replace(/\([^(]+\)/gu, ' ') // remove parenthesis content(s)
-    .replace(/\d{4}/gu, ' ') // remove year
-    .replace(/['’-]/gu, ' ')
+    .replaceAll(/\([^(]+\)/gu, ' ') // remove parenthesis content(s)
+    .replaceAll(/\d{4}/gu, ' ') // remove year
+    .replaceAll(/['’-]/gu, ' ')
     .normalize('NFD')
-    .replace(/[^\d\sa-z]/giu, '')
+    .replaceAll(/[^\d\sa-z]/giu, '')
     .toLowerCase() // from shuutils sanitize
-    .replace(/\b(?:chateau|clos|cuvee|de|domaine|du|la|le|maison|vini)s?\b/gu, ' ') // remove common words
-    .replace(/\s+/gu, ' ')
+    .replaceAll(/\b(?:chateau|clos|cuvee|de|domaine|du|la|le|maison|vini)s?\b/gu, ' ') // remove common words
+    .replaceAll(/\s+/gu, ' ')
     .trim()
 }
 
