@@ -23,7 +23,7 @@ Disable all the **enabled** wake sources from your list :
 
 ```bash
 sudo sh -c 'echo "GP17" > /proc/acpi/wakeup'
-sudo sh -c 'echo "XHC0" > /proc/acpi/wakeup' 
+sudo sh -c 'echo "XHC0" > /proc/acpi/wakeup'
 sudo sh -c 'echo "XHC1" > /proc/acpi/wakeup'
 ```
 
