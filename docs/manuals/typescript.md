@@ -4,24 +4,24 @@
 
 ```ts
 interface User {
-    name: string
-    age: number
+  name: string;
+  age: number;
 }
 
 const objet = {
-    name: 'John Doe',
-    age: 42,
-    details: "J'existe !"
-}
+  name: "John Doe",
+  age: 42,
+  details: "J'existe !",
+};
 
 function getUser(user: User) {
-    return user
+  return user;
 }
 
-const user = getUser(objet)
+const user = getUser(objet);
 
-console.log(user.details) // display "J'existe !"
-//              ^^^^^^^ Property 'details' does not exist on type 'User'.        
+console.log(user.details); // display "J'existe !"
+//              ^^^^^^^ Property 'details' does not exist on type 'User'.
 ```
 
 ## Return type leak
@@ -29,25 +29,25 @@ console.log(user.details) // display "J'existe !"
 ```ts
 // simulate a database query
 const dbQuery = (id: string) => ({
-    id,
-    name: 'John Doe',
-    age: 42,
-    password: 'do-not-leak-me'
-})
+  id,
+  name: "John Doe",
+  age: 42,
+  password: "do-not-leak-me",
+});
 
 interface User {
-    name: string
-    age: number
+  name: string;
+  age: number;
 }
 
 function getUser(id: string): User {
-    // 🔴 no typescript errors but dbQuery returns an object with a password property that does not exist in User interface
-    return dbQuery(id)
+  // 🔴 no typescript errors but dbQuery returns an object with a password property that does not exist in User interface
+  return dbQuery(id);
 }
 
 // 🔴 when we hover the user variable, we see that it contains ONLY name and age, it's not true !
-const user = getUser('admin')
-console.log(user) 
+const user = getUser("admin");
+console.log(user);
 // 🔴 the password is displayed in console
 ```
 
@@ -56,19 +56,19 @@ Without the specified return type, we let TypeScript infer the return type of th
 ```ts
 // simulate a database query
 const dbQuery = (id: string) => ({
-    id,
-    name: 'John Doe',
-    age: 42,
-    password: 'do-not-leak-me'
-})
+  id,
+  name: "John Doe",
+  age: 42,
+  password: "do-not-leak-me",
+});
 
 function getUser(id: string) {
-    // 🟢 the return type is inferred by TypeScript
-    return dbQuery(id)
+  // 🟢 the return type is inferred by TypeScript
+  return dbQuery(id);
 }
 
 // 🟢 when we hover the user variable, we can see that it contains a password property
-const user = getUser('admin')
-console.log(user.name) 
+const user = getUser("admin");
+console.log(user.name);
 // 🟢 we avoid the password leak
 ```

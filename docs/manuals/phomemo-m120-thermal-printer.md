@@ -24,7 +24,7 @@
 1. I tried to connect to it via Bluetooth but the printer was not recognized successfully by Windows 10.
 2. Also I found [here](https://support.google.com/chrome/answer/6362090) that Chrome does not support Bluetooth printers if they are not BLE (Bluetooth Low Energy) compatible. Not sure if it's the case for this printer.
 3. The connection via USB is working fine, the printer is recognized as a printer and can be used as such.
-  
+
 ## Setup
 
 ### Windows
@@ -66,15 +66,15 @@ For example, I created :
 
 After a dozen of tries, I managed to find the good conditions.
 
-__First follow the [setup](#setup) instructions above.__
+**First follow the [setup](#setup) instructions above.**
 
 Then, open this [CodePen](https://codepen.io/Shuunen/pen/vYjvMPE) or in a webpage use following code :
 
 ```html
 <div class="border border-black text-sm p-2 overflow-hidden" style="width:145px; height: 110px; aspect-ratio: 4/3;">
-  Print in 40x30mm<br>
-  & no margin<br>
-  I'm 145 x 110 px<br>
+  Print in 40x30mm<br />
+  & no margin<br />
+  I'm 145 x 110 px<br />
   🔽 👇 last line 🙂
 </div>
 ```
@@ -83,13 +83,13 @@ Open the print modal via Ctrl+P or the browser menu.
 
 Set the following options :
 
-- __Destination : M120 Printer__
+- **Destination : M120 Printer**
 - Pages : All (default)
 - Copies : 1 (default)
 - Layout : Portrait (default)
-- __Paper size : 40 x 30mm__
+- **Paper size : 40 x 30mm**
 - Pages per sheet : 1 (default)
-- __Margins : None__
+- **Margins : None**
 - Scaling : Default (default)
 - Background graphics : unchecked (default)
 - Selection only : unchecked (default)

@@ -223,7 +223,7 @@ irm https://christitus.com/win | iex
 - [ ] options : Looks -> Dracula theme, Text -> font size to 11, Mouse -> right btn paste, Window 120 x 30
 
 ### Android development environnement
-  
+
 Set env variables with this but copy/paste to notepad to have CRLF & copy/paste into CMD after (thx m$) :
 
 ```batch
@@ -252,7 +252,7 @@ Install these deb :
 - [Steam](https://store.steampowered.com/about)
 - [Stretchly](https://github.com/hovancik/stretchly/releases)
 
-```bash  
+```bash
 sudo apt install -y neofetch btop tldr git aria2 nano curl -y
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 bash # reload shell to be able to invoke nvm
@@ -270,7 +270,7 @@ echo -e "optional : you can manually run 'sudo apt install ttf-mscorefonts-insta
   <summary>CentOS, Fedora and Red Hat based : Nobara</summary>
   <br>
 
-  Install these rpm :
+Install these rpm :
 
 - [Chrome](https://www.google.com/intl/fr_fr/chrome)
 - [VsCode](https://code.visualstudio.com/download)
@@ -286,9 +286,9 @@ sudo dnf install pinta qimgv gparted meld mediainfo mkvtoolnix mkvtoolnix-gui mp
 <details>
   <summary>All</summary>
 
-  Copy ssh keys then in a **bash terminal** :
-  
-  ```bash
+Copy ssh keys then in a **bash terminal** :
+
+```bash
 sudo chmod 700 ~/.ssh/ -R # remove 'sudo' on windows
 # mkdir ~/.npm-global # if not using nvm
 # npm config set prefix '~/.npm-global' # if not using nvm
