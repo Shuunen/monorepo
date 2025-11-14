@@ -1,3 +1,17 @@
 {
-  "recommendations": ["nrwl.angular-console", "ms-playwright.playwright"]
+  "recommendations": [
+    "alexkrechik.cucumberautocomplete",
+    "bradlc.vscode-tailwindcss",
+    "davidanson.vscode-markdownlint",
+    "ms-playwright.playwright",
+    "naumovs.color-highlight",
+    "nrwl.angular-console",
+    "oxc.oxc-vscode",
+    "richie5um2.vscode-sort-json",
+    "siarheikuchuk.gherkin-beautifier-vs-code-plugin",
+    "streetsidesoftware.code-spell-checker-british-english",
+    "streetsidesoftware.code-spell-checker",
+    "yzhang.markdown-all-in-one",
+    "yoavbls.pretty-ts-errors"
+  ]
 }
