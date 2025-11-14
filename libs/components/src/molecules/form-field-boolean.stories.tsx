@@ -230,26 +230,21 @@ export const MultipleFields: Story = {
     const switches = canvas.getAllByRole('switch')
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
-
-    await step('toggle rememberMe to true', async () => {
+    await step('toggle acceptCookies to true', async () => {
       await userEvent.click(switches[0])
       expect(switches[0]).toHaveAttribute('aria-checked', 'true')
     })
-
-    await step('toggle acceptCookies to true', async () => {
-      await userEvent.click(switches[1])
-      expect(switches[1]).toHaveAttribute('aria-checked', 'true')
+    await step('toggle rememberMe to true', async () => {
+      await userEvent.click(switches[2])
+      expect(switches[2]).toHaveAttribute('aria-checked', 'true')
     })
-
     await step('verify form data shows both as true', () => {
       expect(formData).toContainHTML(stringify({ acceptCookies: true, rememberMe: true }, true))
     })
-
     await step('submit form', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
     })
-
     await step('verify submitted data', () => {
       const expectedData = {
         acceptCookies: true,
