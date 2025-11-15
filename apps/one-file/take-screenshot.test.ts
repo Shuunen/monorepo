@@ -255,7 +255,7 @@ it('getScreenshotFilename C', () => {
 })
 
 it('getFfmpegCommand A', () => {
-  expect(getFfmpegCommand({ screenPath: 'plop.jpg', totalSeconds: 120, videoPath: 'plop.mp4' })).toBe('ffmpeg -ss 120 -i "plop.mp4" -frames:v 1 -q:v 1 "plop.jpg"')
+  expect(getFfmpegCommand({ screenPath: 'plop.jpg', totalSeconds: 120, videoPath: 'plop.mp4' })).toBe('ffmpeg -ss 120 -i "plop.mp4" -frames:v 1 -q:v 1 -update 1 "plop.jpg"')
 })
 
 it('getTargets A', () => {
