@@ -6,11 +6,11 @@
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-gaming-aio.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/amazon-gaming-aio.user.js
 // @grant        none
-// @match        https://gaming.amazon.com/*
+// @match        https://luna.amazon.fr/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
-// @version      1.1.2
+// @version      1.1.3
 // ==/UserScript==
 
 /**
@@ -129,6 +129,7 @@ function AmazonGamingAio() {
   }
   const deleteUselessSelectors = {
     badges: '.featured-content, [data-a-target="badge-new"],.featured-content-shoveler, [data-a-target="badge-ends-soon"]',
+    gameNight: '[data-a-target="GameNightBannerSectionRootHome"]',
     lunaGaming: '#offer-section-LUNA',
     sections:
       '[data-a-target="hero-banner"],.event-container,.sub-credit-promotion-banner,[data-a-target="offer-section-FGWP"],.marketing-promotion-banner,[data-a-target="offer-section-RECOMMENDED"],[data-a-target="offer-section-WEB_GAMES"], #SearchBar, [data-a-target="offer-section-TOP_PICKS"], [data-a-target="offer-section-EXPIRING"]',
