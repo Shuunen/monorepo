@@ -1,7 +1,7 @@
 /* v8 ignore start -- @preserve */
 import { readFileSync, statSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
-import { Logger, nbMsInSecond, nbRgbMax, sleep, stringSum } from '@monorepo/utils'
+import { consoleLog, Logger, nbMsInSecond, nbPixelSm, sleep, stringSum } from '@monorepo/utils'
 import clipboardy from 'clipboardy'
 import { cleanTrackers } from './clean-trackers.utils.js'
 
@@ -23,10 +23,8 @@ let lastSum = 0
  * Emit a beep sound
  */
 async function beep() {
-  // oxlint-disable no-console
-  // biome-ignore lint/suspicious/noConsole: needed to emit a sound
-  console.log('\u0007')
-  await sleep(nbRgbMax)
+  consoleLog('\u0007')
+  await sleep(nbPixelSm)
 }
 
 /**
