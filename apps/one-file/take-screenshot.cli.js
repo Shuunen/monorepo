@@ -4,7 +4,7 @@ import { exec } from 'node:child_process'
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { createInterface } from 'node:readline'
-import { Logger, nbFourth, nbSecondsInMinute, nbThird } from '@monorepo/utils'
+import { consoleLog, Logger, nbFourth, nbPixelSm, nbSecondsInMinute, nbThird, sleep } from '@monorepo/utils'
 import { getFfmpegCommand, getScreenshotFilename, parseUserInput, parseVideoMetadata } from './take-screenshot.utils.js'
 
 /**
@@ -16,6 +16,14 @@ const currentFolder = import.meta.dirname
 const logFile = path.join(currentFolder, 'take-screenshot.log')
 const lastInputFile = path.join(currentFolder, 'take-screenshot-last-input.txt')
 const logger = new Logger()
+
+/**
+ * Emit a beep sound
+ */
+async function beep() {
+  consoleLog('\u0007')
+  await sleep(nbPixelSm)
+}
 
 /**
  *
@@ -129,6 +137,7 @@ async function init() {
   if (process.argv[nbThird] === undefined) throw new Error('missing videoPath')
   if (process.argv[nbFourth]) {
     await takeScreenAt(process.argv[nbFourth])
+    await beep()
     return
   }
   const lastInput = await fs.readFile(lastInputFile, 'utf8').catch(() => '60')
@@ -136,6 +145,7 @@ async function init() {
   const ask = createInterface({ input: process.stdin, output: process.stdout })
   ask.question(`  Please type the time in mmss or ss (enter to use "${lastInput}") : `, async time => {
     await takeScreenAt(time || lastInput)
+    await beep()
     ask.close() // close the readline interface to allow the process to exit
   })
 }
