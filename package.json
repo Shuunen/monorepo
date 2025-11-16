@@ -115,6 +115,7 @@
     "up:deps": "pnpm update --recursive --latest && echo up:deps success",
     "up:nx": "npx nx@latest migrate latest && echo up:nx success",
     "up:sb": "npx storybook@latest upgrade && echo up:sb success",
+    "up:shadcn": "bun libs/components/bin/update.cli.ts",
     "up:taze": "npx taze major --write && echo up:taze success"
   },
   "version": "1.0.0"
