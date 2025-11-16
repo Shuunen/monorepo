@@ -18,7 +18,7 @@ export function FormFieldBoolean({ fieldName, fieldSchema, formData, isOptional,
       {field => (
         <div className="flex gap-2 mt-2">
           <FormControl>{isBooleanLiteral ? <Switch {...field} checked={booleanLiteralValue === true} disabled /> : <Switch {...field} checked={!!field.value} disabled={isDisabled} onCheckedChange={field.onChange} />}</FormControl>
-          {placeholder && <FormDescription>{placeholder}</FormDescription>}
+          {placeholder && <FormDescription name={fieldName}>{placeholder}</FormDescription>}
         </div>
       )}
     </FormFieldBase>

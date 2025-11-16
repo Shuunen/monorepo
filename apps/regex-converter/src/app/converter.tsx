@@ -42,11 +42,11 @@ export function Converter() {
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <h2 className="mb-2 mt-2">input</h2>
-          <Textarea className="w-full h-80 p-3 border rounded-xl bg-white shadow" onChange={event => setInput(event.target.value)} placeholder="Paste your text here..." value={input} />
+          <Textarea className="w-full h-80 p-3 border rounded-xl bg-white shadow" name="input" onChange={event => setInput(event.target.value)} placeholder="Paste your text here..." value={input} />
         </div>
         <div>
           <h2 className="mb-2 mt-2 text-secondary">output</h2>
-          <Textarea className="w-full h-80 p-3 border rounded-xl bg-white shadow" readOnly value={output} />
+          <Textarea className="w-full h-80 p-3 border rounded-xl bg-white shadow" name="output" readOnly value={output} />
         </div>
       </div>
       <div className="col-span-2 mt-8">

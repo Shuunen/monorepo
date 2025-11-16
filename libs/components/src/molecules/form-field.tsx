@@ -1,4 +1,4 @@
-import { camelToKebabCase, type Logger } from '@monorepo/utils'
+import type { Logger } from '@monorepo/utils'
 import type { ControllerRenderProps } from 'react-hook-form'
 import type { z } from 'zod'
 import { FormField, FormItem, FormLabel, FormMessage } from '../atoms/form'
@@ -19,7 +19,6 @@ export function FormFieldBase(props: FormFieldBaseProps) {
   const metadata = getFieldMetadata(fieldSchema)
   if (!metadata) throw new Error(`Field "${fieldName}" is missing metadata (label, placeholder, state)`)
   const { label = '' } = metadata
-  const testId = camelToKebabCase(fieldName)
   const requiredMark = !isOptional && <span className="text-red-500 ml-1">*</span>
   return (
     <FormField
@@ -32,7 +31,7 @@ export function FormFieldBase(props: FormFieldBaseProps) {
             {requiredMark}
           </FormLabel>
           {children?.(field)}
-          <FormMessage testId={`${testId}-error`} />
+          <FormMessage name={fieldName} />
         </FormItem>
       )}
     />

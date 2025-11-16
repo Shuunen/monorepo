@@ -1,31 +1,20 @@
-import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@monorepo/components'
-import { createFileRoute, Link } from '@tanstack/react-router'
-// oxlint-disable-next-line no-restricted-imports
-import { FileInputIcon } from 'lucide-react'
-import { FormContact } from '../components/molecules/form-contact'
+import { AutoForm, mockSubmit, Title } from '@monorepo/components'
+import { createFileRoute } from '@tanstack/react-router'
+import { z } from 'zod'
+
+const formSchema = z.object({
+  message: z.string().min(1).meta({ label: 'Your Message' }),
+  phone: z.string().optional().meta({ label: 'Your Phone Number' }),
+})
 
 function Contact() {
+  function onSubmit() {
+    return mockSubmit('success', 'Message sent successfully!')
+  }
   return (
     <div className="flex flex-col gap-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <FileInputIcon className="mr-2 h-6 w-6" />
-            Contact Us
-          </CardTitle>
-          <CardDescription>We are here to assist you!</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <FormContact />
-        </CardContent>
-        <CardFooter>
-          <Link className="mb-6" to="/">
-            <Button testId="go-home" variant="destructive">
-              Go to home
-            </Button>
-          </Link>
-        </CardFooter>
-      </Card>
+      <Title variant="primary">Contact Us</Title>
+      <AutoForm onSubmit={onSubmit} schemas={[formSchema]} useSubmissionStep />
     </div>
   )
 }
