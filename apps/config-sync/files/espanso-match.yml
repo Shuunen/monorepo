@@ -8,13 +8,13 @@
 # Matches are substitution rules: when you type the "trigger" string
 # it gets replaced by the "replace" string.
 matches:
-  # prénom, first name
-  - regex: ":(pr|fi)"
+  # first name
+  - regex: ":(fi)"
     label: "Romain"
     replace: "Romain"
 
-  # nom, last name
-  - regex: ":(no|la)"
+  # last name
+  - regex: ":(la)"
     label: "Racamier-Lafon"
     replace: "Racamier-Lafon"
 
@@ -23,8 +23,8 @@ matches:
     label: "Romain Racamier-Lafon"
     replace: "Romain Racamier-Lafon"
 
-  # entreprise, company
-  - regex: ":(ent|com)"
+  # company
+  - regex: ":(com)"
     label: "HumaCode"
     replace: "HumaCode"
 
@@ -33,8 +33,8 @@ matches:
     label: "HumaCode"
     replace: "HumaCode"
 
-  # poste, job
-  - regex: ":(po|jo)"
+  # job
+  - regex: ":(job)"
     label: "Développeur Web"
     replace: "Développeur Web"
 
@@ -116,7 +116,7 @@ matches:
   # But matches can also be dynamic:
 
   # Print the current date
-  - trigger: ":da"
+  - trigger: ":today"
     replace: "{{today}}"
     vars:
       - name: today
@@ -125,7 +125,7 @@ matches:
           format: "%m/%d/%Y"
 
   # Print the output of a shell command
-  - trigger: ":sh"
+  - trigger: ":shc"
     replace: "{{output}}"
     vars:
       - name: output
