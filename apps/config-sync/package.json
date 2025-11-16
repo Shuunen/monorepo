@@ -3,6 +3,7 @@
     "@monorepo/utils": "workspace:*"
   },
   "description": "My personal config files",
+  "main": "src/sync.cli.js",
   "name": "config-sync",
   "private": true,
   "type": "module",
