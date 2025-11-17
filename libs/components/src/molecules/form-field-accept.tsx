@@ -7,12 +7,11 @@ import { Label } from '../atoms/label'
 import { RadioGroup, RadioGroupItem } from '../atoms/radio-group'
 import { IconAccept } from '../icons/icon-accept'
 import { IconReject } from '../icons/icon-reject'
-import type { AutoFormFieldMetadata } from './auto-form.types'
-import { checkZodBoolean } from './auto-form.utils'
+import { checkZodBoolean, getFieldMetadata } from './auto-form.utils'
 import { FormFieldBase, type FormFieldBaseProps } from './form-field'
 
 export function FormFieldAccept({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false }: FormFieldBaseProps) {
-  const metadata = fieldSchema.meta() as AutoFormFieldMetadata | undefined
+  const metadata = getFieldMetadata(fieldSchema)
   if (!metadata) throw new Error(`Field "${fieldName}" is missing metadata (label, placeholder, state)`)
   const { state = 'editable' } = metadata
   const { isBoolean, isBooleanLiteral } = checkZodBoolean(fieldSchema as z.ZodBoolean | z.ZodLiteral | z.ZodOptional<z.ZodBoolean>)
