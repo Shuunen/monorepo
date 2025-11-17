@@ -5,12 +5,9 @@ import { type MouseEvent, useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { Button } from '../atoms/button'
 import { Form } from '../atoms/form'
-import { IconEdit } from '../icons/icon-edit'
 import { IconHome } from '../icons/icon-home'
-import { IconReadonly } from '../icons/icon-readonly'
-import { IconSuccess } from '../icons/icon-success'
 import type { AutoFormProps, AutoFormSubmissionStepProps } from './auto-form.types'
-import { defaultLabels, filterSchema, getFieldMetadata, getStepMetadata, mapExternalDataToFormFields, normalizeData } from './auto-form.utils'
+import { defaultIcons, defaultLabels, filterSchema, getFieldMetadata, getStepMetadata, mapExternalDataToFormFields, normalizeData } from './auto-form.utils'
 import { AutoFormFields } from './auto-form-fields'
 import { AutoFormNavigation } from './auto-form-navigation'
 import { AutoFormStepper } from './auto-form-stepper'
@@ -128,25 +125,29 @@ export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger
   // Step states and icons
   const steps = schemas.map((schema, idx) => {
     const stepMetadata = getStepMetadata(schema)
-    const label = stepMetadata?.step ?? `Step ${idx + 1}`
+    const title = stepMetadata?.title ?? `Step ${idx + 1}`
+    const subtitle = stepMetadata?.subtitle
+    const suffix = stepMetadata?.suffix
     const allReadonly = Object.values(schema.shape).every(fieldSchema => getFieldMetadata(fieldSchema)?.state === 'readonly')
     const filtered = filterSchema(schema, formData)
     const isSuccess = filtered.safeParse(formData).success
     /* oxlint-disable no-nested-ternary */
     const state = allReadonly ? ('readonly' as const) : isSuccess ? ('success' as const) : ('editable' as const)
-    const icon = allReadonly ? <IconReadonly key="readonly" /> : isSuccess ? <IconSuccess key="success" /> : <IconEdit key="editable" />
+    const icon = allReadonly ? defaultIcons.readonly : isSuccess ? defaultIcons.success : defaultIcons.edit
     /* oxlint-enable no-nested-ternary */
     return {
       active: idx === currentStep,
       icon,
       idx,
-      label,
       state,
+      subtitle,
+      suffix,
+      title,
     }
   })
-  // Get current step label for rendering above fields
-  const currentStepLabel = getStepMetadata(currentSchema)?.step
-  const stepTitle = typeof currentStepLabel === 'string' ? currentStepLabel : ''
+  // Get current step title for rendering above fields
+  const currentStepTitle = getStepMetadata(currentSchema)?.title
+  const stepTitle = typeof currentStepTitle === 'string' ? currentStepTitle : ''
   // Check if all schemas are valid to enable/disable submit button
   const isFormValid = useMemo(
     () =>

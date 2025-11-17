@@ -45,11 +45,15 @@ export type AutoFormProps = {
 /**
  * Metadata describing the configuration and behavior of a step in an auto-generated multi-step form.
  * Applied to the schema object itself using `.meta()`.
- * example: `z.object({ ... }).meta({ step: '1. Personal Information' })`
+ * example: `z.object({ ... }).meta({ title: 'Personal Information', subtitle: 'Basic details', suffix: '1/3' })`
  */
 export type AutoFormStepMetadata = {
-  /** The display label for this step, shown in the stepper and as the section heading. */
-  step: string
+  /** The display title for this step, shown in the stepper and as the section heading. */
+  title: string
+  /** Optional subtitle text shown below the title. */
+  subtitle?: string
+  /** Optional suffix text shown after the title (e.g., step number indicator). */
+  suffix?: string
 }
 
 /**

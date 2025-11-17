@@ -1,5 +1,5 @@
-import { PencilIcon } from 'lucide-react'
+import { CircleEllipsisIcon } from 'lucide-react'
 
-export function IconEdit() {
-  return <PencilIcon />
+export function IconEdit({ className }: { className?: string }) {
+  return <CircleEllipsisIcon className={className} />
 }

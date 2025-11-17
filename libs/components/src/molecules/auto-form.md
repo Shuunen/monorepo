@@ -443,7 +443,8 @@ const step1Schema = z.object({
     label: 'Last Name',
   }),
 }).meta({
-  step: '1. Personal Information',  // Step label on schema object
+  title: '1. Personal Information',  // Step title on schema object
+  subtitle: 'Basic personal details',  // Optional subtitle
 })
 
 // Step 2: Contact Details
@@ -455,7 +456,8 @@ const step2Schema = z.object({
     label: 'Phone Number',
   }),
 }).meta({
-  step: '2. Contact Details',  // Step label on schema object
+  title: '2. Contact Details',  // Step title on schema object
+  subtitle: 'How we can reach you',  // Optional subtitle
 })
 
 // Step 3: Confirmation
@@ -464,7 +466,8 @@ const step3Schema = z.object({
     label: 'I agree to Terms & Conditions',
   }),
 }).meta({
-  step: '3. Confirmation',  // Step label on schema object
+  title: '3. Confirmation',  // Step title on schema object
+  subtitle: 'Review and accept terms',  // Optional subtitle
 })
 
 <AutoForm
@@ -966,50 +969,50 @@ export function ContactForm() {
 const shippingSchema = z.object({
   email: z.email().meta({
     label: 'Email',
-    step: 'Shipping',
+    title: 'Shipping',
   }),
   fullName: z.string().meta({
     label: 'Full Name',
-    step: 'Shipping',
+    title: 'Shipping',
   }),
   address: z.string().meta({
     label: 'Address',
-    step: 'Shipping',
+    title: 'Shipping',
   }),
   city: z.string().meta({
     label: 'City',
-    step: 'Shipping',
+    title: 'Shipping',
   }),
   postalCode: z.string().meta({
     label: 'Postal Code',
-    step: 'Shipping',
+    title: 'Shipping',
   }),
 })
 
 const billingSchema = z.object({
   sameAsShipping: z.boolean().meta({
     label: 'Same as shipping address',
-    step: 'Billing',
+    title: 'Billing',
   }),
   billingAddress: z.string().meta({
     label: 'Billing Address',
     dependsOn: 'sameAsShipping',
-    step: 'Billing',
+    title: 'Billing',
   }),
 })
 
 const paymentSchema = z.object({
   cardNumber: z.string().regex(/^\d{16}$/).meta({
     label: 'Card Number',
-    step: 'Payment',
+    title: 'Payment',
   }),
   expiry: z.string().regex(/^\d{2}\/\d{2}$/).meta({
     label: 'MM/YY',
-    step: 'Payment',
+    title: 'Payment',
   }),
   cvv: z.string().regex(/^\d{3}$/).meta({
     label: 'CVV',
-    step: 'Payment',
+    title: 'Payment',
   }),
 })
 
@@ -1035,29 +1038,29 @@ import { fileSchema } from '@monorepo/components'
 const applicationSchema = z.object({
   fullName: z.string().meta({
     label: 'Full Name',
-    step: 'Personal Info',
+    title: 'Personal Info',
   }),
   email: z.email().meta({
     label: 'Email',
-    step: 'Personal Info',
+    title: 'Personal Info',
   }),
   phone: z.string().meta({
     label: 'Phone',
-    step: 'Personal Info',
+    title: 'Personal Info',
   }),
 
   resume: fileSchema(['pdf', 'doc', 'docx']).meta({
     label: 'Resume',
-    step: 'Documents',
+    title: 'Documents',
   }),
   coverLetter: fileSchema(['pdf', 'doc', 'docx']).optional().meta({
     label: 'Cover Letter (Optional)',
-    step: 'Documents',
+    title: 'Documents',
   }),
 
   agreeToTerms: z.boolean().meta({
     label: 'I agree to the privacy policy',
-    step: 'Confirmation',
+    title: 'Confirmation',
   }),
 })
 

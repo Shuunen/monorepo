@@ -631,7 +631,8 @@ const optionalSectionStep1Schema = z
     }),
   })
   .meta({
-    step: 'My infos',
+    subtitle: 'Basic personal information',
+    title: 'My infos',
   })
 
 const optionalSectionStep2Schema = z
@@ -654,7 +655,8 @@ const optionalSectionStep2Schema = z
     }),
   })
   .meta({
-    step: 'My pet',
+    subtitle: 'Pet information and details',
+    title: 'My pet',
   })
 
 /**
@@ -779,7 +781,8 @@ const editableStep1Schema = z
     }),
   })
   .meta({
-    step: 'My infos',
+    subtitle: 'Basic personal information',
+    title: 'My infos',
   })
 
 const readonlyStep2Schema = z
@@ -797,7 +800,8 @@ const readonlyStep2Schema = z
     }),
   })
   .meta({
-    step: 'My pet',
+    subtitle: 'Pet information and details',
+    title: 'My pet',
   })
 
 /**
@@ -824,7 +828,7 @@ export const StepperStates: Story = {
       expect(secondStepButton).toHaveAttribute('data-state', 'readonly')
     })
     await step('verify step 2 readonly fields', async () => {
-      const secondStepButton = canvas.getByRole('button', { name: 'My pet' })
+      const secondStepButton = canvas.getByRole('button', { name: 'My pet Pet information and details' })
       await userEvent.click(secondStepButton)
       const petNameInput = canvas.getByTestId('pet-name')
       expect(petNameInput).toBeInTheDocument()
@@ -936,11 +940,12 @@ export const NestedKeyMapping: Story = {
     const canvas = within(canvasElement)
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
-    await step('verify initial data was mapped correctly', () => {
+    await step('verify initial data was mapped correctly', async () => {
       const emailInput = canvas.getByTestId('user-email')
       expect(emailInput).toHaveValue('jane.doe@example.com')
       const nameInput = canvas.getByTestId('user-name')
       expect(nameInput).toHaveValue('Jane Doe')
+      await userEvent.click(emailInput)
       expect(formData).toContainHTML('"email": "jane.doe@example.com"')
       expect(formData).toContainHTML('"fullName": "Jane Doe"')
       expect(submittedData).toContainHTML('{}')
@@ -960,7 +965,9 @@ export const NestedKeyMapping: Story = {
       expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
     })
-    await step('verify submitted data uses nested output paths', () => {
+    await step('verify submitted data uses nested output paths', async () => {
+      const emailInput = canvas.getByTestId('user-email')
+      await userEvent.click(emailInput)
       const expectedData = { userInfos: { email: 'new.email@example.com', fullName: 'John Smith' } }
       expect(formData).toContainHTML(stringify(expectedData, true))
       expect(submittedData).toContainHTML(stringify(expectedData, true))
@@ -979,7 +986,7 @@ const step1SummarySchema = z
       placeholder: 'Enter your legal name',
     }),
   })
-  .meta({ step: 'Personal Information' })
+  .meta({ subtitle: 'Basic personal details', title: 'Personal Information' })
 
 const step2SummarySchema = z
   .object({
@@ -992,7 +999,7 @@ const step2SummarySchema = z
       placeholder: 'Check to subscribe',
     }),
   })
-  .meta({ step: 'Additional Details' })
+  .meta({ subtitle: 'Additional information about you', title: 'Additional Details' })
 
 /**
  * Multi-step form with summary step
