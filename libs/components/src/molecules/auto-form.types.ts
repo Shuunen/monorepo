@@ -1,6 +1,7 @@
 import type { Logger } from '@monorepo/utils'
 import type { ReactNode } from 'react'
 import type { z } from 'zod'
+import type { AutoFormStepperStep } from './auto-form-stepper'
 
 /** Props for the AutoForm component, which generates a form based on provided Zod schemas. */
 export type AutoFormProps = {
@@ -47,14 +48,7 @@ export type AutoFormProps = {
  * Applied to the schema object itself using `.meta()`.
  * example: `z.object({ ... }).meta({ title: 'Personal Information', subtitle: 'Basic details', suffix: '1/3' })`
  */
-export type AutoFormStepMetadata = {
-  /** The display title for this step, shown in the stepper and as the section heading. */
-  title: string
-  /** Optional subtitle text shown below the title. */
-  subtitle?: string
-  /** Optional suffix text shown after the title (e.g., step number indicator). */
-  suffix?: string
-}
+export type AutoFormStepMetadata = Pick<AutoFormStepperStep, 'title' | 'subtitle' | 'suffix' | 'indent'>
 
 /**
  * Metadata describing the configuration and behavior of a field in an auto-generated form.

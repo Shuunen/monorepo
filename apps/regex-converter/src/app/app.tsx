@@ -1,4 +1,4 @@
-import { OwlIcon, TypewriterEffectSmooth } from '@monorepo/components'
+import { IconOwl, TypewriterEffectSmooth } from '@monorepo/components'
 import { Converter } from './converter'
 
 export function App() {
@@ -19,7 +19,7 @@ export function App() {
         </h1>
         <Converter />
         <span className="text-sm text-center block w-full text-muted-foreground italic mt-12">__unique-mark__</span>
-        <OwlIcon className="opacity-10 text-primary w-12 mx-auto mt-12" />
+        <IconOwl className="opacity-10 text-primary w-12 mx-auto mt-12" />
       </div>
     </div>
   )
