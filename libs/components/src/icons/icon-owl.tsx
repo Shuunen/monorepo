@@ -3,7 +3,7 @@
  * @param props SVG properties to apply to the icon
  * @returns the SVG element for the Owl icon
  */
-export function OwlIcon(props: React.SVGProps<SVGSVGElement>) {
+export function IconOwl(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 76 50" xmlns="http://www.w3.org/2000/svg" {...props}>
       <title>Owl Icon</title>

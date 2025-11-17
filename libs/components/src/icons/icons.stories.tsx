@@ -1,4 +1,5 @@
-import { DebugData } from '@monorepo/components'
+// oxlint-disable max-dependencies
+import { DebugData, IconAccept, IconChevronDown, IconCircle, IconCircleCheck, IconCircleClose, IconCircleDot, IconCircleEllipsis, IconDownload, IconFileClock, IconOwl, IconReject, IconSearch, IconSearchCheck, IconSearchX, IconUpload } from '@monorepo/components'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { JSX } from 'react'
 import { IconAdd } from './icon-add'
@@ -15,9 +16,42 @@ import { IconReadonly } from './icon-readonly'
 import { IconSelect } from './icon-select'
 import { IconSuccess } from './icon-success'
 import { IconTooltip } from './icon-tooltip'
+import { IconUpcoming } from './icon-upcoming'
 import { IconWarning } from './icon-warning'
 
-const icons = [IconAdd, IconArrowDown, IconArrowLeft, IconArrowRight, IconArrowUp, IconCheck, IconEdit, IconError, IconHome, IconLoading, IconReadonly, IconSelect, IconSuccess, IconTooltip, IconWarning]
+const icons = [
+  IconAccept,
+  IconAdd,
+  IconArrowDown,
+  IconArrowLeft,
+  IconArrowRight,
+  IconArrowUp,
+  IconCheck,
+  IconChevronDown,
+  IconCircleCheck,
+  IconCircleClose,
+  IconCircleDot,
+  IconCircleEllipsis,
+  IconCircle,
+  IconDownload,
+  IconEdit,
+  IconError,
+  IconFileClock,
+  IconHome,
+  IconLoading,
+  IconOwl,
+  IconReadonly,
+  IconReject,
+  IconSearchX,
+  IconSearchCheck,
+  IconSearch,
+  IconSelect,
+  IconSuccess,
+  IconTooltip,
+  IconUpcoming,
+  IconUpload,
+  IconWarning,
+]
 
 type Props = { component: ({ className }: { className?: string | undefined }) => JSX.Element }
 

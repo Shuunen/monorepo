@@ -15,7 +15,8 @@ type Story = StoryObj<typeof AutoFormStepper>
 const successState = 'success' as const
 const editableState = 'editable' as const
 const readonlyState = 'readonly' as const
-const { success: iconSuccess, edit: iconEdit, readonly: iconReadonly } = defaultIcons
+const upcomingState = 'upcoming' as const
+const { success: iconSuccess, edit: iconEdit, readonly: iconReadonly, upcoming: iconUpcoming } = defaultIcons
 
 /**
  * Basic stepper with title only
@@ -210,7 +211,6 @@ export const Everything: Story = {
         idx: 0,
         state: successState,
         subtitle: 'Name, email, phone',
-        suffix: '1/6',
         title: 'Personal Info',
       },
       {
@@ -219,17 +219,18 @@ export const Everything: Story = {
         idx: 1,
         state: successState,
         subtitle: 'Street, city, zip code',
-        suffix: '2/6',
+        suffix: '- Part 1/2',
         title: 'Address',
       },
       {
         active: activeStep === 2,
         icon: iconEdit,
         idx: 2,
+        indent: true,
         state: editableState,
-        subtitle: 'Choose your preferences',
-        suffix: '3/6',
-        title: 'Preferences',
+        subtitle: 'State, country',
+        suffix: '- Part 2/2',
+        title: 'Address',
       },
       {
         active: activeStep === 3,
@@ -237,26 +238,16 @@ export const Everything: Story = {
         idx: 3,
         state: readonlyState,
         subtitle: 'View only, cannot edit',
-        suffix: '4/6',
         title: 'Terms & Conditions',
       },
       {
         active: activeStep === 4,
-        icon: activeStep > 4 ? iconSuccess : iconEdit,
+        icon: iconUpcoming,
         idx: 4,
-        state: activeStep > 4 ? successState : editableState,
-        subtitle: 'Card details and billing',
-        suffix: '5/6',
+        state: upcomingState,
+        subtitle: 'Payment method and details',
+        suffix: '- FINAL',
         title: 'Payment',
-      },
-      {
-        active: activeStep === 5,
-        icon: activeStep > 5 ? iconSuccess : iconEdit,
-        idx: 5,
-        state: activeStep > 5 ? successState : editableState,
-        subtitle: 'Review and submit',
-        suffix: '6/6',
-        title: 'Review',
       },
     ]
 
