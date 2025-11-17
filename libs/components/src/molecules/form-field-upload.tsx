@@ -8,7 +8,7 @@ import { FormControl } from '../atoms/form'
 import { Input } from '../atoms/input'
 import { Progress } from '../atoms/progress'
 import { cn } from '../shadcn/utils'
-import type { AutoFormFieldMetadata } from './auto-form.types'
+import { getFieldMetadata } from './auto-form.utils'
 import { FormFieldBase, type FormFieldBaseProps } from './form-field'
 import { formatFileSize, maxPercent, uploadDurationFail, uploadDurationSuccess, uploadPercentFail } from './form-field-upload.const'
 
@@ -23,7 +23,7 @@ type FormFieldUploadProps = FormFieldBaseProps & {
 
 // oxlint-disable-next-line max-lines-per-function
 export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOptional, logger, readonly = false, shouldFail, onFileChange, onFileRemove, onFileUploadComplete, onFileUploadError }: FormFieldUploadProps) {
-  const metadata = fieldSchema.meta() as AutoFormFieldMetadata | undefined
+  const metadata = getFieldMetadata(fieldSchema)
   if (!metadata) throw new Error(`Field "${fieldName}" is missing metadata (label, placeholder, state)`)
   const { placeholder, state = 'editable' } = metadata
   const isDisabled = state === 'disabled'

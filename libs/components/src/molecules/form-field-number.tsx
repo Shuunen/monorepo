@@ -1,11 +1,10 @@
 import { FormControl } from '../atoms/form'
 import { Input } from '../atoms/input'
-import type { AutoFormFieldMetadata } from './auto-form.types'
-import { isZodNumber } from './auto-form.utils'
+import { getFieldMetadata, isZodNumber } from './auto-form.utils'
 import { FormFieldBase, type FormFieldBaseProps } from './form-field'
 
 export function FormFieldNumber({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false }: FormFieldBaseProps) {
-  const metadata = fieldSchema.meta() as AutoFormFieldMetadata | undefined
+  const metadata = getFieldMetadata(fieldSchema)
   if (!metadata) throw new Error(`Field "${fieldName}" is missing metadata (label, placeholder, state)`)
   const { placeholder, state = 'editable' } = metadata
   const isDisabled = state === 'disabled'
