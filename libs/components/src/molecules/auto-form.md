@@ -166,6 +166,15 @@ type AutoFormFieldMetadata = {
   // Display properties
   label?: string              // Field label above input
   placeholder?: string        // Placeholder or description text
+  title?: string              // Section title (for section render)
+  subtitle?: string           // Section subtitle (for section render)
+  description?: string        // Section description or field help text
+  code?: string               // Code block content (for section render)
+  line?: boolean              // Show divider line (for section render)
+
+  // Field rendering
+  render?: 'text' | 'textarea' | 'date' | 'number' | 'boolean' | 'select' |
+           'upload' | 'accept' | 'section'  // Component to render
 
   // Field state
   state?: 'editable' | 'readonly' | 'disabled'  // User can interact?
@@ -259,6 +268,19 @@ agreeTerms: z.boolean().meta({
 
 AutoForm automatically determines which component to render based on the Zod schema type.
 
+**Available field types:**
+
+- Text input (`z.string()`)
+- Textarea (`z.string().meta({ render: 'textarea' })`)
+- Email (`z.email()`)
+- Number (`z.number()`)
+- Boolean/Checkbox (`z.boolean()`)
+- Select/Dropdown (`z.enum()`)
+- Date picker (`z.date()` or `z.string().meta({ render: 'date' })`)
+- File upload (`z.instanceof(File)`)
+- Accept/Reject buttons (`z.boolean().meta({ render: 'accept' })`)
+- Informational sections (`z.string().meta({ render: 'section' })`)
+
 ![auto-form-fields](./auto-form-fields.png)
 
 ### 1. Text Fields
@@ -291,7 +313,42 @@ z.object({
 
 ---
 
-### 2. Number Fields
+### 2. Textarea Fields
+
+**Zod Type:** `z.string()` with `render: 'textarea'`
+**Renders:** Multi-line text input
+
+```typescript
+z.object({
+  description: z.string().min(10, 'At least 10 characters').meta({
+    label: 'Description',
+    placeholder: 'Enter a detailed description',
+    render: 'textarea',
+  }),
+  feedback: z.string().optional().meta({
+    label: 'Additional Feedback',
+    placeholder: 'Optional comments',
+    render: 'textarea',
+  }),
+  terms: z.string().meta({
+    label: 'Terms & Conditions',
+    render: 'textarea',
+    state: 'readonly',  // Display-only
+  }),
+})
+```
+
+**Features:**
+
+- Multi-line text editing
+- String validation from schema (min, max, required)
+- Readonly and disabled states
+- Auto-expanding height based on content
+- Error messages display automatically
+
+---
+
+### 3. Number Fields
 
 **Zod Type:** `z.number()`
 **Renders:** Number input with type coercion
@@ -320,10 +377,10 @@ z.object({
 
 ---
 
-### 3. Boolean Fields
+### 4. Boolean Fields
 
 **Zod Type:** `z.boolean()` or `z.literal(true/false)`
-**Renders:** Checkbox
+**Renders:** Checkbox/Toggle switch
 
 ```typescript
 z.object({
@@ -354,7 +411,7 @@ z.object({
 
 ---
 
-### 4. Select Fields
+### 5. Select Fields
 
 **Zod Type:** `z.enum()` or `z.union()`
 **Renders:** Dropdown select
@@ -393,7 +450,43 @@ z.object({
 
 ---
 
-### 5. File Upload Fields
+### 6. Date Fields
+
+**Zod Type:** `z.date()` or `z.string()` with `render: 'date'`
+**Renders:** Date picker
+
+```typescript
+z.object({
+  // Native Date field
+  birthDate: z.date().meta({
+    label: 'Date of Birth',
+    placeholder: 'Select your birth date',
+  }),
+
+  // String as date (useful for APIs that expect ISO string)
+  eventDate: z.string().meta({
+    label: 'Event Date',
+    placeholder: 'Select event date',
+    render: 'date',
+  }),
+
+  // Optional date field
+  reminderDate: z.date().optional().meta({
+    label: 'Reminder Date',
+  }),
+})
+```
+
+**Features:**
+
+- Interactive date picker
+- Date validation from schema
+- Converts between Date objects and string representations
+- Readonly and disabled states
+
+---
+
+### 7. File Upload Fields
 
 **Zod Type:** `z.instanceof(File)` with validation
 **Renders:** File input with progress
@@ -428,6 +521,96 @@ z.object({
 - States: Idle → Uploading → Success/Error
 - Action buttons: Cancel, Retry, Remove
 - Integrated with form validation
+
+---
+
+### 8. Accept/Reject Fields
+
+**Zod Type:** `z.boolean()` with `render: 'accept'`
+**Renders:** Accept/Reject button pair
+
+```typescript
+z.object({
+  // Accept/Reject decision
+  approve: z.boolean().optional().meta({
+    label: 'Do you approve this request?',
+    render: 'accept',
+  }),
+
+  // In sections for clarity
+  confirmDelete: z.boolean().meta({
+    label: 'Confirm deletion',
+    description: 'This action cannot be undone',
+    render: 'accept',
+  }),
+})
+```
+
+**Features:**
+
+- Two-button interface (Accept/Reject)
+- Explicit user confirmation
+- Better UX for critical decisions
+- Returns true (accept) or false (reject)
+- Optional support for non-required decisions
+
+---
+
+### 9. Section Fields
+
+**Zod Type:** `z.string()` with `render: 'section'`
+**Renders:** Informational content (non-interactive)
+
+```typescript
+z.object({
+  section1Title: z.string().meta({
+    title: 'Account Settings',
+    description: 'Manage your account information',
+    render: 'section',
+  }),
+
+  email: z.email().meta({
+    label: 'Email Address',
+  }),
+
+  section2Title: z.string().meta({
+    title: 'Security',
+    description: 'Update your password and two-factor authentication',
+    render: 'section',
+  }),
+
+  password: z.string().min(8).meta({
+    label: 'New Password',
+  }),
+
+  codeDisplay: z.string().meta({
+    code: 'z.email().meta({ label: "Email" })',
+    line: true,
+    render: 'section',
+  }),
+})
+```
+
+**Features:**
+
+- Display titles, descriptions, and code examples
+- Non-interactive (not submitted)
+- Useful for visual organization
+- Can display code blocks with syntax highlighting
+- Optional divider lines between sections
+- Automatically excluded from form data
+
+**Section Metadata:**
+
+```typescript
+type FormFieldSectionProps = {
+  title?: string           // Section heading
+  subtitle?: string        // Secondary heading
+  description?: string     // Descriptive text
+  code?: string           // Code block to display
+  line?: boolean          // Show separator line
+}
+```
 
 ---
 
@@ -805,10 +988,29 @@ if (result.ok) {
 
 ```typescript
 // Check if schema is a specific type (handles optional wrapper)
-isZodEnum(fieldSchema)       // true if z.enum() or z.optional(z.enum())
-isZodBoolean(fieldSchema)    // true if z.boolean() or z.literal(bool)
-isZodNumber(fieldSchema)     // true if z.number()
-isZodFile(fieldSchema)       // true if z.instanceof(File)
+isZodEnum(fieldSchema)            // true if z.enum() or z.optional(z.enum())
+isZodBoolean(fieldSchema)         // true if z.boolean() or z.literal(bool)
+checkZodBoolean(fieldSchema)      // Returns { isBoolean, isBooleanLiteral, booleanLiteralValue }
+isZodNumber(fieldSchema)          // true if z.number()
+isZodDate(fieldSchema)            // true if z.date() or z.optional(z.date())
+isZodString(fieldSchema)          // true if z.string()
+isZodFile(fieldSchema)            // true if z.instanceof(File)
+```
+
+#### Form Field Analysis Utilities
+
+```typescript
+// Get the render type for a field (auto-detection + explicit)
+getFormFieldRender(fieldSchema)    // Returns: 'text' | 'textarea' | 'date' | 'number' | 'boolean' | 'select' | 'upload' | undefined
+
+// Get metadata from field schema
+getFieldMetadata(fieldSchema)      // Returns: AutoFormFieldMetadata | undefined
+
+// Get metadata from step schema
+getStepMetadata(stepSchema)        // Returns: AutoFormStepMetadata | undefined
+
+// Parse dependsOn syntax
+parseDependsOn(dependsOn)          // Returns: { fieldName: string; expectedValue?: string }
 ```
 
 ---
@@ -835,15 +1037,25 @@ const mapped = mapExternalDataToFormFields(schema, apiData)
 // Maps 'user.givenName' → 'firstName' (if keyIn: 'user.givenName')
 ```
 
-#### cleanSubmittedData()
+#### normalizeDataForSchema()
 
-Remove hidden and excluded fields before submission:
+Remove hidden, excluded, and section fields before submission:
 
 ```typescript
-const cleaned = cleanSubmittedData(schema, formData, allFormData)
+const normalized = normalizeDataForSchema(schema, formData)
 // - Removes fields with unmet dependencies
 // - Removes fields with excluded: true
+// - Removes fields with render: 'section'
 // - Applies keyOut mappings to nested paths
+```
+
+#### normalizeData()
+
+Apply normalization across multiple schemas:
+
+```typescript
+const cleaned = normalizeData(schemas, formData)
+// Applies normalizeDataForSchema() to all schemas in sequence
 ```
 
 #### mockSubmit()
@@ -871,9 +1083,13 @@ molecules/
 ├── auto-form-field.tsx                # Field router (picks component)
 ├── form-field.tsx                     # Base field wrapper
 ├── form-field-text.tsx                # Text input
+├── form-field-textarea.tsx            # Textarea input
 ├── form-field-number.tsx              # Number input
-├── form-field-boolean.tsx             # Checkbox
-├── form-field-select.tsx              # Dropdown
+├── form-field-boolean.tsx             # Checkbox/Toggle
+├── form-field-select.tsx              # Dropdown select
+├── form-field-date.tsx                # Date picker
+├── form-field-accept.tsx              # Accept/Reject buttons
+├── form-field-section.tsx             # Informational sections
 ├── form-field-upload.tsx              # File upload
 ├── form-field-upload.const.ts         # Upload constants
 │
@@ -884,7 +1100,9 @@ molecules/
 ├── auto-form-submission-step.tsx      # Status display
 ├── form-summary.tsx                   # Summary table
 │
-├── auto-form.stories.tsx              # Storybook stories
+├── auto-form.stories.tsx              # Comprehensive examples
+├── auto-form-fields.stories.tsx       # All field types showcase
+├── form-field-*.stories.tsx           # Individual field stories
 ├── auto-form.utils.test.ts            # Utility tests
 ├── form-field-upload.test.ts          # Upload tests
 └── form-summary.test.tsx              # Summary tests
@@ -925,6 +1143,34 @@ User Input (keyboard, mouse, file)
 - Validation state per field
 - Touched/dirty fields
 - Field-level errors
+
+---
+
+## Render Type Auto-Detection
+
+When you don't explicitly set `render` in metadata, AutoForm automatically selects the right component:
+
+```typescript
+// Automatic detection based on Zod schema type
+z.string()              → render: 'text'
+z.string().email()      → render: 'text' (validated as email)
+z.number()              → render: 'number'
+z.boolean()             → render: 'boolean'
+z.date()                → render: 'date'
+z.enum(['a', 'b'])      → render: 'select'
+z.instanceof(File)      → render: 'upload'
+
+// Override with explicit render in metadata
+z.string().meta({ render: 'textarea' })      // Multi-line instead of single
+z.string().meta({ render: 'date' })          // Date picker (stores ISO string)
+```
+
+**When to use explicit `render`:**
+
+- `render: 'textarea'` - For long text descriptions
+- `render: 'date'` - For z.string() fields that represent dates (APIs expecting ISO strings)
+- `render: 'accept'` - For boolean fields with accept/reject semantics
+- `render: 'section'` - For informational content (headers, descriptions, code examples)
 
 ---
 
