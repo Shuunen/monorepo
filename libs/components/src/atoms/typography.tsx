@@ -12,6 +12,7 @@ const titleVariants = cva('font-semibold tracking-tight', {
       1: 'text-2xl font-bold',
       2: 'text-xl',
       3: 'text-lg',
+      4: 'text-base',
     },
     variant: {
       default: 'text-foreground',
@@ -35,7 +36,7 @@ type TitleProps = VariantProps<typeof titleVariants> & {
    * The level of the title (1, 2, or 3)
    */
   // oxlint-disable-next-line no-magic-numbers
-  level?: 1 | 2 | 3
+  level?: 1 | 2 | 3 | 4
 }
 
 /**

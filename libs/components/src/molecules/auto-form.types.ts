@@ -48,7 +48,7 @@ export type AutoFormProps = {
  * Applied to the schema object itself using `.meta()`.
  * example: `z.object({ ... }).meta({ title: 'Personal Information', subtitle: 'Basic details', suffix: '1/3' })`
  */
-export type AutoFormStepMetadata = Pick<AutoFormStepperStep, 'title' | 'subtitle' | 'suffix' | 'indent'>
+export type AutoFormStepMetadata = Pick<AutoFormStepperStep, 'title' | 'section' | 'subtitle' | 'suffix' | 'indent'>
 
 /**
  * Metadata describing the configuration and behavior of a field in an auto-generated form.
