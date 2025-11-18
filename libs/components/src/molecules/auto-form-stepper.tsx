@@ -1,7 +1,10 @@
 import { cn, slugify } from '@monorepo/utils'
 import { Button } from '../atoms/button'
+import { Title } from '../atoms/typography'
 
 export type AutoFormStepperStep = {
+  /** Optional section identifier for this step. */
+  section?: string
   /** The display title for this step, shown in the stepper and as the section heading. */
   title: string
   /** Optional subtitle text shown below the title. */
@@ -26,30 +29,40 @@ type AutoFormStepperProps = {
   steps: AutoFormStepperStep[]
 }
 
+type AutoFormStepProps = {
+  step: AutoFormStepperStep
+  disabled?: boolean
+  onStepClick: (idx: number) => void
+}
+
+function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps) {
+  const { title, subtitle, suffix, icon, active, idx, state, indent, section } = step
+  const btnClasses = cn('h-10 border border-transparent', { 'h-16 rounded-xl': subtitle }, { 'ml-1': indent }, { 'bg-white text-black border border-gray-500 hover:bg-gray-100': active })
+  return (
+    <div className="grid gap-2">
+      {section && <Title level={4}>{section}</Title>}
+      <div className={cn('flex items-center gap-0.5', { 'opacity-60 pointer-events-none': state === 'upcoming' })}>
+        {indent && <div className={cn('h-10 w-1 bg-gray-200', { 'h-16': subtitle })} />}
+        <Button className={btnClasses} data-state={state} disabled={disabled} onClick={() => onStepClick(idx)} testId={`step-${slugify(title)}`} variant="ghost">
+          {icon}
+          <div className="grow text-start flex flex-col ml-2">
+            <div className="flex items-center gap-1">
+              <span>{title}</span>
+              {suffix && <span className="text-xs text-muted-foreground">{suffix}</span>}
+            </div>
+            {subtitle && <span className="text-xs text-muted-foreground">{subtitle}</span>}
+          </div>
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 export function AutoFormStepper({ steps, onStepClick, disabled = false }: AutoFormStepperProps) {
   return (
     <div className="flex flex-col gap-4 pr-8 border-r border-gray-200 mr-8">
-      {steps.map(({ title, subtitle, suffix, icon, active, idx, state, indent }) => (
-        <div className={cn('flex items-center gap-0.5', { 'opacity-60 pointer-events-none': state === 'upcoming' })} key={title}>
-          {indent && <div className={cn('h-10 w-1 bg-gray-200', { 'h-16': subtitle })} />}
-          <Button
-            className={cn('h-10 border border-transparent', { 'h-16 rounded-xl': subtitle }, { 'ml-1': indent }, { 'bg-white text-black border border-gray-500 hover:bg-gray-100': active })}
-            data-state={state}
-            disabled={disabled}
-            onClick={() => onStepClick(idx)}
-            testId={`step-${slugify(title)}`}
-            variant={active ? 'default' : 'ghost'}
-          >
-            {icon}
-            <div className="grow text-start flex flex-col ml-2">
-              <div className="flex items-center gap-1">
-                <span>{title}</span>
-                {suffix && <span className="text-xs text-muted-foreground">{suffix}</span>}
-              </div>
-              {subtitle && <span className="text-xs text-muted-foreground">{subtitle}</span>}
-            </div>
-          </Button>
-        </div>
+      {steps.map(step => (
+        <AutoFormStep disabled={disabled} key={step.title} onStepClick={onStepClick} step={step} />
       ))}
     </div>
   )

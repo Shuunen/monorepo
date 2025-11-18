@@ -1,10 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useId, useState } from 'react'
+import { Skeleton } from '../atoms/skeleton'
 import { defaultIcons } from './auto-form.utils'
 import { AutoFormStepper } from './auto-form-stepper'
 
 const meta: Meta<typeof AutoFormStepper> = {
   component: AutoFormStepper,
+  parameters: {
+    layout: 'centered',
+  },
   title: 'Molecules/AutoFormStepper',
 }
 
@@ -17,6 +21,29 @@ const editableState = 'editable' as const
 const readonlyState = 'readonly' as const
 const upcomingState = 'upcoming' as const
 const { success: iconSuccess, edit: iconEdit, readonly: iconReadonly, upcoming: iconUpcoming } = defaultIcons
+
+function FormSkeleton() {
+  return (
+    <div className="flex-1 space-y-4">
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-32" />
+        <Skeleton className="h-10 w-full" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-40" />
+        <Skeleton className="h-10 w-full" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-36" />
+        <Skeleton className="h-24 w-full" />
+      </div>
+      <div className="flex gap-3 pt-4">
+        <Skeleton className="h-10 w-24" />
+        <Skeleton className="h-10 w-24" />
+      </div>
+    </div>
+  )
+}
 
 /**
  * Basic stepper with title only
@@ -49,8 +76,11 @@ export const Basic: Story = {
     ]
 
     return (
-      <div className="w-80">
-        <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
+      <div className="flex gap-8">
+        <div className="w-80">
+          <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
+        </div>
+        <FormSkeleton />
       </div>
     )
   },
@@ -90,8 +120,11 @@ export const WithSubtitles: Story = {
     ]
 
     return (
-      <div className="w-80">
-        <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
+      <div className="flex gap-8">
+        <div className="w-80">
+          <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
+        </div>
+        <FormSkeleton />
       </div>
     )
   },
@@ -139,8 +172,11 @@ export const WithSuffixes: Story = {
     ]
 
     return (
-      <div className="w-80">
-        <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
+      <div className="flex gap-8">
+        <div className="w-80">
+          <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
+        </div>
+        <FormSkeleton />
       </div>
     )
   },
@@ -159,7 +195,7 @@ export const WithSubtitlesAndSuffixes: Story = {
         idx: 0,
         state: activeStep > 0 ? successState : editableState,
         subtitle: 'Enter your shipping address',
-        suffix: 'Step 1',
+        suffix: '- Step 1/3',
         title: 'Shipping',
       },
       {
@@ -168,7 +204,7 @@ export const WithSubtitlesAndSuffixes: Story = {
         idx: 1,
         state: activeStep > 1 ? successState : editableState,
         subtitle: 'Enter payment information',
-        suffix: 'Step 2',
+        suffix: '- Step 2/3',
         title: 'Payment',
       },
       {
@@ -177,14 +213,82 @@ export const WithSubtitlesAndSuffixes: Story = {
         idx: 2,
         state: editableState,
         subtitle: 'Review your order',
-        suffix: 'Step 3',
+        suffix: '- Step 3/3',
         title: 'Review',
       },
     ]
 
     return (
-      <div className="w-80">
-        <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
+      <div className="flex gap-8">
+        <div className="w-80">
+          <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
+        </div>
+        <FormSkeleton />
+      </div>
+    )
+  },
+}
+
+/**
+ * Stepper with section headers to group related steps
+ */
+export const WithSections: Story = {
+  render: () => {
+    const [activeStep, setActiveStep] = useState(2)
+    const steps = [
+      {
+        active: activeStep === 0,
+        icon: iconSuccess,
+        idx: 0,
+        section: 'Getting Started',
+        state: successState,
+        title: 'Create Account',
+      },
+      {
+        active: activeStep === 1,
+        icon: iconSuccess,
+        idx: 1,
+        state: successState,
+        title: 'Email Verification',
+      },
+      {
+        active: activeStep === 2,
+        icon: iconEdit,
+        idx: 2,
+        section: 'Profile Setup',
+        state: editableState,
+        title: 'Personal Information',
+      },
+      {
+        active: activeStep === 3,
+        icon: iconUpcoming,
+        idx: 3,
+        state: upcomingState,
+        title: 'Profile Picture',
+      },
+      {
+        active: activeStep === 4,
+        icon: iconUpcoming,
+        idx: 4,
+        section: 'Preferences',
+        state: upcomingState,
+        title: 'Notification Settings',
+      },
+      {
+        active: activeStep === 5,
+        icon: iconUpcoming,
+        idx: 5,
+        state: upcomingState,
+        title: 'Privacy Settings',
+      },
+    ]
+
+    return (
+      <div className="flex gap-8">
+        <div className="w-80">
+          <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
+        </div>
+        <FormSkeleton />
       </div>
     )
   },
@@ -209,23 +313,33 @@ export const Everything: Story = {
         active: activeStep === 0,
         icon: iconSuccess,
         idx: 0,
+        section: 'Completed steps',
         state: successState,
         subtitle: 'Name, email, phone',
         title: 'Personal Info',
       },
       {
         active: activeStep === 1,
-        icon: iconSuccess,
+        icon: iconReadonly,
         idx: 1,
-        state: successState,
-        subtitle: 'Street, city, zip code',
-        suffix: '- Part 1/2',
-        title: 'Address',
+        state: readonlyState,
+        subtitle: 'Details you agreed to',
+        title: 'Terms & Conditions',
       },
       {
         active: activeStep === 2,
         icon: iconEdit,
         idx: 2,
+        section: 'To complete',
+        state: editableState,
+        subtitle: 'Street, city, zip code',
+        suffix: '- Part 1/2',
+        title: 'Address',
+      },
+      {
+        active: activeStep === 3,
+        icon: iconEdit,
+        idx: 3,
         indent: true,
         state: editableState,
         subtitle: 'State, country',
@@ -233,17 +347,10 @@ export const Everything: Story = {
         title: 'Address',
       },
       {
-        active: activeStep === 3,
-        icon: iconReadonly,
-        idx: 3,
-        state: readonlyState,
-        subtitle: 'View only, cannot edit',
-        title: 'Terms & Conditions',
-      },
-      {
         active: activeStep === 4,
         icon: iconUpcoming,
         idx: 4,
+        section: 'Upcoming steps',
         state: upcomingState,
         subtitle: 'Payment method and details',
         suffix: '- FINAL',
@@ -253,42 +360,48 @@ export const Everything: Story = {
 
     return (
       <div className="space-y-6">
+        <div className="flex gap-8">
+          <div className="w-80">
+            <AutoFormStepper disabled={isDisabled} onStepClick={setActiveStep} steps={steps} />
+          </div>
+          <FormSkeleton />
+        </div>
+
         <div className="flex items-center gap-2">
-          <input checked={isDisabled} id={toggleId} onChange={e => setIsDisabled(e.target.checked)} type="checkbox" />
-          <label className="text-sm" htmlFor={toggleId}>
+          <label className="flex gap-2 cursor-pointer" htmlFor={toggleId}>
+            <input checked={isDisabled} id={toggleId} onChange={e => setIsDisabled(e.target.checked)} type="checkbox" />
             Disable stepper (e.g., during submission)
           </label>
         </div>
 
-        <div className="w-80">
-          <AutoFormStepper disabled={isDisabled} onStepClick={setActiveStep} steps={steps} />
-        </div>
-
-        <div className="text-sm text-muted-foreground space-y-2">
+        <div className="text-muted-foreground space-y-2">
           <p>
             <strong>Features demonstrated:</strong>
           </p>
           <ul className="list-disc list-inside space-y-1 ml-2">
             <li>
-              <strong>Success state:</strong> Steps 1-2 (completed with checkmark)
+              <strong>Success state:</strong> Steps 1 (completed with checkmark, readable)
             </li>
             <li>
-              <strong>Editable state:</strong> Step 3, 5-6 (in progress, can edit)
+              <strong>Readonly state:</strong> Step 2 (view only, readable not editable)
             </li>
             <li>
-              <strong>Readonly state:</strong> Step 4 (view only, locked)
+              <strong>Editable state:</strong> Step 3-4 (in progress, can edit)
             </li>
             <li>
-              <strong>Subtitles:</strong> Additional context below each title
+              <strong>Indent state:</strong> Step 4 (indented to indicate link with previous step)
             </li>
             <li>
-              <strong>Suffixes:</strong> Step numbers (1/6, 2/6, etc.)
+              <strong>Upcoming state:</strong> Step 5 (not started, upcoming with faded style)
             </li>
             <li>
-              <strong>Disabled mode:</strong> Toggle above to disable all interactions
+              <strong>Subtitles:</strong> Additional context below each title (like "Name, email, phone")
             </li>
             <li>
-              <strong>Many steps:</strong> 6 steps showing scalability
+              <strong>Suffixes:</strong> Additional context on the right (like "Part 1/2", "FINAL")
+            </li>
+            <li>
+              <strong>Disabled mode:</strong> Toggle above to disable all steps
             </li>
           </ul>
         </div>
