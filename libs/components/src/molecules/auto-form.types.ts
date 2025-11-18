@@ -74,7 +74,7 @@ export type AutoFormFieldMetadata = {
   /** Custom options for select/enum fields with label/value pairs. */
   options?: SelectOption[]
   /** Force the field to be rendered with a specific component, else use automatic field-schema detection */
-  render?: 'text' | 'number' | 'date' | 'select' | 'boolean' | 'upload' | 'accept'
+  render?: 'text' | 'textarea' | 'number' | 'date' | 'select' | 'boolean' | 'upload' | 'accept' | 'section'
 }
 
 /** Option for select/enum fields in the auto-generated form. */
