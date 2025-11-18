@@ -259,6 +259,8 @@ agreeTerms: z.boolean().meta({
 
 AutoForm automatically determines which component to render based on the Zod schema type.
 
+![auto-form-fields](./auto-form-fields.png)
+
 ### 1. Text Fields
 
 **Zod Type:** `z.string()`

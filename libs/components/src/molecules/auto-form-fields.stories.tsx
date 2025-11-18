@@ -42,23 +42,9 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 const allFieldsSchema = z.object({
-  // Accept (Radio buttons with Accept/Reject)
-  acceptTitle: z.string().meta({
-    description: 'This field uses the accept render type to display accept/reject options. For more details, check the FormFieldAccept story.',
-    render: 'section',
-    title: 'Accept',
-  }),
-  acceptField: z.boolean().optional().meta({
-    render: 'accept',
-  }),
-  acceptCode: z.string().meta({
-    code: 'z.boolean().meta({ render: "accept" })',
-    line: true,
-    render: 'section',
-  }),
   // Boolean (Switch)
   booleanCode: z.string().meta({
-    description: 'A toggle switch for boolean values. For more details, check the FormFieldBoolean story.',
+    description: 'The default render of a ZodBoolean : a toggle switch. For more details, check the FormFieldBoolean story.',
     render: 'section',
     title: 'Boolean',
   }),
@@ -70,9 +56,23 @@ const allFieldsSchema = z.object({
     line: true,
     render: 'section',
   }),
+  // Accept (Radio buttons with Accept/Reject)
+  acceptTitle: z.string().meta({
+    description: 'A custom render of a ZodBoolean. This field displays accept/reject options. For more details, check the FormFieldAccept story.',
+    render: 'section',
+    title: 'Boolean accept',
+  }),
+  acceptField: z.boolean().optional().meta({
+    render: 'accept',
+  }),
+  acceptCode: z.string().meta({
+    code: 'z.boolean().meta({ render: "accept" })',
+    line: true,
+    render: 'section',
+  }),
   // Date
   dateCode: z.string().meta({
-    description: 'A date picker field for selecting dates. For more details, check the FormFieldDate story.',
+    description: 'The default render of a ZodDate : a date picker field for selecting a single day. For more details, check the FormFieldDate story.',
     render: 'section',
     title: 'Date',
   }),
@@ -80,13 +80,13 @@ const allFieldsSchema = z.object({
     placeholder: 'Select a date',
   }),
   dateFieldCode: z.string().meta({
-    code: 'z.date()',
+    code: 'z.date() // date object',
     line: true,
     render: 'section',
   }),
   // String as Date
   stringDateCode: z.string().meta({
-    description: 'A ZodString field that renders as a date picker using render: "date". For more details, check the FormFieldDate story.',
+    description: 'A custom render of a ZodString. This field will also render as a date picker. For more details, check the FormFieldDate story.',
     render: 'section',
     title: 'Date string',
   }),
@@ -95,7 +95,7 @@ const allFieldsSchema = z.object({
     render: 'date',
   }),
   stringDateFieldCode: z.string().meta({
-    code: 'z.string().meta({ render: "date" })',
+    code: 'z.string().meta({ render: "date" }) // string containing a date',
     line: true,
     render: 'section',
   }),
@@ -123,7 +123,7 @@ const allFieldsSchema = z.object({
     placeholder: 'Choose an option',
   }),
   selectFieldCode: z.string().meta({
-    code: "z.enum(['option1', 'option2', 'option3']).meta({ placeholder: 'Choose an option' })",
+    code: "z.enum(['option1', ...]).meta({ placeholder: 'Choose an option' })",
     line: true,
     render: 'section',
   }),
@@ -137,28 +137,13 @@ const allFieldsSchema = z.object({
     placeholder: 'Enter a number between 0-100',
   }),
   numberFieldCode: z.string().meta({
-    code: 'z.number().min(0).max(100).meta({ placeholder: "Enter a number between 0-100" })',
-    line: true,
-    render: 'section',
-  }),
-  // Textarea
-  textareaCode: z.string().meta({
-    description: 'A multi-line text input field for longer content. For more details, check the FormFieldTextarea story.',
-    render: 'section',
-    title: 'Textarea',
-  }),
-  textareaField: z.string().optional().meta({
-    placeholder: 'Enter multiple lines',
-    render: 'textarea',
-  }),
-  textareaFieldCode: z.string().meta({
-    code: 'z.string().meta({ placeholder: "Enter multiple lines", render: "textarea" })',
+    code: 'z.number().min(0).max(100)',
     line: true,
     render: 'section',
   }),
   // Text input
   textCode: z.string().meta({
-    description: 'A basic single-line text input field. For more details, check the FormFieldText story.',
+    description: 'The default render of a ZodString : a basic single-line text input field. For more details, check the FormFieldText story.',
     render: 'section',
     title: 'Text',
   }),
@@ -167,6 +152,21 @@ const allFieldsSchema = z.object({
   }),
   textFieldCode: z.string().meta({
     code: 'z.string().meta({ placeholder: "Enter some text" })',
+    line: true,
+    render: 'section',
+  }),
+  // Textarea
+  textareaCode: z.string().meta({
+    description: 'A custom render of a ZodString. This field will render as a multi-line text input. For more details, check the FormFieldTextarea story.',
+    render: 'section',
+    title: 'Textarea',
+  }),
+  textareaField: z.string().optional().meta({
+    placeholder: 'Enter multiple lines',
+    render: 'textarea',
+  }),
+  textareaFieldCode: z.string().meta({
+    code: 'z.string().meta({ render: "textarea" })',
     line: true,
     render: 'section',
   }),
@@ -209,15 +209,15 @@ export const AllFieldsFilled: Story = {
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     const submitButton = canvas.getByRole('button', { name: 'Submit' })
     const expectedData = {
-      acceptField: true,
       booleanField: true,
+      acceptField: true,
       dateField: new Date('2023-01-01'),
       stringDateField: '2023-06-15',
       emailField: 'user@example.com',
       selectField: 'option1',
       numberField: 50,
-      textareaField: 'Sample textarea',
       textField: 'Sample text',
+      textareaField: 'Sample textarea',
     }
     await step('initial state', async () => {
       expect(submitButton).toBeInTheDocument()
