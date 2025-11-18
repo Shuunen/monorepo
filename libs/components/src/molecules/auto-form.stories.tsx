@@ -200,6 +200,29 @@ const exhaustiveSchema = z.object({
     placeholder: 'Some placeholder',
     state: 'readonly',
   }),
+  // Textarea variants
+  textarea: z.string().meta({
+    label: 'Textarea editable required',
+    placeholder: 'Some long placeholder text',
+    render: 'textarea',
+  }),
+  textareaDisabled: z.string().meta({
+    label: 'Textarea disabled required',
+    placeholder: 'Some long placeholder text',
+    render: 'textarea',
+    state: 'disabled',
+  }),
+  textareaOptional: z.string().optional().meta({
+    label: 'Textarea optional',
+    placeholder: 'Some long placeholder text',
+    render: 'textarea',
+  }),
+  textareaReadonly: z.string().meta({
+    label: 'Textarea readonly',
+    placeholder: 'Some long placeholder text',
+    render: 'textarea',
+    state: 'readonly',
+  }),
 })
 
 /**
@@ -300,6 +323,20 @@ export const Exhaustive: Story = {
       const stringReadonly = canvas.getByTestId('string-readonly')
       expect(stringReadonly).toHaveValue('')
     })
+    await step('textarea fields', async () => {
+      const textareaEditable = canvas.getByTestId('textarea-textarea')
+      await userEvent.type(textareaEditable, 'Some long text for textarea')
+      expect(textareaEditable).toHaveValue('Some long text for textarea')
+      const textareaDisabled = canvas.getByTestId('textarea-textarea-disabled')
+      expect(textareaDisabled).toBeDisabled()
+      expect(textareaDisabled).toHaveValue('')
+      const textareaOptional = canvas.getByTestId('textarea-textarea-optional')
+      expect(textareaOptional).toHaveValue('')
+      await userEvent.type(textareaOptional, 'Some long text')
+      expect(textareaOptional).toHaveValue('Some long text')
+      const textareaReadonly = canvas.getByTestId('textarea-textarea-readonly')
+      expect(textareaReadonly).toHaveValue('')
+    })
     step('submit button is disabled because form is invalid', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).toBeDisabled()
@@ -323,6 +360,8 @@ export const Exhaustive: Story = {
             numberOptional: 30,
             string: 'Some text',
             stringOptional: 'Some text',
+            textarea: 'Some long text for textarea',
+            textareaOptional: 'Some long text',
           },
           true,
         ),
@@ -361,6 +400,10 @@ export const ExhaustiveFilled: Story = {
       stringDisabled: 'Some text disabled',
       // stringOptional: 'Some text optional',
       stringReadonly: 'Some text readonly',
+      textarea: 'Some textarea text',
+      textareaDisabled: 'Some disabled textarea text',
+      // textareaOptional: 'Some optional textarea text',
+      textareaReadonly: 'Some readonly textarea text',
     },
     schemas: [exhaustiveSchema],
   },
@@ -438,6 +481,17 @@ export const ExhaustiveFilled: Story = {
       const stringReadonly = canvas.getByTestId('string-readonly')
       expect(stringReadonly).toHaveValue('Some text readonly')
     })
+    await step('textarea fields', () => {
+      const textareaEditable = canvas.getByTestId('textarea-textarea')
+      expect(textareaEditable).toHaveValue('Some textarea text')
+      const textareaDisabled = canvas.getByTestId('textarea-textarea-disabled')
+      expect(textareaDisabled).toBeDisabled()
+      expect(textareaDisabled).toHaveValue('Some disabled textarea text')
+      const textareaOptional = canvas.getByTestId('textarea-textarea-optional')
+      expect(textareaOptional).toHaveValue('')
+      const textareaReadonly = canvas.getByTestId('textarea-textarea-readonly')
+      expect(textareaReadonly).toHaveValue('Some readonly textarea text')
+    })
     step('no error displayed', () => {
       expect(canvas.queryByRole('alert')).not.toBeInTheDocument()
     })
@@ -467,6 +521,9 @@ export const ExhaustiveFilled: Story = {
         string: 'Some text',
         stringDisabled: 'Some text disabled',
         stringReadonly: 'Some text readonly',
+        textarea: 'Some textarea text',
+        textareaDisabled: 'Some disabled textarea text',
+        textareaReadonly: 'Some readonly textarea text',
       }
       expect(formData).toContainHTML(stringify(expectedData, true))
       expect(submittedData).toContainHTML(stringify(expectedData, true))

@@ -166,6 +166,9 @@ export function filterSchema(schema: z.ZodObject, formData: Record<string, unkno
   for (const key of Object.keys(shape)) {
     const fieldSchema = shape[key] as z.ZodTypeAny
     if (!isFieldVisible(fieldSchema, formData)) continue
+    const metadata = getFieldMetadata(fieldSchema)
+    // Exclude section fields from validation schema
+    if (metadata?.render === 'section') continue
     visibleShape[key] = fieldSchema
   }
   return z.object(visibleShape)
@@ -223,6 +226,8 @@ export function normalizeDataForSchema(schema: z.ZodObject, data: Record<string,
     const metadata = getFieldMetadata(fieldSchema)
     if (!isFieldVisible(fieldSchema, data)) continue
     if (metadata?.excluded) continue
+    // Exclude section fields from output data
+    if (metadata?.render === 'section') continue
     // Apply keyOut mapping if provided
     const { keyOut } = getKeyMapping(metadata)
     const outputKey = keyOut ?? key

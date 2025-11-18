@@ -6,8 +6,10 @@ import { FormFieldAccept } from './form-field-accept'
 import { FormFieldBoolean } from './form-field-boolean'
 import { FormFieldDate } from './form-field-date'
 import { FormFieldNumber } from './form-field-number'
+import { FormFieldSection } from './form-field-section'
 import { FormFieldSelect } from './form-field-select'
 import { FormFieldText } from './form-field-text'
+import { FormFieldTextarea } from './form-field-textarea'
 import { FormFieldUpload } from './form-field-upload'
 
 type AutoFormFieldProps = {
@@ -21,15 +23,18 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: Auto
   if (!isFieldVisible(fieldSchema, formData)) return
   logger?.info('Rendering field', fieldName)
   const isOptional = fieldSchema instanceof z.ZodOptional
-  const { state = 'editable' } = getFieldMetadata(fieldSchema) ?? {}
+  const metadata = getFieldMetadata(fieldSchema) ?? {}
+  const { state = 'editable' } = metadata
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly: state === 'readonly' }
   const render = getFormFieldRender(fieldSchema)
-  if (render === 'upload') return <FormFieldUpload {...props} />
-  if (render === 'date') return <FormFieldDate {...props} />
-  if (render === 'select') return <FormFieldSelect {...props} />
-  if (render === 'number') return <FormFieldNumber {...props} />
-  if (render === 'boolean') return <FormFieldBoolean {...props} />
   if (render === 'accept') return <FormFieldAccept {...props} />
+  if (render === 'boolean') return <FormFieldBoolean {...props} />
+  if (render === 'date') return <FormFieldDate {...props} />
+  if (render === 'number') return <FormFieldNumber {...props} />
+  if (render === 'section') return <FormFieldSection {...metadata} />
+  if (render === 'select') return <FormFieldSelect {...props} />
   if (render === 'text') return <FormFieldText {...props} />
-  return <Alert title={`Missing render for field "${fieldName}"`} type="error" />
+  if (render === 'textarea') return <FormFieldTextarea {...props} />
+  if (render === 'upload') return <FormFieldUpload {...props} />
+  return <Alert title={`Missing render "${render}" for field "${fieldName}"`} type="error" />
 }
