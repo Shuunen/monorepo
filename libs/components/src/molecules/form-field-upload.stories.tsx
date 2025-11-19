@@ -230,7 +230,7 @@ export const ResponsiveLayout: Story = {
 
         <div className="space-y-2 max-w-md">
           <h2 className="text-2xl font-bold">Medium width</h2>
-          <p className="text-muted-foreground text-sm">Constrained to ~768px width</p>
+          <p className="text-muted-foreground text-sm">Constrained to ~448px width</p>
           <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
         </div>
       </div>
