@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Logger, slugify } from '@monorepo/utils'
+import { Logger } from '@monorepo/utils'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -60,7 +60,7 @@ const meta = {
                 <FormControl>
                   <Textarea data-testid={field.name} placeholder="Type your message here." {...field} />
                 </FormControl>
-                <FormMessage testId={`message--${slugify(field.name)}`} />
+                <FormMessage name={field.name} />
               </FormItem>
             )}
           />
