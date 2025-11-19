@@ -5,10 +5,10 @@
 ## Use
 
 ```js
-import { getTimestamp } from 'utils'
+import { getTimestamp } from "utils";
 // or for older js : var getTimestamp = require("utils").getTimestamp
 
-console.log('Hello world, current timestamp is', getTimestamp())
+console.log("Hello world, current timestamp is", getTimestamp());
 ```
 
 ## Running unit tests
