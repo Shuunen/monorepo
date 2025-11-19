@@ -6,6 +6,7 @@ import { FormFieldAccept } from './form-field-accept'
 import { FormFieldBoolean } from './form-field-boolean'
 import { FormFieldDate } from './form-field-date'
 import { FormFieldNumber } from './form-field-number'
+import { FormFieldPassword } from './form-field-password'
 import { FormFieldSection } from './form-field-section'
 import { FormFieldSelect } from './form-field-select'
 import { FormFieldText } from './form-field-text'
@@ -31,6 +32,7 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: Auto
   if (render === 'boolean') return <FormFieldBoolean {...props} />
   if (render === 'date') return <FormFieldDate {...props} />
   if (render === 'number') return <FormFieldNumber {...props} />
+  if (render === 'password') return <FormFieldPassword {...props} />
   if (render === 'section') return <FormFieldSection {...metadata} />
   if (render === 'select') return <FormFieldSelect {...props} />
   if (render === 'text') return <FormFieldText {...props} />

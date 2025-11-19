@@ -181,6 +181,29 @@ const exhaustiveSchema = z.object({
     placeholder: 'Readonly number',
     state: 'readonly',
   }),
+  // Password variants
+  password: z.string().min(8, 'Password must be at least 8 characters').meta({
+    label: 'Password editable required',
+    placeholder: 'Enter your password',
+    render: 'password',
+  }),
+  passwordDisabled: z.string().min(8, 'Password must be at least 8 characters').meta({
+    label: 'Password disabled required',
+    placeholder: 'Disabled password',
+    render: 'password',
+    state: 'disabled',
+  }),
+  passwordOptional: z.string().min(8, 'Password must be at least 8 characters').optional().meta({
+    label: 'Password optional',
+    placeholder: 'Optional password',
+    render: 'password',
+  }),
+  passwordReadonly: z.string().min(8, 'Password must be at least 8 characters').meta({
+    label: 'Password readonly',
+    placeholder: 'Readonly password',
+    render: 'password',
+    state: 'readonly',
+  }),
   // String variants
   string: z.string().meta({
     label: 'String editable required',
@@ -337,6 +360,24 @@ export const Exhaustive: Story = {
       const textareaReadonly = canvas.getByTestId('textarea-textarea-readonly')
       expect(textareaReadonly).toHaveValue('')
     })
+    await step('password fields', async () => {
+      const passwordEditable = canvas.getByTestId('password')
+      await userEvent.type(passwordEditable, 'securePassword123')
+      expect(passwordEditable).toHaveValue('securePassword123')
+      expect(passwordEditable).toHaveAttribute('type', 'password')
+      const passwordDisabled = canvas.getByTestId('password-disabled')
+      expect(passwordDisabled).toBeDisabled()
+      expect(passwordDisabled).toHaveValue('')
+      expect(passwordDisabled).toHaveAttribute('type', 'password')
+      const passwordOptional = canvas.getByTestId('password-optional')
+      expect(passwordOptional).toHaveValue('')
+      await userEvent.type(passwordOptional, 'anotherPassword456')
+      expect(passwordOptional).toHaveValue('anotherPassword456')
+      expect(passwordOptional).toHaveAttribute('type', 'password')
+      const passwordReadonly = canvas.getByTestId('password-readonly')
+      expect(passwordReadonly).toHaveValue('')
+      expect(passwordReadonly).toHaveAttribute('type', 'password')
+    })
     step('submit button is disabled because form is invalid', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).toBeDisabled()
@@ -358,6 +399,8 @@ export const Exhaustive: Story = {
             enumOptional: 'green',
             number: 25,
             numberOptional: 30,
+            password: 'securePassword123',
+            passwordOptional: 'anotherPassword456',
             string: 'Some text',
             stringOptional: 'Some text',
             textarea: 'Some long text for textarea',
@@ -396,6 +439,10 @@ export const ExhaustiveFilled: Story = {
       numberDisabled: 99,
       // numberOptional: 30,
       numberReadonly: 60,
+      password: 'SecurePass123',
+      passwordDisabled: 'DisabledPass456',
+      // passwordOptional: 'OptionalPass789',
+      passwordReadonly: 'ReadonlyPass000',
       string: 'Some text',
       stringDisabled: 'Some text disabled',
       // stringOptional: 'Some text optional',
@@ -492,6 +539,21 @@ export const ExhaustiveFilled: Story = {
       const textareaReadonly = canvas.getByTestId('textarea-textarea-readonly')
       expect(textareaReadonly).toHaveValue('Some readonly textarea text')
     })
+    await step('password fields', () => {
+      const passwordEditable = canvas.getByTestId('password')
+      expect(passwordEditable).toHaveValue('SecurePass123')
+      expect(passwordEditable).toHaveAttribute('type', 'password')
+      const passwordDisabled = canvas.getByTestId('password-disabled')
+      expect(passwordDisabled).toBeDisabled()
+      expect(passwordDisabled).toHaveValue('DisabledPass456')
+      expect(passwordDisabled).toHaveAttribute('type', 'password')
+      const passwordOptional = canvas.getByTestId('password-optional')
+      expect(passwordOptional).toHaveValue('')
+      expect(passwordOptional).toHaveAttribute('type', 'password')
+      const passwordReadonly = canvas.getByTestId('password-readonly')
+      expect(passwordReadonly).toHaveValue('ReadonlyPass000')
+      expect(passwordReadonly).toHaveAttribute('type', 'password')
+    })
     step('no error displayed', () => {
       expect(canvas.queryByRole('alert')).not.toBeInTheDocument()
     })
@@ -518,6 +580,9 @@ export const ExhaustiveFilled: Story = {
         number: 45,
         numberDisabled: 99,
         numberReadonly: 60,
+        password: 'SecurePass123',
+        passwordDisabled: 'DisabledPass456',
+        passwordReadonly: 'ReadonlyPass000',
         string: 'Some text',
         stringDisabled: 'Some text disabled',
         stringReadonly: 'Some text readonly',
