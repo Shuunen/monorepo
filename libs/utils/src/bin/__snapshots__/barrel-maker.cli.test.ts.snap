@@ -1,7 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`barrel-maker cli > main B with args 1`] = `
-"export * from './atoms/Button.js'
+"// ACME
+export * from './atoms/Button.js'
 export * from './icons/Icon.js'
 export * from './molecules/Card.js'
 export type * from './atoms/types.js'
@@ -20,8 +21,29 @@ exports[`barrel-maker cli > main B with args 2`] = `
 ]
 `;
 
+exports[`barrel-maker cli > main C without header 1`] = `
+"export * from './atoms/Button.js'
+export * from './icons/Icon.js'
+export * from './molecules/Card.js'
+export type * from './atoms/types.js'
+"
+`;
+
+exports[`barrel-maker cli > main C without header 2`] = `
+[
+  "atoms/Button.tsx",
+  "atoms/types.ts",
+  "atoms/types.d.ts",
+  "icons/Icon.tsx",
+  "molecules/Card.tsx",
+  "molecules/Card.test.tsx",
+  "molecules/Card.stories.tsx",
+]
+`;
+
 exports[`barrel-maker cli > make A ext empty and default index.ts 1`] = `
-"export * from './atoms/Button'
+"// Copyright ACME
+export * from './atoms/Button'
 export * from './icons/Icon'
 export * from './molecules/Card'
 export type * from './atoms/types'
@@ -41,7 +63,8 @@ exports[`barrel-maker cli > make A ext empty and default index.ts 2`] = `
 `;
 
 exports[`barrel-maker cli > make B index.js and ext .js 1`] = `
-"export * from './atoms/Button.js'
+"// Copyright ACME
+export * from './atoms/Button.js'
 export * from './icons/Icon.js'
 export * from './molecules/Card.js'
 export type * from './atoms/types.js'
