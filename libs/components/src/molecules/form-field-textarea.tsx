@@ -13,7 +13,7 @@ export function FormFieldTextarea({ fieldName, fieldSchema, formData, isOptional
     <FormFieldBase {...props}>
       {field => (
         <FormControl>
-          <Textarea {...field} disabled={isDisabled} placeholder={placeholder} readOnly={readonly} />
+          <Textarea {...field} disabled={isDisabled} placeholder={placeholder} readOnly={readonly} value={field.value || ''} />
         </FormControl>
       )}
     </FormFieldBase>

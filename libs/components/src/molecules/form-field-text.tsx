@@ -13,7 +13,7 @@ export function FormFieldText({ fieldName, fieldSchema, formData, isOptional, lo
     <FormFieldBase {...props}>
       {field => (
         <FormControl>
-          <Input {...field} disabled={isDisabled} placeholder={placeholder} readOnly={readonly} />
+          <Input {...field} disabled={isDisabled} placeholder={placeholder} readOnly={readonly} value={field.value || ''} />
         </FormControl>
       )}
     </FormFieldBase>

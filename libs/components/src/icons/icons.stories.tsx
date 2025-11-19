@@ -8,6 +8,7 @@ import { IconArrowLeft } from './icon-arrow-left'
 import { IconArrowRight } from './icon-arrow-right'
 import { IconArrowUp } from './icon-arrow-up'
 import { IconCheck } from './icon-check'
+import { IconChevronRight } from './icon-chevron-right'
 import { IconEdit } from './icon-edit'
 import { IconError } from './icon-error'
 import { IconHome } from './icon-home'
@@ -28,6 +29,7 @@ const icons = [
   IconArrowUp,
   IconCheck,
   IconChevronDown,
+  IconChevronRight,
   IconCircleCheck,
   IconCircleClose,
   IconCircleDot,
