@@ -35,11 +35,12 @@ import { AutoFormSummaryStep } from './auto-form-summary-step'
  * @param props.showCard whether to show the form inside a card layout
  * @param props.showLastStep whether to automatically show the last available step on form load
  * @param props.showMenu whether to force show the stepper menu, if undefined shows menu only when multiple steps exist
+ * @param props.size the size of the form, can be 'auto', 'small', 'medium' or 'large', default is 'medium', 'auto' adapts to parent content
  * @param props.labels custom labels for form buttons and actions
  * @returns the AutoForm component
  */
 // oxlint-disable-next-line max-lines-per-function
-export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, showLastStep = false, showMenu, labels }: AutoFormProps) {
+export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, showLastStep = false, showMenu, size = 'medium', labels }: AutoFormProps) {
   const [currentStep, setCurrentStep] = useState(showLastStep ? schemas.length - 1 : 0)
   const [showSummary, setShowSummary] = useState(false)
   const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined)
@@ -209,7 +210,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     return renderFormContent()
   }
   return (
-    <div className={cn('mx-auto w-full flex', { 'p-6 bg-white rounded-lg shadow-md': showCard })}>
+    <div className={cn('mx-auto w-full flex', { 'min-w-3xl': size === 'medium', 'min-w-5xl': size === 'large', 'min-w-xl': size === 'small', 'p-6 bg-white rounded-lg shadow-md': showCard })}>
       {shouldShowStepper && <AutoFormStepper disabled={isStepperDisabled} onStepClick={handleStepClick} steps={steps} />}
       <div className="flex-1 w-full">{renderContent()}</div>
     </div>

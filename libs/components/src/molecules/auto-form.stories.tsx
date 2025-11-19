@@ -146,7 +146,7 @@ const exhaustiveSchema = z.object({
   // Enum variants
   enum: z.enum(['red', 'green', 'blue']).meta({
     label: 'Enum editable required',
-    placeholder: 'Select your favorite color',
+    placeholder: 'Select your favourite color',
   }),
   enumDisabled: z.enum(['red', 'green', 'blue']).meta({
     label: 'Enum disabled required',

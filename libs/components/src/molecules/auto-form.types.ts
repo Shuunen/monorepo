@@ -30,6 +30,8 @@ export type AutoFormProps = {
   showLastStep?: boolean
   /** Whether to force show the stepper menu. If undefined, shows menu only when multiple steps exist. If true, always shows menu. If false, never shows menu. */
   showMenu?: boolean
+  /** The size of the form, can be 'auto', 'small', 'medium' or 'large', default is 'medium', 'auto' adapts to parent content */
+  size?: 'auto' | 'small' | 'medium' | 'large'
   /** Custom labels for form buttons and actions */
   labels?: {
     /** Label for the back to home button on submission step, default is "Return to Homepage" */
