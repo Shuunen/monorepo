@@ -38,22 +38,24 @@ import { Logger, createState, cn, dom } from '@monorepo/utils'
 ### Component Architecture (React Apps)
 
 - Components use functional style with hooks: `useState`, `useCallback`, `useMemo`
-- **TailwindCSS** for styling 
+- **TailwindCSS** for styling
 - Page components follow `PageXxx` naming
 
 ### State Management
 
 ```typescript
 // Use utils createState for lightweight state management
-import { createState } from '@monorepo/utils'
+import { createState } from "@monorepo/utils";
 
 export const state = createState({
   isLoading: false,
-  items: []
-})
+  items: [],
+});
 
 // Watch state changes
-watchState('isLoading', (value) => { /* handle change */ })
+watchState("isLoading", (value) => {
+  /* handle change */
+});
 ```
 
 ### Testing guidelines
@@ -88,7 +90,7 @@ nx build <project-name> # Build specific project
 
 # Quality assurance
 pnpm check:biome        # Format and lint with Biome
-pnpm check:oxlint       # Additional linting with Oxlint  
+pnpm check:oxlint       # Additional linting with Oxlint
 pnpm check:nx           # Run all Nx tasks (lint, test, build, typecheck)
 
 # Individual tools
@@ -100,7 +102,7 @@ nx run-many -t build     # Build all projects
 
 ### Web Applications (`apps/stuff-finder`, `apps/jozzo`, etc.)
 
-- Use **Vite** for bundling with **@vitejs/plugin-react** 
+- Use **Vite** for bundling with **@vitejs/plugin-react**
 - **React** with **TailwindCSS** and **ShadCn** components
 - Database: **Appwrite** for backend services
 - State: Custom lightweight state management via `@monorepo/utils`

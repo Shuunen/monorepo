@@ -8,7 +8,7 @@ To run every possible unit tests in the monorepo, use the following command:
 
 ```bash
 nx run-many -t test
-``` 
+```
 
 To run tests for a specific project, use:
 
@@ -46,11 +46,11 @@ Duration  649ms (transform 328ms, setup 0ms, collect 793ms, tests 74ms, environm
 ---------------------------------|---------|----------|---------|---------|-------------------
 File                             | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 ---------------------------------|---------|----------|---------|---------|-------------------
-All files                        |   87.13 |     99.5 |   97.72 |   87.13 |                  
- clean-trackers.cli.js           |       0 |        0 |       0 |       0 |                  
- clean-trackers.test.ts          |     100 |      100 |     100 |     100 |                  
- clean-trackers.utils.js         |     100 |      100 |     100 |     100 |                  
- dash-button.js                  |       0 |        0 |       0 |       0 | 1-174                 
+All files                        |   87.13 |     99.5 |   97.72 |   87.13 |
+ clean-trackers.cli.js           |       0 |        0 |       0 |       0 |
+ clean-trackers.test.ts          |     100 |      100 |     100 |     100 |
+ clean-trackers.utils.js         |     100 |      100 |     100 |     100 |
+ dash-button.js                  |       0 |        0 |       0 |       0 | 1-174
  eslint-cleaner.cli.ts           |       0 |        0 |       0 |       0 |
 ---------------------------------|---------|----------|---------|---------|-------------------
 ERROR: Coverage for lines (87.13%) does not meet global threshold (100%)
@@ -60,13 +60,12 @@ ERROR: Coverage for branches (99.5%) does not meet global threshold (100%)
 Warning: command "vitest --coverage=true --coverage.thresholds.100=true" exited with non-zero status code
 ```
 
-On this report we can see : 
+On this report we can see :
 
 1. The `clean-trackers.cli.js` and `eslint-cleaner.cli.ts` files are not covered by any tests, as indicated by the 0% coverage across all metrics. But because there is no "Uncovered Line" it means that the coverage is not enforced for these files. Nothing to do here.
 2. The `clean-trackers.test.ts` and `clean-trackers.utils.js` files are fully covered by tests, with 100% coverage across all metrics. Nothing to do here.
 3. The `dash-button.js` file has 0% coverage, with all lines uncovered, indicating that no tests are written for this file. The uncovered lines are from 1 to 174, which means the entire file is not tested. You should write tests for this file to improve coverage to 100%.
 4. The overall coverage report shows that the project does not meet the global coverage thresholds. This means that you need to improve the coverage of your tests to meet the thresholds.
-
 
 ## Example 2 : file partially covered
 
@@ -84,9 +83,9 @@ Test Files  7 passed (7)
 ---------------------------------|---------|----------|---------|---------|-------------------
 File                             | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 ---------------------------------|---------|----------|---------|---------|-------------------
-All files                        |     100 |    99.65 |     100 |     100 |                  
- clean-ytdl.cli.test.ts          |     100 |      100 |     100 |     100 |                  
- clean-ytdl.cli.ts               |     100 |    97.14 |     100 |     100 | 34                   
+All files                        |     100 |    99.65 |     100 |     100 |
+ clean-ytdl.cli.test.ts          |     100 |      100 |     100 |     100 |
+ clean-ytdl.cli.ts               |     100 |    97.14 |     100 |     100 | 34
 ---------------------------------|---------|----------|---------|---------|-------------------
 ERROR: Coverage for branches (99.65%) does not meet global threshold (100%)
 Warning: command "vitest --coverage=true --coverage.thresholds.100=true" exited with non-zero status code

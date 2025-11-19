@@ -233,7 +233,7 @@ import { Button, Card } from '@monorepo/components'
 
 **Testing Guidelines:**
 
-- Test naming: `it('functionName A should ...', () => {})`  with auto-incrementing letter per function
+- Test naming: `it('functionName A should ...', () => {})` with auto-incrementing letter per function
 - Use `toMatchInlineSnapshot()` for most assertions
 - Mock external dependencies with `vi.mock()`
 - Use `beforeEach`/`afterEach` hooks for setup/cleanup
