@@ -30,21 +30,29 @@ function removeExtension(filename: string) {
   return filename.replace(extensionRegex, '')
 }
 
+type MakeProps = {
+  header: string
+  target: string
+  index?: string
+  ext?: string
+}
+
 /**
  * Creates a barrel file (index.ts) exporting all modules matching the target glob
  * @param options configuration options
+ * @param options.header header to inject at the top of the generated file
  * @param options.target glob pattern for files to include
  * @param options.index output index file name
  * @param options.ext extension for output imports (optional)
  * @returns result object with content and out on success, or error message on failure
- * @example bun barrel-maker.cli.ts --target="./lib/*.ts" --ext=".js"
+ * @example bun barrel-maker.cli.ts --target="./lib/*.ts" --header='Copyright 2025 ACME' --ext=".js"
  */
-export async function make({ target, index = 'index.ts', ext }: { target: string; index?: string; ext?: string }) {
+export async function make({ header = '', target, index = 'index.ts', ext }: MakeProps) {
   const out = path.join(process.cwd(), index)
   logger.info('Listing entries', target)
   const files = await glob(target, { filesOnly: true })
   const list = files.filter(file => filterFile(file)).map(file => `export ${file.includes('types') ? 'type ' : ''}* from './${ext === undefined ? file : removeExtension(file) + ext}'`.replace(path.sep, '/'))
-  const content = `${list.toSorted().join('\n')}\n`
+  const content = `${header}${list.toSorted().join('\n')}\n`
   writeFileSync(out, content)
   logger.success(`${out} has been updated !`)
   return Result.ok({ content, files, out })
@@ -59,7 +67,13 @@ export async function main(argv: string[]) {
   logger.debug('barrel-maker.cli.ts started')
   const args = Object.fromEntries(argv.slice(nbThird).map(arg => arg.replace('--', '').split('=')))
   if (!args.target) return Result.error('missing target argument')
-  const options = { ext: args.ext, index: args.index, target: args.target }
+
+  const options = {
+    ext: args.ext,
+    header: args.header ? `// ${args.header}\n` : '',
+    index: args.index,
+    target: args.target,
+  } satisfies MakeProps
   logger.debug('options', options)
   return await make(options)
 }
