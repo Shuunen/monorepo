@@ -209,9 +209,9 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     return renderFormContent()
   }
   return (
-    <div className={cn('mx-auto w-full flex min-w-2xl', { 'p-6 bg-white rounded-lg shadow-md': showCard })}>
+    <div className={cn('mx-auto w-full flex', { 'p-6 bg-white rounded-lg shadow-md': showCard })}>
       {shouldShowStepper && <AutoFormStepper disabled={isStepperDisabled} onStepClick={handleStepClick} steps={steps} />}
-      <div className="flex-1">{renderContent()}</div>
+      <div className="flex-1 w-full">{renderContent()}</div>
     </div>
   )
 }

@@ -155,34 +155,32 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
           {idleNoFile ? (
             <Input accept={accept} className="w-96" data-testid={`${testId}-${stateTestId}`} disabled={isDisabled} onChange={event => handleFileSelect(event, field.onChange)} placeholder={placeholder || currentState.message} ref={fileInputRef} type="file" />
           ) : (
-            <div className="w-lg rounded-md border border-input bg-background p-3" data-testid={`${testId}-${stateTestId}`}>
-              <div className="flex gap-3">
-                <aside className="mt-0.5">{currentState.icon}</aside>
-                <main className="flex grow flex-col gap-1">
-                  <div className="flex justify-between gap-3">
-                    <div className="flex flex-col gap-1">
-                      <div className="font-medium text-sm truncate max-w-80">{selectedFile?.name}</div>
-                      <div className="text-sm text-muted-foreground truncate max-w-80">{currentState.message}</div>
-                    </div>
-
-                    <div className="flex ml-8">
-                      {currentState.buttons.map(button => (
-                        <Button key={`button-${button.label}`} onClick={() => button.action(field.onChange)} size="sm" testId={`upload-action-${slugify(button.label)}`} title={button.label} variant="ghost">
-                          {button.label}
-                          <button.icon className="size-4" />
-                        </Button>
-                      ))}
-                    </div>
+            <div className="flex gap-3 rounded-md border border-input bg-background p-3 overflow-hidden" data-testid={`${testId}-${stateTestId}`}>
+              <aside className="mt-0.5">{currentState.icon}</aside>
+              <main className="flex grow flex-col gap-1 max-w-full overflow-hidden">
+                <div className="flex justify-between gap-3">
+                  <div className="flex flex-col gap-1 max-w-[calc(100%_-_100px)]">
+                    <div className="font-medium text-sm truncate">{selectedFile?.name}</div>
+                    <div className="text-sm text-muted-foreground truncate">{currentState.message}</div>
                   </div>
 
-                  {uploadState !== 'idle' && (
-                    <div className="flex items-center">
-                      <Progress className={cn('h-1 flex-1', uploadState === 'success' && '[&>div]:bg-success', uploadState === 'error' && '[&>div]:bg-destructive')} value={uploadProgress} />
-                      <span className={cn('text-sm font-medium min-w-[3rem] text-right', uploadState === 'success' && 'text-success', uploadState === 'error' && 'text-destructive')}>{Math.round(uploadProgress)}%</span>
-                    </div>
-                  )}
-                </main>
-              </div>
+                  <div className="flex">
+                    {currentState.buttons.map(button => (
+                      <Button key={`button-${button.label}`} onClick={() => button.action(field.onChange)} size="sm" testId={`upload-action-${slugify(button.label)}`} title={button.label} variant="ghost">
+                        {button.label}
+                        <button.icon className="size-4" />
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                {uploadState !== 'idle' && (
+                  <div className="flex items-center">
+                    <Progress className={cn('h-1 flex-1', uploadState === 'success' && '[&>div]:bg-success', uploadState === 'error' && '[&>div]:bg-destructive')} value={uploadProgress} />
+                    <span className={cn('text-sm font-medium min-w-[3rem] text-right', uploadState === 'success' && 'text-success', uploadState === 'error' && 'text-destructive')}>{Math.round(uploadProgress)}%</span>
+                  </div>
+                )}
+              </main>
             </div>
           )}
         </FormControl>
