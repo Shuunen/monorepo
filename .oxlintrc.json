@@ -26,6 +26,7 @@
     "FileReader": "readonly",
     "FormData": "readonly",
     "fetch": "readonly",
+    "Headers": "readonly",
     "HTMLAnchorElement": "readonly",
     "HTMLButtonElement": "readonly",
     "HTMLCollection": "readonly",
