@@ -170,11 +170,26 @@ const allFieldsSchema = z.object({
     line: true,
     render: 'section',
   }),
+  // Password
+  passwordCode: z.string().meta({
+    description: 'A custom render of a ZodString. This field renders as a password input field. For more details, check the FormFieldPassword story.',
+    render: 'section',
+    title: 'Password',
+  }),
+  passwordField: z.string().optional().meta({
+    placeholder: 'Enter a password',
+    render: 'password',
+  }),
+  passwordFieldCode: z.string().meta({
+    code: 'z.string().meta({ render: "password" })',
+    line: true,
+    render: 'section',
+  }),
 })
 
 /**
  * Showcase of all available form-field types in editable state
- * Displays one instance of each field type: text, textarea, email, number, date, boolean, enum, and accept
+ * Displays one instance of each field type: text, textarea, email, number, date, boolean, enum, accept, and password
  */
 export const AllFields: Story = {
   args: {
@@ -201,6 +216,7 @@ export const AllFieldsFilled: Story = {
       stringDateField: '2023-06-15',
       textField: 'Sample text',
       textareaField: 'Sample textarea',
+      passwordField: 'Sample password',
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -218,6 +234,7 @@ export const AllFieldsFilled: Story = {
       numberField: 50,
       textField: 'Sample text',
       textareaField: 'Sample textarea',
+      passwordField: 'Sample password',
     }
     await step('initial state', async () => {
       expect(submitButton).toBeInTheDocument()

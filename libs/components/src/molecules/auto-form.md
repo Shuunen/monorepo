@@ -272,6 +272,7 @@ AutoForm automatically determines which component to render based on the Zod sch
 
 - Text input (`z.string()`)
 - Textarea (`z.string().meta({ render: 'textarea' })`)
+- Password (`z.string().meta({ render: 'password' })`)
 - Email (`z.email()`)
 - Number (`z.number()`)
 - Boolean/Checkbox (`z.boolean()`)
@@ -348,7 +349,42 @@ z.object({
 
 ---
 
-### 3. Number Fields
+### 3. Password Fields
+
+**Zod Type:** `z.string()` with `render: 'password'`
+**Renders:** Password input (text masked)
+
+```typescript
+z.object({
+  password: z.string().min(8, 'Password must be at least 8 characters').meta({
+    label: 'Password',
+    placeholder: 'Enter your password',
+    render: 'password',
+  }),
+  newPassword: z.string().min(8).meta({
+    label: 'New Password',
+    placeholder: 'Set a new password',
+    render: 'password',
+  }),
+  confirmPassword: z.string().min(8).optional().meta({
+    label: 'Confirm Password',
+    placeholder: 'Repeat your password',
+    render: 'password',
+  }),
+})
+```
+
+**Features:**
+
+- Masked text input (bullets/dots instead of visible characters)
+- String validation from schema (min, max, required)
+- Readonly and disabled states
+- Ideal for secure password entry
+- Error messages display automatically
+
+---
+
+### 4. Number Fields
 
 **Zod Type:** `z.number()`
 **Renders:** Number input with type coercion
@@ -377,7 +413,7 @@ z.object({
 
 ---
 
-### 4. Boolean Fields
+### 5. Boolean Fields
 
 **Zod Type:** `z.boolean()` or `z.literal(true/false)`
 **Renders:** Checkbox/Toggle switch
@@ -411,7 +447,7 @@ z.object({
 
 ---
 
-### 5. Select Fields
+### 6. Select Fields
 
 **Zod Type:** `z.enum()` or `z.union()`
 **Renders:** Dropdown select
@@ -450,7 +486,7 @@ z.object({
 
 ---
 
-### 6. Date Fields
+### 7. Date Fields
 
 **Zod Type:** `z.date()` or `z.string()` with `render: 'date'`
 **Renders:** Date picker
@@ -486,7 +522,7 @@ z.object({
 
 ---
 
-### 7. File Upload Fields
+### 8. File Upload Fields
 
 **Zod Type:** `z.instanceof(File)` with validation
 **Renders:** File input with progress
@@ -524,7 +560,7 @@ z.object({
 
 ---
 
-### 8. Accept/Reject Fields
+### 9. Accept/Reject Fields
 
 **Zod Type:** `z.boolean()` with `render: 'accept'`
 **Renders:** Accept/Reject button pair
@@ -556,7 +592,7 @@ z.object({
 
 ---
 
-### 9. Section Fields
+### 10. Section Fields
 
 **Zod Type:** `z.string()` with `render: 'section'`
 **Renders:** Informational content (non-interactive)
