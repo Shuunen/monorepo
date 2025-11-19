@@ -180,3 +180,60 @@ export const FileSchemaValidation: Story = {
     })
   },
 }
+
+export const ResponsiveLayout: Story = {
+  args: {
+    initialData: {
+      document: new File(['test content'], 'very-long-filename-that-might-overflow-on-small-screens.pdf', { type: 'application/pdf' }),
+    },
+    schemas: [
+      z.object({
+        document: z.file().meta({
+          label: 'Document upload',
+          placeholder: 'Select a file to upload',
+        }),
+      }),
+    ],
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates the FormFieldUpload responsiveness across different viewport sizes. Resize your browser window or use the viewport toolbar to see how the component adapts to mobile, tablet, and desktop screens.',
+      },
+    },
+    layout: 'padded',
+    viewport: {
+      defaultViewport: 'responsive',
+    },
+  },
+  render: args => {
+    type FormData = { document?: File } | undefined
+    function onChange(data: Partial<FormData>) {
+      logger.info('Form data changed', data)
+    }
+    function onSubmit(data: FormData) {
+      logger.showSuccess('Form submitted successfully', data)
+    }
+    return (
+      <div className="grid gap-8 w-full mx-auto p-4">
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold">Full width</h2>
+          <p className="text-muted-foreground text-sm">Full width with all elements visible</p>
+          <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        </div>
+
+        <div className="space-y-2 max-w-xl">
+          <h2 className="text-2xl font-bold">XLarge width</h2>
+          <p className="text-muted-foreground text-sm">Constrained to ~768px width</p>
+          <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        </div>
+
+        <div className="space-y-2 max-w-md">
+          <h2 className="text-2xl font-bold">Medium width</h2>
+          <p className="text-muted-foreground text-sm">Constrained to ~768px width</p>
+          <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        </div>
+      </div>
+    )
+  },
+}
