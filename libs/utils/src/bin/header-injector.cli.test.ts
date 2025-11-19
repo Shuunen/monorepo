@@ -12,6 +12,7 @@ const mod = await import('./header-injector.cli.js')
 
 function mockFileContent(path: string): string {
   if (path === 'a.ts') return '// HEADER\nconsole.log(1)'
+  if (path === 'c.ts') return 'console.log(3);\n// HEADER'
   return 'console.log(2)'
 }
 
@@ -36,6 +37,7 @@ describe('header-injector.cli.ts', () => {
     const metrics = result.value
     expect(metrics.hasHeader, 'B hasHeader').toBe(1)
     expect(metrics.noHeader, 'B noHeader').toBe(1)
+    expect(metrics.moveHeader, 'B moveHeader').toBe(0)
     expect(metrics.nbFixed, 'B nbFixed').toBe(1)
     expect(writeSpy).toHaveBeenCalledWith('b.ts', '// HEADER\nconsole.log(2)')
   })
@@ -70,9 +72,25 @@ describe('header-injector.cli.ts', () => {
     expect(metrics.nbFixed, 'D nbFixed').toBe(0)
   })
 
+  it('main E should move header into files with header not on the first line', async () => {
+    vi.mocked(glob.default).mockResolvedValue(['a.ts', 'c.ts'])
+    vi.mocked(fs.readFileSync).mockImplementation((...args: unknown[]) => mockFileContent(args[0] as string))
+    const writeSpy = vi.mocked(fs.writeFileSync)
+    const result = await mod.main(['node', 'script', '--header=HEADER'])
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const metrics = result.value
+    expect(metrics.hasHeader, 'B hasHeader').toBe(1)
+    expect(metrics.noHeader, 'B noHeader').toBe(0)
+    expect(metrics.moveHeader, 'B moveHeader').toBe(1)
+    expect(metrics.nbFixed, 'B nbFixed').toBe(0)
+    expect(writeSpy).toHaveBeenCalledWith('c.ts', '// HEADER\nconsole.log(3);')
+  })
+
   it('report A should generate correct report string', () => {
     const metrics = {
       hasHeader: 1,
+      moveHeader: 6,
       nbFixed: 2,
       noHeader: 3,
       readError: 4,
@@ -82,6 +100,7 @@ describe('header-injector.cli.ts', () => {
     expect(report).toMatchInlineSnapshot(`
       "Header Injector report :
         - Files with header : [32m1[39m
+        - Files with header misplaced: [32m6[39m
         - Files without header : [33m3[39m
         - Files fixed : [32m2[39m
         - Files read errors : [31m4[39m
@@ -92,6 +111,7 @@ describe('header-injector.cli.ts', () => {
   it('report B should handle zero metrics gracefully', () => {
     const metrics = {
       hasHeader: 0,
+      moveHeader: 0,
       nbFixed: 0,
       noHeader: 0,
       readError: 0,
@@ -101,6 +121,7 @@ describe('header-injector.cli.ts', () => {
     expect(report).toMatchInlineSnapshot(`
       "Header Injector report :
         - Files with header : [90m0[39m
+        - Files with header misplaced: [90m0[39m
         - Files without header : [90m0[39m
         - Files fixed : [90m0[39m
         - Files read errors : [90m0[39m

@@ -12,6 +12,8 @@ const logger = new Logger({ minimumLevel: import.meta.main ? '3-info' : '7-error
 const metrics = {
   /** Number of files that already have the header */
   hasHeader: 0,
+  /** Number of files that move the header */
+  moveHeader: 0,
   /** Number of files that were fixed (header added) */
   nbFixed: 0,
   /** Number of files that do not have the header */
@@ -33,10 +35,12 @@ export async function main(argv: string[]) {
   const args = parseArgs(argv)
   logger.info('header-injector.cli.ts started with args', yellow(JSON.stringify(args)))
   if (!args.header) return Result.error('missing header argument')
+
   const files = await glob('**/!(*routeTree.gen|*.d).ts', { filesOnly: true })
   const header = `// ${args.header}`
   logger.info(`Scanning headers of ${files.length} files...`)
   for (const file of files) processFile(file, header, stats)
+
   return Result.ok(stats)
 }
 
@@ -50,34 +54,13 @@ function parseArgs(argv: string[]) {
 }
 
 /**
- * Check if a file has the header
- * @param content the file content
- * @param header the header string to check
- * @returns true if the file has the header
- */
-function hasHeader(content: string, header: string): boolean {
-  const firstLine = content.split('\n')[0]
-  return firstLine.includes(header)
-}
-
-/**
- * Inject header into file content
- * @param file the file path
- * @param newContent the new content with header
- * @returns true if write succeeded
- */
-function writeFileWithHeader(file: string, newContent: string): boolean {
-  const writeResult = Result.trySafe(() => writeFileSync(file, newContent))
-  return writeResult.ok
-}
-
-/**
  * Process a single file to check and inject header if missing
  * @param file the file path to process
  * @param header the header string to inject
  * @param stats the metrics object to update
  * @returns void
  */
+// oxlint-disable-next-line max-lines-per-function
 function processFile(file: string, header: string, stats: Metrics) {
   const readResult = Result.trySafe(() => readFileSync(file, 'utf8'))
   if (!readResult.ok) {
@@ -85,18 +68,29 @@ function processFile(file: string, header: string, stats: Metrics) {
     return
   }
   const content = readResult.value as string
-  if (hasHeader(content, header)) {
+  const lines = content.split('\n')
+  const headerLine = lines.indexOf(header)
+  if (headerLine === 0) {
     stats.hasHeader += 1
     return
   }
-  stats.noHeader += 1
-  const newContent = `${header}\n${content}`
-  const writeSuccess = writeFileWithHeader(file, newContent)
-  if (!writeSuccess) {
+
+  let newContent = `${header}\n${content}`
+  if (headerLine === -1) stats.noHeader += 1
+  else {
+    stats.moveHeader += 1
+    newContent = `${header}\n${content
+      .split('\n')
+      .filter(str => str !== header)
+      .join('\n')}`
+  }
+  const writeResult = Result.trySafe(() => writeFileSync(file, newContent))
+  if (writeResult && !writeResult.ok) {
     stats.writeError += 1
     return
   }
   stats.nbFixed += 1
+  return
 }
 
 /**
@@ -107,6 +101,7 @@ function processFile(file: string, header: string, stats: Metrics) {
 export function report(metrics: Metrics): string {
   return `Header Injector report :
   - Files with header : ${metrics.hasHeader === 0 ? gray('0') : green(metrics.hasHeader.toString())}
+  - Files with header misplaced: ${metrics.moveHeader === 0 ? gray('0') : green(metrics.moveHeader.toString())}
   - Files without header : ${metrics.noHeader === 0 ? gray('0') : yellow(metrics.noHeader.toString())}
   - Files fixed : ${metrics.nbFixed === 0 ? gray('0') : green(metrics.nbFixed.toString())}
   - Files read errors : ${metrics.readError === 0 ? gray('0') : red(metrics.readError.toString())}
