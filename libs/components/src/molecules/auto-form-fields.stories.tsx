@@ -1,5 +1,5 @@
 /** biome-ignore-all assist/source/useSortedKeys: not needed here */
-import { isBrowserEnvironment, Logger, stringify } from '@monorepo/utils'
+import { isBrowserEnvironment, Logger, sleep, stringify } from '@monorepo/utils'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { expect, userEvent, within } from 'storybook/test'
@@ -237,6 +237,7 @@ export const AllFieldsFilled: Story = {
       passwordField: 'Sample password',
     }
     await step('initial state', async () => {
+      await sleep(50)
       expect(submitButton).toBeInTheDocument()
       expect(submitButton).toBeEnabled()
       expect(formData).toContainHTML(stringify(expectedData, true))
