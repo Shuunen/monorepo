@@ -1,14 +1,3 @@
-import { dset } from 'dset'
-
-/**
- * Set a nested value in an object
- * @param object the object to set the value in
- * @param path the path to set the value at
- * @param value the value to set
- * @returns void
- */
-export const setNested = dset
-
 /**
  * Get a nested value from an object
  * @see https://github.com/developit/dlv/blob/master/index.js
@@ -22,5 +11,8 @@ export function getNested(object: Record<string, unknown> | undefined, path: str
   const pathArray = typeof path === 'string' ? path.split('.') : path
   let result: unknown = object
   for (const key of pathArray) result = result && typeof result === 'object' ? (result as Record<string, unknown>)[key] : undefined
+
   return result === undefined ? defaultValue : result
 }
+
+export { dset as setNested } from 'dset'
