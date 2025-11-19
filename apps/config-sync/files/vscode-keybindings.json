@@ -31,7 +31,11 @@
   },
   {
     "args": {
-      "commands": ["typescript.restartTsServer", "oxc.restartServer", "biome.restart"]
+      "commands": [
+        "typescript.restartTsServer",
+        "oxc.restartServer",
+        "biome.restart"
+      ]
     },
     "command": "runCommands",
     "key": "ctrl+oem_8"
@@ -70,5 +74,13 @@
     "command": "-workbench.action.terminal.new",
     "key": "ctrl+shift+[Backquote]",
     "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
+  },
+  {
+    "args": {
+      "text": "\\\r\n"
+    },
+    "command": "workbench.action.terminal.sendSequence",
+    "key": "shift+enter",
+    "when": "terminalFocus"
   }
 ]

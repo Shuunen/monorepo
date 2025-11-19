@@ -5,7 +5,7 @@ import path from 'node:path'
 import { clean, logger, useUnixCarriageReturn } from './utils.node.js'
 
 const currentFolderPath = import.meta.dirname
-const changesFolderPath = path.join(currentFolderPath, 'changes')
+const changesFolderPath = path.join(currentFolderPath, '..', 'changes')
 
 const home = process.env.HOME ?? ''
 const appData = process.env.APPDATA ?? (process.platform === 'darwin' ? `${home}Library/Preferences` : `${home}/.config`)
@@ -114,7 +114,7 @@ function isEquals(file, config) {
   return areEquals
 }
 
-export const backupPath = path.join(currentFolder, './files')
+export const backupPath = path.join(currentFolder, '..', 'files')
 
 /** @type {import('./types.js').File[]} */
 export const files = configs.map(config => {
