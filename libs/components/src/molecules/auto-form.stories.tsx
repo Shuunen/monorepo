@@ -205,7 +205,7 @@ const exhaustiveSchema = z.object({
     state: 'readonly',
   }),
   // String variants
-  string: z.string().meta({
+  string: z.string().min(1).meta({
     label: 'String editable required',
     placeholder: 'Some placeholder',
   }),
@@ -224,7 +224,7 @@ const exhaustiveSchema = z.object({
     state: 'readonly',
   }),
   // Textarea variants
-  textarea: z.string().meta({
+  textarea: z.string().min(1).meta({
     label: 'Textarea editable required',
     placeholder: 'Some long placeholder text',
     render: 'textarea',
@@ -282,8 +282,10 @@ export const Exhaustive: Story = {
       expect(booleanOptional).toBeChecked()
       const booleanReadonlyChecked = canvas.getByTestId('boolean-readonly-checked')
       expect(booleanReadonlyChecked).toBeChecked()
+      expect(booleanReadonlyChecked).toBeDisabled()
       const booleanReadonlyUnchecked = canvas.getByTestId('boolean-readonly-unchecked')
       expect(booleanReadonlyUnchecked).not.toBeChecked()
+      expect(booleanReadonlyUnchecked).toBeDisabled()
     })
     await step('email fields', async () => {
       const emailEditable = canvas.getByTestId('email')
@@ -362,8 +364,8 @@ export const Exhaustive: Story = {
     })
     await step('password fields', async () => {
       const passwordEditable = canvas.getByTestId('password')
-      await userEvent.type(passwordEditable, 'securePassword123')
-      expect(passwordEditable).toHaveValue('securePassword123')
+      await userEvent.type(passwordEditable, 'nop')
+      expect(passwordEditable).toHaveValue('nop')
       expect(passwordEditable).toHaveAttribute('type', 'password')
       const passwordDisabled = canvas.getByTestId('password-disabled')
       expect(passwordDisabled).toBeDisabled()
@@ -382,8 +384,8 @@ export const Exhaustive: Story = {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).toBeDisabled()
       const issues = canvas.getAllByRole('alert')
-      expect(issues).toHaveLength(2)
-      const expectedErrorMessages = ['Email editable required', 'Email optional']
+      expect(issues).toHaveLength(3)
+      const expectedErrorMessages = ['Email editable required', 'Email optional', 'Password must be at least 8 characters']
       const errorMessages = issues.map(i => i.textContent?.trim())
       expect(errorMessages).toEqual(expectedErrorMessages)
     })
@@ -399,7 +401,7 @@ export const Exhaustive: Story = {
             enumOptional: 'green',
             number: 25,
             numberOptional: 30,
-            password: 'securePassword123',
+            password: 'nop',
             passwordOptional: 'anotherPassword456',
             string: 'Some text',
             stringOptional: 'Some text',

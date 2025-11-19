@@ -8,7 +8,7 @@ export function FormFieldBoolean({ fieldName, fieldSchema, formData, isOptional,
   const metadata = getFieldMetadata(fieldSchema)
   if (!metadata) throw new Error(`Field "${fieldName}" is missing metadata (label, placeholder, state)`)
   const { placeholder, state = 'editable' } = metadata
-  const isDisabled = state === 'disabled'
+  const isDisabled = state === 'disabled' || readonly
   const { booleanLiteralValue, isBoolean, isBooleanLiteral } = checkZodBoolean(fieldSchema as z.ZodBoolean | z.ZodLiteral | z.ZodOptional<z.ZodBoolean>)
   if (!isBoolean) throw new Error(`Field "${fieldName}" is not a boolean`)
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly }
