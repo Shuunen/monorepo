@@ -11,6 +11,8 @@ export type AutoFormProps = {
   schemas: z.ZodObject[]
   /** Optional callback function invoked whenever the form data changes, providing the cleaned data. */
   onChange?: (data: Record<string, unknown>) => void
+  /** Optional callback function invoked when the cancel button is clicked. */
+  onCancel?: () => void
   /** Initial data to pre-fill the form fields. */
   initialData?: Record<string, unknown>
   /** Whether to include a summary step before submission */

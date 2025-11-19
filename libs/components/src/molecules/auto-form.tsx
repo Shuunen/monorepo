@@ -27,6 +27,7 @@ import { AutoFormSummaryStep } from './auto-form-summary-step'
  * @param props.schemas the Zod schemas for each step
  * @param props.onSubmit the function to call on form submission after summary confirmation
  * @param props.onChange the function to call on form data change
+ * @param props.onCancel the function to call when cancel button is clicked
  * @param props.initialData the initial form data
  * @param props.logger optional logger for logging form events
  * @param props.useSummaryStep whether to include a summary step before submission
@@ -38,7 +39,7 @@ import { AutoFormSummaryStep } from './auto-form-summary-step'
  * @returns the AutoForm component
  */
 // oxlint-disable-next-line max-lines-per-function
-export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, showLastStep = false, showMenu, labels }: AutoFormProps) {
+export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, showLastStep = false, showMenu, labels }: AutoFormProps) {
   const [currentStep, setCurrentStep] = useState(showLastStep ? schemas.length - 1 : 0)
   const [showSummary, setShowSummary] = useState(false)
   const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined)
@@ -160,44 +161,52 @@ export function AutoForm({ schemas, onSubmit, onChange, initialData = {}, logger
   const isSubmitDisabled = !isFormValid
   const isStepperDisabled = submissionProps?.status === 'success'
   const shouldShowStepper = showMenu === undefined ? schemas.length > 1 : showMenu
-  function renderContent() {
-    if (submissionProps) {
-      const showBackButton = submissionProps.status === 'error' || submissionProps.status === 'unknown-error'
-      const showHomeButton = submissionProps.status === 'success' || submissionProps.status === 'warning'
-      return (
-        <>
-          <AutoFormSubmissionStep {...submissionProps} />
-          {showBackButton && <AutoFormNavigation leftButton={{ disabled: false, onClick: handleBack }} />}
-          {showHomeButton && (
-            <div className="pt-6">
-              <Button asChild testId="btn-home">
-                <Link search={{ guard: false }} to="/">
-                  <IconHome /> {finalLabels.homeButton}
-                </Link>
-              </Button>
-            </div>
-          )}
-        </>
-      )
-    }
-    if (showSummary)
-      return (
-        <>
-          <AutoFormSummaryStep data={formData} />
-          <AutoFormNavigation leftButton={{ disabled: false, onClick: handleBack }} rightButton={{ disabled: false, label: finalLabels.summaryStepButton, onClick: handleFinalSubmit, testId: 'summary-proceed' }} />
-        </>
-      )
+  function renderSubmissionContent() {
+    if (!submissionProps) return
+    const showBackButton = submissionProps.status === 'error' || submissionProps.status === 'unknown-error'
+    const showHomeButton = submissionProps.status === 'success' || submissionProps.status === 'warning'
+    return (
+      <>
+        <AutoFormSubmissionStep {...submissionProps} />
+        {showBackButton && <AutoFormNavigation centerButton={onCancel ? { disabled: false, onClick: onCancel } : undefined} leftButton={{ disabled: false, onClick: handleBack }} />}
+        {showHomeButton && (
+          <div className="pt-6">
+            <Button asChild testId="btn-home">
+              <Link search={{ guard: false }} to="/">
+                <IconHome /> {finalLabels.homeButton}
+              </Link>
+            </Button>
+          </div>
+        )}
+      </>
+    )
+  }
+  function renderSummaryContent() {
+    return (
+      <>
+        <AutoFormSummaryStep data={formData} />
+        <AutoFormNavigation centerButton={onCancel ? { disabled: false, onClick: onCancel } : undefined} leftButton={{ disabled: false, onClick: handleBack }} rightButton={{ disabled: false, label: finalLabels.summaryStepButton, onClick: handleFinalSubmit, testId: 'summary-proceed' }} />
+      </>
+    )
+  }
+  function renderFormContent() {
     return (
       <Form {...form}>
         <form onChange={updateFormData} onSubmit={form.handleSubmit(handleStepSubmit)}>
           <AutoFormFields formData={formData} logger={logger} schema={currentSchema} stepTitle={stepTitle} />
           <AutoFormNavigation
+            centerButton={onCancel ? { disabled: false, onClick: onCancel } : undefined}
             leftButton={currentStep > 0 ? { disabled: false, onClick: handleBack } : undefined}
             rightButton={isLastStep ? { disabled: isSubmitDisabled, label: finalLabels.lastStepButton, testId: 'last-step-submit', type: 'submit' } : { disabled: false, label: finalLabels.nextStep, onClick: handleNext, testId: 'step-next' }}
           />
         </form>
       </Form>
     )
+  }
+  function renderContent() {
+    if (submissionProps) return renderSubmissionContent()
+    if (showSummary) return renderSummaryContent()
+    return renderFormContent()
   }
   return (
     <div className={cn('mx-auto w-full flex min-w-2xl', { 'p-6 bg-white rounded-lg shadow-md': showCard })}>

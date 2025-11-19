@@ -70,17 +70,7 @@
     "tsgo": true,
     "wget": false
   },
-  "colorize.languages": [
-    "css",
-    "html",
-    "javascript",
-    "json",
-    "markdown",
-    "php",
-    "scss",
-    "typescript",
-    "vue"
-  ],
+  "colorize.languages": ["css", "html", "javascript", "json", "markdown", "php", "scss", "typescript", "vue"],
   "console-ninja.featureSet": "Community",
   "coverage-gutters.customizable.context-menu": false,
   "cSpell.language": "en,fr",
@@ -528,13 +518,7 @@
     "utils\\.tw\\(['`]([^'`]*)",
     "h\\d\\(['`]([^'`]*)"
   ],
-  "tailwindCSS.files.exclude": [
-    "**/.git/**",
-    "**/node_modules/**",
-    "**/.hg/**",
-    "**/.svn/**",
-    "**/pnpm-lock.yaml"
-  ],
+  "tailwindCSS.files.exclude": ["**/.git/**", "**/node_modules/**", "**/.hg/**", "**/.svn/**", "**/pnpm-lock.yaml"],
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.cursorStyle": "line",
