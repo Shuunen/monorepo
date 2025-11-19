@@ -13,7 +13,7 @@ export function FormFieldPassword({ fieldName, fieldSchema, formData, isOptional
     <FormFieldBase {...props}>
       {field => (
         <FormControl>
-          <Input {...field} disabled={isDisabled} placeholder={placeholder} readOnly={readonly} type="password" />
+          <Input {...field} disabled={isDisabled} placeholder={placeholder} readOnly={readonly} type="password" value={field.value || ''} />
         </FormControl>
       )}
     </FormFieldBase>
