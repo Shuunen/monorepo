@@ -1363,6 +1363,71 @@ export const SummarySubmissionWarning: Story = {
   },
 }
 
+/**
+ * Multi-step form with cancel button
+ * When onCancel is provided, a cancel button appears next to the submit button
+ * Clicking cancel invokes the onCancel callback
+ */
+export const WithCancelButton: Story = {
+  args: {
+    schemas: [step1SummarySchema, step2SummarySchema],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    await step('fill step 1 form fields', async () => {
+      const emailInput = canvas.getByTestId('email')
+      await userEvent.type(emailInput, 'test@example.com')
+      const nameInput = canvas.getByTestId('name')
+      await userEvent.type(nameInput, 'John Doe')
+    })
+    await step('navigate to step 2', async () => {
+      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      await userEvent.click(nextButton)
+    })
+    await step('verify cancel button is visible', () => {
+      const cancelButton = canvas.getByRole('button', { name: 'Cancel' })
+      expect(cancelButton).toBeInTheDocument()
+      expect(cancelButton).toHaveAttribute('data-testid', 'step-cancel')
+    })
+    await step('click cancel button', async () => {
+      const cancelButton = canvas.getByRole('button', { name: 'Cancel' })
+      await userEvent.click(cancelButton)
+      await waitFor(() => {
+        const cancelMessage = canvas.getByText('Form was cancelled by user')
+        expect(cancelMessage).toBeInTheDocument()
+      })
+    })
+  },
+  render: (args: ExtendedAutoFormProps) => {
+    type FormData = Record<string, unknown> | undefined
+    const [formData, setFormData] = useState<Partial<FormData>>({})
+    const [cancelClicked, setCancelClicked] = useState(false)
+    function onChange(data: Partial<FormData>) {
+      setFormData(data)
+      logger.info('Form data changed', data)
+    }
+    const [submittedData, setSubmittedData] = useState<FormData>({})
+    function onSubmit(data: FormData) {
+      setSubmittedData(data)
+      const status = args.mockSubmitStatus ?? 'success'
+      const message = args.mockSubmitMessage ?? <Paragraph>Form submitted successfully!</Paragraph>
+      return mockSubmit(status, message)
+    }
+    function onCancel() {
+      logger.showInfo('Form cancelled')
+      setCancelClicked(true)
+    }
+    return (
+      <div className="grid gap-4 mt-6">
+        {cancelClicked && <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-800">Form was cancelled by user</div>}
+        <DebugData data={formData} isGhost title="Form data" />
+        <AutoForm {...args} logger={logger} onCancel={onCancel} onChange={onChange} onSubmit={onSubmit} />
+        <DebugData data={submittedData} isGhost title="Submitted data" />
+      </div>
+    )
+  },
+}
+
 /*
 TODO, ordered by priority :
 - Stepper should contains links and not buttons
