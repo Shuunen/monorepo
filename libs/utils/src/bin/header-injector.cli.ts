@@ -54,6 +54,17 @@ function parseArgs(argv: string[]) {
 }
 
 /**
+ * Inject header into file content
+ * @param file the file path
+ * @param newContent the new content with header
+ * @returns true if write succeeded
+ */
+function writeFileWithHeader(file: string, newContent: string): boolean {
+  const writeResult = Result.trySafe(() => writeFileSync(file, newContent))
+  return writeResult.ok
+}
+
+/**
  * Process a single file to check and inject header if missing
  * @param file the file path to process
  * @param header the header string to inject
@@ -74,7 +85,6 @@ function processFile(file: string, header: string, stats: Metrics) {
     stats.hasHeader += 1
     return
   }
-
   let newContent = `${header}\n${content}`
   if (headerLine === -1) stats.noHeader += 1
   else {
@@ -84,13 +94,9 @@ function processFile(file: string, header: string, stats: Metrics) {
       .filter(str => str !== header)
       .join('\n')}`
   }
-  const writeResult = Result.trySafe(() => writeFileSync(file, newContent))
-  if (writeResult && !writeResult.ok) {
-    stats.writeError += 1
-    return
-  }
-  stats.nbFixed += 1
-  return
+  const writeSuccess = writeFileWithHeader(file, newContent)
+  if (writeSuccess) stats.nbFixed += 1
+  else stats.writeError += 1
 }
 
 /**
