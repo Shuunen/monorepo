@@ -186,7 +186,7 @@ export function Comparison() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="cursor-pointer" htmlFor="left-upload">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white border-0 transition-all duration-300" onClick={() => document.querySelector<HTMLButtonElement>('#left-upload')?.click()} testId="left-upload-btn" variant="outline">
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white border-0 transition-all duration-300" name="left-upload" onClick={() => document.querySelector<HTMLButtonElement>('#left-upload')?.click()} variant="outline">
                   <Upload className="mr-2 h-4 w-4" />
                   Left Image
                 </Button>
@@ -194,14 +194,14 @@ export function Comparison() {
               <input accept="image/*" className="hidden" id="left-upload" onChange={handleLeftImageUpload} type="file" />
             </div>
 
-            <Button className="w-full bg-slate-700 hover:bg-slate-600 text-white border-0 transition-all duration-300" onClick={handleReset} testId="reset-btn" variant="outline">
+            <Button className="w-full bg-slate-700 hover:bg-slate-600 text-white border-0 transition-all duration-300" name="reset" onClick={handleReset} variant="outline">
               <RotateCcw className="mr-2 h-4 w-4" />
               Reset View
             </Button>
 
             <div>
               <label className="cursor-pointer" htmlFor="right-upload">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white border-0 transition-all duration-300" onClick={() => document.querySelector<HTMLButtonElement>('#right-upload')?.click()} testId="right-upload-btn" variant="outline">
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white border-0 transition-all duration-300" name="right-upload" onClick={() => document.querySelector<HTMLButtonElement>('#right-upload')?.click()} variant="outline">
                   <Upload className="mr-2 h-4 w-4" />
                   Image Droite
                 </Button>

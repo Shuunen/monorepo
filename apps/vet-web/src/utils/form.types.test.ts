@@ -27,7 +27,6 @@ describe('form.types', () => {
       form: UseFormReturn<any> // eslint-disable-line @typescript-eslint/no-explicit-any
       name: keyof TestFieldValues
       isRequired: boolean
-      testId: string
       placeholder?: string
       disableNa?: boolean
     }>()
@@ -44,7 +43,6 @@ describe('form.types', () => {
       label: 'Test Label',
       name: 'name',
       placeholder: 'Enter text',
-      testId: 'test-field',
     }
     expectTypeOf(fieldProps).toMatchTypeOf<FieldBaseProps<{ name: string }>>()
   })

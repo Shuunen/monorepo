@@ -75,7 +75,7 @@ export function RecipeViewer() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen" data-testid="recipe">
-      <Button asChild className="flex fixed bottom-4 z-10 rounded-xl border-2 border-orange-800" testId="back-home" variant="outline">
+      <Button asChild className="flex fixed bottom-4 z-10 rounded-xl border-2 border-orange-800" name="back-home" variant="outline">
         <Link to="/">
           <MoveLeftIcon />
           Retour à l'accueil

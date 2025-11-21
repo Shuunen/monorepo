@@ -1,4 +1,4 @@
-import { camelToKebabCase, cn } from '@monorepo/utils'
+import { cn } from '@monorepo/utils'
 import { FormControl } from '../atoms/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../atoms/select'
 import { getFieldMetadata, getZodEnumOptions } from './auto-form.utils'
@@ -9,7 +9,6 @@ export function FormFieldSelect({ fieldName, fieldSchema, formData, isOptional, 
   if (!metadata) throw new Error(`Field "${fieldName}" is missing metadata (label, placeholder, state)`)
   const { label = '', placeholder, state = 'editable' } = metadata
   const isDisabled = state === 'disabled'
-  const testId = camelToKebabCase(fieldName)
   const options = getZodEnumOptions(fieldSchema)
   if (!options.ok) throw new Error(`Field "${fieldName}" is not an enum`)
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly }
@@ -17,8 +16,8 @@ export function FormFieldSelect({ fieldName, fieldSchema, formData, isOptional, 
     <FormFieldBase {...props}>
       {field => (
         <FormControl>
-          <Select {...field} disabled={isDisabled || readonly} onValueChange={field.onChange}>
-            <SelectTrigger className={cn({ '!opacity-100': readonly })} testId={`${testId}-trigger`}>
+          <Select disabled={isDisabled || readonly} name={field.name} onValueChange={field.onChange} value={String(field.value || '')}>
+            <SelectTrigger className={cn({ '!opacity-100': readonly })} name={field.name}>
               <SelectValue placeholder={placeholder ?? `Select ${label}`} />
             </SelectTrigger>
             <SelectContent>

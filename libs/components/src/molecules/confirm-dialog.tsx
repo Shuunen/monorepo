@@ -23,12 +23,12 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
-            <Button disabled={props.loading} onClick={props.onCancel} testId="modal-button-cancel" type="button" variant="secondary">
+            <Button disabled={props.loading} name="modal-cancel" onClick={props.onCancel} type="button" variant="secondary">
               {props.loading ? <Spinner /> : undefined}
               {props.cancel}
             </Button>
           </DialogClose>
-          <Button disabled={props.loading} onClick={props.onConfirm} testId="modal-button-confirm" type="button">
+          <Button disabled={props.loading} name="modal-confirm" onClick={props.onConfirm} type="button">
             {props.loading ? <Spinner /> : undefined}
             {props.confirm}
           </Button>

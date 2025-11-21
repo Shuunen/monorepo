@@ -17,7 +17,7 @@ const meta: Meta<typeof Select> = {
   },
   render: args => (
     <Select {...args}>
-      <SelectTrigger className="w-96" title="Select">
+      <SelectTrigger className="w-96" name="fruit-select" title="Select">
         <SelectValue placeholder="Select a fruit" />
       </SelectTrigger>
       <SelectContent>
@@ -62,9 +62,12 @@ type Story = StoryObj<typeof meta>
 /**
  * The default form of the select.
  */
-export const Default: Story = {}
+export const Default: Story = {
+  args: {},
+}
 
 export const ShouldSelectOption: Story = {
+  args: {},
   name: 'when an option is selected, should be checked',
   play: async ({ canvasElement, step }) => {
     const canvasBody = within(canvasElement.ownerDocument.body)

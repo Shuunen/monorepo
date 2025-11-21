@@ -57,7 +57,7 @@ export const Basic: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const canvasBody = within(canvasElement.ownerDocument.body)
-    const colorTrigger = canvas.getByTestId('color-trigger')
+    const colorTrigger = canvas.getByTestId('select-trigger-color')
     await userEvent.click(colorTrigger)
     const colorOptions = canvasBody.getAllByRole('option')
     expect(colorOptions[0]).toHaveTextContent('Red')
@@ -96,7 +96,7 @@ export const LabelGeneration: Story = {
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('select color option', async () => {
-      const colorTrigger = canvas.getByTestId('color-trigger')
+      const colorTrigger = canvas.getByTestId('select-trigger-color')
       await userEvent.click(colorTrigger)
       const colorOptions = canvasBody.getAllByRole('option')
       expect(colorOptions[0]).toHaveTextContent('Red')
@@ -107,7 +107,7 @@ export const LabelGeneration: Story = {
       expect(colorNativeSelect).toHaveValue('green')
     })
     await step('select size option', async () => {
-      const sizeTrigger = canvas.getByTestId('size-trigger')
+      const sizeTrigger = canvas.getByTestId('select-trigger-size')
       await userEvent.click(sizeTrigger)
       const sizeOptions = canvasBody.getAllByRole('option')
       expect(sizeOptions[0]).toHaveTextContent('Small')
@@ -119,7 +119,7 @@ export const LabelGeneration: Story = {
       expect(sizeNativeSelect).toHaveValue('large')
     })
     await step('select priority option', async () => {
-      const priorityTrigger = canvas.getByTestId('priority-trigger')
+      const priorityTrigger = canvas.getByTestId('select-trigger-priority')
       await userEvent.click(priorityTrigger)
       const priorityOptions = canvasBody.getAllByRole('option')
       expect(priorityOptions[0]).toHaveTextContent('Low')
@@ -185,7 +185,7 @@ export const Disabled: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const colorTrigger = canvas.getByTestId('color-trigger')
+    const colorTrigger = canvas.getByTestId('select-trigger-color')
     expect(colorTrigger).toBeDisabled()
     const colorNativeSelect = colorTrigger.nextElementSibling
     expect(colorNativeSelect).toHaveValue('green')
@@ -210,7 +210,7 @@ export const Readonly: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const colorTrigger = canvas.getByTestId('color-trigger')
+    const colorTrigger = canvas.getByTestId('select-trigger-color')
     const colorNativeSelect = colorTrigger.nextElementSibling
     expect(colorNativeSelect).toHaveValue('blue')
   },
@@ -254,7 +254,7 @@ export const CustomLabels: Story = {
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('select country option', async () => {
-      const countryTrigger = canvas.getByTestId('country-trigger')
+      const countryTrigger = canvas.getByTestId('select-trigger-country')
       await userEvent.click(countryTrigger)
       const countryOptions = canvasBody.getAllByRole('option')
       expect(countryOptions[0]).toHaveTextContent('🇺🇸 United States')
@@ -265,7 +265,7 @@ export const CustomLabels: Story = {
       expect(countryNativeSelect).toHaveValue('fr')
     })
     await step('select size option', async () => {
-      const sizeTrigger = canvas.getByTestId('size-trigger')
+      const sizeTrigger = canvas.getByTestId('select-trigger-size')
       await userEvent.click(sizeTrigger)
       const sizeOptions = canvasBody.getAllByRole('option')
       expect(sizeOptions[0]).toHaveTextContent('Extra Small (XS)')

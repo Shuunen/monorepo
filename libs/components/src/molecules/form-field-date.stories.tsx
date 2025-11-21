@@ -56,7 +56,7 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const dateInput = canvas.getByTestId('birth-date') as HTMLInputElement
+    const dateInput = canvas.getByTestId('input-date-birth-date') as HTMLInputElement
     expect(dateInput).toBeInTheDocument()
     expect(dateInput).toHaveAttribute('type', 'date')
     await step('fill date input', async () => {
@@ -93,7 +93,7 @@ export const WithInitialValue: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const dateInput = canvas.getByTestId('event-date') as HTMLInputElement
+    const dateInput = canvas.getByTestId('input-date-event-date') as HTMLInputElement
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('verify initial value is displayed', () => {
@@ -146,7 +146,7 @@ export const Disabled: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const dateInput = canvas.getByTestId('lock-date') as HTMLInputElement
+    const dateInput = canvas.getByTestId('input-date-lock-date') as HTMLInputElement
     expect(dateInput).toBeDisabled()
     expect(dateInput).toHaveValue('2025-01-01')
   },
@@ -170,7 +170,7 @@ export const Readonly: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const dateInput = canvas.getByTestId('created-date') as HTMLInputElement
+    const dateInput = canvas.getByTestId('input-date-created-date') as HTMLInputElement
     expect(dateInput).toHaveAttribute('readonly')
     expect(dateInput).toHaveValue('2024-01-15')
   },
@@ -193,7 +193,7 @@ export const StringDateWithRender: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const dateInput = canvas.getByTestId('string-date') as HTMLInputElement
+    const dateInput = canvas.getByTestId('input-date-string-date') as HTMLInputElement
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     expect(dateInput).toBeInTheDocument()
