@@ -134,7 +134,7 @@ export const LabelGeneration: Story = {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
     })
-    step('verify submitted data', () => {
+    await step('verify submitted data', () => {
       const expectedData = {
         color: 'green',
         priority: 'critical',
@@ -279,7 +279,7 @@ export const CustomLabels: Story = {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
     })
-    step('verify submitted data', () => {
+    await step('verify submitted data', () => {
       const expectedData = {
         country: 'fr',
         size: 'lg',

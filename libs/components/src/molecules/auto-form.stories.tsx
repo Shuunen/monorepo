@@ -380,7 +380,7 @@ export const Exhaustive: Story = {
       expect(passwordReadonly).toHaveValue('')
       expect(passwordReadonly).toHaveAttribute('type', 'password')
     })
-    step('submit button is disabled because form is invalid', () => {
+    await step('submit button is disabled because form is invalid', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).toBeDisabled()
       const issues = canvas.getAllByRole('alert')
@@ -389,7 +389,7 @@ export const Exhaustive: Story = {
       const errorMessages = issues.map(i => i.textContent?.trim())
       expect(errorMessages).toEqual(expectedErrorMessages)
     })
-    step('check form data and submitted data', () => {
+    await step('check form data and submitted data', () => {
       expect(formData).toContainHTML(
         stringify(
           {
@@ -556,7 +556,7 @@ export const ExhaustiveFilled: Story = {
       expect(passwordReadonly).toHaveValue('ReadonlyPass000')
       expect(passwordReadonly).toHaveAttribute('type', 'password')
     })
-    step('no error displayed', () => {
+    await step('no error displayed', () => {
       expect(canvas.queryByRole('alert')).not.toBeInTheDocument()
     })
     await step('submit button is enabled because form is valid', async () => {
@@ -565,7 +565,7 @@ export const ExhaustiveFilled: Story = {
       await userEvent.click(submitButton)
       await sleep(100)
     })
-    step('verify submitted data', () => {
+    await step('verify submitted data', () => {
       const expectedData = {
         boolean: true,
         booleanDisabled: true,
@@ -688,7 +688,7 @@ export const MultiStep: Story = {
       const nextButton = canvas.getByRole('button', { name: 'Next' })
       await userEvent.click(nextButton)
     })
-    step('submit button still disabled - step 3 not filled', () => {
+    await step('submit button still disabled - step 3 not filled', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).toBeDisabled()
     })
@@ -701,7 +701,7 @@ export const MultiStep: Story = {
       expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
     })
-    step('verify submitted data', () => {
+    await step('verify submitted data', () => {
       // biome-ignore assist/source/useSortedKeys: should not sort keys here
       const expectedData = {
         email: 'john.doe@example.com',
@@ -853,7 +853,7 @@ export const OptionalSection: Story = {
       const petNameInput = await canvas.findByTestId('pet-name')
       expect(petNameInput).toBeVisible()
     })
-    step('submit button disabled when pet checked but no pet name', () => {
+    await step('submit button disabled when pet checked but no pet name', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).toBeDisabled()
     })
@@ -882,7 +882,7 @@ export const OptionalSection: Story = {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
     })
-    step('verify submitted data', () => {
+    await step('verify submitted data', () => {
       // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
       expect(formData).toContainHTML(stringify({ name: 'Paul Doughy', favoriteColor: 'red' }, true))
       // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
@@ -961,7 +961,7 @@ export const StepperStates: Story = {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
     })
-    step('verify submitted data', () => {
+    await step('verify submitted data', () => {
       // biome-ignore assist/source/useSortedKeys: we need a specific key order here
       const expectedFormData = {
         name: 'Jane Doe-Rollin',
@@ -1004,7 +1004,7 @@ export const KeyMapping: Story = {
     const canvas = within(canvasElement)
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
-    step('verify initial data was mapped correctly', () => {
+    await step('verify initial data was mapped correctly', () => {
       const emailInput = canvas.getByTestId('user-email')
       expect(emailInput).toHaveValue('james.doe@example.com')
       const nameInput = canvas.getByTestId('user-name')
@@ -1014,7 +1014,7 @@ export const KeyMapping: Story = {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
     })
-    step('verify submitted data', () => {
+    await step('verify submitted data', () => {
       const expectedData = {
         // biome-ignore lint/style/useNamingConvention: we use snake_case for testing purposes
         email_address: 'james.doe@example.com',
@@ -1156,7 +1156,7 @@ export const SummaryOnly: Story = {
       const nextButton = canvas.getByRole('button', { name: 'Next' })
       await userEvent.click(nextButton)
     })
-    step('verify data before summary', () => {
+    await step('verify data before summary', () => {
       expect(formData).toContainHTML(stringify(expectedData, true))
       expect(submittedData).toContainHTML('{}')
     })
