@@ -28,7 +28,6 @@ export const machine = setup({
   types: {
     context: {} as Context,
     input: {} as { formData?: FormData },
-    events: {} as { type: 'breed' } | { type: 'diet' } | { type: 'fill' },
   },
   guards: {
     isCat: ({ context }) => context.formData.breed === 'cat',
