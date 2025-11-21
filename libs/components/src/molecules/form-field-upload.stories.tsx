@@ -74,7 +74,7 @@ export const Required: Story = {
     const canvas = within(canvasElement)
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
-    step('cannot submit form initially', () => {
+    await step('cannot submit form initially', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).toBeDisabled()
       expect(formData).toContainHTML('{}')
@@ -123,7 +123,7 @@ export const ExistingFile: Story = {
     const canvas = within(canvasElement)
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
-    step('shows the existing file in the upload field', () => {
+    await step('shows the existing file in the upload field', () => {
       const fileInput = canvas.getByTestId('document-upload-success') as HTMLInputElement
       expect(fileInput).toBeInTheDocument()
       expect(formData).toContainHTML('test.txt')
