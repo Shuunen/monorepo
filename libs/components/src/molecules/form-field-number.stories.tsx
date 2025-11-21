@@ -56,7 +56,7 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const numberInput = canvas.getByTestId('age') as HTMLInputElement
+    const numberInput = canvas.getByTestId('input-number-age') as HTMLInputElement
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
 
     expect(numberInput).toBeInTheDocument()
@@ -96,7 +96,7 @@ export const WithInitialValue: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const numberInput = canvas.getByTestId('quantity') as HTMLInputElement
+    const numberInput = canvas.getByTestId('input-number-quantity') as HTMLInputElement
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('verify initial value is displayed', () => {
@@ -154,7 +154,7 @@ export const Disabled: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const studentIdInput = canvas.getByTestId('student-id') as HTMLInputElement
+    const studentIdInput = canvas.getByTestId('input-number-student-id') as HTMLInputElement
     expect(studentIdInput).toBeDisabled()
     expect(studentIdInput).toHaveValue(12345)
   },
@@ -178,7 +178,7 @@ export const Readonly: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const priceInput = canvas.getByTestId('price') as HTMLInputElement
+    const priceInput = canvas.getByTestId('input-number-price') as HTMLInputElement
     expect(priceInput).toHaveValue(99.99)
   },
 }
@@ -207,8 +207,8 @@ export const MultipleFields: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const widthInput = canvas.getByTestId('width') as HTMLInputElement
-    const heightInput = canvas.getByTestId('height') as HTMLInputElement
+    const widthInput = canvas.getByTestId('input-number-width') as HTMLInputElement
+    const heightInput = canvas.getByTestId('input-number-height') as HTMLInputElement
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
 

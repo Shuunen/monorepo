@@ -11,7 +11,7 @@ export const Route = createRootRoute({
       <Outlet />
       {import.meta.env.DEV && <TestIdChecker />}
       <TanStackRouterDevtools />
-      <Toaster />
+      <Toaster name="default" />
     </div>
   ),
 })

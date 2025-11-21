@@ -7,7 +7,7 @@ export function AppButtonNext({ label = 'Home', type = 'button', url = '/' }: Re
     navigate(url)
   }, [url])
   return (
-    <Button onClick={onClick} testId="next" type={type}>
+    <Button name="next" onClick={onClick} type={type}>
       {label}
     </Button>
   )

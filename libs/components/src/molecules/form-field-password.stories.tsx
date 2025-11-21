@@ -57,7 +57,7 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const passwordInput = canvas.getByTestId('password') as HTMLInputElement
+    const passwordInput = canvas.getByTestId('input-password-password') as HTMLInputElement
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
 
     expect(passwordInput).toBeInTheDocument()
@@ -98,7 +98,7 @@ export const WithInitialValue: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const passwordInput = canvas.getByTestId('password') as HTMLInputElement
+    const passwordInput = canvas.getByTestId('input-password-password') as HTMLInputElement
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
 
     await step('verify initial value is displayed', () => {
@@ -157,7 +157,7 @@ export const Disabled: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const passwordInput = canvas.getByTestId('password') as HTMLInputElement
+    const passwordInput = canvas.getByTestId('input-password-password') as HTMLInputElement
     expect(passwordInput).toBeDisabled()
     expect(passwordInput).toHaveValue('DisabledPass123')
     expect(passwordInput).toHaveAttribute('type', 'password')
@@ -183,7 +183,7 @@ export const Readonly: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const passwordInput = canvas.getByTestId('password') as HTMLInputElement
+    const passwordInput = canvas.getByTestId('input-password-password') as HTMLInputElement
     expect(passwordInput).toHaveAttribute('readonly')
     expect(passwordInput).toHaveValue('ReadonlyPass123')
     expect(passwordInput).toHaveAttribute('type', 'password')
@@ -217,9 +217,8 @@ export const MultipleFields: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const passwordInput = canvas.getByTestId('password') as HTMLInputElement
-    const confirmPasswordInput = canvas.getByTestId('confirm-password') as HTMLInputElement
-    const _currentPasswordInput = canvas.getByTestId('current-password') as HTMLInputElement
+    const passwordInput = canvas.getByTestId('input-password-password') as HTMLInputElement
+    const confirmPasswordInput = canvas.getByTestId('input-password-confirm-password') as HTMLInputElement
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
 

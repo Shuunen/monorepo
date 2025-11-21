@@ -153,7 +153,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
       {field => (
         <FormControl>
           {idleNoFile ? (
-            <Input accept={accept} className="w-96" data-testid={`${testId}-${stateTestId}`} disabled={isDisabled} onChange={event => handleFileSelect(event, field.onChange)} placeholder={placeholder || currentState.message} ref={fileInputRef} type="file" />
+            <Input accept={accept} className="w-96" disabled={isDisabled} name={`${testId}-${stateTestId}`} onChange={event => handleFileSelect(event, field.onChange)} placeholder={placeholder || currentState.message} ref={fileInputRef} type="file" />
           ) : (
             <div className="flex gap-3 rounded-md border border-input bg-background p-3 overflow-hidden" data-testid={`${testId}-${stateTestId}`}>
               <aside className="mt-0.5">{currentState.icon}</aside>
@@ -166,7 +166,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
 
                   <div className="flex">
                     {currentState.buttons.map(button => (
-                      <Button key={`button-${button.label}`} onClick={() => button.action(field.onChange)} size="sm" testId={`upload-action-${slugify(button.label)}`} title={button.label} variant="ghost">
+                      <Button key={`button-${button.label}`} name={`upload-action-${slugify(button.label)}`} onClick={() => button.action(field.onChange)} size="sm" title={button.label} variant="ghost">
                         {button.label}
                         <button.icon className="size-4" />
                       </Button>

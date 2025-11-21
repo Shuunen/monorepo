@@ -32,6 +32,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     id: 'default-switch',
+    name: 'airplaneMode',
   },
 }
 
@@ -42,10 +43,15 @@ export const Disabled: Story = {
   args: {
     disabled: true,
     id: 'disabled-switch',
+    name: 'airplaneMode',
   },
 }
 
 export const ShouldToggle: Story = {
+  args: {
+    id: 'toggle-switch',
+    name: 'airplaneMode',
+  },
   name: 'when clicking the switch, should toggle it on and off',
   play: async ({ canvas, step }) => {
     const switchBtn = await canvas.findByRole('switch')

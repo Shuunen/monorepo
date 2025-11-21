@@ -58,13 +58,13 @@ const meta = {
               <FormItem>
                 <FormLabel>Message</FormLabel>
                 <FormControl>
-                  <Textarea data-testid={field.name} placeholder="Type your message here." {...field} />
+                  <Textarea placeholder="Type your message here." {...field} />
                 </FormControl>
                 <FormMessage name={field.name} />
               </FormItem>
             )}
           />
-          <Button testId="submit" type="submit">
+          <Button name="submit" type="submit">
             Submit
           </Button>
         </form>

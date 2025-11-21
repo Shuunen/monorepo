@@ -92,7 +92,7 @@ export function AppForm<FormType extends Form>({ children, error: parentError = 
       <div className="order-last flex justify-center md:col-span-full">
         {Boolean(errorMessage) && Boolean(form.isTouched) && <p className="text-red-500">{errorMessage}</p>}
         {onSubmit !== undefined && (
-          <Button disabled={!canSubmit} testId="submit" type="submit" variant={canSubmit ? 'ghost' : 'default'}>
+          <Button disabled={!canSubmit} name="submit" type="submit" variant={canSubmit ? 'ghost' : 'default'}>
             Save
           </Button>
         )}

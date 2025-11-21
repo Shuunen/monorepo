@@ -143,11 +143,11 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
       <CardHeader className={cn('flex justify-between items-center pl-4 pr-2 py-2 text-white', hasErrors ? 'bg-red-700' : 'bg-blue-700')}>
         <CardTitle className="text-base">Data test id checker</CardTitle>
         <Button
+          name="close-test-id-checker"
           onClick={() => {
             setVisible(false)
             localStorage.setItem(STORAGE_KEY, 'false')
           }}
-          testId="close-test-id-checker"
           variant="ghost"
         >
           <XIcon />

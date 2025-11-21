@@ -22,7 +22,7 @@ export const Default: Story = {
     return (
       <Dialog onOpenChange={setOpen} open={open}>
         <DialogTrigger asChild>
-          <Button testId="open-dialog">Open Dialog</Button>
+          <Button name="open-dialog">Open Dialog</Button>
         </DialogTrigger>
         <DialogPortal>
           <DialogOverlay />
@@ -34,11 +34,11 @@ export const Default: Story = {
             <div>Dialog body content goes here.</div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button testId="close" variant="secondary">
+                <Button name="close" variant="secondary">
                   Close
                 </Button>
               </DialogClose>
-              <Button testId="save">Save</Button>
+              <Button name="save">Save</Button>
             </DialogFooter>
           </DialogContent>
         </DialogPortal>

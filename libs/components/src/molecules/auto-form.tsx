@@ -172,7 +172,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
         {showBackButton && <AutoFormNavigation centerButton={onCancel ? { disabled: false, onClick: onCancel } : undefined} leftButton={{ disabled: false, onClick: handleBack }} />}
         {showHomeButton && (
           <div className="pt-6">
-            <Button asChild testId="btn-home">
+            <Button asChild name="home">
               <Link search={{ guard: false }} to="/">
                 <IconHome /> {finalLabels.homeButton}
               </Link>
@@ -186,7 +186,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     return (
       <>
         <AutoFormSummaryStep data={formData} />
-        <AutoFormNavigation centerButton={onCancel ? { disabled: false, onClick: onCancel } : undefined} leftButton={{ disabled: false, onClick: handleBack }} rightButton={{ disabled: false, label: finalLabels.summaryStepButton, onClick: handleFinalSubmit, testId: 'summary-proceed' }} />
+        <AutoFormNavigation centerButton={onCancel ? { disabled: false, onClick: onCancel } : undefined} leftButton={{ disabled: false, onClick: handleBack }} rightButton={{ disabled: false, label: finalLabels.summaryStepButton, name: 'summary-proceed', onClick: handleFinalSubmit }} />
       </>
     )
   }
@@ -198,7 +198,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
           <AutoFormNavigation
             centerButton={onCancel ? { disabled: false, onClick: onCancel } : undefined}
             leftButton={currentStep > 0 ? { disabled: false, onClick: handleBack } : undefined}
-            rightButton={isLastStep ? { disabled: isSubmitDisabled, label: finalLabels.lastStepButton, testId: 'last-step-submit', type: 'submit' } : { disabled: false, label: finalLabels.nextStep, onClick: handleNext, testId: 'step-next' }}
+            rightButton={isLastStep ? { disabled: isSubmitDisabled, label: finalLabels.lastStepButton, name: 'last-step-submit', type: 'submit' } : { disabled: false, label: finalLabels.nextStep, name: 'step-next', onClick: handleNext }}
           />
         </form>
       </Form>

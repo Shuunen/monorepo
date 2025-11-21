@@ -16,23 +16,23 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
+    name: 'default',
     placeholder: 'Enter text here',
-    testId: 'input-default',
   },
 }
 
 export const Disabled: Story = {
   args: {
     disabled: true,
+    name: 'disabled',
     placeholder: 'Disabled input',
-    testId: 'input-disabled',
   },
 }
 
 export const Readonly: Story = {
   args: {
+    name: 'readonly',
     placeholder: 'Readonly input',
     readOnly: true,
-    testId: 'input-readonly',
   },
 }

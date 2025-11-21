@@ -43,7 +43,7 @@ function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps
       {section && <Title level={4}>{section}</Title>}
       <div className={cn('flex items-center gap-0.5', { 'opacity-60 pointer-events-none': state === 'upcoming' })}>
         {indent && <div className={cn('h-10 w-1 bg-gray-200', { 'h-16': subtitle })} />}
-        <Button className={btnClasses} data-state={state} disabled={disabled} onClick={() => onStepClick(idx)} testId={`step-${slugify(title)}`} variant="ghost">
+        <Button className={btnClasses} data-state={state} disabled={disabled} name={`step-${slugify(title)}`} onClick={() => onStepClick(idx)} variant="ghost">
           {icon}
           <div className="grow text-start flex flex-col ml-2">
             <div className="flex items-center gap-1">
@@ -62,7 +62,7 @@ export function AutoFormStepper({ steps, onStepClick, disabled = false }: AutoFo
   return (
     <div className="flex flex-col gap-4 pr-8 border-r border-gray-200 mr-8">
       {steps.map(step => (
-        <AutoFormStep disabled={disabled} key={step.title} onStepClick={onStepClick} step={step} />
+        <AutoFormStep disabled={disabled} key={step.idx} onStepClick={onStepClick} step={step} />
       ))}
     </div>
   )

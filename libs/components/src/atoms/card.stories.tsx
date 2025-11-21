@@ -28,7 +28,7 @@ export const CompleteCard: Story = {
         <CardTitle>Card Title</CardTitle>
         <CardDescription>Card Description</CardDescription>
         <CardAction>
-          <Button testId="card">Click me</Button>
+          <Button name="click-me">Click me</Button>
         </CardAction>
       </CardHeader>
       <CardContent>

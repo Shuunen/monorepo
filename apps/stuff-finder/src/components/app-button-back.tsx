@@ -9,7 +9,7 @@ export function AppButtonBack({ stepsBack = 1 }: Readonly<{ stepsBack?: number }
   }, [stepsBack])
 
   return (
-    <Button onClick={goBack} testId="back" variant="outline">
+    <Button name="back" onClick={goBack} variant="outline">
       <IconArrowLeft />
       Back
     </Button>

@@ -1,5 +1,4 @@
 import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@monorepo/components'
-import { slugify } from '@monorepo/utils'
 import { Link } from '@tanstack/react-router'
 
 import type { ReactNode } from 'react'
@@ -44,7 +43,7 @@ export function BookCard({ icon, title, description, features, buttonText, butto
       </CardContent>
       <CardFooter className="flex justify-center pb-4 pt-2">
         <Link to={buttonTo}>
-          <Button testId={slugify(buttonText)} variant="default">
+          <Button name={buttonText} variant="default">
             {buttonText}
           </Button>
         </Link>

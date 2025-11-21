@@ -9,8 +9,7 @@ export type FieldBaseProps<TypeFieldValues extends FieldValues = FieldValues> = 
   name: FieldPath<TypeFieldValues>
   /** will show a red star if the label is defined */
   isRequired: boolean
-  /** used for data-testid */
-  testId: string
+  /** placeholder text for the field */
   placeholder?: string
   /** disable the N/A checkbox */
   disableNa?: boolean

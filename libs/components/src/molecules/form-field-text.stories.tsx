@@ -56,7 +56,7 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const textInput = canvas.getByTestId('username') as HTMLInputElement
+    const textInput = canvas.getByTestId('input-text-username') as HTMLInputElement
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
 
     expect(textInput).toBeInTheDocument()
@@ -95,7 +95,7 @@ export const WithInitialValue: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const textInput = canvas.getByTestId('name') as HTMLInputElement
+    const textInput = canvas.getByTestId('input-text-name') as HTMLInputElement
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
 
     await step('verify initial value is displayed', () => {
@@ -152,7 +152,7 @@ export const Disabled: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const emailInput = canvas.getByTestId('email') as HTMLInputElement
+    const emailInput = canvas.getByTestId('input-text-email') as HTMLInputElement
     expect(emailInput).toBeDisabled()
     expect(emailInput).toHaveValue('user@example.com')
   },
@@ -176,7 +176,7 @@ export const Readonly: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const accountIdInput = canvas.getByTestId('account-id') as HTMLInputElement
+    const accountIdInput = canvas.getByTestId('input-text-account-id') as HTMLInputElement
     expect(accountIdInput).toHaveAttribute('readonly')
     expect(accountIdInput).toHaveValue('ACC-12345')
   },
@@ -206,9 +206,8 @@ export const MultipleFields: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const firstNameInput = canvas.getByTestId('first-name') as HTMLInputElement
-    const lastNameInput = canvas.getByTestId('last-name') as HTMLInputElement
-    const _phoneInput = canvas.getByTestId('phone') as HTMLInputElement
+    const firstNameInput = canvas.getByTestId('input-text-first-name') as HTMLInputElement
+    const lastNameInput = canvas.getByTestId('input-text-last-name') as HTMLInputElement
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
 

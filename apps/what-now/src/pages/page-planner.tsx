@@ -34,16 +34,16 @@ function TaskCardControls({ canIncrease, canDecrease, canMove, onIncrease, onDec
   const iconClasses = 'size-3'
   return (
     <div className="absolute right-0.5 top-0.5 grid grid-cols-2 gap-1.5 opacity-10 sepia hover:opacity-100 hover:sepia-0">
-      <Button className={btnClasses} disabled={!canIncrease} onClick={onIncrease} testId="btn-increase" variant={canIncrease ? 'destructive' : 'ghost'}>
+      <Button className={btnClasses} disabled={!canIncrease} name="increase" onClick={onIncrease} variant={canIncrease ? 'destructive' : 'ghost'}>
         <PlusIcon className={iconClasses} />
       </Button>
-      <Button className={btnClasses} disabled={!canDecrease} onClick={onDecrease} testId="btn-decrease" variant={canDecrease ? 'secondary' : 'ghost'}>
+      <Button className={btnClasses} disabled={!canDecrease} name="decrease" onClick={onDecrease} variant={canDecrease ? 'secondary' : 'ghost'}>
         <MinusIcon className={iconClasses} />
       </Button>
-      <Button className={btnClasses} disabled={!canMove} onClick={onBefore} testId="btn-before" variant={canMove ? 'default' : 'ghost'}>
+      <Button className={btnClasses} disabled={!canMove} name="before" onClick={onBefore} variant={canMove ? 'default' : 'ghost'}>
         <MoveLeftIcon className={iconClasses} />
       </Button>
-      <Button className={btnClasses} disabled={!canMove} onClick={onAfter} testId="btn-after" variant={canMove ? 'default' : 'ghost'}>
+      <Button className={btnClasses} disabled={!canMove} name="after" onClick={onAfter} variant={canMove ? 'default' : 'ghost'}>
         <MoveRightIcon className={iconClasses} />
       </Button>
     </div>
@@ -133,7 +133,7 @@ function DayColumn({
         {dayName}
         <span className="ml-2 opacity-75">{realDate}</span>
       </div>
-      <div className="flex flex-col gap-2 p-3 flex-grow">
+      <div className="flex flex-col gap-2 p-3 grow">
         {tasks.map(task => (
           <TaskCard key={`${task.id}-${realDate}`} modifications={modifications} onDateChange={onDateChange} onFrequencyChange={onFrequencyChange} task={task} />
         ))}
@@ -174,7 +174,7 @@ function PlannerContent({
           const realDate = formatDate(columnDate, 'dd MMMM')
           const isToday = columnDate.toDateString() === today.toDateString()
           return (
-            <div className="min-w-48 flex-shrink-0" key={realDate}>
+            <div className="min-w-48 shrink-0" key={realDate}>
               <DayColumn dayName={dayName} isToday={isToday} modifications={modifications} onDateChange={onDateChange} onFrequencyChange={onFrequencyChange} realDate={realDate} tasks={tasksByDay[index]} />
             </div>
           )
@@ -382,22 +382,22 @@ function PlannerHeader({ onTasksUpload, onTasksDispatch, onSaveModifications, ha
           <h3 className="mt-0 mb-0">Planner</h3>
         </div>
         <div className="flex gap-3">
-          <Button onClick={onTasksUpload} testId="btn-upload" variant="outline">
+          <Button name="upload" onClick={onTasksUpload} variant="outline">
             <UploadIcon className="size-4" />
             Upload tasks
           </Button>
-          <Button onClick={downloadData} testId="btn-download" variant="outline">
+          <Button name="download" onClick={downloadData} variant="outline">
             <DownloadIcon className="size-4" />
             Download tasks
           </Button>
           {showDispatch && (
-            <Button onClick={onTasksDispatch} testId="btn-dispatch" variant="outline">
+            <Button name="dispatch" onClick={onTasksDispatch} variant="outline">
               <ArrowLeftRightIcon className="size-4" />
               Dispatch tasks
             </Button>
           )}
           {hasModifications && (
-            <Button disabled={saving} onClick={onSaveModifications} testId="btn-save">
+            <Button disabled={saving} name="save" onClick={onSaveModifications}>
               <SaveIcon className="size-4" />
               {saving ? 'Saving...' : 'Save modifications'}
             </Button>

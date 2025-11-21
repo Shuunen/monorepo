@@ -69,7 +69,7 @@ function CredentialsForm({ formData, onInputChange, onSubmit }: CredentialsFormP
       })}
 
       <div className="flex gap-4 justify-center">
-        <Button testId="save-credentials-btn" type="submit">
+        <Button name="save-credentials" type="submit">
           Save Credentials
         </Button>
       </div>
