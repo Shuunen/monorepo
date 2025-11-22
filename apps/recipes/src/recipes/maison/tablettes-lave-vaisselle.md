@@ -11,7 +11,8 @@ Dans un grand pot a couvercle :
 
 Mixer le tout pour avoir un bon mélange !
 
-Prix de revient : 5 € le kilo ✅💰
+Prix de revient : 5 € le kilo 💰💰
+Sun poudre lave-vaisselle classic : 3 € le kilo 💰
 
 ## Recette alternative sans cristaux de soude
 
