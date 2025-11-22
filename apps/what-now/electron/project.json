@@ -1,0 +1,12 @@
+{
+  "name": "what-now-desktop",
+  "targets": {
+    "typecheck": {
+      "cache": true,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo not needed"
+      }
+    }
+  }
+}
