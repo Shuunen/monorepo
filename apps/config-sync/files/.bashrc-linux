@@ -1,24 +1,8 @@
 #!/bin/bash
 
-# fedora start
-if [ -f /etc/bashrc ]; then # source global definitions
-  . /etc/bashrc
-fi
-
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then # ensure local bin directories are in PATH
-  PATH="$HOME/.local/bin:$HOME/bin:$PATH"
-fi
-export PATH # export PATH
-
-if [ -d ~/.bashrc.d ]; then
-  for rc in ~/.bashrc.d/*; do
-    if [ -f "$rc" ]; then
-      . "$rc"
-    fi
-  done
-fi
-unset rc # clear variable
-# fedora end
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
 
 # debian start
 case $- in # if not running interactively, don't do anything
