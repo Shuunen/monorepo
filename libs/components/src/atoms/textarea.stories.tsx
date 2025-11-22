@@ -16,6 +16,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
+    name: 'default',
     placeholder: 'Enter your message here',
   },
 }
@@ -23,6 +24,7 @@ export const Default: Story = {
 export const Disabled: Story = {
   args: {
     disabled: true,
+    name: 'disabled',
     placeholder: 'Disabled textarea',
   },
 }
