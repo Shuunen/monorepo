@@ -2,22 +2,22 @@
 
 ## Recette
 
-Pour 9 tablettes environ :
+Dans un grand pot a couvercle :
 
-- 3 cuillères à soupe de bicarbonate de soude
-- 3 cuillères à soupe de cristaux de soude
-- 1 cuillère à soupe d’acide citrique
-- 1 cuillère à soupe de gros sel
-- 20 gouttes d'HE de citron
+- 3 parts de bicarbonate de soude
+- 3 parts de cristaux de soude
+- 1 part d’acide citrique
+- 1 part de gros sel
 
 Mixer le tout pour avoir un bon mélange !
 
-Recette alternative sans cristaux de soude :
+Prix de revient : 5 € le kilo ✅💰
+
+## Recette alternative sans cristaux de soude
 
 - 1 part de bicarbonate de soude
 - 1 part de gros sel
 - 1 part d’acide citrique
-- quelques gouttes d’huiles essentielles
 
 ## Retour d'expérience
 
