@@ -49,25 +49,8 @@ jobs:
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       # When you enable task distribution, run the e2e-ci task instead of e2e
 
-      - name: Typecheck all projects
-        run: |
-          pnpm exec nx run components:typecheck && echo typecheck components ok ✅
-          pnpm exec nx run config-sync:typecheck && echo typecheck config-sync ok ✅
-          pnpm exec nx run image-compare:typecheck && echo typecheck image-compare ok ✅
-          pnpm exec nx run jozzo:typecheck && echo typecheck jozzo ok ✅
-          pnpm exec nx run recipes:typecheck && echo typecheck recipes ok ✅
-          pnpm exec nx run regex-converter:typecheck && echo typecheck regex-converter ok ✅
-          pnpm exec nx run sample-web-app-e2e:typecheck && echo typecheck sample-web-app-e2e ok ✅
-          pnpm exec nx run sample-web-app:typecheck && echo typecheck sample-web-app ok ✅
-          pnpm exec nx run stuff-finder:typecheck && echo typecheck stuff-finder ok ✅
-          pnpm exec nx run user-scripts:typecheck && echo typecheck user-scripts ok ✅
-          pnpm exec nx run utils:typecheck && echo typecheck utils ok ✅
-          pnpm exec nx run vet-web:typecheck && echo typecheck vet-web ok ✅
-          pnpm exec nx run vite-plugins:typecheck && echo typecheck vite-plugins ok ✅
-          echo typecheck all projects ok ✅
-
       - name: Install Playwright
         run: pnpm exec playwright install --with-deps && echo playwright install ok ✅
 
-      - name: Run CI Checks
-        run: pnpm check:ci && echo run ci checks ok ✅
+      - name: Run Checks
+        run: pnpm check && echo run checks ok ✅
