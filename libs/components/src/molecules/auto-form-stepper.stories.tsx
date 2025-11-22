@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useId, useState } from 'react'
 import { Skeleton } from '../atoms/skeleton'
 import { defaultIcons } from './auto-form.utils'

@@ -5,15 +5,12 @@
     "moduleResolution": "bundler",
     "outDir": "out-tsc/storybook"
   },
-  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"],
   "extends": "../../tsconfig.base.json",
   "include": ["src/**/*.stories.tsx", "src/**/*.stories.mdx", ".storybook/*.ts", ".storybook/*.tsx"],
   "references": [
     {
-      "path": "../utils/tsconfig.lib.json"
-    },
-    {
-      "path": "../vite-plugins/tsconfig.lib.json"
+      "path": "./tsconfig.lib.json"
     }
   ]
 }
