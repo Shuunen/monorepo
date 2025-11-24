@@ -16,7 +16,7 @@ const meta = {
   },
   render: args => (
     <Command {...args}>
-      <CommandInput placeholder="Type a command or search..." />
+      <CommandInput name="story" placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Suggestions">
