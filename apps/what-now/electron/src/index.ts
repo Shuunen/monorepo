@@ -50,6 +50,7 @@ if (electronIsDev)
   // Register global shortcut for toggling DevTools (Ctrl+Shift+I)
   const { globalShortcut } = require('electron')
   const mainWindow = myCapacitorApp.getMainWindow()
+  // oxlint-disable-next-line max-nested-callbacks
   globalShortcut.register('Control+Shift+I', () => {
     if (mainWindow)
       if (mainWindow.webContents.isDevToolsOpened()) mainWindow.webContents.closeDevTools()

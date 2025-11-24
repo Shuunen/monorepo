@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "esbuild": "^0.27.0",
-    "zod": "^4.1.12"
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "dset": "^3.1.4"

@@ -1,5 +1,8 @@
 {
-  "[json][jsonc]": {
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[jsonc]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
   "cSpell.language": "en-GB",
