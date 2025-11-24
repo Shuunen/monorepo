@@ -4,12 +4,6 @@
   "include": [],
   "references": [
     {
-      "path": "../vite-plugins"
-    },
-    {
-      "path": "../utils"
-    },
-    {
       "path": "./tsconfig.lib.json"
     },
     {

@@ -4,15 +4,6 @@
   "include": [],
   "references": [
     {
-      "path": "../../libs/components"
-    },
-    {
-      "path": "../../libs/utils"
-    },
-    {
-      "path": "../../libs/vite-plugins"
-    },
-    {
       "path": "./tsconfig.app.json"
     },
     {

@@ -1,70 +1,19 @@
 {
   "migrations": [
     {
-      "description": "Removes the legacy cache configuration from nx.json",
-      "implementation": "./src/migrations/update-21-0-0/remove-legacy-cache",
-      "name": "remove-legacy-cache",
+      "cli": "nx",
+      "description": "Updates the nx wrapper.",
+      "implementation": "./src/migrations/update-22-1-0/update-nx-wrapper",
+      "name": "22-1-0-update-nx-wrapper",
       "package": "nx",
-      "version": "21.0.0-beta.8"
+      "version": "22.1.0-beta.5"
     },
     {
-      "description": "Removes the legacy cache configuration from nx.json",
-      "implementation": "./src/migrations/update-21-0-0/remove-custom-tasks-runner",
-      "name": "remove-custom-tasks-runner",
-      "package": "nx",
-      "version": "21.0.0-beta.8"
-    },
-    {
-      "description": "Updates release version config based on the breaking changes in Nx v21",
-      "implementation": "./src/migrations/update-21-0-0/release-version-config-changes",
-      "name": "release-version-config-changes",
-      "package": "nx",
-      "version": "21.0.0-beta.11"
-    },
-    {
-      "description": "Updates release changelog config based on the breaking changes in Nx v21",
-      "implementation": "./src/migrations/update-21-0-0/release-changelog-config-changes",
-      "name": "release-changelog-config-changes",
-      "package": "nx",
-      "version": "21.0.0-beta.11"
-    },
-    {
-      "description": "Adds **/nx-rules.mdc and **/nx.instructions.md to .gitignore if not present",
-      "implementation": "./src/migrations/update-21-1-0/add-gitignore-entry",
-      "name": "21-1-0-add-ignore-entries-for-nx-rule-files",
-      "package": "nx",
-      "version": "21.1.0-beta.2"
-    },
-    {
-      "description": "Migrate the legacy 'development' custom condition to a workspace-unique custom condition name.",
-      "factory": "./src/migrations/update-21-5-0/migrate-development-custom-condition",
-      "name": "migrate-development-custom-condition",
+      "description": "Removes redundant TypeScript project references from project's tsconfig.json files when runtime tsconfig files (e.g., tsconfig.lib.json, tsconfig.app.json) exist.",
+      "factory": "./src/migrations/update-22-1-0/remove-redundant-ts-project-references",
+      "name": "remove-redundant-ts-project-references",
       "package": "@nx/js",
-      "version": "21.5.0-beta.2"
-    },
-    {
-      "cli": "nx",
-      "description": "Update workspace to use Storybook v9",
-      "implementation": "./src/migrations/update-21-1-0/update-sb-9",
-      "name": "update-21-2-0-migrate-storybook-v9",
-      "package": "@nx/storybook",
-      "version": "21.2.0-beta.3"
-    },
-    {
-      "cli": "nx",
-      "description": "Remove deprecated Storybook addon dependencies",
-      "implementation": "./src/migrations/update-21-2-0/remove-addon-dependencies",
-      "name": "update-21-2-0-remove-addon-dependencies",
-      "package": "@nx/storybook",
-      "version": "21.2.0-beta.3"
-    },
-    {
-      "cli": "nx",
-      "description": "Replaces `classProperties.loose` option with `loose`.",
-      "factory": "./src/migrations/update-21-0-0/update-babel-loose",
-      "name": "update-21-0-0-update-babel-loose",
-      "package": "@nx/react",
-      "version": "21.0.0-beta.11"
+      "version": "22.1.0-rc.1"
     }
   ]
 }
