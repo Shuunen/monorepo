@@ -3,13 +3,13 @@
     "@monorepo/components": "workspace:*",
     "@monorepo/utils": "workspace:*",
     "@monorepo/vite-plugins": "workspace:*",
-    "@tanstack/react-router": "^1.139.3",
+    "@tanstack/react-router": "^1.139.14",
     "xstate": "^5.24.0",
-    "zustand": "^5.0.8"
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
-    "@tanstack/react-router-devtools": "^1.139.3",
-    "@tanstack/router-plugin": "^1.139.3"
+    "@tanstack/react-router-devtools": "^1.139.14",
+    "@tanstack/router-plugin": "^1.139.14"
   },
   "name": "vet-web",
   "private": true,

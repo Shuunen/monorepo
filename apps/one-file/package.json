@@ -4,11 +4,11 @@
     "7zip-min": "^2.1.0",
     "clipboardy": "^5.0.1",
     "cors": "^2.8.5",
-    "express": "^5.1.0"
+    "express": "^5.2.1"
   },
   "description": "My personal snippets",
   "devDependencies": {
-    "@types/express": "^5.0.5"
+    "@types/express": "^5.0.6"
   },
   "homepage": "https://github.com/Shuunen/monorepo/tree/master/apps/one-file",
   "keywords": [
