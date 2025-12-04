@@ -52,5 +52,10 @@ export const step3Allergies = z
   .object({
     isAllergicToPeanuts: z.boolean().optional().meta({ label: 'Allergic to peanuts?' }),
     isAllergicToSeafood: z.boolean().optional().meta({ label: 'Allergic to seafood?' }),
+    allergiesDocument: z.file().optional().meta({
+      label: 'Upload allergies document',
+      description: 'Upload any relevant medical documents regarding allergies.',
+      placeholder: 'Select a file',
+    }),
   })
   .meta({ step: '3. Allergies & Parent Info' })

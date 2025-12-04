@@ -25,7 +25,19 @@ const cases = [
     label: 'Case E: Dog breed selected on diet with diet frequency',
   },
   {
-    data: { age: 'FROM-5-TO-10', breed: 'dog' as const, dietFrequency: 'daily' as const, exerciseRoutine: 'daily walks', identifier: 'FR1234', isAllergicToPeanuts: true, isAllergicToSeafood: false, isVegan: false, name: 'Buddy', onDiet: true } satisfies FormData,
+    data: {
+      age: 'FROM-5-TO-10',
+      allergiesDocument: new File(['allergies-foobar-content'], 'allergies.pdf', { type: 'application/pdf' }),
+      breed: 'dog' as const,
+      dietFrequency: 'daily' as const,
+      exerciseRoutine: 'daily walks',
+      identifier: 'FR1234',
+      isAllergicToPeanuts: true,
+      isAllergicToSeafood: false,
+      isVegan: false,
+      name: 'Buddy',
+      onDiet: true,
+    } satisfies FormData,
     label: 'Case F: Completely filled',
   },
 ] as const

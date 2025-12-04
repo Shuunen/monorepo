@@ -11,6 +11,7 @@ export type FormData = {
   identifier?: string
   isAllergicToPeanuts?: boolean
   isAllergicToSeafood?: boolean
+  allergiesDocument?: File
   isVegan?: boolean
   knowsParent?: boolean
   name?: string
