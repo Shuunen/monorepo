@@ -1,4 +1,4 @@
-import { isBrowserEnvironment, Logger, nbHueMax, sleep, stringify } from '@monorepo/utils'
+import { isBrowserEnvironment, Logger, nbHueMax, sleep } from '@monorepo/utils'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { expect, userEvent, within } from 'storybook/test'
@@ -33,9 +33,9 @@ const meta = {
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={{ fileNameSelected: formData?.document?.name }} isGhost title="Form data" />
+        <DebugData data={formData} isGhost title="Form data" />
         <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
-        <DebugData data={{ fileNameSelected: submittedData?.document?.name }} isGhost title="Submitted data" />
+        <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     )
   },
@@ -78,7 +78,7 @@ export const Required: Story = {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).toBeDisabled()
       expect(formData).toContainHTML('{}')
-      expect(submittedData).toContainHTML('{}')
+      expect(submittedData).toContainHTML('undefined')
     })
     await step('upload a file successfully and submit the form', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
@@ -87,7 +87,7 @@ export const Required: Story = {
       await userEvent.upload(input, file)
       await sleep(nbHueMax) // needed
       expect(formData).toContainHTML('test-doc.pdf')
-      expect(submittedData).toContainHTML('{}')
+      expect(submittedData).toContainHTML('undefined')
       expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
       expect(formData).toContainHTML('test-doc.pdf')
@@ -127,7 +127,7 @@ export const ExistingFile: Story = {
       const fileInput = canvas.getByTestId('document-upload-success') as HTMLInputElement
       expect(fileInput).toBeInTheDocument()
       expect(formData).toContainHTML('test.txt')
-      expect(submittedData).toContainHTML('{}')
+      expect(submittedData).toContainHTML('undefined')
     })
     await step('submit the form with the existing file', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
@@ -174,7 +174,7 @@ export const FileSchemaValidation: Story = {
       await sleep(nbHueMax)
       const errorMessage = canvas.getByTestId('form-message-document')
       expect(errorMessage).toHaveTextContent('File extension not allowed, accepted : pdf, jpg, png')
-      expect(formData).toContainHTML(stringify({ fileNameSelected: 'document.txt' }, true))
+      expect(formData).toContainHTML('document.txt')
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).toBeDisabled()
     })

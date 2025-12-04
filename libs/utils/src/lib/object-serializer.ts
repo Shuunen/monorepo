@@ -4,7 +4,9 @@ import { objectSort } from './object-sort.js'
 // currently handled :
 // - array
 // - boolean
+// - circular references
 // - date
+// - file
 // - function
 // - null
 // - number
@@ -12,7 +14,6 @@ import { objectSort } from './object-sort.js'
 // - regexp
 // - string
 // not handled yet :
-// - circular references
 // - infinity
 // - map
 // - nan
@@ -27,11 +28,13 @@ import { objectSort } from './object-sort.js'
  */
 function replacer(this: unknown, key: string, value?: Readonly<unknown>) {
   if (value === undefined) return value
-  if (value instanceof RegExp) return { __strRegexFlags__: value.flags, __strRegexSource__: value.source }
-  if (typeof value === 'function') return { __strFunction__: value.toString() }
+  if (value instanceof RegExp) return { __regexFlags__: value.flags, __regexSource__: value.source }
+  if (typeof value === 'function') return { __function__: value.toString() }
+  // @ts-expect-error type issue
+  if (this[key] instanceof File) return { __fileName__: this[key].name, __fileSize__: this[key].size, __fileType__: this[key].type }
   // cannot do this : if (value instanceof Date) { console.log('replacer return toISOString'); return { __strDate__: value.toISOString() } } // see note 1, instead we do this :
   // @ts-expect-error type issue
-  if (this[key] instanceof Date) return { __strDate__: this[key].toISOString() }
+  if (this[key] instanceof Date) return { __date__: this[key].toISOString() }
   return value
 }
 
@@ -63,10 +66,11 @@ const createCircularReplacer = () => {
 function reviver(_key: string, value?: unknown) {
   if (value === undefined || value === null) return value
   if (typeof value !== 'object') return value // @ts-expect-error non-standard properties
-  if ('__strRegexFlags__' in value && '__strRegexSource__' in value) return new RegExp(value.__strRegexSource__, value.__strRegexFlags__)
+  if ('__regexFlags__' in value && '__regexSource__' in value) return new RegExp(value.__regexSource__, value.__regexFlags__)
   // oxlint-disable-next-line no-new-func
-  if ('__strFunction__' in value) return new Function(`return ${value.__strFunction__}`)() /* @ts-expect-error non-standard properties */
-  if ('__strDate__' in value) return new Date(value.__strDate__)
+  if ('__function__' in value) return new Function(`return ${value.__function__}`)() // @ts-expect-error non-standard properties
+  if ('__fileName__' in value && '__fileSize__' in value && '__fileType__' in value) return new File([], value.__fileName__, { type: value.__fileType__ }) /* @ts-expect-error non-standard properties */
+  if ('__date__' in value) return new Date(value.__date__)
   return value
 }
 

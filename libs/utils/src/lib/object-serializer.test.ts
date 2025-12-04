@@ -25,16 +25,16 @@ it('objectSerialize A string', () => {
   expect(objectSerialize({ name: 'John' })).toBe('{"name":"John"}')
 })
 it('objectSerialize B date', () => {
-  expect(objectSerialize({ date: new Date('2021-01-01T00:00:00.000Z') })).toMatchInlineSnapshot('"{"date":{"__strDate__":"2021-01-01T00:00:00.000Z"}}"')
+  expect(objectSerialize({ date: new Date('2021-01-01T00:00:00.000Z') })).toMatchInlineSnapshot(`"{"date":{"__date__":"2021-01-01T00:00:00.000Z"}}"`)
 })
 it('objectSerialize C regex', () => {
-  expect(objectSerialize({ regex: /^ho\d+$/iu })).toMatchInlineSnapshot(String.raw`"{"regex":{"__strRegexFlags__":"iu","__strRegexSource__":"^ho\\d+$"}}"`)
+  expect(objectSerialize({ regex: /^ho\d+$/iu })).toMatchInlineSnapshot(String.raw`"{"regex":{"__regexFlags__":"iu","__regexSource__":"^ho\\d+$"}}"`)
 })
 it('objectSerialize D arrow function', () => {
-  expect(objectSerialize({ func: () => 42 })).toMatchInlineSnapshot('"{"func":{"__strFunction__":"() => 42"}}"')
+  expect(objectSerialize({ func: () => 42 })).toMatchInlineSnapshot(`"{"func":{"__function__":"() => 42"}}"`)
 })
 it('objectSerialize E function', () => {
-  expect(objectSerialize({ func: add })).toMatchInlineSnapshot(String.raw`"{"func":{"__strFunction__":"function add(numberA, numberB) {\n  return numberA + numberB;\n}"}}"`)
+  expect(objectSerialize({ func: add })).toMatchInlineSnapshot(String.raw`"{"func":{"__function__":"function add(numberA, numberB) {\n  return numberA + numberB;\n}"}}"`)
 })
 it('objectSerialize F object with sort', () => {
   // biome-ignore assist/source/useSortedKeys: needed
@@ -42,7 +42,7 @@ it('objectSerialize F object with sort', () => {
 })
 it('objectSerialize G person', () => {
   expect(objectSerialize(person)).toMatchInlineSnapshot(
-    `"{"age":21,"canPush":null,"details":{"dateOfBirth":{"__strDate__":"2001-12-22T00:00:00.000Z"},"favoriteFood":"sushi"},"isNameValid":true,"name":"John","nameRegex":{"__strRegexFlags__":"iu","__strRegexSource__":"^jo"},"nameValidator":{"__strFunction__":"(input) => input.length > 3"},"pets":["Médoc","T-Rex","Angel"],"petsDetails":[{"age":3,"name":"Médoc"},{"age":5,"name":"T-Rex"},{"age":1,"name":"Angel"}]}"`,
+    `"{"age":21,"canPush":null,"details":{"dateOfBirth":{"__date__":"2001-12-22T00:00:00.000Z"},"favoriteFood":"sushi"},"isNameValid":true,"name":"John","nameRegex":{"__regexFlags__":"iu","__regexSource__":"^jo"},"nameValidator":{"__function__":"(input) => input.length > 3"},"pets":["Médoc","T-Rex","Angel"],"petsDetails":[{"age":3,"name":"Médoc"},{"age":5,"name":"T-Rex"},{"age":1,"name":"Angel"}]}"`,
   )
 })
 it('objectSerialize H person beautified', () => {
@@ -52,18 +52,18 @@ it('objectSerialize H person beautified', () => {
       "canPush": null,
       "details": {
         "dateOfBirth": {
-          "__strDate__": "2001-12-22T00:00:00.000Z",
+          "__date__": "2001-12-22T00:00:00.000Z",
         },
         "favoriteFood": "sushi",
       },
       "isNameValid": true,
       "name": "John",
       "nameRegex": {
-        "__strRegexFlags__": "iu",
-        "__strRegexSource__": "^jo",
+        "__regexFlags__": "iu",
+        "__regexSource__": "^jo",
       },
       "nameValidator": {
-        "__strFunction__": "(input) => input.length > 3",
+        "__function__": "(input) => input.length > 3",
       },
       "pets": [
         "Médoc",
@@ -124,6 +124,11 @@ it('objectSerialize M with indentation', () => {
   `)
 })
 
+it('objectSerialize N file', () => {
+  const file = new File(['file content'], 'test.txt', { type: 'text/plain' })
+  expect(objectSerialize({ document: file })).toMatchInlineSnapshot(`"{"document":{"__fileName__":"test.txt","__fileSize__":12,"__fileType__":"text/plain"}}"`)
+})
+
 it('objectDeserialize A string', () => {
   expect(objectDeserialize('{"name":"John"}')).toMatchInlineSnapshot(`
   {
@@ -133,7 +138,7 @@ it('objectDeserialize A string', () => {
 })
 
 it('objectDeserialize B date', () => {
-  const object = objectDeserialize('{"date":{"__strDate__":"2021-01-01T00:00:00.000Z"}}')
+  const object = objectDeserialize('{"date":{"__date__":"2021-01-01T00:00:00.000Z"}}')
   expect(object).toMatchInlineSnapshot(`
     {
       "date": 2021-01-01T00:00:00.000Z,
@@ -143,7 +148,7 @@ it('objectDeserialize B date', () => {
 })
 
 it('objectDeserialize C regex', () => {
-  const object = objectDeserialize(String.raw`{"regex":{"__strRegexFlags__":"iu","__strRegexSource__":"^ho\\d+$"}}`)
+  const object = objectDeserialize(String.raw`{"regex":{"__regexFlags__":"iu","__regexSource__":"^ho\\d+$"}}`)
   expect(object).toMatchInlineSnapshot(`
     {
       "regex": /\\^ho\\\\d\\+\\$/iu,
@@ -154,7 +159,7 @@ it('objectDeserialize C regex', () => {
 })
 
 it('objectDeserialize D arrow function', () => {
-  const object = objectDeserialize('{"func":{"__strFunction__":"() => 42"}}')
+  const object = objectDeserialize('{"func":{"__function__":"() => 42"}}')
   expect(object).toMatchInlineSnapshot(`
     {
       "func": [Function],
@@ -165,7 +170,7 @@ it('objectDeserialize D arrow function', () => {
 })
 
 it('objectDeserialize E function', () => {
-  const object = objectDeserialize(String.raw`{"func":{"__strFunction__":"function add(numberA, numberB) {\n  return numberA + numberB;\n}"}}`)
+  const object = objectDeserialize(String.raw`{"func":{"__function__":"function add(numberA, numberB) {\n  return numberA + numberB;\n}"}}`)
   expect(object).toMatchInlineSnapshot(`
     {
       "func": [Function],
@@ -176,7 +181,7 @@ it('objectDeserialize E function', () => {
 })
 
 it('objectDeserialize F nested Date', () => {
-  const object = objectDeserialize('{"age":21,"details":{"dateOfBirth":{"__strDate__":"2001-12-22T00:00:00.000Z"},"favoriteFood":"sushi"},"name":"John","nameValid":true}')
+  const object = objectDeserialize('{"age":21,"details":{"dateOfBirth":{"__date__":"2001-12-22T00:00:00.000Z"},"favoriteFood":"sushi"},"name":"John","nameValid":true}')
   expect(object).toMatchInlineSnapshot(`
     {
       "age": 21,
@@ -212,7 +217,7 @@ it('objectDeserialize G does not affect original object', () => {
 
 it('objectDeserialize H person', () => {
   const object = objectDeserialize(
-    '{"age":21,"canPush":null,"details":{"dateOfBirth":{"__strDate__":"2001-12-22T00:00:00.000Z"},"favoriteFood":"sushi","hatedFood":null},"isNameValid":true,"name":"John","nameRegex":{"__strRegexFlags__":"iu","__strRegexSource__":"^jo"},"nameValidator":{"__strFunction__":"(input) => input.length > 3"},"pets":["Médoc","T-Rex","Angel"],"petsDetails":[{"age":3,"name":"Médoc"},{"age":5,"name":"T-Rex"},{"age":1,"name":"Angel"}]}',
+    '{"age":21,"canPush":null,"details":{"dateOfBirth":{"__date__":"2001-12-22T00:00:00.000Z"},"favoriteFood":"sushi","hatedFood":null},"isNameValid":true,"name":"John","nameRegex":{"__regexFlags__":"iu","__regexSource__":"^jo"},"nameValidator":{"__function__":"(input) => input.length > 3"},"pets":["Médoc","T-Rex","Angel"],"petsDetails":[{"age":3,"name":"Médoc"},{"age":5,"name":"T-Rex"},{"age":1,"name":"Angel"}]}',
   )
   expect(object).toMatchInlineSnapshot(`
     {
@@ -291,4 +296,28 @@ it('objectDeserialize I simple', () => {
       "keyC": 3,
     }
   `)
+})
+
+it('objectDeserialize J file partial revive', () => {
+  /**
+   * We cannot restore the content of the file because it would require the serializer to async read the file data
+   * so for now we just restore the File object with name, size and type
+   */
+  const object = objectDeserialize('{"document":{"__fileName__":"test.txt","__fileSize__":12,"__fileType__":"text/plain"}}')
+  expect(object).toMatchInlineSnapshot(`
+    {
+      "document": File {
+        Symbol(kHandle): Blob {},
+        Symbol(kLength): 0,
+        Symbol(kType): "text/plain",
+      },
+    }
+  `)
+  expect(object.document instanceof File).toBe(true)
+  // @ts-expect-error type is unknown
+  expect(object.document.name).toBe('test.txt')
+  // @ts-expect-error type is unknown
+  expect(object.document.size).toBe(0)
+  // @ts-expect-error type is unknown
+  expect(object.document.type).toBe('text/plain')
 })
