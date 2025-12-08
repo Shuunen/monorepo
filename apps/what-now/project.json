@@ -27,7 +27,7 @@
       }
     },
     "sync": {
-      "continuous": true,
+      "cache": false,
       "dependsOn": ["build"],
       "executor": "nx:run-commands",
       "metadata": {
