@@ -244,7 +244,7 @@ class CheckVideos {
     listing += `${filename},${meta.title}\n`
     const entry = `${utils.ellipsis(filename, 50).padEnd(50)}  ${(String(meta.sizeGb)).padStart(4)} Gb  ${(meta.codec).padEnd(5)} ${(String(meta.height)).padStart(4)}p  ${(String(meta.bitrateKbps)).padStart(4)} kbps  ${(String(meta.fps)).padStart(2)} fps`
     if (meta.isDvdRip ? this.checkDvdRip(meta, entry) : this.checkBlurayRip(meta, entry)) return
-    if (this.checkFps(meta, entry)) return
+    this.checkFps(meta, entry)
   }
 
   /**
