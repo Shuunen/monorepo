@@ -28,6 +28,7 @@
     },
     "sync": {
       "continuous": true,
+      "dependsOn": ["build"],
       "executor": "nx:run-commands",
       "metadata": {
         "description": "Sync WhatNow electron desktop app"
