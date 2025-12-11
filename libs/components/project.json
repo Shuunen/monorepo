@@ -5,7 +5,7 @@
       "cache": true,
       "executor": "nx:run-commands",
       "options": {
-        "command": "bun ../../utils/src/bin/barrel-maker.cli.ts --target=\"./{atoms,icons,molecules}/*.tsx\" --ext=",
+        "command": "bun ../../utils/src/bin/barrel-maker.cli.ts --target=\"./{atoms,icons,molecules}/*.{ts,tsx}\" --ext=",
         "cwd": "{projectRoot}/src"
       },
       "outputs": ["{projectRoot}/src/index.ts"]
@@ -13,7 +13,7 @@
     "run-storybook": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "storybook dev --port 6006",
+        "command": "BROWSER=none storybook dev --port 6006",
         "cwd": "{projectRoot}"
       }
     },
