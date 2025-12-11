@@ -8,7 +8,7 @@ import { FormControl } from '../atoms/form'
 import { Input } from '../atoms/input'
 import { Progress } from '../atoms/progress'
 import { cn } from '../shadcn/utils'
-import { getFieldMetadata } from './auto-form.utils'
+import { getFieldMetadataOrThrow } from './auto-form.utils'
 import { FormFieldBase, type FormFieldBaseProps } from './form-field'
 import { formatFileSize, maxPercent, uploadDurationFail, uploadDurationSuccess, uploadPercentFail } from './form-field-upload.const'
 
@@ -23,10 +23,9 @@ type FormFieldUploadProps = FormFieldBaseProps & {
 
 // oxlint-disable-next-line max-lines-per-function
 export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOptional, logger, readonly = false, shouldFail, onFileChange, onFileRemove, onFileUploadComplete, onFileUploadError }: FormFieldUploadProps) {
-  const metadata = getFieldMetadata(fieldSchema)
-  if (!metadata) throw new Error(`Field "${fieldName}" is missing metadata (label, placeholder, state)`)
+  const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema)
   const { placeholder, state = 'editable' } = metadata
-  const isDisabled = state === 'disabled'
+  const isDisabled = ['disabled', 'readonly'].includes(state)
   const testId = camelToKebabCase(fieldName)
   const [selectedFile, setSelectedFile] = useState<File | undefined>()
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -40,7 +39,8 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
   const sizeProgress = selectedFile?.size ? `(${formatFileSize(selectedFile.size * (uploadProgress / maxPercent))} / ${formatFileSize(selectedFile.size)})` : ''
   const states = {
     error: {
-      buttons: uploadProgress === 0 ? [buttons.remove] : [buttons.retry, buttons.remove],
+      // oxlint-disable-next-line no-nested-ternary
+      buttons: isDisabled ? [] : uploadProgress === 0 ? [buttons.remove] : [buttons.retry, buttons.remove],
       icon: <FileXIcon className="size-5 text-destructive" />,
       message: `Uploading failed! ${sizeProgress}`,
     },
@@ -50,7 +50,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
       message: 'No file selected',
     },
     success: {
-      buttons: [buttons.remove],
+      buttons: isDisabled ? [] : [buttons.remove],
       icon: <FileCheckIcon className="size-5 text-success" />,
       message: `Uploading succeeded! ${sizeProgress}`,
     },
@@ -150,16 +150,17 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
 
   return (
     <FormFieldBase {...props}>
+      {/* oxlint-disable-next-line max-lines-per-function */}
       {field => (
         <FormControl>
           {idleNoFile ? (
-            <Input accept={accept} className="w-96" disabled={isDisabled} name={`${testId}-${stateTestId}`} onChange={event => handleFileSelect(event, field.onChange)} placeholder={placeholder || currentState.message} ref={fileInputRef} type="file" />
+            <Input accept={accept} disabled={isDisabled} name={`${testId}-${stateTestId}`} onChange={event => handleFileSelect(event, field.onChange)} placeholder={placeholder || currentState.message} ref={fileInputRef} type="file" />
           ) : (
             <div className="flex gap-3 rounded-md border border-input bg-background p-3 overflow-hidden" data-testid={`${testId}-${stateTestId}`}>
               <aside className="mt-0.5">{currentState.icon}</aside>
               <main className="flex grow flex-col gap-1 max-w-full overflow-hidden">
                 <div className="flex justify-between gap-3">
-                  <div className="flex flex-col gap-1 max-w-[calc(100%_-_100px)]">
+                  <div className={cn('flex flex-col gap-1', { 'max-w-[calc(100%_-_100px)]': !isDisabled })}>
                     <div className="font-medium text-sm truncate">{selectedFile?.name}</div>
                     <div className="text-sm text-muted-foreground truncate">{currentState.message}</div>
                   </div>
