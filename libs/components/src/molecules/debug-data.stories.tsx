@@ -7,7 +7,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  title: 'molecules/DebugData',
+  title: 'Commons/Molecules/DebugData',
 } satisfies Meta<typeof DebugData>
 
 export default meta
