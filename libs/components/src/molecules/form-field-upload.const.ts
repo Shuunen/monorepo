@@ -18,7 +18,7 @@ export function formatFileSize(bytes: number, addUnit = true): string {
   const formatValue = (value: number, unit: string) => {
     const rounded = Math.round(value * decimalPrecisionLimit) / decimalPrecisionLimit
     const formatted = rounded % 1 === 0 ? rounded.toString() : rounded.toFixed(1)
-    return `${formatted}${addUnit ? ` ${unit}` : ''}`
+    return addUnit ? `${formatted} ${unit}` : formatted
   }
   if (bytes < bytesInKb) return formatValue(bytes, 'B')
   if (bytes < bytesInMb) return formatValue(bytes / bytesInKb, 'KB')
