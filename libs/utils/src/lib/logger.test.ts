@@ -9,7 +9,12 @@ it('logger A', () => {
 })
 
 it('logger B', () => {
-  const loggerB = new Logger({ isActive: false, willLogDelay: false, willOutputToConsole: false, willOutputToMemory: true })
+  const loggerB = new Logger({
+    isActive: false,
+    willLogDelay: false,
+    willOutputToConsole: false,
+    willOutputToMemory: true,
+  })
   expect(loggerB.options.isActive).toBe(false)
   loggerB.info('This info 1 should not be logged')
   loggerB.options.isActive = true
@@ -24,7 +29,14 @@ it('logger B', () => {
 })
 
 it('logger C', () => {
-  const loggerC = new Logger({ minimumLevel: '7-error', willLogDate: true, willLogDelay: true, willLogTime: true, willOutputToConsole: false, willOutputToMemory: true })
+  const loggerC = new Logger({
+    minimumLevel: '7-error',
+    willLogDate: true,
+    willLogDelay: true,
+    willLogTime: true,
+    willOutputToConsole: false,
+    willOutputToMemory: true,
+  })
   loggerC.warn('This warn 2 should not be logged')
   loggerC.success('This success 1 should not be logged')
   loggerC.error('This error 1 should be logged')

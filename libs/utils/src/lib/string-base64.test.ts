@@ -18,13 +18,25 @@ describe('string-base64', () => {
   })
 
   it('parseBase64 png image', () => {
-    expect(parseBase64('data:image/png;base64,iVBORw0KGgoYII=')).toStrictEqual({ base64: 'iVBORw0KGgoYII=', size: 11, type: 'image/png' })
+    expect(parseBase64('data:image/png;base64,iVBORw0KGgoYII=')).toStrictEqual({
+      base64: 'iVBORw0KGgoYII=',
+      size: 11,
+      type: 'image/png',
+    })
   })
   it('parseBase64 jpg image', () => {
-    expect(parseBase64('image/jpg;base64,iVBORw0KGgoYII=')).toStrictEqual({ base64: 'iVBORw0KGgoYII=', size: 11, type: 'image/jpg' })
+    expect(parseBase64('image/jpg;base64,iVBORw0KGgoYII=')).toStrictEqual({
+      base64: 'iVBORw0KGgoYII=',
+      size: 11,
+      type: 'image/jpg',
+    })
   })
   it('parseBase64 jpeg image', () => {
-    expect(parseBase64('image/jpeg;base64,iVBORw0KGgoYII=')).toStrictEqual({ base64: 'iVBORw0KGgoYII=', size: 11, type: 'image/jpeg' })
+    expect(parseBase64('image/jpeg;base64,iVBORw0KGgoYII=')).toStrictEqual({
+      base64: 'iVBORw0KGgoYII=',
+      size: 11,
+      type: 'image/jpeg',
+    })
   })
   it('parseBase64 invalid, missing type', () => {
     expect(parseBase64(';base64,iVBORw0KGgoYII')).toStrictEqual({ base64: '', size: 0, type: '' })

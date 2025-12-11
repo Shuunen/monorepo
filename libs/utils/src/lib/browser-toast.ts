@@ -33,7 +33,12 @@ function toastShow(element: HTMLElement, delay = 100) {
  * @returns the style for the toast notification
  */
 function toastStyle(type: 'error' | 'info' | 'success') {
-  if (type === 'success') return { backgrounds: ['MediumSeaGreen', 'SeaGreen'], icon: '&check;', iconStyle: 'line-height: 21px; text-indent: 1px;' }
+  if (type === 'success')
+    return {
+      backgrounds: ['MediumSeaGreen', 'SeaGreen'],
+      icon: '&check;',
+      iconStyle: 'line-height: 21px; text-indent: 1px;',
+    }
   if (type === 'error') return { backgrounds: ['FireBrick', 'Brown'], icon: 'x', iconStyle: 'line-height: 21.5px;' }
   return { backgrounds: ['DodgerBlue', 'RoyalBlue'], icon: 'i', iconStyle: 'line-height: 21px;' }
 }
