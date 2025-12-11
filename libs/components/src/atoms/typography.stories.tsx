@@ -7,7 +7,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  title: 'atoms/Typography',
+  title: 'Commons/Atoms/Typography',
 } satisfies Meta<typeof Title>
 
 export default meta

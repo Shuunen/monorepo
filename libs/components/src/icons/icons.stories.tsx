@@ -1,5 +1,25 @@
 // oxlint-disable max-dependencies
-import { DebugData, IconAccept, IconChevronDown, IconCircle, IconCircleCheck, IconCircleClose, IconCircleDot, IconCircleEllipsis, IconDownload, IconFileClock, IconOwl, IconReject, IconSearch, IconSearchCheck, IconSearchX, IconUpload } from '@monorepo/components'
+import {
+  DebugData,
+  IconAccept,
+  IconChevronDown,
+  IconCircle,
+  IconCircleCheck,
+  IconCircleClose,
+  IconCircleDot,
+  IconCircleEllipsis,
+  IconDownload,
+  IconFileClock,
+  IconHourglass,
+  IconListAdd,
+  IconOwl,
+  IconReject,
+  IconSearch,
+  IconSearchCheck,
+  IconSearchX,
+  IconTrash,
+  IconUpload,
+} from '@monorepo/components'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { JSX } from 'react'
 import { IconAdd } from './icon-add'
@@ -30,26 +50,29 @@ const icons = [
   IconCheck,
   IconChevronDown,
   IconChevronRight,
+  IconCircle,
   IconCircleCheck,
   IconCircleClose,
   IconCircleDot,
   IconCircleEllipsis,
-  IconCircle,
   IconDownload,
   IconEdit,
   IconError,
   IconFileClock,
   IconHome,
+  IconHourglass,
+  IconListAdd,
   IconLoading,
   IconOwl,
   IconReadonly,
   IconReject,
-  IconSearchX,
-  IconSearchCheck,
   IconSearch,
+  IconSearchCheck,
+  IconSearchX,
   IconSelect,
   IconSuccess,
   IconTooltip,
+  IconTrash,
   IconUpcoming,
   IconUpload,
   IconWarning,
@@ -60,7 +83,7 @@ type Props = { component: ({ className }: { className?: string | undefined }) =>
 function Icon({ component: Component }: Props) {
   return (
     <div className="flex items-center gap-4">
-      <div className="size-14 shadow-md flex items-center justify-center transition-colors hover:bg-slate-800 hover:text-blue-300">
+      <div className="size-14 flex items-center justify-center transition-colors hover:bg-slate-800 hover:text-blue-300">
         <Component />
       </div>
       <DebugData data={`<${Component.name} />`} />
@@ -73,14 +96,14 @@ const meta = {
     layout: 'centered',
   },
   render: () => (
-    <div className="grid gap-4 w-3xl grid-cols-2">
+    <div className="grid gap-4 w-full grid-cols-3">
       {icons.map(icon => (
         <Icon component={icon} key={icon.name} />
       ))}
     </div>
   ),
   tags: ['autodocs'],
-  title: 'atoms/Icons',
+  title: 'Commons/Icons',
 } satisfies Meta
 
 export default meta
