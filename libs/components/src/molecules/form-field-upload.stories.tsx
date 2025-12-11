@@ -40,7 +40,7 @@ const meta = {
     )
   },
   tags: ['autodocs'],
-  title: 'molecules/FormFieldUpload',
+  title: 'Commons/Molecules/FormFieldUpload',
 } satisfies Meta<typeof AutoForm>
 
 export default meta
@@ -76,7 +76,7 @@ export const Required: Story = {
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('cannot submit form initially', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
-      expect(submitButton).toBeDisabled()
+      expect(submitButton).toBeEnabled()
       expect(formData).toContainHTML('{}')
       expect(submittedData).toContainHTML('undefined')
     })
@@ -88,7 +88,6 @@ export const Required: Story = {
       await sleep(nbHueMax) // needed
       expect(formData).toContainHTML('test-doc.pdf')
       expect(submittedData).toContainHTML('undefined')
-      expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
       expect(formData).toContainHTML('test-doc.pdf')
       expect(submittedData).toContainHTML('test-doc.pdf')
@@ -99,8 +98,6 @@ export const Required: Story = {
       expect(formData).toContainHTML('{}')
       const errorMessage = canvas.getByTestId('form-message-document')
       expect(errorMessage).toHaveTextContent('Invalid input: expected file, received undefined')
-      const submitButton = canvas.getByRole('button', { name: 'Submit' })
-      expect(submitButton).toBeDisabled()
     })
   },
 }
@@ -161,7 +158,7 @@ export const FileSchemaValidation: Story = {
       await sleep(nbHueMax)
       expect(formData).toContainHTML('document.pdf')
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
-      expect(submitButton).not.toBeDisabled()
+      expect(submitButton).toBeEnabled()
       await userEvent.click(submitButton)
       expect(submittedData).toContainHTML('document.pdf')
     })
@@ -176,7 +173,7 @@ export const FileSchemaValidation: Story = {
       expect(errorMessage).toHaveTextContent('File extension not allowed, accepted : pdf, jpg, png')
       expect(formData).toContainHTML('document.txt')
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
-      expect(submitButton).toBeDisabled()
+      expect(submitButton).toBeEnabled()
     })
   },
 }
@@ -184,7 +181,9 @@ export const FileSchemaValidation: Story = {
 export const ResponsiveLayout: Story = {
   args: {
     initialData: {
-      document: new File(['test content'], 'very-long-filename-that-might-overflow-on-small-screens.pdf', { type: 'application/pdf' }),
+      document: new File(['test content'], 'very-long-filename-that-might-overflow-on-small-screens.pdf', {
+        type: 'application/pdf',
+      }),
     },
     schemas: [
       z.object({

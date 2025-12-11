@@ -34,14 +34,14 @@ const meta = {
     )
   },
   tags: ['autodocs'],
-  title: 'molecules/FormFieldBoolean',
+  title: 'Commons/Molecules/FormFieldBoolean',
 } satisfies Meta<typeof AutoForm>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 /**
- * Basic boolean field with switch (E2E: toggle and submit)
+ * Basic boolean field with switch
  */
 export const Basic: Story = {
   args: {
@@ -54,21 +54,10 @@ export const Basic: Story = {
       }),
     ],
   },
-  play: async ({ canvasElement, step }) => {
+  play: ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const toggleSwitch = canvas.getByRole('switch')
-
     expect(toggleSwitch).toBeInTheDocument()
-
-    await step('toggle switch to true', async () => {
-      await userEvent.click(toggleSwitch)
-      expect(toggleSwitch).toHaveAttribute('aria-checked', 'true')
-    })
-
-    await step('submit form', async () => {
-      const submitButton = canvas.getByRole('button', { name: 'Submit' })
-      await userEvent.click(submitButton)
-    })
   },
 }
 

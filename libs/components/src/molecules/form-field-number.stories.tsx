@@ -34,7 +34,7 @@ const meta = {
     )
   },
   tags: ['autodocs'],
-  title: 'molecules/FormFieldNumber',
+  title: 'Commons/Molecules/FormFieldNumber',
 } satisfies Meta<typeof AutoForm>
 
 export default meta
