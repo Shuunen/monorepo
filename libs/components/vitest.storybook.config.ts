@@ -27,6 +27,8 @@ export default defineConfig({
       provider: playwright(),
     },
     name: 'storybook',
+    reporters: ['dot'],
     setupFiles: ['.storybook/vitest.setup.ts'],
+    silent: true,
   },
 })

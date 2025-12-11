@@ -14,7 +14,8 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     include: ['src/**/*.test.ts'],
-    reporters: ['default'],
+    reporters: ['dot'],
+    silent: true,
     watch: false,
   },
   // Uncomment this if you are using workers.
