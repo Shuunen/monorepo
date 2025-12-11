@@ -10,6 +10,7 @@
 *.crt
 *.endpoint
 *.env
+*.gen.ts
 *.key
 *.local.json
 *.log
