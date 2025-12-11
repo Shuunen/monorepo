@@ -11,5 +11,5 @@ export function stringify(data: unknown, willIndent = false) {
   if (data === null) return 'null'
   if (typeof data === 'string') return data
   if (typeof data === 'object') return objectSerialize(data as Readonly<Record<string, unknown>>, false, willIndent)
-  return String(data)
+  return String(data) //NOSONAR
 }
