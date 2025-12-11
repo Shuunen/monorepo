@@ -6,7 +6,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "bun ../../utils/src/bin/barrel-maker.cli.ts --target=\"./lib/*.js\" --index=index.js",
-        "cwd": "libs/vite-plugins/src"
+        "cwd": "{projectRoot}/src"
       },
       "outputs": ["{projectRoot}/src/index.js"]
     },
