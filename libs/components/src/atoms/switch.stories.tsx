@@ -19,7 +19,7 @@ const meta = {
     </div>
   ),
   tags: ['autodocs'],
-  title: 'atoms/Switch',
+  title: 'Commons/Atoms/Switch',
 } satisfies Meta<typeof Switch>
 
 export default meta
@@ -34,6 +34,19 @@ export const Default: Story = {
     id: 'default-switch',
     name: 'airplaneMode',
   },
+  play: async ({ canvas, step }) => {
+    const switchBtn = await canvas.findByRole('switch')
+
+    await step('toggle the switch on', async () => {
+      await userEvent.click(switchBtn)
+      await expect(switchBtn).toBeChecked()
+    })
+
+    await step('toggle the switch off', async () => {
+      await userEvent.click(switchBtn)
+      await expect(switchBtn).not.toBeChecked()
+    })
+  },
 }
 
 /**
@@ -44,6 +57,12 @@ export const Disabled: Story = {
     disabled: true,
     id: 'disabled-switch',
     name: 'airplaneMode',
+  },
+  play: async ({ canvas }) => {
+    const switchBtn = await canvas.findByRole('switch')
+
+    await userEvent.click(switchBtn)
+    await expect(switchBtn).not.toBeChecked()
   },
 }
 

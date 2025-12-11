@@ -1,4 +1,3 @@
-// Replace nextjs-vite with the name of your framework
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, fn, userEvent, within } from 'storybook/test'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue } from './select'
@@ -52,7 +51,7 @@ const meta: Meta<typeof Select> = {
     </Select>
   ),
   tags: ['autodocs'],
-  title: 'atoms/Select',
+  title: 'Commons/Atoms/Select',
 } satisfies Meta<typeof Select>
 
 export default meta
@@ -62,13 +61,10 @@ type Story = StoryObj<typeof meta>
 /**
  * The default form of the select.
  */
-export const Default: Story = {
-  args: {},
-}
+export const Default: Story = {}
 
 export const ShouldSelectOption: Story = {
-  args: {},
-  name: 'when an option is selected, should be checked',
+  name: 'Should check selected option',
   play: async ({ canvasElement, step }) => {
     const canvasBody = within(canvasElement.ownerDocument.body)
     const select = await canvasBody.findByRole('combobox')

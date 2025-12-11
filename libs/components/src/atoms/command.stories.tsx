@@ -34,7 +34,7 @@ const meta = {
     </Command>
   ),
   tags: ['autodocs'],
-  title: 'atoms/Command',
+  title: 'Commons/Atoms/Command',
 } satisfies Meta<typeof Command>
 
 export default meta
@@ -44,10 +44,23 @@ type Story = StoryObj<typeof meta>
 /**
  * The default form of the command.
  */
-export const Default: Story = {}
+export const Default: Story = {
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Ensure items are present
+    const calendar = canvas.getByRole('option', { name: /calendar/i })
+    expect(calendar).toBeInTheDocument()
+
+    const searchEmojiOptions = canvas.getAllByRole('option', { name: /search emoji/i })
+    expect(searchEmojiOptions).toHaveLength(1)
+
+    const calculator = canvas.getByRole('option', { name: /calculator/i })
+    expect(calculator).toBeInTheDocument()
+  },
+}
 
 export const TypingInCombobox: Story = {
-  name: 'when typing into the combobox, should filter results',
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const input = canvas.getByRole('combobox')
@@ -58,7 +71,7 @@ export const TypingInCombobox: Story = {
 
     await userEvent.clear(input)
 
-    // Search for "story" which should return multiple results
+    // Search for "se" which should return multiple results
     await userEvent.type(input, 'se', { delay: 100 })
     expect(canvas.getAllByRole('option').length).toBeGreaterThan(1)
     expect(canvas.getAllByRole('option', { name: /search/i })).toHaveLength(1)
@@ -70,5 +83,4 @@ export const TypingInCombobox: Story = {
     expect(canvas.queryAllByRole('option', { hidden: false })).toHaveLength(0)
     expect(canvas.getByText(/no results/i)).toBeVisible()
   },
-  tags: ['!dev', '!autodocs'],
 }
