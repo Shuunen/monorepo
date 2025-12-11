@@ -8,7 +8,7 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  title: 'molecules/FormFieldSection',
+  title: 'Commons/Molecules/FormFieldSection',
 } satisfies Meta<typeof FormFieldSection>
 
 export default meta

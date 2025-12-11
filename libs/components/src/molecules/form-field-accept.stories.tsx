@@ -34,7 +34,7 @@ const meta = {
     )
   },
   tags: ['autodocs'],
-  title: 'molecules/FormFieldAccept',
+  title: 'Commons/Molecules/FormFieldAccept',
 } satisfies Meta<typeof AutoForm>
 
 export default meta
@@ -54,7 +54,7 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const radioGroup = canvas.getByTestId('radio-agreed-to-terms')
+    const radioGroup = canvas.getByTestId('radio-group-agreed-to-terms')
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('verify radio group is rendered', () => {

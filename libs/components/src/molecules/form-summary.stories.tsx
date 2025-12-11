@@ -6,7 +6,7 @@ const meta: Meta<typeof FormSummary> = {
   parameters: {
     layout: 'centered',
   },
-  title: 'molecules/FormSummary',
+  title: 'Commons/Molecules/FormSummary',
 }
 
 export default meta

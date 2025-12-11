@@ -4,7 +4,7 @@ import { Landing } from './landing'
 
 const meta: Meta<typeof Landing> = {
   component: Landing,
-  title: 'molecules/Landing',
+  title: 'Commons/Molecules/Landing',
 }
 
 export default meta

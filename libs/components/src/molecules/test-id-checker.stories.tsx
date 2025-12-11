@@ -36,7 +36,7 @@ const DemoPage = ({ testIds = [], description }: DemoProps) => (
 
 const meta = {
   component: DemoPage,
-  title: 'molecules/TestIdChecker',
+  title: 'Commons/Molecules/TestIdChecker',
 } satisfies Meta<typeof DemoPage>
 
 export default meta

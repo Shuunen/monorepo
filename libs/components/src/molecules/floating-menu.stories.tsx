@@ -6,7 +6,7 @@ import { FloatingMenu } from './floating-menu'
 
 const meta: Meta<typeof FloatingMenu> = {
   component: FloatingMenu,
-  title: 'molecules/FloatingMenu',
+  title: 'Commons/Molecules/FloatingMenu',
 }
 
 export default meta
