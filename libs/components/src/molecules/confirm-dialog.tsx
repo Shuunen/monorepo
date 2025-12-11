@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Button } from '../atoms/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../atoms/dialog'
 import { Spinner } from '../atoms/spinner'
@@ -11,6 +12,7 @@ export type ConfirmDialogProps = {
   onCancel: () => void
   onConfirm: () => void
   loading?: boolean
+  children?: ReactNode
 }
 
 export function ConfirmDialog(props: ConfirmDialogProps) {
@@ -21,6 +23,7 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
           <DialogTitle data-testid="modal-title">{props.title}</DialogTitle>
           <DialogDescription data-testid="modal-description">{props.description}</DialogDescription>
         </DialogHeader>
+        {props.children}
         <DialogFooter>
           <DialogClose asChild>
             <Button disabled={props.loading} name="modal-cancel" onClick={props.onCancel} type="button" variant="secondary">
