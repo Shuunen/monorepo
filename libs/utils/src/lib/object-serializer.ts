@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: it's ok here */
 import { nbSpacesIndent } from './constants.js'
 import { objectSort } from './object-sort.js'
 
@@ -31,10 +32,14 @@ function replacer(this: unknown, key: string, value?: Readonly<unknown>) {
   if (value instanceof RegExp) return { __regexFlags__: value.flags, __regexSource__: value.source }
   if (typeof value === 'function') return { __function__: value.toString() }
   // @ts-expect-error type issue
-  if (this[key] instanceof File) return { __fileName__: this[key].name, __fileSize__: this[key].size, __fileType__: this[key].type }
+  if (this[key] instanceof File)
+    // @ts-expect-error type issue
+    return { __fileName__: this[key].name, __fileSize__: this[key].size, __fileType__: this[key].type }
   // cannot do this : if (value instanceof Date) { console.log('replacer return toISOString'); return { __strDate__: value.toISOString() } } // see note 1, instead we do this :
   // @ts-expect-error type issue
-  if (this[key] instanceof Date) return { __date__: this[key].toISOString() }
+  if (this[key] instanceof Date)
+    // @ts-expect-error type issue
+    return { __date__: this[key].toISOString() }
   return value
 }
 
@@ -58,19 +63,33 @@ const createCircularReplacer = () => {
 }
 
 /**
+ * Detect function for JSON.parse reviver
+ * @param value an unknown value
+ * @returns the type of this value like : "empty", "date"...
+ */
+function detect(value?: unknown) /* NOSONAR */ {
+  if (value === undefined || value === null || typeof value !== 'object') return 'not-object'
+  if ('__regexFlags__' in value && '__regexSource__' in value) return 'regex'
+  if ('__function__' in value) return 'function'
+  if ('__fileName__' in value && '__fileSize__' in value && '__fileType__' in value) return 'file'
+  if ('__date__' in value) return 'date'
+  return 'unknown'
+}
+
+/**
  * Reviver function for JSON.parse
  * @param _key the key of the object
  * @param value the value of the object
  * @returns the value of the object
  */
-function reviver(_key: string, value?: unknown) {
-  if (value === undefined || value === null) return value
-  if (typeof value !== 'object') return value // @ts-expect-error non-standard properties
-  if ('__regexFlags__' in value && '__regexSource__' in value) return new RegExp(value.__regexSource__, value.__regexFlags__)
+// oxlint-disable-next-line no-explicit-any
+function reviver(_key: string, value?: any) {
+  const type = detect(value)
+  if (type === 'regex') return new RegExp(value.__regexSource__, value.__regexFlags__)
   // oxlint-disable-next-line no-new-func
-  if ('__function__' in value) return new Function(`return ${value.__function__}`)() // @ts-expect-error non-standard properties
-  if ('__fileName__' in value && '__fileSize__' in value && '__fileType__' in value) return new File([], value.__fileName__, { type: value.__fileType__ }) /* @ts-expect-error non-standard properties */
-  if ('__date__' in value) return new Date(value.__date__)
+  if (type === 'function') return new Function(`return ${value.__function__}`)() // NOSONAR
+  if (type === 'file') return new File([], value.__fileName__, { type: value.__fileType__ })
+  if (type === 'date') return new Date(value.__date__)
   return value
 }
 
