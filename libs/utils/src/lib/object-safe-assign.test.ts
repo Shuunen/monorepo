@@ -40,11 +40,17 @@ it('safe assign A simple', () => {
 })
 
 it('safe assign B does not overwrite with undefined', () => {
-  expect(safeAssign({ age: 31, name: 'John' }, { age: undefined, name: 'Claire' })).toStrictEqual({ age: 31, name: 'Claire' })
+  expect(safeAssign({ age: 31, name: 'John' }, { age: undefined, name: 'Claire' })).toStrictEqual({
+    age: 31,
+    name: 'Claire',
+  })
 })
 
 it('safe assign C does not overwrite with null', () => {
-  expect(safeAssign({ age: 31, name: 'John' }, { age: null, name: 'Claire' })).toStrictEqual({ age: 31, name: 'Claire' })
+  expect(safeAssign({ age: 31, name: 'John' }, { age: null, name: 'Claire' })).toStrictEqual({
+    age: 31,
+    name: 'Claire',
+  })
 })
 
 it('safe assign D does not loose side data', () => {
@@ -71,17 +77,30 @@ it('safe assign H does overwrite with empty string', () => {
 })
 
 it('safe assign I does not overwrite with empty object', () => {
-  expect(safeAssign({ details: { age: 42, type: 'years' }, name: 'John' }, { details: {}, name: '' })).toStrictEqual({ details: { age: 42, type: 'years' }, name: '' })
+  expect(safeAssign({ details: { age: 42, type: 'years' }, name: 'John' }, { details: {}, name: '' })).toStrictEqual({
+    details: { age: 42, type: 'years' },
+    name: '',
+  })
 })
 
 it('safe assign J does handle non existing sub object', () => {
-  expect(safeAssign({ name: 'John' }, { details: { age: 42, type: 'years' } })).toStrictEqual({ details: { age: 42, type: 'years' }, name: 'John' })
+  expect(safeAssign({ name: 'John' }, { details: { age: 42, type: 'years' } })).toStrictEqual({
+    details: { age: 42, type: 'years' },
+    name: 'John',
+  })
 })
 
 it('safe assign K with multiple sources', () => {
-  expect(safeAssign({ name: 'John' }, { age: 30 }, { city: 'Paris' })).toStrictEqual({ age: 30, city: 'Paris', name: 'John' })
+  expect(safeAssign({ name: 'John' }, { age: 30 }, { city: 'Paris' })).toStrictEqual({
+    age: 30,
+    city: 'Paris',
+    name: 'John',
+  })
 })
 
 it('safe assign L does not crash with non-record values', () => {
-  expect(safeAssign({ name: 'John' }, { age: 30 }, null as unknown as Record<string, unknown>)).toStrictEqual({ age: 30, name: 'John' })
+  expect(safeAssign({ name: 'John' }, { age: 30 }, null as unknown as Record<string, unknown>)).toStrictEqual({
+    age: 30,
+    name: 'John',
+  })
 })
