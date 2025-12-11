@@ -14,10 +14,13 @@
     "Audio": "readonly",
     "atob": "readonly",
     "Blob": "readonly",
+    "btoa": "readonly",
+    "CryptoKey": "readonly",
     "CustomEvent": "readonly",
     "clearInterval": "readonly",
     "clearTimeout": "readonly",
     "console": "readonly",
+    "crypto": "readonly",
     "DOMParser": "readonly",
     "document": "readonly",
     "Element": "readonly",
@@ -43,6 +46,8 @@
     "setInterval": "readonly",
     "setTimeout": "readonly",
     "structuredClone": "readonly",
+    "TextDecoder": "readonly",
+    "TextEncoder": "readonly",
     "URL": "readonly",
     "window": "readonly"
   },
@@ -112,6 +117,7 @@
     {
       "files": ["*.schemas.ts", "schemas.ts"],
       "rules": {
+        "no-magic-numbers": "off",
         "sort-keys": "off"
       }
     },
@@ -119,8 +125,11 @@
       "files": ["*.machine.ts", "machine.ts"],
       "rules": {
         "ban-types": "off",
+        "check-tag-names": "off",
         "func-names": "off",
         "no-empty-object-type": "off",
+        "require-param": "off",
+        "require-returns": "off",
         "sort-keys": "off"
       }
     },
