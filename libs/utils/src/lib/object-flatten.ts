@@ -10,7 +10,7 @@ export function flatten(object: Readonly<Record<string, unknown>>, path = '', se
   for (const key of Object.keys(object)) {
     const value = object[key]
     const updatedPath = Array.isArray(object) ? `${path}[${key}]` : [path, key].filter(Boolean).join(separator)
-    const isObject = [typeof value === 'object', value !== null, !(value instanceof Date), !(value instanceof RegExp), !(Array.isArray(value) && value.length === 0)].every(Boolean)
+    const isObject = [typeof value === 'object', value !== null, !(value instanceof Date), !(value instanceof File), !(value instanceof RegExp), !(Array.isArray(value) && value.length === 0)].every(Boolean)
     if (isObject) Object.assign(result, flatten(value as Record<string, unknown>, updatedPath, separator))
     else result[updatedPath] = value
   }
