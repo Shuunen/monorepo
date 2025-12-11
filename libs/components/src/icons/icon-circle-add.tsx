@@ -1,5 +1,5 @@
-import { CirclePlus } from 'lucide-react'
+import { CirclePlus } from "lucide-react";
 
 export function IconCircleAdd() {
-  return <CirclePlus />
+  return <CirclePlus />;
 }

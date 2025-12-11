@@ -57,7 +57,7 @@
       "files": ["*.tsx"],
       "rules": {
         "@typescript-eslint/explicit-module-boundary-types": "off",
-        "max-lines-per-function": ["error", 50],
+        "max-lines-per-function": ["error", 60],
         "max-nested-callbacks": ["error", 2],
         "require-returns": "off"
       }
@@ -110,7 +110,7 @@
     {
       "files": ["*.ts", "*.js"],
       "rules": {
-        "max-lines-per-function": ["error", 20],
+        "max-lines-per-function": ["error", 40],
         "max-nested-callbacks": ["error", 1]
       }
     },
@@ -231,6 +231,12 @@
       "files": ["libs/vite-plugins/**/*", "libs/components/.storybook/**/*"],
       "rules": {
         "no-console": "off"
+      }
+    },
+    {
+      "files": ["libs/**/*"],
+      "rules": {
+        "curly": "error"
       }
     }
   ],

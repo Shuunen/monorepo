@@ -7,7 +7,7 @@ export function sleep(ms = 1000) {
   return new Promise(resolve => {
     // oxlint-disable-next-line max-nested-callbacks
     setTimeout(() => {
-      void resolve(ms)
-    }, ms)
-  })
+      void resolve(ms);
+    }, ms);
+  });
 }

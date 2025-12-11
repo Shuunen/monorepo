@@ -1,7 +1,7 @@
-import { FormLabel } from '../atoms/form'
+import { FormLabel } from "../atoms/form";
 
 export function RequiredMark() {
-  return <span className="text-red-500 ml-1">*</span>
+  return <span className="text-red-500 ml-1">*</span>;
 }
 
 export function FormFieldLabel({ className, label, isOptional }: { className?: string; label?: string; isOptional: boolean }) {
@@ -10,5 +10,5 @@ export function FormFieldLabel({ className, label, isOptional }: { className?: s
       {label}
       {!isOptional && <RequiredMark />}
     </FormLabel>
-  )
+  );
 }

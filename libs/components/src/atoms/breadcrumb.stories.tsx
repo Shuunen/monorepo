@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, within } from 'storybook/test'
-import { Breadcrumb } from './breadcrumb'
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "storybook/test";
+import { Breadcrumb } from "./breadcrumb";
 
 /**
  * Displays a breadcrumb
@@ -8,15 +8,15 @@ import { Breadcrumb } from './breadcrumb'
 const meta = {
   component: Breadcrumb,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
-  title: 'Commons/Atoms/Breadcrumb',
-} satisfies Meta<typeof Breadcrumb>
+  tags: ["autodocs"],
+  title: "Commons/Atoms/Breadcrumb",
+} satisfies Meta<typeof Breadcrumb>;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 /**
  * The default form of the breadcrumb.
@@ -24,24 +24,24 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     items: [
-      { label: 'Home', link: '/' },
-      { label: 'Components', link: '/components' },
-      { label: 'Breadcrumb', link: '/components/breadcrumb' },
+      { label: "Home", link: "/" },
+      { label: "Components", link: "/components" },
+      { label: "Breadcrumb", link: "/components/breadcrumb" },
     ],
   },
   play: ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = within(canvasElement);
 
-    const homeBreadcrumb = canvas.getByText('Home')
-    expect(homeBreadcrumb).toBeInTheDocument()
-    expect(homeBreadcrumb.closest('a')).toHaveAttribute('href', '/')
+    const homeBreadcrumb = canvas.getByText("Home");
+    expect(homeBreadcrumb).toBeInTheDocument();
+    expect(homeBreadcrumb.closest("a")).toHaveAttribute("href", "/");
 
-    const componentsBreadcrumb = canvas.getByText('Components')
-    expect(componentsBreadcrumb).toBeInTheDocument()
-    expect(componentsBreadcrumb.closest('a')).toHaveAttribute('href', '/components')
+    const componentsBreadcrumb = canvas.getByText("Components");
+    expect(componentsBreadcrumb).toBeInTheDocument();
+    expect(componentsBreadcrumb.closest("a")).toHaveAttribute("href", "/components");
 
-    const atomBreadcrumb = canvas.getByText('Breadcrumb')
-    expect(atomBreadcrumb).toHaveClass('text-foreground')
-    expect(atomBreadcrumb).toBeInTheDocument()
+    const atomBreadcrumb = canvas.getByText("Breadcrumb");
+    expect(atomBreadcrumb).toHaveClass("text-foreground");
+    expect(atomBreadcrumb).toBeInTheDocument();
   },
-}
+};

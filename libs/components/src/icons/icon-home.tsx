@@ -1,5 +1,5 @@
-import { HouseIcon } from 'lucide-react'
+import { HouseIcon } from "lucide-react";
 
 export function IconHome() {
-  return <HouseIcon />
+  return <HouseIcon />;
 }

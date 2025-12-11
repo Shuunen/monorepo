@@ -1,6 +1,6 @@
 // oxlint-disable prefer-dom-node-text-content
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 
 /**
  * A set of layered sections of content—known as tab panels—that are displayed
@@ -8,13 +8,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
  */
 const meta = {
   args: {
-    className: 'w-96',
-    defaultValue: 'account',
+    className: "w-96",
+    defaultValue: "account",
   },
   argTypes: {},
   component: Tabs,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
   render: args => (
     <Tabs {...args}>
@@ -26,15 +26,15 @@ const meta = {
       <TabsContent value="password">Change your password here.</TabsContent>
     </Tabs>
   ),
-  tags: ['autodocs'],
-  title: 'Commons/Atoms/Tabs',
-} satisfies Meta<typeof Tabs>
+  tags: ["autodocs"],
+  title: "Commons/Atoms/Tabs",
+} satisfies Meta<typeof Tabs>;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 /**
  * The default form of the tabs.
  */
-export const Default: Story = {}
+export const Default: Story = {};

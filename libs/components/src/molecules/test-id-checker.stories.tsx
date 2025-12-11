@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { TestIdChecker } from './test-id-checker'
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { TestIdChecker } from "./test-id-checker";
 
 type DemoProps = {
-  testIds: string[]
-  description?: string
-}
+  testIds: string[];
+  description?: string;
+};
 
 const DemoPage = ({ testIds = [], description }: DemoProps) => (
   <div className="px-4 py-28 space-y-4">
@@ -32,40 +32,40 @@ const DemoPage = ({ testIds = [], description }: DemoProps) => (
 
     <TestIdChecker forceVisible={true} />
   </div>
-)
+);
 
 const meta = {
   component: DemoPage,
-  title: 'Commons/Molecules/TestIdChecker',
-} satisfies Meta<typeof DemoPage>
+  title: "Commons/Molecules/TestIdChecker",
+} satisfies Meta<typeof DemoPage>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const UniqueTestIds: Story = {
   args: {
-    description: 'On this page we only have unique data-testid attributes.',
-    testIds: ['header-section', 'title', 'description', 'content-section', 'primary-button', 'search-input', 'footer-section', 'copyright-text'],
+    description: "On this page we only have unique data-testid attributes.",
+    testIds: ["header-section", "title", "description", "content-section", "primary-button", "search-input", "footer-section", "copyright-text"],
   },
-}
+};
 
 export const DuplicateTestIds: Story = {
   args: {
-    description: 'On this page we have duplicate data-testid attributes.',
-    testIds: ['header-section', 'title', 'description', 'section', 'primary-button', 'search-input', 'section'],
+    description: "On this page we have duplicate data-testid attributes.",
+    testIds: ["header-section", "title", "description", "section", "primary-button", "search-input", "section"],
   },
-}
+};
 
 export const NoTestIds: Story = {
   args: {
-    description: 'On this page we have no data-testid attributes',
+    description: "On this page we have no data-testid attributes",
     testIds: [],
   },
-}
+};
 
 export const InvalidTestIds: Story = {
   args: {
-    description: 'On this page we have invalid data-testid attributes.',
-    testIds: ['valid-section', 'valid-title', 'valid-description', 'text with spaces', 'special#chars', 'search.input'],
+    description: "On this page we have invalid data-testid attributes.",
+    testIds: ["valid-section", "valid-title", "valid-description", "text with spaces", "special#chars", "search.input"],
   },
-}
+};

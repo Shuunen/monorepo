@@ -1,1 +1,1 @@
-export { Spinner } from '../shadcn/spinner'
+export { Spinner } from "../shadcn/spinner";

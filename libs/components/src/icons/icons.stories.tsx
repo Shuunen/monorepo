@@ -19,26 +19,26 @@ import {
   IconSearchX,
   IconTrash,
   IconUpload,
-} from '@monorepo/components'
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import type { JSX } from 'react'
-import { IconAdd } from './icon-add'
-import { IconArrowDown } from './icon-arrow-down'
-import { IconArrowLeft } from './icon-arrow-left'
-import { IconArrowRight } from './icon-arrow-right'
-import { IconArrowUp } from './icon-arrow-up'
-import { IconCheck } from './icon-check'
-import { IconChevronRight } from './icon-chevron-right'
-import { IconEdit } from './icon-edit'
-import { IconError } from './icon-error'
-import { IconHome } from './icon-home'
-import { IconLoading } from './icon-loading'
-import { IconReadonly } from './icon-readonly'
-import { IconSelect } from './icon-select'
-import { IconSuccess } from './icon-success'
-import { IconTooltip } from './icon-tooltip'
-import { IconUpcoming } from './icon-upcoming'
-import { IconWarning } from './icon-warning'
+} from "@monorepo/components";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { JSX } from "react";
+import { IconAdd } from "./icon-add";
+import { IconArrowDown } from "./icon-arrow-down";
+import { IconArrowLeft } from "./icon-arrow-left";
+import { IconArrowRight } from "./icon-arrow-right";
+import { IconArrowUp } from "./icon-arrow-up";
+import { IconCheck } from "./icon-check";
+import { IconChevronRight } from "./icon-chevron-right";
+import { IconEdit } from "./icon-edit";
+import { IconError } from "./icon-error";
+import { IconHome } from "./icon-home";
+import { IconLoading } from "./icon-loading";
+import { IconReadonly } from "./icon-readonly";
+import { IconSelect } from "./icon-select";
+import { IconSuccess } from "./icon-success";
+import { IconTooltip } from "./icon-tooltip";
+import { IconUpcoming } from "./icon-upcoming";
+import { IconWarning } from "./icon-warning";
 
 const icons = [
   IconAccept,
@@ -76,9 +76,9 @@ const icons = [
   IconUpcoming,
   IconUpload,
   IconWarning,
-]
+];
 
-type Props = { component: ({ className }: { className?: string | undefined }) => JSX.Element }
+type Props = { component: ({ className }: { className?: string | undefined }) => JSX.Element };
 
 function Icon({ component: Component }: Props) {
   return (
@@ -88,12 +88,12 @@ function Icon({ component: Component }: Props) {
       </div>
       <DebugData data={`<${Component.name} />`} />
     </div>
-  )
+  );
 }
 
 const meta = {
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
   render: () => (
     <div className="grid gap-4 w-full grid-cols-3">
@@ -102,12 +102,12 @@ const meta = {
       ))}
     </div>
   ),
-  tags: ['autodocs'],
-  title: 'Commons/Icons',
-} satisfies Meta
+  tags: ["autodocs"],
+  title: "Commons/Icons",
+} satisfies Meta;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
-export const Icons: Story = {}
+export const Icons: Story = {};

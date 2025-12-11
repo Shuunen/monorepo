@@ -1,14 +1,14 @@
-import { getPath } from './browser-routing.js'
-import { Result } from './result.js'
-import { fillTemplate } from './string-template.js'
+import { getPath } from "./browser-routing.js";
+import { Result } from "./result.js";
+import { fillTemplate } from "./string-template.js";
 
-const handledLangs = ['en', 'fr'] as const
+const handledLangs = ["en", "fr"] as const;
 
-export type Lang = (typeof handledLangs)[number]
+export type Lang = (typeof handledLangs)[number];
 
-const langRegex = /^\/(en|fr)\//u
+const langRegex = /^\/(en|fr)\//u;
 
-const defaultLang = 'en'
+const defaultLang = "en";
 
 /**
  * Get the language from the path
@@ -16,8 +16,8 @@ const defaultLang = 'en'
  * @returns the language, like "en"
  */
 export function getLangFromPath(path: string) {
-  const detected = langRegex.exec(path)?.[1] ?? defaultLang
-  return detected === 'fr' ? 'fr' : defaultLang
+  const detected = langRegex.exec(path)?.[1] ?? defaultLang;
+  return detected === "fr" ? "fr" : defaultLang;
 }
 
 // oxlint-disable require-param-description
@@ -29,12 +29,18 @@ export function getLangFromPath(path: string) {
  */
 export function handlePlural(translated: string, data?: Readonly<Record<string, unknown>>) {
   // oxlint-enable require-param-description
-  if (!translated.includes('|')) return fillTemplate(translated, data)
-  const count = Number.parseInt(String(data?.count ?? '1'), 10)
-  const [partA = '', partB = '', partC = ''] = translated.split(' | ')
-  if (partC.length > 0 && count > 1) return fillTemplate(partC, data)
-  if ((partC.length > 0 && count === 1) || (partB.length > 0 && count > 1)) return fillTemplate(partB, data)
-  return fillTemplate(partA, data)
+  if (!translated.includes("|")) {
+    return fillTemplate(translated, data);
+  }
+  const count = Number.parseInt(String(data?.count ?? "1"), 10);
+  const [partA = "", partB = "", partC = ""] = translated.split(" | ");
+  if (partC.length > 0 && count > 1) {
+    return fillTemplate(partC, data);
+  }
+  if ((partC.length > 0 && count === 1) || (partB.length > 0 && count > 1)) {
+    return fillTemplate(partB, data);
+  }
+  return fillTemplate(partA, data);
 }
 
 // oxlint-disable require-param-description
@@ -47,9 +53,11 @@ export function handlePlural(translated: string, data?: Readonly<Record<string, 
  */
 export function translate(lang: Lang, message: Readonly<Record<string, string>> | string, data?: Readonly<Record<string, unknown>>) {
   // oxlint-enable require-param-description
-  const translated = typeof message === 'string' ? message : message[lang]
-  if (translated === undefined) return `missing translation for message "${JSON.stringify(message)}" and lang "${lang}"`
-  return handlePlural(translated, data)
+  const translated = typeof message === "string" ? message : message[lang];
+  if (translated === undefined) {
+    return `missing translation for message "${JSON.stringify(message)}" and lang "${lang}"`;
+  }
+  return handlePlural(translated, data);
 }
 
 /**
@@ -59,8 +67,10 @@ export function translate(lang: Lang, message: Readonly<Record<string, string>> 
  * @returns the translated path, like "/fr/contact"
  */
 export function localePath(path: string, targetLang: Lang = defaultLang) {
-  if (!handledLangs.includes(targetLang)) return Result.error(`unsupported lang "${targetLang}", cannot translate path "${path}"`)
-  return Result.ok(getPath(path, targetLang === defaultLang ? '' : targetLang))
+  if (!handledLangs.includes(targetLang)) {
+    return Result.error(`unsupported lang "${targetLang}", cannot translate path "${path}"`);
+  }
+  return Result.ok(getPath(path, targetLang === defaultLang ? "" : targetLang));
 }
 
 /**
@@ -70,5 +80,5 @@ export function localePath(path: string, targetLang: Lang = defaultLang) {
  * @example const $t = getTranslator('en')
  */
 export function getTranslator(lang: Lang) {
-  return (message: Readonly<Record<string, string>> | string, data?: Readonly<Record<string, unknown>>) => translate(lang, message, data)
+  return (message: Readonly<Record<string, string>> | string, data?: Readonly<Record<string, unknown>>) => translate(lang, message, data);
 }

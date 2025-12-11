@@ -4,5 +4,5 @@
  * @returns the array with unique values
  */
 export function arrayUnique<Type>(items: readonly Type[]) {
-  return Array.from(new Set(items))
+  return Array.from(new Set(items));
 }

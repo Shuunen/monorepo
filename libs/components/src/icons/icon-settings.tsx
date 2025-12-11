@@ -1,5 +1,5 @@
-import { SettingsIcon } from 'lucide-react'
+import { SettingsIcon } from "lucide-react";
 
 export function IconSettings() {
-  return <SettingsIcon />
+  return <SettingsIcon />;
 }

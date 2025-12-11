@@ -1,10 +1,10 @@
-type ListenerMedia = Element | HTMLElement | typeof globalThis | Window
+type ListenerMedia = Element | HTMLElement | typeof globalThis | Window;
 
 export type Listener = {
-  callback: (event: unknown) => unknown
-  media: ListenerMedia
-  name: string
-}
+  callback: (event: unknown) => unknown;
+  media: ListenerMedia;
+  name: string;
+};
 
 /**
  * Emit an event on a media, window by default
@@ -14,8 +14,11 @@ export type Listener = {
  */
 export function emit<Data>(name: string, data?: Readonly<Data>, media: ListenerMedia = globalThis) {
   /* v8 ignore next -- @preserve */
-  if (data === undefined) media.dispatchEvent(new CustomEvent(name))
-  else media.dispatchEvent(new CustomEvent(name, { detail: data }))
+  if (data === undefined) {
+    media.dispatchEvent(new CustomEvent(name));
+  } else {
+    media.dispatchEvent(new CustomEvent(name, { detail: data }));
+  }
 }
 
 /**
@@ -33,10 +36,10 @@ export function on<Data>(name: string, callback: (data: Data, event: Event) => u
    */
   function onCallback(event: unknown) {
     /* v8 ignore next -- @preserve */
-    return callback(event instanceof CustomEvent ? event.detail : event, event as Event)
+    return callback(event instanceof CustomEvent ? event.detail : event, event as Event);
   }
-  media.addEventListener(name, onCallback, { passive: true })
-  return { callback: onCallback, media, name }
+  media.addEventListener(name, onCallback, { passive: true });
+  return { callback: onCallback, media, name };
 }
 
 /**
@@ -47,5 +50,5 @@ export function on<Data>(name: string, callback: (data: Data, event: Event) => u
  * @param listener.callback the callback to remove
  */
 export function off({ callback, media, name }: Readonly<Listener>) {
-  media.removeEventListener(name, callback)
+  media.removeEventListener(name, callback);
 }

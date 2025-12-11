@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Plus } from 'lucide-react'
-import { expect, userEvent, waitFor, within } from 'storybook/test'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip'
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Plus } from "lucide-react";
+import { expect, userEvent, waitFor, within } from "storybook/test";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 
 /**
  * A popup that displays information related to an element when the element
@@ -9,23 +9,23 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tool
  */
 const meta: Meta<typeof TooltipContent> = {
   args: {
-    children: 'Add to library',
-    side: 'top',
+    children: "Add to library",
+    side: "top",
   },
   argTypes: {
     children: {
-      control: 'text',
+      control: "text",
     },
     side: {
       control: {
-        type: 'radio',
+        type: "radio",
       },
-      options: ['top', 'bottom', 'left', 'right'],
+      options: ["top", "bottom", "left", "right"],
     },
   },
   component: TooltipContent,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
   render: args => (
     <TooltipProvider>
@@ -38,60 +38,60 @@ const meta: Meta<typeof TooltipContent> = {
       </Tooltip>
     </TooltipProvider>
   ),
-  tags: ['autodocs'],
-  title: 'Commons/Atoms/Tooltip',
-} satisfies Meta<typeof TooltipContent>
+  tags: ["autodocs"],
+  title: "Commons/Atoms/Tooltip",
+} satisfies Meta<typeof TooltipContent>;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 /**
  * The default form of the tooltip.
  */
 export const Default: Story = {
   play: async ({ canvasElement, step }) => {
-    const canvasBody = within(canvasElement.ownerDocument.body)
-    const triggerBtn = await canvasBody.findByRole('button', { name: /add/i })
+    const canvasBody = within(canvasElement.ownerDocument.body);
+    const triggerBtn = await canvasBody.findByRole("button", { name: /add/i });
 
-    await step('hover over trigger', async () => {
-      await userEvent.hover(triggerBtn)
-      await waitFor(() => expect(canvasElement.ownerDocument.body.querySelector('[data-radix-popper-content-wrapper]')).toBeVisible())
-    })
+    await step("hover over trigger", async () => {
+      await userEvent.hover(triggerBtn);
+      await waitFor(() => expect(canvasElement.ownerDocument.body.querySelector("[data-radix-popper-content-wrapper]")).toBeVisible());
+    });
 
-    await step('unhover trigger', async () => {
-      await userEvent.unhover(triggerBtn)
+    await step("unhover trigger", async () => {
+      await userEvent.unhover(triggerBtn);
       await waitFor(() => {
-        const tooltipElement = canvasElement.ownerDocument.body.querySelector('[data-radix-popper-content-wrapper]')
-        expect(tooltipElement).toBeNull()
-      })
-    })
+        const tooltipElement = canvasElement.ownerDocument.body.querySelector("[data-radix-popper-content-wrapper]");
+        expect(tooltipElement).toBeNull();
+      });
+    });
   },
-}
+};
 
 /**
  * Use the `bottom` side to display the tooltip below the element.
  */
 export const Bottom: Story = {
   args: {
-    side: 'bottom',
+    side: "bottom",
   },
-}
+};
 
 /**
  * Use the `left` side to display the tooltip to the left of the element.
  */
 export const Left: Story = {
   args: {
-    side: 'left',
+    side: "left",
   },
-}
+};
 
 /**
  * Use the `right` side to display the tooltip to the right of the element.
  */
 export const Right: Story = {
   args: {
-    side: 'right',
+    side: "right",
   },
-}
+};

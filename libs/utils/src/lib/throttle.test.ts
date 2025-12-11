@@ -1,15 +1,15 @@
-import { sleep } from './sleep.js'
-import { throttle } from './throttle.js'
+import { sleep } from "./sleep.js";
+import { throttle } from "./throttle.js";
 
-let times = 0
+let times = 0;
 
 /**
  * A function that increment a counter
  * @returns {number} the number of times the function has been called
  */
 function myFunction() {
-  times += 1
-  return times
+  times += 1;
+  return times;
 }
 
 /**
@@ -17,8 +17,8 @@ function myFunction() {
  * @returns {Promise<number>} the number 12
  */
 async function anAsyncFunctionThatReturn12() {
-  await sleep(5)
-  return 12
+  await sleep(5);
+  return 12;
 }
 
 /**
@@ -26,30 +26,30 @@ async function anAsyncFunctionThatReturn12() {
  * @returns {Promise<{ age: number, name: string }>} an object
  */
 async function anAsyncFunctionThatReturnAnObject() {
-  await sleep(5)
+  await sleep(5);
   return {
     age: 30,
-    name: 'John',
-  }
+    name: "John",
+  };
 }
 
-it('throttle A', async () => {
-  times = 0
-  const myFunctionThrottled = throttle(myFunction, 10)
-  expect(times).toBe(0)
-  myFunctionThrottled()
-  expect(times).toBe(1)
-  myFunctionThrottled()
-  myFunctionThrottled()
-  myFunctionThrottled()
-  expect(times).toBe(1)
-  await sleep(10)
-  myFunctionThrottled()
-  myFunctionThrottled()
-  expect(times).toBe(2)
-})
+it("throttle A", async () => {
+  times = 0;
+  const myFunctionThrottled = throttle(myFunction, 10);
+  expect(times).toBe(0);
+  myFunctionThrottled();
+  expect(times).toBe(1);
+  myFunctionThrottled();
+  myFunctionThrottled();
+  myFunctionThrottled();
+  expect(times).toBe(1);
+  await sleep(10);
+  myFunctionThrottled();
+  myFunctionThrottled();
+  expect(times).toBe(2);
+});
 
-let optionalCallCount = 0
+let optionalCallCount = 0;
 
 /**
  * A function with an optional parameter
@@ -57,32 +57,32 @@ let optionalCallCount = 0
  * @returns {number} the number of times the function has been called
  */
 function functionWithOptionalParameter(value = 10) {
-  optionalCallCount += 1
-  return value + optionalCallCount
+  optionalCallCount += 1;
+  return value + optionalCallCount;
 }
 
-it('throttle B should work with functions that have optional parameters', async () => {
-  optionalCallCount = 0
-  const throttledFunction = throttle(functionWithOptionalParameter, 10)
-  expect(optionalCallCount).toBe(0)
+it("throttle B should work with functions that have optional parameters", async () => {
+  optionalCallCount = 0;
+  const throttledFunction = throttle(functionWithOptionalParameter, 10);
+  expect(optionalCallCount).toBe(0);
 
   // Call without parameter (uses default)
-  throttledFunction()
-  expect(optionalCallCount).toBe(1)
+  throttledFunction();
+  expect(optionalCallCount).toBe(1);
 
   // Call with parameter
-  throttledFunction(20)
+  throttledFunction(20);
   // Should not execute due to throttling
-  expect(optionalCallCount).toBe(1)
+  expect(optionalCallCount).toBe(1);
 
-  await sleep(10)
-  throttledFunction(30)
-  expect(optionalCallCount).toBe(2)
-})
+  await sleep(10);
+  throttledFunction(30);
+  expect(optionalCallCount).toBe(2);
+});
 
-it('anAsyncFunctionThatReturn12 A', async () => {
-  expect(await anAsyncFunctionThatReturn12()).toBe(12)
-})
-it('anAsyncFunctionThatReturnAnObject A', async () => {
-  expect(await anAsyncFunctionThatReturnAnObject()).toStrictEqual({ age: 30, name: 'John' })
-})
+it("anAsyncFunctionThatReturn12 A", async () => {
+  expect(await anAsyncFunctionThatReturn12()).toBe(12);
+});
+it("anAsyncFunctionThatReturnAnObject A", async () => {
+  expect(await anAsyncFunctionThatReturnAnObject()).toStrictEqual({ age: 30, name: "John" });
+});

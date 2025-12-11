@@ -1,26 +1,26 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { useId, useState } from 'react'
-import { Skeleton } from '../atoms/skeleton'
-import { defaultIcons } from './auto-form.utils'
-import { AutoFormStepper } from './auto-form-stepper'
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useId, useState } from "react";
+import { Skeleton } from "../atoms/skeleton";
+import { defaultIcons } from "./auto-form.utils";
+import { AutoFormStepper } from "./auto-form-stepper";
 
 const meta: Meta<typeof AutoFormStepper> = {
   component: AutoFormStepper,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  title: 'Commons/Molecules/AutoFormStepper',
-}
+  title: "Commons/Molecules/AutoFormStepper",
+};
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof AutoFormStepper>
+type Story = StoryObj<typeof AutoFormStepper>;
 
-const successState = 'success' as const
-const editableState = 'editable' as const
-const readonlyState = 'readonly' as const
-const upcomingState = 'upcoming' as const
-const { success: iconSuccess, edit: iconEdit, readonly: iconReadonly, upcoming: iconUpcoming } = defaultIcons
+const successState = "success" as const;
+const editableState = "editable" as const;
+const readonlyState = "readonly" as const;
+const upcomingState = "upcoming" as const;
+const { success: iconSuccess, edit: iconEdit, readonly: iconReadonly, upcoming: iconUpcoming } = defaultIcons;
 
 function FormSkeleton() {
   return (
@@ -42,7 +42,7 @@ function FormSkeleton() {
         <Skeleton className="h-10 w-24" />
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -50,30 +50,30 @@ function FormSkeleton() {
  */
 export const Basic: Story = {
   render: () => {
-    const [activeStep, setActiveStep] = useState(0)
+    const [activeStep, setActiveStep] = useState(0);
     const steps = [
       {
         active: activeStep === 0,
         icon: activeStep > 0 ? iconSuccess : iconEdit,
         idx: 0,
         state: activeStep > 0 ? successState : editableState,
-        title: 'Personal Information',
+        title: "Personal Information",
       },
       {
         active: activeStep === 1,
         icon: activeStep > 1 ? iconSuccess : iconEdit,
         idx: 1,
         state: activeStep > 1 ? successState : editableState,
-        title: 'Contact Details',
+        title: "Contact Details",
       },
       {
         active: activeStep === 2,
         icon: iconEdit,
         idx: 2,
         state: editableState,
-        title: 'Confirmation',
+        title: "Confirmation",
       },
-    ]
+    ];
 
     return (
       <div className="flex gap-8">
@@ -82,42 +82,42 @@ export const Basic: Story = {
         </div>
         <FormSkeleton />
       </div>
-    )
+    );
   },
-}
+};
 
 /**
  * Stepper with subtitles for additional context
  */
 export const WithSubtitles: Story = {
   render: () => {
-    const [activeStep, setActiveStep] = useState(0)
+    const [activeStep, setActiveStep] = useState(0);
     const steps = [
       {
         active: activeStep === 0,
         icon: activeStep > 0 ? iconSuccess : iconEdit,
         idx: 0,
         state: activeStep > 0 ? successState : editableState,
-        subtitle: 'Basic details about you',
-        title: 'Personal Information',
+        subtitle: "Basic details about you",
+        title: "Personal Information",
       },
       {
         active: activeStep === 1,
         icon: activeStep > 1 ? iconSuccess : iconEdit,
         idx: 1,
         state: activeStep > 1 ? successState : editableState,
-        subtitle: 'How we can reach you',
-        title: 'Contact Details',
+        subtitle: "How we can reach you",
+        title: "Contact Details",
       },
       {
         active: activeStep === 2,
         icon: iconEdit,
         idx: 2,
         state: editableState,
-        subtitle: 'Review and accept terms',
-        title: 'Confirmation',
+        subtitle: "Review and accept terms",
+        title: "Confirmation",
       },
-    ]
+    ];
 
     return (
       <div className="flex gap-8">
@@ -126,50 +126,50 @@ export const WithSubtitles: Story = {
         </div>
         <FormSkeleton />
       </div>
-    )
+    );
   },
-}
+};
 
 /**
  * Stepper with step number suffixes
  */
 export const WithSuffixes: Story = {
   render: () => {
-    const [activeStep, setActiveStep] = useState(0)
+    const [activeStep, setActiveStep] = useState(0);
     const steps = [
       {
         active: activeStep === 0,
         icon: activeStep > 0 ? iconSuccess : iconEdit,
         idx: 0,
         state: activeStep > 0 ? successState : editableState,
-        suffix: '1/4',
-        title: 'Account Setup',
+        suffix: "1/4",
+        title: "Account Setup",
       },
       {
         active: activeStep === 1,
         icon: activeStep > 1 ? iconSuccess : iconEdit,
         idx: 1,
         state: activeStep > 1 ? successState : editableState,
-        suffix: '2/4',
-        title: 'Personal Details',
+        suffix: "2/4",
+        title: "Personal Details",
       },
       {
         active: activeStep === 2,
         icon: activeStep > 2 ? iconSuccess : iconEdit,
         idx: 2,
         state: activeStep > 2 ? successState : editableState,
-        suffix: '3/4',
-        title: 'Preferences',
+        suffix: "3/4",
+        title: "Preferences",
       },
       {
         active: activeStep === 3,
         icon: iconEdit,
         idx: 3,
         state: editableState,
-        suffix: '4/4',
-        title: 'Review',
+        suffix: "4/4",
+        title: "Review",
       },
-    ]
+    ];
 
     return (
       <div className="flex gap-8">
@@ -178,45 +178,45 @@ export const WithSuffixes: Story = {
         </div>
         <FormSkeleton />
       </div>
-    )
+    );
   },
-}
+};
 
 /**
  * Stepper with both subtitles and suffixes
  */
 export const WithSubtitlesAndSuffixes: Story = {
   render: () => {
-    const [activeStep, setActiveStep] = useState(0)
+    const [activeStep, setActiveStep] = useState(0);
     const steps = [
       {
         active: activeStep === 0,
         icon: activeStep > 0 ? iconSuccess : iconEdit,
         idx: 0,
         state: activeStep > 0 ? successState : editableState,
-        subtitle: 'Enter your shipping address',
-        suffix: '- Step 1/3',
-        title: 'Shipping',
+        subtitle: "Enter your shipping address",
+        suffix: "- Step 1/3",
+        title: "Shipping",
       },
       {
         active: activeStep === 1,
         icon: activeStep > 1 ? iconSuccess : iconEdit,
         idx: 1,
         state: activeStep > 1 ? successState : editableState,
-        subtitle: 'Enter payment information',
-        suffix: '- Step 2/3',
-        title: 'Payment',
+        subtitle: "Enter payment information",
+        suffix: "- Step 2/3",
+        title: "Payment",
       },
       {
         active: activeStep === 2,
         icon: iconEdit,
         idx: 2,
         state: editableState,
-        subtitle: 'Review your order',
-        suffix: '- Step 3/3',
-        title: 'Review',
+        subtitle: "Review your order",
+        suffix: "- Step 3/3",
+        title: "Review",
       },
-    ]
+    ];
 
     return (
       <div className="flex gap-8">
@@ -225,63 +225,63 @@ export const WithSubtitlesAndSuffixes: Story = {
         </div>
         <FormSkeleton />
       </div>
-    )
+    );
   },
-}
+};
 
 /**
  * Stepper with section headers to group related steps
  */
 export const WithSections: Story = {
   render: () => {
-    const [activeStep, setActiveStep] = useState(2)
+    const [activeStep, setActiveStep] = useState(2);
     const steps = [
       {
         active: activeStep === 0,
         icon: iconSuccess,
         idx: 0,
-        section: 'Getting Started',
+        section: "Getting Started",
         state: successState,
-        title: 'Create Account',
+        title: "Create Account",
       },
       {
         active: activeStep === 1,
         icon: iconSuccess,
         idx: 1,
         state: successState,
-        title: 'Email Verification',
+        title: "Email Verification",
       },
       {
         active: activeStep === 2,
         icon: iconEdit,
         idx: 2,
-        section: 'Profile Setup',
+        section: "Profile Setup",
         state: editableState,
-        title: 'Personal Information',
+        title: "Personal Information",
       },
       {
         active: activeStep === 3,
         icon: iconUpcoming,
         idx: 3,
         state: upcomingState,
-        title: 'Profile Picture',
+        title: "Profile Picture",
       },
       {
         active: activeStep === 4,
         icon: iconUpcoming,
         idx: 4,
-        section: 'Preferences',
+        section: "Preferences",
         state: upcomingState,
-        title: 'Notification Settings',
+        title: "Notification Settings",
       },
       {
         active: activeStep === 5,
         icon: iconUpcoming,
         idx: 5,
         state: upcomingState,
-        title: 'Privacy Settings',
+        title: "Privacy Settings",
       },
-    ]
+    ];
 
     return (
       <div className="flex gap-8">
@@ -290,9 +290,9 @@ export const WithSections: Story = {
         </div>
         <FormSkeleton />
       </div>
-    )
+    );
   },
-}
+};
 
 /**
  * Comprehensive example showcasing all stepper features:
@@ -304,37 +304,37 @@ export const WithSections: Story = {
  */
 export const Everything: Story = {
   render: () => {
-    const [activeStep, setActiveStep] = useState(2)
-    const [isDisabled, setIsDisabled] = useState(false)
-    const toggleId = useId()
+    const [activeStep, setActiveStep] = useState(2);
+    const [isDisabled, setIsDisabled] = useState(false);
+    const toggleId = useId();
 
     const steps = [
       {
         active: activeStep === 0,
         icon: iconSuccess,
         idx: 0,
-        section: 'Completed steps',
+        section: "Completed steps",
         state: successState,
-        subtitle: 'Name, email, phone',
-        title: 'Personal Info',
+        subtitle: "Name, email, phone",
+        title: "Personal Info",
       },
       {
         active: activeStep === 1,
         icon: iconReadonly,
         idx: 1,
         state: readonlyState,
-        subtitle: 'Details you agreed to',
-        title: 'Terms & Conditions',
+        subtitle: "Details you agreed to",
+        title: "Terms & Conditions",
       },
       {
         active: activeStep === 2,
         icon: iconEdit,
         idx: 2,
-        section: 'To complete',
+        section: "To complete",
         state: editableState,
-        subtitle: 'Street, city, zip code',
-        suffix: '- Part 1/2',
-        title: 'Address',
+        subtitle: "Street, city, zip code",
+        suffix: "- Part 1/2",
+        title: "Address",
       },
       {
         active: activeStep === 3,
@@ -342,21 +342,21 @@ export const Everything: Story = {
         idx: 3,
         indent: true,
         state: editableState,
-        subtitle: 'State, country',
-        suffix: '- Part 2/2',
-        title: 'Address',
+        subtitle: "State, country",
+        suffix: "- Part 2/2",
+        title: "Address",
       },
       {
         active: activeStep === 4,
         icon: iconUpcoming,
         idx: 4,
-        section: 'Upcoming steps',
+        section: "Upcoming steps",
         state: upcomingState,
-        subtitle: 'Payment method and details',
-        suffix: '- FINAL',
-        title: 'Payment',
+        subtitle: "Payment method and details",
+        suffix: "- FINAL",
+        title: "Payment",
       },
-    ]
+    ];
 
     return (
       <div className="space-y-6">
@@ -406,6 +406,6 @@ export const Everything: Story = {
           </ul>
         </div>
       </div>
-    )
+    );
   },
-}
+};

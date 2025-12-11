@@ -4,5 +4,5 @@
  * @returns  The Unix path
  */
 export function toUnixPath(filepath: string) {
-  return filepath.replaceAll(/\\+/giu, '/')
+  return filepath.replaceAll(/\\+/giu, "/");
 }

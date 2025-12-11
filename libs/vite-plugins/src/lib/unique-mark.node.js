@@ -1,6 +1,6 @@
-import { execSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { execSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 /**
  * Inject a mark in a string at a specific placeholder locations like
@@ -12,11 +12,11 @@ import { join } from 'node:path'
  */
 export function injectMark(content, placeholder, mark) {
   return content
-    .replaceAll(new RegExp(`__${placeholder}__`, 'gu'), mark)
-    .replaceAll(new RegExp(`{{1,2} ?${placeholder} ?}{1,2}`, 'g'), mark)
-    .replace(new RegExp(`(<[a-z]+ .*id="${placeholder}"[^>]*>)[^<]*(</[a-z]+>)`, 'u'), `$1${mark}$2`)
-    .replace(new RegExp(`(<meta name="${placeholder}" content=")[^"]*(")`, 'u'), `$1${mark}$2`)
-    .replace(new RegExp(`(<meta content=")[^"]*(") name="${placeholder}"`, 'u'), `$1${mark}$2`)
+    .replaceAll(new RegExp(`__${placeholder}__`, "gu"), mark)
+    .replaceAll(new RegExp(`{{1,2} ?${placeholder} ?}{1,2}`, "g"), mark)
+    .replace(new RegExp(`(<[a-z]+ .*id="${placeholder}"[^>]*>)[^<]*(</[a-z]+>)`, "u"), `$1${mark}$2`)
+    .replace(new RegExp(`(<meta name="${placeholder}" content=")[^"]*(")`, "u"), `$1${mark}$2`)
+    .replace(new RegExp(`(<meta content=")[^"]*(") name="${placeholder}"`, "u"), `$1${mark}$2`);
 }
 
 /**
@@ -27,11 +27,13 @@ export function injectMark(content, placeholder, mark) {
  * @param {string} [root0.version] the version to use, if empty, will use the version from package.json
  * @returns the mark to inject, like "4.2.0 - 123abc45 - 01/01/2021 12:00:00"
  */
-export function generateMark({ commit = '', date = new Date().toISOString(), version = '' }) {
-  let finalCommit = commit
+export function generateMark({ commit = "", date = new Date().toISOString(), version = "" }) {
+  let finalCommit = commit;
   /* v8 ignore next -- @preserve */
-  if (commit === '') finalCommit = execSync('git rev-parse --short HEAD', { cwd: process.cwd() }).toString().trim() //NOSONAR
-  return `${version} - ${finalCommit} - ${date}`
+  if (commit === "") {
+    finalCommit = execSync("git rev-parse --short HEAD", { cwd: process.cwd() }).toString().trim();
+  } //NOSONAR
+  return `${version} - ${finalCommit} - ${date}`;
 }
 
 /**
@@ -44,10 +46,10 @@ export function generateMark({ commit = '', date = new Date().toISOString(), ver
  */
 export function injectMarkInAsset({ asset, fileName, mark, placeholder }) {
   // console.log(`Checking ${fileName}... hasAsset: ${!!asset}, typeof source: ${typeof asset.source}, typeof code: ${typeof asset.code}`)
-  const firstLine = fileName.endsWith('.html') ? '' : `/* ${placeholder} : ${mark} */\n`
-  const contentKey = fileName.endsWith('.js') ? 'code' : 'source'
-  const injected = `${firstLine}${injectMark(asset[contentKey], placeholder, mark)}`
-  asset[contentKey] = injected
+  const firstLine = fileName.endsWith(".html") ? "" : `/* ${placeholder} : ${mark} */\n`;
+  const contentKey = fileName.endsWith(".js") ? "code" : "source";
+  const injected = `${firstLine}${injectMark(asset[contentKey], placeholder, mark)}`;
+  asset[contentKey] = injected;
   // console.log(`Mark injected into ${fileName}`)
 }
 
@@ -58,17 +60,18 @@ export function injectMarkInAsset({ asset, fileName, mark, placeholder }) {
  * @param {string} version - The version string to include in the generated mark.
  */
 export function injectMarkInAssets(assets, placeholder, version) {
-  const mark = generateMark({ version })
-  console.log('Injecting unique mark into HTML, JS, and CSS files...')
-  const targets = Object.keys(assets).filter(fileName => fileName.endsWith('.html') || fileName.endsWith('.js') || fileName.endsWith('.css'))
-  for (const fileName of targets)
+  const mark = generateMark({ version });
+  console.log("Injecting unique mark into HTML, JS, and CSS files...");
+  const targets = Object.keys(assets).filter(fileName => fileName.endsWith(".html") || fileName.endsWith(".js") || fileName.endsWith(".css"));
+  for (const fileName of targets) {
     injectMarkInAsset({
       asset: assets[fileName],
       fileName,
       mark,
       placeholder,
-    })
-  console.log(`Mark potentially injected into ${targets.length} files`)
+    });
+  }
+  console.log(`Mark potentially injected into ${targets.length} files`);
 }
 
 /**
@@ -79,11 +82,13 @@ export function injectMarkInAssets(assets, placeholder, version) {
 /* v8 ignore next -- @preserve */
 export function getProjectVersion(projectRoot) {
   try {
-    const pkg = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'))
-    return pkg.version || ''
+    const pkg = JSON.parse(readFileSync(join(projectRoot, "package.json"), "utf8"));
+    return pkg.version || "";
   } catch (error) {
-    if (error instanceof Error) console.error('Could not read project package.json for version', error.message)
-    return ''
+    if (error instanceof Error) {
+      console.error("Could not read project package.json for version", error.message);
+    }
+    return "";
   }
 }
 
@@ -94,20 +99,20 @@ export function getProjectVersion(projectRoot) {
  * @returns {import('vite').Plugin} Vite plugin object.
  */
 export function uniqueMark(options = {}) {
-  const placeholder = options.placeholder || 'unique-mark'
-  let projectRoot = ''
-  let projectVersion = ''
+  const placeholder = options.placeholder || "unique-mark";
+  let projectRoot = "";
+  let projectVersion = "";
   return {
-    apply: 'build',
+    apply: "build",
     configResolved(config) {
-      projectRoot = config.root
-      projectVersion = getProjectVersion(projectRoot)
+      projectRoot = config.root;
+      projectVersion = getProjectVersion(projectRoot);
     },
-    enforce: 'post',
+    enforce: "post",
     generateBundle(_options, bundle) {
       // @ts-expect-error type mismatch, but we know bundle is an object with string keys
-      injectMarkInAssets(bundle, placeholder, projectVersion)
+      injectMarkInAssets(bundle, placeholder, projectVersion);
     },
-    name: 'vite-plugin-unique-mark',
-  }
+    name: "vite-plugin-unique-mark",
+  };
 }

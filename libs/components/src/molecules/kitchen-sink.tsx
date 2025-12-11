@@ -1,15 +1,15 @@
-import { useId } from 'react'
+import { useId } from "react";
 
 function ColorPaletteItem({ classes }: { classes: string }) {
   return (
     <div className={`flex flex-col justify-center text-center p-4 rounded-lg shadow-lg ${classes}`}>
-      {classes.split(' ').map(className => (
+      {classes.split(" ").map(className => (
         <div className="whitespace-nowrap" key={className}>
           {className}
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 function ColorPalette() {
@@ -51,12 +51,12 @@ function ColorPalette() {
       <ColorPaletteItem classes="bg-chart-5 text-white" />
       <ColorPaletteItem classes="bg-white border-2 border-chart-5 text-chart-5" />
     </div>
-  )
+  );
 }
 
 export function KitchenSink() {
   return (
-    <div className="flex flex-col min-h-screen" id={`kitchen-sink-${useId()}`} style={{ background: 'radial-gradient(125% 125% at 50% 10%, #fff 40%, #6366f1 100%)' }}>
+    <div className="flex flex-col min-h-screen" id={`kitchen-sink-${useId()}`} style={{ background: "radial-gradient(125% 125% at 50% 10%, #fff 40%, #6366f1 100%)" }}>
       <div className="container mx-auto prose lg:prose-lg pt-24">
         <h1>Components</h1>
         <p>This kitchen sink let you see and experiment the catalog of components and the default styles provided.</p>
@@ -91,5 +91,5 @@ export function KitchenSink() {
         <ColorPalette />
       </div>
     </div>
-  )
+  );
 }

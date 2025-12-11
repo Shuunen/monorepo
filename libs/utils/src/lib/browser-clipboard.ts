@@ -1,6 +1,6 @@
-import { consoleLog } from './browser-console.js'
-import { Result } from './result.js'
-import { ellipsis } from './strings.js'
+import { consoleLog } from "./browser-console.js";
+import { Result } from "./result.js";
+import { ellipsis } from "./strings.js";
 
 /**
  * Copy data to the clipboard
@@ -9,20 +9,22 @@ import { ellipsis } from './strings.js'
  * @returns a Result object
  */
 export async function copyToClipboard(stuff: number | Readonly<Record<string, unknown>> | readonly Readonly<Record<string, unknown>>[] | readonly string[] | string, willLog = false) {
-  let text = ''
+  let text = "";
   try {
-    text = typeof stuff === 'string' ? stuff : JSON.stringify(stuff)
+    text = typeof stuff === "string" ? stuff : JSON.stringify(stuff);
   } catch {
-    return Result.error('failed to stringify the data')
+    return Result.error("failed to stringify the data");
   }
   try {
-    if (willLog) consoleLog(`copying to clipboard : ${ellipsis(text)}`)
+    if (willLog) {
+      consoleLog(`copying to clipboard : ${ellipsis(text)}`);
+    }
     // oxlint-disable-next-line no-undef
-    await navigator.clipboard.writeText(text)
-    return Result.ok(`copied to clipboard : ${ellipsis(text)}`)
+    await navigator.clipboard.writeText(text);
+    return Result.ok(`copied to clipboard : ${ellipsis(text)}`);
   } catch {
     /* v8 ignore next -- @preserve */
-    return Result.error('clipboard not available')
+    return Result.error("clipboard not available");
   }
 }
 
@@ -35,9 +37,15 @@ export async function copyToClipboard(stuff: number | Readonly<Record<string, un
 // oxlint-disable-next-line no-undef
 export async function readClipboard(willLog = false, clipboard = navigator.clipboard) {
   /* v8 ignore next -- @preserve */
-  if (!clipboard) return Result.error('clipboard not available')
-  if (willLog) consoleLog('reading clipboard...')
-  const text = await clipboard.readText()
-  if (willLog) consoleLog(`got this text from clipboard : ${ellipsis(text)}`)
-  return Result.ok(text)
+  if (!clipboard) {
+    return Result.error("clipboard not available");
+  }
+  if (willLog) {
+    consoleLog("reading clipboard...");
+  }
+  const text = await clipboard.readText();
+  if (willLog) {
+    consoleLog(`got this text from clipboard : ${ellipsis(text)}`);
+  }
+  return Result.ok(text);
 }

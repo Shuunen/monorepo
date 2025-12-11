@@ -1,5 +1,5 @@
-import { PencilIcon } from 'lucide-react'
+import { PencilIcon } from "lucide-react";
 
 export function IconEdit({ className }: { className?: string }) {
-  return <PencilIcon className={className} />
+  return <PencilIcon className={className} />;
 }

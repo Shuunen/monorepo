@@ -8,11 +8,13 @@
  * @returns the value at the specified path
  */
 export function getNested(object: Record<string, unknown> | undefined, path: string | Array<string | number>, defaultValue?: unknown) {
-  const pathArray = typeof path === 'string' ? path.split('.') : path
-  let result: unknown = object
-  for (const key of pathArray) result = result && typeof result === 'object' ? (result as Record<string, unknown>)[key] : undefined
+  const pathArray = typeof path === "string" ? path.split(".") : path;
+  let result: unknown = object;
+  for (const key of pathArray) {
+    result = result && typeof result === "object" ? (result as Record<string, unknown>)[key] : undefined;
+  }
 
-  return result === undefined ? defaultValue : result
+  return result === undefined ? defaultValue : result;
 }
 
-export { dset as setNested } from 'dset'
+export { dset as setNested } from "dset";

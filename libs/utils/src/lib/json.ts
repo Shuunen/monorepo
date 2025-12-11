@@ -1,7 +1,7 @@
-import { objectDeserialize } from './object-serializer.js'
-import { Result } from './result.js'
+import { objectDeserialize } from "./object-serializer.js";
+import { Result } from "./result.js";
 
-const JSON_START_REGEX = /^(?:\[\s*)?\{\s*"/u
+const JSON_START_REGEX = /^(?:\[\s*)?\{\s*"/u;
 
 /**
  * Check if the given string is a JSON object
@@ -9,14 +9,16 @@ const JSON_START_REGEX = /^(?:\[\s*)?\{\s*"/u
  * @returns The parsed object or false if parsing failed
  */
 export function isJson(jsonString: string) {
-  const hasValidStart = JSON_START_REGEX.test(jsonString)
-  if (!hasValidStart) return false
-  try {
-    JSON.parse(jsonString)
-  } catch {
-    return false
+  const hasValidStart = JSON_START_REGEX.test(jsonString);
+  if (!hasValidStart) {
+    return false;
   }
-  return true
+  try {
+    JSON.parse(jsonString);
+  } catch {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -26,9 +28,9 @@ export function isJson(jsonString: string) {
  */
 export function parseJson<Type>(json: string) {
   try {
-    return Result.ok(objectDeserialize(json) as Type)
+    return Result.ok(objectDeserialize(json) as Type);
   } catch (error) {
     /* v8 ignore next -- @preserve */
-    return Result.error(`Invalid JSON string: ${error instanceof Error ? error.message : String(error)}`)
+    return Result.error(`Invalid JSON string: ${error instanceof Error ? error.message : String(error)}`);
   }
 }

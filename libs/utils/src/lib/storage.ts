@@ -1,10 +1,10 @@
-import { parseJson } from './json.js'
+import { parseJson } from "./json.js";
 
-function get(key: string, defaultValue: string): string
-function get(key: string, defaultValue: boolean): boolean
-function get(key: string, defaultValue: number): number
-function get<Type = unknown>(_key: string, _defaultValue: Type): Type
-function get<Type = unknown>(key: string): Type | undefined
+function get(key: string, defaultValue: string): string;
+function get(key: string, defaultValue: boolean): boolean;
+function get(key: string, defaultValue: number): number;
+function get<Type = unknown>(_key: string, _defaultValue: Type): Type;
+function get<Type = unknown>(key: string): Type | undefined;
 
 /**
  * Get a value from the storage media
@@ -13,12 +13,16 @@ function get<Type = unknown>(key: string): Type | undefined
  * @returns The value or defaultValue if not found
  */
 function get<Type = unknown>(key: string, defaultValue?: Type) {
-  const path = storage.prefix + key
-  const data = storage.media[path] // don't use getItem because it's not supported by all browsers or in memory object storage
-  if (data === undefined || data === null || data === '') return defaultValue
-  const result = parseJson<Type>(data)
-  if (!result.ok) return data as Type // TODO: wait... what ?!
-  return result.value
+  const path = storage.prefix + key;
+  const data = storage.media[path]; // don't use getItem because it's not supported by all browsers or in memory object storage
+  if (data === undefined || data === null || data === "") {
+    return defaultValue;
+  }
+  const result = parseJson<Type>(data);
+  if (!result.ok) {
+    return data as Type;
+  } // TODO: wait... what ?!
+  return result.value;
 }
 
 /**
@@ -28,10 +32,10 @@ function get<Type = unknown>(key: string, defaultValue?: Type) {
  * @returns The given value
  */
 function set<Type>(key: string, data: Type) {
-  const path = storage.prefix + key
-  const value = typeof data === 'string' ? data : JSON.stringify(data)
-  Reflect.set(storage.media, path, value)
-  return data
+  const path = storage.prefix + key;
+  const value = typeof data === "string" ? data : JSON.stringify(data);
+  Reflect.set(storage.media, path, value);
+  return data;
 }
 
 /**
@@ -40,7 +44,7 @@ function set<Type>(key: string, data: Type) {
  * @returns true if storage has a value for the given key
  */
 function has(key: string) {
-  return get(key) !== undefined
+  return get(key) !== undefined;
 }
 
 /**
@@ -48,18 +52,18 @@ function has(key: string) {
  * @param key The key of the value to remove
  */
 function clear(key: string) {
-  const path = storage.prefix + key
+  const path = storage.prefix + key;
   // oxlint-disable-next-line no-dynamic-delete
-  delete storage.media[path]
+  delete storage.media[path];
 }
 
 export const storage = {
   clear,
   get,
   has,
-  media: /* v8 ignore next */ typeof localStorage === 'undefined' ? ({} as Storage) : localStorage,
-  prefix: '', // prefix all keys in the storage with a custom string
+  media: /* v8 ignore next */ typeof localStorage === "undefined" ? ({} as Storage) : localStorage,
+  prefix: "", // prefix all keys in the storage with a custom string
   set,
-}
+};
 
-export type ShuutilsStorage = typeof storage
+export type ShuutilsStorage = typeof storage;

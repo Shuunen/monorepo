@@ -1,20 +1,20 @@
 // oxlint-disable max-lines
-import { zodResolver } from '@hookform/resolvers/zod'
-import { cn } from '@monorepo/utils'
-import { Link } from '@tanstack/react-router'
-import { debounce } from 'es-toolkit'
-import { useEffect, useMemo, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
-import { Button } from '../atoms/button'
-import { Form } from '../atoms/form'
-import { IconHome } from '../icons/icon-home'
-import type { AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps } from './auto-form.types'
-import { defaultIcons, defaultLabels, filterSchema, getFieldMetadata, getStepMetadata, mapExternalDataToFormFields, normalizeData } from './auto-form.utils'
-import { AutoFormFields } from './auto-form-fields'
-import { AutoFormNavigation } from './auto-form-navigation'
-import { AutoFormStepper } from './auto-form-stepper'
-import { AutoFormSubmissionStep } from './auto-form-submission-step'
-import { AutoFormSummaryStep } from './auto-form-summary-step'
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "@monorepo/utils";
+import { Link } from "@tanstack/react-router";
+import { debounce } from "es-toolkit";
+import { useEffect, useMemo, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { Button } from "../atoms/button";
+import { Form } from "../atoms/form";
+import { IconHome } from "../icons/icon-home";
+import type { AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps } from "./auto-form.types";
+import { defaultIcons, defaultLabels, filterSchema, getFieldMetadata, getStepMetadata, mapExternalDataToFormFields, normalizeData } from "./auto-form.utils";
+import { AutoFormFields } from "./auto-form-fields";
+import { AutoFormNavigation } from "./auto-form-navigation";
+import { AutoFormStepper } from "./auto-form-stepper";
+import { AutoFormSubmissionStep } from "./auto-form-submission-step";
+import { AutoFormSummaryStep } from "./auto-form-summary-step";
 
 // run this command to check e2e tests `nx run components:test-storybook --skip-nx-cache` and run this command to check unit tests `nx run components:test --skip-nx-cache`
 
@@ -43,54 +43,60 @@ import { AutoFormSummaryStep } from './auto-form-summary-step'
  * @returns the AutoForm component
  */
 // oxlint-disable-next-line max-lines-per-function
-export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, showLastStep = false, showMenu, size = 'medium', labels, stepperWidth }: AutoFormProps) {
-  const [currentStep, setCurrentStep] = useState(showLastStep ? schemas.length - 1 : 0)
-  const [showSummary, setShowSummary] = useState(false)
-  const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined)
+export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, showLastStep = false, showMenu, size = "medium", labels, stepperWidth }: AutoFormProps) {
+  const [currentStep, setCurrentStep] = useState(showLastStep ? schemas.length - 1 : 0);
+  const [showSummary, setShowSummary] = useState(false);
+  const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined);
   const defaultValues = useMemo(() => {
-    const allMappedData: Record<string, unknown> = {}
+    const allMappedData: Record<string, unknown> = {};
     for (const schema of schemas) {
-      const schemaMappedData = mapExternalDataToFormFields(schema, initialData)
-      Object.assign(allMappedData, schemaMappedData)
+      const schemaMappedData = mapExternalDataToFormFields(schema, initialData);
+      Object.assign(allMappedData, schemaMappedData);
     }
-    return allMappedData
-  }, [schemas, initialData])
-  const [formData, setFormData] = useState<Record<string, unknown>>(defaultValues)
-  const currentSchema = schemas[currentStep]
-  const isLastStep = currentStep === schemas.length - 1
-  const finalLabels = { ...defaultLabels, ...labels }
-  const form = useForm({ defaultValues, mode: 'onBlur', resolver: zodResolver(filterSchema(currentSchema, formData)) })
+    return allMappedData;
+  }, [schemas, initialData]);
+  const [formData, setFormData] = useState<Record<string, unknown>>(defaultValues);
+  const currentSchema = schemas[currentStep];
+  const isLastStep = currentStep === schemas.length - 1;
+  const finalLabels = { ...defaultLabels, ...labels };
+  const form = useForm({ defaultValues, mode: "onBlur", resolver: zodResolver(filterSchema(currentSchema, formData)) });
   // Find a way to reset the form when schema changes.
   // useEffect(() => { form.reset(formData) }, [formData, form])
   // Watch all form values and sync with formData
-  const watchedValues = useWatch({ control: form.control })
+  const watchedValues = useWatch({ control: form.control });
   // biome-ignore lint/correctness/useExhaustiveDependencies: cannot add all dependencies because it causes infinite loop
   useEffect(() => {
-    if (!watchedValues) return
-    void updateFormData()
-  }, [watchedValues])
+    if (!watchedValues) {
+      return;
+    }
+    void updateFormData();
+  }, [watchedValues]);
   /**
    * Update form data state and call onChange callback if provided
    */
   function updateFormDataSync() {
-    const updatedData = { ...formData, ...form.getValues() }
-    logger?.info('updateFormData', updatedData)
-    setFormData(updatedData)
-    if (onChange) onChange(normalizeData(schemas, updatedData))
+    const updatedData = { ...formData, ...form.getValues() };
+    logger?.info("updateFormData", updatedData);
+    setFormData(updatedData);
+    if (onChange) {
+      onChange(normalizeData(schemas, updatedData));
+    }
   }
-  const updateFormData = debounce(updateFormDataSync, 1)
+  const updateFormData = debounce(updateFormDataSync, 1);
   /**
    * Handle submission for the current step of a multi-step form
    * @param data partial form values for the current step as a Record<string, unknown>
    * @returns void
    */
   function handleStepSubmit() {
-    logger?.info('Step form submitted')
-    if (isLastStep && useSummaryStep) setShowSummary(true)
-    else if (isLastStep) void handleFinalSubmit()
-    else {
-      setCurrentStep(prev => prev + 1)
-      updateFormData()
+    logger?.info("Step form submitted");
+    if (isLastStep && useSummaryStep) {
+      setShowSummary(true);
+    } else if (isLastStep) {
+      void handleFinalSubmit();
+    } else {
+      setCurrentStep(prev => prev + 1);
+      updateFormData();
     }
   }
   /**
@@ -98,45 +104,63 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
    * @param data the complete form data
    */
   async function handleFinalSubmit() {
-    if (!onSubmit) return
-    const cleanedData = normalizeData(schemas, { ...formData, ...form.getValues() })
-    logger?.info('Final form submitted', cleanedData)
-    const result = await onSubmit(cleanedData)
-    if (useSubmissionStep) setSubmissionProps(result.submission)
+    if (!onSubmit) {
+      return;
+    }
+    const cleanedData = normalizeData(schemas, { ...formData, ...form.getValues() });
+    logger?.info("Final form submitted", cleanedData);
+    const result = await onSubmit(cleanedData);
+    if (useSubmissionStep) {
+      setSubmissionProps(result.submission);
+    }
   }
   // Handle back button
   function handleBack() {
-    if (submissionProps) setSubmissionProps(undefined)
-    else if (showSummary) setShowSummary(false)
-    else if (currentStep > 0) setCurrentStep(prev => prev - 1)
+    if (submissionProps) {
+      setSubmissionProps(undefined);
+    } else if (showSummary) {
+      setShowSummary(false);
+    } else if (currentStep > 0) {
+      setCurrentStep(prev => prev - 1);
+    }
   }
   /**
    * Handle step click
    * @param stepIndex the step index
    */
   function handleStepClick(stepIndex: number) {
-    if (submissionProps && (submissionProps.status === 'success' || submissionProps.status === 'warning')) return
-    if (submissionProps) setSubmissionProps(undefined)
-    if (showSummary) setShowSummary(false)
-    setCurrentStep(stepIndex)
+    if (submissionProps && (submissionProps.status === "success" || submissionProps.status === "warning")) {
+      return;
+    }
+    if (submissionProps) {
+      setSubmissionProps(undefined);
+    }
+    if (showSummary) {
+      setShowSummary(false);
+    }
+    setCurrentStep(stepIndex);
   }
   // Step states and icons
-  let lastSection = '' as AutoFormStepMetadata['section']
+  let lastSection = "" as AutoFormStepMetadata["section"];
   const steps = schemas.map((schema, idx) => {
-    const { title = `Step ${idx + 1}`, subtitle, suffix, section: currentSection } = getStepMetadata(schema) ?? {}
-    const section = currentSection !== lastSection && currentSection ? currentSection : undefined
-    lastSection = currentSection
+    const { title = `Step ${idx + 1}`, subtitle, suffix, section: currentSection } = getStepMetadata(schema) ?? {};
+    const section = currentSection !== lastSection && currentSection ? currentSection : undefined;
+    lastSection = currentSection;
     const allReadonly = Object.values(schema.shape).every(fieldSchema => {
-      const meta = getFieldMetadata(fieldSchema)
-      if (!meta) return true
-      if ('state' in meta && meta.state) return meta.state === 'readonly'
-      return false
-    })
-    const filtered = filterSchema(schema, formData)
-    const isSuccess = filtered.safeParse(formData).success
+      const meta = getFieldMetadata(fieldSchema);
+      if (!meta) {
+        return true;
+      }
+      if ("state" in meta && meta.state) {
+        return meta.state === "readonly";
+      }
+      return false;
+    });
+    const filtered = filterSchema(schema, formData);
+    const isSuccess = filtered.safeParse(formData).success;
     /* oxlint-disable no-nested-ternary */
-    const state = allReadonly ? ('readonly' as const) : isSuccess ? ('success' as const) : ('editable' as const)
-    const icon = allReadonly ? defaultIcons.readonly : isSuccess ? defaultIcons.success : defaultIcons.edit
+    const state = allReadonly ? ("readonly" as const) : isSuccess ? ("success" as const) : ("editable" as const);
+    const icon = allReadonly ? defaultIcons.readonly : isSuccess ? defaultIcons.success : defaultIcons.edit;
     /* oxlint-enable no-nested-ternary */
     return {
       active: idx === currentStep,
@@ -147,17 +171,19 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
       subtitle,
       suffix,
       title,
-    }
-  })
+    };
+  });
   // Get current step title for rendering above fields
-  const currentStepTitle = getStepMetadata(currentSchema)?.title
-  const stepTitle = typeof currentStepTitle === 'string' ? currentStepTitle : ''
-  const isStepperDisabled = submissionProps?.status === 'success'
-  const shouldShowStepper = showMenu === undefined ? schemas.length > 1 : showMenu
+  const currentStepTitle = getStepMetadata(currentSchema)?.title;
+  const stepTitle = typeof currentStepTitle === "string" ? currentStepTitle : "";
+  const isStepperDisabled = submissionProps?.status === "success";
+  const shouldShowStepper = showMenu === undefined ? schemas.length > 1 : showMenu;
   function renderSubmissionContent() {
-    if (!submissionProps) return
-    const showBackButton = submissionProps.status === 'error' || submissionProps.status === 'unknown-error'
-    const showHomeButton = submissionProps.status === 'success' || submissionProps.status === 'warning'
+    if (!submissionProps) {
+      return;
+    }
+    const showBackButton = submissionProps.status === "error" || submissionProps.status === "unknown-error";
+    const showHomeButton = submissionProps.status === "success" || submissionProps.status === "warning";
     return (
       <>
         <AutoFormSubmissionStep {...submissionProps} />
@@ -172,7 +198,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
           </div>
         )}
       </>
-    )
+    );
   }
   function renderSummaryContent() {
     return (
@@ -183,12 +209,12 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
           leftButton={{ onClick: handleBack }}
           rightButton={{
             label: finalLabels.summaryStepButton,
-            name: 'summary-proceed',
+            name: "summary-proceed",
             onClick: handleFinalSubmit,
           }}
         />
       </>
-    )
+    );
   }
   function renderFormContent() {
     return (
@@ -202,32 +228,36 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
               isLastStep
                 ? {
                     label: finalLabels.lastStepButton,
-                    name: 'last-step-submit',
-                    type: 'submit',
+                    name: "last-step-submit",
+                    type: "submit",
                   }
-                : { label: finalLabels.nextStep, name: 'step-next', type: 'submit' }
+                : { label: finalLabels.nextStep, name: "step-next", type: "submit" }
             }
           />
         </form>
       </Form>
-    )
+    );
   }
   function renderContent() {
-    if (submissionProps) return renderSubmissionContent()
-    if (showSummary) return renderSummaryContent()
-    return renderFormContent()
+    if (submissionProps) {
+      return renderSubmissionContent();
+    }
+    if (showSummary) {
+      return renderSummaryContent();
+    }
+    return renderFormContent();
   }
   return (
     <div
-      className={cn('mx-auto w-full flex', {
-        'min-w-3xl': size === 'medium',
-        'min-w-5xl': size === 'large',
-        'min-w-xl': size === 'small',
-        'p-6 bg-white rounded-lg shadow-md': showCard,
+      className={cn("mx-auto w-full flex", {
+        "min-w-3xl": size === "medium",
+        "min-w-5xl": size === "large",
+        "min-w-xl": size === "small",
+        "p-6 bg-white rounded-lg shadow-md": showCard,
       })}
     >
       {shouldShowStepper && <AutoFormStepper disabled={isStepperDisabled} onStepClick={handleStepClick} steps={steps} width={stepperWidth} />}
       <div className="flex-1 overflow-hidden">{renderContent()}</div>
     </div>
-  )
+  );
 }

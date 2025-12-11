@@ -1,11 +1,11 @@
-import { Alert } from '../atoms/alert'
+import { Alert } from "../atoms/alert";
 
 type LandingProps = {
-  children?: React.ReactNode
-  title: string
-  subtitle: string
-  status?: string
-}
+  children?: React.ReactNode;
+  title: string;
+  subtitle: string;
+  status?: string;
+};
 
 export function Landing({ children, title, subtitle, status }: LandingProps) {
   return (
@@ -20,5 +20,5 @@ export function Landing({ children, title, subtitle, status }: LandingProps) {
         {children}
       </div>
     </div>
-  )
+  );
 }

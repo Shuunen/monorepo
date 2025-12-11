@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, within } from 'storybook/test'
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "storybook/test";
 
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from './pagination'
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./pagination";
 
 /**
  * Pagination with page navigation, next and previous links.
@@ -10,7 +10,7 @@ const meta = {
   argTypes: {},
   component: Pagination,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
   render: args => (
     <Pagination {...args}>
@@ -36,41 +36,41 @@ const meta = {
       </PaginationContent>
     </Pagination>
   ),
-  tags: ['autodocs'],
-  title: 'Commons/Atoms/Pagination',
-} satisfies Meta<typeof Pagination>
+  tags: ["autodocs"],
+  title: "Commons/Atoms/Pagination",
+} satisfies Meta<typeof Pagination>;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 /**
  * The default form of the pagination.
  */
 export const Default: Story = {
   play: ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = within(canvasElement);
 
     // Previous / Next links (Radix-based: sr-only text "Previous" / "Next")
-    const previousLink = canvas.getByRole('link', { name: /previous/i })
-    const nextLink = canvas.getByRole('link', { name: /next/i })
+    const previousLink = canvas.getByRole("link", { name: /previous/i });
+    const nextLink = canvas.getByRole("link", { name: /next/i });
 
-    expect(previousLink).toBeInTheDocument()
-    expect(nextLink).toBeInTheDocument()
-    expect(previousLink).toHaveAttribute('href', '#')
-    expect(nextLink).toHaveAttribute('href', '#')
+    expect(previousLink).toBeInTheDocument();
+    expect(nextLink).toBeInTheDocument();
+    expect(previousLink).toHaveAttribute("href", "#");
+    expect(nextLink).toHaveAttribute("href", "#");
 
     // Page number links
-    const page1 = canvas.getByRole('link', { name: '1' })
-    const page2 = canvas.getByRole('link', { name: '2' })
-    const page3 = canvas.getByRole('link', { name: '3' })
+    const page1 = canvas.getByRole("link", { name: "1" });
+    const page2 = canvas.getByRole("link", { name: "2" });
+    const page3 = canvas.getByRole("link", { name: "3" });
 
-    expect(page1).toBeInTheDocument()
-    expect(page2).toBeInTheDocument()
-    expect(page3).toBeInTheDocument()
+    expect(page1).toBeInTheDocument();
+    expect(page2).toBeInTheDocument();
+    expect(page3).toBeInTheDocument();
 
-    expect(page1).toHaveAttribute('href', '#')
-    expect(page2).toHaveAttribute('href', '#')
-    expect(page3).toHaveAttribute('href', '#')
+    expect(page1).toHaveAttribute("href", "#");
+    expect(page2).toHaveAttribute("href", "#");
+    expect(page3).toHaveAttribute("href", "#");
   },
-}
+};

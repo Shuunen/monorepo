@@ -1,5 +1,5 @@
-import { CircleX } from 'lucide-react'
+import { CircleX } from "lucide-react";
 
 export function IconReject({ className }: { className?: string }) {
-  return <CircleX className={className} />
+  return <CircleX className={className} />;
 }

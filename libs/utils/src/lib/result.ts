@@ -2,64 +2,64 @@
 // I had to get sources from https://github.com/johannschopplich/resultx/blob/main/src/index.ts to be able to have a cjs working version of the library
 // oxlint-disable max-classes-per-file, consistent-type-definitions, curly, sort-keys, id-length
 
-type Result<T, E> = Ok<T> | Err<E>
+type Result<T, E> = Ok<T> | Err<E>;
 
 interface UnwrappedOk<T> {
-  value: T
-  error: undefined
+  value: T;
+  error: undefined;
 }
 interface UnwrappedErr<E> {
-  value: undefined
-  error: E
+  value: undefined;
+  error: E;
 }
 
-export type UnwrappedResult<T, E> = UnwrappedOk<T> | UnwrappedErr<E>
+export type UnwrappedResult<T, E> = UnwrappedOk<T> | UnwrappedErr<E>;
 
 class Ok<T> {
-  readonly value: T
-  readonly ok = true
+  readonly value: T;
+  readonly ok = true;
   constructor(value: T) {
-    this.value = value
+    this.value = value;
   }
 }
 
 class Err<E> {
-  readonly error: E
-  readonly ok = false
+  readonly error: E;
+  readonly ok = false;
   constructor(error: E) {
-    this.error = error
+    this.error = error;
   }
 }
 
 function ok<T>(value: T): Ok<T> {
-  return new Ok(value)
+  return new Ok(value);
 }
 
-function err<E extends string = string>(error: E): Err<E>
-function err<E = unknown>(error: E): Err<E>
+function err<E extends string = string>(error: E): Err<E>;
+function err<E = unknown>(error: E): Err<E>;
 function err<E = unknown>(error: E): Err<E> {
-  return new Err(error)
+  return new Err(error);
 }
 
-function trySafe<T, E = unknown>(fn: () => T): Result<T, E>
-function trySafe<T, E = unknown>(promise: Promise<T>): Promise<Result<T, E>>
+function trySafe<T, E = unknown>(fn: () => T): Result<T, E>;
+function trySafe<T, E = unknown>(promise: Promise<T>): Promise<Result<T, E>>;
 function trySafe<T, E = unknown>(fnOrPromise: (() => T) | Promise<T>): Result<T, E> | Promise<Result<T, E>> {
   if (fnOrPromise instanceof Promise) {
-    return fnOrPromise.then(ok).catch(err as (error: unknown) => Err<E>)
+    return fnOrPromise.then(ok).catch(err as (error: unknown) => Err<E>);
   }
 
   try {
-    return ok(fnOrPromise())
+    return ok(fnOrPromise());
   } catch (error) {
-    return err(error as E)
+    return err(error as E);
   }
 }
 
-function unwrap<T>(result: Ok<T>): UnwrappedOk<T>
-function unwrap<E>(result: Err<E>): UnwrappedErr<E>
-function unwrap<T, E>(result: Result<T, E>): UnwrappedResult<T, E>
+function unwrap<T>(result: Ok<T>): UnwrappedOk<T>;
+function unwrap<E>(result: Err<E>): UnwrappedErr<E>;
+function unwrap<T, E>(result: Result<T, E>): UnwrappedResult<T, E>;
 function unwrap<T, E>(result: Result<T, E>): UnwrappedResult<T, E> {
-  return result.ok ? { error: undefined, value: result.value } : { error: result.error, value: undefined }
+  return result.ok ? { error: undefined, value: result.value } : { error: result.error, value: undefined };
 }
 
 /**
@@ -97,7 +97,7 @@ export const Result = {
    * const { value, error } = Result.unwrap(result); // value: undefined // error: "SyntaxError..."
    */
   unwrap,
-}
+};
 
 // oxlint-disable-next-line id-length
-export type ResultType<T, E> = Result<T, E>
+export type ResultType<T, E> = Result<T, E>;

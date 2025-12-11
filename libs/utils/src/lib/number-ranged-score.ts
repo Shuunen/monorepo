@@ -1,4 +1,4 @@
-import { round } from './number-round.js'
+import { round } from "./number-round.js";
 
 /**
  * Get a ranged score
@@ -12,13 +12,17 @@ import { round } from './number-round.js'
  * @returns the ranged score
  */
 export function rangedScore({ isHigherBetter, scoreMax, scoreMin, valueMax, valueMin }: Readonly<{ isHigherBetter: boolean; scoreMax: number; scoreMin: number; valueMax: number; valueMin: number }>, value: number) {
-  const lineA = (scoreMin - scoreMax) / (valueMin - valueMax)
-  const lineB = scoreMax - valueMax * lineA
-  const score = value * lineA + lineB
-  if (score < scoreMin) return isHigherBetter ? scoreMin : scoreMax
-  if (score > scoreMax) return isHigherBetter ? scoreMax : scoreMin
+  const lineA = (scoreMin - scoreMax) / (valueMin - valueMax);
+  const lineB = scoreMax - valueMax * lineA;
+  const score = value * lineA + lineB;
+  if (score < scoreMin) {
+    return isHigherBetter ? scoreMin : scoreMax;
+  }
+  if (score > scoreMax) {
+    return isHigherBetter ? scoreMax : scoreMin;
+  }
   // oxlint-disable-next-line no-magic-numbers
-  const nbDecimals = scoreMax - scoreMin > 10 ? 0 : 2
-  const finalScore = isHigherBetter ? score : scoreMax - score
-  return round(finalScore, nbDecimals)
+  const nbDecimals = scoreMax - scoreMin > 10 ? 0 : 2;
+  const finalScore = isHigherBetter ? score : scoreMax - score;
+  return round(finalScore, nbDecimals);
 }

@@ -1,5 +1,5 @@
-import { CircleCheckBig } from 'lucide-react'
+import { CircleCheckBig } from "lucide-react";
 
 export function IconCircleCheck() {
-  return <CircleCheckBig />
+  return <CircleCheckBig />;
 }

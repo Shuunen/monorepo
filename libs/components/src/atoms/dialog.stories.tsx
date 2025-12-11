@@ -1,24 +1,24 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { useState } from 'react'
-import { expect, screen, within } from 'storybook/test'
-import { Button } from './button'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger } from './dialog'
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
+import { expect, screen, within } from "storybook/test";
+import { Button } from "./button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger } from "./dialog";
 
 const meta = {
   component: Dialog,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
-  title: 'Commons/Atoms/Dialog',
-} satisfies Meta<typeof Dialog>
+  tags: ["autodocs"],
+  title: "Commons/Atoms/Dialog",
+} satisfies Meta<typeof Dialog>;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 const DialogExample = () => {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(true);
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
@@ -43,24 +43,24 @@ const DialogExample = () => {
         </DialogContent>
       </DialogPortal>
     </Dialog>
-  )
-}
+  );
+};
 
 export const Default: Story = {
   // Basic tests only
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = within(canvasElement);
 
     // Trigger button is inside the canvas
-    const openButton = canvas.getByTestId('open-dialog')
-    expect(openButton).toBeInTheDocument()
+    const openButton = canvas.getByTestId("open-dialog");
+    expect(openButton).toBeInTheDocument();
 
     // Dialog content is rendered in a portal: use `screen`
-    const title = await screen.findByText(/dialog title/i)
-    const description = screen.getByText(/this is a dialog description/i)
+    const title = await screen.findByText(/dialog title/i);
+    const description = screen.getByText(/this is a dialog description/i);
 
-    expect(title).toBeVisible()
-    expect(description).toBeVisible()
+    expect(title).toBeVisible();
+    expect(description).toBeVisible();
   },
   render: () => <DialogExample />,
-}
+};

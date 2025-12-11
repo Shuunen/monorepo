@@ -1,5 +1,5 @@
-import { objectDeserialize, objectSerialize } from './object-serializer.js'
-import type { Mutable } from './types.js'
+import { objectDeserialize, objectSerialize } from "./object-serializer.js";
+import type { Mutable } from "./types.js";
 
 /**
  * Return a deep copy of an object or array
@@ -8,8 +8,8 @@ import type { Mutable } from './types.js'
  */
 export function clone<Type>(object: Readonly<Type>) {
   try {
-    return structuredClone(object) as Mutable<Type>
+    return structuredClone(object) as Mutable<Type>;
   } catch {
-    return objectDeserialize(objectSerialize(object)) as Mutable<Type>
+    return objectDeserialize(objectSerialize(object)) as Mutable<Type>;
   }
 }

@@ -6,9 +6,11 @@
 export function hasOption(name: string) {
   /* v8 ignore next 4 -- @preserve */
   // could be nice to check for environment variables too
-  if (typeof process === 'undefined') return false
+  if (typeof process === "undefined") {
+    return false;
+  }
   // oxlint-disable-next-line no-undef
-  return (process.argv ?? []).includes(`--${name}`) || (process.env?.[name] ?? '').toString() === 'true'
+  return (process.argv ?? []).includes(`--${name}`) || (process.env?.[name] ?? "").toString() === "true";
 }
 
 /**
@@ -16,5 +18,5 @@ export function hasOption(name: string) {
  * @returns true if the verbose option is present
  */
 export function isVerbose() {
-  return hasOption('v') || hasOption('verbose') || hasOption('VERBOSE') || hasOption('debug') || hasOption('DEBUG')
+  return hasOption("v") || hasOption("verbose") || hasOption("VERBOSE") || hasOption("debug") || hasOption("DEBUG");
 }

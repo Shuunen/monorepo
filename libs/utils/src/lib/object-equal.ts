@@ -1,4 +1,4 @@
-import { objectSerialize } from './object-serializer.js'
+import { objectSerialize } from "./object-serializer.js";
 
 /**
  * Check if two objects are deeply equal
@@ -8,5 +8,5 @@ import { objectSerialize } from './object-serializer.js'
  * @returns true if the two objects are deeply equal
  */
 export function objectEqual(objectA: Readonly<Record<string, unknown>>, objectB: Readonly<Record<string, unknown>>, willSortKeys = false) {
-  return objectSerialize(objectA, willSortKeys) === objectSerialize(objectB, willSortKeys)
+  return objectSerialize(objectA, willSortKeys) === objectSerialize(objectB, willSortKeys);
 }

@@ -1,13 +1,13 @@
 // oxlint-disable max-lines
-import { consoleLog } from './browser-console.js'
-import { toastError, toastInfo, toastSuccess } from './browser-toast.js'
-import { bgGreen, bgRed, blue, cyan, gray, green, red, yellow } from './colors.js'
-import { nbFourth, nbSpacesIndent } from './constants.js'
-import { readableTime } from './date-readable-time.js'
-import { formatDate } from './dates.js'
-import { isBrowserEnvironment } from './environment.js'
-import { isVerbose } from './flags.js'
-import type { ResultType } from './result.js'
+import { consoleLog } from "./browser-console.js";
+import { toastError, toastInfo, toastSuccess } from "./browser-toast.js";
+import { bgGreen, bgRed, blue, cyan, gray, green, red, yellow } from "./colors.js";
+import { nbFourth, nbSpacesIndent } from "./constants.js";
+import { readableTime } from "./date-readable-time.js";
+import { formatDate } from "./dates.js";
+import { isBrowserEnvironment } from "./environment.js";
+import { isVerbose } from "./flags.js";
+import type { ResultType } from "./result.js";
 
 /**
  * Clean stuff to log
@@ -20,54 +20,54 @@ function clean(...stuff: Readonly<unknown[]>) {
   const ansiEscapeRegex = new RegExp(
     // oxlint-disable-next-line no-magic-numbers
     `[${String.fromCodePoint(0x1b)}${String.fromCodePoint(0x9b)}][#();?[]*(?:\\d{1,4}(?:;\\d{0,4})*)?[\\d<=>A-ORZcf-nqry]`,
-    'gu',
-  )
+    "gu",
+  );
   return stuff
-    .map(thing => (typeof thing === 'object' ? JSON.stringify(thing) : String(thing)))
-    .join(' ')
-    .replaceAll(ansiEscapeRegex, '')
-    .replaceAll('"', "'")
+    .map(thing => (typeof thing === "object" ? JSON.stringify(thing) : String(thing)))
+    .join(" ")
+    .replaceAll(ansiEscapeRegex, "")
+    .replaceAll('"', "'");
 }
 
-type LogLevel = '1-debug' | '2-test' | '3-info' | '4-fix' | '5-warn' | '6-good' | '7-error'
+type LogLevel = "1-debug" | "2-test" | "3-info" | "4-fix" | "5-warn" | "6-good" | "7-error";
 
 export type LoggerOptions = {
   /**
    * If the logger is active, when false, no logs will be output
    * @default true
    */
-  isActive: boolean
+  isActive: boolean;
   /**
    * The minimum log level to output
    * @default '3-info' or '1-debug' if verbose mode is active
    */
-  minimumLevel: LogLevel
+  minimumLevel: LogLevel;
   /**
    * Will log the date in the format yyyy-MM-dd, example "2023-10-01"
    * @default false
    */
-  willLogDate: boolean
+  willLogDate: boolean;
   /**
    * Will log the delay since the last log, example "+12ms"
    * @default true
    */
-  willLogDelay: boolean
+  willLogDelay: boolean;
   /**
    * Will log the time in the format "HH:mm:ss", example "12:34:56"
    * @default false
    */
-  willLogTime: boolean
+  willLogTime: boolean;
   /**
    * Will output the logs to the global console instance
    * @default true
    */
-  willOutputToConsole: boolean
+  willOutputToConsole: boolean;
   /**
    * Will output the logs to the logger.inMemoryLogs array
    * @default false
    */
-  willOutputToMemory: boolean
-}
+  willOutputToMemory: boolean;
+};
 
 /**
  * Logger class
@@ -75,36 +75,38 @@ export type LoggerOptions = {
  * @example const logger = new Logger({ isActive: false, minimumLevel: '3-info', willLogDate: false, willLogDelay: true, willLogTime: false, willOutputToConsole: true, willOutputToMemory: false })
  */
 export class Logger {
-  #lastLogTimestamp = 0
+  #lastLogTimestamp = 0;
 
-  readonly #levels: LogLevel[] = ['1-debug', '2-test', '3-info', '4-fix', '5-warn', '6-good', '7-error']
+  readonly #levels: LogLevel[] = ["1-debug", "2-test", "3-info", "4-fix", "5-warn", "6-good", "7-error"];
 
-  readonly #padding: number
+  readonly #padding: number;
 
-  readonly #padStart = 7
+  readonly #padStart = 7;
 
-  public clean = clean
+  public clean = clean;
 
-  public inMemoryLogs: string[] = []
+  public inMemoryLogs: string[] = [];
 
   public options: LoggerOptions = {
     isActive: true,
     /* v8 ignore next -- @preserve */
-    minimumLevel: isVerbose() ? '1-debug' : '3-info',
+    minimumLevel: isVerbose() ? "1-debug" : "3-info",
     willLogDate: false,
     willLogDelay: true,
     willLogTime: false,
     willOutputToConsole: true,
     willOutputToMemory: false,
-  }
+  };
 
   /**
    * Create a new Logger instance
    * @param options optional, LoggerOptions
    */
   public constructor(options?: Readonly<Partial<LoggerOptions>>) {
-    if (options) this.options = { ...this.options, ...options }
-    this.#padding = Math.max(...this.#levels.map(key => key.length - nbSpacesIndent))
+    if (options) {
+      this.options = { ...this.options, ...options };
+    }
+    this.#padding = Math.max(...this.#levels.map(key => key.length - nbSpacesIndent));
   }
 
   /**
@@ -112,14 +114,14 @@ export class Logger {
    * @returns the delay like "+12ms"
    */
   private __getDelay() {
-    const now = Date.now()
+    const now = Date.now();
     if (this.#lastLogTimestamp === 0) {
-      this.#lastLogTimestamp = now
-      return gray('init'.padStart(this.#padStart))
+      this.#lastLogTimestamp = now;
+      return gray("init".padStart(this.#padStart));
     }
-    const delay = now - this.#lastLogTimestamp
-    this.#lastLogTimestamp = now
-    return gray(`+${readableTime(delay, false)}`.padStart(this.#padStart))
+    const delay = now - this.#lastLogTimestamp;
+    this.#lastLogTimestamp = now;
+    return gray(`+${readableTime(delay, false)}`.padStart(this.#padStart));
   }
 
   /**
@@ -128,12 +130,22 @@ export class Logger {
    * @param stuff the things to log
    */
   private __log(prefix: string, stuff: Readonly<unknown[]>) {
-    const prefixes = [prefix]
-    if (this.options.willLogTime) prefixes.unshift(formatDate(new Date(), 'HH:mm:ss'))
-    if (this.options.willLogDate) prefixes.unshift(formatDate(new Date(), 'yyyy-MM-dd'))
-    if (this.options.willLogDelay) prefixes.unshift(this.__getDelay())
-    if (this.options.willOutputToConsole) consoleLog(prefixes.join(' '), ...stuff)
-    if (this.options.willOutputToMemory) this.addToMemoryLogs(...prefixes, ...stuff)
+    const prefixes = [prefix];
+    if (this.options.willLogTime) {
+      prefixes.unshift(formatDate(new Date(), "HH:mm:ss"));
+    }
+    if (this.options.willLogDate) {
+      prefixes.unshift(formatDate(new Date(), "yyyy-MM-dd"));
+    }
+    if (this.options.willLogDelay) {
+      prefixes.unshift(this.__getDelay());
+    }
+    if (this.options.willOutputToConsole) {
+      consoleLog(prefixes.join(" "), ...stuff);
+    }
+    if (this.options.willOutputToMemory) {
+      this.addToMemoryLogs(...prefixes, ...stuff);
+    }
   }
 
   /**
@@ -146,8 +158,10 @@ export class Logger {
    */
   // oxlint-disable-next-line max-params
   private __logIf(prefix: string, level: LogLevel, stuff: Readonly<unknown[]>, color: (string_: string) => string) {
-    if (!this.__shouldLog(level)) return
-    this.__log(color(prefix.padStart(this.#padding)), stuff)
+    if (!this.__shouldLog(level)) {
+      return;
+    }
+    this.__log(color(prefix.padStart(this.#padding)), stuff);
   }
 
   /**
@@ -156,7 +170,7 @@ export class Logger {
    * @returns true if the log should be output
    */
   private __shouldLog(level: LogLevel) {
-    return this.options.isActive && this.#levels.indexOf(level) >= this.#levels.indexOf(this.options.minimumLevel)
+    return this.options.isActive && this.#levels.indexOf(level) >= this.#levels.indexOf(this.options.minimumLevel);
   }
 
   /**
@@ -165,7 +179,7 @@ export class Logger {
    * @example logger.addToMemoryLogs(['Hello', 'world', 42])
    */
   public addToMemoryLogs(...stuff: Readonly<unknown[]>) {
-    this.inMemoryLogs.push(clean(...stuff))
+    this.inMemoryLogs.push(clean(...stuff));
   }
 
   /**
@@ -174,21 +188,21 @@ export class Logger {
    * @example logger.debug('Hello world')
    */
   public debug(...stuff: Readonly<unknown[]>) {
-    this.__logIf('debug', '1-debug', stuff, gray)
+    this.__logIf("debug", "1-debug", stuff, gray);
   }
 
   /**
    * Disable the logger output
    */
   public disable() {
-    this.options.isActive = false
+    this.options.isActive = false;
   }
 
   /**
    * Enable the logger output
    */
   public enable() {
-    this.options.isActive = true
+    this.options.isActive = true;
   }
 
   /**
@@ -197,8 +211,8 @@ export class Logger {
    * @example logger.error('Something went wrong')
    */
   public error(...stuff: Readonly<unknown[]>) {
-    const errors = stuff.map(thing => (thing instanceof Error ? thing.message : thing))
-    this.__logIf('error', '7-error', errors, red)
+    const errors = stuff.map(thing => (thing instanceof Error ? thing.message : thing));
+    this.__logIf("error", "7-error", errors, red);
   }
 
   /**
@@ -207,7 +221,7 @@ export class Logger {
    * @example logger.fix('This is a fix')
    */
   public fix(...stuff: Readonly<unknown[]>) {
-    this.__logIf('fix', '4-fix', stuff, cyan)
+    this.__logIf("fix", "4-fix", stuff, cyan);
   }
 
   /**
@@ -216,7 +230,7 @@ export class Logger {
    * @example logger.good('Everything went well')
    */
   public good(...stuff: Readonly<unknown[]>) {
-    this.__logIf('good', '6-good', stuff, green)
+    this.__logIf("good", "6-good", stuff, green);
   }
 
   /**
@@ -225,7 +239,7 @@ export class Logger {
    * @example logger.info('Hello ¯\_(ツ)_/¯')
    */
   public info(...stuff: Readonly<unknown[]>) {
-    this.__logIf('info', '3-info', stuff, blue)
+    this.__logIf("info", "3-info", stuff, blue);
   }
 
   /**
@@ -234,9 +248,11 @@ export class Logger {
    * @example logger.error('Something went wrong')
    */
   public showError(...stuff: Readonly<unknown[]>) {
-    this.error(...stuff)
+    this.error(...stuff);
     /* v8 ignore next 3 -- @preserve */
-    if (isBrowserEnvironment()) toastError(clean(...stuff))
+    if (isBrowserEnvironment()) {
+      toastError(clean(...stuff));
+    }
   }
 
   /**
@@ -245,9 +261,11 @@ export class Logger {
    * @example logger.info('Hello ¯\_(ツ)_/¯')
    */
   public showInfo(...stuff: Readonly<unknown[]>) {
-    this.info(...stuff)
+    this.info(...stuff);
     /* v8 ignore next 3 -- @preserve */
-    if (isBrowserEnvironment()) toastInfo(clean(...stuff))
+    if (isBrowserEnvironment()) {
+      toastInfo(clean(...stuff));
+    }
   }
 
   /**
@@ -256,9 +274,11 @@ export class Logger {
    * @example logger.success('Everything went well')
    */
   public showSuccess(...stuff: Readonly<unknown[]>) {
-    this.success(...stuff)
+    this.success(...stuff);
     /* v8 ignore next 3 -- @preserve */
-    if (isBrowserEnvironment()) toastSuccess(clean(...stuff))
+    if (isBrowserEnvironment()) {
+      toastSuccess(clean(...stuff));
+    }
   }
 
   /**
@@ -268,7 +288,7 @@ export class Logger {
    * @alias good
    */
   public success(...stuff: Readonly<unknown[]>) {
-    this.good(...stuff)
+    this.good(...stuff);
   }
 
   /**
@@ -281,9 +301,12 @@ export class Logger {
    * @example logger.result("another operation", result, 'success', 'warn')
    */
   // oxlint-disable-next-line max-params
-  public result(message: string, result: ResultType<unknown, unknown>, okLevel: 'info' | 'success' = 'info', errorLevel: 'error' | 'warn' = 'error') {
-    if (result.ok) this[okLevel](message, 'result was ok and returned :', result.value)
-    else this[errorLevel](message, 'result was error and returned :', result.error)
+  public result(message: string, result: ResultType<unknown, unknown>, okLevel: "info" | "success" = "info", errorLevel: "error" | "warn" = "error") {
+    if (result.ok) {
+      this[okLevel](message, "result was ok and returned :", result.value);
+    } else {
+      this[errorLevel](message, "result was error and returned :", result.error);
+    }
   }
 
   /**
@@ -293,11 +316,13 @@ export class Logger {
    * @example logger.test(1 === 1, '1 is equal to 1') // will log : ✔️ 1 is equal to 1
    */
   public test(thing: unknown, ...stuff: Readonly<unknown[]>) {
-    if (!this.__shouldLog('2-test')) return
-    const isTruthy = Boolean(thing)
-    const box = isTruthy ? bgGreen(' ✓ ') : bgRed(' ✗ ')
-    const prefix = ' '.repeat(this.#padding - nbFourth)
-    this.__log(prefix + box, stuff)
+    if (!this.__shouldLog("2-test")) {
+      return;
+    }
+    const isTruthy = Boolean(thing);
+    const box = isTruthy ? bgGreen(" ✓ ") : bgRed(" ✗ ");
+    const prefix = " ".repeat(this.#padding - nbFourth);
+    this.__log(prefix + box, stuff);
   }
 
   /**
@@ -306,6 +331,6 @@ export class Logger {
    * @example logger.warn('Something went wrong')
    */
   public warn(...stuff: Readonly<unknown[]>) {
-    this.__logIf('warn', '5-warn', stuff, yellow)
+    this.__logIf("warn", "5-warn", stuff, yellow);
   }
 }

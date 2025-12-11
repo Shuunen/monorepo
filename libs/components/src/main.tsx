@@ -1,7 +1,7 @@
 /* v8 ignore start -- @preserve */
-import { createRoot } from 'react-dom/client'
-import { KitchenSink } from './molecules/kitchen-sink'
+import { createRoot } from "react-dom/client";
+import { KitchenSink } from "./molecules/kitchen-sink";
 
-export const root = createRoot(document.querySelector('#root') as HTMLElement)
+export const root = createRoot(document.querySelector("#root") as HTMLElement);
 
-root.render(<KitchenSink />)
+root.render(<KitchenSink />);

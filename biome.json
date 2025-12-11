@@ -190,6 +190,15 @@
       }
     },
     {
+      "includes": ["libs/**"],
+      "javascript": {
+        "formatter": {
+          "quoteStyle": "double",
+          "semicolons": "always"
+        }
+      }
+    },
+    {
       "assist": {
         "actions": {
           "source": {

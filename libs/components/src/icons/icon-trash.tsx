@@ -1,5 +1,5 @@
-import { Trash2 } from 'lucide-react'
+import { Trash2 } from "lucide-react";
 
 export function IconTrash() {
-  return <Trash2 />
+  return <Trash2 />;
 }
