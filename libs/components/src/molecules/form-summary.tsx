@@ -1,5 +1,6 @@
 import { flatten } from '@monorepo/utils'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../atoms/table'
+import { FormSummaryFieldValue } from './form-summary-field-value'
 
 type Props = {
   data: Record<string, unknown>
@@ -10,7 +11,7 @@ export function FormSummary(props: Props) {
   const flatData = flatten(props.data, props.rootPath ?? 'data')
   const entries = Object.entries(flatData)
   return (
-    <div className="border rounded-lg" data-testid="form-summary">
+    <div className="border rounded-lg w-full overflow-hidden" data-testid="form-summary">
       <Table>
         <TableHeader>
           <TableRow>
@@ -19,13 +20,13 @@ export function FormSummary(props: Props) {
           </TableRow>
         </TableHeader>
       </Table>
-      <div className="max-h-96 overflow-y-auto">
+      <div className="max-h-96 w-full overflow-y-auto overflow-x-hidden">
         <Table>
           <TableBody>
             {entries.map(([key, value]) => (
-              <TableRow key={key}>
-                <TableCell className="w-1/2 font-mono text-xs">{key}</TableCell>
-                <TableCell className="w-1/2">{String(value)}</TableCell>
+              <TableRow className="grid grid-cols-2" key={key}>
+                <TableCell className="font-mono text-xs">{key}</TableCell>
+                <FormSummaryFieldValue name={key} value={value} />
               </TableRow>
             ))}
           </TableBody>
