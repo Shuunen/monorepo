@@ -1,5 +1,5 @@
-import { ArrowDownIcon } from 'lucide-react'
+import { ArrowDownIcon } from "lucide-react";
 
 export function IconArrowDown({ className }: { className?: string }) {
-  return <ArrowDownIcon className={className} />
+  return <ArrowDownIcon className={className} />;
 }

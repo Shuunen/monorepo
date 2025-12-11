@@ -1,52 +1,52 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, userEvent, within } from 'storybook/test'
-import { Label } from './label'
-import { RadioGroup, RadioGroupItem } from './radio-group'
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, within } from "storybook/test";
+import { Label } from "./label";
+import { RadioGroup, RadioGroupItem } from "./radio-group";
 
 const meta = {
   component: RadioGroup,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
-  title: 'Commons/Atoms/Radio group',
-} satisfies Meta<typeof RadioGroup>
+  tags: ["autodocs"],
+  title: "Commons/Atoms/Radio group",
+} satisfies Meta<typeof RadioGroup>;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    name: 'radio-group',
+    name: "radio-group",
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = within(canvasElement);
 
     // All three radios are present
-    const radios = canvas.getAllByRole('radio')
-    expect(radios).toHaveLength(3)
+    const radios = canvas.getAllByRole("radio");
+    expect(radios).toHaveLength(3);
 
-    const defaultRadio = canvas.getByRole('radio', { name: /default/i })
-    const comfortableRadio = canvas.getByRole('radio', { name: /comfortable/i })
-    const compactRadio = canvas.getByRole('radio', { name: /compact/i })
+    const defaultRadio = canvas.getByRole("radio", { name: /default/i });
+    const comfortableRadio = canvas.getByRole("radio", { name: /comfortable/i });
+    const compactRadio = canvas.getByRole("radio", { name: /compact/i });
 
-    expect(defaultRadio).toBeInTheDocument()
-    expect(comfortableRadio).toBeInTheDocument()
-    expect(compactRadio).toBeInTheDocument()
+    expect(defaultRadio).toBeInTheDocument();
+    expect(comfortableRadio).toBeInTheDocument();
+    expect(compactRadio).toBeInTheDocument();
 
     // By default, "comfortable" should be selected
-    expect(comfortableRadio).toHaveAttribute('data-state', 'checked')
-    expect(defaultRadio).toHaveAttribute('data-state', 'unchecked')
-    expect(compactRadio).toHaveAttribute('data-state', 'unchecked')
+    expect(comfortableRadio).toHaveAttribute("data-state", "checked");
+    expect(defaultRadio).toHaveAttribute("data-state", "unchecked");
+    expect(compactRadio).toHaveAttribute("data-state", "unchecked");
 
     // Clicking the "Default" label should select the "default" radio
-    const defaultLabel = canvas.getByText('Default')
-    await userEvent.click(defaultLabel, { delay: 80 })
+    const defaultLabel = canvas.getByText("Default");
+    await userEvent.click(defaultLabel, { delay: 80 });
 
-    expect(defaultRadio).toHaveAttribute('data-state', 'checked')
-    expect(comfortableRadio).toHaveAttribute('data-state', 'unchecked')
-    expect(compactRadio).toHaveAttribute('data-state', 'unchecked')
+    expect(defaultRadio).toHaveAttribute("data-state", "checked");
+    expect(comfortableRadio).toHaveAttribute("data-state", "unchecked");
+    expect(compactRadio).toHaveAttribute("data-state", "unchecked");
   },
   render: () => (
     <RadioGroup defaultValue="comfortable" name="radio-group">
@@ -67,4 +67,4 @@ export const Default: Story = {
       </div>
     </RadioGroup>
   ),
-}
+};

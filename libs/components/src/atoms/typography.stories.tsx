@@ -1,22 +1,22 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Paragraph, Title } from './typography'
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Paragraph, Title } from "./typography";
 
 const meta = {
   component: Title,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
-  title: 'Commons/Atoms/Typography',
-} satisfies Meta<typeof Title>
+  tags: ["autodocs"],
+  title: "Commons/Atoms/Typography",
+} satisfies Meta<typeof Title>;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Showcase: Story = {
   args: {
-    children: 'Showcase',
+    children: "Showcase",
   },
   render: () => (
     <div className="space-y-8">
@@ -94,4 +94,4 @@ export const Showcase: Story = {
       </div>
     </div>
   ),
-}
+};

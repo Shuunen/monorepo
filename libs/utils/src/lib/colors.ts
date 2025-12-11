@@ -7,8 +7,10 @@
  */
 export function isFirefox() {
   /* v8 ignore next 3 -- @preserve */
-  if (globalThis.navigator === undefined) return false
-  return globalThis.navigator.userAgent.includes('Firefox')
+  if (globalThis.navigator === undefined) {
+    return false;
+  }
+  return globalThis.navigator.userAgent.includes("Firefox");
 }
 
 /**
@@ -20,7 +22,7 @@ export function isFirefox() {
  */
 export function addColorCode(from: number, to: number, string: string) {
   /* v8 ignore next -- @preserve */
-  return isFirefox() ? string : `\u001B[${from}m${string}\u001B[${to}m`
+  return isFirefox() ? string : `\u001B[${from}m${string}\u001B[${to}m`;
 }
 
 /**
@@ -29,7 +31,7 @@ export function addColorCode(from: number, to: number, string: string) {
  * @returns the string with the reset color
  */
 export function reset(string: string) {
-  return addColorCode(0, 0, string)
+  return addColorCode(0, 0, string);
 }
 
 /**
@@ -38,7 +40,7 @@ export function reset(string: string) {
  * @returns the string with the bold decoration
  */
 export function bold(string: string) {
-  return addColorCode(1, 22, string)
+  return addColorCode(1, 22, string);
 }
 
 /**
@@ -47,7 +49,7 @@ export function bold(string: string) {
  * @returns the string with the dim decoration
  */
 export function dim(string: string) {
-  return addColorCode(2, 22, string)
+  return addColorCode(2, 22, string);
 }
 
 /**
@@ -56,7 +58,7 @@ export function dim(string: string) {
  * @returns the string with the italic decoration
  */
 export function italic(string: string) {
-  return addColorCode(3, 23, string)
+  return addColorCode(3, 23, string);
 }
 
 /**
@@ -65,7 +67,7 @@ export function italic(string: string) {
  * @returns the string with the underline decoration
  */
 export function underline(string: string) {
-  return addColorCode(4, 24, string)
+  return addColorCode(4, 24, string);
 }
 
 /**
@@ -74,7 +76,7 @@ export function underline(string: string) {
  * @returns the string with the overline decoration
  */
 export function overline(string: string) {
-  return addColorCode(53, 55, string)
+  return addColorCode(53, 55, string);
 }
 
 /**
@@ -83,7 +85,7 @@ export function overline(string: string) {
  * @returns the string with the inverse decoration
  */
 export function inverse(string: string) {
-  return addColorCode(7, 27, string)
+  return addColorCode(7, 27, string);
 }
 
 /**
@@ -92,7 +94,7 @@ export function inverse(string: string) {
  * @returns the string with the strike-through decoration
  */
 export function strikeThrough(string: string) {
-  return addColorCode(9, 29, string)
+  return addColorCode(9, 29, string);
 }
 
 /**
@@ -101,7 +103,7 @@ export function strikeThrough(string: string) {
  * @returns the string with the black color
  */
 export function black(string: string) {
-  return addColorCode(30, 39, string)
+  return addColorCode(30, 39, string);
 }
 
 /**
@@ -110,7 +112,7 @@ export function black(string: string) {
  * @returns the string with the red color
  */
 export function red(string: string) {
-  return addColorCode(31, 39, string)
+  return addColorCode(31, 39, string);
 }
 
 /**
@@ -119,7 +121,7 @@ export function red(string: string) {
  * @returns the string with the green color
  */
 export function green(string: string) {
-  return addColorCode(32, 39, string)
+  return addColorCode(32, 39, string);
 }
 
 /**
@@ -128,7 +130,7 @@ export function green(string: string) {
  * @returns the string with the yellow color
  */
 export function yellow(string: string) {
-  return addColorCode(33, 39, string)
+  return addColorCode(33, 39, string);
 }
 
 /**
@@ -137,7 +139,7 @@ export function yellow(string: string) {
  * @returns the string with the blue color
  */
 export function blue(string: string) {
-  return addColorCode(34, 39, string)
+  return addColorCode(34, 39, string);
 }
 
 /**
@@ -146,7 +148,7 @@ export function blue(string: string) {
  * @returns the string with the magenta color
  */
 export function magenta(string: string) {
-  return addColorCode(35, 39, string)
+  return addColorCode(35, 39, string);
 }
 
 /**
@@ -155,7 +157,7 @@ export function magenta(string: string) {
  * @returns the string with the cyan color
  */
 export function cyan(string: string) {
-  return addColorCode(36, 39, string)
+  return addColorCode(36, 39, string);
 }
 
 /**
@@ -164,7 +166,7 @@ export function cyan(string: string) {
  * @returns the string with the white color
  */
 export function white(string: string) {
-  return addColorCode(37, 39, string)
+  return addColorCode(37, 39, string);
 }
 
 /**
@@ -173,7 +175,7 @@ export function white(string: string) {
  * @returns the string with the gray color
  */
 export function gray(string: string) {
-  return addColorCode(90, 39, string)
+  return addColorCode(90, 39, string);
 }
 
 /**
@@ -182,7 +184,7 @@ export function gray(string: string) {
  * @returns the string with the black background
  */
 export function bgBlack(string: string) {
-  return addColorCode(40, 49, string)
+  return addColorCode(40, 49, string);
 }
 
 /**
@@ -191,7 +193,7 @@ export function bgBlack(string: string) {
  * @returns the string with the red background
  */
 export function bgRed(string: string) {
-  return addColorCode(41, 49, string)
+  return addColorCode(41, 49, string);
 }
 
 /**
@@ -200,7 +202,7 @@ export function bgRed(string: string) {
  * @returns the string with the green background
  */
 export function bgGreen(string: string) {
-  return addColorCode(42, 49, string)
+  return addColorCode(42, 49, string);
 }
 
 /**
@@ -209,7 +211,7 @@ export function bgGreen(string: string) {
  * @returns the string with the yellow background
  */
 export function bgYellow(string: string) {
-  return addColorCode(43, 49, string)
+  return addColorCode(43, 49, string);
 }
 
 /**
@@ -218,7 +220,7 @@ export function bgYellow(string: string) {
  * @returns the string with the blue background
  */
 export function bgBlue(string: string) {
-  return addColorCode(44, 49, string)
+  return addColorCode(44, 49, string);
 }
 
 /**
@@ -227,7 +229,7 @@ export function bgBlue(string: string) {
  * @returns the string with the magenta background
  */
 export function bgMagenta(string: string) {
-  return addColorCode(45, 49, string)
+  return addColorCode(45, 49, string);
 }
 
 /**
@@ -236,7 +238,7 @@ export function bgMagenta(string: string) {
  * @returns the string with the cyan background
  */
 export function bgCyan(string: string) {
-  return addColorCode(46, 49, string)
+  return addColorCode(46, 49, string);
 }
 
 /**
@@ -245,7 +247,7 @@ export function bgCyan(string: string) {
  * @returns the string with the white background
  */
 export function bgWhite(string: string) {
-  return addColorCode(47, 49, string)
+  return addColorCode(47, 49, string);
 }
 
 /**
@@ -254,5 +256,5 @@ export function bgWhite(string: string) {
  * @returns the string with the gray background
  */
 export function bgGray(string: string) {
-  return addColorCode(100, 49, string)
+  return addColorCode(100, 49, string);
 }

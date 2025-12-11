@@ -1,42 +1,42 @@
-import { camelToKebabCase, slugify } from '@monorepo/utils'
+import { camelToKebabCase, slugify } from "@monorepo/utils";
 // oxlint-disable-next-line no-restricted-imports
-import { CircleXIcon, FileCheckIcon, FileTextIcon, FileUpIcon, FileXIcon, RotateCcwIcon, TrashIcon } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import type { ControllerRenderProps } from 'react-hook-form'
-import { Button } from '../atoms/button'
-import { FormControl } from '../atoms/form'
-import { Input } from '../atoms/input'
-import { Progress } from '../atoms/progress'
-import { cn } from '../shadcn/utils'
-import { getFieldMetadataOrThrow } from './auto-form.utils'
-import { FormFieldBase, type FormFieldBaseProps } from './form-field'
-import { formatFileSize, maxPercent, uploadDurationFail, uploadDurationSuccess, uploadPercentFail } from './form-field-upload.const'
+import { CircleXIcon, FileCheckIcon, FileTextIcon, FileUpIcon, FileXIcon, RotateCcwIcon, TrashIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import type { ControllerRenderProps } from "react-hook-form";
+import { Button } from "../atoms/button";
+import { FormControl } from "../atoms/form";
+import { Input } from "../atoms/input";
+import { Progress } from "../atoms/progress";
+import { cn } from "../shadcn/utils";
+import { getFieldMetadataOrThrow } from "./auto-form.utils";
+import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
+import { formatFileSize, maxPercent, uploadDurationFail, uploadDurationSuccess, uploadPercentFail } from "./form-field-upload.const";
 
 type FormFieldUploadProps = FormFieldBaseProps & {
-  accept?: string
-  onFileChange?: (file: File | undefined) => void
-  onFileUploadComplete?: (file: File) => void
-  onFileUploadError?: (error: string) => void
-  onFileRemove?: () => void
-  shouldFail?: boolean
-}
+  accept?: string;
+  onFileChange?: (file: File | undefined) => void;
+  onFileUploadComplete?: (file: File) => void;
+  onFileUploadError?: (error: string) => void;
+  onFileRemove?: () => void;
+  shouldFail?: boolean;
+};
 
 // oxlint-disable-next-line max-lines-per-function
 export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOptional, logger, readonly = false, shouldFail, onFileChange, onFileRemove, onFileUploadComplete, onFileUploadError }: FormFieldUploadProps) {
-  const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema)
-  const { placeholder, state = 'editable' } = metadata
-  const isDisabled = ['disabled', 'readonly'].includes(state)
-  const testId = camelToKebabCase(fieldName)
-  const [selectedFile, setSelectedFile] = useState<File | undefined>()
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const retryUpload = () => selectedFile && startUpload(selectedFile)
+  const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
+  const { placeholder, state = "editable" } = metadata;
+  const isDisabled = ["disabled", "readonly"].includes(state);
+  const testId = camelToKebabCase(fieldName);
+  const [selectedFile, setSelectedFile] = useState<File | undefined>();
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const retryUpload = () => selectedFile && startUpload(selectedFile);
   const buttons = {
-    cancel: { action: removeFile, icon: CircleXIcon, label: 'Cancel' },
-    remove: { action: removeFile, icon: TrashIcon, label: 'Remove' },
-    retry: { action: retryUpload, icon: RotateCcwIcon, label: 'Retry' },
-  }
-  const [uploadState, setUploadState] = useState<UploadType>('idle')
-  const sizeProgress = selectedFile?.size ? `(${formatFileSize(selectedFile.size * (uploadProgress / maxPercent))} / ${formatFileSize(selectedFile.size)})` : ''
+    cancel: { action: removeFile, icon: CircleXIcon, label: "Cancel" },
+    remove: { action: removeFile, icon: TrashIcon, label: "Remove" },
+    retry: { action: retryUpload, icon: RotateCcwIcon, label: "Retry" },
+  };
+  const [uploadState, setUploadState] = useState<UploadType>("idle");
+  const sizeProgress = selectedFile?.size ? `(${formatFileSize(selectedFile.size * (uploadProgress / maxPercent))} / ${formatFileSize(selectedFile.size)})` : "";
   const states = {
     error: {
       // oxlint-disable-next-line no-nested-ternary
@@ -47,7 +47,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
     idle: {
       buttons: [],
       icon: <FileTextIcon className="size-5 text-muted-foreground" />,
-      message: 'No file selected',
+      message: "No file selected",
     },
     success: {
       buttons: isDisabled ? [] : [buttons.remove],
@@ -59,94 +59,102 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
       icon: <FileUpIcon className="size-5 text-muted-foreground" />,
       message: `Uploading... ${sizeProgress}`,
     },
-  } as const
-  type UploadType = keyof typeof states
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const uploadIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined)
-  const idleNoFile = uploadState === 'idle' && !selectedFile
+  } as const;
+  type UploadType = keyof typeof states;
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploadIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const idleNoFile = uploadState === "idle" && !selectedFile;
 
   useEffect(() => {
-    const currentValue = formData[fieldName] as File | undefined
-    if (!currentValue) return
-    if (!currentValue.name) return
-    setSelectedFile(currentValue)
-    setUploadState('success')
-    setUploadProgress(maxPercent)
-  }, [formData, fieldName])
+    const currentValue = formData[fieldName] as File | undefined;
+    if (!currentValue) {
+      return;
+    }
+    if (!currentValue.name) {
+      return;
+    }
+    setSelectedFile(currentValue);
+    setUploadState("success");
+    setUploadProgress(maxPercent);
+  }, [formData, fieldName]);
 
   // Cleanup on unmount
-  useEffect(() => () => uploadIntervalRef.current && clearInterval(uploadIntervalRef.current), [])
+  useEffect(() => () => uploadIntervalRef.current && clearInterval(uploadIntervalRef.current), []);
 
   function resetUpload() {
     /* c8 ignore next 3 */
     // oxlint-disable-next-line no-unused-expressions
-    uploadIntervalRef.current && clearInterval(uploadIntervalRef.current)
-    setSelectedFile(undefined)
-    setUploadState('idle')
-    setUploadProgress(0)
+    uploadIntervalRef.current && clearInterval(uploadIntervalRef.current);
+    setSelectedFile(undefined);
+    setUploadState("idle");
+    setUploadProgress(0);
     /* c8 ignore next */
-    if (fileInputRef.current) fileInputRef.current.value = ''
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   }
 
-  function removeFile(onChange: ControllerRenderProps['onChange']) {
-    resetUpload()
+  function removeFile(onChange: ControllerRenderProps["onChange"]) {
+    resetUpload();
     /* c8 ignore next 2 */
-    onFileChange?.(undefined)
-    onFileRemove?.()
-    onChange(undefined)
+    onFileChange?.(undefined);
+    onFileRemove?.();
+    onChange(undefined);
   }
 
   function startUpload(file: File) {
-    const { success, error } = fieldSchema.safeParse(file)
+    const { success, error } = fieldSchema.safeParse(file);
     if (!success) {
-      onFileUploadError?.(error.message)
-      onFileChange?.(file)
-      setUploadState('error')
-      return
+      onFileUploadError?.(error.message);
+      onFileChange?.(file);
+      setUploadState("error");
+      return;
     }
 
-    setUploadState('uploading')
-    setUploadProgress(0)
+    setUploadState("uploading");
+    setUploadProgress(0);
 
-    const uploadDuration = shouldFail ? uploadDurationFail : uploadDurationSuccess
-    const interval = 50
-    const increment = (maxPercent / uploadDuration) * interval
+    const uploadDuration = shouldFail ? uploadDurationFail : uploadDurationSuccess;
+    const interval = 50;
+    const increment = (maxPercent / uploadDuration) * interval;
 
     uploadIntervalRef.current = setInterval(() => {
       setUploadProgress(prev => {
-        const newProgress = Math.min(prev + increment, maxPercent)
+        const newProgress = Math.min(prev + increment, maxPercent);
         if (newProgress >= maxPercent) {
-          clearInterval(uploadIntervalRef.current)
-          setUploadState('success')
-          onFileUploadComplete?.(file)
-          return maxPercent
+          clearInterval(uploadIntervalRef.current);
+          setUploadState("success");
+          onFileUploadComplete?.(file);
+          return maxPercent;
         }
         if (shouldFail && newProgress >= uploadPercentFail) {
-          clearInterval(uploadIntervalRef.current)
-          setUploadState('error')
+          clearInterval(uploadIntervalRef.current);
+          setUploadState("error");
           /* c8 ignore next */
-          onFileUploadError?.('Upload failed')
-          return newProgress
+          onFileUploadError?.("Upload failed");
+          return newProgress;
         }
-        return newProgress
-      })
-    }, interval)
+        return newProgress;
+      });
+    }, interval);
   }
 
   function handleFileSelect(event: React.ChangeEvent<HTMLInputElement>, onChange: (value: File) => void) {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     /* c8 ignore next 3 */
-    if (!file) return
+    if (!file) {
+      return;
+    }
 
-    setSelectedFile(file)
-    onChange(file)
-    onFileChange?.(file)
-    startUpload(file)
+    setSelectedFile(file);
+    onChange(file);
+    onFileChange?.(file);
+    startUpload(file);
   }
 
-  const currentState = states[uploadState]
-  const stateTestId = `upload-${uploadState}`
-  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly }
+  const currentState = states[uploadState];
+  const stateTestId = `upload-${uploadState}`;
+  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
 
   return (
     <FormFieldBase {...props}>
@@ -160,7 +168,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
               <aside className="mt-0.5">{currentState.icon}</aside>
               <main className="flex grow flex-col gap-1 max-w-full overflow-hidden">
                 <div className="flex justify-between gap-3">
-                  <div className={cn('flex flex-col gap-1', { 'max-w-[calc(100%_-_100px)]': !isDisabled })}>
+                  <div className={cn("flex flex-col gap-1", { "max-w-[calc(100%_-_100px)]": !isDisabled })}>
                     <div className="font-medium text-sm truncate">{selectedFile?.name}</div>
                     <div className="text-sm text-muted-foreground truncate">{currentState.message}</div>
                   </div>
@@ -175,10 +183,10 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
                   </div>
                 </div>
 
-                {uploadState !== 'idle' && (
+                {uploadState !== "idle" && (
                   <div className="flex items-center">
-                    <Progress className={cn('h-1 flex-1', uploadState === 'success' && '[&>div]:bg-success', uploadState === 'error' && '[&>div]:bg-destructive')} value={uploadProgress} />
-                    <span className={cn('text-sm font-medium min-w-[3rem] text-right', uploadState === 'success' && 'text-success', uploadState === 'error' && 'text-destructive')}>{Math.round(uploadProgress)}%</span>
+                    <Progress className={cn("h-1 flex-1", uploadState === "success" && "[&>div]:bg-success", uploadState === "error" && "[&>div]:bg-destructive")} value={uploadProgress} />
+                    <span className={cn("text-sm font-medium min-w-[3rem] text-right", uploadState === "success" && "text-success", uploadState === "error" && "text-destructive")}>{Math.round(uploadProgress)}%</span>
                   </div>
                 )}
               </main>
@@ -187,5 +195,5 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
         </FormControl>
       )}
     </FormFieldBase>
-  )
+  );
 }

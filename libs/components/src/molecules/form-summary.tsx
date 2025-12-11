@@ -1,15 +1,15 @@
-import { flatten } from '@monorepo/utils'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../atoms/table'
-import { FormSummaryFieldValue } from './form-summary-field-value'
+import { flatten } from "@monorepo/utils";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../atoms/table";
+import { FormSummaryFieldValue } from "./form-summary-field-value";
 
 type Props = {
-  data: Record<string, unknown>
-  rootPath?: string
-}
+  data: Record<string, unknown>;
+  rootPath?: string;
+};
 
 export function FormSummary(props: Props) {
-  const flatData = flatten(props.data, props.rootPath ?? 'data')
-  const entries = Object.entries(flatData)
+  const flatData = flatten(props.data, props.rootPath ?? "data");
+  const entries = Object.entries(flatData);
   return (
     <div className="border rounded-lg w-full overflow-hidden" data-testid="form-summary">
       <Table>
@@ -33,5 +33,5 @@ export function FormSummary(props: Props) {
         </Table>
       </div>
     </div>
-  )
+  );
 }

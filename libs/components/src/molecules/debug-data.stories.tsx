@@ -1,24 +1,24 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { DebugData } from './debug-data'
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { DebugData } from "./debug-data";
 
 const meta = {
   component: DebugData,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
-  title: 'Commons/Molecules/DebugData',
-} satisfies Meta<typeof DebugData>
+  tags: ["autodocs"],
+  title: "Commons/Molecules/DebugData",
+} satisfies Meta<typeof DebugData>;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Simple: Story = {
   args: {
     data: {
       age: 36,
-      name: 'Romani Paeon',
+      name: "Romani Paeon",
     },
   },
-}
+};

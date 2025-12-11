@@ -1,5 +1,5 @@
-import { HourglassIcon } from 'lucide-react'
+import { HourglassIcon } from "lucide-react";
 
 export function IconHourglass() {
-  return <HourglassIcon />
+  return <HourglassIcon />;
 }

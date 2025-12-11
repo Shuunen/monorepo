@@ -1,5 +1,5 @@
-import { PlusIcon } from 'lucide-react'
+import { PlusIcon } from "lucide-react";
 
 export function IconAdd() {
-  return <PlusIcon />
+  return <PlusIcon />;
 }

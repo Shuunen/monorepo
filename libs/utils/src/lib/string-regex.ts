@@ -1,8 +1,8 @@
-export const htmlTagRegex = /<[^>]+>/u
+export const htmlTagRegex = /<[^>]+>/u;
 
-export const base64Regex = /^(?:data:)?[\w/]+;base64,[\w+/=]+$/u
+export const base64Regex = /^(?:data:)?[\w/]+;base64,[\w+/=]+$/u;
 
-export const base64TypeRegex = /[^:]\w+\/[\w+.-]+(?=;|,)/u
+export const base64TypeRegex = /[^:]\w+\/[\w+.-]+(?=;|,)/u;
 
 /**
  * Check if the string contains HTML
@@ -10,5 +10,5 @@ export const base64TypeRegex = /[^:]\w+\/[\w+.-]+(?=;|,)/u
  * @returns true if the string contains HTML
  */
 export function isHtml(string: string) {
-  return htmlTagRegex.test(string)
+  return htmlTagRegex.test(string);
 }

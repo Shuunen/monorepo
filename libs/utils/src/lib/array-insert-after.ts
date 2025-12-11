@@ -1,5 +1,5 @@
-import { nbAfter, nbNoIndex } from './constants.js'
-import { clone } from './object-clone.js'
+import { nbAfter, nbNoIndex } from "./constants.js";
+import { clone } from "./object-clone.js";
 
 /**
  * Add a value to an array if it does not already exist
@@ -9,10 +9,12 @@ import { clone } from './object-clone.js'
  * @returns the array with the value added (if it did not already exist)
  */
 export function insertValueAfterItem<Type>(array: readonly Type[], item: Type, value: Type) {
-  const index = array.indexOf(item)
-  if (index === nbNoIndex) return array
-  const arrayCopy = clone(array)
-  const start = Math.min(index + nbAfter, arrayCopy.length)
-  arrayCopy.splice(start, 0, value)
-  return arrayCopy
+  const index = array.indexOf(item);
+  if (index === nbNoIndex) {
+    return array;
+  }
+  const arrayCopy = clone(array);
+  const start = Math.min(index + nbAfter, arrayCopy.length);
+  arrayCopy.splice(start, 0, value);
+  return arrayCopy;
 }

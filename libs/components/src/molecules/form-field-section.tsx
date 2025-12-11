@@ -1,18 +1,18 @@
-import { Paragraph, Title } from '../atoms/typography'
-import { DebugData } from './debug-data'
+import { Paragraph, Title } from "../atoms/typography";
+import { DebugData } from "./debug-data";
 
 export type FormFieldSectionProps = {
   /** Optional title text */
-  title?: string
+  title?: string;
   /** Optional subtitle text */
-  subtitle?: string
+  subtitle?: string;
   /** Optional description text */
-  description?: string
+  description?: string;
   /** Optional code block content to display */
-  code?: string
+  code?: string;
   /** Optional line **/
-  line?: boolean
-}
+  line?: boolean;
+};
 
 export function FormFieldSection({ title, subtitle, description, code, line }: FormFieldSectionProps) {
   return (
@@ -23,5 +23,5 @@ export function FormFieldSection({ title, subtitle, description, code, line }: F
       {code && <DebugData data={code} />}
       {line && <div className="border-t border-muted my-4" />}
     </div>
-  )
+  );
 }

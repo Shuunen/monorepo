@@ -1,19 +1,19 @@
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { storybookTest } from '@storybook/addon-vitest/vitest-plugin'
-import { playwright } from '@vitest/browser-playwright'
-import { defineConfig } from 'vitest/config'
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
+import { playwright } from "@vitest/browser-playwright";
+import { defineConfig } from "vitest/config";
 
-const dirname = typeof __dirname === 'undefined' ? path.dirname(fileURLToPath(import.meta.url)) : __dirname
+const dirname = typeof __dirname === "undefined" ? path.dirname(fileURLToPath(import.meta.url)) : __dirname;
 
 export default defineConfig({
   optimizeDeps: {
-    include: ['react/jsx-dev-runtime'],
+    include: ["react/jsx-dev-runtime"],
   },
   plugins: [
     // The plugin will run tests for the stories defined in your Storybook config
     // See options at: https://storybook.js.org/docs/writing-tests/test-addon#storybooktest
-    storybookTest({ configDir: path.join(dirname, '.storybook') }),
+    storybookTest({ configDir: path.join(dirname, ".storybook") }),
   ],
   test: {
     browser: {
@@ -21,14 +21,14 @@ export default defineConfig({
       headless: true,
       instances: [
         {
-          browser: 'chromium',
+          browser: "chromium",
         },
       ],
       provider: playwright(),
     },
-    name: 'storybook',
-    reporters: ['dot'],
-    setupFiles: ['.storybook/vitest.setup.ts'],
+    name: "storybook",
+    reporters: ["dot"],
+    setupFiles: [".storybook/vitest.setup.ts"],
     silent: true,
   },
-})
+});

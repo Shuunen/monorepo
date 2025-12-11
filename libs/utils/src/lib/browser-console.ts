@@ -7,5 +7,5 @@
  */
 export function consoleLog(...messages: unknown[]) {
   // biome-ignore lint/suspicious/noConsole: it's ok here, that's the point of this function ^^'
-  console.log(...messages)
+  console.log(...messages);
 }

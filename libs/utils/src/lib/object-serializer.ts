@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: it's ok here */
-import { nbSpacesIndent } from './constants.js'
-import { objectSort } from './object-sort.js'
+import { nbSpacesIndent } from "./constants.js";
+import { objectSort } from "./object-sort.js";
 
 // currently handled :
 // - array
@@ -28,23 +28,31 @@ import { objectSort } from './object-sort.js'
  * @returns the value of the object
  */
 function replacer(this: unknown, key: string, value?: Readonly<unknown>) {
-  if (value === undefined) return value
-  if (value instanceof RegExp) return { __regexFlags__: value.flags, __regexSource__: value.source }
-  if (typeof value === 'function') return { __function__: value.toString() }
+  if (value === undefined) {
+    return value;
+  }
+  if (value instanceof RegExp) {
+    return { __regexFlags__: value.flags, __regexSource__: value.source };
+  }
+  if (typeof value === "function") {
+    return { __function__: value.toString() };
+  }
   // @ts-expect-error type issue
-  if (this[key] instanceof File)
+  if (this[key] instanceof File) {
     // @ts-expect-error type issue
-    return { __fileName__: this[key].name, __fileSize__: this[key].size, __fileType__: this[key].type }
+    return { __fileName__: this[key].name, __fileSize__: this[key].size, __fileType__: this[key].type };
+  }
   // cannot do this : if (value instanceof Date) { console.log('replacer return toISOString'); return { __strDate__: value.toISOString() } } // see note 1, instead we do this :
   // @ts-expect-error type issue
-  if (this[key] instanceof Date)
+  if (this[key] instanceof Date) {
     // @ts-expect-error type issue
-    return { __date__: this[key].toISOString() }
-  return value
+    return { __date__: this[key].toISOString() };
+  }
+  return value;
 }
 
 const createCircularReplacer = () => {
-  const seen = new WeakSet<object>()
+  const seen = new WeakSet<object>();
   /**
    * Replacer function for JSON.stringify with circular reference handling
    * @param this the context object
@@ -53,14 +61,16 @@ const createCircularReplacer = () => {
    * @returns the value to serialize
    */
   function circularReplacer(this: unknown, key: string, value?: Readonly<unknown>) {
-    if (typeof value === 'object' && value !== null) {
-      if (seen.has(value as object)) return '__circular__'
-      seen.add(value as object)
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value as object)) {
+        return "__circular__";
+      }
+      seen.add(value as object);
     }
-    return replacer.call(this, key, value)
+    return replacer.call(this, key, value);
   }
-  return circularReplacer
-}
+  return circularReplacer;
+};
 
 /**
  * Detect function for JSON.parse reviver
@@ -68,12 +78,22 @@ const createCircularReplacer = () => {
  * @returns the type of this value like : "empty", "date"...
  */
 function detect(value?: unknown) /* NOSONAR */ {
-  if (value === undefined || value === null || typeof value !== 'object') return 'not-object'
-  if ('__regexFlags__' in value && '__regexSource__' in value) return 'regex'
-  if ('__function__' in value) return 'function'
-  if ('__fileName__' in value && '__fileSize__' in value && '__fileType__' in value) return 'file'
-  if ('__date__' in value) return 'date'
-  return 'unknown'
+  if (value === undefined || value === null || typeof value !== "object") {
+    return "not-object";
+  }
+  if ("__regexFlags__" in value && "__regexSource__" in value) {
+    return "regex";
+  }
+  if ("__function__" in value) {
+    return "function";
+  }
+  if ("__fileName__" in value && "__fileSize__" in value && "__fileType__" in value) {
+    return "file";
+  }
+  if ("__date__" in value) {
+    return "date";
+  }
+  return "unknown";
 }
 
 /**
@@ -84,13 +104,21 @@ function detect(value?: unknown) /* NOSONAR */ {
  */
 // oxlint-disable-next-line no-explicit-any
 function reviver(_key: string, value?: any) {
-  const type = detect(value)
-  if (type === 'regex') return new RegExp(value.__regexSource__, value.__regexFlags__)
-  // oxlint-disable-next-line no-new-func
-  if (type === 'function') return new Function(`return ${value.__function__}`)() // NOSONAR
-  if (type === 'file') return new File([], value.__fileName__, { type: value.__fileType__ })
-  if (type === 'date') return new Date(value.__date__)
-  return value
+  const type = detect(value);
+  if (type === "regex") {
+    return new RegExp(value.__regexSource__, value.__regexFlags__);
+  }
+  if (type === "function") {
+    // oxlint-disable-next-line no-new-func
+    return new Function(`return ${value.__function__}`)(); // NOSONAR
+  }
+  if (type === "file") {
+    return new File([], value.__fileName__, { type: value.__fileType__ });
+  }
+  if (type === "date") {
+    return new Date(value.__date__);
+  }
+  return value;
 }
 
 /**
@@ -101,7 +129,7 @@ function reviver(_key: string, value?: any) {
  * @returns the serialized object as a string
  */
 export function objectSerialize(object: Readonly<Record<string, unknown>>, willSortKeys = false, willIndent = false) {
-  return JSON.stringify(willSortKeys ? objectSort(object) : object, createCircularReplacer(), willIndent ? nbSpacesIndent : undefined)
+  return JSON.stringify(willSortKeys ? objectSort(object) : object, createCircularReplacer(), willIndent ? nbSpacesIndent : undefined);
 }
 
 /**
@@ -110,7 +138,7 @@ export function objectSerialize(object: Readonly<Record<string, unknown>>, willS
  * @returns the deserialized object
  */
 export function objectDeserialize(string: string) {
-  return JSON.parse(string, reviver) as Record<number | string, unknown>
+  return JSON.parse(string, reviver) as Record<number | string, unknown>;
 }
 
 // note 1 : detecting Date objects in replacer function

@@ -1,18 +1,18 @@
-import { IconChevronRight } from '../icons/icon-chevron-right'
-import { BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, Breadcrumb as ShadBreadcrumb } from '../shadcn/breadcrumb'
-import { cn } from '../shadcn/utils'
+import { IconChevronRight } from "../icons/icon-chevron-right";
+import { BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, Breadcrumb as ShadBreadcrumb } from "../shadcn/breadcrumb";
+import { cn } from "../shadcn/utils";
 
 type Props = Readonly<{
-  items: { label: string; link: string }[]
-  className?: string
-}>
+  items: { label: string; link: string }[];
+  className?: string;
+}>;
 
-function BreadcrumbSeparator({ children, className, ...props }: React.ComponentProps<'span'>) {
+function BreadcrumbSeparator({ children, className, ...props }: React.ComponentProps<"span">) {
   return (
-    <span aria-hidden="true" className={cn('[&>svg]:size-3.5', className)} data-slot="breadcrumb-separator" role="presentation" {...props}>
+    <span aria-hidden="true" className={cn("[&>svg]:size-3.5", className)} data-slot="breadcrumb-separator" role="presentation" {...props}>
       {children ?? <IconChevronRight />}
     </span>
-  )
+  );
 }
 
 export function Breadcrumb({ items, className }: Props) {
@@ -33,5 +33,5 @@ export function Breadcrumb({ items, className }: Props) {
         ))}
       </BreadcrumbList>
     </ShadBreadcrumb>
-  )
+  );
 }

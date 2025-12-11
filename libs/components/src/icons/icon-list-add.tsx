@@ -1,5 +1,5 @@
-import { ListPlus } from 'lucide-react'
+import { ListPlus } from "lucide-react";
 
 export function IconListAdd() {
-  return <ListPlus />
+  return <ListPlus />;
 }

@@ -7,7 +7,7 @@
  * checkType<PersonModel>(await getPerson())
  */
 export function expectType<Type>(thing: Type) {
-  return thing
+  return thing;
 }
 
 /**
@@ -21,5 +21,5 @@ export function expectType<Type>(thing: Type) {
  * expectEqualTypes<PersonModel>({ name: 'John' }, { name: 'John', age: 42 })
  */
 export function expectEqualTypes<TypeA, TypeB extends TypeA>(thingA: TypeA, thingB: TypeB) {
-  return { thingA, thingB }
+  return { thingA, thingB };
 }

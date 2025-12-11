@@ -1,5 +1,5 @@
-import { ArrowUpIcon } from 'lucide-react'
+import { ArrowUpIcon } from "lucide-react";
 
 export function IconArrowUp({ className }: { className?: string }) {
-  return <ArrowUpIcon className={className} />
+  return <ArrowUpIcon className={className} />;
 }

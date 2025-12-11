@@ -1,5 +1,5 @@
-import { parseJson } from './json.js'
-import { Result } from './result.js'
+import { parseJson } from "./json.js";
+import { Result } from "./result.js";
 
 /**
  * Encode a string to base64
@@ -8,7 +8,7 @@ import { Result } from './result.js'
  */
 export function toBase64(str: string) {
   // oxlint-disable-next-line id-length
-  return globalThis.btoa(encodeURIComponent(str).replaceAll(/%([0-9A-F]{2})/g, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16))))
+  return globalThis.btoa(encodeURIComponent(str).replaceAll(/%([0-9A-F]{2})/g, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16))));
 }
 
 /**
@@ -17,12 +17,14 @@ export function toBase64(str: string) {
  * @returns Percent-encoded string
  */
 function base64CharToPercentEncoded(char: string) {
-  const hexRadix = 16
-  const padLength = 2
-  const code = char.codePointAt(0)
+  const hexRadix = 16;
+  const padLength = 2;
+  const code = char.codePointAt(0);
   /* v8 ignore next -- @preserve */
-  if (code === undefined) return ''
-  return `%${code.toString(hexRadix).padStart(padLength, '0')}`
+  if (code === undefined) {
+    return "";
+  }
+  return `%${code.toString(hexRadix).padStart(padLength, "0")}`;
 }
 
 /**
@@ -36,10 +38,10 @@ export function fromBase64(b64: string) {
       Array.from(globalThis.atob(b64))
         // oxlint-disable-next-line max-nested-callbacks
         .map(char => base64CharToPercentEncoded(char))
-        .join(''),
+        .join(""),
     ),
-  )
-  return result.ok ? result.value : ''
+  );
+  return result.ok ? result.value : "";
 }
 
 /**
@@ -48,7 +50,7 @@ export function fromBase64(b64: string) {
  * @returns Encoded data
  */
 export function encodeForUrl(data: unknown) {
-  return encodeURIComponent(toBase64(JSON.stringify(data)))
+  return encodeURIComponent(toBase64(JSON.stringify(data)));
 }
 
 /**
@@ -57,8 +59,8 @@ export function encodeForUrl(data: unknown) {
  * @returns Decoded data or empty string if decoding or parsing failed
  */
 export function decodeFromUrl(str: string) {
-  const b64 = decodeURIComponent(str)
-  const decoded = fromBase64(b64)
-  const result = parseJson(decoded)
-  return result.ok ? result.value : ''
+  const b64 = decodeURIComponent(str);
+  const decoded = fromBase64(b64);
+  const result = parseJson(decoded);
+  return result.ok ? result.value : "";
 }

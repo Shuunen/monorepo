@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Skeleton } from './skeleton'
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Skeleton } from "./skeleton";
 
 /**
  * Use to show a placeholder while content is loading.
@@ -8,15 +8,15 @@ const meta: Meta<typeof Skeleton> = {
   argTypes: {},
   component: Skeleton,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
-  title: 'Commons/Atoms/Skeleton',
-} satisfies Meta<typeof Skeleton>
+  tags: ["autodocs"],
+  title: "Commons/Atoms/Skeleton",
+} satisfies Meta<typeof Skeleton>;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof Skeleton>
+type Story = StoryObj<typeof Skeleton>;
 
 /**
  * The default form of the skeleton.
@@ -31,4 +31,4 @@ export const Default: Story = {
       </div>
     </div>
   ),
-}
+};

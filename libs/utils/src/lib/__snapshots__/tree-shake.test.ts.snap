@@ -47,7 +47,9 @@ exports[`tree-shake test B 1`] = `
   ╚══════════════════════════╝
   // src/lib/array-pick-one.ts
 function pickOne(items) {
-  if (items.length === 0) throw new Error("Array is empty");
+  if (items.length === 0) {
+    throw new Error("Array is empty");
+  }
   return items[Math.floor(Math.random() * items.length)];
 }
 
@@ -105,7 +107,11 @@ var timeAgoTuples = [
 function readableTimeAgo(input, language = "en") {
   const rtf = new Intl.RelativeTimeFormat(language, { numeric: "auto" });
   const ms = typeof input === "number" ? input : Date.now() - input.getTime();
-  for (const [threshold, divisor, unit] of timeAgoTuples) if (ms < threshold) return rtf.format(-Math.floor(ms / divisor), unit);
+  for (const [threshold, divisor, unit] of timeAgoTuples) {
+    if (ms < threshold) {
+      return rtf.format(-Math.floor(ms / divisor), unit);
+    }
+  }
   return rtf.format(-Math.floor(ms / nbMsInYear), "year");
 }
 
@@ -149,8 +155,16 @@ function toastShow(element, delay = 100) {
   }, delay);
 }
 function toastStyle(type) {
-  if (type === "success") return { backgrounds: ["MediumSeaGreen", "SeaGreen"], icon: "&check;", iconStyle: "line-height: 21px; text-indent: 1px;" };
-  if (type === "error") return { backgrounds: ["FireBrick", "Brown"], icon: "x", iconStyle: "line-height: 21.5px;" };
+  if (type === "success") {
+    return {
+      backgrounds: ["MediumSeaGreen", "SeaGreen"],
+      icon: "&check;",
+      iconStyle: "line-height: 21px; text-indent: 1px;"
+    };
+  }
+  if (type === "error") {
+    return { backgrounds: ["FireBrick", "Brown"], icon: "x", iconStyle: "line-height: 21.5px;" };
+  }
   return { backgrounds: ["DodgerBlue", "RoyalBlue"], icon: "i", iconStyle: "line-height: 21px;" };
 }
 function toastAdd(type, message = "", delay = 0, padding = 14) {
@@ -163,10 +177,11 @@ function toastAdd(type, message = "", delay = 0, padding = 14) {
   element.innerHTML = \`<span style="\${iconStyle}border-radius: 50%; color: \${backgrounds[1]}; background-color: #ffffff90; width: 20px; height: 20px; text-align: center; font-weight: bolder; font-size: 12px;">\${icon}</span><span style="margin-top: -1px;">\${message}</span>\`;
   console[type === "error" ? "error" : "log"](\`toast \${type} : \${message}\`);
   toastShow(element);
-  if (delay > 0)
+  if (delay > 0) {
     setTimeout(() => {
       toastHide(element);
     }, delay);
+  }
 }
 function toastSuccess(message, delay = 2e3) {
   toastAdd("success", message, delay);

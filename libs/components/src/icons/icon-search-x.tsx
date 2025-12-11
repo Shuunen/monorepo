@@ -1,5 +1,5 @@
-import { SearchXIcon } from 'lucide-react'
+import { SearchXIcon } from "lucide-react";
 
 export function IconSearchX({ className }: Readonly<{ className?: string }>) {
-  return <SearchXIcon className={className} strokeWidth={3} />
+  return <SearchXIcon className={className} strokeWidth={3} />;
 }

@@ -1,22 +1,22 @@
-import { Button } from '../atoms/button'
+import { Button } from "../atoms/button";
 
 type AutoFormNavigationProps = {
   leftButton?: {
-    disabled?: boolean
-    onClick: () => void
-  }
+    disabled?: boolean;
+    onClick: () => void;
+  };
   centerButton?: {
-    disabled?: boolean
-    onClick: () => void
-  }
+    disabled?: boolean;
+    onClick: () => void;
+  };
   rightButton?: {
-    label: string
-    disabled?: boolean
-    onClick?: () => void
-    type?: 'submit'
-    name: string
-  }
-}
+    label: string;
+    disabled?: boolean;
+    onClick?: () => void;
+    type?: "submit";
+    name: string;
+  };
+};
 
 export function AutoFormNavigation({ leftButton, centerButton, rightButton }: AutoFormNavigationProps) {
   return (
@@ -35,11 +35,11 @@ export function AutoFormNavigation({ leftButton, centerButton, rightButton }: Au
           </Button>
         )}
         {rightButton && (
-          <Button disabled={rightButton.disabled} name={rightButton.name} onClick={rightButton.onClick} type={rightButton.type || 'button'}>
+          <Button disabled={rightButton.disabled} name={rightButton.name} onClick={rightButton.onClick} type={rightButton.type || "button"}>
             {rightButton.label}
           </Button>
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -1,42 +1,64 @@
-import type { Logger } from '@monorepo/utils'
-import { z } from 'zod'
-import { Alert } from '../atoms/alert'
-import { getFieldMetadata, getFormFieldRender, isFieldVisible } from './auto-form.utils'
-import { FormFieldAccept } from './form-field-accept'
-import { FormFieldBoolean } from './form-field-boolean'
-import { FormFieldDate } from './form-field-date'
-import { FormFieldNumber } from './form-field-number'
-import { FormFieldPassword } from './form-field-password'
-import { FormFieldSection } from './form-field-section'
-import { FormFieldSelect } from './form-field-select'
-import { FormFieldText } from './form-field-text'
-import { FormFieldTextarea } from './form-field-textarea'
-import { FormFieldUpload } from './form-field-upload'
+import type { Logger } from "@monorepo/utils";
+import { z } from "zod";
+import { Alert } from "../atoms/alert";
+import { getFieldMetadata, getFormFieldRender, isFieldVisible } from "./auto-form.utils";
+import { FormFieldAccept } from "./form-field-accept";
+import { FormFieldBoolean } from "./form-field-boolean";
+import { FormFieldDate } from "./form-field-date";
+import { FormFieldNumber } from "./form-field-number";
+import { FormFieldPassword } from "./form-field-password";
+import { FormFieldSection } from "./form-field-section";
+import { FormFieldSelect } from "./form-field-select";
+import { FormFieldText } from "./form-field-text";
+import { FormFieldTextarea } from "./form-field-textarea";
+import { FormFieldUpload } from "./form-field-upload";
 
 type AutoFormFieldProps = {
-  fieldName: string
-  fieldSchema: z.ZodTypeAny
-  formData: Record<string, unknown>
-  logger?: Logger
-}
+  fieldName: string;
+  fieldSchema: z.ZodTypeAny;
+  formData: Record<string, unknown>;
+  logger?: Logger;
+};
 
 export function AutoFormField({ fieldName, fieldSchema, formData, logger }: AutoFormFieldProps) {
-  if (!isFieldVisible(fieldSchema, formData)) return
-  logger?.info('Rendering field', fieldName)
-  const isOptional = fieldSchema instanceof z.ZodOptional
-  const metadata = getFieldMetadata(fieldSchema) ?? {}
-  const state = 'state' in metadata ? (metadata.state ?? 'editable') : 'editable'
-  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly: state === 'readonly' }
-  const render = getFormFieldRender(fieldSchema)
-  if (render === 'accept') return <FormFieldAccept {...props} />
-  if (render === 'boolean') return <FormFieldBoolean {...props} />
-  if (render === 'date') return <FormFieldDate {...props} />
-  if (render === 'number') return <FormFieldNumber {...props} />
-  if (render === 'password') return <FormFieldPassword {...props} />
-  if (render === 'section') return <FormFieldSection {...metadata} />
-  if (render === 'select') return <FormFieldSelect {...props} />
-  if (render === 'text') return <FormFieldText {...props} />
-  if (render === 'textarea') return <FormFieldTextarea {...props} />
-  if (render === 'upload') return <FormFieldUpload {...props} />
-  return <Alert title={`Missing render "${render}" for field "${fieldName}"`} type="error" />
+  if (!isFieldVisible(fieldSchema, formData)) {
+    return;
+  }
+  logger?.info("Rendering field", fieldName);
+  const isOptional = fieldSchema instanceof z.ZodOptional;
+  const metadata = getFieldMetadata(fieldSchema) ?? {};
+  const state = "state" in metadata ? (metadata.state ?? "editable") : "editable";
+  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly: state === "readonly" };
+  const render = getFormFieldRender(fieldSchema);
+  if (render === "accept") {
+    return <FormFieldAccept {...props} />;
+  }
+  if (render === "boolean") {
+    return <FormFieldBoolean {...props} />;
+  }
+  if (render === "date") {
+    return <FormFieldDate {...props} />;
+  }
+  if (render === "number") {
+    return <FormFieldNumber {...props} />;
+  }
+  if (render === "password") {
+    return <FormFieldPassword {...props} />;
+  }
+  if (render === "section") {
+    return <FormFieldSection {...metadata} />;
+  }
+  if (render === "select") {
+    return <FormFieldSelect {...props} />;
+  }
+  if (render === "text") {
+    return <FormFieldText {...props} />;
+  }
+  if (render === "textarea") {
+    return <FormFieldTextarea {...props} />;
+  }
+  if (render === "upload") {
+    return <FormFieldUpload {...props} />;
+  }
+  return <Alert title={`Missing render "${render}" for field "${fieldName}"`} type="error" />;
 }

@@ -1,15 +1,15 @@
-import type { Decorator, Preview } from '@storybook/react-vite'
-import { createRootRoute, createRouter, RouterProvider } from '@tanstack/react-router'
+import type { Decorator, Preview } from "@storybook/react-vite";
+import { createRootRoute, createRouter, RouterProvider } from "@tanstack/react-router";
 // Import Tailwind CSS styles for Storybook
 // oxlint-disable-next-line no-unassigned-import
-import '../src/styles.css'
+import "../src/styles.css";
 
 const RouterDecorator: Decorator = Story => {
-  const rootRoute = createRootRoute({ component: () => <Story /> })
-  const routeTree = rootRoute
-  const router = createRouter({ routeTree })
-  return <RouterProvider router={router} />
-}
+  const rootRoute = createRootRoute({ component: () => <Story /> });
+  const routeTree = rootRoute;
+  const router = createRouter({ routeTree });
+  return <RouterProvider router={router} />;
+};
 
 const preview: Preview = {
   decorators: [RouterDecorator],
@@ -21,7 +21,7 @@ const preview: Preview = {
       },
     },
   },
-}
+};
 
 // oxlint-disable-next-line no-default-export
-export { preview as default }
+export { preview as default };

@@ -1,14 +1,14 @@
-import { Logger } from './logger.js'
-import { Result } from './result.js'
+import { Logger } from "./logger.js";
+import { Result } from "./result.js";
 
 export type AnalyticsOptions = Readonly<{
-  app?: string
-  onIdentify?: (userId: string, additionalData?: Record<string, unknown>) => unknown
-  onPage?: () => unknown
-  onTrack?: (event: string, additionalData?: Record<string, unknown>) => unknown
-  willLog?: boolean
-  willPile?: boolean
-}>
+  app?: string;
+  onIdentify?: (userId: string, additionalData?: Record<string, unknown>) => unknown;
+  onPage?: () => unknown;
+  onTrack?: (event: string, additionalData?: Record<string, unknown>) => unknown;
+  willLog?: boolean;
+  willPile?: boolean;
+}>;
 
 /**
  * Generic analytics wrapper, can be used with any analytics third party library
@@ -22,9 +22,9 @@ export type AnalyticsOptions = Readonly<{
  * @returns the analytics object
  */
 // oxlint-disable-next-line max-lines-per-function
-export function createAnalytics({ app = 'app-default', onIdentify, onPage, onTrack, willLog = false, willPile = false }: AnalyticsOptions | undefined = {}) {
-  const pile: string[] = []
-  const logger = willLog ? new Logger() : undefined
+export function createAnalytics({ app = "app-default", onIdentify, onPage, onTrack, willLog = false, willPile = false }: AnalyticsOptions | undefined = {}) {
+  const pile: string[] = [];
+  const logger = willLog ? new Logger() : undefined;
   /**
    * Add an item to the memory pile
    * @param item the item to add
@@ -32,10 +32,10 @@ export function createAnalytics({ app = 'app-default', onIdentify, onPage, onTra
    * @returns the result of the operation
    */
   function addToPile(item: string, data?: Record<string, unknown>) {
-    logger?.debug(`analytics : "${item}" added to pile`, data)
-    pile.push(item)
-    logger?.debug(`analytics : pile for app "${app}"`, pile)
-    return Result.ok(`analytics : "${item}" added to pile`)
+    logger?.debug(`analytics : "${item}" added to pile`, data);
+    pile.push(item);
+    logger?.debug(`analytics : pile for app "${app}"`, pile);
+    return Result.ok(`analytics : "${item}" added to pile`);
   }
   /**
    * Identify a user
@@ -44,22 +44,26 @@ export function createAnalytics({ app = 'app-default', onIdentify, onPage, onTra
    * @returns a Result object
    */
   function identify(userId: string, additionalData?: Record<string, unknown>) {
-    const message = `analytics : identify user "${userId}" on app "${app}"`
-    onIdentify?.(userId, additionalData)
-    logger?.debug(message)
-    if (willPile) addToPile(`identify:${userId}`)
-    return Result.ok(message)
+    const message = `analytics : identify user "${userId}" on app "${app}"`;
+    onIdentify?.(userId, additionalData);
+    logger?.debug(message);
+    if (willPile) {
+      addToPile(`identify:${userId}`);
+    }
+    return Result.ok(message);
   }
   /**
    * Track a page view
    * @returns a Result object
    */
   function page() {
-    const message = `analytics : track page for app "${app}"`
-    onPage?.()
-    logger?.debug(message)
-    if (willPile) addToPile('page')
-    return Result.ok(message)
+    const message = `analytics : track page for app "${app}"`;
+    onPage?.();
+    logger?.debug(message);
+    if (willPile) {
+      addToPile("page");
+    }
+    return Result.ok(message);
   }
   /**
    * Track an event
@@ -68,11 +72,13 @@ export function createAnalytics({ app = 'app-default', onIdentify, onPage, onTra
    * @returns a Result object
    */
   function track(event: string, additionalData?: Record<string, unknown>) {
-    const message = `analytics : track event "${event}" for app "${app}"`
-    onTrack?.(event, additionalData)
-    logger?.debug(message)
-    if (willPile) addToPile(`track:${event}`)
-    return Result.ok(message)
+    const message = `analytics : track event "${event}" for app "${app}"`;
+    onTrack?.(event, additionalData);
+    logger?.debug(message);
+    if (willPile) {
+      addToPile(`track:${event}`);
+    }
+    return Result.ok(message);
   }
-  return { identify, page, pile, track }
+  return { identify, page, pile, track };
 }

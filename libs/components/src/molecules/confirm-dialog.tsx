@@ -1,19 +1,19 @@
-import type { ReactNode } from 'react'
-import { Button } from '../atoms/button'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../atoms/dialog'
-import { Spinner } from '../atoms/spinner'
+import type { ReactNode } from "react";
+import { Button } from "../atoms/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../atoms/dialog";
+import { Spinner } from "../atoms/spinner";
 
 export type ConfirmDialogProps = {
-  isOpen: boolean
-  title: string
-  description: string
-  cancel: string
-  confirm: string
-  onCancel: () => void
-  onConfirm: () => void
-  loading?: boolean
-  children?: ReactNode
-}
+  isOpen: boolean;
+  title: string;
+  description: string;
+  cancel: string;
+  confirm: string;
+  onCancel: () => void;
+  onConfirm: () => void;
+  loading?: boolean;
+  children?: ReactNode;
+};
 
 export function ConfirmDialog(props: ConfirmDialogProps) {
   return (
@@ -38,5 +38,5 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

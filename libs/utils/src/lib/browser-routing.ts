@@ -1,4 +1,4 @@
-import { isBrowserEnvironment } from './environment.js'
+import { isBrowserEnvironment } from "./environment.js";
 
 /**
  * Remove extra slashes from URL
@@ -6,7 +6,7 @@ import { isBrowserEnvironment } from './environment.js'
  * @returns Cleaned URL
  */
 function removeExtraSlashes(url: string) {
-  return url.replaceAll(/\/{2,}/gu, '/')
+  return url.replaceAll(/\/{2,}/gu, "/");
 }
 
 /**
@@ -15,15 +15,19 @@ function removeExtraSlashes(url: string) {
  * @param addLang - Add language to path
  * @returns Path
  */
-export function getPath(url = '', addLang = '') {
+export function getPath(url = "", addLang = "") {
   /* v8 ignore next 2 -- @preserve */
-  let path = url === '' && isBrowserEnvironment() ? document.location.pathname : url
-  if (path === 'blank') path = ''
-  path = removeExtraSlashes(path)
+  let path = url === "" && isBrowserEnvironment() ? document.location.pathname : url;
+  if (path === "blank") {
+    path = "";
+  }
+  path = removeExtraSlashes(path);
   // biome-ignore lint/performance/useTopLevelRegex: fix me later
-  path = path.replace(/^\/[a-z]{2}\//u, '/') // remove any lang from path
-  if (addLang !== '') path = `/${addLang}/${path}` // add target lang to path
-  return removeExtraSlashes(path)
+  path = path.replace(/^\/[a-z]{2}\//u, "/"); // remove any lang from path
+  if (addLang !== "") {
+    path = `/${addLang}/${path}`;
+  } // add target lang to path
+  return removeExtraSlashes(path);
 }
 
 /**
@@ -31,9 +35,11 @@ export function getPath(url = '', addLang = '') {
  * @param url - URL to get page from
  * @returns Page
  */
-export function getPage(url = '') {
-  const path = getPath(url).slice(1)
-  if (path === '') return 'index'
+export function getPage(url = "") {
+  const path = getPath(url).slice(1);
+  if (path === "") {
+    return "index";
+  }
   /* v8 ignore next -- @preserve */
-  return path.split('.')[0] ?? ''
+  return path.split(".")[0] ?? "";
 }

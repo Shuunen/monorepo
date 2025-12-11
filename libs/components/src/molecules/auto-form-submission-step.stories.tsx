@@ -1,19 +1,19 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, within } from 'storybook/test'
-import { Paragraph } from '../atoms/typography'
-import { AutoFormSubmissionStep } from './auto-form-submission-step'
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, within } from "storybook/test";
+import { Paragraph } from "../atoms/typography";
+import { AutoFormSubmissionStep } from "./auto-form-submission-step";
 
 const meta = {
   component: AutoFormSubmissionStep,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  title: 'Commons/Molecules/AutoFormSubmissionStep',
-} satisfies Meta<typeof AutoFormSubmissionStep>
+  title: "Commons/Molecules/AutoFormSubmissionStep",
+} satisfies Meta<typeof AutoFormSubmissionStep>;
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof meta>;
 
 export const Loading: Story = {
   args: {
@@ -22,9 +22,9 @@ export const Loading: Story = {
         Your order <strong className="font-medium">XX11234654</strong> is being submitted, please wait until the process is finished.
       </Paragraph>
     ),
-    status: 'loading',
+    status: "loading",
   },
-}
+};
 
 export const Success: Story = {
   args: {
@@ -33,9 +33,9 @@ export const Success: Story = {
         Your order <strong className="font-medium">XX1123465111</strong> has been successfully submitted.
       </Paragraph>
     ),
-    status: 'success',
+    status: "success",
   },
-}
+};
 
 export const SuccessWithDetails: Story = {
   args: {
@@ -44,11 +44,11 @@ export const SuccessWithDetails: Story = {
         Your order <strong className="font-medium">XX112346545</strong> has been successfully submitted.
       </Paragraph>
     ),
-    detailsList: ['Your order was processed without issues.'],
-    status: 'success',
-    tooltipDetailsList: ['All checks passed.'],
+    detailsList: ["Your order was processed without issues."],
+    status: "success",
+    tooltipDetailsList: ["All checks passed."],
   },
-}
+};
 
 export const WarningWithDetails: Story = {
   args: {
@@ -57,11 +57,11 @@ export const WarningWithDetails: Story = {
         Your order <strong className="font-medium">XX1123465423</strong> has been successfully submitted with some warnings.
       </Paragraph>
     ),
-    detailsList: ['Some optional documents were missing.'],
-    status: 'warning',
-    tooltipDetailsList: ['Submission succeeded, but review required.'],
+    detailsList: ["Some optional documents were missing."],
+    status: "warning",
+    tooltipDetailsList: ["Submission succeeded, but review required."],
   },
-}
+};
 
 export const ErrorWithDetails: Story = {
   args: {
@@ -70,20 +70,20 @@ export const ErrorWithDetails: Story = {
         Your order <strong className="font-medium">XX1123465433</strong> was not submitted, some errors prevent it from being processed:
       </Paragraph>
     ),
-    detailsList: ['Document X is invalid.', 'Please contact support.'],
-    status: 'error',
-    tooltipDetailsList: ['Critical error encountered.'],
+    detailsList: ["Document X is invalid.", "Please contact support."],
+    status: "error",
+    tooltipDetailsList: ["Critical error encountered."],
   },
   play: ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    const title = canvas.getByRole('heading')
-    expect(title.textContent).toContain('Error')
-    const reference = canvas.getByRole('strong')
-    expect(reference.textContent).toBe('XX1123465433')
-    const tooltipTrigger = canvas.getByTestId('tooltip-trigger-tooltip-details-list')
-    expect(tooltipTrigger).toBeInTheDocument()
+    const canvas = within(canvasElement);
+    const title = canvas.getByRole("heading");
+    expect(title.textContent).toContain("Error");
+    const reference = canvas.getByRole("strong");
+    expect(reference.textContent).toBe("XX1123465433");
+    const tooltipTrigger = canvas.getByTestId("tooltip-trigger-tooltip-details-list");
+    expect(tooltipTrigger).toBeInTheDocument();
   },
-}
+};
 
 export const UnknownErrorWithDetails: Story = {
   args: {
@@ -92,8 +92,8 @@ export const UnknownErrorWithDetails: Story = {
         Your order <strong className="font-medium">XX1123465466</strong> was not submitted, an unknown error occurred.
       </Paragraph>
     ),
-    detailsList: ['An unexpected error occurred.'],
-    status: 'unknown-error',
-    tooltipDetailsList: ['No further information available.'],
+    detailsList: ["An unexpected error occurred."],
+    status: "unknown-error",
+    tooltipDetailsList: ["No further information available."],
   },
-}
+};

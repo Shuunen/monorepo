@@ -1,12 +1,12 @@
-import { Paragraph, Title } from '../atoms/typography'
-import { FormSummary } from './form-summary'
+import { Paragraph, Title } from "../atoms/typography";
+import { FormSummary } from "./form-summary";
 
 type Props = {
   /**
    * The data to summarize
    */
-  data?: Record<string, unknown>
-}
+  data?: Record<string, unknown>;
+};
 
 export function AutoFormSummaryStep(props: Props) {
   return (
@@ -21,5 +21,5 @@ export function AutoFormSummaryStep(props: Props) {
         <Paragraph>No data available for summary.</Paragraph>
       )}
     </div>
-  )
+  );
 }

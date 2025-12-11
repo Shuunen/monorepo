@@ -1,5 +1,5 @@
-import { FileClock } from 'lucide-react'
+import { FileClock } from "lucide-react";
 
 export function IconFileClock() {
-  return <FileClock />
+  return <FileClock />;
 }

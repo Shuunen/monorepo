@@ -1,8 +1,8 @@
-import { nbDaysInWeek, nbSpacesIndent } from './constants.js'
-import { Result } from './result.js'
-import { sleep } from './sleep.js'
+import { nbDaysInWeek, nbSpacesIndent } from "./constants.js";
+import { Result } from "./result.js";
+import { sleep } from "./sleep.js";
 
-type DomContent = Node | Node[] | string
+type DomContent = Node | Node[] | string;
 
 /**
  * Generate a dom element
@@ -11,13 +11,19 @@ type DomContent = Node | Node[] | string
  * @param content the content of the element, can be a string, another dom element or an array of dom elements
  * @returns the generated dom element
  */
-export function dom<Tag extends keyof HTMLElementTagNameMap>(type: Tag, classes = '', content: DomContent = '') {
-  const element = document.createElement(type)
-  element.className = classes
-  if (typeof content === 'string') element.innerHTML = content
-  else if (content instanceof Node) element.append(content)
-  else for (const node of content) element.append(node)
-  return element
+export function dom<Tag extends keyof HTMLElementTagNameMap>(type: Tag, classes = "", content: DomContent = "") {
+  const element = document.createElement(type);
+  element.className = classes;
+  if (typeof content === "string") {
+    element.innerHTML = content;
+  } else if (content instanceof Node) {
+    element.append(content);
+  } else {
+    for (const node of content) {
+      element.append(node);
+    }
+  }
+  return element;
 }
 
 /**
@@ -28,10 +34,10 @@ export function dom<Tag extends keyof HTMLElementTagNameMap>(type: Tag, classes 
  * @returns the generated image element
  */
 export function img(classes: string, source: string, alt: string) {
-  const element = dom('img', classes)
-  element.alt = alt
-  element.src = source
-  return element
+  const element = dom("img", classes);
+  element.alt = alt;
+  element.src = source;
+  return element;
 }
 
 /**
@@ -39,8 +45,8 @@ export function img(classes: string, source: string, alt: string) {
  * @param classes the custom classes to add to the element
  * @returns the generated icon element
  */
-export function icon(classes = '') {
-  return dom('i', `icon ${classes}`)
+export function icon(classes = "") {
+  return dom("i", `icon ${classes}`);
 }
 
 /**
@@ -53,10 +59,12 @@ export function icon(classes = '') {
  */
 // oxlint-disable-next-line max-params
 export function link(classes: string, content: DomContent, href: string, willOpenInNewTab = false) {
-  const element = dom('a', classes, content)
-  element.href = href
-  if (willOpenInNewTab) element.target = '_blank'
-  return element
+  const element = dom("a", classes, content);
+  element.href = href;
+  if (willOpenInNewTab) {
+    element.target = "_blank";
+  }
+  return element;
 }
 
 /**
@@ -65,8 +73,8 @@ export function link(classes: string, content: DomContent, href: string, willOpe
  * @param content the content of the element, can be a string, another dom element or an array of dom elements
  * @returns the generated paragraph element
  */
-export function text(classes: string, content: DomContent = '') {
-  return dom('p', classes, content)
+export function text(classes: string, content: DomContent = "") {
+  return dom("p", classes, content);
 }
 
 /**
@@ -75,8 +83,8 @@ export function text(classes: string, content: DomContent = '') {
  * @param content the content of the element, can be a string, another dom element or an array of dom elements
  * @returns the generated strong element
  */
-export function strong(classes: string, content: DomContent = '') {
-  return dom('strong', classes, content)
+export function strong(classes: string, content: DomContent = "") {
+  return dom("strong", classes, content);
 }
 
 /**
@@ -85,8 +93,8 @@ export function strong(classes: string, content: DomContent = '') {
  * @param content the content of the element, can be a string, another dom element or an array of dom elements
  * @returns the generated emphasis element
  */
-export function em(classes: string, content: DomContent = '') {
-  return dom('em', classes, content)
+export function em(classes: string, content: DomContent = "") {
+  return dom("em", classes, content);
 }
 
 /**
@@ -95,8 +103,8 @@ export function em(classes: string, content: DomContent = '') {
  * @param content the content of the element, can be a string, another dom element or an array of dom elements
  * @returns the generated small element
  */
-export function small(classes: string, content: DomContent = '') {
-  return dom('small', classes, content)
+export function small(classes: string, content: DomContent = "") {
+  return dom("small", classes, content);
 }
 
 /**
@@ -105,8 +113,8 @@ export function small(classes: string, content: DomContent = '') {
  * @param content the content of the element, can be a string, another dom element or an array of dom elements
  * @returns the generated heading element
  */
-export function h1(classes: string, content: DomContent = '') {
-  return dom('h1', classes, content)
+export function h1(classes: string, content: DomContent = "") {
+  return dom("h1", classes, content);
 }
 
 /**
@@ -115,8 +123,8 @@ export function h1(classes: string, content: DomContent = '') {
  * @param content the content of the element, can be a string, another dom element or an array of dom elements
  * @returns the generated heading element
  */
-export function h2(classes: string, content: DomContent = '') {
-  return dom('h2', classes, content)
+export function h2(classes: string, content: DomContent = "") {
+  return dom("h2", classes, content);
 }
 
 /**
@@ -125,8 +133,8 @@ export function h2(classes: string, content: DomContent = '') {
  * @param content the content of the element, can be a string, another dom element or an array of dom elements
  * @returns the generated heading element
  */
-export function h3(classes: string, content: DomContent = '') {
-  return dom('h3', classes, content)
+export function h3(classes: string, content: DomContent = "") {
+  return dom("h3", classes, content);
 }
 
 /**
@@ -135,8 +143,8 @@ export function h3(classes: string, content: DomContent = '') {
  * @param content the content of the element, can be a string, another dom element or an array of dom elements
  * @returns the generated list element
  */
-export function ul(classes: string, content: DomContent = '') {
-  return dom('ul', classes, content)
+export function ul(classes: string, content: DomContent = "") {
+  return dom("ul", classes, content);
 }
 
 /**
@@ -145,8 +153,8 @@ export function ul(classes: string, content: DomContent = '') {
  * @param content the content of the element, can be a string, another dom element or an array of dom elements
  * @returns the generated list element
  */
-export function li(classes: string, content: DomContent = '') {
-  return dom('li', classes, content)
+export function li(classes: string, content: DomContent = "") {
+  return dom("li", classes, content);
 }
 
 /**
@@ -155,8 +163,8 @@ export function li(classes: string, content: DomContent = '') {
  * @param content the content of the element, can be a string, another dom element or an array of dom elements
  * @returns the generated div element
  */
-export function div(classes: string, content: DomContent = '') {
-  return dom('div', classes, content)
+export function div(classes: string, content: DomContent = "") {
+  return dom("div", classes, content);
 }
 
 /**
@@ -165,11 +173,11 @@ export function div(classes: string, content: DomContent = '') {
  * @returns the link element, ex: &lt;link type="text/css" href="../styles.css" rel="stylesheet" />
  */
 export function css(href: string) {
-  const element = dom('link')
-  element.href = href
-  element.rel = 'stylesheet'
-  element.type = 'text/css'
-  return element
+  const element = dom("link");
+  element.href = href;
+  element.rel = "stylesheet";
+  element.type = "text/css";
+  return element;
 }
 
 /**
@@ -179,7 +187,7 @@ export function css(href: string) {
  * @returns the element or null if not found
  */
 export function findOne<Type extends Element = HTMLElement>(selector: string, context: Document | HTMLElement = document) {
-  return context.querySelector<Type>(selector)
+  return context.querySelector<Type>(selector);
 }
 
 /**
@@ -189,7 +197,7 @@ export function findOne<Type extends Element = HTMLElement>(selector: string, co
  * @returns array of found elements
  */
 export function findAll(selector: string, context: Document | HTMLElement = document) {
-  return Array.from(context.querySelectorAll(selector))
+  return Array.from(context.querySelectorAll(selector));
 }
 
 /**
@@ -202,12 +210,16 @@ export function findAll(selector: string, context: Document | HTMLElement = docu
  */
 // oxlint-disable-next-line max-params
 export async function waitToDetect(selector: string, wait = 500, nbTries = 0, maxTry = 5) {
-  await sleep(wait)
-  const element = findOne(selector)
-  if (element) return Result.ok(element)
+  await sleep(wait);
+  const element = findOne(selector);
+  if (element) {
+    return Result.ok(element);
+  }
   /* v8 ignore next 3 -- @preserve */
-  if (nbTries > maxTry) return Result.error(`stop searching after 5 fails to detect : "${selector}"`)
-  return waitToDetect(selector, wait, nbTries + 1, maxTry)
+  if (nbTries > maxTry) {
+    return Result.error(`stop searching after 5 fails to detect : "${selector}"`);
+  }
+  return waitToDetect(selector, wait, nbTries + 1, maxTry);
 }
 
 /**
@@ -218,12 +230,12 @@ export async function waitToDetect(selector: string, wait = 500, nbTries = 0, ma
  * @param element the element to set height to
  */
 export async function scrollToHeightSync(element: HTMLElement) {
-  const initial = element.style.height
-  element.style.height = 'inherit'
-  const target = element.scrollHeight + nbSpacesIndent
-  element.style.height = initial
-  await sleep(nbDaysInWeek)
-  element.style.height = `${target}px`
+  const initial = element.style.height;
+  element.style.height = "inherit";
+  const target = element.scrollHeight + nbSpacesIndent;
+  element.style.height = initial;
+  await sleep(nbDaysInWeek);
+  element.style.height = `${target}px`;
 }
 
 /**
@@ -232,7 +244,7 @@ export async function scrollToHeightSync(element: HTMLElement) {
  * @returns the backdrop element
  */
 export function backdrop(classes: string) {
-  return div(`backdrop ${classes} fixed top-0 left-0 z-10 w-full h-full opacity-0 pointer-events-none`)
+  return div(`backdrop ${classes} fixed top-0 left-0 z-10 w-full h-full opacity-0 pointer-events-none`);
 }
 
 /**
@@ -241,6 +253,8 @@ export function backdrop(classes: string) {
  * @returns the classes as a string
  */
 export function tw(classes: Readonly<string[]> | Readonly<TemplateStringsArray> | string) {
-  if (typeof classes === 'string') return classes
-  return classes.join(' ')
+  if (typeof classes === "string") {
+    return classes;
+  }
+  return classes.join(" ");
 }

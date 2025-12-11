@@ -7,5 +7,5 @@
  */
 export function round(number: number, nbDecimals = 2) {
   // oxlint-disable-next-line no-magic-numbers
-  return Math.round(number * 10 ** nbDecimals) / 10 ** nbDecimals
+  return Math.round(number * 10 ** nbDecimals) / 10 ** nbDecimals;
 }

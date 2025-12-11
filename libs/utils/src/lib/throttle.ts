@@ -6,13 +6,15 @@
  * @returns a throttled function
  */
 export function throttle<Arguments extends readonly unknown[], Return>(callback: (...arguments_: Arguments) => Return, timeout: number): (...arguments_: Arguments) => void {
-  let isReady = true
+  let isReady = true;
   return (...arguments_: Arguments) => {
-    if (!isReady) return
-    isReady = false
-    callback(...arguments_)
+    if (!isReady) {
+      return;
+    }
+    isReady = false;
+    callback(...arguments_);
     setTimeout(() => {
-      isReady = true
-    }, timeout)
-  }
+      isReady = true;
+    }, timeout);
+  };
 }

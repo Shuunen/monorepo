@@ -1,42 +1,42 @@
-import { toastInfo } from '@monorepo/utils'
-import type { Meta, StoryObj } from '@storybook/react-vite'
+import { toastInfo } from "@monorepo/utils";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 // oxlint-disable-next-line no-restricted-imports
-import { BanIcon, CogIcon, TvIcon } from 'lucide-react'
-import { FloatingMenu } from './floating-menu'
+import { BanIcon, CogIcon, TvIcon } from "lucide-react";
+import { FloatingMenu } from "./floating-menu";
 
 const meta: Meta<typeof FloatingMenu> = {
   component: FloatingMenu,
-  title: 'Commons/Molecules/FloatingMenu',
-}
+  title: "Commons/Molecules/FloatingMenu",
+};
 
-export default meta
+export default meta;
 
-type Story = StoryObj<typeof FloatingMenu>
+type Story = StoryObj<typeof FloatingMenu>;
 
 export const Basic: Story = {
   args: {
     actions: [
       {
-        handleClick: () => toastInfo('Casting to tv...'),
+        handleClick: () => toastInfo("Casting to tv..."),
         icon: TvIcon,
-        name: 'Cast to TV',
+        name: "Cast to TV",
       },
       {
-        handleClick: () => toastInfo('Blocking user...'),
+        handleClick: () => toastInfo("Blocking user..."),
         icon: BanIcon,
-        name: 'Block User',
+        name: "Block User",
       },
       {
-        handleClick: () => toastInfo('Opening settings...'),
+        handleClick: () => toastInfo("Opening settings..."),
         icon: CogIcon,
-        name: 'Open Settings',
+        name: "Open Settings",
       },
     ],
   },
-}
+};
 
 export const NoActions: Story = {
   args: {
     actions: [],
   },
-}
+};

@@ -1,5 +1,5 @@
-import { CircleEllipsis } from 'lucide-react'
+import { CircleEllipsis } from "lucide-react";
 
 export function IconCircleEllipsis() {
-  return <CircleEllipsis />
+  return <CircleEllipsis />;
 }

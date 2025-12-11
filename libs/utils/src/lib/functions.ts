@@ -5,7 +5,7 @@
  * @returns true if the object has the property
  */
 export function hasOwn(object: object, property: string) {
-  return Object.hasOwn(object, property)
+  return Object.hasOwn(object, property);
 }
 
 // oxlint-disable no-empty-function, empty-brace-spaces
@@ -21,5 +21,5 @@ export function functionReturningVoid(): void {}
  * @returns `undefined`
  */
 export function functionReturningUndefined() {
-  return undefined
+  return undefined;
 }
