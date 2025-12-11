@@ -1,0 +1,3 @@
+.not-indented + .indented {
+  margin-top: 12px;
+}
