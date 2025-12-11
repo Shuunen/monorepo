@@ -22,7 +22,7 @@ const config: StorybookConfig = {
       },
     },
   },
-  stories: ["../src/**/*.@(mdx|stories.tsx)", "../../../apps/**/src/**/*.stories.@(js|jsx|ts|tsx|mdx)"],
+  stories: ["../src/**/*.@(mdx|stories.tsx)", "../../../apps/*/src/components/*.stories.@(js|jsx|ts|tsx|mdx)"],
   viteFinal: config => {
     config.esbuild = {
       ...config.esbuild,
