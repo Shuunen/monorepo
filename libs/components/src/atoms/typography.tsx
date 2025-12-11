@@ -11,7 +11,7 @@ const titleVariants = cva('font-semibold tracking-tight', {
     level: {
       1: 'text-2xl font-bold',
       2: 'text-xl',
-      3: 'text-lg',
+      3: cn('text-base font-semibold'),
       4: 'text-base',
     },
     variant: {
@@ -75,7 +75,8 @@ const paragraphVariants = cva('leading-relaxed', {
   variants: {
     variant: {
       default: 'text-foreground',
-      muted: 'text-muted-foreground',
+      error: 'text-destructive text-sm',
+      muted: 'text-muted-foreground text-sm',
       primary: 'text-primary',
       secondary: 'text-secondary-foreground',
     },
