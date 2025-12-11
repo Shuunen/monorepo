@@ -4,6 +4,7 @@ import { cn } from '../shadcn/utils'
 
 type Props = Readonly<{
   items: { label: string; link: string }[]
+  className?: string
 }>
 
 function BreadcrumbSeparator({ children, className, ...props }: React.ComponentProps<'span'>) {
@@ -14,9 +15,9 @@ function BreadcrumbSeparator({ children, className, ...props }: React.ComponentP
   )
 }
 
-export function Breadcrumb({ items }: Props) {
+export function Breadcrumb({ items, className }: Props) {
   return (
-    <ShadBreadcrumb>
+    <ShadBreadcrumb className={className}>
       <BreadcrumbList>
         {items.map((item, index) => (
           <BreadcrumbItem key={item.link + item.label}>
