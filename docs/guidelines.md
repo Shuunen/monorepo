@@ -45,9 +45,9 @@ TODO: ??? handlers (display toast when error, authentication timeout needed to r
 
 ### Stores
 
-Stores must be created in the stores folder: ex: `/apps/<app>/src/stores/use-notifications.store.ts`.
+Stores must be created in the stores folder: ex: `/apps/<app>/src/stores/notifications.store.ts`, `/apps/<app>/src/stores/use-downloads.store.ts`.
 
-Each store must export a hook (ex: `useNotificationsStore()`).
+Each store can also export a hook (ex: `useDownloadsStore()`).
 
 Stores must be unit tested.
 
@@ -179,10 +179,10 @@ funnel approach naming : from generic to specific, what is wrapping what ?
 
 ### Enums
 
-Prefer `as const` object` to enums. Use CamelCase for the variable name and keys.
+Prefer `as const` object` to enums. Use camelCase for the variable name and keys.
 
 ```ts
-export const ASYNC_JOB_STATUS = {
+export const asyncJobStatus = {
   error: 3,
   pending: 0,
   ready: 2,
