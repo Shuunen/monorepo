@@ -17,11 +17,12 @@ type IndexedObject = Record<string, unknown>
  */
 export function arraySort<ArrayType extends unknown[]>(subject: ArrayType, comparator?: KeyComparator) {
   const result = []
-  for (let value of subject) {
+  for (const value of subject) {
+    let sortedValue = value
     if (value !== null && value !== undefined)
-      if (Array.isArray(value)) value = arraySort(value, comparator)
-      else if (typeof value === 'object') value = objectSort(value as IndexedObject, comparator)
-    result.push(value)
+      if (Array.isArray(value)) sortedValue = arraySort(value, comparator)
+      else if (typeof value === 'object') sortedValue = objectSort(value as IndexedObject, comparator)
+    result.push(sortedValue)
   }
   return result as ArrayType
 }
