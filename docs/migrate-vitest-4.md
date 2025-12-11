@@ -13,7 +13,6 @@ These instructions guide you through migrating an Nx workspace containing multip
    ```
 
 2. **Locate all Vitest configuration files**:
-
    - Search for `vitest.config.{ts,js,mjs}`
    - Search for `vitest.workspace.{ts,js,mjs}`
    - Check `project.json` files for inline Vitest configuration
@@ -39,7 +38,7 @@ export default defineConfig({
   test: {
     coverage: {
       all: true,
-      extensions: ['.ts', '.tsx'],
+      extensions: [".ts", ".tsx"],
       ignoreEmptyLines: false,
       experimentalAstAwareRemapping: true,
     },
@@ -51,7 +50,7 @@ export default defineConfig({
   test: {
     coverage: {
       // Explicitly define files to include in coverage
-      include: ['src/**/*.{ts,tsx}'],
+      include: ["src/**/*.{ts,tsx}"],
       // Remove: all, extensions, ignoreEmptyLines, experimentalAstAwareRemapping
     },
   },
@@ -85,7 +84,7 @@ export default defineConfig({
         useAtomics: true,
       },
       vmThreads: {
-        memoryLimit: '512MB',
+        memoryLimit: "512MB",
       },
     },
   },
@@ -97,7 +96,7 @@ export default defineConfig({
     maxWorkers: 4, // Consolidates maxThreads and maxForks
     isolate: true, // Replaces singleThread: false
     // Remove: poolOptions, threads.useAtomics
-    vmMemoryLimit: '512MB', // Moved to top-level
+    vmMemoryLimit: "512MB", // Moved to top-level
   },
 });
 ```
@@ -120,14 +119,14 @@ export default defineConfig({
 // ❌ BEFORE (Vitest 3.x)
 export default defineConfig({
   test: {
-    workspace: ['apps/*', 'libs/*'],
+    workspace: ["apps/*", "libs/*"],
   },
 });
 
 // ✅ AFTER (Vitest 4.0)
 export default defineConfig({
   test: {
-    projects: ['apps/*', 'libs/*'],
+    projects: ["apps/*", "libs/*"],
   },
 });
 ```
@@ -151,28 +150,28 @@ export default defineConfig({
   test: {
     browser: {
       enabled: true,
-      provider: 'playwright', // String value
-      testerScripts: ['./setup.js'],
+      provider: "playwright", // String value
+      testerScripts: ["./setup.js"],
     },
   },
 });
 
 // Import changes
-import { page } from '@vitest/browser';
+import { page } from "@vitest/browser";
 
 // ✅ AFTER (Vitest 4.0)
 export default defineConfig({
   test: {
     browser: {
       enabled: true,
-      provider: { name: 'playwright' }, // Object value
-      testerHtmlPath: './test-setup.html', // Renamed from testerScripts
+      provider: { name: "playwright" }, // Object value
+      testerHtmlPath: "./test-setup.html", // Renamed from testerScripts
     },
   },
 });
 
 // Import changes
-import { page } from 'vitest/browser';
+import { page } from "vitest/browser";
 ```
 
 **Action Items**:
@@ -193,8 +192,8 @@ import { page } from 'vitest/browser';
 export default defineConfig({
   test: {
     deps: {
-      external: ['some-package'],
-      inline: ['inline-package'],
+      external: ["some-package"],
+      inline: ["inline-package"],
       fallbackCJS: true,
     },
   },
@@ -205,8 +204,8 @@ export default defineConfig({
   test: {
     server: {
       deps: {
-        external: ['some-package'],
-        inline: ['inline-package'],
+        external: ["some-package"],
+        inline: ["inline-package"],
         fallbackCJS: true,
       },
     },
@@ -231,15 +230,15 @@ export default defineConfig({
 ```typescript
 // ❌ BEFORE (Vitest 3.x)
 const mockFn = vi.fn();
-expect(mockFn.getMockName()).toBe('spy'); // Old default
+expect(mockFn.getMockName()).toBe("spy"); // Old default
 
 // ✅ AFTER (Vitest 4.0)
 const mockFn = vi.fn();
-expect(mockFn.getMockName()).toBe('vi.fn()'); // New default
+expect(mockFn.getMockName()).toBe("vi.fn()"); // New default
 
 // If you need custom names, set them explicitly
-const namedMock = vi.fn().mockName('myCustomName');
-expect(namedMock.getMockName()).toBe('myCustomName');
+const namedMock = vi.fn().mockName("myCustomName");
+expect(namedMock.getMockName()).toBe("myCustomName");
 ```
 
 **Action Items**:
@@ -308,15 +307,15 @@ const MockConstructor = vi.fn(MockClass);
 
 ```typescript
 // ❌ BEFORE (Vitest 3.x)
-vi.mock('./module', () => ({ fn: vi.fn() }));
+vi.mock("./module", () => ({ fn: vi.fn() }));
 vi.restoreAllMocks(); // Would restore automocks
 
 // ✅ AFTER (Vitest 4.0)
-vi.mock('./module', () => ({ fn: vi.fn() }));
+vi.mock("./module", () => ({ fn: vi.fn() }));
 vi.restoreAllMocks(); // Only restores manual spies, NOT automocks
 
 // To reset automocks, use:
-vi.unmock('./module');
+vi.unmock("./module");
 // or
 vi.resetModules();
 ```
@@ -336,12 +335,12 @@ vi.resetModules();
 ```typescript
 // ❌ BEFORE (Vitest 3.x)
 const mock = vi.fn();
-const spy = vi.spyOn({ method: mock }, 'method');
+const spy = vi.spyOn({ method: mock }, "method");
 // spy !== mock (created new spy)
 
 // ✅ AFTER (Vitest 4.0)
 const mock = vi.fn();
-const spy = vi.spyOn({ method: mock }, 'method');
+const spy = vi.spyOn({ method: mock }, "method");
 // spy === mock (returns same instance)
 ```
 
@@ -359,40 +358,40 @@ const spy = vi.spyOn({ method: mock }, 'method');
 
 ```typescript
 // ❌ BEFORE (Vitest 3.x)
-vi.mock('./utils', () => ({
+vi.mock("./utils", () => ({
   get value() {
     return 42;
   }, // Would call getter
 }));
 
-import { value } from './utils';
+import { value } from "./utils";
 console.log(value); // Would execute getter logic
 
 // Restore might have worked
-const spy = vi.spyOn(obj, 'method');
+const spy = vi.spyOn(obj, "method");
 spy.mockRestore(); // Might work on automocks
 
 // ✅ AFTER (Vitest 4.0)
-vi.mock('./utils', () => ({
+vi.mock("./utils", () => ({
   get value() {
     return 42;
   },
 }));
 
-import { value } from './utils';
+import { value } from "./utils";
 console.log(value); // Returns undefined (doesn't call getter)
 
 // Explicitly return value if needed
-vi.mock('./utils', () => ({
+vi.mock("./utils", () => ({
   value: 42, // Not a getter
 }));
 
 // mockRestore no longer works on automocks
-const spy = vi.spyOn(obj, 'method');
+const spy = vi.spyOn(obj, "method");
 spy.mockRestore(); // Throws error if method is automocked
 
 // Use unmock instead
-vi.unmock('./module');
+vi.unmock("./module");
 ```
 
 **Action Items**:
@@ -410,20 +409,20 @@ vi.unmock('./module');
 
 ```typescript
 // ✅ AFTER (Vitest 4.0)
-const asyncMock = vi.fn(async () => 'result');
+const asyncMock = vi.fn(async () => "result");
 const promise = asyncMock();
 
 // settledResults is immediately populated with 'incomplete' status
 expect(asyncMock.mock.settledResults[0]).toEqual({
-  type: 'incomplete',
+  type: "incomplete",
   value: undefined,
 });
 
 // After promise resolves
 await promise;
 expect(asyncMock.mock.settledResults[0]).toEqual({
-  type: 'fulfilled',
-  value: 'result',
+  type: "fulfilled",
+  value: "result",
 });
 ```
 
@@ -475,19 +474,19 @@ export default {
 // ❌ BEFORE (Vitest 3.x)
 export default defineConfig({
   test: {
-    reporters: ['basic'],
+    reporters: ["basic"],
   },
 });
 
 // ✅ AFTER (Vitest 4.0)
 export default defineConfig({
   test: {
-    reporters: [['default', { summary: false }]], // Equivalent to 'basic'
+    reporters: [["default", { summary: false }]], // Equivalent to 'basic'
   },
 });
 
 // For verbose (tree output)
-reporters: ['tree']; // Use 'tree' for hierarchical output
+reporters: ["tree"]; // Use 'tree' for hierarchical output
 ```
 
 **Action Items**:
@@ -554,7 +553,7 @@ VITEST_MODULE_DIRECTORIES=/custom/path
 
 ```typescript
 // ❌ BEFORE (Vitest 3.x)
-import { execute } from 'vitest/execute';
+import { execute } from "vitest/execute";
 // Access to __vitest_executor
 
 // ✅ AFTER (Vitest 4.0)

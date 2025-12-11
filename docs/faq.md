@@ -3,6 +3,9 @@
 - [FAQ](#faq)
   - [Cannot find module](#cannot-find-module)
     - [Vitest](#vitest)
+  - [Storybook](#storybook)
+    - [How to run the storybook ?](#how-to-run-the-storybook-)
+    - [Where should I put my story ?](#where-should-i-put-my-story-)
 
 ## Cannot find module
 
@@ -30,3 +33,17 @@ Here for example we will clean components node_modules and re-run the same comma
 pnpm clean
 nx run components:test
 ```
+
+## Storybook
+
+Now all the stories from every project are shared in the same storybook. All the stories names are prefixed with the project name. All the stories in the `libs/components` folder are prefixed with `Commons`.
+
+_For exemple: `Sample-Webapp/Atoms/Button`._
+
+### How to run the storybook ?
+
+You can either run the command: `nx run components:run-storybook` or directly run the task from the Nx Console / Command Palette > Run Task.
+
+### Where should I put my story ?
+
+Stories always stay with his component. Wherever there is your component is where your story must be.
