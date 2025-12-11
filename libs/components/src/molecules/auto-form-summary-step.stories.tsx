@@ -6,7 +6,7 @@ const meta: Meta<typeof AutoFormSummaryStep> = {
   parameters: {
     layout: 'centered',
   },
-  title: 'molecules/AutoFormSummaryStep',
+  title: 'Commons/Molecules/AutoFormSummaryStep',
 }
 
 export default meta

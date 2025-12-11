@@ -6,7 +6,7 @@ import { IconEdit } from '../icons/icon-edit'
 import { IconReadonly } from '../icons/icon-readonly'
 import { IconSuccess } from '../icons/icon-success'
 import { IconUpcoming } from '../icons/icon-upcoming'
-import type { AutoFormFieldMetadata, AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps, SelectOption } from './auto-form.types'
+import type { AutoFormFieldMetadata, AutoFormFieldSectionMetadata, AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps, SelectOption } from './auto-form.types'
 
 /**
  * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
@@ -17,7 +17,7 @@ import type { AutoFormFieldMetadata, AutoFormProps, AutoFormStepMetadata, AutoFo
  */
 export function getZodEnumOptions(fieldSchema: z.ZodType) {
   const metadata = getFieldMetadata(fieldSchema)
-  if (metadata?.options) return Result.ok(metadata.options)
+  if (metadata && 'options' in metadata && metadata.options) return Result.ok(metadata.options)
   let rawOptions: string[] = []
   if (fieldSchema.type === 'enum') rawOptions = (fieldSchema as z.ZodEnum).options as string[]
   else if (fieldSchema.type === 'optional' && (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.type === 'enum') rawOptions = (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.options as string[]
@@ -145,7 +145,9 @@ export function parseDependsOn(dependsOn: string): { fieldName: string; expected
  */
 export function isFieldVisible(fieldSchema: z.ZodType, formData: Record<string, unknown>): boolean {
   const metadata = getFieldMetadata(fieldSchema)
-  if (!metadata?.dependsOn) return true
+  if (!metadata) return true
+  if ('isVisible' in metadata && metadata.isVisible) return metadata.isVisible(formData)
+  if (!('dependsOn' in metadata) || !metadata.dependsOn) return true
   const { fieldName, expectedValue } = parseDependsOn(metadata.dependsOn)
   const fieldValue = formData[fieldName]
   // If expectedValue is specified, check for equality
@@ -181,10 +183,10 @@ export function filterSchema(schema: z.ZodObject, formData: Record<string, unkno
  */
 export function getKeyMapping(metadata?: AutoFormFieldMetadata): { keyIn: string | undefined; keyOut: string | undefined } {
   if (!metadata) return { keyIn: undefined, keyOut: undefined }
-  // If key is provided, use it for both in and out
-  if (metadata.key) return { keyIn: metadata.key, keyOut: metadata.key }
-  // Otherwise use keyIn and keyOut if provided
-  return { keyIn: metadata.keyIn, keyOut: metadata.keyOut }
+  const key = 'key' in metadata && metadata.key ? metadata.key : undefined
+  const keyIn = 'keyIn' in metadata && metadata.keyIn ? metadata.keyIn : key
+  const keyOut = 'keyOut' in metadata && metadata.keyOut ? metadata.keyOut : key
+  return { keyIn, keyOut }
 }
 
 /**
@@ -225,7 +227,7 @@ export function normalizeDataForSchema(schema: z.ZodObject, data: Record<string,
     const fieldSchema = shape[key] as z.ZodTypeAny
     const metadata = getFieldMetadata(fieldSchema)
     if (!isFieldVisible(fieldSchema, data)) continue
-    if (metadata?.excluded) continue
+    if (metadata && 'excluded' in metadata && metadata.excluded) continue
     // Exclude section fields from output data
     if (metadata?.render === 'section') continue
     // Apply keyOut mapping if provided
@@ -303,6 +305,41 @@ export function getFieldMetadata(fieldSchema?: z.ZodType): AutoFormFieldMetadata
 }
 
 /**
+ * Gets metadata from a Zod field schema, throw if not exists, throw if section metadata
+ * @param fieldName - The name of the form field
+ * @param fieldSchema - The Zod schema to extract metadata from
+ * @returns The metadata object or undefined if not present
+ */
+export function getFieldMetadataOrThrow(fieldName: string, fieldSchema?: z.ZodType) {
+  const metadata = getFieldMetadata(fieldSchema)
+  if (!metadata) throw new Error(`Field "${fieldName}" is missing metadata`)
+  if (metadata.render === 'section') throw new Error(`Cannot render field "${fieldName}" with section metadata`)
+  return metadata
+}
+
+/**
+ * Helper to write AutoForm fields
+ * @param fieldSchema zod schema
+ * @param fieldMetadata related metadata
+ * @returns field schema with valid metadata
+ * @example field(z.string(), { label: "First-name" })
+ */
+export function field(fieldSchema: z.ZodType, fieldMetadata: AutoFormFieldMetadata) {
+  return fieldSchema.meta(fieldMetadata)
+}
+
+/**
+ * Helper to write AutoForm section
+ * @param sectionMetadata related metadata
+ * @returns section schema with valid metadata
+ * @example section({ title: "General case data", line: true })
+ */
+export function section(sectionMetadata: Omit<AutoFormFieldSectionMetadata, 'render'>) {
+  const metadata = { ...sectionMetadata, render: 'section' } satisfies AutoFormFieldSectionMetadata
+  return z.string().optional().meta(metadata)
+}
+
+/**
  * Gets step metadata from a Zod object schema if it exists.
  * @param stepSchema - The Zod object schema to extract metadata from
  * @returns The step metadata object or undefined if not present
@@ -310,6 +347,17 @@ export function getFieldMetadata(fieldSchema?: z.ZodType): AutoFormFieldMetadata
 export function getStepMetadata(stepSchema: z.ZodObject): AutoFormStepMetadata | undefined {
   if (typeof stepSchema.meta !== 'function') return undefined
   return stepSchema.meta() as AutoFormStepMetadata
+}
+
+/**
+ * Helper to write AutoForm steps
+ * @param stepSchema zod schema
+ * @param stepMetadata related metadata
+ * @returns step schema with valid metadata
+ * @example step(z.object({ firstName: field(...) }), { title: "User infos" })
+ */
+export function step(stepSchema: z.ZodObject, stepMetadata: AutoFormStepMetadata) {
+  return stepSchema.meta(stepMetadata)
 }
 
 /**

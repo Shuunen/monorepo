@@ -8,7 +8,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  title: 'molecules/AutoFormSubmissionStep',
+  title: 'Commons/Molecules/AutoFormSubmissionStep',
 } satisfies Meta<typeof AutoFormSubmissionStep>
 
 export default meta

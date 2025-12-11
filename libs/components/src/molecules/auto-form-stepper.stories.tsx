@@ -9,7 +9,7 @@ const meta: Meta<typeof AutoFormStepper> = {
   parameters: {
     layout: 'centered',
   },
-  title: 'Molecules/AutoFormStepper',
+  title: 'Commons/Molecules/AutoFormStepper',
 }
 
 export default meta

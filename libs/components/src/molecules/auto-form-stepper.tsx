@@ -27,6 +27,8 @@ type AutoFormStepperProps = {
   disabled?: boolean
   onStepClick: (step: number) => void
   steps: AutoFormStepperStep[]
+  /** A fixed width if needed */
+  width?: number
 }
 
 type AutoFormStepProps = {
@@ -37,7 +39,7 @@ type AutoFormStepProps = {
 
 function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps) {
   const { title, subtitle, suffix, icon, active, idx, state, indent, section } = step
-  const btnClasses = cn('h-10 border border-transparent', { 'h-16 rounded-xl': subtitle }, { 'ml-1': indent }, { 'bg-white text-black border border-gray-500 hover:bg-gray-100': active })
+  const btnClasses = cn('h-10 border border-transparent w-full', { 'h-16 rounded-xl': subtitle }, { 'ml-1': indent }, { 'bg-white text-black border border-gray-500 hover:bg-gray-100': active })
   return (
     <div className="grid gap-2">
       {section && <Title level={4}>{section}</Title>}
@@ -58,11 +60,11 @@ function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps
   )
 }
 
-export function AutoFormStepper({ steps, onStepClick, disabled = false }: AutoFormStepperProps) {
+export function AutoFormStepper({ steps, onStepClick, disabled = false, width }: AutoFormStepperProps) {
   return (
-    <div className="flex flex-col gap-4 pr-8 border-r border-gray-200 mr-8">
+    <div className={cn('flex flex-col gap-4 mr-10', { [`w-[${width}px]`]: width })}>
       {steps.map(step => (
-        <AutoFormStep disabled={disabled} key={step.idx} onStepClick={onStepClick} step={step} />
+        <AutoFormStep disabled={disabled} key={step.title} onStepClick={onStepClick} step={step} />
       ))}
     </div>
   )

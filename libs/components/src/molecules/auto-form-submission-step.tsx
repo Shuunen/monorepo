@@ -42,7 +42,7 @@ export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetail
         {tooltipDetailsList.length > 0 && (
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger name="tooltip-details-list">
+              <TooltipTrigger name="details-list">
                 <IconTooltip />
               </TooltipTrigger>
               <TooltipContent>
