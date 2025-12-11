@@ -45,7 +45,7 @@ const meta = {
     )
   },
   tags: ['autodocs'],
-  title: 'molecules/AutoForm',
+  title: 'Commons/Molecules/AutoForm',
 } satisfies Meta<ExtendedAutoFormProps>
 
 export default meta
@@ -75,16 +75,10 @@ export const Basic: Story = {
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     const submitButton = canvas.getByRole('button', { name: 'Submit' })
-    // Initially submit button should be disabled (form is empty)
-    expect(submitButton).toBeDisabled()
-    const emailInput = canvas.getByTestId('input-text-email')
+    const emailInput = canvas.getByTestId('email')
     await userEvent.type(emailInput, 'example-email@email.com')
-    // Still disabled - name is missing
-    expect(submitButton).toBeDisabled()
-    const nameInput = canvas.getByTestId('input-text-name')
+    const nameInput = canvas.getByTestId('name')
     await userEvent.type(nameInput, 'John Doe')
-    // Now enabled - form is valid
-    expect(submitButton).not.toBeDisabled()
     await userEvent.click(submitButton)
     await expect(formData).toContainHTML(stringify({ email: 'example-email@email.com', name: 'John Doe' }, true))
     await expect(submittedData).toContainHTML(stringify({ email: 'example-email@email.com', name: 'John Doe' }, true))
@@ -136,65 +130,72 @@ export const MultiStep: Story = {
     const canvas = within(canvasElement)
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
-    await step('navigate to step 2 without filling step 1 (validation bypassed)', async () => {
-      // Click Next without filling any fields - should work
+    await step('cannot reach step 2 via next button if step 1 invalid', async () => {
       const nextButton = canvas.getByRole('button', { name: 'Next' })
       await userEvent.click(nextButton)
+      const errorsElements = await canvas.findAllByRole('alert')
+      const errors = Array.from(errorsElements).map(el => el.textContent)
+      expect(errors).toStrictEqual(['Invalid email address', 'Invalid input: expected string, received undefined'])
+    })
+    await step('navigate to step 2 without filling step 1 (validation bypassed)', async () => {
+      // Click Next without filling any fields - should work
+      const nextButton = canvas.getByRole('button', { name: 'Step 2' })
+      await userEvent.click(nextButton)
       // We should be on step 2 now
-      const ageInput = canvas.getByTestId('input-number-age')
+      const ageInput = canvas.getByTestId('age')
       expect(ageInput).toBeInTheDocument()
     })
     await step('navigate to step 3 without filling step 2 (validation bypassed)', async () => {
       // Click Next without filling step 2 fields - should work
-      const nextButton = canvas.getByRole('button', { name: 'Next' })
+      const nextButton = canvas.getByRole('button', { name: 'Step 3' })
       await userEvent.click(nextButton)
       // We should be on step 3 now - verify all fields are present
-      const addressInput = canvas.getByTestId('input-text-address')
+      const addressInput = canvas.getByTestId('address')
       expect(addressInput).toBeInTheDocument()
-      const cityInput = canvas.getByTestId('input-text-city')
+      const cityInput = canvas.getByTestId('city')
       expect(cityInput).toBeInTheDocument()
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       expect(submitButton).toBeInTheDocument()
-      expect(submitButton).toBeDisabled()
+      expect(submitButton).toBeEnabled()
     })
     await step('go back to step 1 and fill fields', async () => {
       const step1Button = canvas.getByRole('button', { name: 'Step 1' })
       await userEvent.click(step1Button)
-      const nameInput = canvas.getByTestId('input-text-name')
+      const nameInput = canvas.getByTestId('name')
       await userEvent.type(nameInput, 'John Doe')
-      const emailInput = canvas.getByTestId('input-text-email')
+      const emailInput = canvas.getByTestId('email')
       await userEvent.type(emailInput, 'john.doe@example.com')
     })
     await step('submit button still disabled - step 2 & 3 not filled', async () => {
       const step3Button = canvas.getByRole('button', { name: 'Step 3' })
       await userEvent.click(step3Button)
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
-      expect(submitButton).toBeDisabled()
+      expect(submitButton).toBeEnabled()
     })
     await step('step 2 - fill fields', async () => {
       const stepBackButton = canvas.getByRole('button', { name: 'Step 2' })
       await userEvent.click(stepBackButton)
-      const ageInput = canvas.getByTestId('input-number-age')
+      const ageInput = canvas.getByTestId('age')
       await userEvent.type(ageInput, '30')
-      const subscribeCheckbox = canvas.getByTestId('switch-subscribe')
+      const subscribeCheckbox = canvas.getByTestId('subscribe')
       await userEvent.click(subscribeCheckbox)
       const nextButton = canvas.getByRole('button', { name: 'Next' })
       await userEvent.click(nextButton)
     })
-    await step('submit button still disabled - step 3 not filled', () => {
+    step('submit button still disabled - step 3 not filled', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
-      expect(submitButton).toBeDisabled()
+      expect(submitButton).toBeEnabled()
     })
     await step('step 3 - fill fields and submit', async () => {
-      const addressInput = canvas.getByTestId('input-text-address')
+      const addressInput = canvas.getByTestId('address')
       await userEvent.type(addressInput, '123 Main St')
-      const cityInput = canvas.getByTestId('input-text-city')
+      const cityInput = canvas.getByTestId('city')
       await userEvent.type(cityInput, 'Metropolis')
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
-      expect(submitButton).not.toBeDisabled()
+      expect(submitButton).toBeEnabled()
       await userEvent.click(submitButton)
     })
-    await step('verify submitted data', () => {
+    step('verify submitted data', () => {
       // biome-ignore assist/source/useSortedKeys: should not sort keys here
       const expectedData = {
         email: 'john.doe@example.com',
@@ -237,12 +238,12 @@ const optionalSectionStep1Schema = z
       label: 'Full Name',
       placeholder: 'Enter your legal name',
     }),
-    favoriteColor: z.enum(['red', 'green', 'blue']).optional().meta({
-      label: 'Favorite Color',
-      placeholder: 'Select your favorite color',
+    favouriteColor: z.enum(['red', 'green', 'blue']).optional().meta({
+      label: 'Favourite Color',
+      placeholder: 'Select your favourite color',
     }),
     isHacker: z.boolean().meta({
-      dependsOn: 'favoriteColor=green', // this field depends on favoriteColor being "green"
+      dependsOn: 'favouriteColor=green', // this field depends on favouriteColor being "green"
       label: 'Are you a hacker ?',
       placeholder: 'Check if you are a hacker',
     }),
@@ -296,16 +297,16 @@ export const OptionalSection: Story = {
     await step('fill name', async () => {
       const step1Title = canvas.getByTestId('step-title')
       expect(step1Title).toHaveTextContent('My infos')
-      const nameInput = canvas.getByTestId('input-text-name')
+      const nameInput = canvas.getByTestId('name')
       await userEvent.type(nameInput, 'Austin Dow')
     })
     await step('filling favouriteColor to see if hacker question appears', async () => {
       expect(canvas.queryByTestId('is-hacker')).not.toBeInTheDocument()
-      const favouriteColorTrigger = canvas.getByTestId('select-trigger-favorite-color')
+      const favouriteColorTrigger = canvas.getByTestId('favourite-color-trigger')
       await userEvent.click(favouriteColorTrigger)
       const favouriteColorOptions = await canvasBody.findAllByRole('option')
       await userEvent.click(favouriteColorOptions[1]) // select "green"
-      const isHackerCheckbox = await canvas.getByTestId('switch-is-hacker')
+      const isHackerCheckbox = await canvas.findByTestId('is-hacker')
       expect(isHackerCheckbox).toBeVisible()
       await userEvent.click(isHackerCheckbox)
       expect(formData).toContainHTML('"isHacker": true')
@@ -323,7 +324,7 @@ export const OptionalSection: Story = {
     await step('go back to step 1 to fix the name', async () => {
       const backButton = canvas.getByRole('button', { name: 'Back' })
       await userEvent.click(backButton)
-      const nameInput = canvas.getByTestId('input-text-name')
+      const nameInput = canvas.getByTestId('name')
       await userEvent.clear(nameInput)
       await userEvent.type(nameInput, 'Paul Doughy')
       const nextButton = canvas.getByRole('button', { name: 'Next' })
@@ -335,51 +336,50 @@ export const OptionalSection: Story = {
       // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
       const expectedData = {
         name: 'Paul Doughy',
-        favoriteColor: 'red',
+        favouriteColor: 'red',
       }
       expect(formData).toContainHTML(stringify(expectedData, true))
       expect(submittedData).toContainHTML(stringify(expectedData, true))
     })
     await step('show pet name field', async () => {
-      const hasPetCheckbox = canvas.getByTestId('switch-has-pet')
+      const hasPetCheckbox = canvas.getByTestId('has-pet')
       await userEvent.click(hasPetCheckbox)
-      const petNameInput = await canvas.getByTestId('input-text-pet-name')
+      const petNameInput = await canvas.findByTestId('pet-name')
       expect(petNameInput).toBeVisible()
     })
-    await step('submit button disabled when pet checked but no pet name', () => {
+    step('submit button enabled even with missing fields', () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
-      expect(submitButton).toBeDisabled()
+      expect(submitButton).toBeEnabled()
     })
     await step('fill pet name', async () => {
-      const petNameInput = await canvas.getByTestId('input-text-pet-name')
+      const petNameInput = await canvas.findByTestId('pet-name')
       await userEvent.type(petNameInput, 'Fido')
     })
     await step('submit button enabled and submit successfully', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
-      expect(submitButton).not.toBeDisabled()
       await userEvent.click(submitButton)
       // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
       const expectedData = {
         name: 'Paul Doughy',
-        favoriteColor: 'red',
+        favouriteColor: 'red',
         petName: 'Fido',
       }
       expect(formData).toContainHTML(stringify(expectedData, true))
       expect(submittedData).toContainHTML(stringify(expectedData, true))
     })
     await step('uncheck hasPet to hide pet fields', async () => {
-      const hasPetCheckbox = canvas.getByTestId('switch-has-pet')
+      const hasPetCheckbox = canvas.getByTestId('has-pet')
       await userEvent.click(hasPetCheckbox)
       expect(canvas.queryByTestId('pet-name')).not.toBeInTheDocument()
       expect(canvas.queryByTestId('pet-age')).not.toBeInTheDocument()
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
     })
-    await step('verify submitted data', () => {
+    step('verify submitted data', () => {
       // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
-      expect(formData).toContainHTML(stringify({ name: 'Paul Doughy', favoriteColor: 'red' }, true))
+      expect(formData).toContainHTML(stringify({ name: 'Paul Doughy', favouriteColor: 'red' }, true))
       // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
-      expect(submittedData).toContainHTML(stringify({ name: 'Paul Doughy', favoriteColor: 'red' }, true))
+      expect(submittedData).toContainHTML(stringify({ name: 'Paul Doughy', favouriteColor: 'red' }, true))
     })
   },
 }
@@ -434,27 +434,27 @@ export const StepperStates: Story = {
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('fill step 1', async () => {
-      const currentStepButton = canvas.getByTestId('button-step-my-infos')
+      const currentStepButton = canvas.getByTestId('step-my-infos')
       expect(currentStepButton).toHaveAttribute('data-state', 'success')
-      const nameInput = canvas.getByTestId('input-text-name')
+      const nameInput = canvas.getByTestId('name')
       expect(nameInput).toHaveValue('Jane Doe')
       await userEvent.type(nameInput, '-Rollin')
       await userEvent.tab()
       expect(currentStepButton).toHaveAttribute('data-state', 'success')
-      const secondStepButton = canvas.getByTestId('button-step-my-pet')
+      const secondStepButton = canvas.getByTestId('step-my-pet')
       expect(secondStepButton).toHaveAttribute('data-state', 'readonly')
     })
     await step('verify step 2 readonly fields', async () => {
       const secondStepButton = canvas.getByRole('button', { name: 'My pet Pet information and details' })
       await userEvent.click(secondStepButton)
-      const petNameInput = canvas.getByTestId('input-text-pet-name')
+      const petNameInput = canvas.getByTestId('pet-name')
       expect(petNameInput).toBeInTheDocument()
       expect(petNameInput).toHaveAttribute('readonly')
       expect(petNameInput).toHaveValue('Fido')
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
     })
-    await step('verify submitted data', () => {
+    step('verify submitted data', () => {
       // biome-ignore assist/source/useSortedKeys: we need a specific key order here
       const expectedFormData = {
         name: 'Jane Doe-Rollin',
@@ -497,17 +497,17 @@ export const KeyMapping: Story = {
     const canvas = within(canvasElement)
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
-    await step('verify initial data was mapped correctly', () => {
-      const emailInput = canvas.getByTestId('input-text-user-email')
+    step('verify initial data was mapped correctly', () => {
+      const emailInput = canvas.getByTestId('user-email')
       expect(emailInput).toHaveValue('james.doe@example.com')
-      const nameInput = canvas.getByTestId('input-text-user-name')
+      const nameInput = canvas.getByTestId('user-name')
       expect(nameInput).toHaveValue('Jam Doe')
     })
     await step('submit and verify output uses mapped keys', async () => {
       const submitButton = canvas.getByRole('button', { name: 'Submit' })
       await userEvent.click(submitButton)
     })
-    await step('verify submitted data', () => {
+    step('verify submitted data', () => {
       const expectedData = {
         // biome-ignore lint/style/useNamingConvention: we use snake_case for testing purposes
         email_address: 'james.doe@example.com',
@@ -558,9 +558,9 @@ export const NestedKeyMapping: Story = {
     const formData = canvas.getByTestId('debug-data-form-data')
     const submittedData = canvas.getByTestId('debug-data-submitted-data')
     await step('verify initial data was mapped correctly', async () => {
-      const emailInput = canvas.getByTestId('input-text-user-email')
+      const emailInput = canvas.getByTestId('user-email')
       expect(emailInput).toHaveValue('jane.doe@example.com')
-      const nameInput = canvas.getByTestId('input-text-user-name')
+      const nameInput = canvas.getByTestId('user-name')
       expect(nameInput).toHaveValue('Jane Doe')
       await userEvent.click(emailInput)
       expect(formData).toContainHTML('"email": "jane.doe@example.com"')
@@ -568,11 +568,11 @@ export const NestedKeyMapping: Story = {
       expect(submittedData).toContainHTML('{}')
     })
     await step('modify the fields', async () => {
-      const emailInput = canvas.getByTestId('input-text-user-email')
+      const emailInput = canvas.getByTestId('user-email')
       await userEvent.clear(emailInput)
       await userEvent.type(emailInput, 'new.email@example.com')
       expect(emailInput).toHaveValue('new.email@example.com')
-      const nameInput = canvas.getByTestId('input-text-user-name')
+      const nameInput = canvas.getByTestId('user-name')
       await userEvent.clear(nameInput)
       await userEvent.type(nameInput, 'John Smith')
       expect(nameInput).toHaveValue('John Smith')
@@ -583,7 +583,7 @@ export const NestedKeyMapping: Story = {
       await userEvent.click(submitButton)
     })
     await step('verify submitted data uses nested output paths', async () => {
-      const emailInput = canvas.getByTestId('input-text-user-email')
+      const emailInput = canvas.getByTestId('user-email')
       await userEvent.click(emailInput)
       const expectedData = { userInfos: { email: 'new.email@example.com', fullName: 'John Smith' } }
       expect(formData).toContainHTML(stringify(expectedData, true))
@@ -644,12 +644,12 @@ export const SummaryOnly: Story = {
       subscribe: true,
     }
     await step('navigate to last step', async () => {
-      const step1Button = canvas.getByTestId('button-step-personal-information')
+      const step1Button = canvas.getByTestId('step-personal-information')
       expect(step1Button).toBeInTheDocument()
       const nextButton = canvas.getByRole('button', { name: 'Next' })
       await userEvent.click(nextButton)
     })
-    await step('verify data before summary', () => {
+    step('verify data before summary', () => {
       expect(formData).toContainHTML(stringify(expectedData, true))
       expect(submittedData).toContainHTML('{}')
     })
@@ -700,9 +700,9 @@ export const SubmissionSuccess: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     await step('fill step 1 form fields', async () => {
-      const emailInput = canvas.getByTestId('input-text-email')
+      const emailInput = canvas.getByTestId('email')
       await userEvent.type(emailInput, 'test@example.com')
-      const nameInput = canvas.getByTestId('input-text-name')
+      const nameInput = canvas.getByTestId('name')
       await userEvent.type(nameInput, 'John Doe')
     })
     await step('navigate to step 2', async () => {
@@ -710,9 +710,9 @@ export const SubmissionSuccess: Story = {
       await userEvent.click(nextButton)
     })
     await step('fill step 2 form fields', async () => {
-      const ageInput = canvas.getByTestId('input-number-age')
+      const ageInput = canvas.getByTestId('age')
       await userEvent.type(ageInput, '30')
-      const subscribeCheckbox = canvas.getByTestId('switch-subscribe')
+      const subscribeCheckbox = canvas.getByTestId('subscribe')
       await userEvent.click(subscribeCheckbox)
     })
     await step('submit form', async () => {
@@ -728,7 +728,7 @@ export const SubmissionSuccess: Story = {
       })
     })
     await step('verify home button is displayed', () => {
-      const homeButton = canvas.getByTestId('button-home')
+      const homeButton = canvas.getByTestId('btn-home')
       expect(homeButton).toBeInTheDocument()
       expect(homeButton).toHaveTextContent('Return to Homepage')
     })
@@ -748,9 +748,9 @@ export const SubmissionError: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     await step('fill step 1 form fields', async () => {
-      const emailInput = canvas.getByTestId('input-text-email')
+      const emailInput = canvas.getByTestId('email')
       await userEvent.type(emailInput, 'test@example.com')
-      const nameInput = canvas.getByTestId('input-text-name')
+      const nameInput = canvas.getByTestId('name')
       await userEvent.type(nameInput, 'John Doe')
     })
     await step('navigate to step 2', async () => {
@@ -758,9 +758,9 @@ export const SubmissionError: Story = {
       await userEvent.click(nextButton)
     })
     await step('fill step 2 form fields', async () => {
-      const ageInput = canvas.getByTestId('input-number-age')
+      const ageInput = canvas.getByTestId('age')
       await userEvent.type(ageInput, '30')
-      const subscribeCheckbox = canvas.getByTestId('switch-subscribe')
+      const subscribeCheckbox = canvas.getByTestId('subscribe')
       await userEvent.click(subscribeCheckbox)
     })
     await step('submit form', async () => {
@@ -820,7 +820,7 @@ export const SummarySubmissionSuccess: Story = {
       })
     })
     await step('verify home button is displayed', () => {
-      const homeButton = canvas.getByTestId('button-home')
+      const homeButton = canvas.getByTestId('btn-home')
       expect(homeButton).toBeInTheDocument()
       expect(homeButton).toHaveTextContent('Return to Homepage')
     })
@@ -917,7 +917,7 @@ export const SummarySubmissionWarning: Story = {
       })
     })
     // step('verify buttons are disabled on warning submission step', () => {
-    //   const buttons = [canvas.getByTestId('button-step-personal-information'), canvas.getByTestId('button-step-additional-details')]
+    //   const buttons = [canvas.getByTestId('step-personal-information'), canvas.getByTestId('step-additional-details')]
     //   for (const button of buttons) expect(button).toBeDisabled()
     // })
   },
@@ -935,9 +935,9 @@ export const WithCancelButton: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
     await step('fill step 1 form fields', async () => {
-      const emailInput = canvas.getByTestId('input-text-email')
+      const emailInput = canvas.getByTestId('email')
       await userEvent.type(emailInput, 'test@example.com')
-      const nameInput = canvas.getByTestId('input-text-name')
+      const nameInput = canvas.getByTestId('name')
       await userEvent.type(nameInput, 'John Doe')
     })
     await step('navigate to step 2', async () => {
@@ -947,7 +947,7 @@ export const WithCancelButton: Story = {
     await step('verify cancel button is visible', () => {
       const cancelButton = canvas.getByRole('button', { name: 'Cancel' })
       expect(cancelButton).toBeInTheDocument()
-      expect(cancelButton).toHaveAttribute('data-testid', 'button-step-cancel')
+      expect(cancelButton).toHaveAttribute('data-testid', 'step-cancel')
     })
     await step('click cancel button', async () => {
       const cancelButton = canvas.getByRole('button', { name: 'Cancel' })

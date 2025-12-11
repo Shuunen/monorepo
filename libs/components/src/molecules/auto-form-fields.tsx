@@ -17,11 +17,9 @@ export function AutoFormFields({ schema, formData, stepTitle, logger }: AutoForm
           {stepTitle}
         </h3>
       )}
-      <div className="space-y-4">
-        {Object.keys(schema.shape).map(fieldName => (
-          <AutoFormField fieldName={fieldName} fieldSchema={schema.shape[fieldName] as z.ZodTypeAny} formData={formData} key={fieldName} logger={logger} />
-        ))}
-      </div>
+      {Object.keys(schema.shape).map(fieldName => (
+        <AutoFormField fieldName={fieldName} fieldSchema={schema.shape[fieldName] as z.ZodTypeAny} formData={formData} key={fieldName} logger={logger} />
+      ))}
     </>
   )
 }

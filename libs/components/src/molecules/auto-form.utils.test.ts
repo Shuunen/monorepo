@@ -364,12 +364,12 @@ describe('auto-form.utils', () => {
       }
     `)
   })
-  it('getKeyMapping D should prioritize key over keyIn and keyOut', () => {
+  it('getKeyMapping D should prioritize keyIn and keyOut over key', () => {
     const result = getKeyMapping({ key: 'mappedKey', keyIn: 'inputKey', keyOut: 'outputKey' })
     expect(result).toMatchInlineSnapshot(`
       {
-        "keyIn": "mappedKey",
-        "keyOut": "mappedKey",
+        "keyIn": "inputKey",
+        "keyOut": "outputKey",
       }
     `)
   })

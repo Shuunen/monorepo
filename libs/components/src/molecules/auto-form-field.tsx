@@ -25,7 +25,7 @@ export function AutoFormField({ fieldName, fieldSchema, formData, logger }: Auto
   logger?.info('Rendering field', fieldName)
   const isOptional = fieldSchema instanceof z.ZodOptional
   const metadata = getFieldMetadata(fieldSchema) ?? {}
-  const { state = 'editable' } = metadata
+  const state = 'state' in metadata ? (metadata.state ?? 'editable') : 'editable'
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly: state === 'readonly' }
   const render = getFormFieldRender(fieldSchema)
   if (render === 'accept') return <FormFieldAccept {...props} />

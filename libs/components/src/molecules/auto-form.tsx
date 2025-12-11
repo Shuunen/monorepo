@@ -1,12 +1,14 @@
+// oxlint-disable max-lines
 import { zodResolver } from '@hookform/resolvers/zod'
-import { cn, debounce } from '@monorepo/utils'
+import { cn } from '@monorepo/utils'
 import { Link } from '@tanstack/react-router'
-import { type MouseEvent, useEffect, useMemo, useState } from 'react'
+import { debounce } from 'es-toolkit'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { Button } from '../atoms/button'
 import { Form } from '../atoms/form'
 import { IconHome } from '../icons/icon-home'
-import type { AutoFormProps, AutoFormSubmissionStepProps } from './auto-form.types'
+import type { AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps } from './auto-form.types'
 import { defaultIcons, defaultLabels, filterSchema, getFieldMetadata, getStepMetadata, mapExternalDataToFormFields, normalizeData } from './auto-form.utils'
 import { AutoFormFields } from './auto-form-fields'
 import { AutoFormNavigation } from './auto-form-navigation'
@@ -37,10 +39,11 @@ import { AutoFormSummaryStep } from './auto-form-summary-step'
  * @param props.showMenu whether to force show the stepper menu, if undefined shows menu only when multiple steps exist
  * @param props.size the size of the form, can be 'auto', 'small', 'medium' or 'large', default is 'medium', 'auto' adapts to parent content
  * @param props.labels custom labels for form buttons and actions
+ * @param props.stepperWidth custom stepper width if needed
  * @returns the AutoForm component
  */
 // oxlint-disable-next-line max-lines-per-function
-export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, showLastStep = false, showMenu, size = 'medium', labels }: AutoFormProps) {
+export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, showLastStep = false, showMenu, size = 'medium', labels, stepperWidth }: AutoFormProps) {
   const [currentStep, setCurrentStep] = useState(showLastStep ? schemas.length - 1 : 0)
   const [showSummary, setShowSummary] = useState(false)
   const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined)
@@ -85,7 +88,10 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     logger?.info('Step form submitted')
     if (isLastStep && useSummaryStep) setShowSummary(true)
     else if (isLastStep) void handleFinalSubmit()
-    else setCurrentStep(prev => prev + 1)
+    else {
+      setCurrentStep(prev => prev + 1)
+      updateFormData()
+    }
   }
   /**
    * Handle final submission after all steps are complete
@@ -97,16 +103,6 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     logger?.info('Final form submitted', cleanedData)
     const result = await onSubmit(cleanedData)
     if (useSubmissionStep) setSubmissionProps(result.submission)
-  }
-  /**
-   * Handle next button click
-   * @param event optional mouse event
-   * @returns Promise<void>
-   */
-  function handleNext(event?: MouseEvent) {
-    event?.preventDefault() // Prevent any default button behavior
-    setCurrentStep(prev => prev + 1)
-    return updateFormData()
   }
   // Handle back button
   function handleBack() {
@@ -125,12 +121,17 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     setCurrentStep(stepIndex)
   }
   // Step states and icons
+  let lastSection = '' as AutoFormStepMetadata['section']
   const steps = schemas.map((schema, idx) => {
-    const stepMetadata = getStepMetadata(schema)
-    const title = stepMetadata?.title ?? `Step ${idx + 1}`
-    const subtitle = stepMetadata?.subtitle
-    const suffix = stepMetadata?.suffix
-    const allReadonly = Object.values(schema.shape).every(fieldSchema => getFieldMetadata(fieldSchema)?.state === 'readonly')
+    const { title = `Step ${idx + 1}`, subtitle, suffix, section: currentSection } = getStepMetadata(schema) ?? {}
+    const section = currentSection !== lastSection && currentSection ? currentSection : undefined
+    lastSection = currentSection
+    const allReadonly = Object.values(schema.shape).every(fieldSchema => {
+      const meta = getFieldMetadata(fieldSchema)
+      if (!meta) return true
+      if ('state' in meta && meta.state) return meta.state === 'readonly'
+      return false
+    })
     const filtered = filterSchema(schema, formData)
     const isSuccess = filtered.safeParse(formData).success
     /* oxlint-disable no-nested-ternary */
@@ -141,6 +142,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
       active: idx === currentStep,
       icon,
       idx,
+      section,
       state,
       subtitle,
       suffix,
@@ -150,16 +152,6 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
   // Get current step title for rendering above fields
   const currentStepTitle = getStepMetadata(currentSchema)?.title
   const stepTitle = typeof currentStepTitle === 'string' ? currentStepTitle : ''
-  // Check if all schemas are valid to enable/disable submit button
-  const isFormValid = useMemo(
-    () =>
-      schemas.every(schema => {
-        const filtered = filterSchema(schema, formData)
-        return filtered.safeParse(formData).success
-      }),
-    [schemas, formData],
-  )
-  const isSubmitDisabled = !isFormValid
   const isStepperDisabled = submissionProps?.status === 'success'
   const shouldShowStepper = showMenu === undefined ? schemas.length > 1 : showMenu
   function renderSubmissionContent() {
@@ -169,7 +161,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     return (
       <>
         <AutoFormSubmissionStep {...submissionProps} />
-        {showBackButton && <AutoFormNavigation centerButton={onCancel ? { disabled: false, onClick: onCancel } : undefined} leftButton={{ disabled: false, onClick: handleBack }} />}
+        {showBackButton && <AutoFormNavigation centerButton={onCancel ? { onClick: onCancel } : undefined} leftButton={{ onClick: handleBack }} />}
         {showHomeButton && (
           <div className="pt-6">
             <Button asChild name="home">
@@ -186,7 +178,15 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     return (
       <>
         <AutoFormSummaryStep data={formData} />
-        <AutoFormNavigation centerButton={onCancel ? { disabled: false, onClick: onCancel } : undefined} leftButton={{ disabled: false, onClick: handleBack }} rightButton={{ disabled: false, label: finalLabels.summaryStepButton, name: 'summary-proceed', onClick: handleFinalSubmit }} />
+        <AutoFormNavigation
+          centerButton={onCancel ? { onClick: onCancel } : undefined}
+          leftButton={{ onClick: handleBack }}
+          rightButton={{
+            label: finalLabels.summaryStepButton,
+            name: 'summary-proceed',
+            onClick: handleFinalSubmit,
+          }}
+        />
       </>
     )
   }
@@ -196,9 +196,17 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
         <form onChange={updateFormData} onSubmit={form.handleSubmit(handleStepSubmit)}>
           <AutoFormFields formData={formData} logger={logger} schema={currentSchema} stepTitle={stepTitle} />
           <AutoFormNavigation
-            centerButton={onCancel ? { disabled: false, onClick: onCancel } : undefined}
-            leftButton={currentStep > 0 ? { disabled: false, onClick: handleBack } : undefined}
-            rightButton={isLastStep ? { disabled: isSubmitDisabled, label: finalLabels.lastStepButton, name: 'last-step-submit', type: 'submit' } : { disabled: false, label: finalLabels.nextStep, name: 'step-next', onClick: handleNext }}
+            centerButton={onCancel ? { onClick: onCancel } : undefined}
+            leftButton={currentStep > 0 ? { onClick: handleBack } : undefined}
+            rightButton={
+              isLastStep
+                ? {
+                    label: finalLabels.lastStepButton,
+                    name: 'last-step-submit',
+                    type: 'submit',
+                  }
+                : { label: finalLabels.nextStep, name: 'step-next', type: 'submit' }
+            }
           />
         </form>
       </Form>
@@ -210,9 +218,16 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     return renderFormContent()
   }
   return (
-    <div className={cn('mx-auto w-full flex', { 'min-w-3xl': size === 'medium', 'min-w-5xl': size === 'large', 'min-w-xl': size === 'small', 'p-6 bg-white rounded-lg shadow-md': showCard })}>
-      {shouldShowStepper && <AutoFormStepper disabled={isStepperDisabled} onStepClick={handleStepClick} steps={steps} />}
-      <div className="flex-1 w-full">{renderContent()}</div>
+    <div
+      className={cn('mx-auto w-full flex', {
+        'min-w-3xl': size === 'medium',
+        'min-w-5xl': size === 'large',
+        'min-w-xl': size === 'small',
+        'p-6 bg-white rounded-lg shadow-md': showCard,
+      })}
+    >
+      {shouldShowStepper && <AutoFormStepper disabled={isStepperDisabled} onStepClick={handleStepClick} steps={steps} width={stepperWidth} />}
+      <div className="flex-1 overflow-hidden">{renderContent()}</div>
     </div>
   )
 }

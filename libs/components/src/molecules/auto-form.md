@@ -104,30 +104,30 @@ export function MyForm() {
 ```typescript
 type AutoFormProps<Type extends z.ZodRawShape> = {
   // ===== REQUIRED =====
-  schemas: z.ZodObject<Type>[]                    // Array of Zod schemas (one per step)
+  schemas: z.ZodObject<Type>[]; // Array of Zod schemas (one per step)
 
   // ===== OPTIONAL CALLBACKS =====
-  onSubmit?: (data: any) => any                   // Called on final submission
-  onChange?: (data: Record<string, unknown>) => void  // Called on any field change
+  onSubmit?: (data: any) => any; // Called on final submission
+  onChange?: (data: Record<string, unknown>) => void; // Called on any field change
 
   // ===== OPTIONAL DATA =====
-  initialData?: Record<string, unknown>           // Pre-fill form with initial values
+  initialData?: Record<string, unknown>; // Pre-fill form with initial values
 
   // ===== OPTIONAL FEATURES =====
-  useSummaryStep?: boolean                        // Show summary before submit (default: false)
-  useSubmissionStep?: boolean                     // Show submission status (default: false)
-  showCard?: boolean                              // Wrap in card styling (default: true)
-  logger?: Logger                                 // Logger for debugging
+  useSummaryStep?: boolean; // Show summary before submit (default: false)
+  useSubmissionStep?: boolean; // Show submission status (default: false)
+  showCard?: boolean; // Wrap in card styling (default: true)
+  logger?: Logger; // Logger for debugging
 
   // ===== OPTIONAL CUSTOMIZATION =====
   labels?: {
-    homeButton?: string           // "Return to Homepage"
-    lastStepButton?: string       // "Submit"
-    nextStep?: string             // "Next"
-    previousStep?: string         // "Back"
-    summaryStepButton?: string    // "Proceed"
-  }
-}
+    homeButton?: string; // "Return to Homepage"
+    lastStepButton?: string; // "Submit"
+    nextStep?: string; // "Next"
+    previousStep?: string; // "Back"
+    summaryStepButton?: string; // "Proceed"
+  };
+};
 ```
 
 ### Basic Usage
@@ -152,11 +152,11 @@ Every field in your Zod schema must include `.meta()` with field configuration:
 ```typescript
 const schema = z.object({
   email: z.email().meta({
-    label: 'Email Address',
-    placeholder: 'your@email.com',
-    state: 'editable',
-  })
-})
+    label: "Email Address",
+    placeholder: "your@email.com",
+    state: "editable",
+  }),
+});
 ```
 
 ### Metadata Properties
@@ -164,36 +164,35 @@ const schema = z.object({
 ```typescript
 type AutoFormFieldMetadata = {
   // Display properties
-  label?: string              // Field label above input
-  placeholder?: string        // Placeholder or description text
-  title?: string              // Section title (for section render)
-  subtitle?: string           // Section subtitle (for section render)
-  description?: string        // Section description or field help text
-  code?: string               // Code block content (for section render)
-  line?: boolean              // Show divider line (for section render)
+  label?: string; // Field label above input
+  placeholder?: string; // Placeholder or description text
+  title?: string; // Section title (for section render)
+  subtitle?: string; // Section subtitle (for section render)
+  description?: string; // Section description or field help text
+  code?: string; // Code block content (for section render)
+  line?: boolean; // Show divider line (for section render)
 
   // Field rendering
-  render?: 'text' | 'textarea' | 'date' | 'number' | 'boolean' | 'select' |
-           'upload' | 'accept' | 'section'  // Component to render
+  render?: "text" | "textarea" | "date" | "number" | "boolean" | "select" | "upload" | "accept" | "section"; // Component to render
 
   // Field state
-  state?: 'editable' | 'readonly' | 'disabled'  // User can interact?
+  state?: "editable" | "readonly" | "disabled"; // User can interact?
 
   // Conditional logic
-  dependsOn?: string          // Show only if this field has a value
-  excluded?: boolean          // Don't include in submitted data
+  dependsOn?: string; // Show only if this field has a value
+  excluded?: boolean; // Don't include in submitted data
 
   // Multi-step forms
-  step?: string               // Step name/title in stepper
+  step?: string; // Step name/title in stepper
 
   // Data transformation
-  key?: string                // Maps both input & output keys
-  keyIn?: string              // Map initial data from different key name
-  keyOut?: string             // Map submitted data to different key name
+  key?: string; // Maps both input & output keys
+  keyIn?: string; // Map initial data from different key name
+  keyOut?: string; // Map submitted data to different key name
 
   // Select/enum options
-  options?: SelectOption[]    // Custom label/value pairs
-}
+  options?: SelectOption[]; // Custom label/value pairs
+};
 ```
 
 ### Metadata Examples
@@ -291,19 +290,19 @@ AutoForm automatically determines which component to render based on the Zod sch
 
 ```typescript
 z.object({
-  name: z.string().min(2, 'At least 2 characters').meta({
-    label: 'Full Name',
-    placeholder: 'John Doe',
+  name: z.string().min(2, "At least 2 characters").meta({
+    label: "Full Name",
+    placeholder: "John Doe",
   }),
-  url: z.string().url('Must be valid URL').meta({
-    label: 'Website',
-    placeholder: 'https://example.com',
+  url: z.string().url("Must be valid URL").meta({
+    label: "Website",
+    placeholder: "https://example.com",
   }),
   bio: z.string().max(500).meta({
-    label: 'Bio',
-    placeholder: 'Tell us about yourself',
+    label: "Bio",
+    placeholder: "Tell us about yourself",
   }),
-})
+});
 ```
 
 **Features:**
@@ -321,22 +320,22 @@ z.object({
 
 ```typescript
 z.object({
-  description: z.string().min(10, 'At least 10 characters').meta({
-    label: 'Description',
-    placeholder: 'Enter a detailed description',
-    render: 'textarea',
+  description: z.string().min(10, "At least 10 characters").meta({
+    label: "Description",
+    placeholder: "Enter a detailed description",
+    render: "textarea",
   }),
   feedback: z.string().optional().meta({
-    label: 'Additional Feedback',
-    placeholder: 'Optional comments',
-    render: 'textarea',
+    label: "Additional Feedback",
+    placeholder: "Optional comments",
+    render: "textarea",
   }),
   terms: z.string().meta({
-    label: 'Terms & Conditions',
-    render: 'textarea',
-    state: 'readonly',  // Display-only
+    label: "Terms & Conditions",
+    render: "textarea",
+    state: "readonly", // Display-only
   }),
-})
+});
 ```
 
 **Features:**
@@ -356,22 +355,22 @@ z.object({
 
 ```typescript
 z.object({
-  password: z.string().min(8, 'Password must be at least 8 characters').meta({
-    label: 'Password',
-    placeholder: 'Enter your password',
-    render: 'password',
+  password: z.string().min(8, "Password must be at least 8 characters").meta({
+    label: "Password",
+    placeholder: "Enter your password",
+    render: "password",
   }),
   newPassword: z.string().min(8).meta({
-    label: 'New Password',
-    placeholder: 'Set a new password',
-    render: 'password',
+    label: "New Password",
+    placeholder: "Set a new password",
+    render: "password",
   }),
   confirmPassword: z.string().min(8).optional().meta({
-    label: 'Confirm Password',
-    placeholder: 'Repeat your password',
-    render: 'password',
+    label: "Confirm Password",
+    placeholder: "Repeat your password",
+    render: "password",
   }),
-})
+});
 ```
 
 **Features:**
@@ -392,17 +391,17 @@ z.object({
 ```typescript
 z.object({
   age: z.number().min(18).max(120).meta({
-    label: 'Age',
-    placeholder: '25',
+    label: "Age",
+    placeholder: "25",
   }),
-  salary: z.number().positive('Must be positive').meta({
-    label: 'Annual Salary',
-    placeholder: '50000',
+  salary: z.number().positive("Must be positive").meta({
+    label: "Annual Salary",
+    placeholder: "50000",
   }),
-  quantity: z.number().int('Must be whole number').meta({
-    label: 'Quantity',
+  quantity: z.number().int("Must be whole number").meta({
+    label: "Quantity",
   }),
-})
+});
 ```
 
 **Features:**
@@ -422,21 +421,21 @@ z.object({
 z.object({
   // Interactive checkbox
   agreeToTerms: z.boolean().meta({
-    label: 'I agree to the Terms & Conditions',
-    placeholder: 'You must accept',
+    label: "I agree to the Terms & Conditions",
+    placeholder: "You must accept",
   }),
 
   // Optional boolean
   newsletter: z.boolean().optional().meta({
-    label: 'Subscribe to newsletter',
-    placeholder: 'Receive weekly updates',
+    label: "Subscribe to newsletter",
+    placeholder: "Receive weekly updates",
   }),
 
   // Display-only (always checked, disabled)
   systemAdmin: z.literal(true).meta({
-    label: 'System Administrator',
+    label: "System Administrator",
   }),
-})
+});
 ```
 
 **Features:**
@@ -455,26 +454,26 @@ z.object({
 ```typescript
 z.object({
   // Auto-capitalized labels from enum values
-  country: z.enum(['us', 'ca', 'mx']).meta({
-    label: 'Country',
-    placeholder: 'Select your country',
+  country: z.enum(["us", "ca", "mx"]).meta({
+    label: "Country",
+    placeholder: "Select your country",
   }),
 
   // Custom labels for options
-  status: z.enum(['pending', 'approved', 'rejected']).meta({
-    label: 'Application Status',
+  status: z.enum(["pending", "approved", "rejected"]).meta({
+    label: "Application Status",
     options: [
-      { label: 'Pending Review', value: 'pending' },
-      { label: 'Approved', value: 'approved' },
-      { label: 'Rejected', value: 'rejected' },
+      { label: "Pending Review", value: "pending" },
+      { label: "Approved", value: "approved" },
+      { label: "Rejected", value: "rejected" },
     ],
   }),
 
   // Optional select
-  department: z.enum(['sales', 'engineering', 'hr']).optional().meta({
-    label: 'Department',
+  department: z.enum(["sales", "engineering", "hr"]).optional().meta({
+    label: "Department",
   }),
-})
+});
 ```
 
 **Features:**
@@ -495,22 +494,22 @@ z.object({
 z.object({
   // Native Date field
   birthDate: z.date().meta({
-    label: 'Date of Birth',
-    placeholder: 'Select your birth date',
+    label: "Date of Birth",
+    placeholder: "Select your birth date",
   }),
 
   // String as date (useful for APIs that expect ISO string)
   eventDate: z.string().meta({
-    label: 'Event Date',
-    placeholder: 'Select event date',
-    render: 'date',
+    label: "Event Date",
+    placeholder: "Select event date",
+    render: "date",
   }),
 
   // Optional date field
   reminderDate: z.date().optional().meta({
-    label: 'Reminder Date',
+    label: "Reminder Date",
   }),
-})
+});
 ```
 
 **Features:**
@@ -528,25 +527,25 @@ z.object({
 **Renders:** File input with progress
 
 ```typescript
-import { fileSchema } from '@monorepo/components'
+import { fileSchema } from "@monorepo/components";
 
 z.object({
   // Document with extension validation
-  resume: fileSchema(['pdf', 'doc', 'docx']).meta({
-    label: 'Resume',
-    placeholder: 'PDF or Word document',
+  resume: fileSchema(["pdf", "doc", "docx"]).meta({
+    label: "Resume",
+    placeholder: "PDF or Word document",
   }),
 
   // Image with multiple formats
-  avatar: fileSchema(['jpg', 'png', 'gif']).meta({
-    label: 'Profile Picture',
+  avatar: fileSchema(["jpg", "png", "gif"]).meta({
+    label: "Profile Picture",
   }),
 
   // Archive file
-  portfolio: fileSchema(['zip', 'rar']).meta({
-    label: 'Portfolio',
+  portfolio: fileSchema(["zip", "rar"]).meta({
+    label: "Portfolio",
   }),
-})
+});
 ```
 
 **Features:**
@@ -569,17 +568,17 @@ z.object({
 z.object({
   // Accept/Reject decision
   approve: z.boolean().optional().meta({
-    label: 'Do you approve this request?',
-    render: 'accept',
+    label: "Do you approve this request?",
+    render: "accept",
   }),
 
   // In sections for clarity
   confirmDelete: z.boolean().meta({
-    label: 'Confirm deletion',
-    description: 'This action cannot be undone',
-    render: 'accept',
+    label: "Confirm deletion",
+    description: "This action cannot be undone",
+    render: "accept",
   }),
-})
+});
 ```
 
 **Features:**
@@ -600,31 +599,31 @@ z.object({
 ```typescript
 z.object({
   section1Title: z.string().meta({
-    title: 'Account Settings',
-    description: 'Manage your account information',
-    render: 'section',
+    title: "Account Settings",
+    description: "Manage your account information",
+    render: "section",
   }),
 
   email: z.email().meta({
-    label: 'Email Address',
+    label: "Email Address",
   }),
 
   section2Title: z.string().meta({
-    title: 'Security',
-    description: 'Update your password and two-factor authentication',
-    render: 'section',
+    title: "Security",
+    description: "Update your password and two-factor authentication",
+    render: "section",
   }),
 
   password: z.string().min(8).meta({
-    label: 'New Password',
+    label: "New Password",
   }),
 
   codeDisplay: z.string().meta({
     code: 'z.email().meta({ label: "Email" })',
     line: true,
-    render: 'section',
+    render: "section",
   }),
-})
+});
 ```
 
 **Features:**
@@ -640,12 +639,12 @@ z.object({
 
 ```typescript
 type FormFieldSectionProps = {
-  title?: string           // Section heading
-  subtitle?: string        // Secondary heading
-  description?: string     // Descriptive text
-  code?: string           // Code block to display
-  line?: boolean          // Show separator line
-}
+  title?: string; // Section heading
+  subtitle?: string; // Secondary heading
+  description?: string; // Descriptive text
+  code?: string; // Code block to display
+  line?: boolean; // Show separator line
+};
 ```
 
 ---
@@ -715,23 +714,23 @@ Show fields only when another field has a value:
 ```typescript
 const schema = z.object({
   hasShippingAddress: z.boolean().meta({
-    label: 'Different shipping address?',
+    label: "Different shipping address?",
   }),
 
   // These only appear when hasShippingAddress is true
   shippingStreet: z.string().meta({
-    label: 'Street Address',
-    dependsOn: 'hasShippingAddress',
+    label: "Street Address",
+    dependsOn: "hasShippingAddress",
   }),
   shippingCity: z.string().meta({
-    label: 'City',
-    dependsOn: 'hasShippingAddress',
+    label: "City",
+    dependsOn: "hasShippingAddress",
   }),
   shippingZip: z.string().meta({
-    label: 'ZIP Code',
-    dependsOn: 'hasShippingAddress',
+    label: "ZIP Code",
+    dependsOn: "hasShippingAddress",
   }),
-})
+});
 ```
 
 **How it works:**
@@ -746,28 +745,28 @@ Show fields only when another field has a specific value:
 
 ```typescript
 const schema = z.object({
-  petType: z.enum(['dog', 'cat']).meta({
-    label: 'Pet Type',
+  petType: z.enum(["dog", "cat"]).meta({
+    label: "Pet Type",
   }),
 
   // Only visible when petType === 'dog'
   exerciseRoutine: z.string().meta({
-    label: 'Exercise Routine',
-    dependsOn: 'petType=dog',
+    label: "Exercise Routine",
+    dependsOn: "petType=dog",
   }),
 
   // Only visible when petType === 'cat'
   indoorSpace: z.string().meta({
-    label: 'Indoor Space',
-    dependsOn: 'petType=cat',
+    label: "Indoor Space",
+    dependsOn: "petType=cat",
   }),
 
   // Visible when ownsParent is truthy (boolean or non-empty value)
   parentName: z.string().meta({
-    label: 'Parent Name',
-    dependsOn: 'ownsParent',
+    label: "Parent Name",
+    dependsOn: "ownsParent",
   }),
-})
+});
 ```
 
 **Syntax Options:**
@@ -845,13 +844,13 @@ Some fields shouldn't be submitted (e.g., confirmation fields):
 ```typescript
 const schema = z.object({
   password: z.string().meta({
-    label: 'Password',
+    label: "Password",
   }),
   confirmPassword: z.string().meta({
-    label: 'Confirm Password',
-    excluded: true,  // Not included in submitted data
+    label: "Confirm Password",
+    excluded: true, // Not included in submitted data
   }),
-})
+});
 
 // Validation still happens, but confirmPassword won't be sent to server
 ```
@@ -937,22 +936,22 @@ Control how users interact with fields:
 const schema = z.object({
   // Normal interactive field
   email: z.email().meta({
-    label: 'Email',
-    state: 'editable',  // (default)
+    label: "Email",
+    state: "editable", // (default)
   }),
 
   // User can see but not modify
   userId: z.string().meta({
-    label: 'User ID',
-    state: 'readonly',  // Value visible, can't change
+    label: "User ID",
+    state: "readonly", // Value visible, can't change
   }),
 
   // Grayed out, cannot interact
   status: z.string().meta({
-    label: 'Status',
-    state: 'disabled',  // Grayed out, locked
+    label: "Status",
+    state: "disabled", // Grayed out, locked
   }),
-})
+});
 ```
 
 **States:**
@@ -993,10 +992,10 @@ const schema = z.object({
 Human-readable file size formatting:
 
 ```typescript
-formatFileSize(512)           // "512 B"
-formatFileSize(1024)          // "1 KB"
-formatFileSize(1024 * 1024)   // "1 MB"
-formatFileSize(1024 ** 3)     // "1 GB"
+formatFileSize(512); // "512 B"
+formatFileSize(1024); // "1 KB"
+formatFileSize(1024 * 1024); // "1 MB"
+formatFileSize(1024 ** 3); // "1 GB"
 ```
 
 ---
@@ -1008,8 +1007,8 @@ formatFileSize(1024 ** 3)     // "1 GB"
 Extract options from Zod enum schema:
 
 ```typescript
-const schema = z.enum(['pending', 'approved', 'rejected'])
-const result = getZodEnumOptions(schema)
+const schema = z.enum(["pending", "approved", "rejected"]);
+const result = getZodEnumOptions(schema);
 
 if (result.ok) {
   // result.value = [
@@ -1024,29 +1023,29 @@ if (result.ok) {
 
 ```typescript
 // Check if schema is a specific type (handles optional wrapper)
-isZodEnum(fieldSchema)            // true if z.enum() or z.optional(z.enum())
-isZodBoolean(fieldSchema)         // true if z.boolean() or z.literal(bool)
-checkZodBoolean(fieldSchema)      // Returns { isBoolean, isBooleanLiteral, booleanLiteralValue }
-isZodNumber(fieldSchema)          // true if z.number()
-isZodDate(fieldSchema)            // true if z.date() or z.optional(z.date())
-isZodString(fieldSchema)          // true if z.string()
-isZodFile(fieldSchema)            // true if z.instanceof(File)
+isZodEnum(fieldSchema); // true if z.enum() or z.optional(z.enum())
+isZodBoolean(fieldSchema); // true if z.boolean() or z.literal(bool)
+checkZodBoolean(fieldSchema); // Returns { isBoolean, isBooleanLiteral, booleanLiteralValue }
+isZodNumber(fieldSchema); // true if z.number()
+isZodDate(fieldSchema); // true if z.date() or z.optional(z.date())
+isZodString(fieldSchema); // true if z.string()
+isZodFile(fieldSchema); // true if z.instanceof(File)
 ```
 
 #### Form Field Analysis Utilities
 
 ```typescript
 // Get the render type for a field (auto-detection + explicit)
-getFormFieldRender(fieldSchema)    // Returns: 'text' | 'textarea' | 'date' | 'number' | 'boolean' | 'select' | 'upload' | undefined
+getFormFieldRender(fieldSchema); // Returns: 'text' | 'textarea' | 'date' | 'number' | 'boolean' | 'select' | 'upload' | undefined
 
 // Get metadata from field schema
-getFieldMetadata(fieldSchema)      // Returns: AutoFormFieldMetadata | undefined
+getFieldMetadata(fieldSchema); // Returns: AutoFormFieldMetadata | undefined
 
 // Get metadata from step schema
-getStepMetadata(stepSchema)        // Returns: AutoFormStepMetadata | undefined
+getStepMetadata(stepSchema); // Returns: AutoFormStepMetadata | undefined
 
 // Parse dependsOn syntax
-parseDependsOn(dependsOn)          // Returns: { fieldName: string; expectedValue?: string }
+parseDependsOn(dependsOn); // Returns: { fieldName: string; expectedValue?: string }
 ```
 
 ---
@@ -1058,7 +1057,7 @@ parseDependsOn(dependsOn)          // Returns: { fieldName: string; expectedValu
 Get schema with only visible fields based on current form state:
 
 ```typescript
-const filtered = filterSchema(schema, formData)
+const filtered = filterSchema(schema, formData);
 // Returns new schema excluding hidden fields
 // Useful for validation: filtered.safeParse(formData).success
 ```
@@ -1068,8 +1067,8 @@ const filtered = filterSchema(schema, formData)
 Transform incoming data using keyIn mappings:
 
 ```typescript
-const apiData = { user: { givenName: 'John' } }
-const mapped = mapExternalDataToFormFields(schema, apiData)
+const apiData = { user: { givenName: "John" } };
+const mapped = mapExternalDataToFormFields(schema, apiData);
 // Maps 'user.givenName' → 'firstName' (if keyIn: 'user.givenName')
 ```
 
@@ -1078,7 +1077,7 @@ const mapped = mapExternalDataToFormFields(schema, apiData)
 Remove hidden, excluded, and section fields before submission:
 
 ```typescript
-const normalized = normalizeDataForSchema(schema, formData)
+const normalized = normalizeDataForSchema(schema, formData);
 // - Removes fields with unmet dependencies
 // - Removes fields with excluded: true
 // - Removes fields with render: 'section'
@@ -1090,7 +1089,7 @@ const normalized = normalizeDataForSchema(schema, formData)
 Apply normalization across multiple schemas:
 
 ```typescript
-const cleaned = normalizeData(schemas, formData)
+const cleaned = normalizeData(schemas, formData);
 // Applies normalizeDataForSchema() to all schemas in sequence
 ```
 
@@ -1374,33 +1373,33 @@ export function JobApplicationForm() {
 
 ```typescript
 const registrationSchema = z.object({
-  accountType: z.enum(['individual', 'business']).meta({
-    label: 'Account Type',
+  accountType: z.enum(["individual", "business"]).meta({
+    label: "Account Type",
     options: [
-      { label: 'Personal Account', value: 'individual' },
-      { label: 'Business Account', value: 'business' },
+      { label: "Personal Account", value: "individual" },
+      { label: "Business Account", value: "business" },
     ],
   }),
 
   firstName: z.string().meta({
-    label: 'First Name',
-    dependsOn: 'accountType',
+    label: "First Name",
+    dependsOn: "accountType",
   }),
   lastName: z.string().meta({
-    label: 'Last Name',
-    dependsOn: 'accountType',
+    label: "Last Name",
+    dependsOn: "accountType",
   }),
 
   // Only shown when accountType = 'business'
   companyName: z.string().meta({
-    label: 'Company Name',
-    dependsOn: 'accountType',
+    label: "Company Name",
+    dependsOn: "accountType",
   }),
   taxId: z.string().meta({
-    label: 'Tax ID',
-    dependsOn: 'accountType',
+    label: "Tax ID",
+    dependsOn: "accountType",
   }),
-})
+});
 ```
 
 ---
@@ -1480,15 +1479,15 @@ View `auto-form.stories.tsx` for comprehensive examples.
 ```typescript
 // ❌ Wrong - no metadata
 const schema = z.object({
-  email: z.email()
-})
+  email: z.email(),
+});
 
 // ✅ Correct - has metadata
 const schema = z.object({
   email: z.email().meta({
-    label: 'Email Address'
-  })
-})
+    label: "Email Address",
+  }),
+});
 ```
 
 ### Validation not working
@@ -1498,10 +1497,10 @@ const schema = z.object({
 
 ```typescript
 // ❌ Wrong - no validation
-z.string()
+z.string();
 
 // ✅ Correct - has validation
-z.string().min(1, 'Required').email('Invalid email')
+z.string().min(1, "Required").email("Invalid email");
 ```
 
 ### Conditional fields not hiding
@@ -1525,10 +1524,10 @@ z.string().min(1, 'Required').email('Invalid email')
 
 ```typescript
 // ❌ Wrong - allows any file
-z.instanceof(File)
+z.instanceof(File);
 
 // ✅ Correct - validates extensions
-fileSchema(['pdf', 'doc', 'docx'])
+fileSchema(["pdf", "doc", "docx"]);
 ```
 
 ### Data not mapping correctly
@@ -1539,11 +1538,11 @@ fileSchema(['pdf', 'doc', 'docx'])
 ```typescript
 // API data: { user: { profile: { firstName: 'John' } } }
 // Wrong:
-keyIn: 'firstName'
+keyIn: "firstName";
 
 // Correct:
-keyIn: 'user.profile.firstName'
-keyOut: 'user.profile.firstName'
+keyIn: "user.profile.firstName";
+keyOut: "user.profile.firstName";
 ```
 
 ---
