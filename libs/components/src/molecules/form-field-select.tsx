@@ -7,7 +7,7 @@ import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 export function FormFieldSelect({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { label = "", placeholder, state = "editable" } = metadata;
-  const isDisabled = state === "disabled";
+  const isDisabled = state === "disabled" || readonly;
   const options = getZodEnumOptions(fieldSchema);
   if (!options.ok) {
     throw new Error(`Field "${fieldName}" is not an enum`);

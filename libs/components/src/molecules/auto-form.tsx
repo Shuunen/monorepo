@@ -9,10 +9,10 @@ import { Button } from "../atoms/button";
 import { Form } from "../atoms/form";
 import { IconHome } from "../icons/icon-home";
 import type { AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps } from "./auto-form.types";
-import { defaultIcons, defaultLabels, filterSchema, getFieldMetadata, getStepMetadata, mapExternalDataToFormFields, normalizeData } from "./auto-form.utils";
+import { defaultIcons, defaultLabels, filterSchema, getStepMetadata, mapExternalDataToFormFields, normalizeData } from "./auto-form.utils";
 import { AutoFormFields } from "./auto-form-fields";
 import { AutoFormNavigation } from "./auto-form-navigation";
-import { AutoFormStepper } from "./auto-form-stepper";
+import { AutoFormStepper, type AutoFormStepperStep } from "./auto-form-stepper";
 import { AutoFormSubmissionStep } from "./auto-form-submission-step";
 import { AutoFormSummaryStep } from "./auto-form-summary-step";
 
@@ -57,7 +57,16 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
   }, [schemas, initialData]);
   const [formData, setFormData] = useState<Record<string, unknown>>(defaultValues);
   const currentSchema = schemas[currentStep];
-  const isLastStep = currentStep === schemas.length - 1;
+  const lastAccessibleStepIndex = useMemo(() => {
+    for (let index = schemas.length - 1; index >= 0; index -= 1) {
+      const stepMeta = getStepMetadata(schemas[index]);
+      if (stepMeta?.state !== "upcoming") {
+        return index;
+      }
+    }
+    return schemas.length - 1;
+  }, [schemas]);
+  const isLastStep = currentStep === lastAccessibleStepIndex;
   const finalLabels = { ...defaultLabels, ...labels };
   const form = useForm({ defaultValues, mode: "onBlur", resolver: zodResolver(filterSchema(currentSchema, formData)) });
   // Find a way to reset the form when schema changes.
@@ -132,6 +141,10 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     if (submissionProps && (submissionProps.status === "success" || submissionProps.status === "warning")) {
       return;
     }
+    const stepMeta = getStepMetadata(schemas[stepIndex]);
+    if (stepMeta?.state === "upcoming") {
+      return;
+    }
     if (submissionProps) {
       setSubmissionProps(undefined);
     }
@@ -142,40 +155,28 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
   }
   // Step states and icons
   let lastSection = "" as AutoFormStepMetadata["section"];
-  const steps = schemas.map((schema, idx) => {
-    const { title = `Step ${idx + 1}`, subtitle, suffix, section: currentSection } = getStepMetadata(schema) ?? {};
+  const steps = schemas.map<AutoFormStepperStep>((schema, idx) => {
+    const stepMeta = getStepMetadata(schema);
+    const { title = `Step ${idx + 1}`, subtitle, suffix, section: currentSection, state: metaState } = stepMeta ?? {};
     const section = currentSection !== lastSection && currentSection ? currentSection : undefined;
     lastSection = currentSection;
-    const allReadonly = Object.values(schema.shape).every(fieldSchema => {
-      const meta = getFieldMetadata(fieldSchema);
-      if (!meta) {
-        return true;
-      }
-      if ("state" in meta && meta.state) {
-        return meta.state === "readonly";
-      }
-      return false;
-    });
-    const filtered = filterSchema(schema, formData);
-    const isSuccess = filtered.safeParse(formData).success;
-    /* oxlint-disable no-nested-ternary */
-    const state = allReadonly ? ("readonly" as const) : isSuccess ? ("success" as const) : ("editable" as const);
-    const icon = allReadonly ? defaultIcons.readonly : isSuccess ? defaultIcons.success : defaultIcons.edit;
-    /* oxlint-enable no-nested-ternary */
+    const state = metaState ?? "editable";
     return {
       active: idx === currentStep,
-      icon,
+      icon: defaultIcons[state],
       idx,
       section,
       state,
       subtitle,
       suffix,
       title,
-    };
+    } satisfies AutoFormStepperStep;
   });
   // Get current step title for rendering above fields
-  const currentStepTitle = getStepMetadata(currentSchema)?.title;
+  const currentStepMeta = getStepMetadata(currentSchema);
+  const currentStepTitle = currentStepMeta?.title;
   const stepTitle = typeof currentStepTitle === "string" ? currentStepTitle : "";
+  const stepState = currentStepMeta?.state;
   const isStepperDisabled = submissionProps?.status === "success";
   const shouldShowStepper = showMenu === undefined ? schemas.length > 1 : showMenu;
   function renderSubmissionContent() {
@@ -220,7 +221,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     return (
       <Form {...form}>
         <form onChange={updateFormData} onSubmit={form.handleSubmit(handleStepSubmit)}>
-          <AutoFormFields formData={formData} logger={logger} schema={currentSchema} stepTitle={stepTitle} />
+          <AutoFormFields formData={formData} logger={logger} schema={currentSchema} stepState={stepState} stepTitle={stepTitle} />
           <AutoFormNavigation
             centerButton={onCancel ? { onClick: onCancel } : undefined}
             leftButton={currentStep > 0 ? { onClick: handleBack } : undefined}

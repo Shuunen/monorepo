@@ -44,7 +44,7 @@ function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps
     <div className="grid gap-2">
       {section && <Title level={4}>{section}</Title>}
       <div className={cn("flex items-center gap-0.5", { "opacity-60 pointer-events-none": state === "upcoming" })}>
-        {indent && <div className={cn("h-10 w-1 bg-gray-200", { "h-16": subtitle })} />}
+        {indent && <div className={cn("h-10 w-1 bg-gray-200 shrink-0", { "h-16": subtitle })} />}
         <Button className={btnClasses} data-state={state} disabled={disabled} name={`step-${slugify(title)}`} onClick={() => onStepClick(idx)} variant="ghost">
           {icon}
           <div className="grow text-start flex flex-col ml-2">

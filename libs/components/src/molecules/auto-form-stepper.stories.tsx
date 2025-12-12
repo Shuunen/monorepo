@@ -16,11 +16,10 @@ export default meta;
 
 type Story = StoryObj<typeof AutoFormStepper>;
 
-const successState = "success" as const;
 const editableState = "editable" as const;
 const readonlyState = "readonly" as const;
 const upcomingState = "upcoming" as const;
-const { success: iconSuccess, edit: iconEdit, readonly: iconReadonly, upcoming: iconUpcoming } = defaultIcons;
+const { editable: iconEdit, readonly: iconReadonly, upcoming: iconUpcoming } = defaultIcons;
 
 function FormSkeleton() {
   return (
@@ -54,16 +53,16 @@ export const Basic: Story = {
     const steps = [
       {
         active: activeStep === 0,
-        icon: activeStep > 0 ? iconSuccess : iconEdit,
+        icon: iconEdit,
         idx: 0,
-        state: activeStep > 0 ? successState : editableState,
+        state: editableState,
         title: "Personal Information",
       },
       {
         active: activeStep === 1,
-        icon: activeStep > 1 ? iconSuccess : iconEdit,
+        icon: iconEdit,
         idx: 1,
-        state: activeStep > 1 ? successState : editableState,
+        state: editableState,
         title: "Contact Details",
       },
       {
@@ -77,9 +76,7 @@ export const Basic: Story = {
 
     return (
       <div className="flex gap-8">
-        <div className="w-80">
-          <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
-        </div>
+        <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
         <FormSkeleton />
       </div>
     );
@@ -95,17 +92,17 @@ export const WithSubtitles: Story = {
     const steps = [
       {
         active: activeStep === 0,
-        icon: activeStep > 0 ? iconSuccess : iconEdit,
+        icon: iconEdit,
         idx: 0,
-        state: activeStep > 0 ? successState : editableState,
+        state: editableState,
         subtitle: "Basic details about you",
         title: "Personal Information",
       },
       {
         active: activeStep === 1,
-        icon: activeStep > 1 ? iconSuccess : iconEdit,
+        icon: iconEdit,
         idx: 1,
-        state: activeStep > 1 ? successState : editableState,
+        state: editableState,
         subtitle: "How we can reach you",
         title: "Contact Details",
       },
@@ -121,9 +118,7 @@ export const WithSubtitles: Story = {
 
     return (
       <div className="flex gap-8">
-        <div className="w-80">
-          <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
-        </div>
+        <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
         <FormSkeleton />
       </div>
     );
@@ -139,25 +134,25 @@ export const WithSuffixes: Story = {
     const steps = [
       {
         active: activeStep === 0,
-        icon: activeStep > 0 ? iconSuccess : iconEdit,
+        icon: iconEdit,
         idx: 0,
-        state: activeStep > 0 ? successState : editableState,
+        state: editableState,
         suffix: "1/4",
         title: "Account Setup",
       },
       {
         active: activeStep === 1,
-        icon: activeStep > 1 ? iconSuccess : iconEdit,
+        icon: iconEdit,
         idx: 1,
-        state: activeStep > 1 ? successState : editableState,
+        state: editableState,
         suffix: "2/4",
         title: "Personal Details",
       },
       {
         active: activeStep === 2,
-        icon: activeStep > 2 ? iconSuccess : iconEdit,
+        icon: iconEdit,
         idx: 2,
-        state: activeStep > 2 ? successState : editableState,
+        state: editableState,
         suffix: "3/4",
         title: "Preferences",
       },
@@ -173,9 +168,7 @@ export const WithSuffixes: Story = {
 
     return (
       <div className="flex gap-8">
-        <div className="w-80">
-          <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
-        </div>
+        <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
         <FormSkeleton />
       </div>
     );
@@ -191,18 +184,18 @@ export const WithSubtitlesAndSuffixes: Story = {
     const steps = [
       {
         active: activeStep === 0,
-        icon: activeStep > 0 ? iconSuccess : iconEdit,
+        icon: iconEdit,
         idx: 0,
-        state: activeStep > 0 ? successState : editableState,
+        state: editableState,
         subtitle: "Enter your shipping address",
         suffix: "- Step 1/3",
         title: "Shipping",
       },
       {
         active: activeStep === 1,
-        icon: activeStep > 1 ? iconSuccess : iconEdit,
+        icon: iconEdit,
         idx: 1,
-        state: activeStep > 1 ? successState : editableState,
+        state: editableState,
         subtitle: "Enter payment information",
         suffix: "- Step 2/3",
         title: "Payment",
@@ -220,9 +213,7 @@ export const WithSubtitlesAndSuffixes: Story = {
 
     return (
       <div className="flex gap-8">
-        <div className="w-80">
-          <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
-        </div>
+        <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
         <FormSkeleton />
       </div>
     );
@@ -238,17 +229,17 @@ export const WithSections: Story = {
     const steps = [
       {
         active: activeStep === 0,
-        icon: iconSuccess,
+        icon: iconEdit,
         idx: 0,
         section: "Getting Started",
-        state: successState,
+        state: editableState,
         title: "Create Account",
       },
       {
         active: activeStep === 1,
-        icon: iconSuccess,
+        icon: iconEdit,
         idx: 1,
-        state: successState,
+        state: editableState,
         title: "Email Verification",
       },
       {
@@ -285,9 +276,7 @@ export const WithSections: Story = {
 
     return (
       <div className="flex gap-8">
-        <div className="w-80">
-          <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
-        </div>
+        <AutoFormStepper onStepClick={setActiveStep} steps={steps} />
         <FormSkeleton />
       </div>
     );
@@ -311,10 +300,10 @@ export const Everything: Story = {
     const steps = [
       {
         active: activeStep === 0,
-        icon: iconSuccess,
+        icon: iconReadonly,
         idx: 0,
         section: "Completed steps",
-        state: successState,
+        state: readonlyState,
         subtitle: "Name, email, phone",
         title: "Personal Info",
       },
@@ -361,9 +350,7 @@ export const Everything: Story = {
     return (
       <div className="space-y-6">
         <div className="flex gap-8">
-          <div className="w-80">
-            <AutoFormStepper disabled={isDisabled} onStepClick={setActiveStep} steps={steps} />
-          </div>
+          <AutoFormStepper disabled={isDisabled} onStepClick={setActiveStep} steps={steps} />
           <FormSkeleton />
         </div>
 
@@ -380,10 +367,7 @@ export const Everything: Story = {
           </p>
           <ul className="list-disc list-inside space-y-1 ml-2">
             <li>
-              <strong>Success state:</strong> Steps 1 (completed with checkmark, readable)
-            </li>
-            <li>
-              <strong>Readonly state:</strong> Step 2 (view only, readable not editable)
+              <strong>Readonly state:</strong> Step 1-2 (completed, view only, readable not editable)
             </li>
             <li>
               <strong>Editable state:</strong> Step 3-4 (in progress, can edit)

@@ -227,7 +227,7 @@ export const ShowLastStep: Story = {
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const firstStepTrigger = canvas.queryByRole("button", { name: "Step 1" });
-    expect(firstStepTrigger).toHaveAttribute("data-state", "success");
+    expect(firstStepTrigger).toHaveAttribute("data-state", "editable");
   },
 };
 
@@ -411,27 +411,44 @@ const readonlyStep2Schema = step(
     petName: field(z.string().min(2, "Pet name is required"), {
       label: "Pet Name",
       placeholder: "Enter your pet name",
-      state: "readonly",
     }),
     petAge: field(z.number().min(0).max(50).optional(), {
       label: "Pet Age",
       placeholder: "Enter your pet age",
-      state: "readonly",
     }),
   }),
   {
+    state: "readonly",
     subtitle: "Pet information and details",
     title: "My pet",
   },
 );
 
+const upcomingStep3Schema = step(
+  z.object({
+    address: field(z.string().min(5, "Address is required"), {
+      label: "Street Address",
+      placeholder: "Enter your street address",
+    }),
+    city: field(z.string().min(2, "City is required"), {
+      label: "City",
+      placeholder: "Enter your city",
+    }),
+  }),
+  {
+    state: "upcoming",
+    subtitle: "Address information",
+    title: "My address",
+  },
+);
+
 /**
- * Story to test stepper icons in different states (editable, readonly, completed)
+ * Story to test stepper icons in different states (editable, readonly, upcoming)
  */
 export const StepperStates: Story = {
   args: {
     initialData: { age: 28, name: "Jane Doe", petName: "Fido" },
-    schemas: [editableStep1Schema, readonlyStep2Schema],
+    schemas: [editableStep1Schema, readonlyStep2Schema, upcomingStep3Schema],
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -439,12 +456,15 @@ export const StepperStates: Story = {
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("fill step 1", async () => {
       const currentStepButton = canvas.getByTestId("button-step-my-infos");
-      expect(currentStepButton).toHaveAttribute("data-state", "success");
+      expect(currentStepButton).toHaveAttribute("data-state", "editable");
       const nameInput = canvas.getByTestId("input-text-name");
       expect(nameInput).toHaveValue("Jane Doe");
       await userEvent.type(nameInput, "-Rollin");
       await userEvent.tab();
-      expect(currentStepButton).toHaveAttribute("data-state", "success");
+      const ageInput = canvas.getByTestId("input-number-age");
+      expect(ageInput).toHaveValue(28);
+      expect(ageInput).toBeDisabled();
+      expect(currentStepButton).toHaveAttribute("data-state", "editable");
       const secondStepButton = canvas.getByTestId("button-step-my-pet");
       expect(secondStepButton).toHaveAttribute("data-state", "readonly");
     });
@@ -453,7 +473,7 @@ export const StepperStates: Story = {
       await userEvent.click(secondStepButton);
       const petNameInput = canvas.getByTestId("input-text-pet-name");
       expect(petNameInput).toBeInTheDocument();
-      expect(petNameInput).toHaveAttribute("readonly");
+      expect(petNameInput).toBeDisabled();
       expect(petNameInput).toHaveValue("Fido");
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);

@@ -1,15 +1,17 @@
 import type { Logger } from "@monorepo/utils";
 import type { z } from "zod";
+import type { AutoFormStepMetadata } from "./auto-form.types";
 import { AutoFormField } from "./auto-form-field";
 
 type AutoFormFieldsProps = {
   schema: z.ZodObject;
   formData: Record<string, unknown>;
   stepTitle?: string;
+  stepState?: AutoFormStepMetadata["state"];
   logger?: Logger;
 };
 
-export function AutoFormFields({ schema, formData, stepTitle, logger }: AutoFormFieldsProps) {
+export function AutoFormFields({ schema, formData, stepTitle, stepState, logger }: AutoFormFieldsProps) {
   return (
     <>
       {stepTitle && (
@@ -18,7 +20,7 @@ export function AutoFormFields({ schema, formData, stepTitle, logger }: AutoForm
         </h3>
       )}
       {Object.keys(schema.shape).map(fieldName => (
-        <AutoFormField fieldName={fieldName} fieldSchema={schema.shape[fieldName] as z.ZodTypeAny} formData={formData} key={fieldName} logger={logger} />
+        <AutoFormField fieldName={fieldName} fieldSchema={schema.shape[fieldName] as z.ZodTypeAny} formData={formData} key={fieldName} logger={logger} stepState={stepState} />
       ))}
     </>
   );

@@ -3,7 +3,6 @@ import { getNested, Logger, nbPercentMax, Result, setNested, sleep, stringify } 
 import type { ReactNode } from "react";
 import { z } from "zod";
 import { IconEdit } from "../icons/icon-edit";
-import { IconReadonly } from "../icons/icon-readonly";
 import { IconSuccess } from "../icons/icon-success";
 import { IconUpcoming } from "../icons/icon-upcoming";
 import type { AutoFormFieldMetadata, AutoFormFieldSectionMetadata, AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps, SelectOption } from "./auto-form.types";
@@ -349,11 +348,10 @@ export const defaultLabels = {
 } satisfies AutoFormProps["labels"];
 
 export const defaultIcons = {
-  edit: <IconEdit className="text-muted-foreground size-6" />,
-  readonly: <IconReadonly className="text-muted-foreground size-6" />,
-  success: <IconSuccess className="text-success size-6" />,
+  editable: <IconEdit className="text-muted-foreground size-6" />,
+  readonly: <IconSuccess className="text-success size-6" />,
   upcoming: <IconUpcoming className="text-muted-foreground size-6" />,
-};
+} satisfies Record<NonNullable<AutoFormStepMetadata["state"]>, ReactNode>;
 
 /**
  * Gets metadata from a Zod field schema if it exists.

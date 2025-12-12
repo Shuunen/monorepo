@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: it's ok here */
-import type { Logger } from "@monorepo/utils";
+import type { Logger, Simplify } from "@monorepo/utils";
 import type { ReactNode } from "react";
 import type { z } from "zod";
 import type { AutoFormStepperStep } from "./auto-form-stepper";
@@ -55,7 +55,12 @@ export type AutoFormProps = {
  * Applied to the schema object itself using `.meta()`.
  * example: `step(z.object({ ... }), { title: 'Personal Information', subtitle: 'Basic details', suffix: '1/3' })`
  */
-export type AutoFormStepMetadata = Pick<AutoFormStepperStep, "title" | "section" | "subtitle" | "suffix" | "indent">;
+export type AutoFormStepMetadata = Simplify<
+  Pick<AutoFormStepperStep, "title" | "section" | "subtitle" | "suffix" | "indent"> & {
+    /** The interaction state of the step */
+    state?: "readonly" | "editable" | "upcoming";
+  }
+>;
 
 /**
  * Metadata describing the configuration and behavior of a section field in an auto-generated form.

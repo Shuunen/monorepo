@@ -1,6 +1,7 @@
 import type { Logger } from "@monorepo/utils";
 import { z } from "zod";
 import { Alert } from "../atoms/alert";
+import type { AutoFormStepMetadata } from "./auto-form.types";
 import { getFieldMetadata, getFormFieldRender, isFieldVisible } from "./auto-form.utils";
 import { FormFieldAccept } from "./form-field-accept";
 import { FormFieldBoolean } from "./form-field-boolean";
@@ -17,17 +18,19 @@ type AutoFormFieldProps = {
   fieldName: string;
   fieldSchema: z.ZodTypeAny;
   formData: Record<string, unknown>;
+  stepState?: AutoFormStepMetadata["state"];
   logger?: Logger;
 };
 
-export function AutoFormField({ fieldName, fieldSchema, formData, logger }: AutoFormFieldProps) {
+export function AutoFormField({ fieldName, fieldSchema, formData, stepState, logger }: AutoFormFieldProps) {
   if (!isFieldVisible(fieldSchema, formData)) {
     return;
   }
   logger?.info("Rendering field", fieldName);
   const isOptional = fieldSchema instanceof z.ZodOptional;
   const metadata = getFieldMetadata(fieldSchema) ?? {};
-  const state = "state" in metadata ? (metadata.state ?? "editable") : "editable";
+  const fieldState = "state" in metadata ? metadata.state : undefined;
+  const state = fieldState ?? stepState ?? "editable";
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly: state === "readonly" };
   const render = getFormFieldRender(fieldSchema);
   if (render === "accept") {
