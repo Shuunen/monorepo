@@ -85,8 +85,8 @@ export const Simple: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const messageField = canvas.getByTestId("message");
-    const submitButton = canvas.getByTestId("submit");
+    const messageField = canvas.getByTestId("textarea-message");
+    const submitButton = canvas.getByTestId("button-submit");
 
     const errorInvalidMessagePattern = /invalid input/i;
     const errorShortMessagePattern = /too small/i;
