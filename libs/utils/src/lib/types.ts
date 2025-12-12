@@ -51,3 +51,7 @@ export type PackageJson = {
 export type Mutable<Type> = {
   -readonly [Key in keyof Type]: Type[Key];
 };
+
+// source : https://github.com/sindresorhus/type-fest/blob/main/source/simplify.d.ts
+// oxlint-disable-next-line ban-types
+export type Simplify<Input> = { [KeyType in keyof Input]: Input[KeyType] } & {};
