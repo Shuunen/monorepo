@@ -59,8 +59,9 @@ export async function make({ header = "", target, index = "index.ts", ext }: Mak
   const files = await glob(target, { filesOnly: true });
   const list = files.filter(file => filterFile(file)).map(file => `export ${file.includes("types") ? "type " : ""}* from "./${ext === undefined ? file : removeExtension(file) + ext}";`.replace(path.sep, "/"));
   const content = `${header}${list.toSorted().join("\n")}\n`;
+  logger.info("Into barrel file", out);
   writeFileSync(out, content);
-  logger.success(`${out} has been updated !`);
+  logger.success("Barrel file updated !");
   return Result.ok({ content, files, out });
 }
 
