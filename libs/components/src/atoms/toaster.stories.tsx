@@ -31,7 +31,7 @@ export const Info: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const button = canvas.getByTestId("show-toast");
+    const button = canvas.getByTestId("button-show-toast");
     expect(button).toBeInTheDocument();
 
     // Click to show toast
@@ -53,7 +53,7 @@ export const Success: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const button = canvas.getByTestId("show-toast");
+    const button = canvas.getByTestId("button-show-toast");
     expect(button).toBeInTheDocument();
 
     // Click to show toast

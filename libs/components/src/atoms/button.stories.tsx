@@ -80,7 +80,7 @@ export const AsChild: Story = {
   play: ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const childButton = canvas.getByTestId("as-child-button");
+    const childButton = canvas.getByTestId("button-as-child");
     const spanElement = canvas.getByText("child element");
     expect(spanElement).toBeInTheDocument();
     expect(childButton).toContainElement(spanElement);

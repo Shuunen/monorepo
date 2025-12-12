@@ -48,7 +48,7 @@ export const CompleteCard: Story = {
     expect(footer).toBeInTheDocument();
 
     // Check the button exists and is clickable
-    const button = canvas.getByTestId("card");
+    const button = canvas.getByTestId("button-card");
     expect(button).toBeInTheDocument();
 
     button.click();

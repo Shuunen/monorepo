@@ -52,7 +52,7 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     // Trigger button is inside the canvas
-    const openButton = canvas.getByTestId("open-dialog");
+    const openButton = canvas.getByTestId("button-open-dialog");
     expect(openButton).toBeInTheDocument();
 
     // Dialog content is rendered in a portal: use `screen`

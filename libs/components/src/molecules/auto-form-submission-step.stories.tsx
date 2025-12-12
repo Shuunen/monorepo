@@ -80,7 +80,7 @@ export const ErrorWithDetails: Story = {
     expect(title.textContent).toContain("Error");
     const reference = canvas.getByRole("strong");
     expect(reference.textContent).toBe("XX1123465433");
-    const tooltipTrigger = canvas.getByTestId("tooltip-trigger-tooltip-details-list");
+    const tooltipTrigger = canvas.getByTestId("tooltip-trigger-details-list");
     expect(tooltipTrigger).toBeInTheDocument();
   },
 };

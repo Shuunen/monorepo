@@ -23,7 +23,7 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const input = canvas.getByTestId("input-default") as HTMLInputElement;
+    const input = canvas.getByTestId("input-text-default") as HTMLInputElement;
 
     // Renders with correct placeholder
     expect(input).toBeInTheDocument();
@@ -45,7 +45,7 @@ export const Disabled: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const input = canvas.getByTestId("input-disabled") as HTMLInputElement;
+    const input = canvas.getByTestId("input-text-disabled") as HTMLInputElement;
 
     // Renders disabled with correct placeholder
     expect(input).toBeInTheDocument();
@@ -68,7 +68,7 @@ export const Readonly: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const input = canvas.getByTestId("input-readonly") as HTMLInputElement;
+    const input = canvas.getByTestId("input-text-readonly") as HTMLInputElement;
 
     // Renders readonly with correct placeholder & initial value
     expect(input).toBeInTheDocument();
