@@ -110,6 +110,16 @@
       }
     },
     {
+      "assist": {
+        "actions": {
+          "source": {
+            "useSortedKeys": "off"
+          }
+        }
+      },
+      "includes": ["**/*.schemas.ts", "**/schemas.ts"]
+    },
+    {
       "includes": ["**/*.jsx", "**/*.tsx"],
       "linter": {
         "rules": {

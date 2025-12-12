@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Paragraph } from "../atoms/typography";
 import { AutoForm } from "./auto-form";
 import type { AutoFormProps, AutoFormSubmissionStepProps } from "./auto-form.types";
-import { mockSubmit } from "./auto-form.utils";
+import { field, mockSubmit, step } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 // allow dev to see logs in the browser console when running storybook dev but not in headless tests
@@ -53,11 +53,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const basicSchema = z.object({
-  email: z.email("Invalid email address").meta({
+  email: field(z.email("Invalid email address"), {
     label: "Email Address",
     placeholder: "We'll never share your email",
   }),
-  name: z.string().min(2, "Name is required").meta({
+  name: field(z.string().min(2, "Name is required"), {
     label: "Full Name",
     placeholder: "Enter your legal name",
   }),
@@ -86,33 +86,33 @@ export const Basic: Story = {
 };
 
 const step1Schema = z.object({
-  email: z.email("Invalid email address").meta({
+  email: field(z.email("Invalid email address"), {
     label: "Email Address",
     placeholder: "We'll never share your email",
   }),
-  name: z.string().min(2, "Name is required").meta({
+  name: field(z.string().min(2, "Name is required"), {
     label: "Full Name",
     placeholder: "Enter your legal name",
   }),
 });
 
 const step2Schema = z.object({
-  age: z.number().min(0).max(120).optional().meta({
+  age: field(z.number().min(0).max(120).optional(), {
     label: "Age",
     placeholder: "Enter your age",
   }),
-  subscribe: z.boolean().meta({
+  subscribe: field(z.boolean(), {
     label: "Subscribe to newsletter",
     placeholder: "Check to subscribe",
   }),
 });
 
 const step3Schema = z.object({
-  address: z.string().min(5, "Address is required").meta({
+  address: field(z.string().min(5, "Address is required"), {
     label: "Street Address",
     placeholder: "Enter your street address",
   }),
-  city: z.string().min(2, "City is required").meta({
+  city: field(z.string().min(2, "City is required"), {
     label: "City",
     placeholder: "Enter your city",
   }),
@@ -231,51 +231,53 @@ export const ShowLastStep: Story = {
   },
 };
 
-const optionalSectionStep1Schema = z
+const optionalSectionStep1Schema = step(
   // biome-ignore assist/source/useSortedKeys: we need a specific key order here
-  .object({
-    name: z.string().min(2, "Name is required").meta({
+  z.object({
+    name: field(z.string().min(2, "Name is required"), {
       label: "Full Name",
       placeholder: "Enter your legal name",
     }),
-    favouriteColor: z.enum(["red", "green", "blue"]).optional().meta({
+    favouriteColor: field(z.enum(["red", "green", "blue"]).optional(), {
       label: "Favourite Color",
       placeholder: "Select your favourite color",
     }),
-    isHacker: z.boolean().meta({
+    isHacker: field(z.boolean(), {
       dependsOn: "favouriteColor=green", // this field depends on favouriteColor being "green"
       label: "Are you a hacker ?",
       placeholder: "Check if you are a hacker",
     }),
-  })
-  .meta({
+  }),
+  {
     subtitle: "Basic personal information",
     title: "My infos",
-  });
+  },
+);
 
-const optionalSectionStep2Schema = z
+const optionalSectionStep2Schema = step(
   // biome-ignore assist/source/useSortedKeys: we need a specific key order here
-  .object({
-    hasPet: z.boolean().optional().meta({
+  z.object({
+    hasPet: field(z.boolean().optional(), {
       excluded: true, // avoid including this field in the final submitted data
       label: "Do you have a pet ?",
       placeholder: "Check if you have a pet",
     }),
-    petName: z.string().min(2, "Pet name is required").meta({
+    petName: field(z.string().min(2, "Pet name is required"), {
       dependsOn: "hasPet", // this field depends on the truthiness of "hasPet" field
       label: "Pet Name",
       placeholder: "Enter your pet name",
     }),
-    petAge: z.number().min(0).max(50).optional().meta({
+    petAge: field(z.number().min(0).max(50).optional(), {
       dependsOn: "hasPet", // this field depends on the truthiness of "hasPet" field
       label: "Pet Age",
       placeholder: "Enter your pet age if you know it",
     }),
-  })
-  .meta({
+  }),
+  {
     subtitle: "Pet information and details",
     title: "My pet",
-  });
+  },
+);
 
 /**
  * Schema with an optional section
@@ -384,42 +386,44 @@ export const OptionalSection: Story = {
   },
 };
 
-const editableStep1Schema = z
+const editableStep1Schema = step(
   // biome-ignore assist/source/useSortedKeys: we need a specific key order here
-  .object({
-    name: z.string().min(2, "Name is required").meta({
+  z.object({
+    name: field(z.string().min(2, "Name is required"), {
       label: "Full Name",
       placeholder: "Enter your legal name",
     }),
-    age: z.number().min(0).max(120).meta({
+    age: field(z.number().min(0).max(120), {
       label: "Age",
       placeholder: "Enter your age",
       state: "readonly",
     }),
-  })
-  .meta({
+  }),
+  {
     subtitle: "Basic personal information",
     title: "My infos",
-  });
+  },
+);
 
-const readonlyStep2Schema = z
+const readonlyStep2Schema = step(
   // biome-ignore assist/source/useSortedKeys: we need a specific key order here
-  .object({
-    petName: z.string().min(2, "Pet name is required").meta({
+  z.object({
+    petName: field(z.string().min(2, "Pet name is required"), {
       label: "Pet Name",
       placeholder: "Enter your pet name",
       state: "readonly",
     }),
-    petAge: z.number().min(0).max(50).optional().meta({
+    petAge: field(z.number().min(0).max(50).optional(), {
       label: "Pet Age",
       placeholder: "Enter your pet age",
       state: "readonly",
     }),
-  })
-  .meta({
+  }),
+  {
     subtitle: "Pet information and details",
     title: "My pet",
-  });
+  },
+);
 
 /**
  * Story to test stepper icons in different states (editable, readonly, completed)
@@ -479,12 +483,12 @@ export const KeyMapping: Story = {
     },
     schemas: [
       z.object({
-        userEmail: z.email("Invalid email address").meta({
+        userEmail: field(z.email("Invalid email address"), {
           key: "email_address", // Maps initialData.email_address to userEmail field and back to email_address in output
           label: "Email Address",
           placeholder: "We'll never share your email",
         }),
-        userName: z.string().min(2, "Name is required").meta({
+        userName: field(z.string().min(2, "Name is required"), {
           keyIn: "userName-Input", // Maps initialData.full_name to userName field
           keyOut: "user-name-output", // Maps userName field back to full_name in output
           label: "Full Name",
@@ -538,13 +542,13 @@ export const NestedKeyMapping: Story = {
     },
     schemas: [
       z.object({
-        userEmail: z.email("Invalid email address").meta({
+        userEmail: field(z.email("Invalid email address"), {
           keyIn: "user.contact_info.email_address",
           keyOut: "userInfos.email",
           label: "Email Address",
           placeholder: "We'll never share your email",
         }),
-        userName: z.string().min(2, "Name is required").meta({
+        userName: field(z.string().min(2, "Name is required"), {
           keyIn: "user.personal-Info.fullName",
           keyOut: "userInfos.fullName",
           label: "Full Name",
@@ -592,31 +596,39 @@ export const NestedKeyMapping: Story = {
   },
 };
 
-const step1SummarySchema = z
-  .object({
-    email: z.email("Invalid email address").meta({
+const step1SummarySchema = step(
+  z.object({
+    email: field(z.email("Invalid email address"), {
       label: "Email Address",
       placeholder: "We'll never share your email",
     }),
-    name: z.string().min(2, "Name is required").meta({
+    name: field(z.string().min(2, "Name is required"), {
       label: "Full Name",
       placeholder: "Enter your legal name",
     }),
-  })
-  .meta({ subtitle: "Basic personal details", title: "Personal Information" });
+  }),
+  {
+    subtitle: "Basic personal details",
+    title: "Personal Information",
+  },
+);
 
-const step2SummarySchema = z
-  .object({
-    age: z.number().min(0).max(120).optional().meta({
+const step2SummarySchema = step(
+  z.object({
+    age: field(z.number().min(0).max(120).optional(), {
       label: "Age",
       placeholder: "Enter your age",
     }),
-    subscribe: z.boolean().meta({
+    subscribe: field(z.boolean(), {
       label: "Subscribe to newsletter",
       placeholder: "Check to subscribe",
     }),
-  })
-  .meta({ subtitle: "Additional information about you", title: "Additional Details" });
+  }),
+  {
+    subtitle: "Additional information about you",
+    title: "Additional Details",
+  },
+);
 
 /**
  * Multi-step form with summary step

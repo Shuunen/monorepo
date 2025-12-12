@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -44,7 +45,7 @@ export const Basic: Story = {
   args: {
     schemas: [
       z.object({
-        agreedToTerms: z.boolean().meta({
+        agreedToTerms: field(z.boolean(), {
           label: "I agree to the Terms and Conditions",
           placeholder: "Please accept the terms",
           render: "accept",
@@ -107,7 +108,7 @@ export const Readonly: Story = {
     },
     schemas: [
       z.object({
-        agreedToTerms: z.boolean().meta({
+        agreedToTerms: field(z.boolean(), {
           label: "I agree to the Terms and Conditions",
           placeholder: "Please accept the terms",
           render: "accept",
@@ -125,7 +126,7 @@ export const Disabled: Story = {
     },
     schemas: [
       z.object({
-        agreedToTerms: z.boolean().meta({
+        agreedToTerms: field(z.boolean(), {
           label: "I agree to the Terms and Conditions",
           placeholder: "Please accept the terms",
           render: "accept",

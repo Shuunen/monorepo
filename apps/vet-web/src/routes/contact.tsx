@@ -1,22 +1,9 @@
-import { AutoForm, mockSubmit, Title } from '@monorepo/components'
+import { AutoForm, mockSubmit } from '@monorepo/components'
 import { createFileRoute } from '@tanstack/react-router'
-import { z } from 'zod'
-
-const formSchema = z.object({
-  message: z.string().min(1).meta({ label: 'Your Message' }),
-  phone: z.string().optional().meta({ label: 'Your Phone Number' }),
-})
+import { formSchema } from '../business/contact.schemas'
 
 function Contact() {
-  function onSubmit() {
-    return mockSubmit('success', 'Message sent successfully!')
-  }
-  return (
-    <div className="flex flex-col gap-4">
-      <Title variant="primary">Contact Us</Title>
-      <AutoForm onSubmit={onSubmit} schemas={[formSchema]} useSubmissionStep />
-    </div>
-  )
+  return <AutoForm onSubmit={() => mockSubmit('success', 'Message sent successfully!')} schemas={[formSchema]} useSubmissionStep />
 }
 
 export const Route = createFileRoute('/contact')({

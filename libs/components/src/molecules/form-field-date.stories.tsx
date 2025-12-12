@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -47,7 +48,7 @@ export const Basic: Story = {
   args: {
     schemas: [
       z.object({
-        birthDate: z.date().meta({
+        birthDate: field(z.date(), {
           label: "Birth Date",
           placeholder: "Select your birth date",
         }),
@@ -84,7 +85,7 @@ export const WithInitialValue: Story = {
     initialData: { eventDate: new Date("2025-12-25") },
     schemas: [
       z.object({
-        eventDate: z.date().meta({
+        eventDate: field(z.date(), {
           label: "Event Date",
           placeholder: "Select event date",
         }),
@@ -119,7 +120,7 @@ export const Optional: Story = {
   args: {
     schemas: [
       z.object({
-        reminderDate: z.date().optional().meta({
+        reminderDate: field(z.date().optional(), {
           label: "Reminder Date",
           placeholder: "Set a reminder date",
         }),
@@ -136,7 +137,7 @@ export const Disabled: Story = {
     initialData: { lockDate: new Date("2025-01-01") },
     schemas: [
       z.object({
-        lockDate: z.date().meta({
+        lockDate: field(z.date(), {
           label: "Locked Date",
           placeholder: "This date is locked",
           state: "disabled",
@@ -160,7 +161,7 @@ export const Readonly: Story = {
     initialData: { createdDate: new Date("2024-01-15") },
     schemas: [
       z.object({
-        createdDate: z.date().meta({
+        createdDate: field(z.date(), {
           label: "Created Date",
           placeholder: "Creation date (readonly)",
           state: "readonly",
@@ -183,7 +184,7 @@ export const StringDateWithRender: Story = {
   args: {
     schemas: [
       z.object({
-        stringDate: z.string().meta({
+        stringDate: field(z.string(), {
           label: "String Date Field",
           placeholder: "Select a date (string)",
           render: "date",

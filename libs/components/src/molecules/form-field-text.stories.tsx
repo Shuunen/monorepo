@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -47,7 +48,7 @@ export const Basic: Story = {
   args: {
     schemas: [
       z.object({
-        username: z.string().meta({
+        username: field(z.string(), {
           label: "Username",
           placeholder: "Enter your username",
         }),
@@ -86,7 +87,7 @@ export const WithInitialValue: Story = {
     initialData: { name: "Alice" },
     schemas: [
       z.object({
-        name: z.string().meta({
+        name: field(z.string(), {
           label: "Full Name",
           placeholder: "Enter your name",
         }),
@@ -120,7 +121,7 @@ export const Optional: Story = {
   args: {
     schemas: [
       z.object({
-        nickname: z.string().optional().meta({
+        nickname: field(z.string().optional(), {
           label: "Nickname",
           placeholder: "Enter an optional nickname",
         }),
@@ -142,7 +143,7 @@ export const Disabled: Story = {
     initialData: { email: "user@example.com" },
     schemas: [
       z.object({
-        email: z.string().meta({
+        email: field(z.string(), {
           label: "Email Address",
           placeholder: "your@email.com",
           state: "disabled",
@@ -166,7 +167,7 @@ export const Readonly: Story = {
     initialData: { accountId: "ACC-12345" },
     schemas: [
       z.object({
-        accountId: z.string().meta({
+        accountId: field(z.string(), {
           label: "Account ID",
           placeholder: "Your account ID",
           state: "readonly",
@@ -189,15 +190,15 @@ export const MultipleFields: Story = {
   args: {
     schemas: [
       z.object({
-        firstName: z.string().meta({
+        firstName: field(z.string(), {
           label: "First Name",
           placeholder: "Enter first name",
         }),
-        lastName: z.string().meta({
+        lastName: field(z.string(), {
           label: "Last Name",
           placeholder: "Enter last name",
         }),
-        phone: z.string().optional().meta({
+        phone: field(z.string().optional(), {
           label: "Phone Number",
           placeholder: "Optional: enter phone number",
         }),

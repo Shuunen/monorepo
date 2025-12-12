@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -47,7 +48,7 @@ export const Basic: Story = {
   args: {
     schemas: [
       z.object({
-        color: z.enum(["red", "green", "blue"]).meta({
+        color: field(z.enum(["red", "green", "blue"]), {
           label: "Favorite Color",
           placeholder: "Choose a color",
         }),
@@ -75,15 +76,15 @@ export const LabelGeneration: Story = {
   args: {
     schemas: [
       z.object({
-        color: z.enum(["red", "green", "blue"]).meta({
+        color: field(z.enum(["red", "green", "blue"]), {
           label: "Favorite Color",
           placeholder: "Choose a color",
         }),
-        priority: z.enum(["low", "medium", "high", "critical"]).meta({
+        priority: field(z.enum(["low", "medium", "high", "critical"]), {
           label: "Priority Level",
           placeholder: "Select priority",
         }),
-        size: z.enum(["small", "medium", "large", "extra-large"]).meta({
+        size: field(z.enum(["small", "medium", "large", "extra-large"]), {
           label: "T-shirt Size",
           placeholder: "Select your size",
         }),
@@ -153,7 +154,7 @@ export const Optional: Story = {
   args: {
     schemas: [
       z.object({
-        color: z.enum(["red", "green", "blue"]).optional().meta({
+        color: field(z.enum(["red", "green", "blue"]).optional(), {
           label: "Optional Color",
           placeholder: "Choose a color",
         }),
@@ -175,7 +176,7 @@ export const Disabled: Story = {
     initialData: { color: "green" },
     schemas: [
       z.object({
-        color: z.enum(["red", "green", "blue"]).meta({
+        color: field(z.enum(["red", "green", "blue"]), {
           label: "Disabled Color",
           placeholder: "Choose a color",
           state: "disabled",
@@ -200,7 +201,7 @@ export const Readonly: Story = {
     initialData: { color: "blue" },
     schemas: [
       z.object({
-        color: z.enum(["red", "green", "blue"]).meta({
+        color: field(z.enum(["red", "green", "blue"]), {
           label: "Readonly Color",
           placeholder: "Choose a color",
           state: "readonly",
@@ -223,7 +224,7 @@ export const CustomLabels: Story = {
   args: {
     schemas: [
       z.object({
-        country: z.enum(["us", "uk", "fr", "de", "jp"]).meta({
+        country: field(z.enum(["us", "uk", "fr", "de", "jp"]), {
           label: "Country",
           options: [
             { label: "🇺🇸 United States", value: "us" },
@@ -234,7 +235,7 @@ export const CustomLabels: Story = {
           ],
           placeholder: "Select your country",
         }),
-        size: z.enum(["xs", "sm", "md", "lg", "xl"]).meta({
+        size: field(z.enum(["xs", "sm", "md", "lg", "xl"]), {
           label: "Size",
           options: [
             { label: "Extra Small (XS)", value: "xs" },

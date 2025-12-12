@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -47,7 +48,7 @@ export const Basic: Story = {
   args: {
     schemas: [
       z.object({
-        age: z.number().meta({
+        age: field(z.number(), {
           label: "Age",
           placeholder: "Enter your age",
         }),
@@ -87,7 +88,7 @@ export const WithInitialValue: Story = {
     initialData: { quantity: 10 },
     schemas: [
       z.object({
-        quantity: z.number().meta({
+        quantity: field(z.number(), {
           label: "Quantity",
           placeholder: "Enter quantity",
         }),
@@ -122,7 +123,7 @@ export const Optional: Story = {
   args: {
     schemas: [
       z.object({
-        score: z.number().optional().meta({
+        score: field(z.number().optional(), {
           label: "Score",
           placeholder: "Enter optional score",
         }),
@@ -144,7 +145,7 @@ export const Disabled: Story = {
     initialData: { studentId: 12345 },
     schemas: [
       z.object({
-        studentId: z.number().meta({
+        studentId: field(z.number(), {
           label: "Student ID",
           placeholder: "Your student ID",
           state: "disabled",
@@ -168,7 +169,7 @@ export const Readonly: Story = {
     initialData: { price: 99.99 },
     schemas: [
       z.object({
-        price: z.number().meta({
+        price: field(z.number(), {
           label: "Price",
           placeholder: "Product price",
           state: "readonly",
@@ -190,15 +191,15 @@ export const MultipleFields: Story = {
   args: {
     schemas: [
       z.object({
-        aspectRatio: z.number().optional().meta({
+        aspectRatio: field(z.number().optional(), {
           label: "Aspect Ratio",
           placeholder: "Optional: enter aspect ratio",
         }),
-        height: z.number().meta({
+        height: field(z.number(), {
           label: "Height (px)",
           placeholder: "Enter height",
         }),
-        width: z.number().meta({
+        width: field(z.number(), {
           label: "Width (px)",
           placeholder: "Enter width",
         }),

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -47,7 +48,7 @@ export const Basic: Story = {
   args: {
     schemas: [
       z.object({
-        description: z.string().meta({
+        description: field(z.string(), {
           label: "Description",
           placeholder: "Enter your description",
           render: "textarea",
@@ -87,7 +88,7 @@ export const WithInitialValue: Story = {
     initialData: { content: "Lorem ipsum dolor sit amet" },
     schemas: [
       z.object({
-        content: z.string().meta({
+        content: field(z.string(), {
           label: "Content",
           placeholder: "Enter your content",
           render: "textarea",
@@ -122,7 +123,7 @@ export const Optional: Story = {
   args: {
     schemas: [
       z.object({
-        notes: z.string().optional().meta({
+        notes: field(z.string().optional(), {
           label: "Notes",
           placeholder: "Enter optional notes",
           render: "textarea",
@@ -145,7 +146,7 @@ export const Disabled: Story = {
     initialData: { feedback: "This is disabled feedback" },
     schemas: [
       z.object({
-        feedback: z.string().meta({
+        feedback: field(z.string(), {
           label: "Feedback",
           placeholder: "Your feedback",
           render: "textarea",
@@ -170,7 +171,7 @@ export const Readonly: Story = {
     initialData: { terms: "By using this service, you agree to our terms and conditions." },
     schemas: [
       z.object({
-        terms: z.string().meta({
+        terms: field(z.string(), {
           label: "Terms & Conditions",
           placeholder: "Your terms",
           render: "textarea",
@@ -194,12 +195,12 @@ export const MultipleFields: Story = {
   args: {
     schemas: [
       z.object({
-        details: z.string().optional().meta({
+        details: field(z.string().optional(), {
           label: "Additional Details",
           placeholder: "Optional: enter additional details",
           render: "textarea",
         }),
-        summary: z.string().meta({
+        summary: field(z.string(), {
           label: "Summary",
           placeholder: "Enter a brief summary",
           render: "textarea",
@@ -253,7 +254,7 @@ export const LongText: Story = {
     },
     schemas: [
       z.object({
-        article: z.string().meta({
+        article: field(z.string(), {
           label: "Article",
           placeholder: "Enter your article",
           render: "textarea",

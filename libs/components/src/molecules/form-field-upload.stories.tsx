@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 import { fileSchema } from "./form-field-upload.const";
 
@@ -50,7 +51,7 @@ export const Basic: Story = {
   args: {
     schemas: [
       z.object({
-        document: z.file().optional().meta({
+        document: field(z.file().optional(), {
           label: "Optional document",
           placeholder: "Select a document",
         }),
@@ -63,7 +64,7 @@ export const Required: Story = {
   args: {
     schemas: [
       z.object({
-        document: z.file().meta({
+        document: field(z.file(), {
           label: "Required document",
           placeholder: "Select a required file",
         }),
@@ -109,7 +110,7 @@ export const ExistingFile: Story = {
     },
     schemas: [
       z.object({
-        document: z.file().meta({
+        document: field(z.file(), {
           label: "Document required",
           placeholder: "Select a document",
         }),
@@ -140,7 +141,7 @@ export const FileSchemaValidation: Story = {
   args: {
     schemas: [
       z.object({
-        document: fileSchema(["pdf", "jpg", "png"], true).meta({
+        document: field(fileSchema(["pdf", "jpg", "png"], true), {
           label: "Image or PDF document",
           placeholder: "Select a PDF or image file",
         }),
@@ -187,7 +188,7 @@ export const ResponsiveLayout: Story = {
     },
     schemas: [
       z.object({
-        document: z.file().meta({
+        document: field(z.file(), {
           label: "Document upload",
           placeholder: "Select a file to upload",
         }),

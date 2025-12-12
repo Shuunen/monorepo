@@ -5,6 +5,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import { field, section } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -43,147 +44,127 @@ type Story = StoryObj<typeof meta>;
 
 const allFieldsSchema = z.object({
   // Boolean (Switch)
-  booleanCode: z.string().meta({
+  booleanCode: section({
     description: "The default render of a ZodBoolean : a toggle switch. For more details, check the FormFieldBoolean story.",
-    render: "section",
     title: "Boolean",
   }),
-  booleanField: z.boolean().optional().meta({
+  booleanField: field(z.boolean().optional(), {
     placeholder: "Turn on or off",
   }),
-  booleanFieldCode: z.string().meta({
+  booleanFieldCode: section({
     code: 'z.boolean().meta({ placeholder: "Turn on or off" })',
     line: true,
-    render: "section",
   }),
   // Accept (Radio buttons with Accept/Reject)
-  acceptTitle: z.string().meta({
+  acceptTitle: section({
     description: "A custom render of a ZodBoolean. This field displays accept/reject options. For more details, check the FormFieldAccept story.",
-    render: "section",
     title: "Boolean accept",
   }),
-  acceptField: z.boolean().optional().meta({
+  acceptField: field(z.boolean().optional(), {
     render: "accept",
   }),
-  acceptCode: z.string().meta({
+  acceptCode: section({
     code: 'z.boolean().meta({ render: "accept" })',
     line: true,
-    render: "section",
   }),
   // Date
-  dateCode: z.string().meta({
+  dateCode: section({
     description: "The default render of a ZodDate : a date picker field for selecting a single day. For more details, check the FormFieldDate story.",
-    render: "section",
     title: "Date",
   }),
-  dateField: z.date().optional().meta({
+  dateField: field(z.date().optional(), {
     placeholder: "Select a date",
   }),
-  dateFieldCode: z.string().meta({
+  dateFieldCode: section({
     code: "z.date() // date object",
     line: true,
-    render: "section",
   }),
   // String as Date
-  stringDateCode: z.string().meta({
+  stringDateCode: section({
     description: "A custom render of a ZodString. This field will also render as a date picker. For more details, check the FormFieldDate story.",
-    render: "section",
     title: "Date string",
   }),
-  stringDateField: z.string().optional().meta({
+  stringDateField: field(z.string().optional(), {
     placeholder: "Select a date as string",
     render: "date",
   }),
-  stringDateFieldCode: z.string().meta({
+  stringDateFieldCode: section({
     code: 'z.string().meta({ render: "date" }) // string containing a date',
     line: true,
-    render: "section",
   }),
   // Email (text variant)
-  emailCode: z.string().meta({
+  emailCode: section({
     description: "An email input field with built-in validation. For more details, check the FormFieldText story.",
-    render: "section",
     title: "Email",
   }),
-  emailField: z.email("Invalid email").optional().meta({
+  emailField: field(z.email("Invalid email").optional(), {
     placeholder: "your@email.com",
   }),
-  emailFieldCode: z.string().meta({
+  emailFieldCode: section({
     code: 'z.email("Invalid email").meta({ placeholder: "your@email.com" })',
     line: true,
-    render: "section",
   }),
   // Select
-  selectCode: z.string().meta({
+  selectCode: section({
     description: "A dropdown select field for choosing from predefined options. For more details, check the FormFieldSelect story.",
-    render: "section",
     title: "Select",
   }),
-  selectField: z.enum(["option1", "option2", "option3"]).optional().meta({
+  selectField: field(z.enum(["option1", "option2", "option3"]).optional(), {
     placeholder: "Choose an option",
   }),
-  selectFieldCode: z.string().meta({
+  selectFieldCode: section({
     code: "z.enum(['option1', ...]).meta({ placeholder: 'Choose an option' })",
     line: true,
-    render: "section",
   }),
   // Number
-  numberCode: z.string().meta({
+  numberCode: section({
     description: "A numeric input field with min/max constraints. For more details, check the FormFieldNumber story.",
-    render: "section",
     title: "Number",
   }),
-  numberField: z.number().min(0).max(100).optional().meta({
+  numberField: field(z.number().min(0).max(100).optional(), {
     placeholder: "Enter a number between 0-100",
   }),
-  numberFieldCode: z.string().meta({
+  numberFieldCode: section({
     code: "z.number().min(0).max(100)",
     line: true,
-    render: "section",
   }),
   // Text input
-  textCode: z.string().meta({
+  textCode: section({
     description: "The default render of a ZodString : a basic single-line text input field. For more details, check the FormFieldText story.",
-    render: "section",
     title: "Text",
   }),
-  textField: z.string().optional().meta({
+  textField: field(z.string().optional(), {
     placeholder: "Enter some text",
   }),
-  textFieldCode: z.string().meta({
+  textFieldCode: section({
     code: 'z.string().meta({ placeholder: "Enter some text" })',
     line: true,
-    render: "section",
   }),
   // Textarea
-  textareaCode: z.string().meta({
+  textareaCode: section({
     description: "A custom render of a ZodString. This field will render as a multi-line text input. For more details, check the FormFieldTextarea story.",
-    render: "section",
     title: "Textarea",
   }),
-  textareaField: z.string().optional().meta({
+  textareaField: field(z.string().optional(), {
     placeholder: "Enter multiple lines",
     render: "textarea",
   }),
-  textareaFieldCode: z.string().meta({
+  textareaFieldCode: section({
     code: 'z.string().meta({ render: "textarea" })',
     line: true,
-    render: "section",
   }),
   // Password
-  passwordCode: z.string().meta({
+  passwordCode: section({
     description: "A custom render of a ZodString. This field renders as a password input field. For more details, check the FormFieldPassword story.",
-    render: "section",
     title: "Password",
   }),
-  passwordField: z.string().optional().meta({
+  passwordField: field(z.string().optional(), {
     placeholder: "Enter a password",
     render: "password",
   }),
-  passwordFieldCode: z.string().meta({
+  passwordFieldCode: section({
     code: 'z.string().meta({ render: "password" })',
     line: true,
-    render: "section",
   }),
 });
 

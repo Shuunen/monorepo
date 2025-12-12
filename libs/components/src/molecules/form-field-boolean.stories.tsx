@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -47,7 +48,7 @@ export const Basic: Story = {
   args: {
     schemas: [
       z.object({
-        agreedToTerms: z.boolean().meta({
+        agreedToTerms: field(z.boolean(), {
           label: "I agree to the Terms and Conditions",
           placeholder: "Please accept the terms",
         }),
@@ -69,7 +70,7 @@ export const WithInitialValueTrue: Story = {
     initialData: { enableNotifications: true },
     schemas: [
       z.object({
-        enableNotifications: z.boolean().meta({
+        enableNotifications: field(z.boolean(), {
           label: "Enable Email Notifications",
           placeholder: "Receive email updates",
         }),
@@ -109,7 +110,7 @@ export const WithInitialValueFalse: Story = {
     initialData: { shareData: false },
     schemas: [
       z.object({
-        shareData: z.boolean().meta({
+        shareData: field(z.boolean(), {
           label: "Share anonymized data with partners",
           placeholder: "Help improve our service",
         }),
@@ -130,7 +131,7 @@ export const Optional: Story = {
   args: {
     schemas: [
       z.object({
-        subscribe: z.boolean().optional().meta({
+        subscribe: field(z.boolean().optional(), {
           label: "Subscribe to newsletter",
           placeholder: "Optional subscription",
         }),
@@ -152,7 +153,7 @@ export const DisabledTrue: Story = {
     initialData: { verified: true },
     schemas: [
       z.object({
-        verified: z.boolean().meta({
+        verified: field(z.boolean(), {
           label: "Account Verified",
           placeholder: "Your account status",
           state: "disabled",
@@ -176,7 +177,7 @@ export const DisabledFalse: Story = {
     initialData: { suspended: false },
     schemas: [
       z.object({
-        suspended: z.boolean().meta({
+        suspended: field(z.boolean(), {
           label: "Account Suspended",
           placeholder: "Your account status",
           state: "disabled",
@@ -199,15 +200,15 @@ export const MultipleFields: Story = {
   args: {
     schemas: [
       z.object({
-        acceptCookies: z.boolean().meta({
+        acceptCookies: field(z.boolean(), {
           label: "Accept Cookies",
           placeholder: "Enable cookies for better experience",
         }),
-        marketingEmails: z.boolean().optional().meta({
+        marketingEmails: field(z.boolean().optional(), {
           label: "Marketing Emails",
           placeholder: "Receive promotional offers",
         }),
-        rememberMe: z.boolean().meta({
+        rememberMe: field(z.boolean(), {
           label: "Remember Me",
           placeholder: "Keep me logged in",
         }),
@@ -251,7 +252,7 @@ export const BooleanLiteral: Story = {
   args: {
     schemas: [
       z.object({
-        isPublished: z.literal(true).meta({
+        isPublished: field(z.literal(true), {
           label: "Published",
           placeholder: "This item is published",
         }),

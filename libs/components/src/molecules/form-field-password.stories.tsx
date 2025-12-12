@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -47,7 +48,7 @@ export const Basic: Story = {
   args: {
     schemas: [
       z.object({
-        password: z.string().min(8, "Password must be at least 8 characters").meta({
+        password: field(z.string().min(8, "Password must be at least 8 characters"), {
           label: "Password",
           placeholder: "Enter your password",
           render: "password",
@@ -88,7 +89,7 @@ export const WithInitialValue: Story = {
     initialData: { password: "InitialPass123" },
     schemas: [
       z.object({
-        password: z.string().min(8, "Password must be at least 8 characters").meta({
+        password: field(z.string().min(8, "Password must be at least 8 characters"), {
           label: "Password",
           placeholder: "Enter your password",
           render: "password",
@@ -123,7 +124,7 @@ export const Optional: Story = {
   args: {
     schemas: [
       z.object({
-        password: z.string().min(8, "Password must be at least 8 characters").optional().meta({
+        password: field(z.string().min(8, "Password must be at least 8 characters").optional(), {
           label: "Password",
           placeholder: "Enter an optional password",
           render: "password",
@@ -146,7 +147,7 @@ export const Disabled: Story = {
     initialData: { password: "DisabledPass123" },
     schemas: [
       z.object({
-        password: z.string().min(8, "Password must be at least 8 characters").meta({
+        password: field(z.string().min(8, "Password must be at least 8 characters"), {
           label: "Password",
           placeholder: "Enter your password",
           render: "password",
@@ -172,7 +173,7 @@ export const Readonly: Story = {
     initialData: { password: "ReadonlyPass123" },
     schemas: [
       z.object({
-        password: z.string().min(8, "Password must be at least 8 characters").meta({
+        password: field(z.string().min(8, "Password must be at least 8 characters"), {
           label: "Password",
           placeholder: "Your password",
           render: "password",
@@ -197,17 +198,17 @@ export const MultipleFields: Story = {
   args: {
     schemas: [
       z.object({
-        confirmPassword: z.string().min(8, "Password must be at least 8 characters").meta({
+        confirmPassword: field(z.string().min(8, "Password must be at least 8 characters"), {
           label: "Confirm Password",
           placeholder: "Confirm password",
           render: "password",
         }),
-        currentPassword: z.string().optional().meta({
+        currentPassword: field(z.string().optional(), {
           label: "Current Password",
           placeholder: "Optional: enter current password",
           render: "password",
         }),
-        password: z.string().min(8, "Password must be at least 8 characters").meta({
+        password: field(z.string().min(8, "Password must be at least 8 characters"), {
           label: "Password",
           placeholder: "Enter password",
           render: "password",
