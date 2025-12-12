@@ -3,6 +3,7 @@ import { createRootRoute, createRouter, RouterProvider } from "@tanstack/react-r
 // Import Tailwind CSS styles for Storybook
 // oxlint-disable-next-line no-unassigned-import
 import "../src/styles.css";
+import "./tw.css";
 
 const RouterDecorator: Decorator = Story => {
   const rootRoute = createRootRoute({ component: () => <Story /> });

@@ -103,7 +103,7 @@ const meta = {
     </div>
   ),
   tags: ["autodocs"],
-  title: "Commons/Icons",
+  title: "Commons/Atoms/Icons",
 } satisfies Meta;
 
 export default meta;

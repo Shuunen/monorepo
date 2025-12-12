@@ -13,7 +13,7 @@
     "run-storybook": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "BROWSER=none storybook dev --port 6006",
+        "command": "storybook dev --no-open --port 6006",
         "cwd": "{projectRoot}"
       }
     },
