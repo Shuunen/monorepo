@@ -1,0 +1,64 @@
+@import "../../../libs/components/src/styles.css";
+@source "../../../libs/components/src";
+
+@theme inline {
+  /* Override the default theme with built-in colours or use your own */
+  --color-primary: var(--chart-2);
+}
+
+.card {
+  @apply relative flex items-center justify-center content-center p-4 mt-5 mb-3 border border-stone-700 rounded-lg;
+}
+
+.card img {
+  @apply transition-shadow;
+}
+
+.card img:hover {
+  @apply shadow-md shadow-black/20;
+}
+
+.stripped-light {
+  @apply bg-white;
+}
+
+.stripped-light:hover {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250' viewBox='0 0 20 20'%3E%3Cg %3E%3Cpolygon fill='%23eee' points='20 10 10 0 0 0 20 20'/%3E%3Cpolygon fill='%23eee' points='0 10 0 20 10 20'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.stripped-dark {
+  @apply bg-stone-950;
+}
+
+.stripped-dark:hover {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250' viewBox='0 0 20 20'%3E%3Cg %3E%3Cpolygon fill='%23111' points='20 10 10 0 0 0 20 20'/%3E%3Cpolygon fill='%23111' points='0 10 0 20 10 20'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.stripped-dark.card img:hover {
+  @apply shadow-white/20;
+}
+
+.ruler {
+  @apply absolute bg-red-500/50;
+}
+
+.ruler.x {
+  @apply w-full h-0.5 -translate-y-2/4 left-0 top-2/4;
+}
+
+.ruler.y {
+  @apply w-0.5 h-full -translate-x-2/4 left-2/4 top-0;
+}
+
+.logo {
+  @apply my-7 object-contain h-64;
+}
+
+.icon {
+  @apply object-contain h-20;
+}
+
+/* Hide the white bg arrow inside tooltip */
+[data-slot="tooltip-content"] p + span {
+  @apply hidden;
+}

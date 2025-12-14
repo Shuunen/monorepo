@@ -310,6 +310,28 @@ export class Logger {
   }
 
   /**
+   * Log a Result with appropriate levels and show a toast
+   * @param message the common message to log before the Result
+   * @param result the Result to log
+   * @param okLevel the log level to use if the Result is ok, default is 'info'
+   * @param errorLevel the log level to use if the Result is error, default is 'error'
+   * @example logger.showResult("update operation", result)
+   * @example logger.showResult("another operation", result, 'success', 'warn')
+   */
+  // oxlint-disable-next-line max-params
+  public showResult(message: string, result: ResultType<unknown, unknown>, okLevel: "info" | "success" = "info", errorLevel: "error" | "warn" = "error") {
+    this.result(message, result, okLevel, errorLevel);
+    /* v8 ignore next 7 -- @preserve */
+    if (isBrowserEnvironment()) {
+      const isOk = result.ok;
+      const level = isOk ? okLevel : errorLevel;
+      const toastMethods = { error: toastError, info: toastInfo, success: toastSuccess, warn: toastInfo };
+      const showMethod = toastMethods[level];
+      showMethod(`${message}: ${clean(isOk ? result.value : result.error)}`);
+    }
+  }
+
+  /**
    * Log a truthy/falsy test assertion
    * @param thing the thing to test for truthiness
    * @param stuff the things to log

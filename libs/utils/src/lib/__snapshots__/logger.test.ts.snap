@@ -55,3 +55,27 @@ exports[`logger result D should log error result with custom levels 1`] = `
   " warn test operation result was error and returned : custom error",
 ]
 `;
+
+exports[`logger showResult A should log ok result with default levels 1`] = `
+[
+  " info test operation result was ok and returned : {'data':'success'}",
+]
+`;
+
+exports[`logger showResult B should log error result with default levels 1`] = `
+[
+  "error test operation result was error and returned : something went wrong",
+]
+`;
+
+exports[`logger showResult C should log ok result with custom levels 1`] = `
+[
+  " good test operation result was ok and returned : 42",
+]
+`;
+
+exports[`logger showResult D should log error result with custom levels 1`] = `
+[
+  " warn test operation result was error and returned : custom error",
+]
+`;

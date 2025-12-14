@@ -226,6 +226,18 @@ importers:
         specifier: ~2.0.1
         version: 2.0.1(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
 
+  apps/logo-tester:
+    dependencies:
+      '@monorepo/components':
+        specifier: workspace:*
+        version: link:../../libs/components
+      '@monorepo/utils':
+        specifier: workspace:*
+        version: link:../../libs/utils
+      '@monorepo/vite-plugins':
+        specifier: workspace:*
+        version: link:../../libs/vite-plugins
+
   apps/one-file:
     dependencies:
       7zip-min:

@@ -6,7 +6,7 @@ export type AutoFormStepperStep = {
   /** Optional section identifier for this step. */
   section?: string;
   /** The display title for this step, shown in the stepper and as the section heading. */
-  title: string;
+  title?: string;
   /** Optional subtitle text shown below the title. */
   subtitle?: string;
   /** Optional suffix text shown after the title (e.g., step number indicator). */
@@ -45,7 +45,7 @@ function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps
       {section && <Title level={4}>{section}</Title>}
       <div className={cn("flex items-center gap-0.5", { "opacity-60 pointer-events-none": state === "upcoming" })}>
         {indent && <div className={cn("h-10 w-1 bg-gray-200 shrink-0", { "h-16": subtitle })} />}
-        <Button className={btnClasses} data-state={state} disabled={disabled} name={`step-${slugify(title)}`} onClick={() => onStepClick(idx)} variant="ghost">
+        <Button className={btnClasses} data-state={state} disabled={disabled} name={`step-${slugify(title ?? idx.toString())}`} onClick={() => onStepClick(idx)} variant="ghost">
           {icon}
           <div className="grow text-start flex flex-col ml-2">
             <div className="flex items-center gap-1">

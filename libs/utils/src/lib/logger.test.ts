@@ -151,3 +151,31 @@ it("logger result D should log error result with custom levels", () => {
   loggerJ.result("test operation", errorResult, "success", "warn");
   expect(loggerJ.inMemoryLogs, "loggerJ inMemoryLogs").toMatchSnapshot();
 });
+
+it("logger showResult A should log ok result with default levels", () => {
+  const loggerK = new Logger({ willLogDelay: false, willOutputToConsole: false, willOutputToMemory: true });
+  const okResult = Result.ok({ data: "success" });
+  loggerK.showResult("test operation", okResult);
+  expect(loggerK.inMemoryLogs, "loggerK inMemoryLogs").toMatchSnapshot();
+});
+
+it("logger showResult B should log error result with default levels", () => {
+  const loggerL = new Logger({ willLogDelay: false, willOutputToConsole: false, willOutputToMemory: true });
+  const errorResult = Result.error("something went wrong");
+  loggerL.showResult("test operation", errorResult);
+  expect(loggerL.inMemoryLogs, "loggerL inMemoryLogs").toMatchSnapshot();
+});
+
+it("logger showResult C should log ok result with custom levels", () => {
+  const loggerM = new Logger({ willLogDelay: false, willOutputToConsole: false, willOutputToMemory: true });
+  const okResult = Result.ok(42);
+  loggerM.showResult("test operation", okResult, "success", "warn");
+  expect(loggerM.inMemoryLogs, "loggerM inMemoryLogs").toMatchSnapshot();
+});
+
+it("logger showResult D should log error result with custom levels", () => {
+  const loggerN = new Logger({ willLogDelay: false, willOutputToConsole: false, willOutputToMemory: true });
+  const errorResult = Result.error("custom error");
+  loggerN.showResult("test operation", errorResult, "success", "warn");
+  expect(loggerN.inMemoryLogs, "loggerN inMemoryLogs").toMatchSnapshot();
+});

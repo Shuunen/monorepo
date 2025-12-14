@@ -423,7 +423,10 @@ export function getStepMetadata(stepSchema: z.ZodObject): AutoFormStepMetadata |
  * @returns step schema with valid metadata
  * @example step(z.object({ firstName: field(...) }), { title: "User infos" })
  */
-export function step(stepSchema: z.ZodObject, stepMetadata: AutoFormStepMetadata) {
+export function step(stepSchema: z.ZodObject, stepMetadata?: AutoFormStepMetadata) {
+  if (!stepMetadata) {
+    return stepSchema;
+  }
   return stepSchema.meta(stepMetadata);
 }
 

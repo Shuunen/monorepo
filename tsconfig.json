@@ -5,10 +5,16 @@
   "files": [],
   "references": [
     {
+      "path": "./apps/config-sync"
+    },
+    {
       "path": "./apps/image-compare"
     },
     {
       "path": "./apps/jozzo"
+    },
+    {
+      "path": "./apps/logo-tester"
     },
     {
       "path": "./apps/recipes"
@@ -42,9 +48,6 @@
     },
     {
       "path": "./libs/vite-plugins"
-    },
-    {
-      "path": "./apps/config-sync"
     }
   ],
   "ts-node": {

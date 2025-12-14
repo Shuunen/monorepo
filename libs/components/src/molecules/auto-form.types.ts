@@ -24,8 +24,10 @@ export type AutoFormProps = {
   // oxlint-disable no-explicit-any
   /** Callback function invoked when the form is submitted, returning the submission step props. */
   onSubmit?: (data: any) => any;
+  /** Whether to show the default form buttons (Next, Back, Submit), default is true */
+  showButtons?: boolean;
   // oxlint-enable no-explicit-any
-  /** Whether to show the form inside a card layout, default is true */
+  /** Whether to show the form inside a card layout, default is false */
   showCard?: boolean;
   /** Whether to automatically show the last available step on form load, default is false */
   showLastStep?: boolean;

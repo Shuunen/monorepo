@@ -34,6 +34,7 @@ import { AutoFormSummaryStep } from "./auto-form-summary-step";
  * @param props.logger optional logger for logging form events
  * @param props.useSummaryStep whether to include a summary step before submission
  * @param props.useSubmissionStep whether to include a submission step after form submission
+ * @param props.showButtons whether to show the default form buttons (Next, Back, Submit)
  * @param props.showCard whether to show the form inside a card layout
  * @param props.showLastStep whether to automatically show the last available step on form load
  * @param props.showMenu whether to force show the stepper menu, if undefined shows menu only when multiple steps exist
@@ -43,7 +44,7 @@ import { AutoFormSummaryStep } from "./auto-form-summary-step";
  * @returns the AutoForm component
  */
 // oxlint-disable-next-line max-lines-per-function
-export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = {}, logger, useSummaryStep = false, useSubmissionStep = false, showCard = true, showLastStep = false, showMenu, size = "medium", labels, stepperWidth }: AutoFormProps) {
+export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = {}, logger, useSummaryStep, useSubmissionStep, showButtons = true, showCard, showLastStep, showMenu, size, labels, stepperWidth }: AutoFormProps) {
   const [currentStep, setCurrentStep] = useState(showLastStep ? schemas.length - 1 : 0);
   const [showSummary, setShowSummary] = useState(false);
   const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined);
@@ -205,15 +206,17 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     return (
       <>
         <AutoFormSummaryStep data={formData} />
-        <AutoFormNavigation
-          centerButton={onCancel ? { onClick: onCancel } : undefined}
-          leftButton={{ onClick: handleBack }}
-          rightButton={{
-            label: finalLabels.summaryStepButton,
-            name: "summary-proceed",
-            onClick: handleFinalSubmit,
-          }}
-        />
+        {showButtons && (
+          <AutoFormNavigation
+            centerButton={onCancel ? { onClick: onCancel } : undefined}
+            leftButton={{ onClick: handleBack }}
+            rightButton={{
+              label: finalLabels.summaryStepButton,
+              name: "summary-proceed",
+              onClick: handleFinalSubmit,
+            }}
+          />
+        )}
       </>
     );
   }
@@ -222,19 +225,21 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
       <Form {...form}>
         <form onChange={updateFormData} onSubmit={form.handleSubmit(handleStepSubmit)}>
           <AutoFormFields formData={formData} logger={logger} schema={currentSchema} stepState={stepState} stepTitle={stepTitle} />
-          <AutoFormNavigation
-            centerButton={onCancel ? { onClick: onCancel } : undefined}
-            leftButton={currentStep > 0 ? { onClick: handleBack } : undefined}
-            rightButton={
-              isLastStep
-                ? {
-                    label: finalLabels.lastStepButton,
-                    name: "last-step-submit",
-                    type: "submit",
-                  }
-                : { label: finalLabels.nextStep, name: "step-next", type: "submit" }
-            }
-          />
+          {showButtons && (
+            <AutoFormNavigation
+              centerButton={onCancel ? { onClick: onCancel } : undefined}
+              leftButton={currentStep > 0 ? { onClick: handleBack } : undefined}
+              rightButton={
+                isLastStep
+                  ? {
+                      label: finalLabels.lastStepButton,
+                      name: "last-step-submit",
+                      type: "submit",
+                    }
+                  : { label: finalLabels.nextStep, name: "step-next", type: "submit" }
+              }
+            />
+          )}
         </form>
       </Form>
     );
