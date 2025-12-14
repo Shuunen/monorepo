@@ -131,8 +131,8 @@ export function App() {
       <Criteria name="Unique logo that stands out" onSelection={pointValue => setPointAtIndex(17, pointValue)} />
       <hr />
       <div className="relative">
-        <img alt="Android phone mock-up" className="w-xl" src="https://i.imgur.com/w2dOu18.png" />
-        <img alt="Icon on Android app" className="icon absolute object-contain" src={iconSrc} style={{ bottom: '79px', right: '205px', width: '30px' }} />
+        <img alt="Android phone mock-up" className="relative z-10 w-xl" src="https://i.imgur.com/w2dOu18.png" />
+        <img alt="Icon on Android app" className="icon absolute z-0 object-contain" src={iconSrc} style={{ bottom: '79px', right: '205px', width: '30px' }} />
       </div>
       <Criteria name="Logo as an app icon" onSelection={pointValue => setPointAtIndex(18, pointValue)} />
       <hr />
