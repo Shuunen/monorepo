@@ -20,7 +20,24 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!!**/.git", "!!**/.nx", "!!**/coverage", "!!**/android", "!!**/electron", "!!**/dist", "!!**/assets/public/assets", "!!**/node_modules", "!!**/out-tsc", "!!**/routeTree.gen.ts", "!!**/shadcn", "!!**/storybook-static", "!!**/test-output", "!!**/types/**/*.d.ts"]
+    "includes": [
+      "**",
+      "!!**/.git",
+      "!!**/.nx",
+      "!!**/coverage",
+      "!!**/android",
+      "!!**/electron",
+      "!!**/dist",
+      "!!**/assets/public/assets",
+      "!!**/node_modules",
+      "!!**/out-tsc",
+      "!!**/routeTree.gen.ts",
+      "!!**/shadcn",
+      "!!**/storybook-static",
+      "!!**/test-output",
+      "!!**/types/**/*.d.ts",
+      "!!**/.storybook/tw.css"
+    ]
   },
   "formatter": {
     "enabled": true,
