@@ -72,4 +72,10 @@ if ! [[ "$PATH" =~ .local/share/applications ]] && [ -d "$HOME/.local/share/appl
 if ! [[ "$PATH" =~ monorepo/apps/one-file ]] && [ -d "$HOME/Projects/github/monorepo/apps/one-file" ]; then PATH="$PATH:$HOME/Projects/github/monorepo/apps/one-file"; fi
 if ! [[ "$PATH" =~ Node_22_Final ]] && [ -d "/d/Apps/Node_22_Final" ]; then PATH="$PATH:/d/Apps/Node_22_Final"; fi
 
+if ! command -v nx >/dev/null 2>&1; then
+  npm i nx -g
+  echo "nx installed globally :)"
+fi
+
+
 echo ' Bash aliases v1 loaded 🧭'
