@@ -17,9 +17,9 @@ export type FormFieldSectionProps = {
 export function FormFieldSection({ title, subtitle, description, code, line }: FormFieldSectionProps) {
   return (
     <div className="grid gap-2">
-      {title && <Title>{title}</Title>}
+      {title && <Title className="mt-4">{title}</Title>}
       {subtitle && <Title level={2}>{subtitle}</Title>}
-      {description && <Paragraph className="text-muted-foreground">{description}</Paragraph>}
+      {description && <Paragraph className="text-muted-foreground mb-4">{description}</Paragraph>}
       {code && <DebugData data={code} />}
       {line && <div className="border-t border-muted my-4" />}
     </div>
