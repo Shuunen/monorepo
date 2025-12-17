@@ -1,55 +1,47 @@
 import { alignForSnap } from "@monorepo/utils";
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { FormSummary } from "./form-summary";
+import { FormSummary, type FormSummaryData } from "./form-summary";
 
 describe("form-summary", () => {
   it("FormSummary A should render simple data", () => {
     const data = {
-      age: 30,
-      name: "John Doe",
-    };
-    const { container } = render(<FormSummary data={data} />);
-    const cells = container.querySelectorAll("td");
-    expect(alignForSnap(cells)).toMatchInlineSnapshot(`"data.age | 30 | data.name | John Doe"`);
-  });
-  it("FormSummary B should render nested data with flattened keys", () => {
-    const data = {
-      user: {
-        address: {
-          city: "Springfield",
-          street: "456 Elm St",
-        },
-        name: "Jane Smith",
+      age: {
+        label: "Age",
+        value: 30,
       },
-    };
-    const { container } = render(<FormSummary data={data} />);
+      name: {
+        label: "Name",
+        value: "John Doe",
+      },
+    } satisfies FormSummaryData;
+    const { container } = render(<FormSummary data={data} name="A" />);
     const cells = container.querySelectorAll("td");
-    expect(alignForSnap(cells)).toMatchInlineSnapshot(`"data.user.address.city | Springfield | data.user.address.street | 456 Elm St | data.user.name | Jane Smith"`);
+    expect(alignForSnap(cells)).toMatchInlineSnapshot(`"Age | 30 | Name | John Doe"`);
   });
-  it("FormSummary C should use custom root path", () => {
-    const data = {
-      firstName: "John",
-      lastName: "Doe",
-    };
-    const { container } = render(<FormSummary data={data} rootPath="user" />);
-    const cells = container.querySelectorAll("td");
-    expect(alignForSnap(cells)).toMatchInlineSnapshot(`"user.firstName | John | user.lastName | Doe"`);
-  });
-  it("FormSummary D should handle empty object", () => {
+  it("FormSummary B should handle empty object", () => {
     const data = {};
-    const { container } = render(<FormSummary data={data} />);
+    const { container } = render(<FormSummary data={data} name="B" />);
     const cells = container.querySelectorAll("td");
     expect(alignForSnap(cells)).toMatchInlineSnapshot(`""`);
   });
-  it("FormSummary E should convert non-string values to strings", () => {
+  it("FormSummary C should convert non-string values to strings", () => {
     const data = {
-      age: 30,
-      isActive: true,
-      score: 95.5,
+      age: {
+        label: "Age",
+        value: 30,
+      },
+      isActive: {
+        label: "Is Active",
+        value: true,
+      },
+      score: {
+        label: "Score",
+        value: 95.5,
+      },
     };
-    const { container } = render(<FormSummary data={data} />);
+    const { container } = render(<FormSummary data={data} name="C" />);
     const cells = container.querySelectorAll("td");
-    expect(alignForSnap(cells)).toMatchInlineSnapshot(`"data.age | 30 | data.isActive | true | data.score | 95.5"`);
+    expect(alignForSnap(cells)).toMatchInlineSnapshot(`"Age | 30 | Is Active | true | Score | 95.5"`);
   });
 });

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import type { z } from "zod";
 import type { AutoFormStepperStep } from "./auto-form-stepper";
 import type { FormFieldSectionProps } from "./form-field-section";
+import type { FormSummaryData } from "./form-summary";
 
 /** Props for the AutoForm component, which generates a form based on provided Zod schemas. */
 export type AutoFormProps = {
@@ -133,4 +134,15 @@ export type AutoFormSubmissionStepProps = {
   status: "loading" | "success" | "warning" | "error" | "unknown-error";
   /** A list of details to add to a tooltip to give some context to the user */
   tooltipDetailsList?: string[];
+};
+
+/** The data output from auto form, sadly not typed :'( */
+export type AutoFormData = Record<string, unknown>;
+
+/** A section of data in the auto form summary */
+export type AutoFormSummarySection = {
+  /** The data entries in the section, with label and value */
+  data: FormSummaryData;
+  /** Optional title for the section, developers are not forced to provide one */
+  title?: string;
 };

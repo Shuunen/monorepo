@@ -173,11 +173,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
       title,
     } satisfies AutoFormStepperStep;
   });
-  // Get current step title for rendering above fields
-  const currentStepMeta = getStepMetadata(currentSchema);
-  const currentStepTitle = currentStepMeta?.title;
-  const stepTitle = typeof currentStepTitle === "string" ? currentStepTitle : "";
-  const stepState = currentStepMeta?.state;
+  const stepMetadata = getStepMetadata(currentSchema);
   const isStepperDisabled = submissionProps?.status === "success";
   const shouldShowStepper = showMenu === undefined ? schemas.length > 1 : showMenu;
   function renderSubmissionContent() {
@@ -205,7 +201,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
   function renderSummaryContent() {
     return (
       <>
-        <AutoFormSummaryStep data={formData} />
+        <AutoFormSummaryStep formData={formData} schemas={schemas} />
         {showButtons && (
           <AutoFormNavigation
             centerButton={onCancel ? { onClick: onCancel } : undefined}
@@ -224,7 +220,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     return (
       <Form {...form}>
         <form onChange={updateFormData} onSubmit={form.handleSubmit(handleStepSubmit)}>
-          <AutoFormFields formData={formData} logger={logger} schema={currentSchema} stepState={stepState} stepTitle={stepTitle} />
+          <AutoFormFields formData={formData} logger={logger} schema={currentSchema} state={stepMetadata?.state} />
           {showButtons && (
             <AutoFormNavigation
               centerButton={onCancel ? { onClick: onCancel } : undefined}

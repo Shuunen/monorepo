@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Paragraph } from "../atoms/typography";
 import { AutoForm } from "./auto-form";
 import type { AutoFormProps, AutoFormSubmissionStepProps } from "./auto-form.types";
-import { field, mockSubmit, step } from "./auto-form.utils";
+import { field, mockSubmit, section, step } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 // allow dev to see logs in the browser console when running storybook dev but not in headless tests
@@ -297,8 +297,6 @@ export const OptionalSection: Story = {
     const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("fill name", async () => {
-      const step1Title = canvas.getByTestId("step-title");
-      expect(step1Title).toHaveTextContent("My infos");
       const nameInput = canvas.getByTestId("input-text-name");
       await userEvent.type(nameInput, "Austin Dow");
     });
@@ -320,8 +318,6 @@ export const OptionalSection: Story = {
     await step("go to step 2", async () => {
       const nextButton = canvas.getByRole("button", { name: "Next" });
       await userEvent.click(nextButton);
-      const step2Title = canvas.getByTestId("step-title");
-      expect(step2Title).toHaveTextContent("My pet");
     });
     await step("go back to step 1 to fix the name", async () => {
       const backButton = canvas.getByRole("button", { name: "Back" });
@@ -389,6 +385,10 @@ export const OptionalSection: Story = {
 const editableStep1Schema = step(
   // biome-ignore assist/source/useSortedKeys: we need a specific key order here
   z.object({
+    myInfosSection: section({
+      description: "You can fill these fields to tell us more about you",
+      title: "My information",
+    }),
     name: field(z.string().min(2, "Name is required"), {
       label: "Full Name",
       placeholder: "Enter your legal name",
@@ -397,6 +397,14 @@ const editableStep1Schema = step(
       label: "Age",
       placeholder: "Enter your age",
       state: "readonly",
+    }),
+    optionalSection: section({
+      description: "You can fill these fields if you want to provide more info",
+      title: "Optional information",
+    }),
+    nickname: field(z.string().optional(), {
+      label: "Nickname",
+      placeholder: "Enter your nickname if you have one",
     }),
   }),
   {
@@ -449,6 +457,7 @@ export const StepperStates: Story = {
   args: {
     initialData: { age: 28, name: "Jane Doe", petName: "Fido" },
     schemas: [editableStep1Schema, readonlyStep2Schema, upcomingStep3Schema],
+    useSummaryStep: true,
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -457,6 +466,7 @@ export const StepperStates: Story = {
     await step("fill step 1", async () => {
       const currentStepButton = canvas.getByTestId("button-step-my-infos");
       expect(currentStepButton).toHaveAttribute("data-state", "editable");
+      expect(currentStepButton).toHaveAttribute("data-active", "true");
       const nameInput = canvas.getByTestId("input-text-name");
       expect(nameInput).toHaveValue("Jane Doe");
       await userEvent.type(nameInput, "-Rollin");
@@ -467,10 +477,13 @@ export const StepperStates: Story = {
       expect(currentStepButton).toHaveAttribute("data-state", "editable");
       const secondStepButton = canvas.getByTestId("button-step-my-pet");
       expect(secondStepButton).toHaveAttribute("data-state", "readonly");
+      expect(secondStepButton).toHaveAttribute("data-active", "false");
     });
     await step("verify step 2 readonly fields", async () => {
       const secondStepButton = canvas.getByRole("button", { name: "My pet Pet information and details" });
+      expect(secondStepButton).toHaveAttribute("data-state", "readonly");
       await userEvent.click(secondStepButton);
+      expect(secondStepButton).toHaveAttribute("data-active", "true");
       const petNameInput = canvas.getByTestId("input-text-pet-name");
       expect(petNameInput).toBeInTheDocument();
       expect(petNameInput).toBeDisabled();
@@ -478,7 +491,23 @@ export const StepperStates: Story = {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
     });
-    step("verify submitted data", () => {
+    await step("verify summary data", async () => {
+      const secondStepButton = canvas.getByRole("button", { name: "My pet Pet information and details" });
+      expect(secondStepButton).toHaveAttribute("data-active", "false");
+      const summaryMyInfo = canvas.getByTestId("form-summary-my-information").textContent;
+      expect(canvas.getByText("My information")).toBeInTheDocument();
+      expect(summaryMyInfo).toContain("Full NameJane Doe-Rollin");
+      expect(summaryMyInfo).toContain("Age28");
+      const summaryOptionalInfo = canvas.getByTestId("form-summary-optional-information").textContent;
+      expect(canvas.getByText("Optional information")).toBeInTheDocument();
+      expect(summaryOptionalInfo).toContain("Nickname");
+      expect(summaryOptionalInfo).not.toContain("Pet Name");
+      expect(summaryOptionalInfo).not.toContain("Pet Age");
+      expect(summaryOptionalInfo).not.toContain("Address");
+      const proceedButton = canvas.getByRole("button", { name: "Proceed" });
+      await userEvent.click(proceedButton);
+    });
+    await step("verify submitted data", () => {
       // biome-ignore assist/source/useSortedKeys: we need a specific key order here
       const expectedFormData = {
         name: "Jane Doe-Rollin",
@@ -692,15 +721,15 @@ export const SummaryOnly: Story = {
     await step("verify summary step displays", () => {
       const summaryStep = canvas.getByTestId("auto-form-summary-step");
       expect(summaryStep).toBeInTheDocument();
-      const summaryStepTitle = canvas.getByTestId("title-level-1");
+      const summaryStepTitle = canvas.getByTestId("title-summary");
       expect(summaryStepTitle).toHaveTextContent("Summary");
-      expect(canvas.getByText("data.email")).toBeInTheDocument();
+      expect(canvas.getByText("Email Address")).toBeInTheDocument();
       expect(canvas.getByText("jane.doe@example.com")).toBeInTheDocument();
-      expect(canvas.getByText("data.name")).toBeInTheDocument();
+      expect(canvas.getByText("Full Name")).toBeInTheDocument();
       expect(canvas.getByText("Jane Doe")).toBeInTheDocument();
-      expect(canvas.getByText("data.age")).toBeInTheDocument();
+      expect(canvas.getByText("Age")).toBeInTheDocument();
       expect(canvas.getByText("28")).toBeInTheDocument();
-      expect(canvas.getByText("data.subscribe")).toBeInTheDocument();
+      expect(canvas.getByText("Subscribe to newsletter")).toBeInTheDocument();
       expect(canvas.getByText("true")).toBeInTheDocument();
     });
     await step("verify data before submission", async () => {
