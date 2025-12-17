@@ -1,3 +1,4 @@
+import { getNodeText, slugify } from "@monorepo/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import type { JSX } from "react";
 import { cn } from "../shadcn/utils";
@@ -51,7 +52,7 @@ type TitleProps = VariantProps<typeof titleVariants> & {
 export function Title({ children, level = 1, variant = "default", className = "" }: TitleProps) {
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
   return (
-    <Tag className={cn(titleVariants({ level, variant }), className)} data-testid={`title-level-${level}`}>
+    <Tag className={cn(titleVariants({ level, variant }), className)} data-testid={slugify(`title-${getNodeText(children)}`)}>
       {children}
     </Tag>
   );
