@@ -22,6 +22,11 @@ nx dev sample-web-app
 
 - [ ] remove `noUndeclaredDependencies: "off"` from `biome.json` when Biome supports monorepo, for no it's reporting falsy undeclared dependencies
 - [ ] remove `explicit-module-boundary-types: off` from oxlint conf and declare types everywhere ?
+- [ ] investigate why biome is showing warnings
+- [ ] investigate why nx is displaying : ✖  nx run sample-web-app:preview
+- [ ] add knip (does it works with monorepo ?)
+- [ ] investigate why we need local dependencies like react in utils when react is already in the root package.json, in the other hand apps/sample-web-app works without local react dependency
+- [ ] investigate why cant we use tsgo considering the fact that the [official doc](https://github.com/microsoft/typescript-go) says it's done
 
 ## Thanks
 
