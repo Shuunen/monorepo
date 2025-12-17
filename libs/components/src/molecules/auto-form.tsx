@@ -163,7 +163,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     lastSection = currentSection;
     const state = metaState ?? "editable";
     return {
-      active: idx === currentStep,
+      active: idx === currentStep && !showSummary && !submissionProps,
       icon: defaultIcons[state],
       idx,
       section,
