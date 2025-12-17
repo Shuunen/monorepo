@@ -5,7 +5,7 @@ import { z } from "zod";
 import { IconEdit } from "../icons/icon-edit";
 import { IconSuccess } from "../icons/icon-success";
 import { IconUpcoming } from "../icons/icon-upcoming";
-import type { AutoFormFieldMetadata, AutoFormFieldSectionMetadata, AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps, SelectOption } from "./auto-form.types";
+import type { AutoFormData, AutoFormFieldMetadata, AutoFormFieldSectionMetadata, AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps, AutoFormSummarySection, SelectOption } from "./auto-form.types";
 
 /**
  * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
@@ -174,7 +174,7 @@ export function parseDependsOn(dependsOn: string): { fieldName: string; expected
  * @param formData the current form data as a record of field names to values.
  * @returns `true` if the field should be visible; `false` otherwise.
  */
-export function isFieldVisible(fieldSchema: z.ZodType, formData: Record<string, unknown>): boolean {
+export function isFieldVisible(fieldSchema: z.ZodType, formData: AutoFormData) {
   const metadata = getFieldMetadata(fieldSchema);
   if (!metadata) {
     return true;
@@ -201,7 +201,7 @@ export function isFieldVisible(fieldSchema: z.ZodType, formData: Record<string, 
  * @param formData the current form data to evaluate visibility
  * @returns a new Zod schema with only visible fields
  */
-export function filterSchema(schema: z.ZodObject, formData: Record<string, unknown>): z.ZodObject {
+export function filterSchema(schema: z.ZodObject, formData: AutoFormData): z.ZodObject {
   const shape = schema.shape;
   const visibleShape: Record<string, z.ZodTypeAny> = {};
   for (const key of Object.keys(shape)) {
@@ -240,9 +240,9 @@ export function getKeyMapping(metadata?: AutoFormFieldMetadata): { keyIn: string
  * @param externalData - The external data object with potentially different key names
  * @returns A new object with data mapped to schema field names using keyIn mappings
  */
-export function mapExternalDataToFormFields(schema: z.ZodObject, externalData: Record<string, unknown>): Record<string, unknown> {
+export function mapExternalDataToFormFields(schema: z.ZodObject, externalData: AutoFormData) {
   const shape = schema.shape;
-  const result: Record<string, unknown> = {};
+  const result: AutoFormData = {};
   for (const fieldName of Object.keys(shape)) {
     const fieldSchema = shape[fieldName] as z.ZodTypeAny;
     const metadata = getFieldMetadata(fieldSchema);
@@ -269,9 +269,9 @@ export function mapExternalDataToFormFields(schema: z.ZodObject, externalData: R
  * @param data - The submitted data object to be cleaned.
  * @returns A new object containing only the fields that are visible and not excluded according to the schema, with keyOut mappings applied.
  */
-export function normalizeDataForSchema(schema: z.ZodObject, data: Record<string, unknown>): Record<string, unknown> {
+export function normalizeDataForSchema(schema: z.ZodObject, data: AutoFormData) {
   const shape = schema.shape;
-  const result: Record<string, unknown> = {};
+  const result: AutoFormData = {};
   for (const [key, value] of Object.entries(data)) {
     const fieldSchema = shape[key] as z.ZodTypeAny;
     const metadata = getFieldMetadata(fieldSchema);
@@ -304,12 +304,121 @@ export function normalizeDataForSchema(schema: z.ZodObject, data: Record<string,
  * @param data - The form data to clean
  * @returns Cleaned data with invisible/excluded fields removed
  */
-export function normalizeData(schemas: z.ZodObject[], data: Record<string, unknown>): Record<string, unknown> {
+export function normalizeData(schemas: z.ZodObject[], data: AutoFormData) {
   let cleanedData = data;
   for (const schema of schemas) {
     cleanedData = normalizeDataForSchema(schema, cleanedData);
   }
   return cleanedData;
+}
+
+/**
+ * Checks if a field should be included in the summary
+ * @param fieldSchema - The field schema
+ * @param metadata - The field metadata
+ * @param data - The form data
+ * @returns true if the field should be included in summary
+ */
+function shouldIncludeFieldInSummary(fieldSchema: z.ZodTypeAny, metadata: AutoFormFieldMetadata | undefined, data: AutoFormData) {
+  if (metadata?.render === "section") {
+    return false;
+  }
+  if (!isFieldVisible(fieldSchema, data)) {
+    return false;
+  }
+  if (metadata?.excluded) {
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Filters data for summary display by excluding fields from readonly and upcoming steps.
+ * Only includes fields from editable steps.
+ * @param schemas - Array of Zod schemas for all steps
+ * @param data - The complete form data
+ * @returns Filtered data containing only fields from editable steps
+ */
+export function filterDataForSummary(schemas: z.ZodObject[], data: AutoFormData) {
+  const result: AutoFormData = {};
+  for (const schema of schemas) {
+    const stepMeta = getStepMetadata(schema);
+    const stepState = stepMeta?.state;
+    // Only include fields from editable steps (skip readonly and upcoming)
+    if (stepState === "readonly" || stepState === "upcoming") {
+      continue;
+    }
+    const shape = schema.shape;
+    for (const [key, value] of Object.entries(data)) {
+      const fieldSchema = shape[key] as z.ZodTypeAny;
+      if (!fieldSchema) {
+        continue;
+      }
+      const metadata = getFieldMetadata(fieldSchema);
+      if (shouldIncludeFieldInSummary(fieldSchema, metadata, data)) {
+        result[key] = value;
+      }
+    }
+  }
+  return result;
+}
+
+/**
+ * Groups form data by sections for summary display
+ * @param schemas - Array of Zod schemas for all steps
+ * @param data - The complete form data
+ * @returns Array of section groups, each containing a title and data
+ */
+export function sectionsFromEditableSteps(schemas: z.ZodObject[], data: AutoFormData) {
+  const sections: Array<AutoFormSummarySection> = [];
+  for (const schema of schemas) {
+    const stepSections = sectionsFromEditableStep(schema, data);
+    sections.push(...stepSections);
+  }
+  return sections;
+}
+
+function sectionsFromEditableStep(schema: z.ZodObject, data: AutoFormData) {
+  const stepMeta = getStepMetadata(schema);
+  const stepState = stepMeta?.state;
+  if (stepState === "readonly" || stepState === "upcoming") {
+    return [];
+  }
+  const sections: Array<AutoFormSummarySection> = [];
+  const shape = schema.shape;
+  const fieldKeys = Object.keys(shape);
+  let currentSectionTitle: AutoFormSummarySection["title"] = undefined;
+  let currentSectionData: AutoFormSummarySection["data"] = {};
+  function saveCurrentSection() {
+    if (Object.keys(currentSectionData).length > 0) {
+      sections.push({ data: currentSectionData, title: currentSectionTitle });
+    }
+  }
+  for (const key of fieldKeys) {
+    const fieldSchema = shape[key] as z.ZodTypeAny;
+    if (!fieldSchema) {
+      continue;
+    }
+    const metadata = getFieldMetadata(fieldSchema);
+    // Check if this field is a section marker
+    if (metadata?.render === "section") {
+      saveCurrentSection();
+      // Start new section
+      currentSectionTitle = "title" in metadata ? metadata.title : undefined;
+      currentSectionData = {};
+      continue;
+    }
+    // Add field to current section if it should be included
+    const value = data[key];
+    if (shouldIncludeFieldInSummary(fieldSchema, metadata, data)) {
+      currentSectionData[key] = {
+        label: metadata?.label ?? key,
+        value,
+      };
+    }
+  }
+  saveCurrentSection();
+  return sections;
 }
 
 /**
