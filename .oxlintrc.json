@@ -64,7 +64,6 @@
     },
     {
       "files": ["**/icons/icon-*.tsx"],
-      "name": "wui-icons-overrides",
       "rules": {
         "no-restricted-imports": "off"
       }

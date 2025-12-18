@@ -63,7 +63,10 @@ export function sendCorsHeaders(res: ServerResponse) {
 
 export function makeRequest({ url, method, payload }: { url: string; method: string; payload: string }): Promise<{ result: unknown; error: string | undefined }> {
   return new Promise(resolve => {
-    if (url.includes('fake-endpoint.local')) return resolve({ error: undefined, result: { message: 'This is a fake endpoint response for testing.', success: true } })
+    if (url.includes('fake-endpoint.local')) {
+      void resolve({ error: undefined, result: { message: 'This is a fake endpoint response for testing.', success: true } })
+      return
+    }
     const req = request(url, { headers: { 'Content-Length': Buffer.byteLength(payload), 'Content-Type': 'application/json' }, method, rejectUnauthorized: false })
     const data = ''
     req.on(

@@ -27,7 +27,7 @@ Object.keys(plugins).forEach(pluginKey => {
       // Events
       if (plugins[pluginKey][classKey].prototype instanceof EventEmitter) {
         const listeners: { [key: string]: { type: string; listener: (...args: any[]) => void } } = {}
-        const listenersOfTypeExist = type => !!Object.values(listeners).some(listenerObj => listenerObj.type === type)
+        const listenersOfTypeExist = type => Boolean(Object.values(listeners).some(listenerObj => listenerObj.type === type))
         Object.assign(contextApi[classKey], {
           addListener(type: string, callback: (...args) => void) {
             const id = randomId()

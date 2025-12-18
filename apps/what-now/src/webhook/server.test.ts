@@ -42,6 +42,7 @@ describe('server.cli.ts (integration)', () => {
     const result = await request('/hello')
     if (result.ok) return
     if (Date.now() - start < timeout) {
+      // oxlint-disable-next-line no-promise-executor-return
       await new Promise(r => setTimeout(r, 100))
       return waitForServerReady(timeout, start)
     }

@@ -3,7 +3,7 @@
     "@monorepo/components": "workspace:*",
     "@monorepo/utils": "workspace:*",
     "@monorepo/vite-plugins": "workspace:*",
-    "framer-motion": "^12.23.25"
+    "framer-motion": "^12.23.26"
   },
   "name": "image-compare",
   "private": true,

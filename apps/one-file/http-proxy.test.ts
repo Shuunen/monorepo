@@ -192,6 +192,7 @@ describe('http-proxy', () => {
     mockRequest.body = { test: 'data' }
     webhookRoute(mockRequest as Request, mockResponse as Response)
     // Wait for async operation to complete
+    // oxlint-disable-next-line no-promise-executor-return
     await new Promise(resolve => setTimeout(resolve, 0))
     expect(mockResponse.status).toHaveBeenCalledWith(200)
   })
@@ -203,6 +204,7 @@ describe('http-proxy', () => {
     mockRequest.body = { test: 'data' }
     webhookRoute(mockRequest as Request, mockResponse as Response)
     // Wait for async operation to complete
+    // oxlint-disable-next-line no-promise-executor-return
     await new Promise(resolve => setTimeout(resolve, 0))
     expect(mockResponse.status).toHaveBeenCalledWith(500)
     expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Network error' })
