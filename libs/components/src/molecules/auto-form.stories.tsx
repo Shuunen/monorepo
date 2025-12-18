@@ -288,7 +288,7 @@ const optionalSectionStep2Schema = step(
  */
 export const OptionalSection: Story = {
   args: {
-    initialData: { age: 14, name: "Sanders Doe" },
+    initialData: { age: 14, hasPet: false, name: "Sanders Doe" },
     schemas: [optionalSectionStep1Schema, optionalSectionStep2Schema],
   },
   play: async ({ canvasElement, step }) => {
