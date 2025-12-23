@@ -2,6 +2,7 @@
 @source "../../../libs/components/src";
 
 @theme inline {
-  /* Override the default theme with built-in colors or use your own */
+  /* Override the default theme with built-in colours or use your own */
   --color-primary: var(--chart-2);
+  --color-secondary: #df1e69;
 }
