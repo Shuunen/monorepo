@@ -1,5 +1,29 @@
+// oxlint-disable id-length
+// oxlint-disable no-magic-numbers
 import { Paragraph, Title } from '@monorepo/components'
 import { cn } from '@monorepo/utils'
+import { motion, type Variants } from 'framer-motion'
+
+const containerAnimation = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.1,
+      staggerChildren: 0.15,
+    },
+  },
+} satisfies Variants
+
+const textAnimation = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }, y: 0 },
+} satisfies Variants
+
+const imageAnimation = {
+  hidden: { opacity: 0, scale: 0.95 },
+  show: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] } },
+} satisfies Variants
 
 function Num({ children: number }: { children: string }) {
   return <span className="font-mono bg-blue-900 shadow-md shadow-accent-foreground/30 size-5 inline-flex justify-center leading-5 mx-1 rounded-full">{number}</span>
@@ -9,37 +33,59 @@ export function About() {
   const titleClasses = cn('text-primary w-1/2 mx-auto text-center border-t pt-8 mt-10 border-primary/30')
   return (
     <div className="bg-accent flex flex-col gap-4 justify-center">
-      <div className="prose mx-auto mb-20">
-        <Title className={cn(titleClasses, 'border-0')} level={2}>
-          Purpose
-        </Title>
-        <Paragraph>Image Compare is a simple tool to compare two images side by side with a draggable slider. It allows you to zoom in and pan around the images for detailed comparison.</Paragraph>
-        <Title className={titleClasses} level={2}>
-          Usage
-        </Title>
-        <Paragraph>
-          You are on menu <Num>1</Num> on the screenshot below :
-        </Paragraph>
-        <img alt="demo" className="shadow-xl shadow-muted-foreground/20" src="/demo.jpg" />
-        <Paragraph>
-          Go to menu <Num>2</Num> to see the comparison in action or menu <Num>3</Num> to adjust comparison settings.
-        </Paragraph>
-        <Paragraph>
-          You can upload your own images <Num>4</Num> & <Num>5</Num> by clicking the "Left Image" <Num>9</Num> and "Right Image" <Num>11</Num> buttons.'
-        </Paragraph>
-        <Paragraph>
-          Use the slider <Num>6</Num> or <Num>7</Num> to adjust the comparison position. You can zoom in and out using your mouse wheel and pan around by clicking and dragging the images <Num>4</Num> & <Num>5</Num>.
-        </Paragraph>
-        <Paragraph>
-          The zoom level is displayed at the bottom right corner <Num>8</Num>. You can reset the zoom and pan by clicking the "Reset View" button <Num>10</Num>.
-        </Paragraph>
-        <Title className={titleClasses} level={2}>
-          Tech stack
-        </Title>
-        <Paragraph>This tool is built with React and TypeScript, utilizing modern web technologies for a smooth and responsive user experience.</Paragraph>
-        {/** biome-ignore lint/correctness/useUniqueElementIds: it's ok */}
-        <div className="text-center text-sm font-mono pb-4" id="unique-mark"></div>
-      </div>
+      <motion.div animate="show" className="prose mx-auto mb-20" initial="hidden" variants={containerAnimation}>
+        <motion.div variants={textAnimation}>
+          <Title className={cn(titleClasses, 'border-0')} level={2}>
+            Purpose
+          </Title>
+        </motion.div>
+        <motion.div variants={textAnimation}>
+          <Paragraph>Image Compare is a simple tool to compare two images side by side with a draggable slider. It allows you to zoom in and pan around the images for detailed comparison.</Paragraph>
+        </motion.div>
+        <motion.div variants={textAnimation}>
+          <Title className={titleClasses} level={2}>
+            Usage
+          </Title>
+        </motion.div>
+        <motion.div variants={textAnimation}>
+          <Paragraph>
+            You are on menu <Num>1</Num> on the screenshot below :
+          </Paragraph>
+        </motion.div>
+        <motion.img alt="demo" className="shadow-xl shadow-muted-foreground/20" src="/demo.jpg" variants={imageAnimation} />
+        <motion.div variants={textAnimation}>
+          <Paragraph>
+            Go to menu <Num>2</Num> to see the comparison in action or menu <Num>3</Num> to adjust comparison settings.
+          </Paragraph>
+        </motion.div>
+        <motion.div variants={textAnimation}>
+          <Paragraph>
+            You can upload your own images <Num>4</Num> & <Num>5</Num> by clicking the "Left Image" <Num>9</Num> and "Right Image" <Num>11</Num> buttons.'
+          </Paragraph>
+        </motion.div>
+        <motion.div variants={textAnimation}>
+          <Paragraph>
+            Use the slider <Num>6</Num> or <Num>7</Num> to adjust the comparison position. You can zoom in and out using your mouse wheel and pan around by clicking and dragging the images <Num>4</Num> & <Num>5</Num>.
+          </Paragraph>
+        </motion.div>
+        <motion.div variants={textAnimation}>
+          <Paragraph>
+            The zoom level is displayed at the bottom right corner <Num>8</Num>. You can reset the zoom and pan by clicking the "Reset View" button <Num>10</Num>.
+          </Paragraph>
+        </motion.div>
+        <motion.div variants={textAnimation}>
+          <Title className={titleClasses} level={2}>
+            Tech stack
+          </Title>
+        </motion.div>
+        <motion.div variants={textAnimation}>
+          <Paragraph>This tool is built with React and TypeScript, utilizing modern web technologies for a smooth and responsive user experience.</Paragraph>
+        </motion.div>
+        <motion.div variants={textAnimation}>
+          {/** biome-ignore lint/correctness/useUniqueElementIds: it's ok */}
+          <div className="text-center text-sm font-mono pb-4" id="unique-mark"></div>
+        </motion.div>
+      </motion.div>
     </div>
   )
 }
