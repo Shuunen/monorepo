@@ -49,7 +49,19 @@ jobs:
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       # When you enable task distribution, run the e2e-ci task instead of e2e
 
+      - name: Check if Playwright is needed
+        id: check_playwright
+        run: |
+          if pnpm exec nx show projects --affected -t test-storybook --json 2>/dev/null | grep -q '"components"'; then
+            echo "needed=true" >> $GITHUB_OUTPUT
+            echo "Playwright dependencies needed ✅"
+          else
+            echo "needed=false" >> $GITHUB_OUTPUT
+            echo "Playwright dependencies not needed ❌"
+          fi
+
       - name: Install Playwright
+        if: steps.check_playwright.outputs.needed == 'true'
         run: pnpm exec playwright install --with-deps && echo playwright install ok ✅
 
       - name: Run Checks
