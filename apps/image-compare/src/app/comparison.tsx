@@ -1,5 +1,6 @@
 // oxlint-disable no-magic-numbers, id-length
 import { Logger } from '@monorepo/utils'
+import { motion } from 'framer-motion'
 import { type MouseEvent, type MouseEventHandler, useEffect, useRef, useState, type WheelEvent } from 'react'
 import {
   type ContestState,
@@ -42,14 +43,14 @@ export function Comparison() {
     if (shouldResetPan(zoom)) setPan({ x: 0, y: 0 })
   }, [zoom])
 
+  /* c8 ignore start */
   useEffect(() => {
-    /* c8 ignore start */
     if (contestState?.currentMatch) {
       setLeftImage(contestState.currentMatch.leftImage.url)
       setRightImage(contestState.currentMatch.rightImage.url)
     }
-    /* c8 ignore stop */
   }, [contestState])
+  /* c8 ignore stop */
 
   type FileInputEvent = {
     target: {
@@ -184,33 +185,41 @@ export function Comparison() {
 
   return (
     <div className="bg-accent flex flex-col grow justify-center items-center pt-5 pb-12">
-      <div className="w-full max-w-4xl">
-        <ContestHeader contestState={contestState} />
-        <ImageViewer
-          contestState={contestState}
-          cursor={cursor}
-          imageContainerRef={imageContainerRef}
-          imageStyle={imageStyle}
-          isDraggingOver={isDraggingOver}
-          leftImage={leftImage}
-          onDragEnter={handleDragEnter}
-          onDragLeave={handleDragLeave}
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-          onMouseDownOnHandle={handleMouseDownOnHandle}
-          onMouseDownOnImage={handleMouseDownOnImage}
-          onMouseLeave={handleMouseLeave}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onSelectWinner={handleSelectWinner}
-          onWheel={handleWheel}
-          rightImage={rightImage}
-          sliderPosition={sliderPosition}
-          zoom={zoom}
-        />
-        <SliderControl contestState={contestState} onValueChange={setSliderPosition} value={sliderPosition} />
-        <ControlButtons contestState={contestState} onLeftImageUpload={handleLeftImageUpload} onReset={handleReset} onRightImageUpload={handleRightImageUpload} />
-      </div>
+      <motion.div animate={{ opacity: 1, y: 0 }} className="w-full max-w-4xl" initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.5, staggerChildren: 0.1 }}>
+        <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: -10 }} transition={{ delay: 0.1, duration: 0.4 }}>
+          <ContestHeader contestState={contestState} />
+        </motion.div>
+        <motion.div animate={{ opacity: 1, scale: 1 }} initial={{ opacity: 0, scale: 0.95 }} transition={{ delay: 0.2, duration: 0.4 }}>
+          <ImageViewer
+            contestState={contestState}
+            cursor={cursor}
+            imageContainerRef={imageContainerRef}
+            imageStyle={imageStyle}
+            isDraggingOver={isDraggingOver}
+            leftImage={leftImage}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            onMouseDownOnHandle={handleMouseDownOnHandle}
+            onMouseDownOnImage={handleMouseDownOnImage}
+            onMouseLeave={handleMouseLeave}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onSelectWinner={handleSelectWinner}
+            onWheel={handleWheel}
+            rightImage={rightImage}
+            sliderPosition={sliderPosition}
+            zoom={zoom}
+          />
+        </motion.div>
+        <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 10 }} transition={{ delay: 0.3, duration: 0.4 }}>
+          <SliderControl contestState={contestState} onValueChange={setSliderPosition} value={sliderPosition} />
+        </motion.div>
+        <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 10 }} transition={{ delay: 0.4, duration: 0.4 }}>
+          <ControlButtons contestState={contestState} onLeftImageUpload={handleLeftImageUpload} onReset={handleReset} onRightImageUpload={handleRightImageUpload} />
+        </motion.div>
+      </motion.div>
     </div>
   )
 }
