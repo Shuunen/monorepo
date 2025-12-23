@@ -1,3 +1,10 @@
-export { Slider } from "../shadcn/slider";
+import { cn } from "@monorepo/utils";
+import type { ComponentProps } from "react";
+import { Slider as ShadSlider } from "../shadcn/slider";
 
-// TODO : ideally we add data-testid handling (and other customizations) like in button.tsx instead of just exposing the raw shadcn component
+type SliderProps = ComponentProps<typeof ShadSlider>;
+
+export function Slider(props: SliderProps) {
+  const classes = cn(props.className, "cursor-grab");
+  return <ShadSlider {...props} className={classes} />;
+}
