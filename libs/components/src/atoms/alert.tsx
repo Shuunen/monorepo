@@ -14,6 +14,10 @@ type AlertProps = {
    */
   children?: ReactNode;
   /**
+   * Additional classes to apply to the alert container
+   */
+  className?: string;
+  /**
    * When `true` shows a close button to acknowledge/discard the alert
    */
   closable?: boolean;
@@ -29,11 +33,12 @@ type AlertProps = {
 };
 
 // oxlint-disable-next-line max-lines-per-function
-export function Alert({ type, title, children, closable }: AlertProps) {
+export function Alert({ type, title, children, closable, className }: AlertProps) {
   const [isVisible, setIsVisible] = useState(true);
   const content = useMemo(() => {
     if (type === "info") {
       return {
+        classes: cn(className),
         icon: <IconTooltip />,
         title: title ?? "Info",
       };
@@ -41,7 +46,7 @@ export function Alert({ type, title, children, closable }: AlertProps) {
 
     if (type === "success") {
       return {
-        classes: cn("text-success"),
+        classes: cn("text-success", className),
         icon: <IconSuccess />,
         title: title ?? "Success",
       };
@@ -49,19 +54,19 @@ export function Alert({ type, title, children, closable }: AlertProps) {
 
     if (type === "warning") {
       return {
-        classes: cn("text-warning"),
+        classes: cn("text-warning", className),
         icon: <IconWarning />,
         title: title ?? "Warning",
       };
     }
 
     return {
-      classes: cn("text-destructive"),
+      classes: cn("text-destructive", className),
       icon: <IconError />,
       title: title ?? "Error",
       variant: "destructive",
     } as const;
-  }, [type, title]);
+  }, [type, title, className]);
 
   if (!isVisible) {
     return;
