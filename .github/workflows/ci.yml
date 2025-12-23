@@ -52,12 +52,16 @@ jobs:
       - name: Check if Playwright is needed
         id: check_playwright
         run: |
-          if pnpm exec nx show projects --affected -t test-storybook --json 2>/dev/null | grep -q '"components"'; then
+          echo "Checking affected projects with test-storybook target..."
+          AFFECTED_PROJECTS=$(pnpm exec nx show projects --affected -t test-storybook --json 2>/dev/null || echo "[]")
+          echo "Affected projects JSON: $AFFECTED_PROJECTS"
+
+          if echo "$AFFECTED_PROJECTS" | grep -q '"components"'; then
             echo "needed=true" >> $GITHUB_OUTPUT
-            echo "Playwright dependencies needed ✅"
+            echo "⚙️ Playwright dependencies needed"
           else
             echo "needed=false" >> $GITHUB_OUTPUT
-            echo "Playwright dependencies not needed ❌"
+            echo "➡️ Playwright dependencies not needed"
           fi
 
       - name: Install Playwright
