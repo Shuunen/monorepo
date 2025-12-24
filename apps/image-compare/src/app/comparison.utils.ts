@@ -27,10 +27,7 @@ export function calculateNewZoom(currentZoom: number, deltaY: number): number {
 export function calculateNewPan(dragStart: DragStartPosition, clientX: number, clientY: number): PanPosition {
   const dx = clientX - dragStart.x
   const dy = clientY - dragStart.y
-  return {
-    x: dragStart.panX + dx,
-    y: dragStart.panY + dy,
-  }
+  return { x: dragStart.panX + dx, y: dragStart.panY + dy }
 }
 
 export function calculateSliderPosition(clientX: number, rect: DOMRect): number {
@@ -40,10 +37,7 @@ export function calculateSliderPosition(clientX: number, rect: DOMRect): number 
 }
 
 export function getImageStyle(pan: PanPosition, zoom: number, isPanning: boolean): ImageStyle {
-  return {
-    transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-    transition: isPanning ? 'none' : 'transform 0.1s ease-out',
-  }
+  return { transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, transition: isPanning ? 'none' : 'transform 0.1s ease-out' }
 }
 
 export function getCursorType(isHandleDragging: boolean, zoom: number, isPanning: boolean): CursorType {
@@ -68,19 +62,41 @@ export function readImageFile(file: File, onSuccess: (dataUrl: string) => void, 
   reader.readAsDataURL(file)
 }
 
+export async function fetchImageMetadata(url: string, filename?: string): Promise<ImageMetadata> {
+  const response = await fetch(url)
+  const blob = await response.blob()
+  const extractedFilename = filename ?? url.split('/').pop() ?? 'unknown'
+  const dimensions = await getImageDimensions(url)
+  return { filename: extractedFilename, height: dimensions.height, size: blob.size, width: dimensions.width }
+}
+
+function getImageDimensions(src: string): Promise<{ height: number; width: number }> {
+  return new Promise((resolve, reject) => {
+    const img = globalThis.document.createElement('img')
+    img.addEventListener('load', () => resolve({ height: img.naturalHeight, width: img.naturalWidth }))
+    img.addEventListener('error', () => reject(new Error('Failed to load image')))
+    img.src = src
+  })
+}
+
 export type ImageUpdateCallbacks = {
   logger: Logger
   onImageUpdate: (dataUrl: string) => void
+  onMetadataUpdate?: (metadata: ImageMetadata) => void
   imageSide: 'left' | 'right'
 }
 
 export function handleSingleFileUpload(file: File | undefined, callbacks: ImageUpdateCallbacks): void {
   if (!file) return
-  const { imageSide, logger, onImageUpdate } = callbacks
+  const { imageSide, logger, onImageUpdate, onMetadataUpdate } = callbacks
   readImageFile(
     file,
-    dataUrl => {
+    async dataUrl => {
       onImageUpdate(dataUrl)
+      if (onMetadataUpdate) {
+        const dimensions = await getImageDimensions(dataUrl)
+        onMetadataUpdate({ filename: file.name, height: dimensions.height, size: file.size, width: dimensions.width })
+      }
       logger.info(`${imageSide === 'left' ? 'Left' : 'Right'} image updated via upload.`)
     },
     /* v8 ignore next 3 */
@@ -94,6 +110,16 @@ export type TwoImagesUpdateCallbacks = {
   logger: Logger
   onLeftImageUpdate: (dataUrl: string) => void
   onRightImageUpdate: (dataUrl: string) => void
+  onLeftMetadataUpdate?: (metadata: ImageMetadata) => void
+  onRightMetadataUpdate?: (metadata: ImageMetadata) => void
+}
+
+export type ImageMetadata = {
+  filename: string
+  size: number
+  width: number
+  height: number
+  isWinner?: boolean
 }
 
 export type ImageData = {
@@ -129,13 +155,17 @@ function loadImagesForContest(files: FileList, callbacks: MultipleImagesUpdateCa
 }
 
 function loadTwoImages(files: FileList, callbacks: TwoImagesUpdateCallbacks): void {
-  const { logger, onLeftImageUpdate, onRightImageUpdate } = callbacks
+  const { logger, onLeftImageUpdate, onLeftMetadataUpdate, onRightImageUpdate, onRightMetadataUpdate } = callbacks
   const [file1, file2] = Array.from(files)
   if (!file1 || !file2) return
   readImageFile(
     file1,
-    dataUrl => {
+    async dataUrl => {
       onLeftImageUpdate(dataUrl)
+      if (onLeftMetadataUpdate) {
+        const dimensions = await getImageDimensions(dataUrl)
+        onLeftMetadataUpdate({ filename: file1.name, height: dimensions.height, size: file1.size, width: dimensions.width })
+      }
       logger.info('Left image updated via drag and drop.')
     },
     /* v8 ignore next */
@@ -143,8 +173,12 @@ function loadTwoImages(files: FileList, callbacks: TwoImagesUpdateCallbacks): vo
   )
   readImageFile(
     file2,
-    dataUrl => {
+    async dataUrl => {
       onRightImageUpdate(dataUrl)
+      if (onRightMetadataUpdate) {
+        const dimensions = await getImageDimensions(dataUrl)
+        onRightMetadataUpdate({ filename: file2.name, height: dimensions.height, size: file2.size, width: dimensions.width })
+      }
       logger.info('Right image updated via drag and drop.')
     },
     /* v8 ignore next */
