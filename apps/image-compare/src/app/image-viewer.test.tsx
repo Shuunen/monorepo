@@ -22,7 +22,6 @@ describe('image-viewer', () => {
     onMouseMove: vi.fn(),
     onMouseUp: vi.fn(),
     onSelectWinner: vi.fn(),
-    onWheel: vi.fn(),
     rightImage: '/right.jpg',
     sliderPosition: [50],
     zoom: 1,
@@ -40,20 +39,13 @@ describe('image-viewer', () => {
     expect(zoomText).toBeTruthy()
   })
 
-  it('ImageViewer C should call onWheel when wheel event occurs', () => {
-    const { container } = render(<ImageViewer {...mockProps} />)
-    const viewer = container.querySelector('div')
-    if (viewer) fireEvent.wheel(viewer, { deltaY: -100 })
-    expect(mockProps.onWheel).toHaveBeenCalled()
-  })
-
-  it('ImageViewer D should hide choose buttons when not in contest mode', () => {
+  it('ImageViewer C should hide choose buttons when not in contest mode', () => {
     const { container } = render(<ImageViewer {...mockProps} />)
     const hiddenButtons = container.querySelectorAll('.hidden')
     expect(hiddenButtons.length).toBeGreaterThan(0)
   })
 
-  it('ImageViewer E should display choose buttons in contest mode', () => {
+  it('ImageViewer D should display choose buttons in contest mode', () => {
     const contestState: ContestState = {
       activeImages: [],
       allImages: [],
@@ -75,7 +67,7 @@ describe('image-viewer', () => {
     expect(rightButton).toBeTruthy()
   })
 
-  it('ImageViewer F should call onSelectWinner when choose button is clicked', () => {
+  it('ImageViewer E should call onSelectWinner when choose button is clicked', () => {
     const contestState: ContestState = {
       activeImages: [],
       allImages: [],
@@ -96,7 +88,7 @@ describe('image-viewer', () => {
     expect(mockProps.onSelectWinner).toHaveBeenCalledWith(0)
   })
 
-  it('ImageViewer G should hide slider bar when contest is complete', () => {
+  it('ImageViewer F should hide slider bar when contest is complete', () => {
     const contestState: ContestState = {
       activeImages: [],
       allImages: [],
@@ -112,13 +104,13 @@ describe('image-viewer', () => {
     expect(sliderBar?.classList.contains('hidden')).toBe(true)
   })
 
-  it('ImageViewer H should show drag over overlay when dragging', () => {
+  it('ImageViewer G should show drag over overlay when dragging', () => {
     render(<ImageViewer {...mockProps} isDraggingOver={true} />)
     const dropText = screen.getByText('Drop 2 images here')
     expect(dropText).toBeTruthy()
   })
 
-  it('ImageViewer I should handle right image winning in contest', () => {
+  it('ImageViewer H should handle right image winning in contest', () => {
     const contestState: ContestState = {
       activeImages: [],
       allImages: [],

@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
-import type { ContestState } from './comparison.utils'
+import type { ContestState, ImageMetadata } from './comparison.utils'
 import { ContestHeader } from './contest-header'
 
 describe('contest-header', () => {
-  const mockContestState: ContestState = {
+  const mockContestState = {
     activeImages: [
       { eliminated: false, filename: 'image1.jpg', id: 0, url: 'url1' },
       { eliminated: false, filename: 'image2.jpg', id: 1, url: 'url2' },
@@ -22,26 +22,21 @@ describe('contest-header', () => {
     matchesInRound: 1,
     round: 1,
     winner: undefined,
-  }
+  } satisfies ContestState
 
-  it('ContestHeader A should return undefined when not in contest mode and not complete', () => {
-    const { container } = render(<ContestHeader contestState={undefined} />)
-    expect(container.firstChild).toBeNull()
-  })
-
-  it('ContestHeader B should display contest mode header', () => {
+  it('ContestHeader A should display contest mode header', () => {
     render(<ContestHeader contestState={mockContestState} />)
     const header = screen.getByText('Round 1 - Match 1')
     expect(header).toBeTruthy()
   })
 
-  it('ContestHeader C should display select your preferred image message', () => {
+  it('ContestHeader B should display select your preferred image message', () => {
     render(<ContestHeader contestState={mockContestState} />)
     const message = screen.getByText('Select your preferred image')
     expect(message).toBeTruthy()
   })
 
-  it('ContestHeader D should display winner header when contest is complete', () => {
+  it('ContestHeader C should display winner header when contest is complete', () => {
     const completeState: ContestState = {
       ...mockContestState,
       currentMatch: undefined,
@@ -53,15 +48,28 @@ describe('contest-header', () => {
     expect(header).toBeTruthy()
   })
 
-  it('ContestHeader E should display winner filename when contest is complete', () => {
+  it('ContestHeader D should display winner filename when contest is complete', () => {
     const completeState: ContestState = {
       ...mockContestState,
       currentMatch: undefined,
       isComplete: true,
       winner: { eliminated: false, filename: 'winner.jpg', id: 0, url: 'winner-url' },
     }
-    render(<ContestHeader contestState={completeState} />)
-    const filename = screen.getByText('winner.jpg')
-    expect(filename).toBeTruthy()
+    const winnerMetadata: ImageMetadata = { filename: 'winner.jpg', height: 1080, isWinner: true, size: 100000, width: 1920 }
+    render(<ContestHeader contestState={completeState} leftImageMetadata={winnerMetadata} rightImageMetadata={winnerMetadata} />)
+    const filenames = screen.getAllByText('winner.jpg')
+    expect(filenames.length).toBeGreaterThan(0)
+  })
+
+  it('ContestHeader E should not display image info during contest mode', () => {
+    render(<ContestHeader contestState={mockContestState} leftImageMetadata={{ filename: 'image1.jpg', height: 800, size: 50000, width: 600 }} rightImageMetadata={{ filename: 'image2.jpg', height: 800, size: 60000, width: 600 }} />)
+    const filename = screen.queryByText('image1.jpg')
+    expect(filename).toBeNull()
+  })
+
+  it('ContestHeader F should not have a title when no contest state is provided', () => {
+    render(<ContestHeader leftImageMetadata={{ filename: 'image1.jpg', height: 800, size: 50000, width: 600 }} rightImageMetadata={{ filename: 'image2.jpg', height: 800, size: 60000, width: 600 }} />)
+    const title = screen.queryByRole('heading')
+    expect(title).toBeNull()
   })
 })

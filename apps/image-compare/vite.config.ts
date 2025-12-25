@@ -33,6 +33,7 @@ export default defineConfig({
     globals: true,
     include: ['src/**/*.test.{ts,tsx}'],
     reporters: ['dot'],
+    setupFiles: ['./src/vitest.setup.ts'],
     silent: true,
     watch: false,
   },

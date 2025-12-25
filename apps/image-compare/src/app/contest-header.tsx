@@ -3,12 +3,12 @@ import { Paragraph, Title } from '@monorepo/components'
 import { cn } from '@monorepo/utils'
 import { motion } from 'framer-motion'
 import type { ContestState, ImageMetadata } from './comparison.utils'
-import { ImageInfos } from './image-metadata'
+import { ImageInfos } from './image-infos'
 
 type ContestHeaderProps = {
-  contestState: ContestState | undefined
-  leftImageMetadata: ImageMetadata | undefined
-  rightImageMetadata: ImageMetadata | undefined
+  contestState?: ContestState
+  leftImageMetadata?: ImageMetadata
+  rightImageMetadata?: ImageMetadata
 }
 
 function getTitle(isContestComplete: boolean, isContestMode: boolean, contestState: ContestState | undefined) {
@@ -20,8 +20,6 @@ function getTitle(isContestComplete: boolean, isContestMode: boolean, contestSta
 export function ContestHeader({ contestState, leftImageMetadata, rightImageMetadata }: ContestHeaderProps) {
   const isContestMode = contestState !== undefined && !contestState.isComplete
   const isContestComplete = contestState?.isComplete ?? false
-  const showImageInfo = !isContestMode && !isContestComplete
-  if (!showImageInfo && !isContestComplete && !isContestMode) return undefined
   const title = getTitle(isContestComplete, isContestMode, contestState)
   return (
     <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: -20 }} transition={{ duration: 0.6 }}>

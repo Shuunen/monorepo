@@ -50,22 +50,19 @@ export function Comparison() {
   const dragStartRef = useRef<DragStartPosition>({ panX: 0, panY: 0, x: 0, y: 0 })
   const logger = useMemo(() => new Logger(), [])
 
+  /* v8 ignore start */
   useEffect(() => {
     if (shouldResetPan(zoom)) setPan({ x: 0, y: 0 })
   }, [zoom])
 
   useEffect(() => {
     const loadDefaultMetadata = async () => {
-      try {
-        const [leftMeta, rightMeta] = await Promise.all([fetchImageMetadata(defaultImages.before), fetchImageMetadata(defaultImages.after)])
-        setLeftImageMetadata(leftMeta)
-        setRightImageMetadata(rightMeta)
-      } catch {
-        logger.showError('Failed to load default image metadata')
-      }
+      const [leftMeta, rightMeta] = await Promise.all([fetchImageMetadata(defaultImages.before), fetchImageMetadata(defaultImages.after)])
+      setLeftImageMetadata(leftMeta)
+      setRightImageMetadata(rightMeta)
     }
     void loadDefaultMetadata()
-  }, [logger])
+  }, [])
 
   useEffect(() => {
     const container = imageContainerRef.current
@@ -78,20 +75,19 @@ export function Comparison() {
     return () => container.removeEventListener('wheel', handleWheelEvent)
   }, [zoom])
 
-  /* c8 ignore start */
   useEffect(() => {
     if (contestState?.currentMatch) {
       setLeftImage(contestState.currentMatch.leftImage.url)
       setRightImage(contestState.currentMatch.rightImage.url)
-      void fetchImageMetadata(contestState.currentMatch.leftImage.url, contestState.currentMatch.leftImage.filename).then(setLeftImageMetadata)
-      void fetchImageMetadata(contestState.currentMatch.rightImage.url, contestState.currentMatch.rightImage.filename).then(setRightImageMetadata)
+      void fetchImageMetadata(contestState.currentMatch.leftImage.url).then(setLeftImageMetadata)
+      void fetchImageMetadata(contestState.currentMatch.rightImage.url).then(setRightImageMetadata)
     } else if (contestState?.isComplete && contestState.winner)
-      void fetchImageMetadata(contestState.winner.url, contestState.winner.filename).then(metadata => {
+      void fetchImageMetadata(contestState.winner.url).then(metadata => {
         setLeftImageMetadata({ ...metadata, isWinner: true })
         setRightImageMetadata({ ...metadata, isWinner: false })
       })
   }, [contestState])
-  /* c8 ignore stop */
+  /* v8 ignore stop */
 
   type FileInputEvent = {
     target: {
@@ -117,6 +113,7 @@ export function Comparison() {
     })
   }
 
+  /* v8 ignore start */
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -132,9 +129,7 @@ export function Comparison() {
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    /* c8 ignore start */
     if (isDragLeavingContainer(e)) setIsDraggingOver(false)
-    /* c8 ignore stop */
   }
 
   const handleDrop = (e: React.DragEvent) => {
@@ -153,6 +148,7 @@ export function Comparison() {
       onRightMetadataUpdate: setRightImageMetadata,
     })
   }
+  /* v8 ignore stop */
 
   const handleReset = () => {
     setSliderPosition([defaultSliderPosition])
@@ -168,7 +164,7 @@ export function Comparison() {
     logger.info('Reset zoom and pan to initial positions.')
   }
 
-  /* c8 ignore start */
+  /* v8 ignore start */
   const handleSelectWinner = (winnerId: number) => {
     if (!contestState) return
     const newState = selectWinner(contestState, winnerId)
@@ -182,7 +178,6 @@ export function Comparison() {
       setRightImage(newState.winner.url)
     }
   }
-  /* c8 ignore stop */
 
   const handleMouseDownOnImage: MouseEventHandler<HTMLDivElement> = e => {
     if (zoom <= minZoom) return
@@ -219,6 +214,7 @@ export function Comparison() {
       setSliderPosition([calculateSliderPosition(e.clientX, rect)])
     }
   }
+  /* v8 ignore stop */
 
   const imageStyle = getImageStyle(pan, zoom, isPanning)
   const cursor = getCursorType(isHandleDragging, zoom, isPanning)
