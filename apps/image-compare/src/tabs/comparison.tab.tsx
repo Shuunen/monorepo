@@ -157,10 +157,6 @@ export function Comparison() {
     setIsPanning(false)
     setIsHandleDragging(false)
     setContestState(undefined)
-    setLeftImage('/before.svg')
-    setRightImage('/after.svg')
-    setLeftImageMetadata(undefined)
-    setRightImageMetadata(undefined)
     logger.info('Reset zoom and pan to initial positions.')
   }
 
