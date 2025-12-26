@@ -79,7 +79,7 @@ export function ImageViewer({
         </motion.div>
       </motion.div>
       <motion.div animate={{ opacity: 1 }} className="absolute inset-0 pointer-events-none select-none" initial={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-        <img alt="right" className="w-full h-full object-cover" src={rightImage} style={imageStyle} />
+        <img alt="right" className="size-full object-contain" src={rightImage} style={imageStyle} />
       </motion.div>
 
       <motion.div
@@ -91,7 +91,7 @@ export function ImageViewer({
         }}
         transition={{ damping: 30, opacity: { duration: 0.3 }, stiffness: 300, type: 'spring' }}
       >
-        <img alt="left" className="w-full h-full object-cover" src={leftImage} style={imageStyle} />
+        <img alt="left" className="size-full object-contain" src={leftImage} style={imageStyle} />
       </motion.div>
 
       <motion.div
