@@ -4,7 +4,7 @@
 import { Button } from '@monorepo/components'
 import { cn } from '@monorepo/utils'
 import { motion } from 'framer-motion'
-import type { MouseEvent, MouseEventHandler, RefObject, WheelEvent } from 'react'
+import type { MouseEvent, MouseEventHandler, RefObject } from 'react'
 import type { ContestState, CursorType, ImageStyle } from './comparison.utils'
 
 type ImageViewerProps = {
@@ -24,7 +24,6 @@ type ImageViewerProps = {
   onMouseMove: (e: MouseEvent) => void
   onMouseUp: () => void
   onSelectWinner: (winnerId: number) => void
-  onWheel: (e: WheelEvent) => void
   rightImage: string
   sliderPosition: number[]
   zoom: number
@@ -48,7 +47,6 @@ export function ImageViewer({
   onMouseMove,
   onMouseUp,
   onSelectWinner,
-  onWheel,
   rightImage,
   sliderPosition,
   zoom,
@@ -57,7 +55,7 @@ export function ImageViewer({
   const isContestComplete = contestState?.isComplete ?? false
   return (
     <div
-      className="relative w-full aspect-video rounded-xl overflow-hidden mb-6"
+      className="relative h-[calc(100vh-382px)] rounded-xl overflow-hidden mb-8"
       onDragEnter={onDragEnter}
       onDragLeave={onDragLeave}
       onDragOver={onDragOver}
@@ -66,7 +64,6 @@ export function ImageViewer({
       onMouseLeave={onMouseLeave}
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
-      onWheel={onWheel}
       ref={imageContainerRef}
       style={{ cursor }}
     >

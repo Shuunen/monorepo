@@ -1,5 +1,7 @@
 // oxlint-disable no-magic-numbers, id-length
-import type { Logger } from '@monorepo/utils'
+import type { ImageData, ImageMetadata, ImageUpdateCallbacks, MultipleImagesUpdateCallbacks, TwoImagesUpdateCallbacks } from './image.utils'
+export type { ImageData, ImageMetadata, ImageUpdateCallbacks, MultipleImagesUpdateCallbacks, TwoImagesUpdateCallbacks }
+export { fetchImageMetadata, handleMultipleFilesUpload, handleSingleFileUpload, isDragLeavingContainer, readImageFile, requiredFilesCount } from './image.utils'
 
 export type PanPosition = { x: number; y: number }
 
@@ -17,7 +19,6 @@ export const maxZoom = 5
 export const zoomSensitivity = 0.005
 export const defaultSliderPosition = 50
 export const maxPercentage = 100
-export const requiredFilesCount = 2
 
 export function calculateNewZoom(currentZoom: number, deltaY: number): number {
   const newZoom = currentZoom - deltaY * zoomSensitivity
@@ -27,10 +28,7 @@ export function calculateNewZoom(currentZoom: number, deltaY: number): number {
 export function calculateNewPan(dragStart: DragStartPosition, clientX: number, clientY: number): PanPosition {
   const dx = clientX - dragStart.x
   const dy = clientY - dragStart.y
-  return {
-    x: dragStart.panX + dx,
-    y: dragStart.panY + dy,
-  }
+  return { x: dragStart.panX + dx, y: dragStart.panY + dy }
 }
 
 export function calculateSliderPosition(clientX: number, rect: DOMRect): number {
@@ -40,10 +38,7 @@ export function calculateSliderPosition(clientX: number, rect: DOMRect): number 
 }
 
 export function getImageStyle(pan: PanPosition, zoom: number, isPanning: boolean): ImageStyle {
-  return {
-    transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-    transition: isPanning ? 'none' : 'transform 0.1s ease-out',
-  }
+  return { transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, transition: isPanning ? 'none' : 'transform 0.1s ease-out' }
 }
 
 export function getCursorType(isHandleDragging: boolean, zoom: number, isPanning: boolean): CursorType {
@@ -54,114 +49,6 @@ export function getCursorType(isHandleDragging: boolean, zoom: number, isPanning
 
 export function shouldResetPan(zoom: number): boolean {
   return zoom === minZoom
-}
-
-export function readImageFile(file: File, onSuccess: (dataUrl: string) => void, onError: (error: string) => void): void {
-  const reader = new FileReader()
-  // oxlint-disable-next-line prefer-add-event-listener
-  reader.onload = event => {
-    const result = event.target?.result
-    /* v8 ignore next 2 -- @preserve */
-    if (typeof result === 'string') onSuccess(result)
-    else onError('Result is not a string.')
-  }
-  reader.readAsDataURL(file)
-}
-
-export type ImageUpdateCallbacks = {
-  logger: Logger
-  onImageUpdate: (dataUrl: string) => void
-  imageSide: 'left' | 'right'
-}
-
-export function handleSingleFileUpload(file: File | undefined, callbacks: ImageUpdateCallbacks): void {
-  if (!file) return
-  const { imageSide, logger, onImageUpdate } = callbacks
-  readImageFile(
-    file,
-    dataUrl => {
-      onImageUpdate(dataUrl)
-      logger.info(`${imageSide === 'left' ? 'Left' : 'Right'} image updated via upload.`)
-    },
-    /* v8 ignore next 3 */
-    () => {
-      logger.showError(`Failed to read ${imageSide} image file: result is not a string.`)
-    },
-  )
-}
-
-export type TwoImagesUpdateCallbacks = {
-  logger: Logger
-  onLeftImageUpdate: (dataUrl: string) => void
-  onRightImageUpdate: (dataUrl: string) => void
-}
-
-export type ImageData = {
-  url: string
-  filename: string
-}
-
-export type MultipleImagesUpdateCallbacks = {
-  logger: Logger
-  onContestStart: (images: ImageData[]) => void
-}
-
-function loadImagesForContest(files: FileList, callbacks: MultipleImagesUpdateCallbacks): void {
-  const { logger, onContestStart } = callbacks
-  const imageData: ImageData[] = []
-  let loadedCount = 0
-  const filesArray = Array.from(files)
-  for (const file of filesArray)
-    readImageFile(
-      file,
-      // oxlint-disable-next-line no-loop-func
-      dataUrl => {
-        imageData.push({ filename: file.name, url: dataUrl })
-        loadedCount += 1
-        if (loadedCount === files.length) {
-          onContestStart(imageData)
-          logger.info(`Contest mode started with ${files.length} images.`)
-        }
-      },
-      /* v8 ignore next */
-      () => logger.showError('Failed to read one of the dropped files.'),
-    )
-}
-
-function loadTwoImages(files: FileList, callbacks: TwoImagesUpdateCallbacks): void {
-  const { logger, onLeftImageUpdate, onRightImageUpdate } = callbacks
-  const [file1, file2] = Array.from(files)
-  if (!file1 || !file2) return
-  readImageFile(
-    file1,
-    dataUrl => {
-      onLeftImageUpdate(dataUrl)
-      logger.info('Left image updated via drag and drop.')
-    },
-    /* v8 ignore next */
-    () => logger.showError('Failed to read first dropped file: result is not a string.'),
-  )
-  readImageFile(
-    file2,
-    dataUrl => {
-      onRightImageUpdate(dataUrl)
-      logger.info('Right image updated via drag and drop.')
-    },
-    /* v8 ignore next */
-    () => logger.showError('Failed to read second dropped file: result is not a string.'),
-  )
-}
-
-export function handleMultipleFilesUpload(files: FileList, callbacks: MultipleImagesUpdateCallbacks | TwoImagesUpdateCallbacks): void {
-  /* v8 ignore start -- @preserve */
-  if (files.length === requiredFilesCount && 'onLeftImageUpdate' in callbacks) loadTwoImages(files, callbacks)
-  else if (files.length > requiredFilesCount && 'onContestStart' in callbacks) loadImagesForContest(files, callbacks)
-  else if (files.length === 1) callbacks.logger.showError('Please drop 2 or more images to compare.')
-  /* v8 ignore stop -- @preserve */
-}
-
-export function isDragLeavingContainer(event: React.DragEvent): boolean {
-  return event.currentTarget === event.target || !event.currentTarget.contains(event.relatedTarget as Node)
 }
 
 export type ContestImage = {

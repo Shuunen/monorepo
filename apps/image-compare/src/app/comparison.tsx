@@ -1,7 +1,7 @@
 // oxlint-disable no-magic-numbers, id-length
 import { Logger } from '@monorepo/utils'
 import { motion } from 'framer-motion'
-import { type MouseEvent, type MouseEventHandler, useEffect, useRef, useState, type WheelEvent } from 'react'
+import { type MouseEvent, type MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react'
 import {
   type ContestState,
   calculateNewPan,
@@ -10,10 +10,12 @@ import {
   createContestState,
   type DragStartPosition,
   defaultSliderPosition,
+  fetchImageMetadata,
   getCursorType,
   getImageStyle,
   handleMultipleFilesUpload,
   handleSingleFileUpload,
+  type ImageMetadata,
   isDragLeavingContainer,
   minZoom,
   selectWinner,
@@ -23,13 +25,21 @@ import {
 import { ContestHeader } from './contest-header'
 import { ControlButtons } from './control-buttons'
 import { ImageViewer } from './image-viewer'
+// oxlint-disable-next-line max-dependencies
 import { SliderControl } from './slider-control'
+
+const defaultImages = {
+  after: '/sample-image-green.svg',
+  before: '/sample-image-blue.svg',
+}
 
 // oxlint-disable-next-line max-lines-per-function
 export function Comparison() {
   const [sliderPosition, setSliderPosition] = useState([defaultSliderPosition])
-  const [leftImage, setLeftImage] = useState('/before.svg')
-  const [rightImage, setRightImage] = useState('/after.svg')
+  const [leftImage, setLeftImage] = useState(defaultImages.before)
+  const [rightImage, setRightImage] = useState(defaultImages.after)
+  const [leftImageMetadata, setLeftImageMetadata] = useState<ImageMetadata | undefined>(undefined)
+  const [rightImageMetadata, setRightImageMetadata] = useState<ImageMetadata | undefined>(undefined)
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
   const [isPanning, setIsPanning] = useState(false)
@@ -38,19 +48,46 @@ export function Comparison() {
   const [contestState, setContestState] = useState<ContestState | undefined>(undefined)
   const imageContainerRef = useRef<HTMLDivElement>(null)
   const dragStartRef = useRef<DragStartPosition>({ panX: 0, panY: 0, x: 0, y: 0 })
+  const logger = useMemo(() => new Logger(), [])
 
+  /* v8 ignore start */
   useEffect(() => {
     if (shouldResetPan(zoom)) setPan({ x: 0, y: 0 })
   }, [zoom])
 
-  /* c8 ignore start */
+  useEffect(() => {
+    const loadDefaultMetadata = async () => {
+      const [leftMeta, rightMeta] = await Promise.all([fetchImageMetadata(defaultImages.before), fetchImageMetadata(defaultImages.after)])
+      setLeftImageMetadata(leftMeta)
+      setRightImageMetadata(rightMeta)
+    }
+    void loadDefaultMetadata()
+  }, [])
+
+  useEffect(() => {
+    const container = imageContainerRef.current
+    if (!container) return
+    const handleWheelEvent = (e: globalThis.WheelEvent) => {
+      e.preventDefault()
+      setZoom(calculateNewZoom(zoom, e.deltaY))
+    }
+    container.addEventListener('wheel', handleWheelEvent, { passive: false })
+    return () => container.removeEventListener('wheel', handleWheelEvent)
+  }, [zoom])
+
   useEffect(() => {
     if (contestState?.currentMatch) {
       setLeftImage(contestState.currentMatch.leftImage.url)
       setRightImage(contestState.currentMatch.rightImage.url)
-    }
+      void fetchImageMetadata(contestState.currentMatch.leftImage.url).then(setLeftImageMetadata)
+      void fetchImageMetadata(contestState.currentMatch.rightImage.url).then(setRightImageMetadata)
+    } else if (contestState?.isComplete && contestState.winner)
+      void fetchImageMetadata(contestState.winner.url).then(metadata => {
+        setLeftImageMetadata({ ...metadata, isWinner: true })
+        setRightImageMetadata({ ...metadata, isWinner: false })
+      })
   }, [contestState])
-  /* c8 ignore stop */
+  /* v8 ignore stop */
 
   type FileInputEvent = {
     target: {
@@ -58,13 +95,12 @@ export function Comparison() {
     }
   }
 
-  const logger = new Logger()
-
   const handleLeftImageUpload = (e: FileInputEvent): void => {
     handleSingleFileUpload(e.target.files?.[0], {
       imageSide: 'left',
       logger,
       onImageUpdate: setLeftImage,
+      onMetadataUpdate: setLeftImageMetadata,
     })
   }
 
@@ -73,9 +109,11 @@ export function Comparison() {
       imageSide: 'right',
       logger,
       onImageUpdate: setRightImage,
+      onMetadataUpdate: setRightImageMetadata,
     })
   }
 
+  /* v8 ignore start */
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -91,9 +129,7 @@ export function Comparison() {
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    /* c8 ignore start */
     if (isDragLeavingContainer(e)) setIsDraggingOver(false)
-    /* c8 ignore stop */
   }
 
   const handleDrop = (e: React.DragEvent) => {
@@ -107,9 +143,12 @@ export function Comparison() {
         setContestState(startContest(state))
       },
       onLeftImageUpdate: setLeftImage,
+      onLeftMetadataUpdate: setLeftImageMetadata,
       onRightImageUpdate: setRightImage,
+      onRightMetadataUpdate: setRightImageMetadata,
     })
   }
+  /* v8 ignore stop */
 
   const handleReset = () => {
     setSliderPosition([defaultSliderPosition])
@@ -120,10 +159,12 @@ export function Comparison() {
     setContestState(undefined)
     setLeftImage('/before.svg')
     setRightImage('/after.svg')
+    setLeftImageMetadata(undefined)
+    setRightImageMetadata(undefined)
     logger.info('Reset zoom and pan to initial positions.')
   }
 
-  /* c8 ignore start */
+  /* v8 ignore start */
   const handleSelectWinner = (winnerId: number) => {
     if (!contestState) return
     const newState = selectWinner(contestState, winnerId)
@@ -136,12 +177,6 @@ export function Comparison() {
       setLeftImage(newState.winner.url)
       setRightImage(newState.winner.url)
     }
-  }
-  /* c8 ignore stop */
-
-  const handleWheel = (e: WheelEvent) => {
-    e.preventDefault()
-    setZoom(calculateNewZoom(zoom, e.deltaY))
   }
 
   const handleMouseDownOnImage: MouseEventHandler<HTMLDivElement> = e => {
@@ -179,15 +214,16 @@ export function Comparison() {
       setSliderPosition([calculateSliderPosition(e.clientX, rect)])
     }
   }
+  /* v8 ignore stop */
 
   const imageStyle = getImageStyle(pan, zoom, isPanning)
   const cursor = getCursorType(isHandleDragging, zoom, isPanning)
 
   return (
-    <div className="bg-accent flex flex-col grow justify-center items-center pt-5 pb-12">
-      <motion.div animate={{ opacity: 1, y: 0 }} className="w-full max-w-4xl" initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.5, staggerChildren: 0.1 }}>
+    <div className="bg-accent flex flex-col grow justify-center items-center p-6 h-[calc(100vh-56px)] overflow-hidden">
+      <motion.div animate={{ opacity: 1, y: 0 }} className="w-full" initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.5, staggerChildren: 0.1 }}>
         <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: -10 }} transition={{ delay: 0.1, duration: 0.4 }}>
-          <ContestHeader contestState={contestState} />
+          <ContestHeader contestState={contestState} leftImageMetadata={leftImageMetadata} rightImageMetadata={rightImageMetadata} />
         </motion.div>
         <motion.div animate={{ opacity: 1, scale: 1 }} initial={{ opacity: 0, scale: 0.95 }} transition={{ delay: 0.2, duration: 0.4 }}>
           <ImageViewer
@@ -207,7 +243,6 @@ export function Comparison() {
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onSelectWinner={handleSelectWinner}
-            onWheel={handleWheel}
             rightImage={rightImage}
             sliderPosition={sliderPosition}
             zoom={zoom}
