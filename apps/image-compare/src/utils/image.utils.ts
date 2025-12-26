@@ -150,3 +150,11 @@ export function isDragLeavingContainer(event: React.DragEvent): boolean {
   return event.currentTarget === event.target || !event.currentTarget.contains(event.relatedTarget as Node)
 }
 /* v8 ignore stop */
+
+export function getContainedSize(params: { imageHeight: number; imageWidth: number; maxHeight: number; maxWidth: number }) {
+  const { imageWidth, imageHeight, maxWidth, maxHeight } = params
+  const aspectRatio = imageWidth / imageHeight
+  const maxAspectRatio = maxWidth / maxHeight
+  if (aspectRatio > maxAspectRatio) return { height: maxWidth / aspectRatio, width: maxWidth }
+  return { height: Math.round(maxHeight), width: Math.round(maxHeight * aspectRatio) }
+}

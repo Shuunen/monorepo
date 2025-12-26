@@ -21,10 +21,12 @@ export function ContestHeader({ contestState, leftImageMetadata, rightImageMetad
   const isContestMode = contestState !== undefined && !contestState.isComplete
   const isContestComplete = contestState?.isComplete ?? false
   const title = getTitle(isContestComplete, isContestMode, contestState)
+
   return (
     <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: -20 }} transition={{ duration: 0.6 }}>
-      <div className={cn('flex flex-col items-center gap-4 relative mb-6 p-6 bg-primary/10 rounded-xl text-center')}>
-        {title.length > 0 && <Title className={cn({ 'absolute top-12': !isContestMode })}>{title}</Title>}
+      <div className={cn('flex flex-col items-center gap-4 relative mb-6 p-6 to-success via-transparent rounded-xl text-center bg-primary/10', { 'bg-conic-0': isContestComplete && leftImageMetadata?.isWinner, 'bg-conic-180': isContestComplete && rightImageMetadata?.isWinner })}>
+        {title.length > 0 && <Title className={cn({ 'absolute top-12 shadow-xl bg-accent/80 px-5 py-3 rounded-md': !isContestMode })}>{title}</Title>}
+        {isContestComplete && <img alt="Stars Twinkling" className={cn('absolute h-36 top-0 w-28', { '-left-24': leftImageMetadata?.isWinner, '-right-24 rotate-180': rightImageMetadata?.isWinner })} src="/stars-twinkling.gif" />}
         {isContestMode && <Paragraph>Select your preferred image</Paragraph>}
         {!isContestMode && <ImageInfos infos={[leftImageMetadata, rightImageMetadata]} />}
       </div>

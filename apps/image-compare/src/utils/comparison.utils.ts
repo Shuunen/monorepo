@@ -14,9 +14,11 @@ export type ImageStyle = {
 
 export type CursorType = 'auto' | 'grab' | 'grabbing'
 
-export const minZoom = 1
+export const minHeight = 400
+export const minWidth = 700
+export const minZoom = 0.1
 export const maxZoom = 5
-export const zoomSensitivity = 0.005
+export const zoomSensitivity = 0.001
 export const defaultSliderPosition = 50
 export const maxPercentage = 100
 
@@ -38,7 +40,10 @@ export function calculateSliderPosition(clientX: number, rect: DOMRect): number 
 }
 
 export function getImageStyle(pan: PanPosition, zoom: number, isPanning: boolean): ImageStyle {
-  return { transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, transition: isPanning ? 'none' : 'transform 0.1s ease-out' }
+  return {
+    transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+    transition: isPanning ? 'none' : 'transform 0.1s ease-out',
+  }
 }
 
 export function getCursorType(isHandleDragging: boolean, zoom: number, isPanning: boolean): CursorType {

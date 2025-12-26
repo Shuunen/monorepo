@@ -38,7 +38,7 @@ describe('comparison.utils', () => {
 
     it('calculateNewZoom D should not go below minZoom', () => {
       const result = calculateNewZoom(1.1, 1000)
-      expect(result).toBe(minZoom)
+      expect(result).toBeCloseTo(minZoom, 10)
     })
   })
 
@@ -124,8 +124,13 @@ describe('comparison.utils', () => {
       expect(result).toBe('grabbing')
     })
 
-    it('getCursorType D should return auto when not zoomed', () => {
+    it('getCursorType D should return grab when zoom is above minZoom', () => {
       const result = getCursorType(false, 1, false)
+      expect(result).toBe('grab')
+    })
+
+    it('getCursorType E should return auto when zoom equals minZoom', () => {
+      const result = getCursorType(false, minZoom, false)
       expect(result).toBe('auto')
     })
   })

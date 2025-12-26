@@ -1,11 +1,10 @@
-// oxlint-disable no-magic-numbers, id-length
+// oxlint-disable no-magic-numbers, id-length, max-dependencies
 import { Logger } from '@monorepo/utils'
 import { motion } from 'framer-motion'
 import { type MouseEvent, type MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react'
 import { ContestHeader } from '../components/contest-header'
 import { ControlButtons } from '../components/control-buttons'
 import { ImageViewer } from '../components/image-viewer'
-// oxlint-disable-next-line max-dependencies
 import { SliderControl } from '../components/slider-control'
 import {
   type ContestState,
@@ -22,11 +21,14 @@ import {
   handleSingleFileUpload,
   type ImageMetadata,
   isDragLeavingContainer,
+  minHeight,
+  minWidth,
   minZoom,
   selectWinner,
   shouldResetPan,
   startContest,
 } from '../utils/comparison.utils'
+import { getContainedSize } from '../utils/image.utils'
 
 const defaultImages = {
   after: '/sample-image-green.svg',
@@ -69,23 +71,34 @@ export function Comparison() {
     if (!container) return
     const handleWheelEvent = (e: globalThis.WheelEvent) => {
       e.preventDefault()
-      setZoom(calculateNewZoom(zoom, e.deltaY))
+      const metadata = leftImageMetadata || rightImageMetadata
+      if (!metadata?.width || !metadata?.height) {
+        setZoom(calculateNewZoom(zoom, e.deltaY))
+        return
+      }
+      const maxWidth = window.innerWidth - 48
+      const maxHeight = window.innerHeight - 382
+      const containedSize = getContainedSize({ imageHeight: metadata.height, imageWidth: metadata.width, maxHeight, maxWidth })
+      const newZoom = calculateNewZoom(zoom, e.deltaY)
+      const wouldBeWidth = containedSize.width * newZoom
+      const wouldBeHeight = containedSize.height * newZoom
+      if (wouldBeWidth >= minWidth || wouldBeHeight >= minHeight) setZoom(newZoom)
     }
     container.addEventListener('wheel', handleWheelEvent, { passive: false })
     return () => container.removeEventListener('wheel', handleWheelEvent)
-  }, [zoom])
+  }, [zoom, leftImageMetadata, rightImageMetadata])
 
   useEffect(() => {
     if (contestState?.currentMatch) {
       setLeftImage(contestState.currentMatch.leftImage.url)
       setRightImage(contestState.currentMatch.rightImage.url)
-      void fetchImageMetadata(contestState.currentMatch.leftImage.url).then(setLeftImageMetadata)
-      void fetchImageMetadata(contestState.currentMatch.rightImage.url).then(setRightImageMetadata)
-    } else if (contestState?.isComplete && contestState.winner)
-      void fetchImageMetadata(contestState.winner.url).then(metadata => {
-        setLeftImageMetadata({ ...metadata, isWinner: true })
-        setRightImageMetadata({ ...metadata, isWinner: false })
+      void fetchImageMetadata(contestState.currentMatch.leftImage.url).then(metadata => {
+        setLeftImageMetadata({ ...metadata, filename: contestState.currentMatch?.leftImage.filename ?? metadata.filename })
       })
+      void fetchImageMetadata(contestState.currentMatch.rightImage.url).then(metadata => {
+        setRightImageMetadata({ ...metadata, filename: contestState.currentMatch?.rightImage.filename ?? metadata.filename })
+      })
+    }
   }, [contestState])
   /* v8 ignore stop */
 
@@ -152,7 +165,7 @@ export function Comparison() {
 
   const handleReset = () => {
     setSliderPosition([defaultSliderPosition])
-    setZoom(minZoom)
+    setZoom(1)
     setPan({ x: 0, y: 0 })
     setIsPanning(false)
     setIsHandleDragging(false)
@@ -165,13 +178,9 @@ export function Comparison() {
     if (!contestState) return
     const newState = selectWinner(contestState, winnerId)
     setContestState(newState)
-    if (newState.currentMatch) {
-      setLeftImage(newState.currentMatch.leftImage.url)
-      setRightImage(newState.currentMatch.rightImage.url)
-    }
     if (newState.isComplete && newState.winner) {
-      setLeftImage(newState.winner.url)
-      setRightImage(newState.winner.url)
+      setLeftImageMetadata({ ...leftImageMetadata, filename: leftImageMetadata?.filename ?? 'lost-filename', height: leftImageMetadata?.height ?? 0, isWinner: leftImageMetadata?.filename === newState.winner.filename, size: leftImageMetadata?.size ?? 0, width: leftImageMetadata?.width ?? 0 })
+      setRightImageMetadata({ ...rightImageMetadata, filename: rightImageMetadata?.filename ?? 'lost-filename', height: rightImageMetadata?.height ?? 0, isWinner: rightImageMetadata?.filename === newState.winner.filename, size: rightImageMetadata?.size ?? 0, width: rightImageMetadata?.width ?? 0 })
     }
   }
 
@@ -210,19 +219,35 @@ export function Comparison() {
       setSliderPosition([calculateSliderPosition(e.clientX, rect)])
     }
   }
-  /* v8 ignore stop */
 
   const imageStyle = getImageStyle(pan, zoom, isPanning)
   const cursor = getCursorType(isHandleDragging, zoom, isPanning)
 
+  // Calculate dynamic width and height based on image dimensions with object-contain behavior
+  const { containerWidth, containerHeight } = useMemo(() => {
+    const metadata = leftImageMetadata || rightImageMetadata
+    if (!metadata?.width || !metadata?.height) return { containerHeight: 'auto', containerWidth: '100%' }
+    const maxWidth = window.innerWidth - 48
+    const maxHeight = window.innerHeight - 382
+    const containedSize = getContainedSize({ imageHeight: metadata.height, imageWidth: metadata.width, maxHeight, maxWidth })
+    const zoomedWidth = Math.round(containedSize.width * zoom)
+    const zoomedHeight = Math.round(containedSize.height * zoom)
+    return {
+      containerHeight: Math.max(Math.min(zoomedHeight, maxHeight), minHeight),
+      containerWidth: Math.max(Math.min(zoomedWidth, maxWidth), minWidth),
+    }
+  }, [leftImageMetadata, rightImageMetadata, zoom])
+  /* v8 ignore stop */
+
   return (
-    <div className="bg-accent flex flex-col grow justify-center items-center p-6 h-[calc(100vh-56px)] overflow-hidden">
-      <motion.div animate={{ opacity: 1, y: 0 }} className="w-full" initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.5, staggerChildren: 0.1 }}>
+    <div className="bg-accent flex flex-col grow justify-center items-center p-6 h-[calc(100vh-56px)] overflow-hidden" data-testid="comparison-tab">
+      <motion.div animate={{ opacity: 1, width: containerWidth, y: 0 }} className="flex flex-col" initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.5, staggerChildren: 0.1, width: { duration: 0.3, ease: 'easeInOut' } }}>
         <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: -10 }} transition={{ delay: 0.1, duration: 0.4 }}>
           <ContestHeader contestState={contestState} leftImageMetadata={leftImageMetadata} rightImageMetadata={rightImageMetadata} />
         </motion.div>
         <motion.div animate={{ opacity: 1, scale: 1 }} initial={{ opacity: 0, scale: 0.95 }} transition={{ delay: 0.2, duration: 0.4 }}>
           <ImageViewer
+            containerHeight={containerHeight}
             contestState={contestState}
             cursor={cursor}
             imageContainerRef={imageContainerRef}
@@ -245,7 +270,7 @@ export function Comparison() {
           />
         </motion.div>
         <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 10 }} transition={{ delay: 0.3, duration: 0.4 }}>
-          <SliderControl contestState={contestState} onValueChange={setSliderPosition} value={sliderPosition} />
+          <SliderControl onValueChange={setSliderPosition} value={sliderPosition} />
         </motion.div>
         <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 10 }} transition={{ delay: 0.4, duration: 0.4 }}>
           <ControlButtons contestState={contestState} onLeftImageUpload={handleLeftImageUpload} onReset={handleReset} onRightImageUpload={handleRightImageUpload} />

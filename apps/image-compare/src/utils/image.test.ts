@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/style/useNamingConvention: it'ok */
-import { sleep } from '@monorepo/utils'
+import { objectSerialize, sleep } from '@monorepo/utils'
 import { describe, expect, it, vi } from 'vitest'
-import { fetchImageMetadata, handleMultipleFilesUpload, handleSingleFileUpload } from './image.utils'
+import { fetchImageMetadata, getContainedSize, handleMultipleFilesUpload, handleSingleFileUpload } from './image.utils'
 
 describe('image.utils', () => {
   describe('readImageFile', () => {
@@ -111,18 +111,28 @@ describe('image.utils', () => {
   describe('fetchImageMetadata', () => {
     it('fetchImageMetadata A should fetch and return image metadata', async () => {
       const result = await fetchImageMetadata('http://example.com/image.jpg')
-      expect(result).toMatchInlineSnapshot(`
-        {
-          "filename": "image.jpg",
-          "height": 1080,
-          "size": 15,
-          "width": 1920,
-        }
-      `)
+      expect(objectSerialize(result)).toMatchInlineSnapshot(`"{"filename":"image.jpg","height":1080,"size":15,"width":1920}"`)
     })
     it('fetchImageMetadata B should handle missing filename in URL', async () => {
       const result = await fetchImageMetadata('')
       expect(result.filename).toBe('unknown')
+    })
+  })
+
+  describe('getContainedSize', () => {
+    it('getContainedSize A should scale width when aspect ratio is greater than max', () => {
+      const result = getContainedSize({ imageHeight: 100, imageWidth: 200, maxHeight: 100, maxWidth: 150 })
+      expect(objectSerialize(result)).toMatchInlineSnapshot(`"{"height":75,"width":150}"`)
+    })
+
+    it('getContainedSize B should scale height when aspect ratio is less than max', () => {
+      const result = getContainedSize({ imageHeight: 200, imageWidth: 100, maxHeight: 150, maxWidth: 100 })
+      expect(objectSerialize(result)).toMatchInlineSnapshot(`"{"height":150,"width":75}"`)
+    })
+
+    it('getContainedSize C should handle equal aspect ratios', () => {
+      const result = getContainedSize({ imageHeight: 100, imageWidth: 200, maxHeight: 50, maxWidth: 100 })
+      expect(objectSerialize(result)).toMatchInlineSnapshot(`"{"height":50,"width":100}"`)
     })
   })
 })

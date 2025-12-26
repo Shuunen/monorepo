@@ -32,7 +32,7 @@ function Num({ children: number }: { children: string }) {
 export function About() {
   const titleClasses = cn('text-4xl text-primary w-1/2 mx-auto text-center border-t pt-8 mt-10 border-primary/30')
   return (
-    <div className="bg-accent flex flex-col gap-4 justify-center">
+    <div className="bg-accent flex flex-col gap-4 justify-center" data-testid="about-tab">
       <motion.div animate="show" className="prose prose-xl mx-auto mb-20" initial="hidden" variants={containerAnimation}>
         <motion.div variants={textAnimation}>
           <Title className={cn(titleClasses, 'border-0')} level={2}>

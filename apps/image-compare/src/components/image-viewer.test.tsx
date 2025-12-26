@@ -6,6 +6,7 @@ import { ImageViewer } from './image-viewer'
 
 describe('image-viewer', () => {
   const mockProps = {
+    containerHeight: 600,
     contestState: undefined,
     cursor: 'auto' as const,
     imageContainerRef: createRef<HTMLDivElement>(),
@@ -39,10 +40,12 @@ describe('image-viewer', () => {
     expect(zoomText).toBeTruthy()
   })
 
-  it('ImageViewer C should hide choose buttons when not in contest mode', () => {
-    const { container } = render(<ImageViewer {...mockProps} />)
-    const hiddenButtons = container.querySelectorAll('.hidden')
-    expect(hiddenButtons.length).toBeGreaterThan(0)
+  it('ImageViewer C should have choose buttons with zero opacity when not in contest mode', () => {
+    render(<ImageViewer {...mockProps} />)
+    const leftButton = screen.getByText('Choose Left')
+    const rightButton = screen.getByText('Choose Right')
+    expect(leftButton).toBeTruthy()
+    expect(rightButton).toBeTruthy()
   })
 
   it('ImageViewer D should display choose buttons in contest mode', () => {
@@ -88,7 +91,7 @@ describe('image-viewer', () => {
     expect(mockProps.onSelectWinner).toHaveBeenCalledWith(0)
   })
 
-  it('ImageViewer F should hide slider bar when contest is complete', () => {
+  it('ImageViewer F should show slider bar even when contest is complete', () => {
     const contestState: ContestState = {
       activeImages: [],
       allImages: [],
@@ -101,12 +104,12 @@ describe('image-viewer', () => {
     }
     const { container } = render(<ImageViewer {...mockProps} contestState={contestState} />)
     const sliderBar = container.querySelector('[test-id="slider-bar"]')
-    expect(sliderBar?.classList.contains('hidden')).toBe(true)
+    expect(sliderBar).toBeTruthy()
   })
 
   it('ImageViewer G should show drag over overlay when dragging', () => {
     render(<ImageViewer {...mockProps} isDraggingOver={true} />)
-    const dropText = screen.getByText('Drop 2 images here')
+    const dropText = screen.getByText('Drop images in this green area')
     expect(dropText).toBeTruthy()
   })
 

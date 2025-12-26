@@ -8,6 +8,7 @@ import type { MouseEvent, MouseEventHandler, RefObject } from 'react'
 import type { ContestState, CursorType, ImageStyle } from '../utils/comparison.utils'
 
 type ImageViewerProps = {
+  containerHeight: number | string
   contestState: ContestState | undefined
   cursor: CursorType
   imageContainerRef: RefObject<HTMLDivElement | null>
@@ -31,6 +32,7 @@ type ImageViewerProps = {
 
 // oxlint-disable-next-line max-lines-per-function
 export function ImageViewer({
+  containerHeight,
   contestState,
   cursor,
   imageContainerRef,
@@ -52,10 +54,11 @@ export function ImageViewer({
   zoom,
 }: ImageViewerProps) {
   const isContestMode = contestState !== undefined && !contestState.isComplete
-  const isContestComplete = contestState?.isComplete ?? false
   return (
-    <div
-      className="relative h-[calc(100vh-382px)] rounded-xl overflow-hidden mb-8"
+    <motion.div
+      animate={{ height: containerHeight }}
+      className="relative max-h-[calc(100vh-382px)] rounded-xl overflow-hidden mb-8"
+      data-testid="image-viewer"
       onDragEnter={onDragEnter}
       onDragLeave={onDragLeave}
       onDragOver={onDragOver}
@@ -66,6 +69,7 @@ export function ImageViewer({
       onMouseUp={onMouseUp}
       ref={imageContainerRef}
       style={{ cursor }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       <motion.div
         animate={{ opacity: isDraggingOver ? 1 : 0 }}
@@ -75,7 +79,7 @@ export function ImageViewer({
         transition={{ duration: 0.2 }}
       >
         <motion.div animate={{ scale: isDraggingOver ? 1 : 0.9 }} className="bg-background/90 text-foreground px-6 py-3 rounded-lg text-lg font-semibold" initial={{ scale: 0.9 }} transition={{ duration: 0.2 }}>
-          Drop 2 images here
+          Drop images in this green area
         </motion.div>
       </motion.div>
       <motion.div animate={{ opacity: 1 }} className="absolute inset-0 pointer-events-none select-none" initial={{ opacity: 0 }} transition={{ duration: 0.3 }}>
@@ -95,8 +99,8 @@ export function ImageViewer({
       </motion.div>
 
       <motion.div
-        animate={{ opacity: isContestComplete ? 0 : 1 }}
-        className={cn('absolute top-0 bottom-0 w-1 bg-primary mix-blend-difference shadow-lg cursor-ew-resize transition-colors', { hidden: isContestComplete })}
+        animate={{ opacity: 1 }}
+        className={cn('absolute top-0 bottom-0 w-1 bg-primary mix-blend-difference shadow-lg cursor-ew-resize transition-colors')}
         initial={{ opacity: 0 }}
         onMouseDown={onMouseDownOnHandle}
         style={{ left: `${sliderPosition[0]}%` }}
@@ -114,17 +118,17 @@ export function ImageViewer({
         Zoom: {Math.round(zoom * 100)}%
       </motion.div>
       {/* v8 ignore start -- @preserve */}
-      <motion.div animate={{ opacity: isContestMode ? 1 : 0, y: isContestMode ? 0 : 20 }} className={cn('absolute left-2 bottom-2', { hidden: !isContestMode })} initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.3 }}>
+      <motion.div animate={{ opacity: isContestMode ? 1 : 0, y: isContestMode ? 0 : 20 }} className={cn('absolute left-2 bottom-2')} initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.3 }}>
         <Button name="choose-left" onClick={() => onSelectWinner(contestState?.currentMatch?.leftImage.id ?? 0)}>
           Choose Left
         </Button>
       </motion.div>
-      <motion.div animate={{ opacity: isContestMode ? 1 : 0, y: isContestMode ? 0 : 20 }} className={cn('absolute right-2 bottom-2', { hidden: !isContestMode })} initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.3 }}>
+      <motion.div animate={{ opacity: isContestMode ? 1 : 0, y: isContestMode ? 0 : 20 }} className={cn('absolute right-2 bottom-2')} initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.3 }}>
         <Button name="choose-right" onClick={() => onSelectWinner(contestState?.currentMatch?.rightImage.id ?? 0)}>
           Choose Right
         </Button>
       </motion.div>
       {/* v8 ignore stop -- @preserve */}
-    </div>
+    </motion.div>
   )
 }
