@@ -2,6 +2,11 @@
 import { Logger } from '@monorepo/utils'
 import { motion } from 'framer-motion'
 import { type MouseEvent, type MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react'
+import { ContestHeader } from '../components/contest-header'
+import { ControlButtons } from '../components/control-buttons'
+import { ImageViewer } from '../components/image-viewer'
+// oxlint-disable-next-line max-dependencies
+import { SliderControl } from '../components/slider-control'
 import {
   type ContestState,
   calculateNewPan,
@@ -21,12 +26,7 @@ import {
   selectWinner,
   shouldResetPan,
   startContest,
-} from './comparison.utils'
-import { ContestHeader } from './contest-header'
-import { ControlButtons } from './control-buttons'
-import { ImageViewer } from './image-viewer'
-// oxlint-disable-next-line max-dependencies
-import { SliderControl } from './slider-control'
+} from '../utils/comparison.utils'
 
 const defaultImages = {
   after: '/sample-image-green.svg',

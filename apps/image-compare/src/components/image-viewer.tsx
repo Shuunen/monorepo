@@ -5,7 +5,7 @@ import { Button } from '@monorepo/components'
 import { cn } from '@monorepo/utils'
 import { motion } from 'framer-motion'
 import type { MouseEvent, MouseEventHandler, RefObject } from 'react'
-import type { ContestState, CursorType, ImageStyle } from './comparison.utils'
+import type { ContestState, CursorType, ImageStyle } from '../utils/comparison.utils'
 
 type ImageViewerProps = {
   contestState: ContestState | undefined

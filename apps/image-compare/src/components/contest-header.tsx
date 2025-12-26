@@ -2,7 +2,7 @@
 import { Paragraph, Title } from '@monorepo/components'
 import { cn } from '@monorepo/utils'
 import { motion } from 'framer-motion'
-import type { ContestState, ImageMetadata } from './comparison.utils'
+import type { ContestState, ImageMetadata } from '../utils/comparison.utils'
 import { ImageInfos } from './image-infos'
 
 type ContestHeaderProps = {

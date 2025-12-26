@@ -1,6 +1,6 @@
 import { Slider } from '@monorepo/components'
 import { cn } from '@monorepo/utils'
-import type { ContestState } from './comparison.utils'
+import type { ContestState } from '../utils/comparison.utils'
 
 type SliderControlProps = {
   contestState: ContestState | undefined

@@ -2,7 +2,7 @@
 
 import { Paragraph } from '@monorepo/components'
 import { cn } from '@monorepo/utils'
-import type { ImageMetadata } from './comparison.utils'
+import type { ImageMetadata } from '../utils/comparison.utils'
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`

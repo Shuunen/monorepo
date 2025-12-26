@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import type { ContestState } from './comparison.utils'
+import type { ContestState } from '../utils/comparison.utils'
 import { ControlButtons } from './control-buttons'
 
 describe('control-buttons', () => {

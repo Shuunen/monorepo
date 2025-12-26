@@ -4,7 +4,7 @@ import { Button } from '@monorepo/components'
 import { cn } from '@monorepo/utils'
 // oxlint-disable-next-line no-restricted-imports
 import { RotateCcw, Upload } from 'lucide-react'
-import type { ContestState } from './comparison.utils'
+import type { ContestState } from '../utils/comparison.utils'
 
 type ControlButtonsProps = {
   contestState: ContestState | undefined

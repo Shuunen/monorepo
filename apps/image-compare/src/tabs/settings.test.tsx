@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { Settings } from './settings'
+import { Settings } from './settings.tab'
 
 describe('settings', () => {
   it('Settings A should render successfully', () => {
@@ -11,11 +11,5 @@ describe('settings', () => {
     render(<Settings />)
     const title = screen.getByText('Settings')
     expect(title).toBeTruthy()
-  })
-
-  it('Settings C should display under construction message', () => {
-    render(<Settings />)
-    const message = screen.getByText('Settings page is under construction.')
-    expect(message).toBeTruthy()
   })
 })

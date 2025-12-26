@@ -1,7 +1,7 @@
 import { NavLink, Route, Routes } from 'react-router-dom'
-import { About } from './about'
-import { Comparison } from './comparison'
-import { Settings } from './settings'
+import { About } from '../tabs/about.tab'
+import { Comparison } from '../tabs/comparison.tab'
+import { Settings } from '../tabs/settings.tab'
 
 const navClasses = ({ isActive }: { isActive: boolean }) => `transition-colors ${isActive ? 'text-primary underline underline-offset-20' : 'text-primary/30 hover:text-primary'}`
 

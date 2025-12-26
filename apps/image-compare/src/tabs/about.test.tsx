@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { About } from './about'
+import { About } from './about.tab'
 
 describe('about', () => {
   it('About A should render successfully', () => {

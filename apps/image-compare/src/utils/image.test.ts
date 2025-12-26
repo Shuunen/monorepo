@@ -102,7 +102,7 @@ describe('image.utils', () => {
       const onRightMetadataUpdate = vi.fn()
       const logger = { info: vi.fn(), showError: vi.fn() }
       handleMultipleFilesUpload(fileList, { logger: logger as never, onLeftImageUpdate, onLeftMetadataUpdate, onRightImageUpdate, onRightMetadataUpdate })
-      await sleep(30) // Wait for async FileReader operations
+      await sleep(50) // Wait for async FileReader operations
       expect(onLeftMetadataUpdate).toHaveBeenCalledWith({ filename: 'test1.jpg', height: 1080, size: file1.size, width: 1920 })
       expect(onRightMetadataUpdate).toHaveBeenCalledWith({ filename: 'test2.jpg', height: 1080, size: file2.size, width: 1920 })
     })

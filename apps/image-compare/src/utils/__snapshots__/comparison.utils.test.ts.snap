@@ -1,0 +1,64 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`comparison.utils > createContestState > createContestState A should create initial contest state 1`] = `
+{
+  "activeImages": [
+    {
+      "eliminated": false,
+      "filename": "img1.jpg",
+      "id": 0,
+      "url": "url1",
+    },
+    {
+      "eliminated": false,
+      "filename": "img2.jpg",
+      "id": 1,
+      "url": "url2",
+    },
+    {
+      "eliminated": false,
+      "filename": "img3.jpg",
+      "id": 2,
+      "url": "url3",
+    },
+    {
+      "eliminated": false,
+      "filename": "img4.jpg",
+      "id": 3,
+      "url": "url4",
+    },
+  ],
+  "allImages": [
+    {
+      "eliminated": false,
+      "filename": "img1.jpg",
+      "id": 0,
+      "url": "url1",
+    },
+    {
+      "eliminated": false,
+      "filename": "img2.jpg",
+      "id": 1,
+      "url": "url2",
+    },
+    {
+      "eliminated": false,
+      "filename": "img3.jpg",
+      "id": 2,
+      "url": "url3",
+    },
+    {
+      "eliminated": false,
+      "filename": "img4.jpg",
+      "id": 3,
+      "url": "url4",
+    },
+  ],
+  "currentMatch": undefined,
+  "isComplete": false,
+  "matchesCompletedInRound": 0,
+  "matchesInRound": 2,
+  "round": 1,
+  "winner": undefined,
+}
+`;

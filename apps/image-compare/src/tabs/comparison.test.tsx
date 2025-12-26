@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { Comparison } from './comparison'
+import { Comparison } from './comparison.tab'
 
 // Mock framer-motion to avoid animation issues in tests
 vi.mock('framer-motion', () => ({
