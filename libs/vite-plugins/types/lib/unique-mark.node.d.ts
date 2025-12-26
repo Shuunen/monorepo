@@ -25,13 +25,13 @@ export function injectMark(content: string, placeholder: string, mark: string): 
  * Generate the mark to inject
  * @param {object} root0 the options
  * @param {string} [root0.commit] the commit hash to use, if empty, will use the last git commit hash
- * @param {string} [root0.date] the date to use, if empty, will use the current date
+ * @param {Date}   [root0.date] the date to use, if empty, will use the current date
  * @param {string} [root0.version] the version to use, if empty, will use the version from package.json
- * @returns the mark to inject, like "4.2.0 - 123abc45 - 01/01/2021 12:00:00"
+ * @returns the mark to inject, like "4.2.0 - 123abc45 - 01/01/2021 12:00"
  */
 export function generateMark({ commit, date, version }: {
     commit?: string | undefined;
-    date?: string | undefined;
+    date?: Date | undefined;
     version?: string | undefined;
 }): string;
 /**

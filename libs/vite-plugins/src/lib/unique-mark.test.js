@@ -12,8 +12,8 @@ describe("vite-plugin-unique-mark", () => {
   });
 
   it("generateMark A generate a mocked mark", () => {
-    const mark = generateMark({ commit: "d52a6ba", date: "27/06/2025 20:08:01", version: "2.0.1" });
-    expect(mark).toMatchInlineSnapshot(`"2.0.1 - d52a6ba - 27/06/2025 20:08:01"`);
+    const mark = generateMark({ commit: "d52a6ba", date: new Date("2025-06-27T20:08:01"), version: "2.0.1" });
+    expect(mark).toMatchInlineSnapshot(`"2.0.1 - d52a6ba - 27/06/2025 20:08"`);
   });
 
   const injectMarkTests = {

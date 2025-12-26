@@ -45,17 +45,18 @@ export function injectMark(content, placeholder, mark) {
  * Generate the mark to inject
  * @param {object} root0 the options
  * @param {string} [root0.commit] the commit hash to use, if empty, will use the last git commit hash
- * @param {string} [root0.date] the date to use, if empty, will use the current date
+ * @param {Date}   [root0.date] the date to use, if empty, will use the current date
  * @param {string} [root0.version] the version to use, if empty, will use the version from package.json
- * @returns the mark to inject, like "4.2.0 - 123abc45 - 01/01/2021 12:00:00"
+ * @returns the mark to inject, like "4.2.0 - 123abc45 - 01/01/2021 12:00"
  */
-export function generateMark({ commit = "", date = new Date().toISOString(), version = "" }) {
+export function generateMark({ commit = "", date = new Date(), version = "" }) {
   let finalCommit = commit;
+  const readableDate = new Intl.DateTimeFormat("en-GB", { day: "2-digit", hour: "2-digit", minute: "2-digit", month: "2-digit", year: "numeric" }).format(date).replace(",", "");
   /* v8 ignore next -- @preserve */
   if (commit === "") {
-    finalCommit = execSync("git rev-parse --short HEAD", { cwd: process.cwd() }).toString().trim();
-  } //NOSONAR
-  return `${version} - ${finalCommit} - ${date}`;
+    finalCommit = execSync("git rev-parse --short HEAD", { cwd: process.cwd() }).toString().trim(); // NOSONAR
+  }
+  return `${version} - ${finalCommit} - ${readableDate}`;
 }
 
 /**
