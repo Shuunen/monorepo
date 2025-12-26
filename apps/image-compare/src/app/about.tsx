@@ -30,10 +30,10 @@ function Num({ children: number }: { children: string }) {
 }
 
 export function About() {
-  const titleClasses = cn('text-primary w-1/2 mx-auto text-center border-t pt-8 mt-10 border-primary/30')
+  const titleClasses = cn('text-4xl text-primary w-1/2 mx-auto text-center border-t pt-8 mt-10 border-primary/30')
   return (
     <div className="bg-accent flex flex-col gap-4 justify-center">
-      <motion.div animate="show" className="prose mx-auto mb-20" initial="hidden" variants={containerAnimation}>
+      <motion.div animate="show" className="prose prose-xl mx-auto mb-20" initial="hidden" variants={containerAnimation}>
         <motion.div variants={textAnimation}>
           <Title className={cn(titleClasses, 'border-0')} level={2}>
             Purpose
@@ -82,8 +82,7 @@ export function About() {
           <Paragraph>This tool is built with React and TypeScript, utilizing modern web technologies for a smooth and responsive user experience.</Paragraph>
         </motion.div>
         <motion.div variants={textAnimation}>
-          {/** biome-ignore lint/correctness/useUniqueElementIds: it's ok */}
-          <div className="text-center text-sm font-mono pb-4" id="unique-mark"></div>
+          <Paragraph className="text-center font-mono py-4 opacity-50">__unique-mark__</Paragraph>
         </motion.div>
       </motion.div>
     </div>
