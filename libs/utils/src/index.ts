@@ -49,6 +49,7 @@ export * from "./lib/state.js";
 export * from "./lib/storage.js";
 export * from "./lib/string-base64.js";
 export * from "./lib/string-case.js";
+export * from "./lib/string-inject-mark.js";
 export * from "./lib/string-regex.js";
 export * from "./lib/string-remove-accents.js";
 export * from "./lib/string-stringify.js";

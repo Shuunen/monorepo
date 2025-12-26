@@ -3,6 +3,27 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 /**
+ * Wrap a string with a color code
+ * @param {number} from the color code to start the color
+ * @param {number} to the color code to end the color
+ * @param {string} string the string to wrap
+ * @returns the string with the color code
+ */
+export function addColorCode(from, to, string) {
+  return `\u001B[${from}m${string}\u001B[${to}m`;
+}
+
+/**
+ * Render a yellow string for the terminal
+ * @param {string} string the string to render
+ * @returns the string with the yellow color
+ */
+export function yellow(string) {
+  // oxlint-disable-next-line no-magic-numbers
+  return addColorCode(33, 39, string);
+}
+
+/**
  * Inject a mark in a string at a specific placeholder locations like
  * `__placeholder__` or `<div id="placeholder">...</div>` or `<meta name="placeholder" content="..." />`
  * @param {string} content the string to inject the mark in
@@ -14,9 +35,10 @@ export function injectMark(content, placeholder, mark) {
   return content
     .replaceAll(new RegExp(`__${placeholder}__`, "gu"), mark)
     .replaceAll(new RegExp(`{{1,2} ?${placeholder} ?}{1,2}`, "g"), mark)
-    .replace(new RegExp(`(<[a-z]+ .*id="${placeholder}"[^>]*>)[^<]*(</[a-z]+>)`, "u"), `$1${mark}$2`)
-    .replace(new RegExp(`(<meta name="${placeholder}" content=")[^"]*(")`, "u"), `$1${mark}$2`)
-    .replace(new RegExp(`(<meta content=")[^"]*(") name="${placeholder}"`, "u"), `$1${mark}$2`);
+    .replace(new RegExp(`(<[a-z.]+\\b[^>]*id="${placeholder}"[^>]*>)[^<]*(</[a-z.]+>)`, "u"), `$1${mark}$2`)
+    .replace(new RegExp(`(<meta\\b[^>]*name="${placeholder}"[^>]*content=")[^"]*(")`, "u"), `$1${mark}$2`)
+    .replace(new RegExp(`(<meta\\b[^>]*content=")[^"]*(" [^>]*name="${placeholder}")`, "u"), `$1${mark}$2`)
+    .replace(new RegExp(`(\\w+\\.jsx\\([^,]+,\\{[^}]*id:"${placeholder}"[^}]*)(\\})`, "u"), `$1,children:"${mark}"$2`);
 }
 
 /**
@@ -48,7 +70,12 @@ export function injectMarkInAsset({ asset, fileName, mark, placeholder }) {
   // console.log(`Checking ${fileName}... hasAsset: ${!!asset}, typeof source: ${typeof asset.source}, typeof code: ${typeof asset.code}`)
   const firstLine = fileName.endsWith(".html") ? "" : `/* ${placeholder} : ${mark} */\n`;
   const contentKey = fileName.endsWith(".js") ? "code" : "source";
-  const injected = `${firstLine}${injectMark(asset[contentKey], placeholder, mark)}`;
+  const oldContent = asset[contentKey];
+  const newContent = injectMark(oldContent, placeholder, mark);
+  if (oldContent.includes(placeholder) && !newContent.includes(mark)) {
+    console.warn(yellow(`Warning /!\\ some "${placeholder}" placeholder have not been replaced in ${fileName}.`));
+  }
+  const injected = `${firstLine}${newContent}`;
   asset[contentKey] = injected;
   // console.log(`Mark injected into ${fileName}`)
 }

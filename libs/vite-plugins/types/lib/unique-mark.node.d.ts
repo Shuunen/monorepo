@@ -1,4 +1,18 @@
 /**
+ * Wrap a string with a color code
+ * @param {number} from the color code to start the color
+ * @param {number} to the color code to end the color
+ * @param {string} string the string to wrap
+ * @returns the string with the color code
+ */
+export function addColorCode(from: number, to: number, string: string): string;
+/**
+ * Render a yellow string for the terminal
+ * @param {string} string the string to render
+ * @returns the string with the yellow color
+ */
+export function yellow(string: string): string;
+/**
  * Inject a mark in a string at a specific placeholder locations like
  * `__placeholder__` or `<div id="placeholder">...</div>` or `<meta name="placeholder" content="..." />`
  * @param {string} content the string to inject the mark in

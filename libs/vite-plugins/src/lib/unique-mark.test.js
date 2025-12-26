@@ -1,10 +1,91 @@
-import { generateMark, getProjectVersion, injectMarkInAsset, injectMarkInAssets, uniqueMark } from "./unique-mark.node";
+import { addColorCode, generateMark, getProjectVersion, injectMark, injectMarkInAsset, injectMarkInAssets, uniqueMark, yellow } from "./unique-mark.node";
 
 describe("vite-plugin-unique-mark", () => {
+  it("addColorCode A wraps string with color codes", () => {
+    const result = addColorCode(33, 39, "test");
+    expect(result).toMatchInlineSnapshot(`"[33mtest[39m"`);
+  });
+
+  it("yellow A renders yellow string", () => {
+    const result = yellow("warning");
+    expect(result).toMatchInlineSnapshot(`"[33mwarning[39m"`);
+  });
+
   it("generateMark A generate a mocked mark", () => {
     const mark = generateMark({ commit: "d52a6ba", date: "27/06/2025 20:08:01", version: "2.0.1" });
     expect(mark).toMatchInlineSnapshot(`"2.0.1 - d52a6ba - 27/06/2025 20:08:01"`);
   });
+
+  const injectMarkTests = {
+    a: {
+      example: "simple placeholder with underscores",
+      input: "Version: __my-placeholder__",
+      output: "Version: MARK",
+    },
+    b: {
+      example: "simple placeholder with mustache",
+      input: "Version: {{ my-placeholder }}",
+      output: "Version: MARK",
+    },
+    c: {
+      example: "placeholder inside a div with id",
+      input: '<div id="my-placeholder">Old Content</div>',
+      output: '<div id="my-placeholder">MARK</div>',
+    },
+    d: {
+      example: "placeholder inside a more complex HTML/JSX structure",
+      input: `<motion.div variants={textAnimation}>
+             {/** biome-ignore lint/correctness/useUniqueElementIds: it's ok */}
+             <div className="text-center text-sm font-mono pb-4" id="my-placeholder"></div>
+           </motion.div>`,
+      output: `<motion.div variants={textAnimation}>
+             {/** biome-ignore lint/correctness/useUniqueElementIds: it's ok */}
+             <div className="text-center text-sm font-mono pb-4" id="my-placeholder">MARK</div>
+           </motion.div>`,
+    },
+    e: {
+      example: "placeholder inside a JSX function call",
+      input: 'O.jsx(wt.div,{variants:cn,children:O.jsx("div",{className:"text-center text-sm font-mono pb-4",id:"my-placeholder"})})]})})}',
+      output: 'O.jsx(wt.div,{variants:cn,children:O.jsx("div",{className:"text-center text-sm font-mono pb-4",id:"my-placeholder",children:"MARK"})})]})})}',
+    },
+    f: {
+      example: "empty string",
+      input: "",
+      output: "",
+    },
+    g: {
+      example: "string without placeholder",
+      input: "Hello world",
+      output: "Hello world",
+    },
+    h: {
+      example: "string that contains one placeholder on a meta tag",
+      input: '<meta name="my-placeholder" content="..." />',
+      output: '<meta name="my-placeholder" content="MARK" />',
+    },
+    i: {
+      example: "string that contains one placeholder on a meta tag with reversed attributes",
+      input: '<meta content="..." name="my-placeholder" />',
+      output: '<meta content="MARK" name="my-placeholder" />',
+    },
+    j: {
+      example: "string that contains one placeholder on a meta tag with additional attributes",
+      input: '<meta charset="UTF-8" name="my-placeholder" content="..." />',
+      output: '<meta charset="UTF-8" name="my-placeholder" content="MARK" />',
+    },
+    k: {
+      example: "complex string with multiple placeholders",
+      input: 'Hello __my-placeholder__ I like <meta name="my-placeholder" content="..." /> and <div id="my-placeholder" class="mt-6 p-4">OLD-mark</div> :)',
+      output: 'Hello MARK I like <meta name="my-placeholder" content="MARK" /> and <div id="my-placeholder" class="mt-6 p-4">MARK</div> :)',
+    },
+  };
+
+  for (const [key, { example, input, output }] of Object.entries(injectMarkTests)) {
+    it(`injectMark ${key.toUpperCase()} ${example}`, () => {
+      const result = injectMark(input, "my-placeholder", "MARK");
+      expect(result).toBe(output);
+    });
+  }
 
   it("injectMarkInAsset A injects mark in js file", () => {
     const asset = { code: 'console.log("__unique-mark__")', source: "" };
@@ -16,6 +97,16 @@ describe("vite-plugin-unique-mark", () => {
     const asset = { code: "", source: "<!-- __unique-mark__ -->" };
     injectMarkInAsset({ asset, fileName: "index.html", mark: "MARK", placeholder: "unique-mark" });
     expect(asset.source).toContain("MARK");
+  });
+
+  it("injectMarkInAsset C warns when placeholder not replaced", () => {
+    const asset = { code: "/* unknown-placeholder format */", source: "" };
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {
+      /* suppress warning */
+    });
+    injectMarkInAsset({ asset, fileName: "main.js", mark: "MARK", placeholder: "unknown-placeholder" });
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("unknown-placeholder"));
+    warnSpy.mockRestore();
   });
 
   it("injectMarkInAssets C injects into multiple assets (observable effect)", () => {

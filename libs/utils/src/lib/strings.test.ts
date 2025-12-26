@@ -1,4 +1,4 @@
-import { capitalize, crc32, createCrc32Table, ellipsis, ellipsisWords, injectMark, isString, sanitize, slugify, stringSum } from "./strings.js";
+import { capitalize, crc32, createCrc32Table, ellipsis, ellipsisWords, isString, sanitize, slugify, stringSum } from "./strings.js";
 
 it("sanitize A basic word", () => {
   expect(sanitize("Superbe")).toBe("superbe");
@@ -84,33 +84,6 @@ it("isString valid", () => {
 });
 it("isString invalid", () => {
   expect(isString(123)).toBe(false);
-});
-
-it("injectMark on empty string", () => {
-  expect(injectMark("", "placeholder", "da-mark")).toBe("");
-});
-it("injectMark on string that does not contain any placeholder", () => {
-  expect(injectMark("Hello world", "placeholder", "da-mark")).toBe("Hello world");
-});
-it("injectMark on string that contains one placeholder inside mustaches", () => {
-  expect(injectMark("Hello {placeholder}} world", "placeholder", "da-mark")).toBe("Hello da-mark world");
-});
-it("injectMark on string that contains one placeholder inside underscores", () => {
-  expect(injectMark("Hello __placeholder__ world", "placeholder", "da-mark")).toBe("Hello da-mark world");
-});
-it("injectMark on string that contains one placeholder on a div", () => {
-  expect(injectMark('Hello <div id="placeholder">...</div> world', "placeholder", "da-mark")).toBe('Hello <div id="placeholder">da-mark</div> world');
-});
-it("injectMark on string that contains one placeholder on a div with a class", () => {
-  expect(injectMark('Hello <div id="placeholder" class="mt-6 p-4">...</div> world', "placeholder", "da-mark")).toBe('Hello <div id="placeholder" class="mt-6 p-4">da-mark</div> world');
-});
-it("injectMark on string that contains one placeholder on a meta tag", () => {
-  expect(injectMark('<meta name="placeholder" content="..." />', "placeholder", "da-mark")).toBe('<meta name="placeholder" content="da-mark" />');
-});
-it("injectMark on a complex string with multiple placeholders", () => {
-  expect(injectMark('Hello __placeholder__ I like <meta name="placeholder" content="..." /> and <div id="placeholder" class="mt-6 p-4">OLD-mark</div> :)', "placeholder", "super-mark")).toBe(
-    'Hello super-mark I like <meta name="placeholder" content="super-mark" /> and <div id="placeholder" class="mt-6 p-4">super-mark</div> :)',
-  );
 });
 
 it("createCrc32Table", () => {
