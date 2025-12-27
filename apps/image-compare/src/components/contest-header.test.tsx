@@ -56,7 +56,7 @@ describe('contest-header', () => {
       isComplete: true,
       winner: { eliminated: false, filename: 'winner.jpg', id: 0, url: 'winner-url' },
     }
-    const winnerMetadata: ImageMetadata = { filename: 'winner.jpg', height: 1080, isWinner: true, size: 100000, width: 1920 }
+    const winnerMetadata: ImageMetadata = { filename: 'winner.jpg', height: 1080, size: 100000, width: 1920 }
     render(<ContestHeader contestState={completeState} leftImageMetadata={winnerMetadata} rightImageMetadata={winnerMetadata} />)
     const filenames = screen.getAllByText('winner.jpg')
     expect(filenames.length).toBeGreaterThan(0)

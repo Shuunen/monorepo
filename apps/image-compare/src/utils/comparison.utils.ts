@@ -19,6 +19,8 @@ export const maxZoom = 5
 export const zoomSensitivity = 0.001
 export const defaultSliderPosition = 50
 export const maxPercentage = 100
+export const padding = 48
+export const headerAndControlsHeight = 382
 
 export function calculateNewZoom(currentZoom: number, deltaY: number): number {
   const newZoom = currentZoom - deltaY * zoomSensitivity

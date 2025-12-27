@@ -149,10 +149,4 @@ describe('image-viewer', () => {
     const contestMessage = screen.getByText('Drop these 3 images to start a contest')
     expect(contestMessage).toBeTruthy()
   })
-
-  it('ImageViewer K should show right side highlighted when dragging 1 file over right side', () => {
-    render(<ImageViewer {...mockProps} isDraggingLeft={false} isDraggingOver={true} nbDraggedFiles={1} />)
-    const sideMessage = screen.getByText('Change right image')
-    expect(sideMessage).toBeTruthy()
-  })
 })

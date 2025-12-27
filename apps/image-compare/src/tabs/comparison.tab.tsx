@@ -11,7 +11,7 @@ import { useDragDrop } from '../hooks/use-drag-drop'
 import { useImageState } from '../hooks/use-image-state'
 import { usePanZoom } from '../hooks/use-pan-zoom'
 import { useSlider } from '../hooks/use-slider'
-import { createContestState, minHeight, minWidth, selectWinner, startContest } from '../utils/comparison.utils'
+import { createContestState, defaultSliderPosition, headerAndControlsHeight, minHeight, minWidth, padding, startContest } from '../utils/comparison.utils'
 import { getContainedSize } from '../utils/image.utils'
 
 // oxlint-disable-next-line max-lines-per-function
@@ -46,11 +46,10 @@ export function Comparison() {
 
   const handleReset = () => {
     logger.info('handleReset : resetting zoom, pan, and contest state.')
-    setSliderPosition([50])
+    setSliderPosition([defaultSliderPosition])
     setZoom(1)
     setPan({ x: 0, y: 0 })
     setContestState(undefined)
-    logger.info('Reset zoom and pan to initial positions.')
   }
 
   const handleMouseMove = (event: React.MouseEvent) => {
@@ -66,12 +65,9 @@ export function Comparison() {
   const handleSelectWinnerWrapper = (winnerId: number) => {
     logger.info(`handleSelectWinnerWrapper : user selected image with ID ${winnerId} as winner.`)
     handleSelectWinner(winnerId)
-    if (contestState) setContestState(selectWinner(contestState, winnerId))
   }
 
   // Calculate dynamic width and height based on image dimensions with object-contain behavior
-  const padding = 48
-  const headerAndControlsHeight = 382
   const { containerWidth, containerHeight } = useMemo(() => {
     const metadata = leftImageMetadata || rightImageMetadata
     if (!metadata?.width || !metadata?.height) return { containerHeight: 'auto', containerWidth: '100%' }

@@ -1,10 +1,7 @@
 // oxlint-disable max-lines-per-function, max-nested-callbacks, no-magic-numbers, id-length, no-nested-ternary
 import { type MouseEvent, type MouseEventHandler, type RefObject, useEffect, useRef, useState } from 'react'
-import { calculateNewPan, calculateNewZoom, type DragStartPosition, minHeight, minWidth, minZoom, type PanPosition, shouldResetPan } from '../utils/comparison.utils'
+import { calculateNewPan, calculateNewZoom, type DragStartPosition, headerAndControlsHeight, minHeight, minWidth, minZoom, type PanPosition, padding, shouldResetPan } from '../utils/comparison.utils'
 import { getContainedSize, type ImageMetadata } from '../utils/image.utils'
-
-const padding = 48
-const headerAndControlsHeight = 382
 
 type UsePanZoomReturn = {
   cursor: 'auto' | 'grab' | 'grabbing'

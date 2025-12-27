@@ -1,10 +1,7 @@
 // oxlint-disable id-length, no-magic-numbers, max-lines-per-function
-import { Logger } from '@monorepo/utils'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { getNbFiles } from '../utils/comparison.utils'
 import { handleMultipleFilesUpload, handleSingleFileUpload, type ImageData, type ImageMetadata, isDragLeavingContainer } from '../utils/image.utils'
-
-const halfScreen = 2
 
 type UseDragDropReturn = {
   handleDragEnter: (e: React.DragEvent) => void
@@ -30,7 +27,6 @@ export function useDragDrop(callbacks: UseDragDropCallbacks): UseDragDropReturn 
   const [isDraggingOver, setIsDraggingOver] = useState(false)
   const [nbDraggedFiles, setNbDraggedFiles] = useState(0)
   const [isDraggingLeft, setIsDraggingLeft] = useState(false)
-  const logger = useMemo(() => new Logger(), [])
 
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault()
@@ -42,7 +38,7 @@ export function useDragDrop(callbacks: UseDragDropCallbacks): UseDragDropReturn 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    setIsDraggingLeft(e.clientX < window.innerWidth / halfScreen)
+    setIsDraggingLeft(e.clientX < window.innerWidth / 2)
   }
 
   const handleDragLeave = (e: React.DragEvent) => {
@@ -61,21 +57,18 @@ export function useDragDrop(callbacks: UseDragDropCallbacks): UseDragDropReturn 
       if (isDraggingLeft)
         handleSingleFileUpload(file, {
           imageSide: 'left',
-          logger,
           onImageUpdate: callbacks.onLeftImageUpdate,
           onMetadataUpdate: callbacks.onLeftMetadataUpdate,
         })
       else
         handleSingleFileUpload(file, {
           imageSide: 'right',
-          logger,
           onImageUpdate: callbacks.onRightImageUpdate,
           onMetadataUpdate: callbacks.onRightMetadataUpdate,
         })
       return
     }
     handleMultipleFilesUpload(files, {
-      logger,
       onContestStart: callbacks.onContestStart,
       onLeftImageUpdate: callbacks.onLeftImageUpdate,
       onLeftMetadataUpdate: callbacks.onLeftMetadataUpdate,
@@ -87,7 +80,6 @@ export function useDragDrop(callbacks: UseDragDropCallbacks): UseDragDropReturn 
   const handleLeftImageUpload = (e: { target: { files?: FileList | null } }): void => {
     handleSingleFileUpload(e.target.files?.[0], {
       imageSide: 'left',
-      logger,
       onImageUpdate: callbacks.onLeftImageUpdate,
       onMetadataUpdate: callbacks.onLeftMetadataUpdate,
     })
@@ -96,7 +88,6 @@ export function useDragDrop(callbacks: UseDragDropCallbacks): UseDragDropReturn 
   const handleRightImageUpload = (e: { target: { files?: FileList | null } }): void => {
     handleSingleFileUpload(e.target.files?.[0], {
       imageSide: 'right',
-      logger,
       onImageUpdate: callbacks.onRightImageUpdate,
       onMetadataUpdate: callbacks.onRightMetadataUpdate,
     })

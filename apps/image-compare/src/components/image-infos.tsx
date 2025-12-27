@@ -9,14 +9,14 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
 }
 
-function ImageInfosColumn({ infos, doReverse = false }: { infos: ImageMetadata; doReverse?: boolean }) {
+function ImageInfosColumn({ infos, doReverse = false, win }: { infos: ImageMetadata; doReverse?: boolean; win?: boolean }) {
   const data = [
     { label: 'name', value: infos.filename },
     { label: 'size', value: formatFileSize(infos.size) },
     { label: 'resolution', value: `${infos.width} × ${infos.height}` },
   ]
   return (
-    <div className={cn('flex flex-col gap-2', { 'opacity-50': infos.isWinner === false })}>
+    <div className={cn('flex flex-col gap-2', { 'opacity-50': win === false })}>
       {data.map(item => (
         <div className={cn('flex gap-2 items-center', { 'flex-row-reverse': doReverse })} key={item.label}>
           <Paragraph>{item.label}</Paragraph>
@@ -27,11 +27,11 @@ function ImageInfosColumn({ infos, doReverse = false }: { infos: ImageMetadata; 
   )
 }
 
-export function ImageInfos({ infos }: { infos: Array<ImageMetadata | undefined> }) {
+export function ImageInfos({ leftWin, infos }: { leftWin?: boolean; infos: Array<ImageMetadata | undefined> }) {
   return (
     <div className="flex justify-between w-full">
-      {infos[0] && <ImageInfosColumn infos={infos[0]} />}
-      {infos[1] && <ImageInfosColumn doReverse infos={infos[1]} />}
+      {infos[0] && <ImageInfosColumn infos={infos[0]} win={leftWin} />}
+      {infos[1] && <ImageInfosColumn doReverse infos={infos[1]} win={leftWin === false} />}
     </div>
   )
 }
