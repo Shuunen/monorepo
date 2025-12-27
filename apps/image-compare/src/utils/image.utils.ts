@@ -1,4 +1,4 @@
-import type { Logger } from '@monorepo/utils'
+import { logger } from './logger.utils'
 
 export const requiredFilesCount = 2
 
@@ -7,7 +7,6 @@ export type ImageMetadata = {
   size: number
   width: number
   height: number
-  isWinner?: boolean
 }
 
 export type ImageData = {
@@ -16,14 +15,12 @@ export type ImageData = {
 }
 
 export type ImageUpdateCallbacks = {
-  logger: Logger
   onImageUpdate: (dataUrl: string) => void
   onMetadataUpdate?: (metadata: ImageMetadata) => void
   imageSide: 'left' | 'right'
 }
 
 export type TwoImagesUpdateCallbacks = {
-  logger: Logger
   onLeftImageUpdate: (dataUrl: string) => void
   onRightImageUpdate: (dataUrl: string) => void
   onLeftMetadataUpdate?: (metadata: ImageMetadata) => void
@@ -31,7 +28,6 @@ export type TwoImagesUpdateCallbacks = {
 }
 
 export type MultipleImagesUpdateCallbacks = {
-  logger: Logger
   onContestStart: (images: ImageData[]) => void
 }
 
@@ -68,7 +64,7 @@ function getImageDimensions(src: string): Promise<{ height: number; width: numbe
 
 export function handleSingleFileUpload(file: File | undefined, callbacks: ImageUpdateCallbacks): void {
   if (!file) return
-  const { imageSide, logger, onImageUpdate, onMetadataUpdate } = callbacks
+  const { imageSide, onImageUpdate, onMetadataUpdate } = callbacks
   readImageFile(
     file,
     async dataUrl => {
@@ -87,7 +83,7 @@ export function handleSingleFileUpload(file: File | undefined, callbacks: ImageU
 }
 
 function loadImagesForContest(files: FileList, callbacks: MultipleImagesUpdateCallbacks): void {
-  const { logger, onContestStart } = callbacks
+  const { onContestStart } = callbacks
   const imageData: ImageData[] = []
   let loadedCount = 0
   const filesArray = Array.from(files)
@@ -111,7 +107,7 @@ function loadImagesForContest(files: FileList, callbacks: MultipleImagesUpdateCa
 /* v8 ignore start */
 
 function loadTwoImages(files: FileList, callbacks: TwoImagesUpdateCallbacks): void {
-  const { logger, onLeftImageUpdate, onLeftMetadataUpdate, onRightImageUpdate, onRightMetadataUpdate } = callbacks
+  const { onLeftImageUpdate, onLeftMetadataUpdate, onRightImageUpdate, onRightMetadataUpdate } = callbacks
   const [file1, file2] = Array.from(files)
   if (!file1 || !file2) return
   readImageFile(
@@ -143,7 +139,7 @@ function loadTwoImages(files: FileList, callbacks: TwoImagesUpdateCallbacks): vo
 export function handleMultipleFilesUpload(files: FileList, callbacks: MultipleImagesUpdateCallbacks | TwoImagesUpdateCallbacks): void {
   if (files.length === requiredFilesCount && 'onLeftImageUpdate' in callbacks) loadTwoImages(files, callbacks)
   else if (files.length > requiredFilesCount && 'onContestStart' in callbacks) loadImagesForContest(files, callbacks)
-  else if (files.length === 1) callbacks.logger.showError('Please drop 2 or more images to compare.')
+  else if (files.length === 1) logger.showError('Please drop 2 or more images to compare.')
 }
 
 export function isDragLeavingContainer(event: React.DragEvent): boolean {

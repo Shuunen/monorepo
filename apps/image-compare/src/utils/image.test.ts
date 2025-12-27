@@ -1,7 +1,15 @@
 /** biome-ignore-all lint/style/useNamingConvention: it'ok */
 import { objectSerialize, sleep } from '@monorepo/utils'
 import { describe, expect, it, vi } from 'vitest'
-import { fetchImageMetadata, getContainedSize, handleMultipleFilesUpload, handleSingleFileUpload } from './image.utils'
+import { fetchImageMetadata, getContainedSize, handleMultipleFilesUpload, handleSingleFileUpload, isDragLeavingContainer } from './image.utils'
+import { logger } from './logger.utils'
+
+vi.mock('./logger.utils', () => ({
+  logger: {
+    info: vi.fn(),
+    showError: vi.fn(),
+  },
+}))
 
 describe('image.utils', () => {
   describe('readImageFile', () => {
@@ -18,16 +26,14 @@ describe('image.utils', () => {
   describe('handleSingleFileUpload', () => {
     it('handleSingleFileUpload A should return early if file is undefined', () => {
       const onImageUpdate = vi.fn()
-      const logger = { info: vi.fn(), showError: vi.fn() }
-      handleSingleFileUpload(undefined, { imageSide: 'left', logger: logger as never, onImageUpdate })
+      handleSingleFileUpload(undefined, { imageSide: 'left', onImageUpdate })
       expect(onImageUpdate).not.toHaveBeenCalled()
     })
 
     it('handleSingleFileUpload B should process left image file', () => {
       const file = new File(['content'], 'test.jpg', { type: 'image/jpeg' })
       const onImageUpdate = vi.fn()
-      const logger = { info: vi.fn(), showError: vi.fn() }
-      handleSingleFileUpload(file, { imageSide: 'left', logger: logger as never, onImageUpdate })
+      handleSingleFileUpload(file, { imageSide: 'left', onImageUpdate })
       // FileReader is async, we can't test the callback directly
       expect(file).toBeTruthy()
     })
@@ -36,8 +42,7 @@ describe('image.utils', () => {
       const file = new File(['content'], 'test.jpg', { type: 'image/jpeg' })
       const onImageUpdate = vi.fn()
       const onMetadataUpdate = vi.fn()
-      const logger = { info: vi.fn(), showError: vi.fn() }
-      handleSingleFileUpload(file, { imageSide: 'right', logger: logger as never, onImageUpdate, onMetadataUpdate })
+      handleSingleFileUpload(file, { imageSide: 'right', onImageUpdate, onMetadataUpdate })
       expect(file).toBeTruthy()
       expect(onImageUpdate).not.toHaveBeenCalled()
       expect(onMetadataUpdate).not.toHaveBeenCalled()
@@ -48,8 +53,7 @@ describe('image.utils', () => {
     it('handleMultipleFilesUpload A should show error for single file', () => {
       const file = new File(['content'], 'test.jpg', { type: 'image/jpeg' })
       const fileList = { 0: file, item: () => file, length: 1 } as unknown as FileList
-      const logger = { showError: vi.fn() }
-      handleMultipleFilesUpload(fileList, { logger: logger as never, onContestStart: vi.fn() })
+      handleMultipleFilesUpload(fileList, { onContestStart: vi.fn() })
       expect(logger.showError).toHaveBeenCalledWith('Please drop 2 or more images to compare.')
     })
 
@@ -61,8 +65,7 @@ describe('image.utils', () => {
       const onRightImageUpdate = vi.fn()
       const onLeftMetadataUpdate = vi.fn()
       const onRightMetadataUpdate = vi.fn()
-      const logger = { info: vi.fn(), showError: vi.fn() }
-      handleMultipleFilesUpload(fileList, { logger: logger as never, onLeftImageUpdate, onLeftMetadataUpdate, onRightImageUpdate, onRightMetadataUpdate })
+      handleMultipleFilesUpload(fileList, { onLeftImageUpdate, onLeftMetadataUpdate, onRightImageUpdate, onRightMetadataUpdate })
       await sleep(20) // Wait for async FileReader operations
       expect(onLeftImageUpdate).toHaveBeenCalled()
       expect(onRightImageUpdate).toHaveBeenCalled()
@@ -76,8 +79,7 @@ describe('image.utils', () => {
       const file3 = new File(['content3'], 'test3.jpg', { type: 'image/jpeg' })
       const fileList = { 0: file1, 1: file2, 2: file3, item: (i: number) => [file1, file2, file3][i], length: 3 } as unknown as FileList
       const onContestStart = vi.fn()
-      const logger = { info: vi.fn(), showError: vi.fn() }
-      handleMultipleFilesUpload(fileList, { logger: logger as never, onContestStart })
+      handleMultipleFilesUpload(fileList, { onContestStart })
       await sleep(20) // Wait for async FileReader operations
       expect(onContestStart).toHaveBeenCalled()
       expect(logger.info).toHaveBeenCalledWith('Contest mode started with 3 images.')
@@ -87,8 +89,7 @@ describe('image.utils', () => {
       const fileList = { 0: undefined, 1: undefined, item: () => undefined, length: 2 } as unknown as FileList
       const onLeftImageUpdate = vi.fn()
       const onRightImageUpdate = vi.fn()
-      const logger = { info: vi.fn(), showError: vi.fn() }
-      handleMultipleFilesUpload(fileList, { logger: logger as never, onLeftImageUpdate, onRightImageUpdate })
+      handleMultipleFilesUpload(fileList, { onLeftImageUpdate, onRightImageUpdate })
       expect(fileList.length).toBe(2)
     })
 
@@ -100,8 +101,7 @@ describe('image.utils', () => {
       const onRightImageUpdate = vi.fn()
       const onLeftMetadataUpdate = vi.fn()
       const onRightMetadataUpdate = vi.fn()
-      const logger = { info: vi.fn(), showError: vi.fn() }
-      handleMultipleFilesUpload(fileList, { logger: logger as never, onLeftImageUpdate, onLeftMetadataUpdate, onRightImageUpdate, onRightMetadataUpdate })
+      handleMultipleFilesUpload(fileList, { onLeftImageUpdate, onLeftMetadataUpdate, onRightImageUpdate, onRightMetadataUpdate })
       await sleep(50) // Wait for async FileReader operations
       expect(onLeftMetadataUpdate).toHaveBeenCalledWith({ filename: 'test1.jpg', height: 1080, size: file1.size, width: 1920 })
       expect(onRightMetadataUpdate).toHaveBeenCalledWith({ filename: 'test2.jpg', height: 1080, size: file2.size, width: 1920 })
@@ -133,6 +133,23 @@ describe('image.utils', () => {
     it('getContainedSize C should handle equal aspect ratios', () => {
       const result = getContainedSize({ imageHeight: 100, imageWidth: 200, maxHeight: 50, maxWidth: 100 })
       expect(objectSerialize(result)).toMatchInlineSnapshot(`"{"height":50,"width":100}"`)
+    })
+  })
+
+  describe('isDragLeavingContainer', () => {
+    it('isDragLeavingContainer A should return true when target equals currentTarget', () => {
+      const div = document.createElement('div')
+      const event = { currentTarget: div, relatedTarget: null, target: div } as unknown as React.DragEvent
+      const result = isDragLeavingContainer(event)
+      expect(result).toBe(true)
+    })
+
+    it('isDragLeavingContainer B should return true when related target is not contained', () => {
+      const div = document.createElement('div')
+      const otherDiv = document.createElement('div')
+      const event = { currentTarget: div, relatedTarget: otherDiv, target: document.createElement('span') } as unknown as React.DragEvent
+      const result = isDragLeavingContainer(event)
+      expect(result).toBe(true)
     })
   })
 })

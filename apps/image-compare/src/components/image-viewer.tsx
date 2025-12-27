@@ -89,7 +89,6 @@ export function ImageViewer({
             <motion.div animate={{ scale: isDraggingLeft ? 1.2 : 1 }} className={cn('bg-background/80 text-foreground px-6 py-3 rounded-lg text-lg font-semibold', { 'bg-secondary/90': isDraggingLeft })} initial={{ scale: 0.9 }} transition={{ duration: 0.2 }}>
               Change left image
             </motion.div>
-            <div className="absolute top-12 bg-background/80 text-foreground px-6 py-3 rounded-lg text-lg font-semibold">User is dragging over the {isDraggingLeft ? 'left' : 'right'} side</div>
             <motion.div animate={{ scale: isDraggingLeft ? 1 : 1.2 }} className={cn('bg-background/80 text-foreground px-6 py-3 rounded-lg text-lg font-semibold', { 'bg-secondary/90': !isDraggingLeft })} initial={{ scale: 0.9 }} transition={{ duration: 0.3 }}>
               Change right image
             </motion.div>

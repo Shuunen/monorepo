@@ -1,24 +1,7 @@
 /** biome-ignore-all lint/style/useNamingConvention: it'ok */
 import { describe, expect, it } from 'vitest'
-import {
-  type ContestState,
-  calculateNewPan,
-  calculateNewZoom,
-  calculateSliderPosition,
-  createContestState,
-  type DragStartPosition,
-  getCursorType,
-  getImageStyle,
-  getNbFiles,
-  getNextMatch,
-  type ImageData,
-  isDragLeavingContainer,
-  maxZoom,
-  minZoom,
-  selectWinner,
-  shouldResetPan,
-  startContest,
-} from './comparison.utils'
+import { type ContestState, calculateNewPan, calculateNewZoom, calculateSliderPosition, createContestState, type DragStartPosition, getCursorType, getImageStyle, getNbFiles, getNextMatch, maxZoom, minZoom, selectWinner, shouldResetPan, startContest } from './comparison.utils'
+import type { ImageData } from './image.utils'
 
 describe('comparison.utils', () => {
   describe('calculateNewZoom', () => {
@@ -145,23 +128,6 @@ describe('comparison.utils', () => {
     it('shouldResetPan B should return false when zoom is greater than minZoom', () => {
       const result = shouldResetPan(1.5)
       expect(result).toBe(false)
-    })
-  })
-
-  describe('isDragLeavingContainer', () => {
-    it('isDragLeavingContainer A should return true when target equals currentTarget', () => {
-      const div = document.createElement('div')
-      const event = { currentTarget: div, relatedTarget: null, target: div } as unknown as React.DragEvent
-      const result = isDragLeavingContainer(event)
-      expect(result).toBe(true)
-    })
-
-    it('isDragLeavingContainer B should return true when related target is not contained', () => {
-      const div = document.createElement('div')
-      const otherDiv = document.createElement('div')
-      const event = { currentTarget: div, relatedTarget: otherDiv, target: document.createElement('span') } as unknown as React.DragEvent
-      const result = isDragLeavingContainer(event)
-      expect(result).toBe(true)
     })
   })
 
