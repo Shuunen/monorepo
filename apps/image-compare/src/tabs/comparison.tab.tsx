@@ -1,4 +1,4 @@
-// oxlint-disable no-magic-numbers, id-length, max-dependencies
+// oxlint-disable no-magic-numbers, id-length, max-dependencies, max-lines
 import { Logger } from '@monorepo/utils'
 import { motion } from 'framer-motion'
 import { type MouseEvent, type MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react'
@@ -17,6 +17,7 @@ import {
   fetchImageMetadata,
   getCursorType,
   getImageStyle,
+  getNbFiles,
   handleMultipleFilesUpload,
   handleSingleFileUpload,
   type ImageMetadata,
@@ -47,16 +48,16 @@ export function Comparison() {
   const [isPanning, setIsPanning] = useState(false)
   const [isHandleDragging, setIsHandleDragging] = useState(false)
   const [isDraggingOver, setIsDraggingOver] = useState(false)
+  const [nbDraggedFiles, setNbDraggedFiles] = useState(0)
+  const [isDraggingLeft, setIsDraggingLeft] = useState(false)
   const [contestState, setContestState] = useState<ContestState | undefined>(undefined)
   const imageContainerRef = useRef<HTMLDivElement>(null)
   const dragStartRef = useRef<DragStartPosition>({ panX: 0, panY: 0, x: 0, y: 0 })
   const logger = useMemo(() => new Logger(), [])
-
   /* v8 ignore start */
   useEffect(() => {
     if (shouldResetPan(zoom)) setPan({ x: 0, y: 0 })
   }, [zoom])
-
   useEffect(() => {
     const loadDefaultMetadata = async () => {
       const [leftMeta, rightMeta] = await Promise.all([fetchImageMetadata(defaultImages.before), fetchImageMetadata(defaultImages.after)])
@@ -65,7 +66,6 @@ export function Comparison() {
     }
     void loadDefaultMetadata()
   }, [])
-
   useEffect(() => {
     const container = imageContainerRef.current
     if (!container) return
@@ -131,12 +131,14 @@ export function Comparison() {
     e.preventDefault()
     e.stopPropagation()
     setIsDraggingOver(true)
+    setNbDraggedFiles(getNbFiles(e.nativeEvent))
   }
 
   // oxlint-disable-next-line consistent-function-scoping
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    setIsDraggingLeft(e.clientX < window.innerWidth / 2)
   }
 
   const handleDragLeave = (e: React.DragEvent) => {
@@ -149,7 +151,26 @@ export function Comparison() {
     e.preventDefault()
     e.stopPropagation()
     setIsDraggingOver(false)
-    handleMultipleFilesUpload(e.dataTransfer.files, {
+    const files = e.dataTransfer.files
+    if (files.length === 1) {
+      const file = files[0]
+      if (isDraggingLeft)
+        handleSingleFileUpload(file, {
+          imageSide: 'left',
+          logger,
+          onImageUpdate: setLeftImage,
+          onMetadataUpdate: setLeftImageMetadata,
+        })
+      else
+        handleSingleFileUpload(file, {
+          imageSide: 'right',
+          logger,
+          onImageUpdate: setRightImage,
+          onMetadataUpdate: setRightImageMetadata,
+        })
+      return
+    }
+    handleMultipleFilesUpload(files, {
       logger,
       onContestStart: images => {
         const state = createContestState(images)
@@ -170,6 +191,8 @@ export function Comparison() {
     setIsPanning(false)
     setIsHandleDragging(false)
     setContestState(undefined)
+    setLeftImageMetadata({ filename: leftImageMetadata?.filename ?? 'lost-filename', height: leftImageMetadata?.height ?? 0, isWinner: undefined, size: leftImageMetadata?.size ?? 0, width: leftImageMetadata?.width ?? 0 })
+    setRightImageMetadata({ filename: rightImageMetadata?.filename ?? 'lost-filename', height: rightImageMetadata?.height ?? 0, isWinner: undefined, size: rightImageMetadata?.size ?? 0, width: rightImageMetadata?.width ?? 0 })
     logger.info('Reset zoom and pan to initial positions.')
   }
 
@@ -179,8 +202,9 @@ export function Comparison() {
     const newState = selectWinner(contestState, winnerId)
     setContestState(newState)
     if (newState.isComplete && newState.winner) {
-      setLeftImageMetadata({ ...leftImageMetadata, filename: leftImageMetadata?.filename ?? 'lost-filename', height: leftImageMetadata?.height ?? 0, isWinner: leftImageMetadata?.filename === newState.winner.filename, size: leftImageMetadata?.size ?? 0, width: leftImageMetadata?.width ?? 0 })
-      setRightImageMetadata({ ...rightImageMetadata, filename: rightImageMetadata?.filename ?? 'lost-filename', height: rightImageMetadata?.height ?? 0, isWinner: rightImageMetadata?.filename === newState.winner.filename, size: rightImageMetadata?.size ?? 0, width: rightImageMetadata?.width ?? 0 })
+      const winnerFilename = newState.winner.filename
+      setLeftImageMetadata({ filename: leftImageMetadata?.filename ?? 'lost-filename', height: leftImageMetadata?.height ?? 0, isWinner: leftImageMetadata?.filename === winnerFilename, size: leftImageMetadata?.size ?? 0, width: leftImageMetadata?.width ?? 0 })
+      setRightImageMetadata({ filename: rightImageMetadata?.filename ?? 'lost-filename', height: rightImageMetadata?.height ?? 0, isWinner: rightImageMetadata?.filename === winnerFilename, size: rightImageMetadata?.size ?? 0, width: rightImageMetadata?.width ?? 0 })
     }
   }
 
@@ -202,12 +226,7 @@ export function Comparison() {
     setIsHandleDragging(true)
   }
 
-  const handleMouseUp = () => {
-    setIsPanning(false)
-    setIsHandleDragging(false)
-  }
-
-  const handleMouseLeave = () => {
+  const handleMouseUpOrLeave = () => {
     setIsPanning(false)
     setIsHandleDragging(false)
   }
@@ -252,17 +271,19 @@ export function Comparison() {
             cursor={cursor}
             imageContainerRef={imageContainerRef}
             imageStyle={imageStyle}
+            isDraggingLeft={isDraggingLeft}
             isDraggingOver={isDraggingOver}
             leftImage={leftImage}
+            nbDraggedFiles={nbDraggedFiles}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
             onMouseDownOnHandle={handleMouseDownOnHandle}
             onMouseDownOnImage={handleMouseDownOnImage}
-            onMouseLeave={handleMouseLeave}
+            onMouseLeave={handleMouseUpOrLeave}
             onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
+            onMouseUp={handleMouseUpOrLeave}
             onSelectWinner={handleSelectWinner}
             rightImage={rightImage}
             sliderPosition={sliderPosition}

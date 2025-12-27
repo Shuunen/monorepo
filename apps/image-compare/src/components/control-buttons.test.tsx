@@ -16,14 +16,14 @@ describe('control-buttons', () => {
 
   it('ControlButtons B should call reset handler when reset button is clicked', () => {
     render(<ControlButtons contestState={undefined} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />)
-    const resetButton = screen.getByText('Reset View')
+    const resetButton = screen.getByText('Reset view')
     fireEvent.click(resetButton)
     expect(mockReset).toHaveBeenCalledOnce()
   })
 
   it('ControlButtons C should display Reset View text in normal mode', () => {
     render(<ControlButtons contestState={undefined} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />)
-    const resetText = screen.getByText('Reset View')
+    const resetText = screen.getByText('Reset view')
     expect(resetText).toBeTruthy()
   })
 
@@ -63,7 +63,7 @@ describe('control-buttons', () => {
       winner: undefined,
     }
     render(<ControlButtons contestState={contestState} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />)
-    const exitText = screen.getByText('Exit Contest')
+    const exitText = screen.getByText('Exit contest')
     expect(exitText).toBeTruthy()
   })
 

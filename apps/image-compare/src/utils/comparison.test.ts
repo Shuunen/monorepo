@@ -9,6 +9,7 @@ import {
   type DragStartPosition,
   getCursorType,
   getImageStyle,
+  getNbFiles,
   getNextMatch,
   type ImageData,
   isDragLeavingContainer,
@@ -324,6 +325,26 @@ describe('comparison.utils', () => {
       expect(result.currentMatch).toBeDefined()
       expect(result.currentMatch?.leftImage.id).toBe(0)
       expect(result.currentMatch?.rightImage.id).toBe(1)
+    })
+  })
+
+  describe('getNbFiles', () => {
+    it('getNbFiles A should return 0 when no files are being dragged', () => {
+      const mockEvent = { dataTransfer: { items: [] } } as unknown as DragEvent
+      const result = getNbFiles(mockEvent)
+      expect(result).toBe(0)
+    })
+
+    it('getNbFiles B should count only file items', () => {
+      const mockEvent = { dataTransfer: { items: [{ kind: 'file' }, { kind: 'string' }, { kind: 'file' }] } } as unknown as DragEvent
+      const result = getNbFiles(mockEvent)
+      expect(result).toBe(2)
+    })
+
+    it('getNbFiles C should handle null dataTransfer', () => {
+      const mockEvent = { dataTransfer: null } as unknown as DragEvent
+      const result = getNbFiles(mockEvent)
+      expect(result).toBe(0)
     })
   })
 })

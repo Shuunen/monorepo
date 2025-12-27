@@ -29,7 +29,7 @@ describe('comparison', () => {
 
   it('Comparison D should reset view when reset button is clicked', () => {
     render(<Comparison />)
-    const resetButton = screen.getByText('Reset View')
+    const resetButton = screen.getByText('Reset view')
     fireEvent.click(resetButton)
     const zoomText = screen.getByText('Zoom: 100%')
     expect(zoomText).toBeTruthy()

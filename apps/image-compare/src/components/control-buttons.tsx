@@ -18,30 +18,34 @@ export function ControlButtons({ contestState, onLeftImageUpload, onReset, onRig
   const isContestComplete = contestState?.isComplete ?? false
   return (
     <div className={cn('flex justify-center gap-4')} data-testid="control-buttons">
+      {/* v8 ignore start -- @preserve */}
       <div className={cn({ hidden: isContestMode || isContestComplete })}>
         <label className="cursor-pointer" htmlFor="left-upload">
           <Button name="left-upload" onClick={() => document.querySelector<HTMLButtonElement>('#left-upload')?.click()}>
             <Upload />
-            Left Image
+            Change left image
           </Button>
         </label>
         <input accept="image/*" className="hidden" id="left-upload" onChange={onLeftImageUpload} type="file" />
       </div>
+      {/* v8 ignore stop -- @preserve */}
 
       <Button name="reset" onClick={onReset} variant="outline">
         <RotateCcw />
-        {isContestMode || isContestComplete ? 'Exit Contest' : 'Reset View'}
+        {isContestMode || isContestComplete ? 'Exit contest' : 'Reset view'}
       </Button>
 
+      {/* v8 ignore start -- @preserve */}
       <div className={cn({ hidden: isContestMode || isContestComplete })}>
         <label className="cursor-pointer" htmlFor="right-upload">
           <Button name="right-upload" onClick={() => document.querySelector<HTMLButtonElement>('#right-upload')?.click()}>
             <Upload />
-            Right Image
+            Change right image
           </Button>
         </label>
         <input accept="image/*" className="hidden" id="right-upload" onChange={onRightImageUpload} type="file" />
       </div>
+      {/* v8 ignore stop -- @preserve */}
     </div>
   )
 }

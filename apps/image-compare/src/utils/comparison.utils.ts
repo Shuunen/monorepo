@@ -156,3 +156,10 @@ export function startContest(state: ContestState): ContestState {
     currentMatch: firstMatch,
   }
 }
+
+export function getNbFiles(e: DragEvent) {
+  let amount = 0
+  const items = Array.from(e.dataTransfer?.items || [])
+  for (const item of items) if (item.kind === 'file') amount += 1
+  return amount
+}
