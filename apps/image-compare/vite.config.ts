@@ -25,6 +25,7 @@ export default defineConfig({
   },
   test: {
     coverage: {
+      exclude: ['**/hooks/**'],
       provider: 'v8' as const,
       reporter: [['text', { maxCols: 120 }], 'lcov', 'html'],
       reportsDirectory: './test-output/vitest/coverage',

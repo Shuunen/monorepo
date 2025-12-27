@@ -1,7 +1,5 @@
 // oxlint-disable no-magic-numbers, id-length
-import type { ImageData, ImageMetadata, ImageUpdateCallbacks, MultipleImagesUpdateCallbacks, TwoImagesUpdateCallbacks } from './image.utils'
-export type { ImageData, ImageMetadata, ImageUpdateCallbacks, MultipleImagesUpdateCallbacks, TwoImagesUpdateCallbacks }
-export { fetchImageMetadata, handleMultipleFilesUpload, handleSingleFileUpload, isDragLeavingContainer, readImageFile, requiredFilesCount } from './image.utils'
+import type { ImageData } from './image.utils'
 
 export type PanPosition = { x: number; y: number }
 

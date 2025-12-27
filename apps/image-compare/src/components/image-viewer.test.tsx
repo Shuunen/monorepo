@@ -152,7 +152,7 @@ describe('image-viewer', () => {
 
   it('ImageViewer K should show right side highlighted when dragging 1 file over right side', () => {
     render(<ImageViewer {...mockProps} isDraggingLeft={false} isDraggingOver={true} nbDraggedFiles={1} />)
-    const sideMessage = screen.getByText('User is dragging over the right side')
+    const sideMessage = screen.getByText('Change right image')
     expect(sideMessage).toBeTruthy()
   })
 })

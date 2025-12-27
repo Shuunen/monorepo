@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/style/useNamingConvention: it'ok */
 import { objectSerialize, sleep } from '@monorepo/utils'
 import { describe, expect, it, vi } from 'vitest'
-import { fetchImageMetadata, getContainedSize, handleMultipleFilesUpload, handleSingleFileUpload } from './image.utils'
+import { fetchImageMetadata, getContainedSize, handleMultipleFilesUpload, handleSingleFileUpload, isDragLeavingContainer } from './image.utils'
 
 describe('image.utils', () => {
   describe('readImageFile', () => {
@@ -133,6 +133,23 @@ describe('image.utils', () => {
     it('getContainedSize C should handle equal aspect ratios', () => {
       const result = getContainedSize({ imageHeight: 100, imageWidth: 200, maxHeight: 50, maxWidth: 100 })
       expect(objectSerialize(result)).toMatchInlineSnapshot(`"{"height":50,"width":100}"`)
+    })
+  })
+
+  describe('isDragLeavingContainer', () => {
+    it('isDragLeavingContainer A should return true when target equals currentTarget', () => {
+      const div = document.createElement('div')
+      const event = { currentTarget: div, relatedTarget: null, target: div } as unknown as React.DragEvent
+      const result = isDragLeavingContainer(event)
+      expect(result).toBe(true)
+    })
+
+    it('isDragLeavingContainer B should return true when related target is not contained', () => {
+      const div = document.createElement('div')
+      const otherDiv = document.createElement('div')
+      const event = { currentTarget: div, relatedTarget: otherDiv, target: document.createElement('span') } as unknown as React.DragEvent
+      const result = isDragLeavingContainer(event)
+      expect(result).toBe(true)
     })
   })
 })

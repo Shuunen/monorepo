@@ -99,7 +99,10 @@
       }
     },
     "typecheck": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "options": {
+        "args": "--force"
+      }
     }
   },
   "tui": {

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import type { ContestState, ImageMetadata } from '../utils/comparison.utils'
+import type { ContestState } from '../utils/comparison.utils'
+import type { ImageMetadata } from '../utils/image.utils'
 import { ContestHeader } from './contest-header'
 
 describe('contest-header', () => {
