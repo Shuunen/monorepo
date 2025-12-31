@@ -4,14 +4,15 @@
 // @description  Generate expenses automatically
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/tiime-auto-expenses.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/tiime-auto-expenses.user.js
-// @match        https://apps.tiime.fr/companies/*/expense/advanced-expenses
+// @match        https://apps.tiime.fr/companies/*/expense/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tiime.fr
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
-// @version      1.1.2
+// @version      1.1.3
 // ==/UserScript==
 
 // oxlint-disable max-lines-per-function
+// cSpell:disable
 
 const id = 'tim-aex'
 
@@ -38,10 +39,30 @@ function createButton(label = '') {
 function TiimeAutoExpenses() {
   const utils = new Shuutils(id)
   const elements = {
-    addOneButton: createButton(''),
+    createNdfBtn: createButton(''),
+    newExpenseBtn: createButton(''),
   }
   const selectors = {
-    addExpenseBtn: '.right [tiime-button]',
+    /** Ajouter une dépense" dans la popup après avoir cliqué sur "Creer une note de frais" */
+    chooseExpenseBtn: 'span + .tiime-background-secondary-surface',
+    /** "Creer une note de frais" le bouton sur la page de demarrage */
+    createNdfBtn: '.action-bar-actions > [tiime-button][accent]',
+    /** Ajouter un label */
+    formAddLabelBtn: 'app-advanced-expense-side-panel button[data-cy="label__btn-add"]',
+    /** Montant de la dépense */
+    formInputAmount: 'app-advanced-expense-side-panel [formcontrolname="amount"]',
+    /** Commentaire de la dépense */
+    formInputComment: 'app-advanced-expense-side-panel [formcontrolname="comment"]',
+    /** Date de la dépense */
+    formInputDate: 'app-advanced-expense-side-panel [formcontrolname="date"]',
+    /** Nom de la dépense */
+    formInputName: 'app-advanced-expense-side-panel [formcontrolname="expenseName"]',
+    /** Montant de la TVA */
+    formInputVatAmount: 'app-advanced-expense-side-panel [formcontrolname="vatAmount"]',
+    /** (+) Nouvelle dépense */
+    newExpenseBtn: 'app-expense-report-advanced-expenses button[tiime-button][neutral]',
+    /** Suivant */
+    nextButton: 'app-fixed-footer-bar > button + button[tiime-button][accent]',
     tableRow: 'tbody > tr',
     tableRowAmountInput: '[placeholder="Montant"]',
     tableRowDate: '.mat-datepicker-input',
@@ -56,15 +77,16 @@ function TiimeAutoExpenses() {
     textareaComment: 'textarea[placeholder="Ajouter un commentaire"]',
     textareaCommentValidate: '.mat-mdc-dialog-actions button[tiime-button][accent]',
   }
-  const classes = {
-    tableRowActive: 'row-active',
-  }
-  /** @param {HTMLElement} row the row to set the date for */
-  async function setDate(row) {
+  async function setDate() {
     utils.log('setting date to last day of previous month')
-    const input = utils.findOne(selectors.tableRowDate, row)
+    const input = utils.findOne(selectors.formInputDate)
     if (input === undefined) {
-      utils.showError('tableRowDate not found')
+      utils.showError('formInputDate not found')
+      return
+    }
+    const currentValue = input instanceof HTMLInputElement ? input.value : ''
+    if (currentValue !== '') {
+      utils.log('date already set to', currentValue)
       return
     }
     input.click()
@@ -83,62 +105,42 @@ function TiimeAutoExpenses() {
     utils.log('date set to the', lastDay.textContent, 'of previous month')
   }
   /**
-   * @param {HTMLElement} row the row to set the label for
    * @param {string} label the label to set, like "Abonnement Internet"
    * @returns {Promise<void>}
    */
-  async function setLabel(row, label) {
+  async function setLabel(label) {
     utils.log(`setting label "${label}"`)
-    const chip = row.querySelector('[data-cy="label-chip__txt-label-name"]')
-    if (chip !== null) {
-      utils.log('label already set')
-      return
-    }
-    const button = utils.findOne(selectors.tableRowLabel, row)
-    if (button === undefined) {
-      utils.showError('tableRowLabel not found')
-      return
-    }
-    button.click()
-    const input = await utils.waitToDetect(selectors.tableRowLabelInput)
+    const input = await utils.waitToDetect(selectors.formInputName)
     if (input === undefined) {
-      utils.showError('tableRowLabelInput not found')
+      utils.showError('formInputName not found')
       return
     }
     if (!(input instanceof HTMLInputElement)) {
-      utils.showError('tableRowLabelInput is not an input element')
+      utils.showError('formInputName is not an input element')
       return
     }
-    input.value = label
-    input.dispatchEvent(new Event('input'))
-    const firstChip = await utils.waitToDetect(selectors.tableRowLabelFirstChip)
-    if (firstChip === undefined) {
-      utils.showError('tableRowLabelFirstChip not found')
-      return
-    }
-    firstChip.click()
-    utils.log('label set to', firstChip.textContent)
+    // input.value = label
+    // input.dispatchEvent(new Event('input'))
+    await utils.fillLikeHuman(input, label)
+    utils.log('label set to', input.value)
   }
   /**
-   * @param {HTMLElement} row the row to set the amount for
    * @param {number} amount the amount to set, like 22.47
    */
-  async function setAmount(row, amount) {
+  async function setAmount(amount) {
     utils.log(`setting amount "${amount}"`)
-    const input = utils.findOne(selectors.tableRowAmountInput, row)
+    const input = utils.findOne(selectors.formInputAmount)
     if (input === undefined) {
-      utils.showError('tableRowAmountInput not found')
+      utils.showError('formInputAmount not found')
       return
     }
     if (!(input instanceof HTMLInputElement)) {
-      utils.showError('tableRowAmountInput is not an input element')
+      utils.showError('formInputAmount is not an input element')
       return
     }
-    if (input.value !== '') {
-      utils.log('amount already set')
-      return
-    }
-    input.parentElement?.click()
+    // await utils.fillLikeHuman(input, amount.toString().replace('.', ',')) // fail with "The specified value "25," cannot be parsed, or is out of range."
+    // await utils.fillLikeHuman(input, amount.toString()) // fail with "The specified value "25." cannot be parsed, or is out of range."
+    // await utils.fillLikeHuman(input, '42')
     input.focus()
     input.value = amount.toString()
     await utils.sleep(delays.small)
@@ -146,6 +148,17 @@ function TiimeAutoExpenses() {
     await utils.sleep(delays.small)
     input.blur()
     utils.log('amount set to', input.value)
+    const vatInput = utils.findOne(selectors.formInputVatAmount)
+    if (vatInput === undefined) {
+      utils.showError('formInputVatAmount not found')
+      return
+    }
+    if (!(vatInput instanceof HTMLInputElement)) {
+      utils.showError('formInputVatAmount is not an input element')
+      return
+    }
+    await utils.fillLikeHuman(vatInput, '0')
+    utils.log('vat amount set to', vatInput.value)
   }
   /**
    * Set the comment for an expense
@@ -153,48 +166,23 @@ function TiimeAutoExpenses() {
    */
   async function setComment(comment) {
     utils.log(`setting comment "${comment}"`)
-    const icon = await utils.waitToDetect(`${selectors.tableRow}.${classes.tableRowActive} ${selectors.tableRowHasCommentIcon}`)
-    if (icon !== undefined) {
-      utils.log('comment already set')
-      return
-    }
-    const button = await utils.waitToDetect(`${selectors.tableRow}.${classes.tableRowActive} ${selectors.tableRowMenu}`)
-    if (button === undefined) {
-      utils.showError('tableRowMenu not found')
-      return
-    }
-    button.click()
-    const entry = await utils.waitToDetect(selectors.tableRowMenuComment)
-    if (entry === undefined) {
-      utils.showError('tableRowMenuComment not found')
-      return
-    }
-    const entryText = entry.textContent?.trim() ?? ''
-    if (entryText !== 'Ajouter un commentaire') {
-      utils.showError(`tableRowMenuComment found but wrong text inside : ${entryText}`)
-      return
-    }
-    entry.click()
-    const textarea = await utils.waitToDetect(selectors.textareaComment)
+    const textarea = await utils.findOne(selectors.formInputComment)
     if (textarea === undefined) {
-      utils.showError('textareaComment not found')
+      utils.showError('formInputComment not found')
       return
     }
     if (!(textarea instanceof HTMLTextAreaElement)) {
-      utils.showError('textareaComment is not a textarea element')
+      utils.showError('formInputComment is not a textarea element')
       return
     }
+    // await utils.fillLikeHuman(textarea, comment) // fail : nothing appears
+    await utils.sleep(delays.small)
     textarea.value = comment
     await utils.sleep(delays.small)
     textarea.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
     await utils.sleep(delays.small)
     textarea.blur()
-    const validate = await utils.waitToDetect(selectors.textareaCommentValidate)
-    if (validate === undefined) {
-      utils.showError('textareaCommentValidate not found')
-      return
-    }
-    validate.click()
+    utils.log('comment set to', textarea.value)
   }
   /**
    * Check if an expense is already filled
@@ -223,6 +211,34 @@ function TiimeAutoExpenses() {
       // so we consider it as already filled
     })
   }
+  async function createNdf() {
+    elements.createNdfBtn.click()
+    const addExpenseOptionBtn = await utils.waitToDetect(selectors.chooseExpenseBtn)
+    if (addExpenseOptionBtn === undefined) {
+      utils.showError('addExpenseOptionBtn not found')
+      return
+    }
+    addExpenseOptionBtn.click()
+    const nextButton = await utils.waitToDetect(selectors.nextButton)
+    if (nextButton === undefined) {
+      utils.showError('nextButton not found')
+      return
+    }
+    nextButton.click()
+    const newExpenseBtn = await utils.waitToDetect(selectors.newExpenseBtn)
+    if (newExpenseBtn === undefined) {
+      utils.log('no add expense button found on this page')
+      return
+    }
+    if (!(newExpenseBtn instanceof HTMLButtonElement)) {
+      utils.showError('newExpenseBtn is not a button element')
+      return
+    }
+    elements.newExpenseBtn = newExpenseBtn
+    utils.log('newExpenseBtn found and stored', elements.newExpenseBtn)
+    utils.log('ndf created')
+  }
+
   /**
    * Add an expense to the page
    * @param {string} label the label
@@ -236,18 +252,11 @@ function TiimeAutoExpenses() {
       utils.log(`expense already filled : ${label}`)
       return
     }
-    elements.addOneButton.click()
-    const row = await utils.waitToDetect(selectors.tableRow)
-    if (row === undefined) {
-      utils.showError('row not found')
-      return
-    }
-    row.classList.add(classes.tableRowActive)
-    await setDate(row)
-    await setLabel(row, label)
-    await setAmount(row, amount)
+    elements.newExpenseBtn.click()
+    await setDate()
+    await setLabel(label)
+    await setAmount(amount)
     if (comment !== '') await setComment(comment)
-    row.classList.remove(classes.tableRowActive)
   }
   /**
    * Add multiple expenses from the clipboard
@@ -286,30 +295,31 @@ function TiimeAutoExpenses() {
    * Initialize the script
    */
   async function init() {
-    const addOne = await utils.waitToDetect(selectors.addExpenseBtn)
-    if (addOne === undefined) {
+    const createNdfBtn = await utils.waitToDetect(selectors.createNdfBtn)
+    if (createNdfBtn === undefined) {
       utils.log('no add expense button found on this page')
       return
     }
-    if (!(addOne instanceof HTMLButtonElement)) {
-      utils.showError('addOne is not a button element')
+    if (!(createNdfBtn instanceof HTMLButtonElement)) {
+      utils.showError('createNdfBtn is not a button element')
       return
     }
-    elements.addOneButton = addOne
+    elements.createNdfBtn = createNdfBtn
     const hasAddAll = utils.findOne(`#${id}`, document.body, true)
     if (hasAddAll !== undefined) {
       utils.log('button already injected')
       return
     }
     const addAll = createButton('Ajouter les dépenses courantes 😎')
-    addAll.addEventListener('click', () => {
-      void addExpenses()
+    addAll.addEventListener('click', async () => {
+      await createNdf()
+      await addExpenses()
     })
-    if (addOne.parentElement === null) {
+    if (createNdfBtn.parentElement === null) {
       utils.showError('button parent element not found')
       return
     }
-    addOne.parentElement.append(addAll)
+    createNdfBtn.parentElement.append(addAll)
     utils.showLog('button injected')
   }
   const initDebounced = utils.debounce(init, delays.large)

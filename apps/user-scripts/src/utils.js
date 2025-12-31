@@ -193,7 +193,7 @@ class Shuutils {
   }
   /**
    * Fill an input like a human would do
-   * @param {HTMLInputElement} input the input to fill
+   * @param {HTMLInputElement | HTMLTextAreaElement} input the input to fill
    * @param {string} value the value to fill
    * @returns {Promise<void>} nothing
    * @example await utils.fillLikeHuman(input, 'hello world')
