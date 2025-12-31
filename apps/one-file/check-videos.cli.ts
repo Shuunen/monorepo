@@ -8,8 +8,8 @@ import { blue, Logger, parseJson, red, slugify } from '@monorepo/utils'
 import type { FfProbeOutput, FfProbeOutputStream } from './take-screenshot.types'
 
 // use me like :
-//  node ~/Projects/github/monorepo/apps/one-file/check-videos.js "/u/A Voir/" --set-title
-//  node ~/Projects/github/monorepo/apps/one-file/check-videos.js "/m/A Voir/Movies"
+//  bun ~/Projects/github/monorepo/apps/one-file/check-videos.ts "/u/A Voir/" --set-title
+//  bun ~/Projects/github/monorepo/apps/one-file/check-videos.ts "/m/A Voir/Movies"
 
 const { argv } = process
 const expectedNbParameters = 2

@@ -1,9 +1,10 @@
 {
   "dependencies": {
-    "@monorepo/utils": "workspace:*",
     "7zip-min": "^2.1.0",
+    "@monorepo/utils": "workspace:*",
     "clipboardy": "^5.0.2",
     "cors": "^2.8.5",
+    "exiftool-vendored": "^34.2.0",
     "express": "^5.2.1"
   },
   "description": "My personal snippets",
