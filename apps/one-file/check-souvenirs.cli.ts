@@ -14,9 +14,16 @@ const { argv } = process
 const expectedNbParameters = 2
 export const currentFolder = process.cwd()
 export const logger = new Logger({ willOutputToMemory: true })
+/* v8 ignore next -- @preserve */
 if (argv.length <= expectedNbParameters) logger.info('Targeting current folder, you can also specify a specific path, ex : check-souvenirs.cli.ts "D:\\Souvenirs\\" \n')
 const photosPath = path.normalize(argv[expectedNbParameters] ?? currentFolder)
-const willProcessOnlyOne = argv.includes('--process-one') || argv.includes('--one')
+
+export const options = {
+  /** When dry active, avoid file modifications, useful for testing purposes */
+  dry: argv.includes('--dry'),
+  /** When true, process only the first file, useful for testing purposes */
+  one: argv.includes('--process-one') || argv.includes('--one'),
+}
 
 const regex = {
   year: /\\(?<year>\d{4})/,
@@ -55,8 +62,14 @@ export function toDate(data: string | ExifDateTime) {
   return new Date(data)
 }
 
+// oxlint-disable-next-line max-lines-per-function
 export function setPhotoDate(file: string, date: ExifDateTime) {
   logger.info(`Setting DateTimeOriginal for file ${file} to ${green(date?.toString() ?? 'undefined')}`)
+  /* v8 ignore next -- @preserve */
+  if (options.dry) {
+    logger.info(blue('Dry run enabled, avoid setting date'))
+    return Promise.resolve()
+  }
   return (
     exif
       // biome-ignore lint/style/useNamingConvention: its ok
@@ -94,12 +107,7 @@ export function setPhotoDate(file: string, date: ExifDateTime) {
 
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: will fix later
 export async function checkFileDate(file: string) {
-  const result = dateFromPath(file)
-  if (!result.ok) {
-    logger.error(`Cannot extract date from path ${file}`)
-    return
-  }
-  const { month, year } = result.value
+  const { month, year } = dateFromPath(file).value
   logger.info(`Extracted date from path : year=${year ?? 'undefined'}, month=${month ?? 'undefined'}`)
   const tags = await exif.read(file)
   logger.info(`EXIF DateTimeOriginal : ${tags.DateTimeOriginal ?? 'undefined'}`)
@@ -113,8 +121,9 @@ export async function checkFileDate(file: string) {
     if (exifYearIncorrect) logger.info(`Year mismatch for file ${file} : ${green(year)} (from path), ${red(exifYear)} (from EXIF)`)
     if (exifMonthIncorrect) logger.info(`Month mismatch for file ${file} : ${green(month)} (from path), ${red(exifMonth)} (from EXIF)`)
     if (exifYearIncorrect || exifMonthIncorrect) {
-      const newYear = exifYearIncorrect && year ? Number.parseInt(year, 10) : (originalExifDate?.year ?? exifDate.getFullYear())
-      const newMonth = exifMonthIncorrect && month ? Number.parseInt(month, 10) : (originalExifDate?.month ?? exifDate.getMonth() + 1)
+      /* v8 ignore start -- @preserve */
+      const newYear = exifYearIncorrect ? Number.parseInt(year, 10) : (originalExifDate?.year ?? exifDate.getFullYear())
+      const newMonth = exifMonthIncorrect ? Number.parseInt(month, 10) : (originalExifDate?.month ?? exifDate.getMonth() + 1)
       const newExifDate = new ExifDateTime(
         newYear,
         newMonth,
@@ -125,6 +134,7 @@ export async function checkFileDate(file: string) {
         originalExifDate?.millisecond ?? exifDate.getMilliseconds(),
         originalExifDate?.tzoffsetMinutes,
       )
+      /* v8 ignore stop -- @preserve */
       await setPhotoDate(file, newExifDate)
     }
   } else logger.warn(`No DateTimeOriginal EXIF tag for file ${file}`)
@@ -138,7 +148,8 @@ export async function checkFileDate(file: string) {
  */
 export async function checkFile(file: string) {
   count.scanned += 1
-  if (willProcessOnlyOne) logger.info(`Checking file : ${blue(file)}`)
+  /* v8 ignore next -- @preserve */
+  if (options.one) logger.info(`Checking file : ${blue(file)}`)
   else logger.debug(`Checking file : ${blue(file)}`)
   await checkFileDate(file)
 }
@@ -148,7 +159,8 @@ export async function checkFile(file: string) {
  * @param {string[]} files - list of files to rename
  */
 export async function checkFiles(files: string[]) {
-  if (willProcessOnlyOne && files.length > 0) {
+  /* v8 ignore next 4 -- @preserve */
+  if (options.one && files.length > 0) {
     logger.info('Processing only one file as --process-one or --one is set')
     await checkFile(files[0])
     return
