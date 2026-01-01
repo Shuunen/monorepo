@@ -55,7 +55,7 @@ vi.mock('exiftool-vendored', () => ({
 }))
 
 // Import after mocks are set up
-const { checkFile, checkFileDate, checkFiles, count, dateFromPath, getFiles, logger, setPhotoDate, showReport, start, toDate } = await import('./check-souvenirs.cli')
+const { checkFile, checkFileDate, checkFiles, count, dateFromPath, getExifDateFromSiblings, getFiles, getNewExifDateBasedOnExistingDate: getNewExifDateTimeOriginal, logger, setFileDateBasedOnSiblings, setPhotoDate, showReport, start, toDate } = await import('./check-souvenirs.cli')
 const { ExifDateTime } = await import('exiftool-vendored')
 
 describe('check-souvenirs.cli', () => {
@@ -130,6 +130,149 @@ describe('check-souvenirs.cli', () => {
     expect(date).toBeInstanceOf(Date)
   })
 
+  it('getExifDateFromSiblings A should return ExifDateTime from previous sibling', async () => {
+    const siblingDate = new ExifDateTime(2006, 8, 14, 10, 20, 30, 0)
+    // biome-ignore lint/style/useNamingConvention: its ok
+    mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate })
+    const result = await getExifDateFromSiblings({
+      currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+      nextFilePath: '',
+      previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg`,
+    })
+    expect(result).toBeInstanceOf(ExifDateTime)
+    expect(result?.year).toBe(2006)
+  })
+
+  it('getExifDateFromSiblings B should convert string DateTimeOriginal to ExifDateTime', async () => {
+    // biome-ignore lint/style/useNamingConvention: its ok
+    mockRead.mockResolvedValue({ DateTimeOriginal: '2006-08-14T10:20:30' })
+    const result = await getExifDateFromSiblings({
+      currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+      nextFilePath: '',
+      previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg`,
+    })
+    expect(result).toBeInstanceOf(ExifDateTime)
+    expect(result?.year).toBe(2006)
+    expect(result?.month).toBe(8)
+  })
+
+  it('getExifDateFromSiblings C should return undefined when no siblings have dates', async () => {
+    mockRead.mockResolvedValue({})
+    const result = await getExifDateFromSiblings({
+      currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+      nextFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\next.jpg`,
+      previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg`,
+    })
+    expect(result).toBeUndefined()
+  })
+
+  it('getNewExifDateTimeOriginal A should use path year when exifYearIncorrect is true and pathYear exists', () => {
+    const originalExifDate = new ExifDateTime(2005, 8, 15, 12, 30, 45, 0)
+    const exifDate = new Date(2005, 7, 15, 12, 30, 45, 0)
+    const result = getNewExifDateTimeOriginal({
+      exifDate,
+      exifMonthIncorrect: false,
+      exifYearIncorrect: true,
+      originalExifDate,
+      pathMonth: undefined,
+      pathYear: '2006',
+    })
+    expect(result.year).toBe(2006)
+    expect(result.month).toBe(8)
+  })
+
+  it('getNewExifDateTimeOriginal B should use path month when exifMonthIncorrect is true and pathMonth exists', () => {
+    const originalExifDate = new ExifDateTime(2006, 7, 15, 12, 30, 45, 0)
+    const exifDate = new Date(2006, 6, 15, 12, 30, 45, 0)
+    const result = getNewExifDateTimeOriginal({
+      exifDate,
+      exifMonthIncorrect: true,
+      exifYearIncorrect: false,
+      originalExifDate,
+      pathMonth: '08',
+      pathYear: '2006',
+    })
+    expect(result.year).toBe(2006)
+    expect(result.month).toBe(8)
+  })
+
+  it('getNewExifDateTimeOriginal C should use originalExifDate when exifYearIncorrect is false', () => {
+    const originalExifDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0)
+    const exifDate = new Date(2006, 7, 15, 12, 30, 45, 0)
+    const result = getNewExifDateTimeOriginal({
+      exifDate,
+      exifMonthIncorrect: false,
+      exifYearIncorrect: false,
+      originalExifDate,
+      pathMonth: undefined,
+      pathYear: '2006',
+    })
+    expect(result.year).toBe(2006)
+    expect(result.month).toBe(8)
+  })
+
+  it('getNewExifDateTimeOriginal D should use exifDate when originalExifDate is undefined', () => {
+    const exifDate = new Date(2006, 7, 15, 12, 30, 45, 100)
+    const result = getNewExifDateTimeOriginal({
+      exifDate,
+      exifMonthIncorrect: false,
+      exifYearIncorrect: false,
+      originalExifDate: undefined,
+      pathMonth: undefined,
+      pathYear: undefined,
+    })
+    expect(result.year).toBe(2006)
+    expect(result.month).toBe(8)
+    expect(result.day).toBe(15)
+    expect(result.hour).toBe(12)
+    expect(result.minute).toBe(30)
+    expect(result.second).toBe(45)
+    expect(result.millisecond).toBe(100)
+  })
+
+  it('getNewExifDateTimeOriginal E should handle both year and month corrections', () => {
+    const originalExifDate = new ExifDateTime(2005, 7, 15, 12, 30, 45, 0)
+    const exifDate = new Date(2005, 6, 15, 12, 30, 45, 0)
+    const result = getNewExifDateTimeOriginal({
+      exifDate,
+      exifMonthIncorrect: true,
+      exifYearIncorrect: true,
+      originalExifDate,
+      pathMonth: '08',
+      pathYear: '2006',
+    })
+    expect(result.year).toBe(2006)
+    expect(result.month).toBe(8)
+  })
+
+  it('getNewExifDateTimeOriginal F should use exifDate year when exifYearIncorrect is true but pathYear is undefined', () => {
+    const originalExifDate = new ExifDateTime(2005, 8, 15, 12, 30, 45, 0)
+    const exifDate = new Date(2005, 7, 15, 12, 30, 45, 0)
+    const result = getNewExifDateTimeOriginal({
+      exifDate,
+      exifMonthIncorrect: false,
+      exifYearIncorrect: true,
+      originalExifDate,
+      pathMonth: undefined,
+      pathYear: undefined,
+    })
+    expect(result.year).toBe(2005)
+  })
+
+  it('getNewExifDateTimeOriginal G should use exifDate month when exifMonthIncorrect is true but pathMonth is undefined', () => {
+    const originalExifDate = new ExifDateTime(2006, 7, 15, 12, 30, 45, 0)
+    const exifDate = new Date(2006, 6, 15, 12, 30, 45, 0)
+    const result = getNewExifDateTimeOriginal({
+      exifDate,
+      exifMonthIncorrect: true,
+      exifYearIncorrect: false,
+      originalExifDate,
+      pathMonth: undefined,
+      pathYear: '2006',
+    })
+    expect(result.month).toBe(7)
+  })
+
   it('setPhotoDate A should set photo date successfully on first attempt', async () => {
     mockWrite.mockResolvedValue(undefined)
     const exifDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0)
@@ -164,7 +307,7 @@ describe('check-souvenirs.cli', () => {
 
   it('checkFileDate A should handle file without DateTimeOriginal', async () => {
     mockRead.mockResolvedValue({})
-    await checkFileDate(String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`)
+    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: '', previousFilePath: '' })
     expect(mockRead).toHaveBeenCalled()
   })
 
@@ -172,7 +315,7 @@ describe('check-souvenirs.cli', () => {
     const originalDate = new ExifDateTime(2005, 8, 15, 12, 30, 45, 0)
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate })
-    await checkFileDate(String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`)
+    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: '', previousFilePath: '' })
     expect(mockWrite).toHaveBeenCalled()
   })
 
@@ -180,7 +323,7 @@ describe('check-souvenirs.cli', () => {
     const originalDate = new ExifDateTime(2006, 7, 15, 12, 30, 45, 0)
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate })
-    await checkFileDate(String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`)
+    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: '', previousFilePath: '' })
     expect(mockWrite).toHaveBeenCalled()
   })
 
@@ -188,14 +331,14 @@ describe('check-souvenirs.cli', () => {
     const originalDate = new ExifDateTime(2005, 7, 15, 12, 30, 45, 0)
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate })
-    await checkFileDate(String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`)
+    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: '', previousFilePath: '' })
     expect(mockWrite).toHaveBeenCalled()
   })
 
   it('checkFileDate E should handle string DateTimeOriginal', async () => {
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: '2005-08-15T12:30:45' })
-    await checkFileDate(String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`)
+    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: '', previousFilePath: '' })
     expect(mockWrite).toHaveBeenCalled()
   })
 
@@ -203,7 +346,7 @@ describe('check-souvenirs.cli', () => {
     const correctDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0)
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: correctDate })
-    await checkFileDate(String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`)
+    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: '', previousFilePath: '' })
     expect(mockWrite).not.toHaveBeenCalled()
   })
 
@@ -211,7 +354,7 @@ describe('check-souvenirs.cli', () => {
     const originalDate = new ExifDateTime(2005, 8, 15, 12, 30, 45, 0)
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate })
-    await checkFileDate(String.raw`D:\Souvenirs\random.jpg`)
+    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\random.jpg`, nextFilePath: '', previousFilePath: '' })
     expect(mockWrite).not.toHaveBeenCalled()
   })
 
@@ -219,13 +362,85 @@ describe('check-souvenirs.cli', () => {
     const originalDate = new ExifDateTime(2006, 7, 15, 12, 30, 45, 0)
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate })
-    await checkFileDate(String.raw`D:\Souvenirs\2006\random.jpg`)
+    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\random.jpg`, nextFilePath: '', previousFilePath: '' })
     expect(mockWrite).not.toHaveBeenCalled()
+  })
+
+  it('setFileDateBasedOnSiblings A should set date from previous sibling', async () => {
+    const siblingDate = new ExifDateTime(2006, 8, 14, 10, 20, 30, 0)
+    // biome-ignore lint/style/useNamingConvention: its ok
+    mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate })
+    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: '', previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg` }, '2006', '08')
+    expect(mockWrite).toHaveBeenCalled()
+  })
+
+  it('setFileDateBasedOnSiblings B should set date from next sibling', async () => {
+    const siblingDate = new ExifDateTime(2006, 8, 16, 14, 25, 35, 0)
+    // biome-ignore lint/style/useNamingConvention: its ok
+    mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate })
+    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\next.jpg`, previousFilePath: '' }, '2006', '08')
+    expect(mockWrite).toHaveBeenCalled()
+  })
+
+  it('setFileDateBasedOnSiblings C should handle no siblings with dates', async () => {
+    mockRead.mockResolvedValue({})
+    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\next.jpg`, previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg` }, '2006', '08')
+    expect(mockWrite).toHaveBeenCalled()
+    const lastCall = mockWrite.mock.calls.at(-1)
+    expect(lastCall).toMatchInlineSnapshot(`
+      [
+        "D:\\Souvenirs\\2006\\2006-08_House\\test.jpg",
+        {
+          "DateTimeOriginal": ExifDateTime2 {
+            "day": 1,
+            "hour": 2,
+            "millisecond": 0,
+            "minute": 0,
+            "month": 8,
+            "second": 0,
+            "tzoffsetMinutes": undefined,
+            "year": 2006,
+          },
+        },
+      ]
+    `)
+  })
+
+  it('setFileDateBasedOnSiblings D should correct year from sibling date', async () => {
+    const siblingDate = new ExifDateTime(2005, 8, 14, 10, 20, 30, 0)
+    // biome-ignore lint/style/useNamingConvention: its ok
+    mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate })
+    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: '', previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg` }, '2006', '08')
+    expect(mockWrite).toHaveBeenCalled()
+    const writeCall = mockWrite.mock.calls[0]
+    expect(writeCall[1].DateTimeOriginal.year).toBe(2006)
+  })
+
+  it('setFileDateBasedOnSiblings E should correct month from sibling date', async () => {
+    const siblingDate = new ExifDateTime(2006, 7, 14, 10, 20, 30, 0)
+    // biome-ignore lint/style/useNamingConvention: its ok
+    mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate })
+    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: '', previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg` }, '2006', '08')
+    expect(mockWrite).toHaveBeenCalled()
+    const writeCall = mockWrite.mock.calls[0]
+    expect(writeCall[1].DateTimeOriginal.month).toBe(8)
+  })
+
+  it('setFileDateBasedOnSiblings F should handle string DateTimeOriginal from sibling', async () => {
+    // biome-ignore lint/style/useNamingConvention: its ok
+    mockRead.mockResolvedValue({ DateTimeOriginal: '2006-08-14T10:20:30' })
+    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: '', previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg` }, '2006', '08')
+    expect(mockWrite).toHaveBeenCalled()
+  })
+
+  it('setFileDateBasedOnSiblings G should handle no siblings', async () => {
+    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: '', previousFilePath: '' }, '2007', '08')
+    expect(mockWrite).toHaveBeenCalled()
   })
 
   it('checkFile A should check file and update count', async () => {
     mockRead.mockResolvedValue({})
-    await checkFile(String.raw`D:\Souvenirs\2006\test.jpg`)
+    await checkFile({ currentFilePath: String.raw`D:\Souvenirs\2006\test.jpg`, nextFilePath: '', previousFilePath: '' })
     expect(count.scanned).toBe(1)
   })
 

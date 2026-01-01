@@ -1,7 +1,7 @@
 import { rename, unlink } from 'node:fs/promises'
 import path from 'node:path'
-import { blue, green, Logger, nbThird, Result, red, yellow } from '@monorepo/utils'
-import { ExifDateTime, ExifTool } from 'exiftool-vendored'
+import { blue, functionReturningVoid, green, Logger, nbThird, Result, red, yellow } from '@monorepo/utils'
+import { ExifDateTime, ExifTool, type Maybe } from 'exiftool-vendored'
 import glob from 'tiny-glob'
 
 // use me like :
@@ -28,6 +28,12 @@ export const options = {
 const regex = {
   year: /\\(?<year>\d{4})/,
   yearAndMonth: /\\(?<year>\d{4})-(?<month>\d{2})/,
+}
+
+type File = {
+  previousFilePath: string
+  currentFilePath: string
+  nextFilePath: string
 }
 
 export const count = {
@@ -100,57 +106,106 @@ export function setPhotoDate(file: string, date: ExifDateTime) {
         logger.debug(`Successfully set DateTimeOriginal for file ${file} on second attempt`)
       })
       .finally(async () => {
-        await unlink(`${file}_original`) // created by exif tool
+        // created by exif tool
+        // oxlint-disable-next-line max-nested-callbacks
+        await unlink(`${file}_original`).catch(functionReturningVoid)
       })
   )
 }
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: will fix later
-export async function checkFileDate(file: string) {
-  const { month, year } = dateFromPath(file).value
-  logger.info(`Extracted date from path : year=${year ?? 'undefined'}, month=${month ?? 'undefined'}`)
-  const tags = await exif.read(file)
-  logger.info(`EXIF DateTimeOriginal : ${tags.DateTimeOriginal ?? 'undefined'}`)
-  if (tags.DateTimeOriginal) {
-    const originalExifDate = tags.DateTimeOriginal instanceof ExifDateTime ? tags.DateTimeOriginal : ExifDateTime.fromISO(tags.DateTimeOriginal)
-    const exifDate = toDate(tags.DateTimeOriginal)
-    const exifYear = exifDate.getFullYear().toString()
-    const exifYearIncorrect = year && exifYear !== year
-    const exifMonth = (exifDate.getMonth() + 1).toString().padStart(nbThird, '0')
-    const exifMonthIncorrect = month && exifMonth !== month
-    if (exifYearIncorrect) logger.info(`Year mismatch for file ${file} : ${green(year)} (from path), ${red(exifYear)} (from EXIF)`)
-    if (exifMonthIncorrect) logger.info(`Month mismatch for file ${file} : ${green(month)} (from path), ${red(exifMonth)} (from EXIF)`)
-    if (exifYearIncorrect || exifMonthIncorrect) {
-      /* v8 ignore start -- @preserve */
-      const newYear = exifYearIncorrect ? Number.parseInt(year, 10) : (originalExifDate?.year ?? exifDate.getFullYear())
-      const newMonth = exifMonthIncorrect ? Number.parseInt(month, 10) : (originalExifDate?.month ?? exifDate.getMonth() + 1)
-      const newExifDate = new ExifDateTime(
-        newYear,
-        newMonth,
-        originalExifDate?.day ?? exifDate.getDate(),
-        originalExifDate?.hour ?? exifDate.getHours(),
-        originalExifDate?.minute ?? exifDate.getMinutes(),
-        originalExifDate?.second ?? exifDate.getSeconds(),
-        originalExifDate?.millisecond ?? exifDate.getMilliseconds(),
-        originalExifDate?.tzoffsetMinutes,
-      )
-      /* v8 ignore stop -- @preserve */
-      await setPhotoDate(file, newExifDate)
+export function getNewExifDateBasedOnExistingDate({ pathYear, pathMonth, originalExifDate, exifYearIncorrect, exifMonthIncorrect, exifDate }: { pathYear?: string; pathMonth?: string; originalExifDate: Maybe<ExifDateTime>; exifYearIncorrect: boolean; exifMonthIncorrect: boolean; exifDate: Date }) {
+  const newYear = exifYearIncorrect && pathYear ? Number.parseInt(pathYear, 10) : (originalExifDate?.year ?? exifDate.getFullYear())
+  const newMonth = exifMonthIncorrect && pathMonth ? Number.parseInt(pathMonth, 10) : (originalExifDate?.month ?? exifDate.getMonth() + 1)
+  const newExifDate = new ExifDateTime(
+    newYear,
+    newMonth,
+    originalExifDate?.day ?? exifDate.getDate(),
+    originalExifDate?.hour ?? exifDate.getHours(),
+    originalExifDate?.minute ?? exifDate.getMinutes(),
+    originalExifDate?.second ?? exifDate.getSeconds(),
+    originalExifDate?.millisecond ?? exifDate.getMilliseconds(), // cspell: disable-next-line
+    originalExifDate?.tzoffsetMinutes,
+  )
+  return newExifDate
+}
+
+export async function checkFileDateTimeOriginal({ file, dateTimeOriginal, pathYear, pathMonth }: { file: string; dateTimeOriginal: string | ExifDateTime; pathYear: string; pathMonth?: string }) {
+  const originalExifDate = dateTimeOriginal instanceof ExifDateTime ? dateTimeOriginal : ExifDateTime.fromISO(dateTimeOriginal)
+  const exifDate = toDate(dateTimeOriginal)
+  const exifYear = exifDate.getFullYear().toString()
+  const exifYearIncorrect = exifYear !== pathYear
+  const exifMonth = (exifDate.getMonth() + 1).toString().padStart(nbThird, '0')
+  const exifMonthIncorrect = pathMonth !== undefined && exifMonth !== pathMonth
+  if (exifYearIncorrect) logger.info(`Year mismatch for file ${file} : ${green(pathYear)} (from path), ${red(exifYear)} (from EXIF)`)
+  if (exifMonthIncorrect) logger.info(`Month mismatch for file ${file} : ${green(pathMonth)} (from path), ${red(exifMonth)} (from EXIF)`)
+  if (exifYearIncorrect || exifMonthIncorrect) {
+    const newExifDate = getNewExifDateBasedOnExistingDate({ exifDate, exifMonthIncorrect, exifYearIncorrect, originalExifDate, pathMonth, pathYear })
+    await setPhotoDate(file, newExifDate)
+  }
+}
+
+export async function getExifDateFromSiblings(file: File): Promise<ExifDateTime | undefined> {
+  const siblings = [file.previousFilePath, file.nextFilePath].filter(sibling => sibling !== '')
+  const referenceDate: ExifDateTime | undefined = await (async () => {
+    for (const sibling of siblings) {
+      // oxlint-disable-next-line no-await-in-loop
+      const tags = await exif.read(sibling)
+      if (!tags.DateTimeOriginal) continue
+      /* v8 ignore next -- @preserve */
+      logger.debug(`Found DateTimeOriginal in sibling file ${sibling} : ${green(tags.DateTimeOriginal.toString() ?? 'undefined')}`)
+      return tags.DateTimeOriginal instanceof ExifDateTime ? tags.DateTimeOriginal : (ExifDateTime.fromISO(tags.DateTimeOriginal) as ExifDateTime)
     }
-  } else logger.warn(`No DateTimeOriginal EXIF tag for file ${file}`)
+    return undefined
+  })()
+  return referenceDate
+}
+
+export function getExifDateFromYearAndMonth(pathYear: string, pathMonth?: string) {
+  const isoString = `${pathYear}-${pathMonth ?? '01'}-01T00:00:00.000Z`
+  return ExifDateTime.fromISO(isoString) as ExifDateTime
+}
+
+export async function getNewExifDateBasedOnSiblings(file: File, pathYear: string, pathMonth?: string) {
+  const referenceDate = (await getExifDateFromSiblings(file)) ?? getExifDateFromYearAndMonth(pathYear, pathMonth)
+  const exifDate = toDate(referenceDate)
+  const exifYear = exifDate.getFullYear().toString()
+  const exifYearIncorrect = exifYear !== pathYear
+  const exifMonth = (exifDate.getMonth() + 1).toString().padStart(nbThird, '0')
+  const exifMonthIncorrect = pathMonth !== undefined && exifMonth !== pathMonth
+  const newExifDate = getNewExifDateBasedOnExistingDate({ exifDate, exifMonthIncorrect, exifYearIncorrect, originalExifDate: referenceDate, pathMonth, pathYear })
+  return newExifDate
+}
+
+export async function setFileDateBasedOnSiblings(file: File, pathYear: string, pathMonth?: string) {
+  logger.info(`No DateTimeOriginal EXIF tag for file ${file.currentFilePath}, checking siblings...`)
+  const newExifDate = await getNewExifDateBasedOnSiblings(file, pathYear, pathMonth)
+  await setPhotoDate(file.currentFilePath, newExifDate)
+}
+
+export async function checkFileDate(file: File) {
+  const { month: pathMonth, year: pathYear } = dateFromPath(file.currentFilePath).value
+  logger.debug(`Extracted date from path : year=${pathYear ?? 'undefined'}, month=${pathMonth ?? 'undefined'}`)
+  if (!pathYear) {
+    logger.warn(`No year found in path for file ${file.currentFilePath}, skipping date check`)
+    return
+  }
+  const tags = await exif.read(file.currentFilePath)
+  logger.debug(`Extracted DateTimeOriginal from exif : DateTimeOriginal=${tags.DateTimeOriginal ?? 'undefined'}`)
+  if (tags.DateTimeOriginal) await checkFileDateTimeOriginal({ dateTimeOriginal: tags.DateTimeOriginal, file: file.currentFilePath, pathMonth, pathYear })
+  else await setFileDateBasedOnSiblings(file, pathYear, pathMonth)
 }
 
 /**
  * Check a file to remove unwanted characters and rename or delete it
- * @param {string} file - file name to check
- * @returns {void}
+ * @param  file - file name to check
+ * @returns nothing
  * @example checkFile('video (2160p_25fps_AV1-128kbit_AAC-French).mp4')
  */
-export async function checkFile(file: string) {
+export async function checkFile(file: File) {
   count.scanned += 1
   /* v8 ignore next -- @preserve */
-  if (options.one) logger.info(`Checking file : ${blue(file)}`)
-  else logger.debug(`Checking file : ${blue(file)}`)
+  if (options.one) logger.debug(`Checking file : ${blue(file.currentFilePath)}`)
+  else logger.debug(`Checking file : ${blue(file.currentFilePath)}`)
   await checkFileDate(file)
 }
 
@@ -162,11 +217,12 @@ export async function checkFiles(files: string[]) {
   /* v8 ignore next 4 -- @preserve */
   if (options.one && files.length > 0) {
     logger.info('Processing only one file as --process-one or --one is set')
-    await checkFile(files[0])
+    await checkFile({ currentFilePath: files[0], nextFilePath: files[1] ?? '', previousFilePath: '' })
     return
   }
+  // await Promise.all(files.map((file, index) => checkFile({ currentFilePath: file, nextFilePath: files[index + 1] ?? '', previousFilePath: files[index - 1] ?? '' })))
   // oxlint-disable-next-line no-await-in-loop
-  for (const file of files) await checkFile(file)
+  for (const [index, file] of files.entries()) await checkFile({ currentFilePath: file, nextFilePath: files[index + 1] ?? '', previousFilePath: files[index - 1] ?? '' })
 }
 
 /**
