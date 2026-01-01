@@ -14,6 +14,14 @@ vi.mock('tiny-glob', () => ({
   default: mockGlob,
 }))
 
+const mockSharpToFile = vi.fn().mockResolvedValue(undefined)
+const mockSharpJpeg = vi.fn().mockReturnValue({ toFile: mockSharpToFile })
+const mockSharp = vi.fn().mockReturnValue({ jpeg: mockSharpJpeg })
+
+vi.mock('sharp', () => ({
+  default: mockSharp,
+}))
+
 const mockRead = vi.fn().mockResolvedValue({})
 const mockWrite = vi.fn().mockResolvedValue(undefined)
 const mockRewriteAllTags = vi.fn().mockResolvedValue(undefined)
@@ -55,7 +63,26 @@ vi.mock('exiftool-vendored', () => ({
 }))
 
 // Import after mocks are set up
-const { checkFile, checkFileDate, checkFiles, count, dateFromPath, getExifDateFromSiblings, getFiles, getNewExifDateBasedOnExistingDate: getNewExifDateTimeOriginal, logger, setFileDateBasedOnSiblings, setPhotoDate, showReport, start, toDate } = await import('./check-souvenirs.cli')
+const {
+  checkFile,
+  cleanFilePath,
+  checkFileDate,
+  checkFilePathExtension,
+  checkFilePathSpecialCharacters,
+  checkFiles,
+  checkPngTransparency,
+  count,
+  dateFromPath,
+  getExifDateFromSiblings,
+  getFiles,
+  getNewExifDateBasedOnExistingDate: getNewExifDateTimeOriginal,
+  logger,
+  setFileDateBasedOnSiblings,
+  setPhotoDate,
+  showReport,
+  start,
+  toDate,
+} = await import('./check-souvenirs.cli')
 const { ExifDateTime } = await import('exiftool-vendored')
 
 describe('check-souvenirs.cli', () => {
@@ -66,6 +93,9 @@ describe('check-souvenirs.cli', () => {
     mockUnlink.mockResolvedValue(undefined)
     mockRename.mockResolvedValue(undefined)
     mockGlob.mockResolvedValue([])
+    mockSharpToFile.mockResolvedValue(undefined)
+    mockSharpJpeg.mockReturnValue({ toFile: mockSharpToFile })
+    mockSharp.mockReturnValue({ jpeg: mockSharpJpeg })
     count.dateFixes = 0
     count.errors = 0
     count.scanned = 0
@@ -77,34 +107,34 @@ describe('check-souvenirs.cli', () => {
     vi.clearAllMocks()
   })
 
-  const tests = [
+  const dateFromPathTests = [
     {
       description: 'A regular case with year and month',
-      expected: { month: '08', year: '2006' },
       input: 'D:\\Souvenirs\\2006\\2006-08_House Foobar\\P1000068.jpg',
+      output: { month: '08', year: '2006' },
     },
     {
       description: 'B regular case with only year',
-      expected: { month: undefined, year: '2006' },
       input: 'D:\\Souvenirs\\2006\\Me puissance 10.jpg',
+      output: { month: undefined, year: '2006' },
     },
     {
       description: 'C regular case with 00 month',
-      expected: { month: undefined, year: '2006' },
       input: 'D:\\Souvenirs\\2006\\2006-00_Term Mont-topaz-photo-lighting-face-upscale-2x.jpeg',
+      output: { month: undefined, year: '2006' },
     },
     {
       description: 'D irregular case with no year or month',
-      expected: { month: undefined, year: undefined },
       input: 'D:\\Souvenirs\\Miscellaneous\\random-file.png',
+      output: { month: undefined, year: undefined },
     },
   ]
 
-  for (const test of tests)
+  for (const test of dateFromPathTests)
     it(`dateFromPath ${test.description}`, () => {
       const result = dateFromPath(test.input)
       if (!result.ok) throw new Error('Expected ok result')
-      expect(result.value).toStrictEqual(test.expected)
+      expect(result.value).toStrictEqual(test.output)
     })
 
   it('getFiles A should return list of files', async () => {
@@ -483,11 +513,116 @@ describe('check-souvenirs.cli', () => {
     expect(logger.inMemoryLogs.some(log => log.includes('Some issues were found'))).toBe(true)
   })
 
+  it('showReport D should display report with conversions and special chars fixes', () => {
+    count.scanned = 10
+    count.dateFixes = 5
+    count.conversions = 2
+    count.specialCharsFixes = 3
+    count.errors = 0
+    count.warnings = 0
+    showReport()
+    expect(logger.inMemoryLogs.some(log => log.includes('Nice no issues found'))).toBe(true)
+  })
+
+  it('showReport E should display report with zero scanned files', () => {
+    count.scanned = 0
+    count.dateFixes = 0
+    count.conversions = 0
+    count.specialCharsFixes = 0
+    count.errors = 0
+    count.warnings = 0
+    showReport()
+    expect(logger.inMemoryLogs.some(log => log.includes('Nice no issues found'))).toBe(true)
+  })
+
   it('start A should execute full workflow', async () => {
     mockGlob.mockResolvedValue(['file1.jpg'])
     mockRead.mockResolvedValue({})
     await start()
     expect(count.scanned).toBe(1)
     expect(logger.inMemoryLogs.some(log => log.includes('Check Souvenirs is done'))).toBe(true)
+  })
+
+  it('checkFilePathExtension A should handle lowercase extension', async () => {
+    const result = await checkFilePathExtension(String.raw`D:\Souvenirs\test.jpg`)
+    expect(result).toBe(String.raw`D:\Souvenirs\test.jpg`)
+  })
+
+  it('checkFilePathExtension B should rename uppercase extension to lowercase', async () => {
+    const result = await checkFilePathExtension(String.raw`D:\Souvenirs\test.JPG`)
+    expect(mockRename).toHaveBeenCalledTimes(2)
+    expect(result).toBe(String.raw`D:\Souvenirs\test.jpg`)
+  })
+
+  it('checkFilePathSpecialCharacters A should handle files without special characters', async () => {
+    const result = await checkFilePathSpecialCharacters(String.raw`D:\Souvenirs\test.jpg`)
+    expect(result).toBe(String.raw`D:\Souvenirs\test.jpg`)
+    expect(mockRename).not.toHaveBeenCalled()
+  })
+
+  it('checkFilePathSpecialCharacters B should rename files with special characters', async () => {
+    const result = await checkFilePathSpecialCharacters(String.raw`D:\Souvenirs\test@file.jpg`)
+    expect(mockRename).toHaveBeenCalledTimes(1)
+    expect(result).toMatchInlineSnapshot(`"D:\\Souvenirs\\test-file.jpg"`)
+  })
+
+  it('checkPngTransparency A should skip non-PNG files', async () => {
+    await checkPngTransparency(String.raw`D:\Souvenirs\test.jpg`)
+    expect(mockRead).not.toHaveBeenCalled()
+  })
+
+  it('checkPngTransparency B should warn about PNG without ColorType tag', async () => {
+    mockRead.mockResolvedValue({})
+    await checkPngTransparency(String.raw`D:\Souvenirs\test.png`)
+    expect(mockRead).toHaveBeenCalled()
+    expect(logger.inMemoryLogs.some(log => log.includes('No ColorType tag found'))).toBe(true)
+  })
+
+  it('checkPngTransparency C should warn about RGB PNG without transparency', async () => {
+    // biome-ignore lint/style/useNamingConvention: cant fix
+    mockRead.mockResolvedValue({ ColorType: 'RGB' })
+    await checkPngTransparency(String.raw`D:\Souvenirs\test.png`)
+    expect(logger.inMemoryLogs.some(log => log.includes('PNG file without transparency detected'))).toBe(true)
+    expect(mockSharp).toHaveBeenCalledWith(String.raw`D:\Souvenirs\test.png`)
+    expect(mockSharpJpeg).toHaveBeenCalledWith({ quality: 90 })
+    expect(mockSharpToFile).toHaveBeenCalledWith(String.raw`D:\Souvenirs\test.jpg`)
+    expect(mockUnlink).toHaveBeenCalledWith(String.raw`D:\Souvenirs\test.png`)
+  })
+
+  it('checkPngTransparency D should not warn about PNG with RGBA ColorType', async () => {
+    // biome-ignore lint/style/useNamingConvention: cant fix
+    mockRead.mockResolvedValue({ ColorType: 'RGBA' })
+    await checkPngTransparency(String.raw`D:\Souvenirs\test.png`)
+    expect(logger.inMemoryLogs.some(log => log.includes('PNG file without transparency'))).toBe(false)
+  })
+
+  const cleanFilePathTests = [
+    {
+      description: 'A regular case with authorized characters only',
+      input: String.raw`D:\Souvenirs\2006\2006-08_House Foobar\P1000068.jpg`,
+      output: String.raw`D:\Souvenirs\2006\2006-08_House Foobar\P1000068.jpg`,
+    },
+    {
+      description: 'B should replace special characters with dashes',
+      input: String.raw`D:\Souvenirs\2006\test!2!!&@*(file#.jpg`,
+      output: String.raw`D:\Souvenirs\2006\test-2-file.jpg`,
+    },
+    {
+      description: 'C should warn about special characters in the path',
+      input: String.raw`D:\Souvenirs\2006\2006-00_Super test@@@!folder\pic.png`,
+      output: String.raw`D:\Souvenirs\2006\2006-00_Super test@@@!folder\pic.png`,
+    },
+  ]
+
+  for (const test of cleanFilePathTests)
+    it(`cleanFilePath ${test.description}`, async () => {
+      const result = await cleanFilePath(test.input)
+      expect(result).toBe(test.output)
+    })
+
+  it('cleanFilePath D should warn about special characters in the path', async () => {
+    const inputPath = String.raw`D:\Souvenirs\2006\2006-00_Super test@@@!folder\pic.png`
+    await cleanFilePath(inputPath)
+    expect(logger.inMemoryLogs.at(-1)?.split('warn ')[1]).toMatchInlineSnapshot(`"File path D:\\Souvenirs\\2006\\2006-00_Super test@@@!folder\\pic.png contains forbidden characters"`)
   })
 })

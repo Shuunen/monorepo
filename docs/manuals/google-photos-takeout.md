@@ -33,3 +33,7 @@
 ## Order
 
 Now order photos in subfolders and delete `D:/Souvenirs/20XX/to-merge/`.
+
+## Fix
+
+`bun ~/Projects/github/monorepo/apps/one-file/check-souvenirs.cli.ts /d/Souvenirs/202x`

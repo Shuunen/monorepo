@@ -1,7 +1,10 @@
+// oxlint-disable max-lines
 import { rename, unlink } from 'node:fs/promises'
 import path from 'node:path'
 import { blue, functionReturningVoid, green, Logger, nbThird, Result, red, yellow } from '@monorepo/utils'
+import { Presets, SingleBar } from 'cli-progress'
 import { ExifDateTime, ExifTool, type Maybe } from 'exiftool-vendored'
+import sharp from 'sharp'
 import glob from 'tiny-glob'
 
 // use me like :
@@ -17,6 +20,16 @@ export const logger = new Logger({ willOutputToMemory: true })
 /* v8 ignore next -- @preserve */
 if (argv.length <= expectedNbParameters) logger.info('Targeting current folder, you can also specify a specific path, ex : check-souvenirs.cli.ts "D:\\Souvenirs\\" \n')
 const photosPath = path.normalize(argv[expectedNbParameters] ?? currentFolder)
+
+const progressBar = new SingleBar(
+  {
+    barCompleteChar: '\u2588',
+    barIncompleteChar: '\u2591',
+    format: 'Progress |{bar}| {percentage}% | {value}/{total} files',
+    hideCursor: true,
+  },
+  Presets.shades_classic,
+)
 
 export const options = {
   /** When dry active, avoid file modifications, useful for testing purposes */
@@ -37,9 +50,11 @@ type File = {
 }
 
 export const count = {
+  conversions: 0,
   dateFixes: 0,
   errors: 0,
   scanned: 0,
+  specialCharsFixes: 0,
   warnings: 0,
 }
 
@@ -57,7 +72,7 @@ export function dateFromPath(filePath: string) {
  */
 export async function getFiles() {
   logger.info(`Scanning dir ${blue(photosPath)}...`)
-  const globPattern = '**/*.{jpg,jpeg,png}'
+  const globPattern = '**/*.{jpg,JPG,jpeg,JPEG,png,PNG}'
   const files = await glob(globPattern, { absolute: true, cwd: photosPath, filesOnly: true })
   logger.info(`Found ${blue(files.length.toString())} files with glob pattern ${blue(globPattern)}`)
   return files
@@ -195,17 +210,91 @@ export async function checkFileDate(file: File) {
   else await setFileDateBasedOnSiblings(file, pathYear, pathMonth)
 }
 
+export async function checkFilePathExtension(filePath: string): Promise<string> {
+  const extension = path.extname(filePath)
+  const isUpperCaseExtension = extension !== extension.toLowerCase()
+  if (!isUpperCaseExtension) return filePath
+  const newFilePath = filePath.slice(0, -extension.length) + extension.toLowerCase()
+  const tempFilePath = `${filePath}.tmp_renaming`
+  logger.info(`Renaming file ${filePath} to ${newFilePath} to have lowercase extension`)
+  /* v8 ignore next -- @preserve */
+  if (options.dry) {
+    logger.info(blue('Dry run enabled, avoid renaming file'))
+    return newFilePath
+  }
+  await rename(filePath, tempFilePath)
+  await rename(tempFilePath, newFilePath)
+  return newFilePath
+}
+
+const forbiddenCharsInFileName = /[^a-zA-Z0-9._\- éèêëàâäôöùûüç]/g
+const forbiddenCharsInFilePath = /[^a-zA-Z0-9._\- \\:éèêëàâäôöùûüç]/g
+const trailingDashes = /-+$/
+
+export function cleanFilePath(filePath: string): string {
+  const basename = path.basename(filePath)
+  const extension = path.extname(basename)
+  const nameWithoutExtension = basename.slice(0, basename.length - extension.length)
+  const cleanName = nameWithoutExtension.replaceAll(forbiddenCharsInFileName, '-').replaceAll(/-+/g, '-').replace(trailingDashes, '').trim()
+  const newFileName = cleanName + extension
+  const newFilePath = path.join(path.dirname(filePath), newFileName)
+  const directoryPath = path.dirname(filePath)
+  if (forbiddenCharsInFilePath.test(directoryPath)) logger.warn(`File path ${filePath} contains forbidden characters`)
+  if (newFilePath === filePath) return filePath
+  return newFilePath
+}
+
+export async function checkFilePathSpecialCharacters(filePath: string): Promise<string> {
+  const newFilePath = cleanFilePath(filePath)
+  if (newFilePath === filePath) return filePath
+  logger.info(`Renaming file ${filePath} to ${newFilePath} to remove special characters`)
+  /* v8 ignore next -- @preserve */
+  if (options.dry) {
+    logger.info(blue('Dry run enabled, avoid renaming file'))
+    return newFilePath
+  }
+  await rename(filePath, newFilePath)
+  count.specialCharsFixes += 1
+  return newFilePath
+}
+
+export async function checkPngTransparency(filePath: string) {
+  const extension = path.extname(filePath).toLowerCase()
+  if (extension !== '.png') return filePath // no need to check other file types
+  const tags = await exif.read(filePath)
+  if (!('ColorType' in tags)) {
+    logger.warn(`No ColorType tag found for PNG file: ${filePath}. Unable to determine transparency.`)
+    return filePath
+  }
+  if (tags.ColorType !== 'RGB') return filePath // has transparency
+  logger.info(`PNG file without transparency detected: ${filePath}. Converting to JPG...`)
+  /* v8 ignore next -- @preserve */
+  if (options.dry) {
+    logger.info(blue('Dry run enabled, avoid converting file'))
+    return filePath
+  }
+  const jpgFilePath = `${filePath.slice(0, -extension.length)}.jpg`
+  await sharp(filePath).jpeg({ quality: 90 }).toFile(jpgFilePath)
+  logger.info(`Converted ${filePath} to ${green(jpgFilePath)}`)
+  await unlink(filePath).catch(functionReturningVoid)
+  logger.debug(`Deleted original PNG file: ${filePath}`)
+  count.conversions += 1
+  return jpgFilePath
+}
+
 /**
- * Check a file to remove unwanted characters and rename or delete it
- * @param  file - file name to check
+ * Check a file against various criteria
+ * @param  file - file collection to check
  * @returns nothing
- * @example checkFile('video (2160p_25fps_AV1-128kbit_AAC-French).mp4')
  */
 export async function checkFile(file: File) {
   count.scanned += 1
   /* v8 ignore next -- @preserve */
   if (options.one) logger.debug(`Checking file : ${blue(file.currentFilePath)}`)
   else logger.debug(`Checking file : ${blue(file.currentFilePath)}`)
+  file.currentFilePath = await checkFilePathExtension(file.currentFilePath)
+  file.currentFilePath = await checkFilePathSpecialCharacters(file.currentFilePath)
+  file.currentFilePath = await checkPngTransparency(file.currentFilePath)
   await checkFileDate(file)
 }
 
@@ -220,9 +309,14 @@ export async function checkFiles(files: string[]) {
     await checkFile({ currentFilePath: files[0], nextFilePath: files[1] ?? '', previousFilePath: '' })
     return
   }
+  progressBar.start(files.length, 0)
   // await Promise.all(files.map((file, index) => checkFile({ currentFilePath: file, nextFilePath: files[index + 1] ?? '', previousFilePath: files[index - 1] ?? '' })))
-  // oxlint-disable-next-line no-await-in-loop
-  for (const [index, file] of files.entries()) await checkFile({ currentFilePath: file, nextFilePath: files[index + 1] ?? '', previousFilePath: files[index - 1] ?? '' })
+  for (const [index, file] of files.entries()) {
+    // oxlint-disable-next-line no-await-in-loop
+    await checkFile({ currentFilePath: file, nextFilePath: files[index + 1] ?? '', previousFilePath: files[index - 1] ?? '' })
+    progressBar.update(index + 1)
+  }
+  progressBar.stop()
 }
 
 /**
@@ -233,10 +327,12 @@ export function showReport() {
     if (log.includes('error')) count.errors += 1
     else if (log.includes('warn')) count.warnings += 1
   logger.info(`Report :`)
-  logger.info(`- ${blue(count.scanned.toString())} files scanned`)
-  logger.info(`- ${green(count.dateFixes.toString())} date fixes applied`)
-  logger.info(`- ${red(count.errors.toString())} errors`)
-  logger.info(`- ${yellow(count.warnings.toString())} warnings`)
+  logger.info(`- ${count.scanned > 0 ? blue(count.scanned.toString()) : '0'} files scanned`)
+  logger.info(`- ${count.dateFixes > 0 ? green(count.dateFixes.toString()) : '0'} date fixes applied`)
+  logger.info(`- ${count.conversions > 0 ? green(count.conversions.toString()) : '0'} png to jpg conversions`)
+  logger.info(`- ${count.specialCharsFixes > 0 ? green(count.specialCharsFixes.toString()) : '0'} special characters fixes applied`)
+  logger.info(`- ${count.errors > 0 ? red(count.errors.toString()) : '0'} errors`)
+  logger.info(`- ${count.warnings > 0 ? yellow(count.warnings.toString()) : '0'} warnings`)
   if (count.errors + count.warnings === 0) logger.success('Nice no issues found ( ͡° ͜ʖ ͡°)')
   else logger.warn('Some issues were found ಠ_ಠ')
 }
@@ -255,9 +351,3 @@ export async function start() {
 /* v8 ignore next 2 -- @preserve */
 // avoid running this script if it's imported for testing
 if (process.argv[1]?.includes('check-souvenirs.cli.ts')) await start()
-
-/**
- * Todo :
- * - [ ] Remove unwanted characters from file names
- * - [ ] Detect png without transparency and convert to jpg
- */

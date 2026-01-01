@@ -11,3 +11,4 @@ onlyBuiltDependencies:
   - lzma-native
   - nx
   - oxc-resolver
+  - sharp
