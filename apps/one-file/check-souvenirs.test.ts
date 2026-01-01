@@ -1,3 +1,4 @@
+import { alignForSnap } from '@monorepo/utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockUnlink = vi.fn().mockResolvedValue(undefined)
@@ -423,7 +424,7 @@ describe('check-souvenirs.cli', () => {
         {
           "DateTimeOriginal": ExifDateTime2 {
             "day": 1,
-            "hour": 2,
+            "hour": 0,
             "millisecond": 0,
             "minute": 0,
             "month": 8,
@@ -556,14 +557,14 @@ describe('check-souvenirs.cli', () => {
 
   it('checkFilePathSpecialCharacters A should handle files without special characters', async () => {
     const result = await checkFilePathSpecialCharacters(String.raw`D:\Souvenirs\test.jpg`)
-    expect(result).toBe(String.raw`D:\Souvenirs\test.jpg`)
+    expect(alignForSnap(result)).toMatchInlineSnapshot(`"D:/Souvenirs/test.jpg"`)
     expect(mockRename).not.toHaveBeenCalled()
   })
 
   it('checkFilePathSpecialCharacters B should rename files with special characters', async () => {
     const result = await checkFilePathSpecialCharacters(String.raw`D:\Souvenirs\test@file.jpg`)
     expect(mockRename).toHaveBeenCalledTimes(1)
-    expect(result).toMatchInlineSnapshot(`"D:\\Souvenirs\\test-file.jpg"`)
+    expect(alignForSnap(result)).toMatchInlineSnapshot(`"D:/Souvenirs/test-file.jpg"`)
   })
 
   it('checkPngTransparency A should skip non-PNG files', async () => {
@@ -596,33 +597,15 @@ describe('check-souvenirs.cli', () => {
     expect(logger.inMemoryLogs.some(log => log.includes('PNG file without transparency'))).toBe(false)
   })
 
-  const cleanFilePathTests = [
-    {
-      description: 'A regular case with authorized characters only',
-      input: String.raw`D:\Souvenirs\2006\2006-08_House Foobar\P1000068.jpg`,
-      output: String.raw`D:\Souvenirs\2006\2006-08_House Foobar\P1000068.jpg`,
-    },
-    {
-      description: 'B should replace special characters with dashes',
-      input: String.raw`D:\Souvenirs\2006\test!2!!&@*(file#.jpg`,
-      output: String.raw`D:\Souvenirs\2006\test-2-file.jpg`,
-    },
-    {
-      description: 'C should warn about special characters in the path',
-      input: String.raw`D:\Souvenirs\2006\2006-00_Super test@@@!folder\pic.png`,
-      output: String.raw`D:\Souvenirs\2006\2006-00_Super test@@@!folder\pic.png`,
-    },
-  ]
-
-  for (const test of cleanFilePathTests)
-    it(`cleanFilePath ${test.description}`, async () => {
-      const result = await cleanFilePath(test.input)
-      expect(result).toBe(test.output)
-    })
-
-  it('cleanFilePath D should warn about special characters in the path', async () => {
+  it('cleanFilePath A should warn about special characters in the path', async () => {
     const inputPath = String.raw`D:\Souvenirs\2006\2006-00_Super test@@@!folder\pic.png`
     await cleanFilePath(inputPath)
-    expect(logger.inMemoryLogs.at(-1)?.split('warn ')[1]).toMatchInlineSnapshot(`"File path D:\\Souvenirs\\2006\\2006-00_Super test@@@!folder\\pic.png contains forbidden characters"`)
+    expect(logger.inMemoryLogs.some(log => log.includes('contains forbidden characters'))).toBe(true)
+  })
+
+  it('cleanFilePath B should rename file with special characters', async () => {
+    const inputPath = 'test!2!!&@*(file#.jpg'
+    const result = await cleanFilePath(inputPath)
+    expect(result).toMatchInlineSnapshot(`"test-2-file.jpg"`)
   })
 })

@@ -176,7 +176,7 @@ export async function getExifDateFromSiblings(file: File): Promise<ExifDateTime 
 }
 
 export function getExifDateFromYearAndMonth(pathYear: string, pathMonth?: string) {
-  const isoString = `${pathYear}-${pathMonth ?? '01'}-01T00:00:00.000Z`
+  const isoString = `${pathYear}-${pathMonth ?? '01'}-01T00:00:00.000`
   return ExifDateTime.fromISO(isoString) as ExifDateTime
 }
 
