@@ -51,7 +51,15 @@ vi.mock('exiftool-vendored', () => ({
     // biome-ignore lint/style/useNamingConvention: its ok
     static fromISO(str: string) {
       const date = new Date(str)
-      return new ExifDateTime(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())
+      const tzMatch = str.match(/([+-])(\d{2}):(\d{2})$/)
+      let tzoffsetMinutes: number | undefined = undefined
+      if (tzMatch) {
+        const sign = tzMatch[1] === '+' ? 1 : -1
+        const hours = Number.parseInt(tzMatch[2], 10)
+        const minutes = Number.parseInt(tzMatch[3], 10)
+        tzoffsetMinutes = sign * (hours * 60 + minutes)
+      }
+      return new ExifDateTime(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds(), tzoffsetMinutes)
     }
   },
   // biome-ignore lint/style/useNamingConvention: its ok
@@ -68,7 +76,8 @@ vi.mock('exiftool-vendored', () => ({
 const {
   checkFile,
   checkFileDate,
-  checkFilePathExtension,
+  checkFilePathExtensionCase,
+  checkFilePathExtensionMp,
   checkFilePathSpecialCharacters,
   checkFiles,
   checkPngTransparency,
@@ -78,7 +87,8 @@ const {
   getExifDateFromSiblings,
   getExifDateFromYearAndMonth,
   getFiles,
-  getNewExifDateBasedOnExistingDate: getNewExifDateTimeOriginal,
+  getNewExifDateBasedOnExistingDate,
+  isPhoto,
   logger,
   setFileDateBasedOnSiblings,
   setPhotoDate,
@@ -130,6 +140,11 @@ describe('check-souvenirs.cli', () => {
       description: 'D irregular case with no year or month',
       input: 'D:\\Souvenirs\\Miscellaneous\\random-file.png',
       output: { month: undefined, year: undefined },
+    },
+    {
+      description: 'E date in path and different one in file name',
+      input: 'D:\\Souvenirs\\2016\\2016-10_Sydney\\Darling Harbour and around\\2016-11-01 14-21-22_513809296_-Acer.jpg',
+      output: { month: '10', year: '2016' },
     },
   ]
 
@@ -199,10 +214,10 @@ describe('check-souvenirs.cli', () => {
     expect(result).toBeUndefined()
   })
 
-  it('getNewExifDateTimeOriginal A should use path year when exifYearIncorrect is true and pathYear exists', () => {
+  it('getNewExifDateBasedOnExistingDate A should use path year when exifYearIncorrect is true and pathYear exists', () => {
     const originalExifDate = new ExifDateTime(2005, 8, 15, 12, 30, 45, 0)
     const exifDate = new Date(2005, 7, 15, 12, 30, 45, 0)
-    const result = getNewExifDateTimeOriginal({
+    const result = getNewExifDateBasedOnExistingDate({
       exifDate,
       exifMonthIncorrect: false,
       exifYearIncorrect: true,
@@ -214,10 +229,10 @@ describe('check-souvenirs.cli', () => {
     expect(result.month).toBe(8)
   })
 
-  it('getNewExifDateTimeOriginal B should use path month when exifMonthIncorrect is true and pathMonth exists', () => {
+  it('getNewExifDateBasedOnExistingDate B should use path month when exifMonthIncorrect is true and pathMonth exists', () => {
     const originalExifDate = new ExifDateTime(2006, 7, 15, 12, 30, 45, 0)
     const exifDate = new Date(2006, 6, 15, 12, 30, 45, 0)
-    const result = getNewExifDateTimeOriginal({
+    const result = getNewExifDateBasedOnExistingDate({
       exifDate,
       exifMonthIncorrect: true,
       exifYearIncorrect: false,
@@ -229,10 +244,10 @@ describe('check-souvenirs.cli', () => {
     expect(result.month).toBe(8)
   })
 
-  it('getNewExifDateTimeOriginal C should use originalExifDate when exifYearIncorrect is false', () => {
+  it('getNewExifDateBasedOnExistingDate C should use originalExifDate when exifYearIncorrect is false', () => {
     const originalExifDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0)
     const exifDate = new Date(2006, 7, 15, 12, 30, 45, 0)
-    const result = getNewExifDateTimeOriginal({
+    const result = getNewExifDateBasedOnExistingDate({
       exifDate,
       exifMonthIncorrect: false,
       exifYearIncorrect: false,
@@ -244,9 +259,9 @@ describe('check-souvenirs.cli', () => {
     expect(result.month).toBe(8)
   })
 
-  it('getNewExifDateTimeOriginal D should use exifDate when originalExifDate is undefined', () => {
+  it('getNewExifDateBasedOnExistingDate D should use exifDate when originalExifDate is undefined', () => {
     const exifDate = new Date(2006, 7, 15, 12, 30, 45, 100)
-    const result = getNewExifDateTimeOriginal({
+    const result = getNewExifDateBasedOnExistingDate({
       exifDate,
       exifMonthIncorrect: false,
       exifYearIncorrect: false,
@@ -263,10 +278,10 @@ describe('check-souvenirs.cli', () => {
     expect(result.millisecond).toBe(100)
   })
 
-  it('getNewExifDateTimeOriginal E should handle both year and month corrections', () => {
+  it('getNewExifDateBasedOnExistingDate E should handle both year and month corrections', () => {
     const originalExifDate = new ExifDateTime(2005, 7, 15, 12, 30, 45, 0)
     const exifDate = new Date(2005, 6, 15, 12, 30, 45, 0)
-    const result = getNewExifDateTimeOriginal({
+    const result = getNewExifDateBasedOnExistingDate({
       exifDate,
       exifMonthIncorrect: true,
       exifYearIncorrect: true,
@@ -278,10 +293,10 @@ describe('check-souvenirs.cli', () => {
     expect(result.month).toBe(8)
   })
 
-  it('getNewExifDateTimeOriginal F should use exifDate year when exifYearIncorrect is true but pathYear is undefined', () => {
+  it('getNewExifDateBasedOnExistingDate F should use exifDate year when exifYearIncorrect is true but pathYear is undefined', () => {
     const originalExifDate = new ExifDateTime(2005, 8, 15, 12, 30, 45, 0)
     const exifDate = new Date(2005, 7, 15, 12, 30, 45, 0)
-    const result = getNewExifDateTimeOriginal({
+    const result = getNewExifDateBasedOnExistingDate({
       exifDate,
       exifMonthIncorrect: false,
       exifYearIncorrect: true,
@@ -292,10 +307,10 @@ describe('check-souvenirs.cli', () => {
     expect(result.year).toBe(2005)
   })
 
-  it('getNewExifDateTimeOriginal G should use exifDate month when exifMonthIncorrect is true but pathMonth is undefined', () => {
+  it('getNewExifDateBasedOnExistingDate G should use exifDate month when exifMonthIncorrect is true but pathMonth is undefined', () => {
     const originalExifDate = new ExifDateTime(2006, 7, 15, 12, 30, 45, 0)
     const exifDate = new Date(2006, 6, 15, 12, 30, 45, 0)
-    const result = getNewExifDateTimeOriginal({
+    const result = getNewExifDateBasedOnExistingDate({
       exifDate,
       exifMonthIncorrect: true,
       exifYearIncorrect: false,
@@ -304,6 +319,102 @@ describe('check-souvenirs.cli', () => {
       pathYear: '2006',
     })
     expect(result.month).toBe(7)
+  })
+
+  it('getNewExifDateBasedOnExistingDate H should adjust day 31 to 30 when changing month from October to November', () => {
+    const originalExifDate = new ExifDateTime(2023, 10, 31, 17, 51, 15, 193, 60)
+    const exifDate = new Date(2023, 9, 31, 17, 51, 15, 193)
+    const result = getNewExifDateBasedOnExistingDate({
+      exifDate,
+      exifMonthIncorrect: true,
+      exifYearIncorrect: false,
+      originalExifDate,
+      pathMonth: '11',
+      pathYear: '2023',
+    })
+    expect(result.year).toBe(2023)
+    expect(result.month).toBe(11)
+    expect(result.day).toBe(30)
+    expect(result.hour).toBe(17)
+    expect(result.minute).toBe(51)
+    expect(result.second).toBe(15)
+    expect(result.toString()).toMatchInlineSnapshot(`"2023-11-30T17:51:15"`)
+  })
+
+  it('getNewExifDateBasedOnExistingDate I should adjust day 31 to 28 when changing month to February in non-leap year', () => {
+    const originalExifDate = new ExifDateTime(2023, 1, 31, 10, 0, 0, 0, 0)
+    const exifDate = new Date(2023, 0, 31, 10, 0, 0, 0)
+    const result = getNewExifDateBasedOnExistingDate({
+      exifDate,
+      exifMonthIncorrect: true,
+      exifYearIncorrect: false,
+      originalExifDate,
+      pathMonth: '02',
+      pathYear: '2023',
+    })
+    expect(result.year).toBe(2023)
+    expect(result.month).toBe(2)
+    expect(result.day).toBe(28)
+  })
+
+  it('getNewExifDateBasedOnExistingDate J should adjust day 31 to 29 when changing month to February in leap year', () => {
+    const originalExifDate = new ExifDateTime(2024, 1, 31, 10, 0, 0, 0, 0)
+    const exifDate = new Date(2024, 0, 31, 10, 0, 0, 0)
+    const result = getNewExifDateBasedOnExistingDate({
+      exifDate,
+      exifMonthIncorrect: true,
+      exifYearIncorrect: false,
+      originalExifDate,
+      pathMonth: '02',
+      pathYear: '2024',
+    })
+    expect(result.year).toBe(2024)
+    expect(result.month).toBe(2)
+    expect(result.day).toBe(29)
+  })
+
+  it('getNewExifDateBasedOnExistingDate K should not adjust day when it is valid for the target month', () => {
+    const originalExifDate = new ExifDateTime(2023, 10, 15, 12, 0, 0, 0, 0)
+    const exifDate = new Date(2023, 9, 15, 12, 0, 0, 0)
+    const result = getNewExifDateBasedOnExistingDate({
+      exifDate,
+      exifMonthIncorrect: true,
+      exifYearIncorrect: false,
+      originalExifDate,
+      pathMonth: '11',
+      pathYear: '2023',
+    })
+    expect(result.year).toBe(2023)
+    expect(result.month).toBe(11)
+    expect(result.day).toBe(15)
+  })
+
+  it('getNewExifDateBasedOnExistingDate L should preserve timezone offset when adjusting date', () => {
+    const originalExifDate = new ExifDateTime(2023, 10, 31, 17, 51, 15, 193, 60)
+    const exifDate = new Date(2023, 9, 31, 17, 51, 15, 193)
+    const result = getNewExifDateBasedOnExistingDate({
+      exifDate,
+      exifMonthIncorrect: true,
+      exifYearIncorrect: false,
+      originalExifDate,
+      pathMonth: '11',
+      pathYear: '2023',
+    })
+    expect(result.tzoffsetMinutes).toBe(60)
+  })
+
+  it('getNewExifDateBasedOnExistingDate M should handle negative timezone offset', () => {
+    const originalExifDate = new ExifDateTime(2023, 10, 31, 17, 51, 15, 193, -300)
+    const exifDate = new Date(2023, 9, 31, 17, 51, 15, 193)
+    const result = getNewExifDateBasedOnExistingDate({
+      exifDate,
+      exifMonthIncorrect: false,
+      exifYearIncorrect: false,
+      originalExifDate,
+      pathMonth: '10',
+      pathYear: '2023',
+    })
+    expect(result.tzoffsetMinutes).toBe(-300)
   })
 
   it('setPhotoDate A should set photo date successfully on first attempt', async () => {
@@ -335,7 +446,7 @@ describe('check-souvenirs.cli', () => {
   it('setPhotoDate D should handle undefined date', async () => {
     mockWrite.mockResolvedValue(undefined)
     await setPhotoDate('test.jpg', undefined as never)
-    expect(mockWrite).toHaveBeenCalled()
+    expect(mockWrite).not.toHaveBeenCalled()
   })
 
   it('checkFileDate A should handle file without DateTimeOriginal', async () => {
@@ -431,7 +542,7 @@ describe('check-souvenirs.cli', () => {
             "minute": 0,
             "month": 8,
             "second": 0,
-            "tzoffsetMinutes": undefined,
+            "tzoffsetMinutes": 120,
             "year": 2006,
           },
         },
@@ -475,6 +586,12 @@ describe('check-souvenirs.cli', () => {
     mockRead.mockResolvedValue({})
     await checkFile({ currentFilePath: String.raw`D:\Souvenirs\2006\test.jpg`, nextFilePath: '', previousFilePath: '' })
     expect(count.scanned).toBe(1)
+  })
+
+  it('checkFile B should skip non-photo files', async () => {
+    await checkFile({ currentFilePath: String.raw`D:\Souvenirs\2006\video.mp4`, nextFilePath: '', previousFilePath: '' })
+    expect(count.scanned).toBe(1)
+    expect(mockRead).not.toHaveBeenCalled()
   })
 
   it('checkFiles A should process all files', async () => {
@@ -546,15 +663,26 @@ describe('check-souvenirs.cli', () => {
     expect(logger.inMemoryLogs.some(log => log.includes('Check Souvenirs is done'))).toBe(true)
   })
 
-  it('checkFilePathExtension A should handle lowercase extension', async () => {
-    const result = await checkFilePathExtension(String.raw`D:\Souvenirs\test.jpg`)
+  it('checkFilePathExtensionCase A should handle lowercase extension', async () => {
+    const result = await checkFilePathExtensionCase(String.raw`D:\Souvenirs\test.jpg`)
     expect(result).toBe(String.raw`D:\Souvenirs\test.jpg`)
   })
 
-  it('checkFilePathExtension B should rename uppercase extension to lowercase', async () => {
-    const result = await checkFilePathExtension(String.raw`D:\Souvenirs\test.JPG`)
+  it('checkFilePathExtensionCase B should rename uppercase extension to lowercase', async () => {
+    const result = await checkFilePathExtensionCase(String.raw`D:\Souvenirs\test.JPG`)
     expect(mockRename).toHaveBeenCalledTimes(2)
     expect(result).toBe(String.raw`D:\Souvenirs\test.jpg`)
+  })
+
+  it('checkFilePathExtensionMp A should handle non-mp extension', async () => {
+    const result = await checkFilePathExtensionMp(String.raw`D:\Souvenirs\test.jpg`)
+    expect(result).toBe(String.raw`D:\Souvenirs\test.jpg`)
+  })
+
+  it('checkFilePathExtensionMp B should rename mp extension to mp4', async () => {
+    const result = await checkFilePathExtensionMp(String.raw`D:\Souvenirs\test.mp`)
+    expect(mockRename).toHaveBeenCalledTimes(1)
+    expect(result).toBe(String.raw`D:\Souvenirs\test.mp4`)
   })
 
   it('checkFilePathSpecialCharacters A should handle files without special characters', async () => {
@@ -628,5 +756,40 @@ describe('check-souvenirs.cli', () => {
     expect(result.year).toBe(2006)
     expect(result.month).toBe(1)
     expect(result.day).toBe(1)
+  })
+
+  it('isPhoto A should return true for jpg extension', () => {
+    const result = isPhoto('test.jpg')
+    expect(result).toBe(true)
+  })
+
+  it('isPhoto B should return true for jpeg extension', () => {
+    const result = isPhoto('test.jpeg')
+    expect(result).toBe(true)
+  })
+
+  it('isPhoto C should return true for png extension', () => {
+    const result = isPhoto('test.png')
+    expect(result).toBe(true)
+  })
+
+  it('isPhoto D should return true for uppercase JPG extension', () => {
+    const result = isPhoto('test.JPG')
+    expect(result).toBe(true)
+  })
+
+  it('isPhoto E should return false for mp4 extension', () => {
+    const result = isPhoto('test.mp4')
+    expect(result).toBe(false)
+  })
+
+  it('isPhoto F should return false for mp extension', () => {
+    const result = isPhoto('test.mp')
+    expect(result).toBe(false)
+  })
+
+  it('isPhoto G should return false for txt extension', () => {
+    const result = isPhoto('test.txt')
+    expect(result).toBe(false)
   })
 })

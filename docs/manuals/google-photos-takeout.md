@@ -19,11 +19,9 @@
 
 ## Align
 
-1. Rename every `.MP` files to `.mp4` (Google Takeout export live photos videos with `.MP` extension)
-2. Rename every `.jpeg` files to `.jpg`
-3. Convert every `.webp` or `.png` files to `.jpg`
-4. Delete every `*.COVER.jpg` files (they are just thumbnails for albums)
-5. Compress with Imagine to JPG 85%
+1. Convert every `.webp` or `.png` files to `.jpg`
+2. Delete every `*.COVER.jpg` files (they are just thumbnails for albums)
+3. Compress with Imagine to JPG 85%
 
 ## Remove duplicates
 

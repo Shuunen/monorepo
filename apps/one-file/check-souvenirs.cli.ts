@@ -72,7 +72,7 @@ export function dateFromPath(filePath: string) {
  */
 export async function getFiles() {
   logger.info(`Scanning dir ${blue(photosPath)}...`)
-  const globPattern = '**/*.{jpg,JPG,jpeg,JPEG,png,PNG}'
+  const globPattern = '**/*.{jpg,JPG,jpeg,JPEG,png,PNG,MP}'
   const files = await glob(globPattern, { absolute: true, cwd: photosPath, filesOnly: true })
   logger.info(`Found ${blue(files.length.toString())} files with glob pattern ${blue(globPattern)}`)
   return files
@@ -83,9 +83,25 @@ export function toDate(data: string | ExifDateTime) {
   return new Date(data)
 }
 
+export function formatTimezoneOffset(offsetMinutes: number): string {
+  const sign = offsetMinutes >= 0 ? '+' : '-'
+  const absMinutes = Math.abs(offsetMinutes)
+  const minutesInHour = 60
+  const hours = Math.floor(absMinutes / minutesInHour)
+    .toString()
+    .padStart(nbThird, '0')
+  const minutes = (absMinutes % minutesInHour).toString().padStart(nbThird, '0')
+  return `${sign}${hours}:${minutes}`
+}
+
 // oxlint-disable-next-line max-lines-per-function
 export function setPhotoDate(file: string, date: ExifDateTime) {
-  logger.info(`Setting DateTimeOriginal for file ${file} to ${green(date?.toString() ?? 'undefined')}`)
+  const str = date?.toString()?.split('T')[0]
+  if (str === undefined) {
+    logger.error(`Invalid date provided for file ${red(file)}`, date)
+    return Promise.resolve()
+  }
+  logger.info(`Setting DateTimeOriginal for file ${file} to ${green(str)}`)
   /* v8 ignore next -- @preserve */
   if (options.dry) {
     logger.info(blue('Dry run enabled, avoid setting date'))
@@ -96,29 +112,29 @@ export function setPhotoDate(file: string, date: ExifDateTime) {
       // biome-ignore lint/style/useNamingConvention: its ok
       .write(file, { DateTimeOriginal: date }) // first attempt
       .then(() => {
-        logger.debug(`Successfully set DateTimeOriginal for file ${file} on first attempt`)
+        logger.debug(`Successfully set DateTimeOriginal for file ${green(file)} on first attempt`)
         count.dateFixes += 1
       })
       .catch(async () => {
-        logger.debug(`Failed to write DateTimeOriginal for file ${file}, retrying...`)
+        logger.debug(`Failed to write DateTimeOriginal for file ${red(file)}, retrying...`)
         // sometimes exif tool fails to write the date, so we rewrite all tags as a workaround
         await exif.rewriteAllTags(file, `${file}.new`) // cant rewrite in place so write to new file
         await unlink(file) // remove original
         await rename(`${file}.new`, file) // rename new to original name
-        logger.debug(`Rewrote all tags for file ${file}, retrying to set DateTimeOriginal...`)
+        logger.debug(`Rewrote all tags for file ${green(file)}, retrying to set DateTimeOriginal...`)
         await exif
           // biome-ignore lint/style/useNamingConvention: its ok
           .write(file, { DateTimeOriginal: date }) // second attempt
           // oxlint-disable-next-line max-nested-callbacks
           .then(() => {
-            logger.debug(`Successfully set DateTimeOriginal for file ${file} on second attempt`)
+            logger.debug(`Successfully set DateTimeOriginal for file ${green(file)} on second attempt`)
             count.dateFixes += 1
           })
           // oxlint-disable-next-line max-nested-callbacks
           .catch(error => {
-            logger.error(`Failed again to write DateTimeOriginal for file ${file} : ${error}`)
+            logger.error(`Failed again to write DateTimeOriginal for file ${red(file)} : ${error}`)
           })
-        logger.debug(`Successfully set DateTimeOriginal for file ${file} on second attempt`)
+        logger.debug(`Successfully set DateTimeOriginal for file ${green(file)} on second attempt`)
       })
       .finally(async () => {
         // created by exif tool
@@ -131,17 +147,19 @@ export function setPhotoDate(file: string, date: ExifDateTime) {
 export function getNewExifDateBasedOnExistingDate({ pathYear, pathMonth, originalExifDate, exifYearIncorrect, exifMonthIncorrect, exifDate }: { pathYear?: string; pathMonth?: string; originalExifDate: Maybe<ExifDateTime>; exifYearIncorrect: boolean; exifMonthIncorrect: boolean; exifDate: Date }) {
   const newYear = exifYearIncorrect && pathYear ? Number.parseInt(pathYear, 10) : (originalExifDate?.year ?? exifDate.getFullYear())
   const newMonth = exifMonthIncorrect && pathMonth ? Number.parseInt(pathMonth, 10) : (originalExifDate?.month ?? exifDate.getMonth() + 1)
-  const newExifDate = new ExifDateTime(
-    newYear,
-    newMonth,
-    originalExifDate?.day ?? exifDate.getDate(),
-    originalExifDate?.hour ?? exifDate.getHours(),
-    originalExifDate?.minute ?? exifDate.getMinutes(),
-    originalExifDate?.second ?? exifDate.getSeconds(),
-    originalExifDate?.millisecond ?? exifDate.getMilliseconds(), // cspell: disable-next-line
-    originalExifDate?.tzoffsetMinutes,
-  )
-  return newExifDate
+  let day = originalExifDate?.day ?? exifDate.getDate()
+  const daysInMonth = new Date(newYear, newMonth, 0).getDate()
+  if (day > daysInMonth) day = daysInMonth
+  const hour = originalExifDate?.hour ?? exifDate.getHours()
+  const minute = originalExifDate?.minute ?? exifDate.getMinutes()
+  const second = originalExifDate?.second ?? exifDate.getSeconds()
+  const millisecond = originalExifDate?.millisecond ?? exifDate.getMilliseconds()
+  const tzOffsetMinutes = originalExifDate?.tzoffsetMinutes ?? -exifDate.getTimezoneOffset()
+  const millisecondPadding = 3
+  const datePart = `${newYear}-${newMonth.toString().padStart(nbThird, '0')}-${day.toString().padStart(nbThird, '0')}`
+  const timePart = `${hour.toString().padStart(nbThird, '0')}:${minute.toString().padStart(nbThird, '0')}:${second.toString().padStart(nbThird, '0')}.${millisecond.toString().padStart(millisecondPadding, '0')}`
+  const isoString = `${datePart}T${timePart}${formatTimezoneOffset(tzOffsetMinutes)}`
+  return ExifDateTime.fromISO(isoString) as ExifDateTime
 }
 
 export async function checkFileDateTimeOriginal({ file, dateTimeOriginal, pathYear, pathMonth }: { file: string; dateTimeOriginal: string | ExifDateTime; pathYear: string; pathMonth?: string }) {
@@ -192,7 +210,7 @@ export async function getNewExifDateBasedOnSiblings(file: File, pathYear: string
 }
 
 export async function setFileDateBasedOnSiblings(file: File, pathYear: string, pathMonth?: string) {
-  logger.info(`No DateTimeOriginal EXIF tag for file ${file.currentFilePath}, checking siblings...`)
+  logger.info(`No DateTimeOriginal EXIF tag for file ${red(file.currentFilePath)}, checking siblings...`)
   const newExifDate = await getNewExifDateBasedOnSiblings(file, pathYear, pathMonth)
   await setPhotoDate(file.currentFilePath, newExifDate)
 }
@@ -201,7 +219,7 @@ export async function checkFileDate(file: File) {
   const { month: pathMonth, year: pathYear } = dateFromPath(file.currentFilePath).value
   logger.debug(`Extracted date from path : year=${pathYear ?? 'undefined'}, month=${pathMonth ?? 'undefined'}`)
   if (!pathYear) {
-    logger.warn(`No year found in path for file ${file.currentFilePath}, skipping date check`)
+    logger.warn(`No year found in path for file ${red(file.currentFilePath)}, skipping date check`)
     return
   }
   const tags = await exif.read(file.currentFilePath)
@@ -210,13 +228,13 @@ export async function checkFileDate(file: File) {
   else await setFileDateBasedOnSiblings(file, pathYear, pathMonth)
 }
 
-export async function checkFilePathExtension(filePath: string): Promise<string> {
+export async function checkFilePathExtensionCase(filePath: string): Promise<string> {
   const extension = path.extname(filePath)
   const isUpperCaseExtension = extension !== extension.toLowerCase()
   if (!isUpperCaseExtension) return filePath
   const newFilePath = filePath.slice(0, -extension.length) + extension.toLowerCase()
   const tempFilePath = `${filePath}.tmp_renaming`
-  logger.info(`Renaming file ${filePath} to ${newFilePath} to have lowercase extension`)
+  logger.info(`Renaming file ${red(filePath)} to ${green(newFilePath)} to have lowercase extension`)
   /* v8 ignore next -- @preserve */
   if (options.dry) {
     logger.info(blue('Dry run enabled, avoid renaming file'))
@@ -247,7 +265,7 @@ export function cleanFilePath(filePath: string): string {
 export async function checkFilePathSpecialCharacters(filePath: string): Promise<string> {
   const newFilePath = cleanFilePath(filePath)
   if (newFilePath === filePath) return filePath
-  logger.info(`Renaming file ${filePath} to ${newFilePath} to remove special characters`)
+  logger.info(`Renaming file ${red(filePath)} to ${green(newFilePath)} to remove special characters`)
   /* v8 ignore next -- @preserve */
   if (options.dry) {
     logger.info(blue('Dry run enabled, avoid renaming file'))
@@ -263,11 +281,11 @@ export async function checkPngTransparency(filePath: string) {
   if (extension !== '.png') return filePath // no need to check other file types
   const tags = await exif.read(filePath)
   if (!('ColorType' in tags)) {
-    logger.warn(`No ColorType tag found for PNG file: ${filePath}. Unable to determine transparency.`)
+    logger.warn(`No ColorType tag found for PNG file ${red(filePath)}. Unable to determine transparency.`)
     return filePath
   }
   if (tags.ColorType !== 'RGB') return filePath // has transparency
-  logger.info(`PNG file without transparency detected: ${filePath}. Converting to JPG...`)
+  logger.info(`PNG file without transparency detected ${red(filePath)}. Converting to JPG...`)
   /* v8 ignore next -- @preserve */
   if (options.dry) {
     logger.info(blue('Dry run enabled, avoid converting file'))
@@ -282,6 +300,26 @@ export async function checkPngTransparency(filePath: string) {
   return jpgFilePath
 }
 
+export async function checkFilePathExtensionMp(filePath: string): Promise<string> {
+  const extension = path.extname(filePath).toLowerCase()
+  if (extension !== '.mp') return filePath
+  const newFilePath = `${filePath.slice(0, -extension.length)}.mp4`
+  logger.info(`Renaming file ${red(filePath)} to have ${green('.mp4')} extension`)
+  /* v8 ignore next -- @preserve */
+  if (options.dry) {
+    logger.info(blue('Dry run enabled, avoid renaming file'))
+    return newFilePath
+  }
+  await rename(filePath, newFilePath)
+  return newFilePath
+}
+
+export function isPhoto(filePath: string) {
+  const extension = path.extname(filePath).toLowerCase()
+  const photoExtensions = ['.jpg', '.jpeg', '.png']
+  return photoExtensions.includes(extension)
+}
+
 /**
  * Check a file against various criteria
  * @param  file - file collection to check
@@ -292,8 +330,10 @@ export async function checkFile(file: File) {
   /* v8 ignore next -- @preserve */
   if (options.one) logger.debug(`Checking file : ${blue(file.currentFilePath)}`)
   else logger.debug(`Checking file : ${blue(file.currentFilePath)}`)
-  file.currentFilePath = await checkFilePathExtension(file.currentFilePath)
+  file.currentFilePath = await checkFilePathExtensionMp(file.currentFilePath)
+  file.currentFilePath = await checkFilePathExtensionCase(file.currentFilePath)
   file.currentFilePath = await checkFilePathSpecialCharacters(file.currentFilePath)
+  if (!isPhoto(file.currentFilePath)) return
   file.currentFilePath = await checkPngTransparency(file.currentFilePath)
   await checkFileDate(file)
 }
