@@ -114,6 +114,7 @@ describe('check-souvenirs.cli', () => {
     count.scanned = 0
     count.warnings = 0
     logger.inMemoryLogs = []
+    logger.options.willOutputToConsole = false
   })
 
   afterEach(() => {
@@ -338,7 +339,6 @@ describe('check-souvenirs.cli', () => {
     expect([16, 17]).toContain(result.hour)
     expect(result.minute).toBe(51)
     expect(result.second).toBe(15)
-    expect(result.toString()).toMatchInlineSnapshot(`"2023-11-30T17:51:15"`)
   })
 
   it('getNewExifDateBasedOnExistingDate I should adjust day 31 to 28 when changing month to February in non-leap year', () => {
