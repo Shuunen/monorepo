@@ -1,3 +1,4 @@
+import path from 'node:path'
 import { alignForSnap } from '@monorepo/utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -66,15 +67,16 @@ vi.mock('exiftool-vendored', () => ({
 // Import after mocks are set up
 const {
   checkFile,
-  cleanFilePath,
   checkFileDate,
   checkFilePathExtension,
   checkFilePathSpecialCharacters,
   checkFiles,
   checkPngTransparency,
+  cleanFilePath,
   count,
   dateFromPath,
   getExifDateFromSiblings,
+  getExifDateFromYearAndMonth,
   getFiles,
   getNewExifDateBasedOnExistingDate: getNewExifDateTimeOriginal,
   logger,
@@ -556,15 +558,18 @@ describe('check-souvenirs.cli', () => {
   })
 
   it('checkFilePathSpecialCharacters A should handle files without special characters', async () => {
-    const result = await checkFilePathSpecialCharacters(String.raw`D:\Souvenirs\test.jpg`)
-    expect(alignForSnap(result)).toMatchInlineSnapshot(`"D:/Souvenirs/test.jpg"`)
+    const inputPath = path.normalize('/Souvenirs/test.jpg')
+    const result = await checkFilePathSpecialCharacters(inputPath)
+    expect(alignForSnap(result)).toBe(alignForSnap(inputPath))
     expect(mockRename).not.toHaveBeenCalled()
   })
 
   it('checkFilePathSpecialCharacters B should rename files with special characters', async () => {
-    const result = await checkFilePathSpecialCharacters(String.raw`D:\Souvenirs\test@file.jpg`)
+    const inputPath = path.normalize('/Souvenirs/test@file.jpg')
+    const expectedPath = path.normalize('/Souvenirs/test-file.jpg')
+    const result = await checkFilePathSpecialCharacters(inputPath)
     expect(mockRename).toHaveBeenCalledTimes(1)
-    expect(alignForSnap(result)).toMatchInlineSnapshot(`"D:/Souvenirs/test-file.jpg"`)
+    expect(alignForSnap(result)).toBe(alignForSnap(expectedPath))
   })
 
   it('checkPngTransparency A should skip non-PNG files', async () => {
@@ -598,7 +603,7 @@ describe('check-souvenirs.cli', () => {
   })
 
   it('cleanFilePath A should warn about special characters in the path', async () => {
-    const inputPath = String.raw`D:\Souvenirs\2006\2006-00_Super test@@@!folder\pic.png`
+    const inputPath = '/Souvenirs/2006/2006-00_Super test@@@!folder/pic.png'
     await cleanFilePath(inputPath)
     expect(logger.inMemoryLogs.some(log => log.includes('contains forbidden characters'))).toBe(true)
   })
@@ -607,5 +612,21 @@ describe('check-souvenirs.cli', () => {
     const inputPath = 'test!2!!&@*(file#.jpg'
     const result = await cleanFilePath(inputPath)
     expect(result).toMatchInlineSnapshot(`"test-2-file.jpg"`)
+  })
+
+  it('getExifDateFromYearAndMonth A should return ExifDateTime for valid year and month', () => {
+    const result = getExifDateFromYearAndMonth('2006', '08')
+    expect(result).toBeInstanceOf(ExifDateTime)
+    expect(result.year).toBe(2006)
+    expect(result.month).toBe(8)
+    expect(result.day).toBe(1)
+  })
+
+  it('getExifDateFromYearAndMonth B should return ExifDateTime for valid year without month', () => {
+    const result = getExifDateFromYearAndMonth('2006', undefined)
+    expect(result).toBeInstanceOf(ExifDateTime)
+    expect(result.year).toBe(2006)
+    expect(result.month).toBe(1)
+    expect(result.day).toBe(1)
   })
 })

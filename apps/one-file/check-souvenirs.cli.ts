@@ -228,7 +228,7 @@ export async function checkFilePathExtension(filePath: string): Promise<string> 
 }
 
 const forbiddenCharsInFileName = /[^a-zA-Z0-9._\- éèêëàâäôöùûüç]/g
-const forbiddenCharsInFilePath = /[^a-zA-Z0-9._\- \\:éèêëàâäôöùûüç]/g
+const forbiddenCharsInFilePath = /[^a-zA-Z0-9._\- \\/:éèêëàâäôöùûüç]/g
 const trailingDashes = /-+$/
 
 export function cleanFilePath(filePath: string): string {
