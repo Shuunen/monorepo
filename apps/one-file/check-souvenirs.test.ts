@@ -67,15 +67,16 @@ vi.mock('exiftool-vendored', () => ({
 // Import after mocks are set up
 const {
   checkFile,
-  cleanFilePath,
   checkFileDate,
   checkFilePathExtension,
   checkFilePathSpecialCharacters,
   checkFiles,
   checkPngTransparency,
+  cleanFilePath,
   count,
   dateFromPath,
   getExifDateFromSiblings,
+  getExifDateFromYearAndMonth,
   getFiles,
   getNewExifDateBasedOnExistingDate: getNewExifDateTimeOriginal,
   logger,
@@ -611,5 +612,21 @@ describe('check-souvenirs.cli', () => {
     const inputPath = 'test!2!!&@*(file#.jpg'
     const result = await cleanFilePath(inputPath)
     expect(result).toMatchInlineSnapshot(`"test-2-file.jpg"`)
+  })
+
+  it('getExifDateFromYearAndMonth A should return ExifDateTime for valid year and month', () => {
+    const result = getExifDateFromYearAndMonth('2006', '08')
+    expect(result).toBeInstanceOf(ExifDateTime)
+    expect(result.year).toBe(2006)
+    expect(result.month).toBe(8)
+    expect(result.day).toBe(1)
+  })
+
+  it('getExifDateFromYearAndMonth B should return ExifDateTime for valid year without month', () => {
+    const result = getExifDateFromYearAndMonth('2006', undefined)
+    expect(result).toBeInstanceOf(ExifDateTime)
+    expect(result.year).toBe(2006)
+    expect(result.month).toBe(1)
+    expect(result.day).toBe(1)
   })
 })
