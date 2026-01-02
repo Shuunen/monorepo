@@ -1,5 +1,5 @@
-import { alignForSnap } from '@monorepo/utils'
 import path from 'node:path'
+import { alignForSnap } from '@monorepo/utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockUnlink = vi.fn().mockResolvedValue(undefined)
