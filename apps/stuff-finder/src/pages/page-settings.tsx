@@ -23,7 +23,7 @@ export function PageSettings({ ...properties }: Readonly<Record<string, unknown>
       <div className="flex flex-col">
         <p>Stuff-Finder need credentials to access your Airtable base, data will be saved in your browser local storage.</p>
         <AppForm initialForm={settingsForm} onSubmit={onSubmit}>
-          <Button name="download" onClick={downloadItems} variant="secondary">
+          <Button name="download" onClick={downloadItems} type="button" variant="secondary">
             Download items
           </Button>
         </AppForm>

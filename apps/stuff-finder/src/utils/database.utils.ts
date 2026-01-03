@@ -163,6 +163,7 @@ export async function getItemsRemotely() {
 
 export async function downloadItems() {
   const result = await getItemsRemotely()
+  logger.info('downloadItems', { result })
   /* v8 ignore next -- @preserve */
   if (!result.ok) return result
   downloadObject(result.value, `${dateIso10()}_${projectId}_items.json`)
