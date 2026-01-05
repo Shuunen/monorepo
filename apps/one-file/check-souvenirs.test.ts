@@ -10,6 +10,12 @@ vi.mock('node:fs/promises', () => ({
   unlink: mockUnlink,
 }))
 
+const mockSpawnSync = vi.fn().mockReturnValue({ error: null, status: 0, stdout: '' })
+
+vi.mock('node:child_process', () => ({
+  spawnSync: mockSpawnSync,
+}))
+
 const mockGlob = vi.fn().mockResolvedValue([])
 
 vi.mock('tiny-glob', () => ({
@@ -89,9 +95,12 @@ const {
   getFiles,
   getNewExifDateBasedOnExistingDate,
   isPhoto,
+  isMkvToolAvailable,
   logger,
+  resetMkvToolCache,
   setFileDateBasedOnSiblings,
-  setPhotoDate,
+  setFileDate,
+  setFileDateViaMkvTool,
   showReport,
   start,
   toDate,
@@ -109,12 +118,17 @@ describe('check-souvenirs.cli', () => {
     mockSharpToFile.mockResolvedValue(undefined)
     mockSharpJpeg.mockReturnValue({ toFile: mockSharpToFile })
     mockSharp.mockReturnValue({ jpeg: mockSharpJpeg })
+    mockSpawnSync.mockReturnValue({ error: null, status: 0, stdout: '' })
+    count.conversions = 0
     count.dateFixes = 0
     count.errors = 0
     count.scanned = 0
+    count.skipped = 0
+    count.specialCharsFixes = 0
     count.warnings = 0
     logger.inMemoryLogs = []
     logger.options.willOutputToConsole = false
+    resetMkvToolCache()
   })
 
   afterEach(() => {
@@ -417,36 +431,50 @@ describe('check-souvenirs.cli', () => {
     expect(result.tzoffsetMinutes).toBe(-300)
   })
 
-  it('setPhotoDate A should set photo date successfully on first attempt', async () => {
+  it('setFileDate A should set photo date successfully on first attempt', async () => {
     mockWrite.mockResolvedValue(undefined)
     const exifDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0)
-    await setPhotoDate('test.jpg', exifDate)
+    await setFileDate('test.jpg', exifDate)
     // biome-ignore lint/style/useNamingConvention: its ok
     expect(mockWrite).toHaveBeenCalledWith('test.jpg', { DateTimeOriginal: exifDate })
     expect(count.dateFixes).toBe(1)
   })
 
-  it('setPhotoDate B should handle write failure and retry with rewriteAllTags', async () => {
+  it('setFileDate B should handle write failure and retry with rewriteAllTags', async () => {
     mockWrite.mockRejectedValueOnce(new Error('Write failed')).mockResolvedValueOnce(undefined)
     const exifDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0)
-    await setPhotoDate('test.jpg', exifDate)
+    await setFileDate('test.jpg', exifDate)
     expect(mockRewriteAllTags).toHaveBeenCalledWith('test.jpg', 'test.jpg.new')
     expect(mockWrite).toHaveBeenCalledTimes(2)
     expect(count.dateFixes).toBe(1)
   })
 
-  it('setPhotoDate C should handle write failure twice', async () => {
+  it('setFileDate C should handle write failure twice', async () => {
     mockWrite.mockRejectedValue(new Error('Write failed'))
     const exifDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0)
-    await setPhotoDate('test.jpg', exifDate)
+    await setFileDate('test.jpg', exifDate)
     expect(mockWrite).toHaveBeenCalledTimes(2)
     expect(count.dateFixes).toBe(0)
   })
 
-  it('setPhotoDate D should handle undefined date', async () => {
+  it('setFileDate D should handle undefined date', async () => {
     mockWrite.mockResolvedValue(undefined)
-    await setPhotoDate('test.jpg', undefined as never)
+    await setFileDate('test.jpg', undefined as never)
     expect(mockWrite).not.toHaveBeenCalled()
+  })
+
+  it('setFileDate E should handle unsupported file type', async () => {
+    const exifDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0)
+    await setFileDate('test.mp4', exifDate)
+    expect(logger.inMemoryLogs.some(log => log.includes('Cannot set date for unsupported file type'))).toBe(true)
+  })
+
+  it('setFileDate F should handle Matroska video file', async () => {
+    mockSpawnSync.mockReturnValueOnce({ error: null, status: 0, stdout: 'mkvpropedit v1.0.0' })
+    const exifDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0)
+    await setFileDate('test.mkv', exifDate)
+    expect(mockSpawnSync).toHaveBeenCalledWith('mkvpropedit.exe', ['test.mkv', '--edit', 'info', '--set', 'date=2006-08-15'], { encoding: 'utf8' })
+    expect(count.dateFixes).toBe(1)
   })
 
   it('checkFileDate A should handle file without DateTimeOriginal', async () => {
@@ -572,10 +600,10 @@ describe('check-souvenirs.cli', () => {
     expect(count.scanned).toBe(1)
   })
 
-  it('checkFile B should skip non-photo files', async () => {
+  it('checkFile B should check non-photo files', async () => {
+    mockRead.mockResolvedValue({})
     await checkFile({ currentFilePath: String.raw`D:\Souvenirs\2006\video.mp4`, nextFilePath: '', previousFilePath: '' })
     expect(count.scanned).toBe(1)
-    expect(mockRead).not.toHaveBeenCalled()
   })
 
   it('checkFiles A should process all files', async () => {
@@ -637,6 +665,18 @@ describe('check-souvenirs.cli', () => {
     count.warnings = 0
     showReport()
     expect(logger.inMemoryLogs.some(log => log.includes('Nice no issues found'))).toBe(true)
+  })
+
+  it('showReport F should display report with skipped files', () => {
+    count.scanned = 10
+    count.skipped = 3
+    count.dateFixes = 0
+    count.conversions = 0
+    count.specialCharsFixes = 0
+    count.errors = 0
+    count.warnings = 0
+    showReport()
+    expect(logger.inMemoryLogs.some(log => log.includes('3') && log.includes('files skipped'))).toBe(true)
   })
 
   it('start A should execute full workflow', async () => {
@@ -775,5 +815,61 @@ describe('check-souvenirs.cli', () => {
   it('isPhoto G should return false for txt extension', () => {
     const result = isPhoto('test.txt')
     expect(result).toBe(false)
+  })
+
+  it('isMkvToolAvailable A should return false when mkvpropedit throws an error', () => {
+    mockSpawnSync.mockReturnValueOnce({ error: new Error('Command not found'), status: 1, stdout: '' })
+    const result = isMkvToolAvailable()
+    expect(result).toBe(false)
+    expect(mockSpawnSync).toHaveBeenCalledWith('mkvpropedit.exe', ['--version'], { encoding: 'utf8' })
+  })
+
+  it('isMkvToolAvailable B should handle non-Error exceptions', () => {
+    mockSpawnSync.mockReturnValueOnce({ error: 'string error', status: 1, stdout: '' })
+    const result = isMkvToolAvailable()
+    expect(result).toBe(false)
+    expect(logger.inMemoryLogs.some(log => log.includes('Version test failed') && log.includes('string error'))).toBe(true)
+  })
+
+  it('setFileDateViaMkvTool A should handle tool not available', () => {
+    mockSpawnSync.mockReturnValueOnce({ error: new Error('Command not found'), status: 1, stdout: '' })
+    setFileDateViaMkvTool(String.raw`D:\Souvenirs\2006\video.mkv`, '2006-01-01')
+    expect(logger.inMemoryLogs.some(log => log.includes('Cannot set date because') && log.includes('tool is not available'))).toBe(true)
+  })
+
+  it('isMkvToolAvailable C should cache and return true when mkvpropedit is available', () => {
+    mockSpawnSync.mockReturnValueOnce({ error: null, status: 0, stdout: 'mkvpropedit v1.0.0' })
+    const result1 = isMkvToolAvailable()
+    expect(result1).toBe(true)
+    const result2 = isMkvToolAvailable()
+    expect(result2).toBe(true)
+    expect(mockSpawnSync).toHaveBeenCalledTimes(1)
+  })
+
+  it('setFileDateViaMkvTool B should set date successfully when tool is available', () => {
+    count.dateFixes = 0
+    mockSpawnSync.mockReturnValueOnce({ error: null, status: 0, stdout: 'mkvpropedit v1.0.0' })
+    const resultAvailable = isMkvToolAvailable()
+    expect(resultAvailable).toBe(true)
+    mockSpawnSync.mockReturnValueOnce({ error: null, status: 0, stdout: '' })
+    setFileDateViaMkvTool(String.raw`D:\Souvenirs\2006\video.mkv`, '2006-01-01')
+    expect(mockSpawnSync).toHaveBeenLastCalledWith('mkvpropedit.exe', [String.raw`D:\Souvenirs\2006\video.mkv`, '--edit', 'info', '--set', 'date=2006-01-01'], { encoding: 'utf8' })
+    expect(count.dateFixes).toBe(1)
+  })
+
+  it('setFileDateViaMkvTool C should handle non-zero exit status', () => {
+    mockSpawnSync.mockReturnValueOnce({ error: null, status: 0, stdout: 'mkvpropedit v1.0.0' })
+    isMkvToolAvailable()
+    mockSpawnSync.mockReturnValueOnce({ error: null, status: 1, stderr: 'File not found', stdout: '' })
+    setFileDateViaMkvTool(String.raw`D:\Souvenirs\2006\video.mkv`, '2006-01-01')
+    expect(logger.inMemoryLogs.some(log => log.includes('Failed to set date, mkvpropedit exited with'))).toBe(true)
+  })
+
+  it('setFileDateViaMkvTool D should handle spawnSync error', () => {
+    mockSpawnSync.mockReturnValueOnce({ error: null, status: 0, stdout: 'mkvpropedit v1.0.0' })
+    isMkvToolAvailable()
+    mockSpawnSync.mockReturnValueOnce({ error: new Error('Spawn failed'), status: 1, stdout: '' })
+    setFileDateViaMkvTool(String.raw`D:\Souvenirs\2006\video.mkv`, '2006-01-01')
+    expect(logger.inMemoryLogs.some(log => log.includes('Failed to set date for file') && log.includes('using mkvpropedit'))).toBe(true)
   })
 })

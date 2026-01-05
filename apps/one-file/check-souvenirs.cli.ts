@@ -1,4 +1,5 @@
 // oxlint-disable max-lines
+import { spawnSync } from 'node:child_process'
 import { rename, unlink } from 'node:fs/promises'
 import path from 'node:path'
 import { blue, functionReturningVoid, green, Logger, nbThird, Result, red, yellow } from '@monorepo/utils'
@@ -34,6 +35,8 @@ const progressBar = new SingleBar(
 export const options = {
   /** When dry active, avoid file modifications, useful for testing purposes */
   dry: argv.includes('--dry'),
+  /** Glob pattern to check files */
+  globPattern: '**/*.{3gp,3GP,avi,AVI,avif,AVIF,flv,FLV,jpg,JPG,jpeg,JPEG,gif,GIF,mov,MOV,png,PNG,MP,mkv,MKV,mp4,MP4,webp,WEBP,wmv,WMV,webm,WEBM}',
   /** When true, process only the first file, useful for testing purposes */
   one: argv.includes('--process-one') || argv.includes('--one'),
 }
@@ -54,6 +57,7 @@ export const count = {
   dateFixes: 0,
   errors: 0,
   scanned: 0,
+  skipped: 0,
   specialCharsFixes: 0,
   warnings: 0,
 }
@@ -72,9 +76,8 @@ export function dateFromPath(filePath: string) {
  */
 export async function getFiles() {
   logger.info(`Scanning dir ${blue(photosPath)}...`)
-  const globPattern = '**/*.{jpg,JPG,jpeg,JPEG,png,PNG,MP}'
-  const files = await glob(globPattern, { absolute: true, cwd: photosPath, filesOnly: true })
-  logger.info(`Found ${blue(files.length.toString())} files with glob pattern ${blue(globPattern)}`)
+  const files = await glob(options.globPattern, { absolute: true, cwd: photosPath, filesOnly: true })
+  logger.info(`Found ${blue(files.length.toString())} files with glob pattern ${blue(options.globPattern)}`)
   return files
 }
 
@@ -94,19 +97,7 @@ export function formatTimezoneOffset(offsetMinutes: number): string {
   return `${sign}${hours}:${minutes}`
 }
 
-// oxlint-disable-next-line max-lines-per-function
-export function setPhotoDate(file: string, date: ExifDateTime) {
-  const str = date?.toString()?.split('T')[0]
-  if (str === undefined) {
-    logger.error(`Invalid date provided for file ${red(file)}`, date)
-    return Promise.resolve()
-  }
-  logger.info(`Setting DateTimeOriginal for file ${file} to ${green(str)}`)
-  /* v8 ignore next -- @preserve */
-  if (options.dry) {
-    logger.info(blue('Dry run enabled, avoid setting date'))
-    return Promise.resolve()
-  }
+export function setFileDateViaExifTool(file: string, date: ExifDateTime) {
   return (
     exif
       // biome-ignore lint/style/useNamingConvention: its ok
@@ -144,6 +135,66 @@ export function setPhotoDate(file: string, date: ExifDateTime) {
   )
 }
 
+let isMkvPropEditAvailable: boolean | undefined = undefined
+
+export function resetMkvToolCache() {
+  isMkvPropEditAvailable = undefined
+}
+
+export function isMkvToolAvailable() {
+  if (isMkvPropEditAvailable !== undefined) return isMkvPropEditAvailable
+  try {
+    const result = spawnSync('mkvpropedit.exe', ['--version'], { encoding: 'utf8' })
+    if (result.error) throw result.error
+    logger.success(`mkvpropedit tool is available in version`, result.stdout.trim())
+    isMkvPropEditAvailable = true
+  } catch (error) {
+    logger.warn('Version test failed.', error instanceof Error ? error.message : error)
+    isMkvPropEditAvailable = false
+  }
+  return isMkvPropEditAvailable
+}
+
+export function setFileDateViaMkvTool(file: string, date: string) {
+  logger.info(`Setting date for video file ${file} to ${green(date)}`)
+  if (!isMkvToolAvailable()) {
+    logger.warn(`Cannot set date because ${red('mkvpropedit')} tool is not available.`)
+    return
+  }
+  try {
+    // Example to set mkv date on windows : mkvpropedit.exe 2016-02-15_Journal.mkv --edit info --set "date=1974-05-22"
+    const result = spawnSync('mkvpropedit.exe', [file, '--edit', 'info', '--set', `date=${date}`], { encoding: 'utf8' })
+    if (result.error) throw result.error
+    if (result.status !== 0) {
+      logger.error(`Failed to set date, mkvpropedit exited with ${red(`stderr: ${result.stderr.trim()}`)} ${yellow(`stdout: ${result.stdout.trim()}`)}`)
+      return
+    }
+    logger.debug(`Successfully set date for file ${green(file)}.`)
+    count.dateFixes += 1
+  } catch (error) {
+    logger.error(`Failed to set date for file ${red(file)} using mkvpropedit.`, error)
+  }
+}
+
+// oxlint-disable-next-line max-lines-per-function
+export function setFileDate(file: string, date: ExifDateTime) {
+  const isoString = date?.toString()?.split('T')[0]
+  if (isoString === undefined) {
+    logger.error(`Invalid date provided for file ${red(file)}`, date)
+    return Promise.resolve()
+  }
+  logger.info(`Setting DateTimeOriginal for file ${file} to ${green(isoString)}`)
+  /* v8 ignore next -- @preserve */
+  if (options.dry) {
+    logger.info(blue('Dry run enabled, avoid setting date'))
+    return Promise.resolve()
+  }
+  if (isPhoto(file)) return setFileDateViaExifTool(file, date)
+  if (isMatroskaVideo(file)) return setFileDateViaMkvTool(file, isoString)
+  logger.warn(`Cannot set date for unsupported file type: ${yellow(file)}`)
+  return Promise.resolve()
+}
+
 export function getNewExifDateBasedOnExistingDate({ pathYear, pathMonth, originalExifDate, exifYearIncorrect, exifMonthIncorrect, exifDate }: { pathYear?: string; pathMonth?: string; originalExifDate: Maybe<ExifDateTime>; exifYearIncorrect: boolean; exifMonthIncorrect: boolean; exifDate: Date }) {
   const newYear = exifYearIncorrect && pathYear ? Number.parseInt(pathYear, 10) : (originalExifDate?.year ?? exifDate.getFullYear())
   const newMonth = exifMonthIncorrect && pathMonth ? Number.parseInt(pathMonth, 10) : (originalExifDate?.month ?? exifDate.getMonth() + 1)
@@ -173,7 +224,10 @@ export async function checkFileDateTimeOriginal({ file, dateTimeOriginal, pathYe
   if (exifMonthIncorrect) logger.info(`Month mismatch for file ${file} : ${green(pathMonth)} (from path), ${red(exifMonth)} (from EXIF)`)
   if (exifYearIncorrect || exifMonthIncorrect) {
     const newExifDate = getNewExifDateBasedOnExistingDate({ exifDate, exifMonthIncorrect, exifYearIncorrect, originalExifDate, pathMonth, pathYear })
-    await setPhotoDate(file, newExifDate)
+    await setFileDate(file, newExifDate)
+  } else {
+    logger.debug(`DateTimeOriginal EXIF tag is correct for file ${blue(file)}`)
+    count.skipped += 1
   }
 }
 
@@ -210,12 +264,17 @@ export async function getNewExifDateBasedOnSiblings(file: File, pathYear: string
 }
 
 export async function setFileDateBasedOnSiblings(file: File, pathYear: string, pathMonth?: string) {
-  logger.info(`No DateTimeOriginal EXIF tag for file ${red(file.currentFilePath)}, checking siblings...`)
+  logger.info(`No DateTimeOriginal EXIF tag for file ${blue(file.currentFilePath)}, checking siblings...`)
   const newExifDate = await getNewExifDateBasedOnSiblings(file, pathYear, pathMonth)
-  await setPhotoDate(file.currentFilePath, newExifDate)
+  await setFileDate(file.currentFilePath, newExifDate)
 }
 
 export async function checkFileDate(file: File) {
+  if (!isFileSupportedForDateSetting(file.currentFilePath)) {
+    logger.debug(`File type not supported for date setting : ${blue(file.currentFilePath)}`)
+    count.skipped += 1
+    return
+  }
   const { month: pathMonth, year: pathYear } = dateFromPath(file.currentFilePath).value
   logger.debug(`Extracted date from path : year=${pathYear ?? 'undefined'}, month=${pathMonth ?? 'undefined'}`)
   if (!pathYear) {
@@ -316,8 +375,18 @@ export async function checkFilePathExtensionMp(filePath: string): Promise<string
 
 export function isPhoto(filePath: string) {
   const extension = path.extname(filePath).toLowerCase()
-  const photoExtensions = ['.jpg', '.jpeg', '.png']
+  const photoExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.avif', '.webp']
   return photoExtensions.includes(extension)
+}
+
+export function isMatroskaVideo(filePath: string) {
+  const extension = path.extname(filePath).toLowerCase()
+  const nonMatroskaExtensions = ['.wmv', '.mp4', '.avi', '.mov', '.flv', '.3gp', '.webm']
+  return !nonMatroskaExtensions.includes(extension)
+}
+
+export function isFileSupportedForDateSetting(filePath: string) {
+  return isPhoto(filePath) || isMatroskaVideo(filePath)
 }
 
 /**
@@ -333,7 +402,6 @@ export async function checkFile(file: File) {
   file.currentFilePath = await checkFilePathExtensionMp(file.currentFilePath)
   file.currentFilePath = await checkFilePathExtensionCase(file.currentFilePath)
   file.currentFilePath = await checkFilePathSpecialCharacters(file.currentFilePath)
-  if (!isPhoto(file.currentFilePath)) return
   file.currentFilePath = await checkPngTransparency(file.currentFilePath)
   await checkFileDate(file)
 }
@@ -368,6 +436,7 @@ export function showReport() {
     else if (log.includes('warn')) count.warnings += 1
   logger.info(`Report :`)
   logger.info(`- ${count.scanned > 0 ? blue(count.scanned.toString()) : '0'} files scanned`)
+  logger.info(`- ${count.skipped > 0 ? blue(count.skipped.toString()) : '0'} files skipped`)
   logger.info(`- ${count.dateFixes > 0 ? green(count.dateFixes.toString()) : '0'} date fixes applied`)
   logger.info(`- ${count.conversions > 0 ? green(count.conversions.toString()) : '0'} png to jpg conversions`)
   logger.info(`- ${count.specialCharsFixes > 0 ? green(count.specialCharsFixes.toString()) : '0'} special characters fixes applied`)
