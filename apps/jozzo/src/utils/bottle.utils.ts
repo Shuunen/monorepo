@@ -51,7 +51,7 @@ export function getBottle(fillWith: Color, size = defaultBottleSize) {
  * @param amount the amount of colors to pour, if not provided, pour all colors possible
  * @returns the bottles after pouring
  */
-// oxlint-disable-next-line max-lines-per-function,max-statements
+// oxlint-disable-next-line max-lines-per-function, max-statements
 export function pour(from: Readonly<Bottle>, to: Readonly<Bottle>, amount?: number) {
   const cloneFrom = Array.from(from)
   const cloneTo = Array.from(to)
