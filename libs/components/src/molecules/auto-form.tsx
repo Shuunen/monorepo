@@ -43,7 +43,7 @@ import { AutoFormSummaryStep } from "./auto-form-summary-step";
  * @param props.stepperWidth custom stepper width if needed
  * @returns the AutoForm component
  */
-// oxlint-disable-next-line max-lines-per-function
+// oxlint-disable-next-line max-lines-per-function, max-statements
 export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = {}, logger, useSummaryStep, useSubmissionStep, showButtons = true, showCard, showLastStep, showMenu, size, labels, stepperWidth }: AutoFormProps) {
   const [currentStep, setCurrentStep] = useState(showLastStep ? schemas.length - 1 : 0);
   const [showSummary, setShowSummary] = useState(false);

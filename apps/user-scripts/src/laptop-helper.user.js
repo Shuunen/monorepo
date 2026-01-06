@@ -32,9 +32,10 @@
 // @version      1.0.3
 // ==/UserScript==
 
-// @ts-nocheck FIX ME later, I dont use Laptop Helper for now
+// @ts-nocheck FIX ME later, I don't use Laptop Helper for now
 // oxlint-disable no-magic-numbers
 // oxlint-disable max-lines
+// oxlint-disable no-immediate-mutation
 
 function getColorForScore(percent) {
   const alpha = 30

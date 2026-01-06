@@ -65,7 +65,7 @@ const regex = {
  * @param folderPath the folder to extract data from
  * @returns {Object} the extracted data with color, description, name, and scope
  */
-// oxlint-disable-next-line no-undef
+// oxlint-disable-next-line no-undef, complexity
 export function extractData(folderPath = process.cwd()) {
   const defaults = { color: '#024eb8', description: 'A placeholder description', name: 'unknown', scope: 'JohnDoe' }
   const infos = [safeRead('.vscode/settings.json', folderPath), safeRead('package.json', folderPath)].join('\n')

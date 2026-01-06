@@ -64,7 +64,7 @@ function parseArgs(argv: string[]) {
  * @param stats the metrics object to update
  * @returns void
  */
-// oxlint-disable-next-line max-lines-per-function
+// oxlint-disable-next-line max-lines-per-function, max-statements
 function processFile(file: string, header: string, stats: Metrics) {
   const readResult = Result.trySafe(() => readFileSync(file, "utf8"));
   if (!readResult.ok) {

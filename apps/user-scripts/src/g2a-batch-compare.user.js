@@ -71,6 +71,7 @@ function G2aBatchCompare() {
     body.innerHTML = list
       .map(game => {
         const cells = []
+        // oxlint-disable-next-line no-immediate-mutation
         cells.push(`<a class="title" href="${game.priceLocalSearchUrl}" target="_blank">${game.title}</a>`, `<img src="${game.img}" style="width: 200px" />`, `<a class="price" href="https://store.steampowered.com/app/${game.id}" target="_blank">${game.price} €</a>`, Math.round(game.priceLocal))
         if (game.priceLocal > 0) cells.push(`<a class="price" href="${game.priceLocalUrl}" target="_blank">${Math.round(game.priceLocal)} €</a>`)
         else cells.push(`<a class="no-price" href="${game.priceLocalSearchUrl}" target="_blank">no price found</a>`)

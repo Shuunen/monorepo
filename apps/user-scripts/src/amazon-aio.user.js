@@ -158,6 +158,7 @@ function AmazonAio() {
    * @param {HTMLElement} parameters.scoreSection The score section
    * @returns {void} nothing and alter the score section dom element
    */
+  // oxlint-disable complexity
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   function addPricePerWeight({ currency, price, product, scoreSection }) {
     const pricePerWeightElement = product.querySelector(selectors.productPricePerWeight)
@@ -204,6 +205,7 @@ function AmazonAio() {
     pricePerWeightSection.textContent = `⚖️ ${pricePerWeightSection.textContent}`
     scoreSection.append(pricePerWeightSection)
   }
+  // oxlint-enable complexity
   /**
    * Get the product score section
    * @param {object} parameters The parameters

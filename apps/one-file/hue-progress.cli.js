@@ -85,6 +85,7 @@ server.on('upgrade', (request, socket) => {
 
   sockets.add(socket)
 
+  // oxlint-disable-next-line max-statements
   socket.on('data', buffer => {
     try {
       const masked = (buffer[1] & 0x80) === 0x80

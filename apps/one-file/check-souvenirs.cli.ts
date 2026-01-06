@@ -195,6 +195,7 @@ export function setFileDate(file: string, date: ExifDateTime) {
   return Promise.resolve()
 }
 
+// oxlint-disable-next-line complexity
 export function getNewExifDateBasedOnExistingDate({ pathYear, pathMonth, originalExifDate, exifYearIncorrect, exifMonthIncorrect, exifDate }: { pathYear?: string; pathMonth?: string; originalExifDate: Maybe<ExifDateTime>; exifYearIncorrect: boolean; exifMonthIncorrect: boolean; exifDate: Date }) {
   const newYear = exifYearIncorrect && pathYear ? Number.parseInt(pathYear, 10) : (originalExifDate?.year ?? exifDate.getFullYear())
   const newMonth = exifMonthIncorrect && pathMonth ? Number.parseInt(pathMonth, 10) : (originalExifDate?.month ?? exifDate.getMonth() + 1)
@@ -335,6 +336,7 @@ export async function checkFilePathSpecialCharacters(filePath: string): Promise<
   return newFilePath
 }
 
+// oxlint-disable-next-line max-statements
 export async function checkPngTransparency(filePath: string) {
   const extension = path.extname(filePath).toLowerCase()
   if (extension !== '.png') return filePath // no need to check other file types

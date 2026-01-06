@@ -20,6 +20,7 @@ const report = { errors: [], infos: [], success: [], suggestions: [], warnings: 
  * @param {import('./types.js').File} file the file to synchronize
  * @returns {Promise<number>} the number of things you have to do in Life
  */
+// oxlint-disable-next-line max-statements
 async function sync(file) {
   process.stdout.write('.')
   const { areEquals, destination, source } = file

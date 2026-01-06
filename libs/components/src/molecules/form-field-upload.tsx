@@ -21,7 +21,7 @@ type FormFieldUploadProps = FormFieldBaseProps & {
   shouldFail?: boolean;
 };
 
-// oxlint-disable-next-line max-lines-per-function
+// oxlint-disable-next-line max-lines-per-function, max-statements
 export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOptional, logger, readonly = false, shouldFail, onFileChange, onFileRemove, onFileUploadComplete, onFileUploadError }: FormFieldUploadProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { placeholder, state = "editable" } = metadata;
@@ -168,7 +168,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
               <aside className="mt-0.5">{currentState.icon}</aside>
               <main className="flex grow flex-col gap-1 max-w-full overflow-hidden">
                 <div className="flex justify-between gap-3">
-                  <div className={cn("flex flex-col gap-1", { "max-w-[calc(100%_-_100px)]": !isDisabled })}>
+                  <div className={cn("flex flex-col gap-1", { "max-w-[calc(100%-100px)]": !isDisabled })}>
                     <div className="font-medium text-sm truncate">{selectedFile?.name}</div>
                     <div className="text-sm text-muted-foreground truncate">{currentState.message}</div>
                   </div>
@@ -186,7 +186,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
                 {uploadState !== "idle" && (
                   <div className="flex items-center">
                     <Progress className={cn("h-1 flex-1", uploadState === "success" && "[&>div]:bg-success", uploadState === "error" && "[&>div]:bg-destructive")} value={uploadProgress} />
-                    <span className={cn("text-sm font-medium min-w-[3rem] text-right", uploadState === "success" && "text-success", uploadState === "error" && "text-destructive")}>{Math.round(uploadProgress)}%</span>
+                    <span className={cn("text-sm font-medium min-w-12 text-right", uploadState === "success" && "text-success", uploadState === "error" && "text-destructive")}>{Math.round(uploadProgress)}%</span>
                   </div>
                 )}
               </main>

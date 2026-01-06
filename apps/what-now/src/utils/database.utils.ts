@@ -98,6 +98,7 @@ export async function getTasks() {
  * @returns the result of the operation
  */
 /* v8 ignore next -- @preserve */
+// oxlint-disable-next-line max-statements
 export async function downloadData() {
   const result = await Result.trySafe(database.listDocuments<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, [Query.limit(nbPercentMax)]))
   if (!result.ok) {
