@@ -178,7 +178,7 @@ export function respondBadRequest({ res, message, progress, nextTask, remaining 
   res.end(jsonResponse({ data: undefined, message, nextTask, ok: false, progress, remaining, response: undefined }))
 }
 
-// oxlint-disable-next-line max-lines-per-function,max-statements
+// oxlint-disable-next-line max-lines-per-function, max-statements
 export async function handleSetProgressRequest({ body, res }: { body: string; res: ServerResponse }) {
   const context = 'handleSetProgressRequest'
   log('info', context, 'Handling set-progress request')
