@@ -84,6 +84,7 @@ export class ElectronCapacitorApp {
     return this.customScheme
   }
 
+  // oxlint-disable-next-line max-statements
   init() {
     const icon = nativeImage.createFromPath(join(app.getAppPath(), 'assets', process.platform === 'win32' ? 'appIcon.ico' : 'appIcon.png'))
     this.mainWindowState = windowStateKeeper({

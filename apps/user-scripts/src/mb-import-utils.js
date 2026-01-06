@@ -1,4 +1,4 @@
-// oxlint-disable no-unused-vars, max-lines-per-function
+// oxlint-disable max-statements,no-unused-vars, max-lines-per-function
 
 /**
  * Get the text content from the node behind a css selector

@@ -22,6 +22,7 @@ type AutoFormFieldProps = {
   logger?: Logger;
 };
 
+// oxlint-disable-next-line max-statements
 export function AutoFormField({ fieldName, fieldSchema, formData, stepState, logger }: AutoFormFieldProps) {
   if (!isFieldVisible(fieldSchema, formData)) {
     return;

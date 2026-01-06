@@ -18,7 +18,7 @@ describe('control-buttons', () => {
     render(<ControlButtons contestState={undefined} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />)
     const resetButton = screen.getByText('Reset view')
     fireEvent.click(resetButton)
-    expect(mockReset).toHaveBeenCalledOnce()
+    expect(mockReset).toHaveBeenCalledTimes(1)
   })
 
   it('ControlButtons C should display Reset View text in normal mode', () => {

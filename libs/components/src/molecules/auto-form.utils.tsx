@@ -378,6 +378,7 @@ export function sectionsFromEditableSteps(schemas: z.ZodObject[], data: AutoForm
   return sections;
 }
 
+// oxlint-disable-next-line max-statements
 function sectionsFromEditableStep(schema: z.ZodObject, data: AutoFormData) {
   const stepMeta = getStepMetadata(schema);
   const stepState = stepMeta?.state;

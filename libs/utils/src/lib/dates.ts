@@ -38,7 +38,9 @@ export function dateIso10(date: Readonly<Date> = new Date()) {
  * @param locale the locale to use, default is en-US
  * @returns a string like : "2018-09-03"
  */
+// oxlint-disable-next-line max-lines-per-function
 export function formatDate(date: Readonly<Date>, format: string, locale = "en-US") {
+  // oxlint-disable max-statements
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: cant be simplified ^^
   return format.replaceAll(/y{4}|yy|M{4}|MM|dd|d|e{4}|e{3}|HH|mm|ss|\s/gu, match => {
     if (match === "yyyy") {

@@ -86,7 +86,7 @@ async function readInput() {
 /**
  * Clean the clipboard content
  */
-// oxlint-disable-next-line max-lines-per-function
+// oxlint-disable-next-line max-lines-per-function, max-statements
 async function doClean() {
   log(`cleaning trackers in ${willCheckFile ? 'file' : 'clipboard (use --file to read file input)'}...`)
   const input = await readInput()

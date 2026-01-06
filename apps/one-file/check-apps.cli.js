@@ -31,7 +31,7 @@ const checkArchives = parameters.includes('--check')
  * @param {string} secondString the second string
  * @returns {number} the similarity between the two strings
  */
-// oxlint-disable-next-line max-lines-per-function
+// oxlint-disable-next-line max-lines-per-function,max-statements
 function stringsSimilarity(firstString, secondString) {
   const first = firstString.replaceAll(/\s+/gu, '')
   const second = secondString.replaceAll(/\s+/gu, '')
