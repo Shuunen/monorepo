@@ -72,7 +72,7 @@ for (const subfolder of subfolders) {
  * @param {string} language the lang to check
  * @returns {void}
  */
-// oxlint-disable-next-line max-lines-per-function,max-statements
+// oxlint-disable-next-line max-lines-per-function, max-statements
 function checkSubtitle(filename, language) {
   const subPath = path.join(currentFolder, `${filename}.${language}.srt`)
   const subStat = statSync(subPath, { throwIfNoEntry: false })
