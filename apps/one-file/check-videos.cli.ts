@@ -343,7 +343,7 @@ class CheckVideos {
   /**
    * Report the findings
    */
-  // oxlint-disable-next-line max-lines-per-function,max-statements
+  // oxlint-disable-next-line max-lines-per-function, max-statements
   report() {
     const types = Object.keys(this.detected)
     if (types.length === 0) {
