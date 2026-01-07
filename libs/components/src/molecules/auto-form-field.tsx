@@ -6,6 +6,7 @@ import { getFieldMetadata, getFormFieldRender, isFieldVisible } from "./auto-for
 import { FormFieldAccept } from "./form-field-accept";
 import { FormFieldBoolean } from "./form-field-boolean";
 import { FormFieldDate } from "./form-field-date";
+import { FormFieldFormList } from "./form-field-form-list";
 import { FormFieldNumber } from "./form-field-number";
 import { FormFieldPassword } from "./form-field-password";
 import { FormFieldSection } from "./form-field-section";
@@ -63,6 +64,9 @@ export function AutoFormField({ fieldName, fieldSchema, formData, stepState, log
   }
   if (render === "upload") {
     return <FormFieldUpload {...props} />;
+  }
+  if (render === "form-list") {
+    return <FormFieldFormList {...props} />;
   }
   return <Alert title={`Missing render "${render}" for field "${fieldName}"`} type="error" />;
 }
