@@ -10,12 +10,13 @@ import { FormFieldLabel } from "./form-field.utils";
 export type FormFieldBaseProps = {
   children?: (field: ControllerRenderProps) => React.ReactNode;
   fieldName: string;
-  fieldSchema: z.ZodTypeAny;
+  fieldSchema: z.ZodType;
   formData: Record<string, unknown>;
   isOptional: boolean;
   readonly?: boolean;
   logger?: Logger;
   showLabel?: boolean;
+  showForm?: (schema: z.ZodObject, onSubmit: (data: Record<string, unknown>) => void) => void;
 };
 
 export function FormFieldBase(props: FormFieldBaseProps) {

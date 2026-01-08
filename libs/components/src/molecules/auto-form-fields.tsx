@@ -10,13 +10,14 @@ type AutoFormFieldsProps = {
   state?: AutoFormStepMetadata["state"];
   /** The logger instance to use if any */
   logger?: Logger;
+  showForm?: (schema: z.ZodObject, onSubmit: (data: Record<string, unknown>) => void) => void;
 };
 
-export function AutoFormFields({ schema, formData, state: stepState, logger }: AutoFormFieldsProps) {
+export function AutoFormFields({ schema, formData, state: stepState, logger, showForm }: AutoFormFieldsProps) {
   return (
     <>
       {Object.keys(schema.shape).map(fieldName => (
-        <AutoFormField fieldName={fieldName} fieldSchema={schema.shape[fieldName] as z.ZodTypeAny} formData={formData} key={fieldName} logger={logger} stepState={stepState} />
+        <AutoFormField fieldName={fieldName} fieldSchema={schema.shape[fieldName] as z.ZodTypeAny} formData={formData} key={fieldName} logger={logger} showForm={showForm} stepState={stepState} />
       ))}
     </>
   );

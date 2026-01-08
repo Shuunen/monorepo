@@ -5,6 +5,7 @@ import { Link } from "@tanstack/react-router";
 import { debounce } from "es-toolkit";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import type { z } from "zod";
 import { Button } from "../atoms/button";
 import { Form } from "../atoms/form";
 import { IconHome } from "../icons/icon-home";
@@ -154,6 +155,16 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     }
     setCurrentStep(stepIndex);
   }
+  /**
+   * Shows a form
+   * @param schema the Zod schema for the current step
+   * @param onSubmit the function to call on form submission
+   * @returns boolean indicating if the form should be shown
+   */
+  function showForm(schema: z.ZodObject, onSubmit: (data: Record<string, unknown>) => void) {
+    logger?.info("Showing form for schema", schema);
+    onSubmit({ age: 30 });
+  }
   // Step states and icons
   let lastSection = "" as AutoFormStepMetadata["section"];
   const steps = schemas.map<AutoFormStepperStep>((schema, idx) => {
@@ -220,7 +231,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     return (
       <Form {...form}>
         <form onChange={updateFormData} onSubmit={form.handleSubmit(handleStepSubmit)}>
-          <AutoFormFields formData={formData} logger={logger} schema={currentSchema} state={stepMetadata?.state} />
+          <AutoFormFields formData={formData} logger={logger} schema={currentSchema} showForm={showForm} state={stepMetadata?.state} />
           {showButtons && (
             <AutoFormNavigation
               centerButton={onCancel ? { onClick: onCancel } : undefined}

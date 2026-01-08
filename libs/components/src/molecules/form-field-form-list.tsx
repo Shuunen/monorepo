@@ -1,4 +1,5 @@
 import { isEmpty } from "@monorepo/utils";
+import type { z } from "zod";
 import { Badge } from "../atoms/badge";
 import { Button } from "../atoms/button";
 import { Title } from "../atoms/typography";
@@ -10,7 +11,8 @@ import type { AutoFormFieldFormsMetadata } from "./auto-form.types";
 import { DebugData } from "./debug-data";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 
-export function FormFieldFormList({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false }: FormFieldBaseProps) {
+// oxlint-disable-next-line max-lines-per-function
+export function FormFieldFormList({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false, showForm }: FormFieldBaseProps) {
   const metadata = fieldSchema.meta() as AutoFormFieldFormsMetadata;
   const { label, maxItems, identifier } = metadata;
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
@@ -25,6 +27,23 @@ export function FormFieldFormList({ fieldName, fieldSchema, formData, isOptional
     const newItems = items.filter((_, index) => index !== indexToDelete);
     onChange(newItems);
   }
+
+  /**
+   * Function called when user wants to complete a single form list item
+   * @param onChange callback to update the whole FormFieldFormList value
+   * @param indexToComplete index of the item to complete
+   */
+  function onCompleteItem(onChange: (value: unknown) => void, indexToComplete: number) {
+    logger?.showInfo(`Completing item at index ${indexToComplete}`);
+    const formSchema = (fieldSchema as z.ZodArray<z.ZodType>).element;
+    logger?.info({ fieldSchema, formSchema });
+    // @ts-expect-error type mismatch
+    showForm?.(formSchema, data => {
+      const newItems = items.map((item, index) => (index === indexToComplete ? data : item));
+      onChange(newItems);
+    });
+  }
+
   return (
     <FormFieldBase {...props} showLabel={false}>
       {field => (
@@ -32,7 +51,7 @@ export function FormFieldFormList({ fieldName, fieldSchema, formData, isOptional
           <Title>{label}</Title>
           {items.map((item, index) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: its ok here for form lists
-            <div className="flex gap-4 items-center border border-gray-300 shadow p-4 rounded-xl" key={`form-list-item-${index}`}>
+            <div className="flex gap-4 items-center border border-gray-300 shadow p-4 rounded-xl hover:bg-gray-50 transition-colors" key={`form-list-item-${index}`}>
               <div className="bg-gray-100 p-2 rounded-xl">
                 <IconHourglass className="size-6" />
               </div>
@@ -45,7 +64,7 @@ export function FormFieldFormList({ fieldName, fieldSchema, formData, isOptional
               <Button className="ml-auto" name="delete" onClick={() => onDeleteItem(field.onChange, index)} variant="outline">
                 <IconTrash />
               </Button>
-              <Button name="complete" variant="outline">
+              <Button name="complete" onClick={() => onCompleteItem(field.onChange, index)} variant="outline">
                 Complete
                 <IconChevronRight className="size-5" />
               </Button>

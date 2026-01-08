@@ -21,10 +21,11 @@ type AutoFormFieldProps = {
   formData: Record<string, unknown>;
   stepState?: AutoFormStepMetadata["state"];
   logger?: Logger;
+  showForm?: (schema: z.ZodObject, onSubmit: (data: Record<string, unknown>) => void) => void;
 };
 
 // oxlint-disable-next-line max-statements
-export function AutoFormField({ fieldName, fieldSchema, formData, stepState, logger }: AutoFormFieldProps) {
+export function AutoFormField({ fieldName, fieldSchema, formData, stepState, logger, showForm }: AutoFormFieldProps) {
   if (!isFieldVisible(fieldSchema, formData)) {
     return;
   }
@@ -33,7 +34,7 @@ export function AutoFormField({ fieldName, fieldSchema, formData, stepState, log
   const metadata = getFieldMetadata(fieldSchema) ?? {};
   const fieldState = "state" in metadata ? metadata.state : undefined;
   const state = fieldState ?? stepState ?? "editable";
-  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly: state === "readonly" };
+  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly: state === "readonly", showForm };
   const render = getFormFieldRender(fieldSchema);
   if (render === "accept") {
     return <FormFieldAccept {...props} />;
