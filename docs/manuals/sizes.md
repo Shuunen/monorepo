@@ -50,7 +50,7 @@ Waist & hips measurement: 90cm, 90/2 = size 45 EU normally but size 44 EU is bet
 
 Jean size: width 44cm +- 1 or 2 cm (my waist circumference), length 107cm +-3cm (of which 76cm legs)
 
-Last time at Uniqlo I got several slim fit Chinos 34x32 inch (so 86.5 x 81.5 cm), 40 bucks each
+Last time at Uniqlo I got several slim fit Chinos 34x32 inch (so 86.5 x 81.5 cm), 40€ each
 
 ## Belts
 
@@ -58,10 +58,12 @@ Size L
 
 | Criteria            | Nope nope | Ok but not less | Ok or ideal | Ok but not much | Nope too much |
 | ------------------- | :-------: | :-------------: | :---------: | :-------------: | :-----------: |
-| Length (total)      |  108 cm   |     110 cm      |   112 cm    |     122 cm      |    124 cm     |
-| Length (leather)    |  103 cm   |     105 cm      |   107 cm    |     116 cm      |    118 cm     |
+| Length (total)      |  108 cm   |     110 cm      | 112-117 cm  |     122 cm      |    124 cm     |
+| Length (leather)    |  103 cm   |     105 cm      | 107-112 cm  |     116 cm      |    118 cm     |
 | Width (leather)     |   23 mm   |      25 mm      |  27–37 mm   |      39 mm      |     41 mm     |
 | Thickness (leather) |   1 mm    |      2 mm       |    3 mm     |      4 mm       |     5 mm      |
+
+When I bought the Levi's one (24€ on Amz), the size mentioned was 110, which happened to be the total length of the belt (leather + buckle). The leather part alone was 105 cm.
 
 ## Body fat
 
