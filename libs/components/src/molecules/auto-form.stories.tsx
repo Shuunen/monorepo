@@ -95,30 +95,11 @@ export const Basic: Story = {
 }
 */
 
-const step1ChildAccountSchema = step(
-  // biome-ignore assist/source/useSortedKeys: it's important to have a specific key order here
-  z.object({
-    name: field(z.string().min(2, "Name is required"), {
-      label: "Child Account Name",
-      placeholder: "Enter child account name",
-    }),
-    email: field(z.email("Invalid email address"), {
-      label: "Child Account Email",
-      placeholder: "Enter child account email",
-    }),
-  }),
-);
-
 const step1Schema = step(
-  // biome-ignore assist/source/useSortedKeys: it's important to have a specific key order here
   z.object({
     email: field(z.email("Invalid email address"), {
       label: "Email Address",
       placeholder: "We'll never share your email",
-    }),
-    childAccounts: field(z.array(step1ChildAccountSchema), {
-      label: "User's Child Accounts",
-      render: "form-list",
     }),
   }),
 );

@@ -65,6 +65,14 @@ export type AutoFormStepMetadata = Simplify<
   }
 >;
 
+export type AutoFormFieldFormsMetadata = Simplify<
+  AutoFormFieldBaseMetadata & {
+    identifier?: (data: Record<string, unknown>) => string;
+    maxItems?: number;
+    render: "form-list";
+  }
+>;
+
 /**
  * Metadata describing the configuration and behavior of a section field in an auto-generated form.
  * example: `section({ title: 'Main infos', line: true })`
@@ -114,7 +122,7 @@ export type AutoFormFieldBaseMetadata = {
  * example: `field(z.string(), { label: 'First Name', placeholder: 'Enter your first name', state: 'editable' })`
  * example: `section({ title: 'First Name'})`
  */
-export type AutoFormFieldMetadata = AutoFormFieldBaseMetadata | AutoFormFieldSectionMetadata;
+export type AutoFormFieldMetadata = AutoFormFieldBaseMetadata | AutoFormFieldSectionMetadata | AutoFormFieldFormsMetadata;
 
 /** Option for select/enum fields in the auto-generated form. */
 export type SelectOption = {

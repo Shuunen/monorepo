@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
-import { field, step } from "./auto-form.utils";
+import { field, forms, step } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -52,13 +52,6 @@ const applicantSchema = z.object({
   }),
 });
 
-/*
-// To be implemented
-const applicantStep = formListStep(applicantSchema, {
-  identifier: (data) => `${data.name} (${data.age} years)`,
-});
-*/
-
 /**
  * Basic boolean field with switch
  */
@@ -73,10 +66,10 @@ export const Basic: Story = {
     schemas: [
       step(
         z.object({
-          // applicants: field(z.array(applicantStep), { // To be implemented
-          applicants: field(z.array(applicantSchema), {
+          applicants: forms(applicantSchema, {
+            identifier: data => `${data.name} (${data.age} years)`,
             label: "Fill in the applicants",
-            render: "form-list",
+            maxItems: 5,
           }),
         }),
       ),
