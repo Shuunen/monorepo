@@ -20,7 +20,7 @@ const meta = {
     },
     variant: {
       control: "select",
-      options: ["default", "secondary", "destructive", "outline"],
+      options: ["default", "secondary", "destructive", "outline", "success", "warning"],
     },
   },
   component: Badge,
@@ -95,5 +95,19 @@ export const Outline: Story = {
     const canvas = within(canvasElement);
     const badge = canvas.getByText("Badge");
     expect(badge).toHaveClass("text-foreground");
+  },
+};
+
+export const Success: Story = {
+  args: {
+    name: "success",
+    variant: "success",
+  },
+};
+
+export const Warning: Story = {
+  args: {
+    name: "warning",
+    variant: "warning",
   },
 };
