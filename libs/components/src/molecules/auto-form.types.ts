@@ -154,3 +154,5 @@ export type AutoFormSummarySection = {
   /** Optional title for the section, developers are not forced to provide one */
   title?: string;
 };
+
+export type AutoFormSubformOptions = { schema: z.ZodObject; initialData: Record<string, unknown>; onSubmit: (data: Record<string, unknown>) => void }

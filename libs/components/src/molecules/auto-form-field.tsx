@@ -1,7 +1,7 @@
 import type { Logger } from "@monorepo/utils";
 import { z } from "zod";
 import { Alert } from "../atoms/alert";
-import type { AutoFormStepMetadata } from "./auto-form.types";
+import type { AutoFormStepMetadata, AutoFormSubformOptions } from "./auto-form.types";
 import { getFieldMetadata, getFormFieldRender, isFieldVisible } from "./auto-form.utils";
 import { FormFieldAccept } from "./form-field-accept";
 import { FormFieldBoolean } from "./form-field-boolean";
@@ -21,7 +21,7 @@ type AutoFormFieldProps = {
   formData: Record<string, unknown>;
   stepState?: AutoFormStepMetadata["state"];
   logger?: Logger;
-  showForm?: (schema: z.ZodObject, onSubmit: (data: Record<string, unknown>) => void) => void;
+  showForm?: (options: AutoFormSubformOptions) => void;
 };
 
 // oxlint-disable-next-line max-statements

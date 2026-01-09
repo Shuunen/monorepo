@@ -31,16 +31,20 @@ export function FormFieldFormList({ fieldName, fieldSchema, formData, isOptional
   /**
    * Function called when user wants to complete a single form list item
    * @param onChange callback to update the whole FormFieldFormList value
+   * @param itemData data of the item to complete
    * @param indexToComplete index of the item to complete
    */
-  function onCompleteItem(onChange: (value: unknown) => void, indexToComplete: number) {
+  function onCompleteItem(onChange: (value: unknown) => void, indexToComplete: number, itemData: Record<string, unknown>) {
     logger?.showInfo(`Completing item at index ${indexToComplete}`);
     const formSchema = (fieldSchema as z.ZodArray<z.ZodType>).element;
     logger?.info({ fieldSchema, formSchema });
-    // @ts-expect-error type mismatch
-    showForm?.(formSchema, data => {
-      const newItems = items.map((item, index) => (index === indexToComplete ? data : item));
-      onChange(newItems);
+    showForm?.({
+      initialData: itemData,
+      onSubmit: data => {
+        const newItems = items.map((item, index) => (index === indexToComplete ? data : item));
+        onChange(newItems);
+      },
+      schema: formSchema as z.ZodObject,
     });
   }
 
@@ -49,27 +53,30 @@ export function FormFieldFormList({ fieldName, fieldSchema, formData, isOptional
       {field => (
         <div className="flex flex-col gap-4 mt-2">
           <Title>{label}</Title>
-          {items.map((item, index) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: its ok here for form lists
-            <div className="flex gap-4 items-center border border-gray-300 shadow p-4 rounded-xl hover:bg-gray-50 transition-colors" key={`form-list-item-${index}`}>
-              <div className="bg-gray-100 p-2 rounded-xl">
-                <IconHourglass className="size-6" />
+          {items.map((item, index) => {
+            const isEmptyItem = isEmpty(item);
+            const itemIdentifier = identifier && !isEmptyItem ? identifier(item) : `Form ${index + 1}`;
+            return (
+              <div className="flex gap-4 items-center border border-gray-300 shadow p-4 rounded-xl hover:bg-gray-50 transition-colors" key={itemIdentifier}>
+                <div className="bg-gray-100 p-2 rounded-xl">
+                  <IconHourglass className="size-6" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Badge name="status" variant={isEmptyItem ? "secondary" : "success"}>
+                    {isEmptyItem ? "To complete" : "Validated"}
+                  </Badge>
+                  <Title level={3}>{itemIdentifier}</Title>
+                </div>
+                <Button className="ml-auto" name="delete" onClick={() => onDeleteItem(field.onChange, index)} variant="outline">
+                  <IconTrash />
+                </Button>
+                <Button name="complete" onClick={() => onCompleteItem(field.onChange, index, item)} variant="outline">
+                  Complete
+                  <IconChevronRight className="size-5" />
+                </Button>
               </div>
-              <div className="flex flex-col gap-1">
-                <Badge name="status" variant={isEmpty(item) ? "secondary" : "success"}>
-                  {isEmpty(item) ? "To complete" : "Validated"}
-                </Badge>
-                <Title level={3}>{identifier && !isEmpty(item) ? identifier(item) : `Form ${index + 1}`}</Title>
-              </div>
-              <Button className="ml-auto" name="delete" onClick={() => onDeleteItem(field.onChange, index)} variant="outline">
-                <IconTrash />
-              </Button>
-              <Button name="complete" onClick={() => onCompleteItem(field.onChange, index)} variant="outline">
-                Complete
-                <IconChevronRight className="size-5" />
-              </Button>
-            </div>
-          ))}
+            );
+          })}
           <div className="flex">
             <Button disabled={maxItems !== undefined && items.length >= maxItems} name="add" onClick={() => addItem(field.onChange)} variant="secondary">
               Add Applicant

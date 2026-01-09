@@ -1,6 +1,6 @@
 import type { Logger } from "@monorepo/utils";
 import type { z } from "zod";
-import type { AutoFormStepMetadata } from "./auto-form.types";
+import type { AutoFormStepMetadata, AutoFormSubformOptions } from "./auto-form.types";
 import { AutoFormField } from "./auto-form-field";
 
 type AutoFormFieldsProps = {
@@ -10,7 +10,7 @@ type AutoFormFieldsProps = {
   state?: AutoFormStepMetadata["state"];
   /** The logger instance to use if any */
   logger?: Logger;
-  showForm?: (schema: z.ZodObject, onSubmit: (data: Record<string, unknown>) => void) => void;
+  showForm?: (options: AutoFormSubformOptions) => void;
 };
 
 export function AutoFormFields({ schema, formData, state: stepState, logger, showForm }: AutoFormFieldsProps) {

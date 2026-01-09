@@ -76,3 +76,36 @@ export const Basic: Story = {
     ],
   },
 };
+
+/**
+ * Basic boolean field with switch
+ */
+export const MultiStep: Story = {
+  args: {
+    initialData: {
+      applicants: [
+        { age: 7, name: "Alice" },
+        { age: 9, name: "Bob" },
+      ],
+    },
+    schemas: [
+      step(
+        z.object({
+          email: field(z.string().email(), {
+            label: "Email",
+            placeholder: "Enter your email",
+          }),
+        }),
+      ),
+      step(
+        z.object({
+          applicants: forms(applicantSchema, {
+            identifier: data => `${data.name} (${data.age} years)`,
+            label: "Fill in the applicants",
+            maxItems: 5,
+          }),
+        }),
+      ),
+    ],
+  },
+};
