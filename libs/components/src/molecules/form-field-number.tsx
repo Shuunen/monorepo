@@ -13,7 +13,7 @@ export function FormFieldNumber({ fieldName, fieldSchema, formData, isOptional, 
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
   return (
     <FormFieldBase {...props}>
-      {field => (
+      {({ field }) => (
         <FormControl>
           <Input type="number" {...field} disabled={isDisabled} onChange={event => field.onChange(event.target.value === "" ? undefined : Number(event.target.value))} placeholder={placeholder} value={field.value === undefined ? "" : field.value} />
         </FormControl>

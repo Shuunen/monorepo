@@ -16,10 +16,10 @@ export function FormFieldSelect({ fieldName, fieldSchema, formData, isOptional, 
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
   return (
     <FormFieldBase {...props}>
-      {field => (
+      {({ field }) => (
         <FormControl>
           <Select {...field} disabled={isDisabled || readonly} onValueChange={field.onChange}>
-            <SelectTrigger className={cn("max-w-full", { "!opacity-100": readonly })} name={field.name}>
+            <SelectTrigger className={cn("max-w-full", { "opacity-100!": readonly })} name={field.name}>
               <SelectValue placeholder={placeholder ?? `Select ${label}`} />
             </SelectTrigger>
             <SelectContent>

@@ -38,7 +38,7 @@ export function FormFieldAccept({ fieldName, fieldSchema, formData, isOptional, 
   }, []);
   return (
     <FormFieldBase {...props}>
-      {field => (
+      {({ field }) => (
         <RadioGroup className="flex" disabled={isDisabled} name={field.name} onValueChange={value => field.onChange(value === "accepted")} value={initialValue(field)}>
           <div className={buttonClasses}>
             <RadioGroupItem id={idAccept} name={field.name} value="accepted" />

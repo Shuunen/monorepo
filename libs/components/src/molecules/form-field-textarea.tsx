@@ -10,7 +10,7 @@ export function FormFieldTextarea({ fieldName, fieldSchema, formData, isOptional
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
   return (
     <FormFieldBase {...props}>
-      {field => (
+      {({ field }) => (
         <FormControl>
           <Textarea {...field} disabled={isDisabled} placeholder={placeholder} readOnly={readonly} value={field.value || ""} />
         </FormControl>

@@ -18,7 +18,7 @@ export function FormFieldBoolean({ fieldName, fieldSchema, formData, isOptional,
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
   return (
     <FormFieldBase {...props} showLabel={false}>
-      {field => (
+      {({ field }) => (
         <div className="grid gap-2 mt-2">
           <div className="flex gap-2">
             <FormControl>{isBooleanLiteral ? <Switch {...field} checked={booleanLiteralValue === true} disabled /> : <Switch {...field} checked={Boolean(field.value)} disabled={isDisabled} onCheckedChange={field.onChange} />}</FormControl>

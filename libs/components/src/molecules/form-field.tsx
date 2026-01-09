@@ -1,5 +1,5 @@
 import type { Logger } from "@monorepo/utils";
-import type { ControllerRenderProps } from "react-hook-form";
+import type { ControllerFieldState, ControllerRenderProps, FieldValues, UseFormStateReturn } from "react-hook-form";
 import type { z } from "zod";
 import { FormField, FormItem, FormMessage } from "../atoms/form";
 import { cn } from "../shadcn/utils";
@@ -8,9 +8,9 @@ import "./form-field.css";
 import { FormFieldLabel } from "./form-field.utils";
 
 export type FormFieldBaseProps = {
-  children?: (field: ControllerRenderProps) => React.ReactNode;
+  children?: (props: { field: ControllerRenderProps; fieldState: ControllerFieldState; formState: UseFormStateReturn<FieldValues> }) => React.ReactNode;
   fieldName: string;
-  fieldSchema: z.ZodTypeAny;
+  fieldSchema: z.ZodType;
   formData: Record<string, unknown>;
   isOptional: boolean;
   readonly?: boolean;
@@ -26,15 +26,15 @@ export function FormFieldBase(props: FormFieldBaseProps) {
     <FormField
       key={fieldName}
       name={fieldName}
-      render={({ field }) => (
+      render={({ field, fieldState, formState }) => (
         <FormItem
           className={cn("py-2 items-start", {
-            "indented border-l border-l-2 pl-5": indented,
+            "indented border-l-2 pl-5": indented,
             "not-indented": !indented,
           })}
         >
           {props.showLabel !== false && <FormFieldLabel isOptional={isOptional} label={metadata.label} />}
-          {children?.(field)}
+          {children?.({ field, fieldState, formState })}
           <FormMessage name={fieldName} />
         </FormItem>
       )}

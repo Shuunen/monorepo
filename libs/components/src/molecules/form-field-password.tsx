@@ -10,7 +10,7 @@ export function FormFieldPassword({ fieldName, fieldSchema, formData, isOptional
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
   return (
     <FormFieldBase {...props}>
-      {field => (
+      {({ field }) => (
         <FormControl>
           <Input {...field} disabled={isDisabled} placeholder={placeholder} readOnly={readonly} type="password" value={field.value || ""} />
         </FormControl>

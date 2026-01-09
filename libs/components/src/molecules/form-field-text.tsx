@@ -10,7 +10,7 @@ export function FormFieldText({ fieldName, fieldSchema, formData, isOptional, lo
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
   return (
     <FormFieldBase {...props}>
-      {field => (
+      {({ field }) => (
         <FormControl>
           <Input {...field} disabled={isDisabled} placeholder={placeholder} readOnly={readonly} value={field.value || ""} />
         </FormControl>

@@ -159,7 +159,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
   return (
     <FormFieldBase {...props}>
       {/* oxlint-disable-next-line max-lines-per-function */}
-      {field => (
+      {({ field }) => (
         <FormControl>
           {idleNoFile ? (
             <Input accept={accept} disabled={isDisabled} name={`${testId}-${stateTestId}`} onChange={event => handleFileSelect(event, field.onChange)} placeholder={placeholder || currentState.message} ref={fileInputRef} type="file" />
