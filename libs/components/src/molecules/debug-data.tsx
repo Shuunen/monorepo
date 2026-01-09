@@ -2,7 +2,7 @@ import { cn, slugify, stringify } from "@monorepo/utils";
 
 type Props = Readonly<{
   className?: string;
-  data: string | object | undefined;
+  data: string | object | undefined | unknown;
   isFloating?: boolean;
   isGhost?: boolean;
   isScrollable?: boolean;
