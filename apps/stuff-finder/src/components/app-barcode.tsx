@@ -44,9 +44,9 @@ export function AppBarcode({ isHighlighted = false, item, size, willResize = tru
         {/* @ts-expect-error missing types */}
         <qr-code data={value} margin={0} modulesize={3} ref={wcReference} />
       </div>
-      <div className="overflow-hidden pl-1.5 pt-1 text-center">
+      <div className="overflow-hidden pt-1 pl-1.5 text-center">
         <div className={`mb-1 line-clamp-3 font-sans text-[12px] leading-4 tracking-[-0.5px] ${isHighlighted ? 'bg-red-400' : ''}`}>{printText}</div>
-        <div className={cn(`mb-1 font-mono font-bold leading-none`, { 'bg-blue-400': isHighlighted }, getLocationClasses(printLocation.length))}>{printLocation}</div>
+        <div className={cn(`mb-1 font-mono leading-none font-bold`, { 'bg-blue-400': isHighlighted }, getLocationClasses(printLocation.length))}>{printLocation}</div>
       </div>
     </div>
   )

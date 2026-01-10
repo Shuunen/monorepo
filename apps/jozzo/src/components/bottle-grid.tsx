@@ -65,7 +65,7 @@ export function BottleGrid(properties: { state: (typeof machine)['state'] }) {
         ))}
       </div>
       {hasWon && <Confetti mode="boom" />}
-      {hasWon && hat({ className: tw('absolute h-64 hat-win-animation') })}
+      {hasWon && hat({ className: tw('hat-win-animation absolute h-64') })}
     </div>
   )
 }

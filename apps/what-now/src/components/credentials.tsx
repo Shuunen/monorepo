@@ -44,15 +44,15 @@ function CredentialsForm({ formData, onInputChange, onSubmit }: CredentialsFormP
         const inputId = `input-${field.name}`
         return (
           <div className="mb-5" key={field.name}>
-            <label className="flex gap-2 text-sm font-medium mb-1" htmlFor={inputId}>
+            <label className="mb-1 flex gap-2 text-sm font-medium" htmlFor={inputId}>
               {field.label}
               <a className="flex items-center" href={field.href} rel="noopener noreferrer" target="_blank">
                 {field.link}
-                <ExternalLinkIcon className="size-4 ml-1" />
+                <ExternalLinkIcon className="ml-1 size-4" />
               </a>
             </label>
             <input
-              className="w-full px-3 py-2 border border-accent/50 rounded-md focus:outline-none focus:ring-2 "
+              className="w-full rounded-md border border-accent/50 px-3 py-2 focus:ring-2 focus:outline-none"
               id={inputId}
               maxLength={field.maxlength}
               name={field.name}
@@ -68,7 +68,7 @@ function CredentialsForm({ formData, onInputChange, onSubmit }: CredentialsFormP
         )
       })}
 
-      <div className="flex gap-4 justify-center">
+      <div className="flex justify-center gap-4">
         <Button name="save-credentials" type="submit">
           Save Credentials
         </Button>

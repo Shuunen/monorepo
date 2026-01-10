@@ -39,15 +39,15 @@ type AutoFormStepProps = {
 
 function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps) {
   const { title, subtitle, suffix, icon, active, idx, state, indent, section } = step;
-  const btnClasses = cn("h-10 border border-transparent w-full", { "h-16 rounded-xl": subtitle }, { "ml-1": indent }, { "bg-white text-black border border-gray-500 hover:bg-gray-100": active });
+  const btnClasses = cn("h-10 w-full border border-transparent", { "h-16 rounded-xl": subtitle }, { "ml-1": indent }, { "bg-white text-black border border-gray-500 hover:bg-gray-100": active });
   return (
     <div className="grid gap-2">
       {section && <Title level={4}>{section}</Title>}
       <div className={cn("flex items-center gap-0.5", { "opacity-60 pointer-events-none": state === "upcoming" })}>
-        {indent && <div className={cn("h-10 w-1 bg-gray-200 shrink-0", { "h-16": subtitle })} />}
+        {indent && <div className={cn("h-10 w-1 shrink-0 bg-gray-200", { "h-16": subtitle })} />}
         <Button className={btnClasses} data-active={active} data-state={state} disabled={disabled} name={`step-${slugify(title ?? idx.toString())}`} onClick={() => onStepClick(idx)} variant="ghost">
           {icon}
-          <div className="grow text-start flex flex-col ml-2">
+          <div className="ml-2 flex grow flex-col text-start">
             <div className="flex items-center gap-1">
               <span>{title}</span>
               {suffix && <span className="text-xs text-muted-foreground">{suffix}</span>}
@@ -62,7 +62,7 @@ function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps
 
 export function AutoFormStepper({ steps, onStepClick, disabled = false, width }: AutoFormStepperProps) {
   return (
-    <div className={cn("flex flex-col gap-4 mr-10", { [`w-[${width}px]`]: width })}>
+    <div className={cn("mr-10 flex flex-col gap-4", { [`w-[${width}px]`]: width })}>
       {steps.map(step => (
         <AutoFormStep disabled={disabled} key={step.title} onStepClick={onStepClick} step={step} />
       ))}

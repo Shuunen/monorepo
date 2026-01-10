@@ -1,6 +1,6 @@
 /* @import "tailwindcss" */
-@import "../../../libs/components/src/styles.css";
-@source "../../../libs/components/src";
+@import '../../../libs/components/src/styles.css';
+@source '../../../libs/components/src';
 
 @theme inline {
   --color-primary: var(--chart-1);

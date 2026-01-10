@@ -355,17 +355,17 @@ export const Everything: Story = {
         </div>
 
         <div className="flex items-center gap-2">
-          <label className="flex gap-2 cursor-pointer" htmlFor={toggleId}>
+          <label className="flex cursor-pointer gap-2" htmlFor={toggleId}>
             <input checked={isDisabled} id={toggleId} onChange={e => setIsDisabled(e.target.checked)} type="checkbox" />
             Disable stepper (e.g., during submission)
           </label>
         </div>
 
-        <div className="text-muted-foreground space-y-2">
+        <div className="space-y-2 text-muted-foreground">
           <p>
             <strong>Features demonstrated:</strong>
           </p>
-          <ul className="list-disc list-inside space-y-1 ml-2">
+          <ul className="ml-2 list-inside list-disc space-y-1">
             <li>
               <strong>Readonly state:</strong> Step 1-2 (completed, view only, readable not editable)
             </li>

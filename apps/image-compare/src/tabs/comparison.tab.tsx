@@ -84,7 +84,7 @@ export function Comparison() {
   /* v8 ignore stop */
 
   return (
-    <div className="bg-accent flex flex-col grow justify-center items-center p-6 h-[calc(100vh-56px)] overflow-hidden" data-testid="comparison-tab">
+    <div className="flex h-[calc(100vh-56px)] grow flex-col items-center justify-center overflow-hidden bg-accent p-6" data-testid="comparison-tab">
       <motion.div animate={{ opacity: 1, width: containerWidth, y: 0 }} className="flex flex-col" initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.5, staggerChildren: 0.1, width: { duration: 0.3, ease: 'easeInOut' } }}>
         <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: -10 }} transition={{ delay: 0.1, duration: 0.4 }}>
           <ContestHeader contestState={contestState} leftImageMetadata={leftImageMetadata} rightImageMetadata={rightImageMetadata} />

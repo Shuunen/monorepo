@@ -378,10 +378,10 @@ Aucune de ces égalités (en rouge) ne serait vraie au sens strict :
 Exemple dans la console de Chrome :
 
 ```js
-(0 == "")(
+;(0 == '')(
   // true
-  0 === "",
-); // false
+  0 === '',
+) // false
 ```
 
 Vous voilà prévenus, **en utilisant des comparaisons laxistes, on laisse la porte ouverte aux bugs**.
@@ -392,9 +392,9 @@ Par exemple ici, cette fonction (triviale certes) teste si l'utilisateur est aut
 function hasAccess(id) {
   if (id == 0) {
     // only admin
-    return true;
+    return true
   } else {
-    return false;
+    return false
   }
 }
 ```
@@ -404,8 +404,8 @@ On peut voir dans le commentaire que seul l'administrateur possède l'identifian
 Faisons le test dans la console JavaScript :
 
 ```js
-hasAccess(0); // true
-hasAccess(42); // false
+hasAccess(0) // true
+hasAccess(42) // false
 ```
 
 Très bien, on voit bien que l'utilisateur 42 n'a pas accès.
@@ -413,7 +413,7 @@ Très bien, on voit bien que l'utilisateur 42 n'a pas accès.
 Et si un enregistrement en base ne s'est pas déroulé comme prévu et que l'identifiant n'a pas été généré comme il se doit ? Ou si c'est un utilisateur sans compte et qu'il n'a pour le coup pas d'identifiant attitré ?
 
 ```js
-hasAccess(""); // true
+hasAccess('') // true
 ```
 
 Bien sûr, ceci est un exemple, mais cette fonction `hasAccess` n'est pas sûre de par son usage du double égal, en ajoutant un petit égal de plus on évite le problème ci-dessus.
@@ -432,17 +432,17 @@ Les bonnes pratiques liées aux **variables** :
 
 ```js
 // Pollution du namespace global
-var showUser = true;
-var blockEdition = false;
-var maxDownloads = 3;
+var showUser = true
+var blockEdition = false
+var maxDownloads = 3
 
 // Pas de pollution
-var app = {};
+var app = {}
 app.settings = {
   showUser: true,
   blockEdition: false,
   maxDownloads: 3,
-};
+}
 ```
 
 #### Français ou Anglais
@@ -483,7 +483,7 @@ On commence par écrire :
 
 ```js
 function getUser(id) {
-  return get("http://localhost:8080/aidegestion/rest/user/" + id);
+  return get('http://localhost:8080/aidegestion/rest/user/' + id)
 }
 ```
 
@@ -491,7 +491,7 @@ puis on ajoute :
 
 ```js
 function deleteUser(id) {
-  return delete ("http://localhost:8080/aidegestion/rest/user/" + id);
+  return delete ('http://localhost:8080/aidegestion/rest/user/' + id)
 }
 ```
 
@@ -499,7 +499,7 @@ puis :
 
 ```js
 function updateUser(id, data) {
-  return update("http://localhost:8080/aidegestion/rest/user/" + id, data);
+  return update('http://localhost:8080/aidegestion/rest/user/' + id, data)
 }
 ```
 
@@ -516,10 +516,10 @@ Solution : créez un fichier de configuration et importez-le dans chaque fichier
 On se retrouve avec un code plus clair et une app configurable :
 
 ```js
-import config from "../config";
+import config from '../config'
 
 function getUser(id) {
-  return get(config.api + "/user/" + id);
+  return get(config.api + '/user/' + id)
 }
 ```
 
@@ -819,7 +819,7 @@ La technique ci-dessus est ma favorite lorsque la compatibilité IE a été vend
   background-color: rgba(255, 0, 0, 0.2);
 }
 .lte-ie8 .rgba-bg {
-  background-image: url("i/rgba/red-02.png");
+  background-image: url('i/rgba/red-02.png');
 }
 ```
 

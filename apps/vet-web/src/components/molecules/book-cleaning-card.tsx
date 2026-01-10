@@ -11,17 +11,17 @@ export function BookCleaningCard() {
       features={[
         {
           heading: 'Flexible Scheduling',
-          icon: <CalendarCheck2 className="size-5 text-primary mr-3 mt-0.5" />,
+          icon: <CalendarCheck2 className="mt-0.5 mr-3 size-5 text-primary" />,
           text: 'Choose a time that works best for you',
         },
         {
           heading: 'Thorough & Reliable',
-          icon: <Brush className="size-5 text-primary mr-3 mt-0.5" />,
+          icon: <Brush className="mt-0.5 mr-3 size-5 text-primary" />,
           text: 'Experienced cleaners ensure spotless results',
         },
         {
           heading: 'Eco-Friendly Products',
-          icon: <Sparkles className="size-5 text-primary mr-3 mt-0.5" />,
+          icon: <Sparkles className="mt-0.5 mr-3 size-5 text-primary" />,
           text: 'Safe for your family and the environment',
         },
       ]}

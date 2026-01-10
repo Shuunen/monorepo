@@ -28,7 +28,7 @@ export function FormSummaryFieldValue(props: Props) {
     return (
       <TableCell className="overflow-hidden text-ellipsis">
         {/** biome-ignore lint/a11y/noStaticElementInteractions: fix that later */}
-        <a className="flex items-center gap-2 underline cursor-pointer" data-testid={slugify(`summary-file-${props.name}`)} onClick={() => downloadFile(props.value as File)}>
+        <a className="flex cursor-pointer items-center gap-2 underline" data-testid={slugify(`summary-file-${props.name}`)} onClick={() => downloadFile(props.value as File)}>
           <IconDownload /> {props.value.name}
         </a>
       </TableCell>

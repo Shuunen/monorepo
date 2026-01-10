@@ -29,7 +29,7 @@ export function PageKitchenSink() {
         {items.map(item => (
           <div className="flex flex-col items-start gap-0" key={item.reference + item.name}>
             <AppBarcode isHighlighted={isHighlighted} item={item} size={size} willResize={!item.name.includes('NOK')} />
-            <p className="mt-1 break-all font-mono text-xs">
+            <p className="mt-1 font-mono text-xs break-all">
               reference : {item.reference}
               <br />
               length : {item.reference.length}

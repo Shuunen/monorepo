@@ -27,7 +27,7 @@ const meta = {
       logger.showSuccess("Form submitted successfully");
     }
     return (
-      <div className="grid gap-4 mt-6 w-lg">
+      <div className="mt-6 grid w-lg gap-4">
         <DebugData data={formData} isGhost title="Form data" />
         <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />

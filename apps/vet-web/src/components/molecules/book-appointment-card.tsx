@@ -11,17 +11,17 @@ export function BookAppointmentCard() {
       features={[
         {
           heading: 'Quick and Easy Scheduling',
-          icon: <Clock className="size-5 text-primary mr-3 mt-0.5" />,
+          icon: <Clock className="mt-0.5 mr-3 size-5 text-primary" />,
           text: 'Book appointments in just a few clicks',
         },
         {
           heading: 'Specialized Care',
-          icon: <PawPrint className="size-5 text-primary mr-3 mt-0.5" />,
+          icon: <PawPrint className="mt-0.5 mr-3 size-5 text-primary" />,
           text: 'Our veterinarians are experts in pet healthcare',
         },
         {
           heading: 'Comprehensive Services',
-          icon: <BoxIcon className="size-5 text-primary mr-3 mt-0.5" />,
+          icon: <BoxIcon className="mt-0.5 mr-3 size-5 text-primary" />,
           text: 'From routine check-ups to emergency care',
         },
       ]}

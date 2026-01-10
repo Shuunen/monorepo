@@ -29,9 +29,9 @@ export const ContestHeader = memo(function ContestHeader({ contestState, leftIma
   logger.info('Rendering ContestHeader')
   return (
     <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: -20 }} transition={{ duration: 0.6 }}>
-      <div className={cn('flex flex-col items-center gap-4 relative mb-6 p-6 to-success via-transparent rounded-xl text-center bg-primary/10', { 'bg-conic-0': leftWin, 'bg-conic-180': leftWin === false })}>
+      <div className={cn('relative mb-6 flex flex-col items-center gap-4 rounded-xl bg-primary/10 via-transparent to-success p-6 text-center', { 'bg-conic-0': leftWin, 'bg-conic-180': leftWin === false })}>
         {title.length > 0 && <Title className={cn({ 'absolute top-12 shadow-xl bg-accent/80 px-5 py-3 rounded-md': !isContestMode })}>{title}</Title>}
-        {isContestComplete && <img alt="Stars Twinkling" className={cn('absolute h-36 top-0 w-28', { '-left-24': leftWin, '-right-24 rotate-180': leftWin === false })} src="/stars-twinkling.gif" />}
+        {isContestComplete && <img alt="Stars Twinkling" className={cn('absolute top-0 h-36 w-28', { '-left-24': leftWin, '-right-24 rotate-180': leftWin === false })} src="/stars-twinkling.gif" />}
         {isContestMode && <Paragraph>Select your preferred image</Paragraph>}
         {!isContestMode && <ImageInfos infos={imageInfos} leftWin={leftWin} />}
       </div>

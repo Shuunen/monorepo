@@ -130,7 +130,7 @@ export function PageItemAddEdit({ isEdit = false }: Readonly<{ isEdit?: boolean 
 
   return (
     <AppPageCard cardTitle={`${isEdit ? 'Edit' : 'Add'} item`} icon={isEdit ? EditOutlinedIcon : AddCircleOutlineIcon} pageCode={`item-${isEdit ? 'edit' : 'add'}`} pageTitle={`${isEdit ? 'Edit' : 'Add'} item`}>
-      <div className="mb-20 flex max-h-[90%] flex-col overflow-y-auto overflow-x-hidden md:mb-0 md:max-h-full">
+      <div className="mb-20 flex max-h-[90%] flex-col overflow-x-hidden overflow-y-auto md:mb-0 md:max-h-full">
         {Boolean(isEdit) && <p className="text-center">Please fill in the form below to edit the item, you can change any field you want 🔄</p>}
         {!isEdit && <p className="text-center">Please fill in the form below to add a new item, no worry, you will be able to edit it later if needed ✏️</p>}
         {id !== '' && initialForm.fields.reference.value === '' && <p>Here is the keyword you search previously : {id}</p>}

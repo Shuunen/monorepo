@@ -6,10 +6,10 @@
 
 Pour 4 personnes :
 
-- 4   oeufs dur écalés (sans la coquille)
-- 45  grammes de moutarde de Dijon
+- 4 oeufs dur écalés (sans la coquille)
+- 45 grammes de moutarde de Dijon
 - 1/2 cuillère à café de vinaigre de cidre
-- 1   pincée de sel
+- 1 pincée de sel
 
 ## Recette
 

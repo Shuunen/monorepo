@@ -8,7 +8,7 @@ export function App() {
   const createdOn = readableTime(new Date('2025-07-15'))
   return (
     <div>
-      <nav className="absolute flex gap-6 text-2xl font-semibold justify-center w-full p-4 bg-white shadow-md">
+      <nav className="absolute flex w-full justify-center gap-6 bg-white p-4 text-2xl font-semibold shadow-md">
         <NavLink className={navClasses} to="/">
           Home
         </NavLink>

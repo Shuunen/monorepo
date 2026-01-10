@@ -155,7 +155,7 @@ function b2a(a) {
     n = []
   if (!a) return a
   do
-    (c = a.charCodeAt(k++)),
+    ((c = a.charCodeAt(k++)),
       (d = a.charCodeAt(k++)),
       (e = a.charCodeAt(k++)),
       (j = (c << 16) | (d << 8) | e),
@@ -164,11 +164,11 @@ function b2a(a) {
       (h = 63 & (j >> 6)),
       // biome-ignore lint/complexity/noCommaOperator: it's not my code
       (i = 63 & j),
-      (n[l++] = b.charAt(f) + b.charAt(g) + b.charAt(h) + b.charAt(i))
+      (n[l++] = b.charAt(f) + b.charAt(g) + b.charAt(h) + b.charAt(i)))
   while (k < a.length)
   // biome-ignore lint/suspicious/noAssignInExpressions: it's not my code
   // biome-ignore lint/complexity/noCommaOperator: it's not my code
-  return (m = n.join('')), (o = a.length % 3), (o ? m.slice(0, o - 3) : m) + '==='.slice(o || 3)
+  return ((m = n.join('')), (o = a.length % 3), (o ? m.slice(0, o - 3) : m) + '==='.slice(o || 3))
 }
 
 function a2b(a) {

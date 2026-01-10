@@ -33,7 +33,7 @@ function TaskCardControls({ canIncrease, canDecrease, canMove, onIncrease, onDec
   const btnClasses = 'size-4 py-2'
   const iconClasses = 'size-3'
   return (
-    <div className="absolute right-0.5 top-0.5 grid grid-cols-2 gap-1.5 opacity-10 sepia hover:opacity-100 hover:sepia-0">
+    <div className="absolute top-0.5 right-0.5 grid grid-cols-2 gap-1.5 opacity-10 sepia hover:opacity-100 hover:sepia-0">
       <Button className={btnClasses} disabled={!canIncrease} name="increase" onClick={onIncrease} variant={canIncrease ? 'destructive' : 'ghost'}>
         <PlusIcon className={iconClasses} />
       </Button>
@@ -90,8 +90,8 @@ function TaskCard({ task, modifications, onFrequencyChange, onDateChange }: { ta
   const title = `${task.name} (${task.minutes} min, completed ${daysSinceCompletion(task)} days ago)`
 
   return (
-    <div className={`px-2 py-1 rounded text-xs border-2 ${colorClass} ${isModified ? 'ring-2 ring-yellow-400/50' : ''} truncate relative group w-full text-left`} data-completed-on={task.completedOn} data-once={task.once} title={title}>
-      <div className="font-medium truncate">{task.name}</div>
+    <div className={`rounded border-2 px-2 py-1 text-xs ${colorClass} ${isModified ? "ring-2 ring-yellow-400/50" : ''} group relative w-full truncate text-left`} data-completed-on={task.completedOn} data-once={task.once} title={title}>
+      <div className="truncate font-medium">{task.name}</div>
       <div className="text-xs opacity-75">{recurrenceLabel}</div>
       <TaskCardControls canDecrease={canDecrease} canIncrease={canIncrease} canMove={canMove} onAfter={handleAfter} onBefore={handleBefore} onDecrease={handleDecrease} onIncrease={handleIncrease} />
     </div>
@@ -128,12 +128,12 @@ function DayColumn({
   isToday?: boolean
 }) {
   return (
-    <div className={`flex flex-col border-r border-gray-600/30 last:border-r-0 min-h-96 w-full ${isToday ? 'bg-yellow-100/10' : ''}`}>
-      <div className="flex flex-col leading-6 bg-gray-800/40 p-3 border-b border-gray-600/30 text-center font-medium text-gray-200">
+    <div className={`flex min-h-96 w-full flex-col border-r border-gray-600/30 last:border-r-0 ${isToday ? 'bg-yellow-100/10' : ''}`}>
+      <div className="flex flex-col border-b border-gray-600/30 bg-gray-800/40 p-3 text-center leading-6 font-medium text-gray-200">
         {dayName}
         <span className="ml-2 opacity-75">{realDate}</span>
       </div>
-      <div className="flex flex-col gap-2 p-3 grow">
+      <div className="flex grow flex-col gap-2 p-3">
         {tasks.map(task => (
           <TaskCard key={`${task.id}-${realDate}`} modifications={modifications} onDateChange={onDateChange} onFrequencyChange={onFrequencyChange} task={task} />
         ))}
@@ -166,7 +166,7 @@ function PlannerContent({
   const monday = new Date(today)
   monday.setDate(today.getDate() - today.getDay() + 1)
   return (
-    <div className="bg-gray-800/30 rounded-lg shadow-sm border border-gray-600/30 overflow-hidden">
+    <div className="overflow-hidden rounded-lg border border-gray-600/30 bg-gray-800/30 shadow-sm">
       <div className="flex min-h-96 overflow-x-auto">
         {weekDays.map((dayName, index) => {
           const columnDate = new Date(monday)
@@ -233,8 +233,8 @@ function PlannerMetrics({ tasks, modifications }: { tasks: Task[]; modifications
   const metrics = useMemo(() => calculatePlannerMetrics(tasks, modifications), [tasks, modifications])
 
   return (
-    <div className="bg-gray-800/30 rounded-lg shadow-sm border border-gray-600/30 p-4 mt-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="mt-4 rounded-lg border border-gray-600/30 bg-gray-800/30 p-4 shadow-sm">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <div className="text-center">
           <div className="text-2xl font-bold text-blue-400">{metrics.activeTasksCount}</div>
           <div className="text-sm text-gray-400">Active Tasks</div>
@@ -375,9 +375,9 @@ function usePlannerTasks() {
 function PlannerHeader({ onTasksUpload, onTasksDispatch, onSaveModifications, hasModifications, saving }: { onTasksUpload: () => void; onTasksDispatch: () => void; onSaveModifications: () => void; hasModifications: boolean; saving: boolean }) {
   const showDispatch = false
   return (
-    <header className="sticky rounded-lg top-0 z-10 backdrop-blur-sm border-b border-gray-600/30">
-      <div className="flex flex-col md:flex-row py-4 items-center gap-6">
-        <div className="flex items-center gap-3 mr-auto">
+    <header className="sticky top-0 z-10 rounded-lg border-b border-gray-600/30 backdrop-blur-sm">
+      <div className="flex flex-col items-center gap-6 py-4 md:flex-row">
+        <div className="mr-auto flex items-center gap-3">
           <CalendarIcon className="size-8" />
           <h3 className="mt-0 mb-0">Planner</h3>
         </div>
@@ -446,7 +446,7 @@ export function PagePlanner() {
   const tasksByDay = createTaskDistribution(tasksWithModifications, modifications.frequency || {})
 
   return (
-    <div className="flex flex-col justify-center grow" data-testid="page-planner">
+    <div className="flex grow flex-col justify-center" data-testid="page-planner">
       <PlannerHeader hasModifications={hasModifications} onSaveModifications={handleSaveModifications} onTasksDispatch={handleTasksDispatch} onTasksUpload={handleTasksUploadAndReload} saving={saving} />
       <PlannerContent modifications={modifications.frequency || {}} onDateChange={handleDateChange} onFrequencyChange={handleFrequencyChange} tasksByDay={tasksByDay} />
       <PlannerMetrics modifications={modifications.frequency || {}} tasks={tasks} />

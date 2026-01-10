@@ -21,7 +21,7 @@ export function BookCard({ icon, title, description, features, buttonText, butto
     <Card>
       <CardHeader>
         <CardTitle>
-          <div className="flex items-center text-2xl text-primary pt-2">
+          <div className="flex items-center pt-2 text-2xl text-primary">
             {icon}
             {title}
           </div>
@@ -41,7 +41,7 @@ export function BookCard({ icon, title, description, features, buttonText, butto
           ))}
         </div>
       </CardContent>
-      <CardFooter className="flex justify-center pb-4 pt-2">
+      <CardFooter className="flex justify-center pt-2 pb-4">
         <Link to={buttonTo}>
           <Button name={buttonText} variant="default">
             {buttonText}

@@ -1,9 +1,12 @@
 {
   "[json]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "cSpell.language": "en-GB",
   "cSpell.words": [
@@ -51,6 +54,7 @@
     "zenity",
     "zxing"
   ],
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "javascript.format.insertSpaceAfterConstructor": false,
   "javascript.format.insertSpaceBeforeFunctionParenthesis": false,
   "typescript.format.insertSpaceAfterConstructor": false,

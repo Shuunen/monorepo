@@ -34,17 +34,17 @@ const MetricCard = memo(function MetricCard(props: MetricCardProps) {
   const isHidden = items?.length === 0
 
   return (
-    <div className={`flex whitespace-nowrap gap-6 rounded-lg border border-gray-200 relative bg-white p-6 shadow-sm ${color} ${isHidden ? 'hidden' : ''}`}>
+    <div className={`relative flex gap-6 rounded-lg border border-gray-200 bg-white p-6 whitespace-nowrap shadow-sm ${color} ${isHidden ? 'hidden' : ''}`}>
       {amount && Icon && (
         <div className="flex items-center">
           <Icon className="opacity-30" sx={{ fontSize: '3rem' }} />
           <p className="text-3xl font-bold">{amount}</p>
         </div>
       )}
-      <div className={`flex flex-col w-full ${amount ? 'justify-center' : ''}`}>
+      <div className={`flex w-full flex-col ${amount ? 'justify-center' : ''}`}>
         <h2 className="text-xl font-semibold text-current">{title}</h2>
         {(children || items) && (
-          <div className="space-y-3 max-h-96 overflow-y-auto">
+          <div className="max-h-96 space-y-3 overflow-y-auto">
             {items && <AppItemList display="list" items={items} loadingItemIds={loadingItemIds} onSelection={onSelection} showPrice={showPrice ?? false} />}
             {!items && children}
           </div>
@@ -57,9 +57,9 @@ const MetricCard = memo(function MetricCard(props: MetricCardProps) {
 
 function MetricCardEntry({ title, subtitle, value }: { title: string; subtitle: string; value: string }) {
   return (
-    <div className="flex items-center justify-between rounded-md border border-gray-200 p-3 mr-3">
-      <div className="flex-1 max-w-4/5">
-        <h4 className="font-medium text-gray-900 truncate">{title}</h4>
+    <div className="mr-3 flex items-center justify-between rounded-md border border-gray-200 p-3">
+      <div className="max-w-4/5 flex-1">
+        <h4 className="truncate font-medium text-gray-900">{title}</h4>
         <p className="text-sm text-gray-600">{subtitle}</p>
       </div>
       <p className="font-medium">{value}</p>
@@ -160,13 +160,13 @@ export function PageMetrics({ ...properties }: Readonly<Record<string, unknown>>
     <AppPageCard cardTitle="Metrics" icon={InsightsIcon} pageCode="metrics" pageTitle="Metrics">
       <div className="flex flex-col">
         {/* Amounts */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <MetricCard amount={metrics.totalItems} color={tw('text-purple-700')} icon={SpeedIcon} title="items registered" />
           <MetricCard amount={metrics.itemsToGive.length} color={tw('text-green-600')} icon={OutboxIcon} title="items to give" />
           <MetricCard amount={formatCurrency(metrics.totalValue)} color={tw('text-blue-600')} icon={ShoppingCartIcon} title="total value" />
         </div>
         {/* Lists */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <MetricCard color={tw('text-red-600')} items={metrics.itemsNotPrinted} title={`Items not printed : ${metrics.itemsNotPrinted.length}`} />
           <MetricCard color={tw('text-red-600')} items={metrics.itemsWithoutLocation} showPrice={true} title={`Items without location : ${metrics.itemsWithoutLocation.length}`} />
           <MetricCard color={tw('text-red-600')} items={metrics.itemsWithoutPhoto} title={`Items without photo : ${metrics.itemsWithoutPhoto.length}`} />

@@ -161,7 +161,7 @@ myArray.sort(byAge)
 accepted :
 
 ```ts
-const value = await fetch(url).then((response) => response.json());
+const value = await fetch(url).then(response => response.json())
 ```
 
 null / undefined is preferred
@@ -186,7 +186,7 @@ export const asyncJobStatus = {
   error: 3,
   pending: 0,
   ready: 2,
-} as const;
+} as const
 ```
 
 Store the constants that need to be shared in `apps/<app>/src/constants`.

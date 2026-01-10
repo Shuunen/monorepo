@@ -76,8 +76,8 @@ const paragraphVariants = cva("leading-relaxed", {
   variants: {
     variant: {
       default: "text-foreground",
-      error: "text-destructive text-sm",
-      muted: "text-muted-foreground text-sm",
+      error: "text-sm text-destructive",
+      muted: "text-sm text-muted-foreground",
       primary: "text-primary",
       secondary: "text-secondary-foreground",
     },

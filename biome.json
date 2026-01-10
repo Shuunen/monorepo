@@ -57,10 +57,6 @@
   "json": {
     "formatter": {
       "enabled": true
-    },
-    "parser": {
-      "allowComments": false,
-      "allowTrailingCommas": false
     }
   },
   "linter": {

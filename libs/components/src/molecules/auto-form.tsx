@@ -251,7 +251,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
   }
   return (
     <div
-      className={cn("mx-auto w-full flex", {
+      className={cn("mx-auto flex w-full", {
         "min-w-3xl": size === "medium",
         "min-w-5xl": size === "large",
         "min-w-xl": size === "small",

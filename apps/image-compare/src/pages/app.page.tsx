@@ -7,8 +7,8 @@ const navClasses = ({ isActive }: { isActive: boolean }) => `transition-colors $
 
 export function App() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <nav className="flex gap-6 font-semibold justify-center w-full p-4 bg-primary/10 shadow-md">
+    <div className="flex min-h-screen flex-col">
+      <nav className="flex w-full justify-center gap-6 bg-primary/10 p-4 font-semibold shadow-md">
         <NavLink className={navClasses} to="/about">
           About
         </NavLink>
