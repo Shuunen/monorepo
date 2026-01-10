@@ -1,11 +1,12 @@
 import type { Logger } from "@monorepo/utils";
 import { z } from "zod";
 import { Alert } from "../atoms/alert";
-import type { AutoFormStepMetadata } from "./auto-form.types";
+import type { AutoFormStepMetadata, AutoFormSubformOptions } from "./auto-form.types";
 import { getFieldMetadata, getFormFieldRender, isFieldVisible } from "./auto-form.utils";
 import { FormFieldAccept } from "./form-field-accept";
 import { FormFieldBoolean } from "./form-field-boolean";
 import { FormFieldDate } from "./form-field-date";
+import { FormFieldFormList } from "./form-field-form-list";
 import { FormFieldNumber } from "./form-field-number";
 import { FormFieldPassword } from "./form-field-password";
 import { FormFieldSection } from "./form-field-section";
@@ -20,10 +21,11 @@ type AutoFormFieldProps = {
   formData: Record<string, unknown>;
   stepState?: AutoFormStepMetadata["state"];
   logger?: Logger;
+  showForm?: (options: AutoFormSubformOptions) => void;
 };
 
 // oxlint-disable-next-line max-statements
-export function AutoFormField({ fieldName, fieldSchema, formData, stepState, logger }: AutoFormFieldProps) {
+export function AutoFormField({ fieldName, fieldSchema, formData, stepState, logger, showForm }: AutoFormFieldProps) {
   if (!isFieldVisible(fieldSchema, formData)) {
     return;
   }
@@ -32,7 +34,7 @@ export function AutoFormField({ fieldName, fieldSchema, formData, stepState, log
   const metadata = getFieldMetadata(fieldSchema) ?? {};
   const fieldState = "state" in metadata ? metadata.state : undefined;
   const state = fieldState ?? stepState ?? "editable";
-  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly: state === "readonly" };
+  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly: state === "readonly", showForm };
   const render = getFormFieldRender(fieldSchema);
   if (render === "accept") {
     return <FormFieldAccept {...props} />;
@@ -63,6 +65,9 @@ export function AutoFormField({ fieldName, fieldSchema, formData, stepState, log
   }
   if (render === "upload") {
     return <FormFieldUpload {...props} />;
+  }
+  if (render === "form-list") {
+    return <FormFieldFormList {...props} />;
   }
   return <Alert title={`Missing render "${render}" for field "${fieldName}"`} type="error" />;
 }
