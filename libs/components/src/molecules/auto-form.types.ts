@@ -65,6 +65,25 @@ export type AutoFormStepMetadata = Simplify<
   }
 >;
 
+export type AutoFormFieldFormsMetadata = Simplify<
+  AutoFormFieldBaseMetadata & {
+    /** Function to generate the label for each item in the list, based on its data, for example data => `${data.name} (${data.age} years)` */
+    identifier?: (data: Record<string, unknown>) => string;
+    /** Custom labels for the form list */
+    labels?: {
+      /** Label for the button to add a new form to the list, default is "Add" */
+      addButton?: string;
+      /** Label for the button to complete a form in the list, default is "Complete" */
+      completeButton?: string;
+    };
+    /** Minimum number of items allowed in the form list */
+    minItems?: number;
+    /** Maximum number of items allowed in the form list */
+    maxItems?: number;
+    render: "form-list";
+  }
+>;
+
 /**
  * Metadata describing the configuration and behavior of a section field in an auto-generated form.
  * example: `section({ title: 'Main infos', line: true })`
@@ -106,7 +125,7 @@ export type AutoFormFieldBaseMetadata = {
   /** Custom options for select/enum fields with label/value pairs. */
   options?: SelectOption[];
   /** Force the field to be rendered with a specific component, else use automatic field-schema detection */
-  render?: "text" | "textarea" | "number" | "date" | "select" | "boolean" | "upload" | "accept" | "password";
+  render?: "text" | "textarea" | "number" | "date" | "select" | "boolean" | "upload" | "accept" | "password" | "form-list";
 } & AutoFormFieldConditionalMetadata;
 
 /**
@@ -114,7 +133,7 @@ export type AutoFormFieldBaseMetadata = {
  * example: `field(z.string(), { label: 'First Name', placeholder: 'Enter your first name', state: 'editable' })`
  * example: `section({ title: 'First Name'})`
  */
-export type AutoFormFieldMetadata = AutoFormFieldBaseMetadata | AutoFormFieldSectionMetadata;
+export type AutoFormFieldMetadata = AutoFormFieldBaseMetadata | AutoFormFieldSectionMetadata | AutoFormFieldFormsMetadata;
 
 /** Option for select/enum fields in the auto-generated form. */
 export type SelectOption = {
@@ -145,4 +164,14 @@ export type AutoFormSummarySection = {
   data: FormSummaryData;
   /** Optional title for the section, developers are not forced to provide one */
   title?: string;
+};
+
+/** Options for displaying a subform in the auto form */
+export type AutoFormSubformOptions = {
+  /** The step/zod schema for the subform */
+  schema: z.ZodObject;
+  /** Initial data to pre-fill the subform fields. */
+  initialData: Record<string, unknown>;
+  /** Callback function invoked when the subform is submitted, returning the submission data. */
+  onSubmit: (data: Record<string, unknown>) => void;
 };
