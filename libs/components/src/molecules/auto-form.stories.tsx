@@ -85,16 +85,24 @@ export const Basic: Story = {
   },
 };
 
-const step1Schema = z.object({
-  email: field(z.email("Invalid email address"), {
-    label: "Email Address",
-    placeholder: "We'll never share your email",
+/*
+{
+  email: "main-account@gmail.com",
+  childAccounts: [
+    { name: "Child Account 1", email: "child1@gmail.com" },
+    { name: "Child Account 2", email: "child2@gmail.com" }
+  ]
+}
+*/
+
+const step1Schema = step(
+  z.object({
+    email: field(z.email("Invalid email address"), {
+      label: "Email Address",
+      placeholder: "We'll never share your email",
+    }),
   }),
-  name: field(z.string().min(2, "Name is required"), {
-    label: "Full Name",
-    placeholder: "Enter your legal name",
-  }),
-});
+);
 
 const step2Schema = z.object({
   age: field(z.number().min(0).max(120).optional(), {

@@ -5,7 +5,7 @@ import { z } from "zod";
 import { IconEdit } from "../icons/icon-edit";
 import { IconSuccess } from "../icons/icon-success";
 import { IconUpcoming } from "../icons/icon-upcoming";
-import type { AutoFormData, AutoFormFieldMetadata, AutoFormFieldSectionMetadata, AutoFormFieldsMetadata, AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps, AutoFormSummarySection, SelectOption } from "./auto-form.types";
+import type { AutoFormData, AutoFormFieldFormsMetadata, AutoFormFieldMetadata, AutoFormFieldSectionMetadata, AutoFormFieldsMetadata, AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps, AutoFormSummarySection, SelectOption } from "./auto-form.types";
 
 /**
  * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
@@ -503,6 +503,9 @@ export function field(fieldSchema: z.ZodType, fieldMetadata: AutoFormFieldMetada
   return fieldSchema.meta(fieldMetadata);
 }
 
+// Repeatable fields like : names with alternative spelling (John Doe, Jon Doe)
+// export function fields
+
 /**
  * Helper to write AutoForm section
  * @param sectionMetadata related metadata
@@ -554,6 +557,22 @@ export function fields(formSchema: z.ZodType, formMetadata: Omit<AutoFormFieldsM
     .min(minItems ?? 0, `At least ${minItems === 1 ? "one item is" : `${minItems} items are`} required.`)
     .max(maxItems ?? Infinity, `At most ${maxItems === 1 ? "one item is" : `${maxItems} items are`} allowed.`)
     .meta({ ...formMetadata, render: "field-list" });
+}
+
+/**
+ * Helper to write AutoForm repeatable form
+ * @param formSchema zod schema
+ * @param formMetadata related metadata
+ * @returns form schema with valid metadata
+ * @example forms(z.object({ firstName: field(...) }), { identifier: data => `${data.firstName}` })
+ */
+export function forms(formSchema: z.ZodObject, formMetadata: Omit<AutoFormFieldFormsMetadata, "render">) {
+  const { minItems, maxItems } = formMetadata;
+  return z
+    .array(formSchema)
+    .min(minItems ?? 0, `At least ${minItems === 1 ? "one item is" : `${minItems} items are`} required.`)
+    .max(maxItems ?? Infinity, `At most ${maxItems === 1 ? "one item is" : `${maxItems} items are`} allowed.`)
+    .meta({ ...formMetadata, render: "form-list" });
 }
 
 /**

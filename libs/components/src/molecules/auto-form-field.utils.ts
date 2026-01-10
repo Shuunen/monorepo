@@ -1,7 +1,7 @@
 import type { Logger } from "@monorepo/utils";
 import type { ComponentType } from "react";
 import type { z } from "zod";
-import type { AutoFormStepMetadata } from "./auto-form.types";
+import type { AutoFormStepMetadata, AutoFormSubformOptions } from "./auto-form.types";
 import type { getFormFieldRender } from "./auto-form.utils";
 import { FormFieldAccept } from "./form-field-accept";
 import { FormFieldBoolean } from "./form-field-boolean";
@@ -12,6 +12,7 @@ import { FormFieldSelect } from "./form-field-select";
 import { FormFieldText } from "./form-field-text";
 import { FormFieldTextarea } from "./form-field-textarea";
 import { FormFieldUpload } from "./form-field-upload";
+import { FormFieldFormList } from "./form-field-form-list";
 
 export type AutoFormFieldProps = {
   fieldName: string;
@@ -19,6 +20,7 @@ export type AutoFormFieldProps = {
   formData: Record<string, unknown>;
   stepState?: AutoFormStepMetadata["state"];
   logger?: Logger;
+  showForm?: (options: AutoFormSubformOptions) => void;
 };
 
 type FieldComponentProps = {
@@ -38,6 +40,7 @@ export const componentRegistry: ComponentRegistry = {
   accept: FormFieldAccept,
   boolean: FormFieldBoolean,
   date: FormFieldDate,
+  "form-list": FormFieldFormList,
   number: FormFieldNumber,
   password: FormFieldPassword,
   select: FormFieldSelect,
