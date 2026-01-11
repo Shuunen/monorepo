@@ -93,6 +93,7 @@
       "dependsOn": ["^list"]
     },
     "fmt": {
+      "inputs": ["default"],
        "executor": "nx:run-commands",
        "cache": true,
        "options": {
