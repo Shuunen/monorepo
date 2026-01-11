@@ -78,7 +78,7 @@ export const Showcase: Story = {
 
       <div className="space-y-4">
         <p className="text-sm text-muted-foreground">Custom className</p>
-        <Title className="underline italic" level={2} variant="primary">
+        <Title className="italic underline" level={2} variant="primary">
           Custom Styled Heading
         </Title>
       </div>

@@ -46,7 +46,7 @@ function groupRecipesByCategory(recipes: Recipe[]): Record<string, Recipe[]> {
 
 function Loading() {
   return (
-    <nav className="flex gap-6 text-2xl font-semibold justify-center w-full p-4 bg-white shadow-md">
+    <nav className="flex w-full justify-center gap-6 bg-white p-4 text-2xl font-semibold shadow-md">
       <span className="text-gray-500">Chargement des recettes...</span>
     </nav>
   )
@@ -70,7 +70,7 @@ export function RecipeMenu() {
   const categories = Object.keys(groupedRecipes).toSorted()
 
   return (
-    <div className="flex flex-col grow items-center justify-center py-24">
+    <div className="flex grow flex-col items-center justify-center py-24">
       <div className="card">
         <h1>
           Les recettes de
@@ -80,7 +80,7 @@ export function RecipeMenu() {
         {categories.map(category => (
           <section className="w-full" key={category}>
             <h2>{categoryMap[category]}</h2>
-            <ol className="grid sm:grid-cols-2 pl-0!">
+            <ol className="grid pl-0! sm:grid-cols-2">
               {groupedRecipes[category].map((recipe, index) => (
                 <li className="flex items-center" key={`${recipe.category}/${recipe.name}`}>
                   <span className="mr-2">{index + 1}.</span>
@@ -92,7 +92,7 @@ export function RecipeMenu() {
         ))}
         <Divider />
       </div>
-      <span className="text-sm text-center block w-full text-gray-500 italic text-shadow-md text-shadow-white mb-8">__unique-mark__</span>
+      <span className="mb-8 block w-full text-center text-sm text-gray-500 italic text-shadow-md text-shadow-white">__unique-mark__</span>
       <IconOwl className="w-12 text-yellow-400" />
     </div>
   )

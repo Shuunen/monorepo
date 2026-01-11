@@ -118,7 +118,7 @@ export const WithLabel: Story = {
     return (
       <div className="flex items-center space-x-2">
         <Checkbox id={id} name="with-label" />
-        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor={id}>
+        <label className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor={id}>
           Accept terms and conditions
         </label>
       </div>

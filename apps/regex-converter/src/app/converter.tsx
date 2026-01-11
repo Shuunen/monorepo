@@ -39,14 +39,14 @@ export function Converter() {
   /* v8 ignore next -- @preserve */
   return (
     <div className="flex flex-col">
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid gap-8 md:grid-cols-2">
         <div>
-          <h2 className="mb-2 mt-2">input</h2>
-          <Textarea className="w-full h-80 p-3 border rounded-xl bg-white shadow" name="input" onChange={event => setInput(event.target.value)} placeholder="Paste your text here..." value={input} />
+          <h2 className="mt-2 mb-2">input</h2>
+          <Textarea className="h-80 w-full rounded-xl border bg-white p-3 shadow" name="input" onChange={event => setInput(event.target.value)} placeholder="Paste your text here..." value={input} />
         </div>
         <div>
-          <h2 className="mb-2 mt-2 text-secondary">output</h2>
-          <Textarea className="w-full h-80 p-3 border rounded-xl bg-white shadow" name="output" readOnly value={output} />
+          <h2 className="mt-2 mb-2 text-secondary">output</h2>
+          <Textarea className="h-80 w-full rounded-xl border bg-white p-3 shadow" name="output" readOnly value={output} />
         </div>
       </div>
       <div className="col-span-2 mt-8">

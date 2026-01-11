@@ -3,9 +3,9 @@
 ## Ingredients
 
 - 250 gr de champignons
-- 2   cs de farine
-- 25  cL de bouillon
-- 25  cL de lait
+- 2 cs de farine
+- 25 cL de bouillon
+- 25 cL de lait
 - 1 oignon haché
 - persil haché
 

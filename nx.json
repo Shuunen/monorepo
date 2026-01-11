@@ -92,6 +92,15 @@
     "dev": {
       "dependsOn": ["^list"]
     },
+    "fmt": {
+      "inputs": ["default"],
+       "executor": "nx:run-commands",
+       "cache": true,
+       "options": {
+        "command": "oxfmt",
+        "cwd": "{projectRoot}"
+      }
+    },
     "test": {
       "options": {
         "coverage": true,

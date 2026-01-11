@@ -153,7 +153,7 @@ export function Tasks({ tasks }: { tasks: Task[] }) {
       {tasks.map(task => {
         const isActive = isTaskActive(task)
         return (
-          <Button className={`-ml-2 mr-auto pl-2 pb-3 whitespace-normal text-start transition-transform duration-300 ease-out ${isActive ? '' : 'opacity-60'}`} key={task.id} name={task.name} onClick={event => onTaskClick(task, event)} type="button" variant="ghost">
+          <Button className={`mr-auto -ml-2 pb-3 pl-2 text-start whitespace-normal transition-transform duration-300 ease-out ${isActive ? '' : 'opacity-60'}`} key={task.id} name={task.name} onClick={event => onTaskClick(task, event)} type="button" variant="ghost">
             {isActive ? pickOne(emojis) : '✔️'}&nbsp; {task.name}
           </Button>
         )

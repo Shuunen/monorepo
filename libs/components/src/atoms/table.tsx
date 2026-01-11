@@ -7,7 +7,7 @@ export function TableRow({ className, ...props }: React.ComponentProps<typeof Sh
 }
 
 export function TableBody({ className, ...props }: React.ComponentProps<typeof ShadTableBody>) {
-  const classes = cn(className, "[&_tr:last-child]:border-b border-slate-200");
+  const classes = cn(className, "border-slate-200 [&_tr:last-child]:border-b");
   return <ShadTableBody className={classes} data-slot="table-body" {...props} />;
 }
 
@@ -22,7 +22,7 @@ export function TableCell({ className, ...props }: React.ComponentProps<typeof S
 }
 
 export function TableHead({ className, ...props }: React.ComponentProps<typeof ShadTableHead>) {
-  const classes = cn(className, "px-4 py-3 text-zinc-500 font-medium");
+  const classes = cn(className, "px-4 py-3 font-medium text-zinc-500");
   return <ShadTableHead className={classes} data-slot="table-head" {...props} />;
 }
 

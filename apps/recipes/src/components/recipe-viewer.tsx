@@ -17,7 +17,7 @@ type RecipeModule = {
 
 function ErrorMessage({ error }: { error?: string }) {
   return (
-    <div className="flex items-center justify-center h-full" data-testid="error">
+    <div className="flex h-full items-center justify-center" data-testid="error">
       <div className="text-center">
         <h2 className="text-2xl font-semibold text-gray-800">Recette non trouvée</h2>
         <p className="text-gray-600">{error || "La recette demandée n'existe pas."}</p>
@@ -28,7 +28,7 @@ function ErrorMessage({ error }: { error?: string }) {
 
 function LoadingMessage() {
   return (
-    <div className="flex items-center justify-center h-full" data-testid="loading">
+    <div className="flex h-full items-center justify-center" data-testid="loading">
       <div className="text-lg">Chargement de la recette...</div>
     </div>
   )
@@ -74,8 +74,8 @@ export function RecipeViewer() {
   if (!RecipeComponent) return <ErrorMessage error="Composant de recette non disponible" />
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen" data-testid="recipe">
-      <Button asChild className="flex fixed bottom-4 z-10 rounded-xl border-2 border-orange-800" name="back-home" variant="outline">
+    <div className="flex min-h-screen flex-col items-center justify-center" data-testid="recipe">
+      <Button asChild className="fixed bottom-4 z-10 flex rounded-xl border-2 border-orange-800" name="back-home" variant="outline">
         <Link to="/">
           <MoveLeftIcon />
           Retour à l'accueil

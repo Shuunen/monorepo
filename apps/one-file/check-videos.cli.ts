@@ -223,7 +223,7 @@ class CheckVideos {
     for (let index = 0; index < total; index += 1) {
       const filename = this.files[index]
       if (filename === undefined) continue
-      logger.info(`checking file ${(String(index + 1)).padStart(String(total).length)} / ${total} : ${filename}`)
+      logger.info(`checking file ${String(index + 1).padStart(String(total).length)} / ${total} : ${filename}`)
       // oxlint-disable-next-line no-await-in-loop
       await this.checkOne(filename)
     }
@@ -242,7 +242,7 @@ class CheckVideos {
     // oxlint-disable-next-line no-unused-expressions
     if (shouldRename(filename, meta.filename)) willDryRun ? logger.info(`Would rename file to ${red(meta.filename)}\n`) : renameSync(filepath, path.join(videosPath, path.normalize(meta.filename)))
     listing += `${filename},${meta.title}\n`
-    const entry = `${utils.ellipsis(filename, 50).padEnd(50)}  ${(String(meta.sizeGb)).padStart(4)} Gb  ${(meta.codec).padEnd(5)} ${(String(meta.height)).padStart(4)}p  ${(String(meta.bitrateKbps)).padStart(4)} kbps  ${(String(meta.fps)).padStart(2)} fps`
+    const entry = `${utils.ellipsis(filename, 50).padEnd(50)}  ${String(meta.sizeGb).padStart(4)} Gb  ${meta.codec.padEnd(5)} ${String(meta.height).padStart(4)}p  ${String(meta.bitrateKbps).padStart(4)} kbps  ${String(meta.fps).padStart(2)} fps`
     if (meta.isDvdRip ? this.checkDvdRip(meta, entry) : this.checkBlurayRip(meta, entry)) return
     this.checkFps(meta, entry)
   }

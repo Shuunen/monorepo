@@ -1,0 +1,30 @@
+{
+  "$schema": "../../node_modules/oxfmt/configuration_schema.json",
+  "arrowParens": "avoid",
+  "bracketSameLine": false,
+  "bracketSpacing": true,
+  "endOfLine": "lf",
+  // needs to be disabled to work with experimentalTailwindcss, will be fixed in the future
+  // "experimentalSortImports": {
+  //   "ignoreCase": true,
+  //   "newlinesBetween": false,
+  // },
+  // sort but not alphabetically
+  "experimentalSortPackageJson": false,
+  "experimentalTailwindcss": {
+    "functions": ["clsx", "cn", "cva", "tw"],
+    "preserveDuplicates": false,
+    "preserveWhitespace": false,
+    "stylesheet": "./src/styles.css",
+  },
+  "ignorePatterns": ["**/coverage", "**/dist", "**/node_modules", "**/out-tsc", "**/shadcn", "**/storybook-static", "**/test-output", "**/.storybook/tw.css"],
+  "objectWrap": "preserve",
+  "printWidth": 300,
+  "quoteProps": "as-needed",
+  "semi": true,
+  "singleQuote": false,
+  "singleAttributePerLine": false,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "useTabs": false,
+}

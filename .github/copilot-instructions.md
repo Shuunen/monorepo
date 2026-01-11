@@ -45,17 +45,17 @@ import { Logger, createState, cn, dom } from '@monorepo/utils'
 
 ```typescript
 // Use utils createState for lightweight state management
-import { createState } from "@monorepo/utils";
+import { createState } from '@monorepo/utils'
 
 export const state = createState({
   isLoading: false,
   items: [],
-});
+})
 
 // Watch state changes
-watchState("isLoading", (value) => {
+watchState('isLoading', value => {
   /* handle change */
-});
+})
 ```
 
 ### Testing guidelines

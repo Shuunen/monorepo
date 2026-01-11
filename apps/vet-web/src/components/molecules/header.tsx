@@ -14,8 +14,8 @@ const routes = [
 
 export function Header() {
   return (
-    <div className="flex gap-4 justify-between items-center">
-      <Link className="flex text-primary items-center gap-2" to="/">
+    <div className="flex items-center justify-between gap-4">
+      <Link className="flex items-center gap-2 text-primary" to="/">
         <PawPrint />
         <h1 className="font-bold">Vet Web</h1>
       </Link>

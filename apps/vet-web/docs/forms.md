@@ -23,31 +23,30 @@ This document provides an overview of the form features in this web application.
 Field metadata is defined using a custom Zod extension with branded types for compile-time type safety:
 
 ```tsx
-import { z } from 'zod';
+import { z } from 'zod'
 
 // Define field metadata type
 type FieldMetadata = {
-  label: string;
-  placeholder?: string;
-  state?: 'editable' | 'disabled' | 'readonly';
-};
+  label: string
+  placeholder?: string
+  state?: 'editable' | 'disabled' | 'readonly'
+}
 
 // Extend Zod with metadata support
 declare module 'zod' {
   interface ZodTypeDef {
-    metadata?: FieldMetadata;
+    metadata?: FieldMetadata
   }
-  
   interface ZodType<Output = any, Def extends ZodTypeDef = ZodTypeDef, Input = Output> {
-    meta(metadata: FieldMetadata): this;
+    meta(metadata: FieldMetadata): this
   }
 }
 
 // Implementation
-z.ZodType.prototype.meta = function(metadata: FieldMetadata) {
-  this._def.metadata = metadata;
-  return this;
-};
+z.ZodType.prototype.meta = function (metadata: FieldMetadata) {
+  this._def.metadata = metadata
+  return this
+}
 ```
 
 This extension allows you to attach type-safe metadata directly to your Zod schemas without relying on JSON serialization.
@@ -57,27 +56,27 @@ This extension allows you to attach type-safe metadata directly to your Zod sche
 Here is an example of a simple form with validation:
 
 ```tsx
-import { z } from 'zod';
-import { useMemo } from 'react';
+import { z } from 'zod'
+import { useMemo } from 'react'
 
 const schema = z.object({
   name: z.string().min(2, 'Name is required').meta({
     label: 'Full Name',
-    placeholder: 'Enter your legal name'
+    placeholder: 'Enter your legal name',
   }),
   email: z.string().email('Invalid email address').meta({
     label: 'Email Address',
-    placeholder: 'We\'ll never share your email'
-  })
-});
+    placeholder: "We'll never share your email",
+  }),
+})
 
 function MyForm() {
-  const schemas = useMemo(() => [schema], []);
-  const onSubmit = (data: z.infer<typeof schema>) => { 
-    logger.info('onSubmit', data);
-  };
-  
-  return <AutoForm schemas={schemas} onSubmit={onSubmit} />;
+  const schemas = useMemo(() => [schema], [])
+  const onSubmit = (data: z.infer<typeof schema>) => {
+    logger.info('onSubmit', data)
+  }
+
+  return <AutoForm schemas={schemas} onSubmit={onSubmit} />
 }
 ```
 
@@ -88,38 +87,38 @@ This form collects a user's name and email, validating the input according to th
 Here is an example of a multi-step form:
 
 ```tsx
-import { z } from 'zod';
-import { useMemo } from 'react';
+import { z } from 'zod'
+import { useMemo } from 'react'
 
 const step1Schema = z.object({
   name: z.string().min(2, 'Name is required').meta({
     label: 'Full Name',
-    placeholder: 'Enter your legal name'
+    placeholder: 'Enter your legal name',
   }),
   email: z.string().email('Invalid email address').meta({
     label: 'Email Address',
-    placeholder: 'We\'ll never share your email'
-  })
-});
+    placeholder: "We'll never share your email",
+  }),
+})
 
 const step2Schema = z.object({
   address: z.string().min(5, 'Address is required').meta({
     label: 'Address',
-    placeholder: 'Enter your street address'
+    placeholder: 'Enter your street address',
   }),
   gender: z.enum(['male', 'female', 'other']).optional().meta({
     label: 'Gender',
-    placeholder: 'Select your gender'
-  })
-});
+    placeholder: 'Select your gender',
+  }),
+})
 
 function MultiStepForm() {
-  const schemas = useMemo(() => [step1Schema, step2Schema], []);
-  const onSubmit = (data: z.infer<typeof step1Schema> & z.infer<typeof step2Schema>) => { 
-    logger.info('onSubmit', data);
-  };
-  
-  return <AutoForm schemas={schemas} onSubmit={onSubmit} />;
+  const schemas = useMemo(() => [step1Schema, step2Schema], [])
+  const onSubmit = (data: z.infer<typeof step1Schema> & z.infer<typeof step2Schema>) => {
+    logger.info('onSubmit', data)
+  }
+
+  return <AutoForm schemas={schemas} onSubmit={onSubmit} />
 }
 ```
 
@@ -130,101 +129,90 @@ This multi-step form collects user information in two steps, with validation at 
 Here is an example of a multi-step form with variants that dynamically adjusts based on user selection:
 
 ```tsx
-import { z } from 'zod';
-import { useState, useMemo } from 'react';
+import { z } from 'zod'
+import { useState, useMemo } from 'react'
 
 const step1Schema = z.object({
   name: z.string().min(2, 'Name is required').meta({
     label: 'Full Name',
-    placeholder: 'Enter your legal name'
+    placeholder: 'Enter your legal name',
   }),
   email: z.string().email('Invalid email address').meta({
     label: 'Email Address',
-    placeholder: 'We\'ll never share your email'
+    placeholder: "We'll never share your email",
   }),
   variant: z.enum(['basic', 'advanced']).meta({
     label: 'Form Type',
-    placeholder: 'Select the type of form you want to complete'
+    placeholder: 'Select the type of form you want to complete',
   }),
-});
+})
 
 const step2Schema = z.object({
   address: z.string().min(5, 'Address is required').meta({
     label: 'Address',
-    placeholder: 'Enter your street address'
+    placeholder: 'Enter your street address',
   }),
   gender: z.enum(['male', 'female', 'other']).optional().meta({
     label: 'Gender',
-    placeholder: 'Select your gender'
+    placeholder: 'Select your gender',
   }),
-});
+})
 
 const step3Schema = z.discriminatedUnion('hasHolidays', [
   z.object({
     city: z.string().optional().meta({
       label: 'City',
-      placeholder: 'Enter your city of residence'
+      placeholder: 'Enter your city of residence',
     }),
     hasHolidays: z.literal(false).meta({
       label: 'Holidays',
-      placeholder: 'Do you have any holidays planned?'
+      placeholder: 'Do you have any holidays planned?',
     }),
   }),
   z.object({
     city: z.string().optional().meta({
       label: 'City',
-      placeholder: 'Enter your city of residence'
+      placeholder: 'Enter your city of residence',
     }),
     hasHolidays: z.literal(true).meta({
       label: 'Holidays',
-      placeholder: 'Do you have any holidays planned?'
+      placeholder: 'Do you have any holidays planned?',
     }),
     holidayDestination: z.enum(['beach', 'mountains', 'city', 'countryside']).meta({
       label: 'Holiday Destination',
-      placeholder: 'Select your holiday destination'
+      placeholder: 'Select your holiday destination',
     }),
     holidayDuration: z.number().min(1, 'Duration must be at least 1 day').meta({
       label: 'Holiday Duration (days)',
-      placeholder: 'Enter the duration of your holiday in days'
+      placeholder: 'Enter the duration of your holiday in days',
     }),
   }),
-]);
+])
 
-type FormData = Partial<
-  z.infer<typeof step1Schema> & 
-  z.infer<typeof step2Schema> & 
-  z.infer<typeof step3Schema>
->;
+type FormData = Partial<z.infer<typeof step1Schema> & z.infer<typeof step2Schema> & z.infer<typeof step3Schema>>
 
 function CompleteForm() {
-  const [formData, setFormData] = useState<FormData>({ variant: 'basic' });
-  
+  const [formData, setFormData] = useState<FormData>({ variant: 'basic' })
+
   // Memoize schemas based on variant to avoid unnecessary re-renders
   const schemas = useMemo(() => {
     if (formData.variant === 'advanced') {
-      return [step1Schema, step2Schema, step3Schema];
+      return [step1Schema, step2Schema, step3Schema]
     }
-    return [step1Schema, step2Schema];
-  }, [formData.variant]);
-  
-  const onChange = (data: FormData) => { 
-    logger.info('onChange', data);
-    setFormData(data);
-  };
-  
-  const onSubmit = (data: FormData) => { 
-    logger.info('onSubmit', data);
+    return [step1Schema, step2Schema]
+  }, [formData.variant])
+
+  const onChange = (data: FormData) => {
+    logger.info('onChange', data)
+    setFormData(data)
+  }
+
+  const onSubmit = (data: FormData) => {
+    logger.info('onSubmit', data)
     // Handle form submission
-  };
-  
-  return (
-    <AutoForm 
-      schemas={schemas} 
-      initialData={formData}
-      onSubmit={onSubmit} 
-      onChange={onChange} 
-    />
-  );
+  }
+
+  return <AutoForm schemas={schemas} initialData={formData} onSubmit={onSubmit} onChange={onChange} />
 }
 ```
 
@@ -238,17 +226,17 @@ Fields can be rendered in different states by setting the `state` property in th
 const readOnlySchema = z.object({
   userId: z.string().meta({
     label: 'User ID',
-    state: 'readonly'
+    state: 'readonly',
   }),
   name: z.string().meta({
     label: 'Name',
-    state: 'editable'
+    state: 'editable',
   }),
   email: z.string().email().meta({
     label: 'Email',
-    state: 'disabled'
-  })
-});
+    state: 'disabled',
+  }),
+})
 ```
 
 - **editable** (default): Normal input field that users can interact with
@@ -279,7 +267,7 @@ const onSubmit = (data: z.infer<typeof schema>) => {
   // data.name is string
   // data.email is string
   // TypeScript will error if you try to access non-existent properties
-};
+}
 ```
 
 This ensures compile-time safety and excellent IDE autocomplete support throughout your forms.

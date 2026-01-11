@@ -9,7 +9,7 @@ Pour 12 cannelés bordelais :
 - 1 cuillère à soupe de vanille liquide
 - 1 gousse de vanille (Cap d'Ambre évidemment)
 - 7 cl de rhum (ça peut paraître beaucoup mais il faut ça pour donner son véritablement goût aux cannelés !)
-- 250 g de sucre en poudre  
+- 250 g de sucre en poudre
 - 125 g de farine
 - 2 œufs + un jaune
 

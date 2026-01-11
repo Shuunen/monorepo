@@ -11,7 +11,7 @@ export function RuleLine({ rule, onChange, onRemove }: { rule: Rule; onChange: (
       <Switch checked={rule.enabled} name={`rule-${rule.id}`} onCheckedChange={checked => onChange('enabled', checked)} />
       <Input className={inputClasses} name={`rule-${rule.id}-pattern`} onChange={event => onChange('pattern', event.target.value)} placeholder="replace in" value={rule.pattern} />
       <Input className={inputClasses} name={`rule-${rule.id}-replacement`} onChange={event => onChange('replacement', event.target.value)} placeholder="replace out" value={rule.replacement} />
-      <Button className={clsx('hover:text-red-500 -ml-2', rule.enabled ? 'text-primary' : 'text-muted-foreground/50')} name="delete" onClick={onRemove} size="icon" variant="ghost">
+      <Button className={clsx('-ml-2 hover:text-red-500', rule.enabled ? 'text-primary' : 'text-muted-foreground/50')} name="delete" onClick={onRemove} size="icon" variant="ghost">
         <DeleteIcon className="size-5" />
       </Button>
     </div>
@@ -31,9 +31,9 @@ export function Rules({ rules, setRules }: { rules: Rule[]; setRules: (rules: Ru
   }
   return (
     <div>
-      <div className="flex justify-center items-center gap-2 mb-2">
-        <h2 className="text-primary mt-0 mb-1.5">rules</h2>
-        <Button className="rounded-full " name="add" onClick={() => addRule()} size="icon" variant="ghost">
+      <div className="mb-2 flex items-center justify-center gap-2">
+        <h2 className="mt-0 mb-1.5 text-primary">rules</h2>
+        <Button className="rounded-full" name="add" onClick={() => addRule()} size="icon" variant="ghost">
           <PlusCircleIcon className="size-7 text-primary" />
         </Button>
       </div>

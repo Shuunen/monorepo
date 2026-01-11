@@ -106,9 +106,9 @@ The end :)
 You can check this new mapping in browser for example :
 
 ```js
-$("body").on("keydown", function (e) {
-  console.log(e.key);
-});
+$('body').on('keydown', function (e) {
+  console.log(e.key)
+})
 ```
 
 That gave me :

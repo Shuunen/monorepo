@@ -56,7 +56,7 @@ export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetail
   const color = useMemo(() => getColorByStatus(status), [status]);
   return (
     <div className="grid gap-4" data-testid={`app-status-${status}`}>
-      <Title className={cn("flex gap-3 items-center", color)} level={1}>
+      <Title className={cn("flex items-center gap-3", color)} level={1}>
         {icon}
         {title}
         {tooltipDetailsList.length > 0 && (
@@ -66,7 +66,7 @@ export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetail
                 <IconTooltip />
               </TooltipTrigger>
               <TooltipContent>
-                <ul className="list-disc ml-6">
+                <ul className="ml-6 list-disc">
                   {tooltipDetailsList.map(detail => (
                     <li key={detail}>{detail}</li>
                   ))}
@@ -78,7 +78,7 @@ export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetail
       </Title>
       {children}
       {detailsList.length > 0 && (
-        <ul className="list-disc ml-6">
+        <ul className="ml-6 list-disc">
           {detailsList.map(detail => (
             <li key={detail}>{detail}</li>
           ))}

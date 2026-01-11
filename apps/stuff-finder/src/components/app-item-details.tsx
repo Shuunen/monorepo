@@ -12,13 +12,13 @@ export function AppItemDetails({ item }: Readonly<{ item: Item }>) {
 
   return (
     <div className="flex flex-col items-center sm:flex-row">
-      <div className="absolute right-5 top-5 flex flex-col items-end gap-1 transition-opacity hover:opacity-85">
+      <div className="absolute top-5 right-5 flex flex-col items-end gap-1 transition-opacity hover:opacity-85">
         <AppItemDetailsActions item={item} />
       </div>
-      <div className="relative flex aspect-square w-full min-w-40 max-w-[40vh] flex-col md:min-w-64 md:max-w-72">
+      <div className="relative flex aspect-square w-full max-w-[40vh] min-w-40 flex-col md:max-w-72 md:min-w-64">
         <img alt={item.name} className="absolute top-0 size-full object-contain md:p-4" data-test="item-detail-image" loading="lazy" src={itemToImageUrl(item)} />
       </div>
-      <div className="mb-12 flex min-w-96 flex-col items-start justify-start gap-3 sm:mb-0 sm:mr-6">
+      <div className="mb-12 flex min-w-96 flex-col items-start justify-start gap-3 sm:mr-6 sm:mb-0">
         <h1>
           {item.name} {item.brand}
         </h1>

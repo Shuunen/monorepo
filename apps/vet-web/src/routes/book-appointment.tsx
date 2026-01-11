@@ -60,7 +60,7 @@ function RouteComponent() {
         Book an appointment with Dr. Nicolas JohnRom
       </Title>
       {Object.values(cases).map(example => (
-        <div className="grid gap-4 mb-6" key={example.label}>
+        <div className="mb-6 grid gap-4" key={example.label}>
           <Title level={2}>{example.label}</Title>
           <Form initialData={example.data} />
         </div>

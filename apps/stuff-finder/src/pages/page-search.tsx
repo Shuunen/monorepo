@@ -35,7 +35,7 @@ export function PageSearch() {
         <h2 className="text-center">{header}</h2>
         {results.length > 0 && (
           <>
-            <div className="absolute right-7 top-7">
+            <div className="absolute top-7 right-7">
               <AppDisplayToggle />
             </div>
             <AppItemList items={results} />

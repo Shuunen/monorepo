@@ -7,9 +7,9 @@ type DemoProps = {
 };
 
 const DemoPage = ({ testIds = [], description }: DemoProps) => (
-  <div className="px-4 py-28 space-y-4">
+  <div className="space-y-4 px-4 py-28">
     <div data-testid={testIds[0]}>
-      <h1 className="text-2xl font-bold mb-4" data-testid={testIds[1]}>
+      <h1 className="mb-4 text-2xl font-bold" data-testid={testIds[1]}>
         Welcome to Our App
       </h1>
       <p data-testid={testIds[2]}>
@@ -20,10 +20,10 @@ const DemoPage = ({ testIds = [], description }: DemoProps) => (
     </div>
 
     <div data-testid={testIds[3]}>
-      <button className="px-4 py-2 bg-blue-500 text-white rounded" data-testid={testIds[4]} type="button">
+      <button className="rounded bg-blue-500 px-4 py-2 text-white" data-testid={testIds[4]} type="button">
         Click Me
       </button>
-      <input className="ml-4 px-4 py-2 border rounded" data-testid={testIds[5]} placeholder="Search..." type="text" />
+      <input className="ml-4 rounded border px-4 py-2" data-testid={testIds[5]} placeholder="Search..." type="text" />
     </div>
 
     <div data-testid={testIds[6]}>

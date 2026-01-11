@@ -18,9 +18,9 @@ function ImageInfosColumn({ infos, doReverse = false, win }: { infos: ImageMetad
   return (
     <div className={cn('flex flex-col gap-2', { 'opacity-50': win === false })}>
       {data.map(item => (
-        <div className={cn('flex gap-2 items-center', { 'flex-row-reverse': doReverse })} key={item.label}>
+        <div className={cn('flex items-center gap-2', { 'flex-row-reverse': doReverse })} key={item.label}>
           <Paragraph>{item.label}</Paragraph>
-          <Paragraph className="font-sans bg-accent px-2 rounded">{item.value}</Paragraph>
+          <Paragraph className="rounded bg-accent px-2 font-sans">{item.value}</Paragraph>
         </div>
       ))}
     </div>
@@ -29,7 +29,7 @@ function ImageInfosColumn({ infos, doReverse = false, win }: { infos: ImageMetad
 
 export function ImageInfos({ leftWin, infos }: { leftWin?: boolean; infos: Array<ImageMetadata | undefined> }) {
   return (
-    <div className="flex justify-between w-full">
+    <div className="flex w-full justify-between">
       {infos[0] && <ImageInfosColumn infos={infos[0]} win={leftWin} />}
       {infos[1] && <ImageInfosColumn doReverse infos={infos[1]} win={leftWin === false} />}
     </div>
