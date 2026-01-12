@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
-import { checkZodBoolean, filterSchema, getKeyMapping, getZodEnumOptions, isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber, mapExternalDataToFormFields, normalizeDataForSchema, parseDependsOn } from "./auto-form.utils";
+import { checkZodBoolean, fields, filterSchema, getKeyMapping, getZodEnumOptions, isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber, mapExternalDataToFormFields, normalizeDataForSchema, parseDependsOn } from "./auto-form.utils";
 import { imageSchemaOptional, imageSchemaRequired } from "./form-field-upload.const";
 
 describe("auto-form.utils", () => {
@@ -515,6 +515,29 @@ describe("auto-form.utils", () => {
       {
         "userEmail": "test@example.com",
       }
+    `);
+  });
+  it("fields A should create a ZodArray with minItems and maxItems", () => {
+    const schema = fields(z.object({ name: z.string() }), { maxItems: 3, minItems: 1 });
+    expect(schema.type).toBe("array");
+    expect(schema.def.checks).toHaveLength(2);
+    const parsed = schema.safeParse([{ name: "John" }, { name: "Jane" }, { name: "Jim" }]);
+    expect(parsed.success).toBe(true);
+    const parsed2 = schema.safeParse([{ name: "John" }, { name: "Jane" }]);
+    expect(parsed2.success).toBe(true);
+    const parsed3 = schema.safeParse([{ name: "John" }, { name: "Jane" }, { name: "Jim" }, { name: "Jill" }]);
+    expect(parsed3.success).toBe(false);
+    expect(parsed3.error?.message).toMatchInlineSnapshot(`
+      "[
+        {
+          "origin": "array",
+          "code": "too_big",
+          "maximum": 3,
+          "inclusive": true,
+          "path": [],
+          "message": "At most 3 items are allowed."
+        }
+      ]"
     `);
   });
 });

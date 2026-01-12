@@ -65,6 +65,16 @@ export type AutoFormStepMetadata = Simplify<
   }
 >;
 
+export type AutoFormFieldsMetadata = Simplify<
+  AutoFormFieldBaseMetadata & {
+    /** Minimum number of items allowed in the form list */
+    minItems?: number;
+    /** Maximum number of items allowed in the form list */
+    maxItems?: number;
+    render: "field-list";
+  }
+>;
+
 /**
  * Metadata describing the configuration and behavior of a section field in an auto-generated form.
  * example: `section({ title: 'Main infos', line: true })`
@@ -106,7 +116,7 @@ export type AutoFormFieldBaseMetadata = {
   /** Custom options for select/enum fields with label/value pairs. */
   options?: SelectOption[];
   /** Force the field to be rendered with a specific component, else use automatic field-schema detection */
-  render?: "text" | "textarea" | "number" | "date" | "select" | "boolean" | "upload" | "accept" | "password";
+  render?: "text" | "textarea" | "number" | "date" | "select" | "boolean" | "upload" | "accept" | "password" | "field-list";
 } & AutoFormFieldConditionalMetadata;
 
 /**
@@ -114,7 +124,7 @@ export type AutoFormFieldBaseMetadata = {
  * example: `field(z.string(), { label: 'First Name', placeholder: 'Enter your first name', state: 'editable' })`
  * example: `section({ title: 'First Name'})`
  */
-export type AutoFormFieldMetadata = AutoFormFieldBaseMetadata | AutoFormFieldSectionMetadata;
+export type AutoFormFieldMetadata = AutoFormFieldBaseMetadata | AutoFormFieldSectionMetadata | AutoFormFieldsMetadata;
 
 /** Option for select/enum fields in the auto-generated form. */
 export type SelectOption = {
