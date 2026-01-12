@@ -5,7 +5,7 @@ import { z } from "zod";
 import { IconEdit } from "../icons/icon-edit";
 import { IconSuccess } from "../icons/icon-success";
 import { IconUpcoming } from "../icons/icon-upcoming";
-import type { AutoFormData, AutoFormFieldMetadata, AutoFormFieldSectionMetadata, AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps, AutoFormSummarySection, SelectOption } from "./auto-form.types";
+import type { AutoFormData, AutoFormFieldMetadata, AutoFormFieldSectionMetadata, AutoFormFieldsMetadata, AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps, AutoFormSummarySection, SelectOption } from "./auto-form.types";
 
 /**
  * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
@@ -538,6 +538,22 @@ export function step(stepSchema: z.ZodObject, stepMetadata?: AutoFormStepMetadat
     return stepSchema;
   }
   return stepSchema.meta(stepMetadata);
+}
+
+/**
+ * Helper to write AutoForm repeatable fields
+ * @param formSchema zod schema
+ * @param formMetadata related metadata
+ * @returns fields schema with valid metadata
+ * @example fields(z.object({ firstName: field(...) }), { identifier: data => `${data.firstName}` })
+ */
+export function fields(formSchema: z.ZodType, formMetadata: Omit<AutoFormFieldsMetadata, "render">) {
+  const { minItems, maxItems } = formMetadata;
+  return z
+    .array(formSchema)
+    .min(minItems ?? 0, `At least ${minItems === 1 ? "one item is" : `${minItems} items are`} required.`)
+    .max(maxItems ?? Infinity, `At most ${maxItems === 1 ? "one item is" : `${maxItems} items are`} allowed.`)
+    .meta({ ...formMetadata, render: "field-list" });
 }
 
 /**

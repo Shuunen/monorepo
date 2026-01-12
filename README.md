@@ -27,6 +27,7 @@ nx dev sample-web-app
 - [ ] add knip (does it works with monorepo ?)
 - [ ] investigate why we need local dependencies like react in utils when react is already in the root package.json, in the other hand apps/sample-web-app works without local react dependency
 - [ ] investigate why cant we use tsgo considering the fact that the [official doc](https://github.com/microsoft/typescript-go) says it's done
+- [ ] Add optional handling on form-field-field-list component, array level
 
 ## Thanks
 

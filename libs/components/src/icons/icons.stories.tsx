@@ -33,6 +33,7 @@ import { IconEdit } from "./icon-edit";
 import { IconError } from "./icon-error";
 import { IconHome } from "./icon-home";
 import { IconLoading } from "./icon-loading";
+import { IconMinus } from "./icon-minus";
 import { IconReadonly } from "./icon-readonly";
 import { IconSelect } from "./icon-select";
 import { IconSuccess } from "./icon-success";
@@ -76,6 +77,7 @@ const icons = [
   IconUpcoming,
   IconUpload,
   IconWarning,
+  IconMinus,
 ];
 
 type Props = { component: ({ className }: { className?: string | undefined }) => JSX.Element };
