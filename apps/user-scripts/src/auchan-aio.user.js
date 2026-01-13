@@ -108,4 +108,3 @@ function AuchanAio() {
 }
 
 if (globalThis.window) AuchanAio()
-else module.exports = {}

@@ -82,4 +82,3 @@ function AliExpressTakeout() {
 }
 
 if (globalThis.window) AliExpressTakeout()
-else module.exports = {}

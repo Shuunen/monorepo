@@ -37,7 +37,7 @@ Fetch your own beer ratings from Untappd and inject them in the search results t
 
 Acknowledge the guidelines for user scripts inside `.github/copilot-instructions.md` then fix all issues listed by `nx lint user-scripts` command.
 
-At the end run `nx typecheck user-scripts` and `nx test user-scripts` to make sure you have not break anything.
+At the end run `nx tsgo user-scripts` and `nx test user-scripts` to make sure you have not break anything.
 
 Don't provide me any explanations/comments/summary, just iterate, fix all the issues and run the commands at the end.
 

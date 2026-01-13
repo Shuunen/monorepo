@@ -27,8 +27,6 @@
       },
       "outputs": []
     },
-    "typecheck": {
-      "outputs": ["{projectRoot}/out-tsc/vitest/**/*.d.ts", "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo", "{projectRoot}/out-tsc/storybook/**/*.d.ts", "{projectRoot}/out-tsc/storybook/tsconfig.tsbuildinfo"]
-    }
+    "ts-check": {}
   }
 }

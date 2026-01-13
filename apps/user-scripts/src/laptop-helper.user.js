@@ -485,4 +485,3 @@ function LaptopHelper() {
 }
 
 if (globalThis.window) LaptopHelper()
-else module.exports = { a2b, b2a, base64ToString, cleanCpuName, getColorForScore, getScoreForRefresh, getScoreForResolution, getScoresForRam, getScoresForScreen, getScoresForWifi, stringToBase64 }

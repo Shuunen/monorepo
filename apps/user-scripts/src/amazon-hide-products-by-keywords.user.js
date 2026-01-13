@@ -263,4 +263,3 @@ function AmazonHideProductsByKeywords() {
 }
 
 if (globalThis.window) AmazonHideProductsByKeywords()
-else module.exports = {}

@@ -1,0 +1,6 @@
+{
+  "name": "logo-tester",
+  "targets": {
+    "ts-check": {}
+  }
+}

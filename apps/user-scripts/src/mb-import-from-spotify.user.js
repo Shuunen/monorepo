@@ -68,4 +68,3 @@ function MbImportFromSpotify() {
 }
 
 if (globalThis.window) MbImportFromSpotify()
-else module.exports = {}

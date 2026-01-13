@@ -48,6 +48,9 @@
     },
     {
       "path": "./libs/vite-plugins"
+    },
+    {
+      "path": "./apps/what-now"
     }
   ],
   "ts-node": {

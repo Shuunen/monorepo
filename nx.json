@@ -30,20 +30,6 @@
   "plugins": [
     {
       "options": {
-        "build": {
-          "buildDepsName": "build-deps",
-          "configName": "tsconfig.lib.json",
-          "targetName": "build",
-          "watchDepsName": "watch-deps"
-        },
-        "typecheck": {
-          "targetName": "typecheck"
-        }
-      },
-      "plugin": "@nx/js/typescript"
-    },
-    {
-      "options": {
         "buildDepsTargetName": "build-deps",
         "buildTargetName": "build",
         "devTargetName": "dev",
@@ -98,8 +84,16 @@
         "coverage.thresholds.100": true
       }
     },
-    "typecheck": {
-      "dependsOn": ["^build"]
+    "ts-check": {
+      "cache": true,
+      "dependsOn": ["^ts-check"],
+      "executor": "nx:run-commands",
+      "inputs": ["default"],
+      "options": {
+        "command": "tsgo --build --emitDeclarationOnly",
+        "cwd": "{projectRoot}"
+      },
+      "outputs": ["{projectRoot}/dist"]
     }
   },
   "tui": {

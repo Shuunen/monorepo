@@ -74,4 +74,3 @@ function LolKpm() {
 }
 
 if (globalThis.window) LolKpm()
-else module.exports = {}

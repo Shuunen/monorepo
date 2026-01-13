@@ -26,6 +26,7 @@ It will generate a `<project-name>-banner.svg` file that you can use in your REA
 - [ ] let repo-banner find the color in manifest.json or index.html files
 - [ ] banner is displayed full width, so the height should be reduced by 40%
 - [ ] banner should be able to show something else than github + ts : vue + ts, vue + js, js, ts, etc
+- [ ] use ts-check task in project.json to type check everything
 
 ## Thanks
 

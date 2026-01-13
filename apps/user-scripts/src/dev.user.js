@@ -20,4 +20,3 @@ function Dev() {
 }
 
 if (globalThis.window) Dev()
-else module.exports = {}

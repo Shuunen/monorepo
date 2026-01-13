@@ -99,4 +99,3 @@ function LidlTakeout() {
 }
 
 if (globalThis.window) LidlTakeout()
-else module.exports = {}

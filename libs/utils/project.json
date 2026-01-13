@@ -10,8 +10,6 @@
       },
       "outputs": ["{projectRoot}/src/index.ts"]
     },
-    "typecheck": {
-      "outputs": ["{projectRoot}/out-tsc/vitest/**/*.d.ts", "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo"]
-    }
+    "ts-check": {}
   }
 }

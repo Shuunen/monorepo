@@ -37,6 +37,7 @@
         "command": "cap sync && cap sync @capacitor-community/electron",
         "cwd": "{projectRoot}"
       }
-    }
+    },
+    "ts-check": {}
   }
 }

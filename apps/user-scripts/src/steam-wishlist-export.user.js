@@ -96,4 +96,3 @@ function SteamWishlistExport() {
 }
 
 if (globalThis.window) SteamWishlistExport()
-else module.exports = {}

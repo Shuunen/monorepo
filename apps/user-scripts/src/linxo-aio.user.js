@@ -72,4 +72,3 @@ function LinxoAio() {
 }
 
 if (globalThis.window) LinxoAio()
-else module.exports = {}

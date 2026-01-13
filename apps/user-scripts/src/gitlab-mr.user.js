@@ -105,4 +105,3 @@ function GitlabMr() {
 }
 
 if (globalThis.window) GitlabMr()
-else module.exports = {}

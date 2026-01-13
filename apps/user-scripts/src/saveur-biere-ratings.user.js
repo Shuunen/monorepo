@@ -131,4 +131,5 @@ function SaveurBiereRatings() {
 }
 
 if (globalThis.window) SaveurBiereRatings()
-else module.exports = { cleanTitle }
+
+export { cleanTitle }
