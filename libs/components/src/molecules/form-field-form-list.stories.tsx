@@ -2,6 +2,8 @@ import { isBrowserEnvironment, Logger } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { z } from "zod";
+import { IconCheck } from "../icons/icon-check";
+import { IconDownload } from "../icons/icon-download";
 import { AutoForm } from "./auto-form";
 import { field, forms, step } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
@@ -67,6 +69,7 @@ export const Basic: Story = {
       step(
         z.object({
           applicants: forms(applicantSchema, {
+            icon: <IconCheck />,
             identifier: data => `${data.name} (${data.age} years)`,
             label: "Fill in the applicants",
             maxItems: 5,
@@ -102,6 +105,7 @@ export const MultiStep: Story = {
       step(
         z.object({
           applicants: forms(applicantSchema, {
+            icon: <IconDownload className="text-blue-500" />,
             identifier: data => `${data.name} (${data.age} years)`,
             label: "Fill in the applicants",
             placeholder: "You can add multiple applicants, no minimum or maximum.",

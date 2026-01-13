@@ -2,10 +2,7 @@
 import { getNested, Logger, nbPercentMax, Result, setNested, sleep, stringify } from "@monorepo/utils";
 import type { ReactNode } from "react";
 import { z } from "zod";
-import { IconEdit } from "../icons/icon-edit";
-import { IconSuccess } from "../icons/icon-success";
-import { IconUpcoming } from "../icons/icon-upcoming";
-import type { AutoFormData, AutoFormFieldFormsMetadata, AutoFormFieldMetadata, AutoFormFieldSectionMetadata, AutoFormFieldsMetadata, AutoFormProps, AutoFormStepMetadata, AutoFormSubmissionStepProps, AutoFormSummarySection, SelectOption } from "./auto-form.types";
+import type { AutoFormData, AutoFormFieldFormsMetadata, AutoFormFieldMetadata, AutoFormFieldSectionMetadata, AutoFormFieldsMetadata, AutoFormStepMetadata, AutoFormSubmissionStepProps, AutoFormSummarySection, SelectOption } from "./auto-form.types";
 
 /**
  * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
@@ -269,6 +266,7 @@ export function mapExternalDataToFormFields(schema: z.ZodObject, externalData: A
  * @param data - The submitted data object to be cleaned.
  * @returns A new object containing only the fields that are visible and not excluded according to the schema, with keyOut mappings applied.
  */
+// oxlint-disable-next-line max-statements
 export function normalizeDataForSchema(schema: z.ZodObject, data: AutoFormData) {
   const shape = schema.shape;
   const result: AutoFormData = {};
@@ -378,7 +376,7 @@ export function sectionsFromEditableSteps(schemas: z.ZodObject[], data: AutoForm
   return sections;
 }
 
-// oxlint-disable-next-line max-statements
+// oxlint-disable-next-line max-statements, max-lines-per-function
 function sectionsFromEditableStep(schema: z.ZodObject, data: AutoFormData) {
   const stepMeta = getStepMetadata(schema);
   const stepState = stepMeta?.state;
@@ -448,20 +446,6 @@ export async function mockSubmit(status: AutoFormSubmissionStepProps["status"], 
   }
   return { submission };
 }
-
-export const defaultLabels = {
-  homeButton: "Return to Homepage",
-  lastStepButton: "Submit",
-  nextStep: "Next",
-  previousStep: "Back",
-  summaryStepButton: "Proceed",
-} satisfies AutoFormProps["labels"];
-
-export const defaultIcons = {
-  editable: <IconEdit className="text-muted-foreground size-6" />,
-  readonly: <IconSuccess className="text-success size-6" />,
-  upcoming: <IconUpcoming className="text-muted-foreground size-6" />,
-} satisfies Record<NonNullable<AutoFormStepMetadata["state"]>, ReactNode>;
 
 /**
  * Gets metadata from a Zod field schema if it exists.
@@ -544,6 +528,20 @@ export function step(stepSchema: z.ZodObject, stepMetadata?: AutoFormStepMetadat
 }
 
 /**
+ * Helper to create a Zod array schema with optional min and max items constraints.
+ * @param schema - The Zod schema for the array items.
+ * @param minItems - Optional minimum number of items.
+ * @param maxItems - Optional maximum number of items.
+ * @returns A Zod array schema with the specified constraints.
+ */
+function toZodArray(schema: z.ZodType, minItems?: number, maxItems?: number) {
+  return z
+    .array(schema)
+    .min(minItems ?? 0, `At least ${minItems === 1 ? "one item is" : `${minItems} items are`} required.`)
+    .max(maxItems ?? Infinity, `At most ${maxItems === 1 ? "one item is" : `${maxItems} items are`} allowed.`);
+}
+
+/**
  * Helper to write AutoForm repeatable fields
  * @param formSchema zod schema
  * @param formMetadata related metadata
@@ -552,11 +550,7 @@ export function step(stepSchema: z.ZodObject, stepMetadata?: AutoFormStepMetadat
  */
 export function fields(formSchema: z.ZodType, formMetadata: Omit<AutoFormFieldsMetadata, "render">) {
   const { minItems, maxItems } = formMetadata;
-  return z
-    .array(formSchema)
-    .min(minItems ?? 0, `At least ${minItems === 1 ? "one item is" : `${minItems} items are`} required.`)
-    .max(maxItems ?? Infinity, `At most ${maxItems === 1 ? "one item is" : `${maxItems} items are`} allowed.`)
-    .meta({ ...formMetadata, render: "field-list" });
+  return toZodArray(formSchema, minItems, maxItems).meta({ ...formMetadata, render: "field-list" });
 }
 
 /**
@@ -568,11 +562,7 @@ export function fields(formSchema: z.ZodType, formMetadata: Omit<AutoFormFieldsM
  */
 export function forms(formSchema: z.ZodObject, formMetadata: Omit<AutoFormFieldFormsMetadata, "render">) {
   const { minItems, maxItems } = formMetadata;
-  return z
-    .array(formSchema)
-    .min(minItems ?? 0, `At least ${minItems === 1 ? "one item is" : `${minItems} items are`} required.`)
-    .max(maxItems ?? Infinity, `At most ${maxItems === 1 ? "one item is" : `${maxItems} items are`} allowed.`)
-    .meta({ ...formMetadata, render: "form-list" });
+  return toZodArray(formSchema, minItems, maxItems).meta({ ...formMetadata, render: "form-list" });
 }
 
 /**
@@ -581,6 +571,7 @@ export function forms(formSchema: z.ZodObject, formMetadata: Omit<AutoFormFieldF
  * @param fieldSchema the Zod schema for the field
  * @returns the component name to render like 'text', 'number', 'date', etc... Undefined if no suitable component found.
  */
+// oxlint-disable-next-line max-statements
 export function getFormFieldRender(fieldSchema: z.ZodType): AutoFormFieldMetadata["render"] {
   const { render } = getFieldMetadata(fieldSchema) || {};
   if (render) {

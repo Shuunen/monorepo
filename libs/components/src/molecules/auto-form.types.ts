@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: it's ok here */
 import type { Logger, Simplify } from "@monorepo/utils";
-import type { ReactNode } from "react";
+import type { JSX, ReactNode } from "react";
 import type { z } from "zod";
 import type { AutoFormStepperStep } from "./auto-form-stepper";
 import type { FormFieldSectionProps } from "./form-field-section";
@@ -77,6 +77,8 @@ export type AutoFormFieldsMetadata = Simplify<
 
 export type AutoFormFieldFormsMetadata = Simplify<
   AutoFormFieldBaseMetadata & {
+    /** Icon to display alongside the form list title */
+    icon: JSX.Element;
     /** Function to generate the label for each item in the list, based on its data, for example data => `${data.name} (${data.age} years)` */
     identifier?: (data: Record<string, unknown>) => string;
     /** Custom labels for the form list */

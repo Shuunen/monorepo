@@ -4,7 +4,6 @@ import { Badge } from "../atoms/badge";
 import { Button } from "../atoms/button";
 import { Paragraph, Title } from "../atoms/typography";
 import { IconChevronRight } from "../icons/icon-chevron-right";
-import { IconHourglass } from "../icons/icon-hourglass";
 import { IconReject } from "../icons/icon-reject";
 import { IconTrash } from "../icons/icon-trash";
 import type { AutoFormFieldFormsMetadata } from "./auto-form.types";
@@ -13,7 +12,7 @@ import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 // oxlint-disable-next-line max-lines-per-function
 export function FormFieldFormList({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false, showForm }: FormFieldBaseProps) {
   const metadata = fieldSchema.meta() as AutoFormFieldFormsMetadata;
-  const { label, maxItems, identifier, labels } = metadata;
+  const { label, maxItems, icon, identifier, labels } = metadata;
   const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
   const items = (formData[fieldName] as Array<Record<string, unknown>>) || [];
   /**
@@ -61,9 +60,7 @@ export function FormFieldFormList({ fieldName, fieldSchema, formData, isOptional
               const itemIdentifier = identifier && !isEmptyItem ? identifier(item) : `Form ${index + 1}`;
               return (
                 <div className={cn("flex min-w-md gap-4 items-center border border-gray-300 shadow p-4 rounded-xl hover:bg-gray-50 transition-colors", { "bg-red-50 border-red-200 hover:bg-red-50 hover:border-red-300": hasError && isEmptyItem })} key={itemIdentifier}>
-                  <div className="bg-gray-100 p-2 rounded-xl">
-                    <IconHourglass className="size-6" />
-                  </div>
+                  <div className="bg-gray-100 p-2 rounded-xl">{icon}</div>
                   <div className="flex flex-col gap-1">
                     <Badge name="status" variant={isEmptyItem ? "secondary" : "success"}>
                       {isEmptyItem ? "To complete" : "Validated"}
