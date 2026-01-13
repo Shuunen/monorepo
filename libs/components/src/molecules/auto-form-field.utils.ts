@@ -1,11 +1,12 @@
 import type { Logger } from "@monorepo/utils";
 import type { ComponentType } from "react";
 import type { z } from "zod";
-import type { AutoFormStepMetadata } from "./auto-form.types";
+import type { AutoFormStepMetadata, AutoFormSubformOptions } from "./auto-form.types";
 import type { getFormFieldRender } from "./auto-form.utils";
 import { FormFieldAccept } from "./form-field-accept";
 import { FormFieldBoolean } from "./form-field-boolean";
 import { FormFieldDate } from "./form-field-date";
+import { FormFieldFormList } from "./form-field-form-list";
 import { FormFieldNumber } from "./form-field-number";
 import { FormFieldPassword } from "./form-field-password";
 import { FormFieldSelect } from "./form-field-select";
@@ -19,6 +20,8 @@ export type AutoFormFieldProps = {
   formData: Record<string, unknown>;
   stepState?: AutoFormStepMetadata["state"];
   logger?: Logger;
+  /** make auto-form switch from initial render mode to subform mode */
+  showForm?: (options: AutoFormSubformOptions) => void;
 };
 
 type FieldComponentProps = {
@@ -33,11 +36,13 @@ type FieldComponentProps = {
 type ComponentRegistry = {
   [RenderType in Exclude<NonNullable<ReturnType<typeof getFormFieldRender>>, "section" | "field-list">]: ComponentType<FieldComponentProps>;
 };
+
 /* c8 ignore start */
 export const componentRegistry: ComponentRegistry = {
   accept: FormFieldAccept,
   boolean: FormFieldBoolean,
   date: FormFieldDate,
+  "form-list": FormFieldFormList,
   number: FormFieldNumber,
   password: FormFieldPassword,
   select: FormFieldSelect,
