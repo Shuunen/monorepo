@@ -1,6 +1,36 @@
+import { createElement } from "react";
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
-import { checkZodBoolean, fields, filterSchema, getKeyMapping, getZodEnumOptions, isFieldVisible, isZodBoolean, isZodEnum, isZodFile, isZodNumber, mapExternalDataToFormFields, normalizeDataForSchema, parseDependsOn } from "./auto-form.utils";
+import {
+  checkZodBoolean,
+  field,
+  fields,
+  filterDataForSummary,
+  filterSchema,
+  forms,
+  getFieldMetadata,
+  getFieldMetadataOrThrow,
+  getFormFieldRender,
+  getKeyMapping,
+  getStepMetadata,
+  getZodEnumOptions,
+  isFieldVisible,
+  isZodBoolean,
+  isZodDate,
+  isZodEnum,
+  isZodFile,
+  isZodNumber,
+  isZodString,
+  mapExternalDataToFormFields,
+  mockSubmit,
+  normalizeData,
+  normalizeDataForSchema,
+  parseDependsOn,
+  section,
+  sectionsFromEditableSteps,
+  step,
+  // oxlint-disable-next-line max-dependencies
+} from "./auto-form.utils";
 import { imageSchemaOptional, imageSchemaRequired } from "./form-field-upload.const";
 
 describe("auto-form.utils", () => {
@@ -209,6 +239,10 @@ describe("auto-form.utils", () => {
     const schema = z.string().meta({ dependsOn: "age=5", label: "A" });
     expect(isFieldVisible(schema, { age: 5 })).toBe(true);
   });
+  it("isFieldVisible J should handle metatada visible returning false", () => {
+    const schema = z.string().meta({ isVisible: () => false, label: "A" });
+    expect(isFieldVisible(schema, {})).toBe(false);
+  });
 
   // parseDependsOn
   it("parseDependsOn A should parse simple field name", () => {
@@ -251,6 +285,16 @@ describe("auto-form.utils", () => {
     const filtered2 = filterSchema(schema, {});
     expect(filtered2.shape).toHaveProperty("a");
     expect(filtered2.shape).not.toHaveProperty("b");
+  });
+  it("filterSchema B should filter out section fields", () => {
+    const shape = {
+      a: z.string().meta({ label: "A" }),
+      b: z.string().meta({ label: "B", render: "section" }),
+    };
+    const schema = z.object(shape);
+    const filtered = filterSchema(schema, { a: "something" });
+    expect(filtered.shape).toHaveProperty("a");
+    expect(filtered.shape).not.toHaveProperty("b");
   });
 
   // normalizeDataForSchema
@@ -342,6 +386,26 @@ describe("auto-form.utils", () => {
         },
       }
     `);
+  });
+  it("normalizeDataForSchema G should handle section fields", () => {
+    const shape = {
+      a: z.string().meta({ label: "A" }),
+      b: z.string().meta({ label: "B", render: "section" }),
+    };
+    const schema = z.object(shape);
+    const data = { a: "something", b: "something" };
+    const cleaned = normalizeDataForSchema(schema, data);
+    expect(cleaned).toMatchInlineSnapshot(`
+      {
+        "a": "something",
+      }
+    `);
+  });
+  it("normalizeDataForSchema H should handle metadata visible returning false", () => {
+    const schema = z.object({ a: z.string().meta({ isVisible: () => false, label: "A" }) });
+    const data = { a: "something" };
+    const cleaned = normalizeDataForSchema(schema, data);
+    expect(cleaned).toMatchInlineSnapshot(`{}`);
   });
 
   // getKeyMapping
@@ -517,27 +581,365 @@ describe("auto-form.utils", () => {
       }
     `);
   });
-  it("fields A should create a ZodArray with minItems and maxItems", () => {
-    const schema = fields(z.object({ name: z.string() }), { maxItems: 3, minItems: 1 });
+  // fields
+  it("fields A should create a ZodArray", () => {
+    const schema = fields(z.object({ name: z.string() }), {});
     expect(schema.type).toBe("array");
-    expect(schema.def.checks).toHaveLength(2);
+  });
+  it("fields B should create a ZodArray with minItems", () => {
+    const schema = fields(z.object({ name: z.string() }), { minItems: 1 });
+    expect(schema.type).toBe("array");
     const parsed = schema.safeParse([{ name: "John" }, { name: "Jane" }, { name: "Jim" }]);
     expect(parsed.success).toBe(true);
+    const parsed2 = schema.safeParse([]);
+    expect(parsed2.success).toBe(false);
+  });
+  it("fields C should create a ZodArray with maxItems", () => {
+    const schema = fields(z.object({ name: z.string() }), { maxItems: 1 });
+    expect(schema.type).toBe("array");
+    const parsed = schema.safeParse([{ name: "John" }]);
+    expect(parsed.success).toBe(true);
     const parsed2 = schema.safeParse([{ name: "John" }, { name: "Jane" }]);
-    expect(parsed2.success).toBe(true);
-    const parsed3 = schema.safeParse([{ name: "John" }, { name: "Jane" }, { name: "Jim" }, { name: "Jill" }]);
+    expect(parsed2.success).toBe(false);
+  });
+
+  // isZodDate
+  it("isZodDate A should detect ZodDate", () => {
+    const schema = z.date();
+    expect(isZodDate(schema)).toBe(true);
+  });
+  it("isZodDate B should detect optional ZodDate", () => {
+    const schema = z.date().optional();
+    expect(isZodDate(schema)).toBe(true);
+  });
+  it("isZodDate C should return false for non-date", () => {
+    const schema = z.string();
+    expect(isZodDate(schema)).toBe(false);
+  });
+  it("isZodString A should detect ZodString", () => {
+    const schema = z.string();
+    expect(isZodString(schema)).toBe(true);
+  });
+  it("isZodString B should detect optional ZodString", () => {
+    const schema = z.string().optional();
+    expect(isZodString(schema)).toBe(true);
+  });
+  it("isZodString C should return false for non-string", () => {
+    const schema = z.number();
+    expect(isZodString(schema)).toBe(false);
+  });
+
+  // normalizeData
+  it("normalizeData A should clean data across multiple schemas", () => {
+    const schema1 = z.object({
+      a: z.string().meta({ label: "A" }),
+      b: z.string().meta({ excluded: true, label: "B" }),
+    });
+    const schema2 = z.object({
+      c: z.string().meta({ dependsOn: "a", label: "C" }),
+    });
+    const data = { a: "foo", b: "bar", c: "baz" };
+    const cleaned = normalizeData([schema1, schema2], data);
+    expect(cleaned).toEqual({ a: "foo", c: "baz" });
+  });
+  it("normalizeData B should handle empty schemas array", () => {
+    const data = { a: "foo" };
+    const cleaned = normalizeData([], data);
+    expect(cleaned).toEqual(data);
+  });
+
+  // filterDataForSummary
+  it("filterDataForSummary A should filter out fields from readonly steps", () => {
+    const schema1 = z.object({ a: z.string().meta({ label: "A" }) }).meta({ state: "readonly" });
+    const schema2 = z.object({ b: z.string().meta({ label: "B" }) }).meta({ state: "editable" });
+    const data = { a: "foo", b: "bar" };
+    const filtered = filterDataForSummary([schema1, schema2], data);
+    expect(filtered).toEqual({ b: "bar" });
+  });
+  it("filterDataForSummary B should filter out fields from upcoming steps", () => {
+    const schema1 = z.object({ a: z.string().meta({ label: "A" }) }).meta({ state: "upcoming" });
+    const schema2 = z.object({ b: z.string().meta({ label: "B" }) }).meta({ state: "editable" });
+    const data = { a: "foo", b: "bar" };
+    const filtered = filterDataForSummary([schema1, schema2], data);
+    expect(filtered).toEqual({ b: "bar" });
+  });
+  it("filterDataForSummary C should filter out invisible and excluded fields", () => {
+    const schema = z
+      .object({
+        a: z.string().meta({ label: "A" }),
+        b: z.string().meta({ excluded: true, label: "B" }),
+        c: z.string().meta({ dependsOn: "a", label: "C" }),
+      })
+      .meta({ state: "editable" });
+    const data = { a: "foo", b: "bar" };
+    const filtered = filterDataForSummary([schema], data);
+    expect(filtered).toEqual({ a: "foo" });
+  });
+  it("filterDataForSummary D should include fields from editable steps", () => {
+    const schema = z
+      .object({
+        a: z.string().meta({ label: "A" }),
+        b: z.string().meta({ label: "B" }),
+      })
+      .meta({ state: "editable" });
+    const data = { a: "foo", b: "bar" };
+    const filtered = filterDataForSummary([schema], data);
+    expect(filtered).toEqual({ a: "foo", b: "bar" });
+  });
+  it("filterDataForSummary E should handle steps without metadata", () => {
+    const schema = z.object({
+      a: z.string().meta({ label: "A" }),
+    });
+    const data = { a: "foo" };
+    const filtered = filterDataForSummary([schema], data);
+    expect(filtered).toEqual({ a: "foo" });
+  });
+  it("filterDataForSummary F should handle sections", () => {
+    const schema = z.object({
+      a: z.string().meta({ label: "A" }),
+      b: section({ title: "B Section" }),
+    });
+    const data = { a: "foo", b: "bar" };
+    const filtered = filterDataForSummary([schema], data);
+    expect(filtered).toEqual({ a: "foo" });
+  });
+
+  // sectionsFromEditableSteps
+  it("sectionsFromEditableSteps A should skip readonly and upcoming steps", () => {
+    const schema1 = z
+      .object({
+        a: z.string().meta({ label: "A" }),
+      })
+      .meta({ state: "readonly" });
+    const schema2 = z
+      .object({
+        b: z.string().meta({ label: "B" }),
+      })
+      .meta({ state: "editable" });
+    const data = { a: "foo", b: "bar" };
+    const sections = sectionsFromEditableSteps([schema1, schema2], data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data).toEqual({ b: { label: "B", value: "bar" } });
+  });
+  it("sectionsFromEditableSteps B should handle steps without sections", () => {
+    const schema = z
+      .object({
+        a: z.string().meta({ label: "A" }),
+        b: z.string().meta({ label: "B" }),
+      })
+      .meta({ state: "editable" });
+    const data = { a: "foo", b: "bar" };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0].title).toBeUndefined();
+    expect(sections[0].data).toEqual({
+      a: { label: "A", value: "foo" },
+      b: { label: "B", value: "bar" },
+    });
+  });
+  it("sectionsFromEditableSteps C should handle sections", () => {
+    const schema = z.object({
+      a: z.string().meta({ label: "A" }),
+      b: section({ title: "B Section" }),
+      c: section({}),
+    });
+    const data = { a: "foo", b: "bar" };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0].title).toBeUndefined();
+    expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
+  });
+  it("sectionsFromEditableSteps D should handle invisible fields", () => {
+    const schema = z.object({
+      a: z.string().meta({ label: "A" }),
+      b: z.string().meta({ isVisible: () => false, label: "B" }),
+    });
+    const data = { a: "foo", b: "bar" };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0].title).toBeUndefined();
+    expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
+  });
+
+  // getFieldMetadata
+  it("getFieldMetadata A should return metadata when present", () => {
+    const schema = z.string().meta({ label: "Test" });
+    const metadata = getFieldMetadata(schema);
+    expect(metadata).toEqual({ label: "Test" });
+  });
+  it("getFieldMetadata B should return undefined when no metadata", () => {
+    const schema = z.string();
+    const metadata = getFieldMetadata(schema);
+    expect(metadata).toBeUndefined();
+  });
+  it("getFieldMetadata C should return undefined when schema is undefined", () => {
+    const metadata = getFieldMetadata(undefined);
+    expect(metadata).toBeUndefined();
+  });
+  it("getFieldMetadata D should return undefined when meta is not a function", () => {
+    const schema = { type: "string" } as z.ZodType;
+    const metadata = getFieldMetadata(schema);
+    expect(metadata).toBeUndefined();
+  });
+
+  // getFieldMetadataOrThrow
+  it("getFieldMetadataOrThrow A should return metadata when present", () => {
+    const schema = z.string().meta({ label: "Test" });
+    const metadata = getFieldMetadataOrThrow("testField", schema);
+    expect(metadata).toEqual({ label: "Test" });
+  });
+  it("getFieldMetadataOrThrow B should throw when metadata is missing", () => {
+    const schema = z.string();
+    expect(() => getFieldMetadataOrThrow("testField", schema)).toThrow('Field "testField" is missing metadata');
+  });
+  it("getFieldMetadataOrThrow C should throw when schema is section metadata", () => {
+    const schema = section({ title: "Section" });
+    expect(() => getFieldMetadataOrThrow("testField", schema)).toThrow('Cannot render field "testField" with section metadata');
+  });
+
+  // field
+  it("field A should add metadata to schema", () => {
+    const schema = field(z.string(), { label: "Test Field" });
+    const metadata = getFieldMetadata(schema);
+    expect(metadata).toEqual({ label: "Test Field" });
+  });
+  it("field B should preserve schema type", () => {
+    const schema = field(z.number(), { label: "Number Field" });
+    expect(isZodNumber(schema)).toBe(true);
+  });
+
+  // section
+  it("section A should create section schema with metadata", () => {
+    const schema = section({ title: "Test Section" });
+    const metadata = getFieldMetadata(schema);
+    expect(metadata).toEqual({ render: "section", title: "Test Section" });
+  });
+  it("section B should create optional string schema", () => {
+    const schema = section({ title: "Test Section" });
+    expect(schema.type).toBe("optional");
+    const parsed = schema.safeParse(undefined);
+    expect(parsed.success).toBe(true);
+  });
+
+  // getStepMetadata
+  it("getStepMetadata A should return metadata when present", () => {
+    const schema = z.object({}).meta({ title: "Test Step" });
+    const metadata = getStepMetadata(schema);
+    expect(metadata).toEqual({ title: "Test Step" });
+  });
+  it("getStepMetadata B should return undefined when no metadata", () => {
+    const schema = z.object({});
+    const metadata = getStepMetadata(schema);
+    expect(metadata).toBeUndefined();
+  });
+  it("getStepMetadata C should return undefined when meta is not a function", () => {
+    const schema = { shape: {} } as z.ZodObject;
+    const metadata = getStepMetadata(schema);
+    expect(metadata).toBeUndefined();
+  });
+
+  // step
+  it("step A should add metadata to schema when provided", () => {
+    const baseSchema = z.object({ name: z.string() });
+    const schema = step(baseSchema, { title: "Test Step" });
+    const metadata = getStepMetadata(schema);
+    expect(metadata).toEqual({ title: "Test Step" });
+  });
+  it("step B should return schema unchanged when no metadata", () => {
+    const baseSchema = z.object({ name: z.string() });
+    const schema = step(baseSchema);
+    expect(schema).toBe(baseSchema);
+  });
+
+  // forms
+  it("forms A should create a ZodArray with metadata", () => {
+    const schema = forms(z.object({ name: z.string() }), { icon: createElement("div"), maxItems: 3, minItems: 1 });
+    expect(schema.type).toBe("array");
+    const metadata = getFieldMetadata(schema);
+    expect(metadata).toBeDefined();
+    if (metadata) {
+      expect(metadata.render).toBe("form-list");
+      expect("minItems" in metadata && metadata.minItems).toBe(1);
+      expect("maxItems" in metadata && metadata.maxItems).toBe(3);
+    }
+  });
+  it("forms B should validate array constraints", () => {
+    const schema = forms(z.object({ name: z.string() }), { icon: createElement("div"), maxItems: 2, minItems: 1 });
+    const parsed = schema.safeParse([{ name: "John" }]);
+    expect(parsed.success).toBe(true);
+    const parsed2 = schema.safeParse([]);
+    expect(parsed2.success).toBe(false);
+    const parsed3 = schema.safeParse([{ name: "John" }, { name: "Jane" }, { name: "Jim" }]);
     expect(parsed3.success).toBe(false);
-    expect(parsed3.error?.message).toMatchInlineSnapshot(`
-      "[
-        {
-          "origin": "array",
-          "code": "too_big",
-          "maximum": 3,
-          "inclusive": true,
-          "path": [],
-          "message": "At most 3 items are allowed."
-        }
-      ]"
-    `);
+  });
+
+  // getFormFieldRender
+  it("getFormFieldRender A should return explicit render from metadata", () => {
+    const schema = z.string().meta({ render: "form-list" });
+    expect(getFormFieldRender(schema)).toBe("form-list");
+  });
+  it("getFormFieldRender B should return upload for file schema", () => {
+    const schema = z.file();
+    expect(getFormFieldRender(schema)).toBe("upload");
+  });
+  it("getFormFieldRender C should return date for date schema", () => {
+    const schema = z.date();
+    expect(getFormFieldRender(schema)).toBe("date");
+  });
+  it("getFormFieldRender D should return select for enum schema", () => {
+    const schema = z.enum(["a", "b"]);
+    expect(getFormFieldRender(schema)).toBe("select");
+  });
+  it("getFormFieldRender E should return number for number schema", () => {
+    const schema = z.number();
+    expect(getFormFieldRender(schema)).toBe("number");
+  });
+  it("getFormFieldRender F should return boolean for boolean schema", () => {
+    const schema = z.boolean();
+    expect(getFormFieldRender(schema)).toBe("boolean");
+  });
+  it("getFormFieldRender G should return text for string schema", () => {
+    const schema = z.string();
+    expect(getFormFieldRender(schema)).toBe("text");
+  });
+  it("getFormFieldRender H should return undefined for unknown schema", () => {
+    const schema = z.object({});
+    expect(getFormFieldRender(schema)).toBeUndefined();
+  });
+  it("getFormFieldRender I should handle optional schemas", () => {
+    const schema = z.string().optional();
+    expect(getFormFieldRender(schema)).toBe("text");
+  });
+
+  // mockSubmit
+  it("mockSubmit A should return submission with warning status", async () => {
+    const result = await mockSubmit("warning", "Test message");
+    expect(result.submission.status).toBe("warning");
+    expect(result.submission.children).toBe("Test message");
+    expect(result.submission.detailsList).toEqual(["Some fields have warnings.", "Submission is complete anyway."]);
+  });
+  it("mockSubmit B should return submission with success status", async () => {
+    const result = await mockSubmit("success", "Success message");
+    expect(result.submission.status).toBe("success");
+    expect(result.submission.children).toBe("Success message");
+    expect(result.submission.detailsList).toEqual(["All data is valid.", "No errors found."]);
+  });
+  it("mockSubmit C should return submission with error status", async () => {
+    const result = await mockSubmit("error", "Error message");
+    expect(result.submission.status).toBe("error");
+    expect(result.submission.children).toBe("Error message");
+    expect(result.submission.detailsList).toEqual(["Network error occurred.", "Please retry submission."]);
+  });
+  it("mockSubmit D should return submission with loading status", async () => {
+    const result = await mockSubmit("loading", "Loading message");
+    expect(result.submission.status).toBe("loading");
+    expect(result.submission.children).toBe("Loading message");
+    expect(result.submission.detailsList).toEqual(["Network error occurred.", "Please retry submission."]);
+  });
+  it("mockSubmit E should return submission with unknown-error status", async () => {
+    const result = await mockSubmit("unknown-error", "Unknown error message");
+    expect(result.submission.status).toBe("unknown-error");
+    expect(result.submission.children).toBe("Unknown error message");
+    expect(result.submission.detailsList).toEqual(["Network error occurred.", "Please retry submission."]);
   });
 });
