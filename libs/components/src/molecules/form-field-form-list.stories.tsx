@@ -1,4 +1,4 @@
-import { isBrowserEnvironment, Logger, stringify } from "@monorepo/utils";
+import { isBrowserEnvironment, Logger, sleep, stringify } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
@@ -101,6 +101,7 @@ export const Basic: Story = {
       expect(submittedData).toContainHTML(`"applicants": []`);
       const subFormSubmitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(subFormSubmitButton);
+      await sleep(100); // wait for state update
       // biome-ignore assist/source/useSortedKeys: order needed
       const expectedData = { applicants: [{ name: "Alice", age: 7 }] };
       expect(formData).toContainHTML(stringify(expectedData, true));
