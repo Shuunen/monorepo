@@ -6,13 +6,13 @@ import type { getFormFieldRender } from "./auto-form.utils";
 import { FormFieldAccept } from "./form-field-accept";
 import { FormFieldBoolean } from "./form-field-boolean";
 import { FormFieldDate } from "./form-field-date";
+import { FormFieldFormList } from "./form-field-form-list";
 import { FormFieldNumber } from "./form-field-number";
 import { FormFieldPassword } from "./form-field-password";
 import { FormFieldSelect } from "./form-field-select";
 import { FormFieldText } from "./form-field-text";
 import { FormFieldTextarea } from "./form-field-textarea";
 import { FormFieldUpload } from "./form-field-upload";
-import { FormFieldFormList } from "./form-field-form-list";
 
 export type AutoFormFieldProps = {
   fieldName: string;
@@ -35,6 +35,7 @@ type FieldComponentProps = {
 type ComponentRegistry = {
   [RenderType in Exclude<NonNullable<ReturnType<typeof getFormFieldRender>>, "section" | "field-list">]: ComponentType<FieldComponentProps>;
 };
+
 /* c8 ignore start */
 export const componentRegistry: ComponentRegistry = {
   accept: FormFieldAccept,
