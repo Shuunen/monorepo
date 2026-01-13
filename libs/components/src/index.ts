@@ -79,6 +79,7 @@ export * from "./molecules/auto-form-navigation";
 export * from "./molecules/auto-form-stepper";
 export * from "./molecules/auto-form-submission-step";
 export * from "./molecules/auto-form-summary-step";
+export * from "./molecules/auto-form.const";
 export * from "./molecules/auto-form.utils";
 export * from "./molecules/confirm-dialog";
 export * from "./molecules/debug-data";
