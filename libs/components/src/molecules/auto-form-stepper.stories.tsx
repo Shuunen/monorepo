@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useId, useState } from "react";
 import { Skeleton } from "../atoms/skeleton";
-import { defaultIcons } from "./auto-form.utils";
+import { defaultIcons } from "./auto-form.const";
 import { AutoFormStepper } from "./auto-form-stepper";
 
 const meta: Meta<typeof AutoFormStepper> = {
