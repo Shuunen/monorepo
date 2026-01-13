@@ -1,6 +1,7 @@
-import { isBrowserEnvironment, Logger } from "@monorepo/utils";
+import { isBrowserEnvironment, Logger, stringify } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { IconCheck } from "../icons/icon-check";
 import { IconDownload } from "../icons/icon-download";
@@ -55,9 +56,66 @@ const applicantSchema = z.object({
 });
 
 /**
- * Basic boolean field with switch
+ * Basic usage
  */
 export const Basic: Story = {
+  args: {
+    schemas: [
+      step(
+        z.object({
+          applicants: forms(applicantSchema, {
+            icon: <IconCheck />,
+            identifier: data => `${data.name} (${data.age} years)`,
+            label: "Add persons",
+            placeholder: "You can add multiple persons, no minimum or maximum.",
+          }),
+        }),
+      ),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const formData = canvas.getByTestId("debug-data-form-data");
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+    const addButton = canvas.getByTestId("button-add");
+
+    await step("verify initial state", async () => {
+      expect(formData).toContainHTML(`"applicants": []`);
+      expect(submittedData).toContainHTML(`{}`);
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      expect(formData).toContainHTML(`"applicants": []`);
+      expect(submittedData).toContainHTML(`"applicants": []`);
+    });
+
+    await step("add first item", async () => {
+      expect(canvas.queryByTestId("button-complete")).toBeNull();
+      await userEvent.click(addButton);
+      const completeButton = canvas.getByTestId("button-complete");
+      expect(completeButton).toBeInTheDocument();
+      await userEvent.click(completeButton);
+      const nameInput = canvas.getByTestId("input-text-name");
+      const ageInput = canvas.getByTestId("input-number-age");
+      await userEvent.type(nameInput, "Alice");
+      await userEvent.type(ageInput, "7");
+      expect(submittedData).toContainHTML(`"applicants": []`);
+      const subFormSubmitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(subFormSubmitButton);
+      // biome-ignore assist/source/useSortedKeys: order needed
+      const expectedData = { applicants: [{ name: "Alice", age: 7 }] };
+      expect(formData).toContainHTML(stringify(expectedData, true));
+      expect(submittedData).toContainHTML(`"applicants": []`);
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      expect(submittedData).toContainHTML(stringify(expectedData, true));
+    });
+  },
+};
+
+/**
+ * With existing data
+ */
+export const ExistingData: Story = {
   args: {
     initialData: {
       applicants: [
