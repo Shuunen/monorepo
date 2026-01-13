@@ -89,6 +89,8 @@ export * from "./molecules/form-field-accept";
 export * from "./molecules/form-field-boolean";
 export * from "./molecules/form-field-date";
 export * from "./molecules/form-field-field-list";
+export * from "./molecules/form-field-form-list";
+export * from "./molecules/form-field-form-list.utils";
 export * from "./molecules/form-field-number";
 export * from "./molecules/form-field-password";
 export * from "./molecules/form-field-section";

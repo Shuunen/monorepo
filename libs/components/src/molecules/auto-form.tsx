@@ -70,6 +70,8 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
   }, [schemas]);
   const isLastStep = currentStep === lastAccessibleStepIndex;
   const finalLabels = { ...defaultLabels, ...labels };
+  const [mode, setMode] = useState<"initial" | "subform">("initial");
+  const [subformOptions, setSubformOptions] = useState<AutoFormSubformOptions | undefined>(undefined);
   const form = useForm({ defaultValues, mode: "onBlur", resolver: zodResolver(filterSchema(currentSchema, formData)) });
   // Find a way to reset the form when schema changes.
   // useEffect(() => { form.reset(formData) }, [formData, form])
@@ -155,6 +157,25 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     }
     setCurrentStep(stepIndex);
   }
+  /**
+   * Shows a form
+   * @param options the options for the subform
+   * @param options.schema the Zod schema for the current step
+   * @param options.initialData the initial data for the subform
+   * @param options.onSubmit the function to call on form submission
+   * @returns boolean indicating if the form should be shown
+   */
+  function showForm({ schema, initialData, onSubmit }: AutoFormSubformOptions) {
+    setMode("subform");
+    setSubformOptions({
+      initialData,
+      onSubmit: data => {
+        onSubmit(data);
+        setMode("initial");
+      },
+      schema,
+    });
+  }
   // Step states and icons
   let lastSection = "" as AutoFormStepMetadata["section"];
   const steps = schemas.map<AutoFormStepperStep>((schema, idx) => {
@@ -176,7 +197,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
   });
   const stepMetadata = getStepMetadata(currentSchema);
   const isStepperDisabled = submissionProps?.status === "success";
-  const shouldShowStepper = showMenu === undefined ? schemas.length > 1 : showMenu;
+  const shouldShowStepper = (showMenu === undefined ? schemas.length > 1 : showMenu) && mode !== "subform";
   function renderSubmissionContent() {
     if (!submissionProps) {
       return;
@@ -221,7 +242,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
     return (
       <Form {...form}>
         <form onChange={updateFormData} onSubmit={form.handleSubmit(handleStepSubmit)}>
-          <AutoFormFields formData={formData} logger={logger} schema={currentSchema} state={stepMetadata?.state} />
+          <AutoFormFields formData={formData} logger={logger} schema={currentSchema} showForm={showForm} state={stepMetadata?.state} />
           {showButtons && (
             <AutoFormNavigation
               centerButton={onCancel ? { onClick: onCancel } : undefined}
@@ -241,12 +262,29 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
       </Form>
     );
   }
+  function renderSubformContent() {
+    if (!subformOptions) {
+      return;
+    }
+    logger?.info("Rendering subform", subformOptions);
+    return (
+      <>
+        <Button name="subform-back" onClick={() => setMode("initial")}>
+          Back
+        </Button>
+        <AutoForm initialData={subformOptions.initialData} onSubmit={subformOptions.onSubmit} schemas={[subformOptions.schema]} />
+      </>
+    );
+  }
   function renderContent() {
     if (submissionProps) {
       return renderSubmissionContent();
     }
     if (showSummary) {
       return renderSummaryContent();
+    }
+    if (mode === "subform") {
+      return renderSubformContent();
     }
     return renderFormContent();
   }
