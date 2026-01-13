@@ -98,7 +98,7 @@ const meta = {
     layout: "centered",
   },
   render: () => (
-    <div className="grid gap-4 w-full grid-cols-3">
+    <div className="grid gap-4 w-full md:grid-cols-3">
       {icons.map(icon => (
         <Icon component={icon} key={icon.name} />
       ))}
