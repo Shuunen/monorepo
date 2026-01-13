@@ -83,4 +83,3 @@ function VintedAio() {
 }
 
 if (globalThis.window) VintedAio()
-else module.exports = {}

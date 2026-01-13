@@ -167,4 +167,3 @@ function GithubAio() {
 }
 
 if (globalThis.window) GithubAio()
-else module.exports = { createIssueCountLink, getIssueCountCached, getRepoFullName }

@@ -87,4 +87,3 @@ function TemuTakeout() {
 }
 
 if (globalThis.window) TemuTakeout()
-else module.exports = { getData }

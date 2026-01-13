@@ -73,7 +73,7 @@ watchState("isLoading", (value) => {
 - Avoid `;(function AliExpressTakeout() { ... })();` pattern and do not use IIFEs, instead do `function AliExpressTakeout() { ... } AliExpressTakeout();`
 - Avoid type assertions like `/** @type {HTMLTextAreaElement | undefined} */` when you can use ` if (!(input instanceof HTMLInputElement)) { utils.showError('tableRowAmountInput is not an input element'); return; }` to ensure type safety, if you cannot avoid it, keep the type assertion intact
 - The name of the main function should match the filename, e.g. `AliExpressTakeout` for `aliexpress-takeout.user.js` and respect PascalCase convention, all the other functions should be in camelCase
-- To allow testing and avoid user script main function execution in unit test environment, every last lines of a user script will be like `if (globalThis.window) AliExpressTakeout() else module.exports = { funcA, funcB }` where `funcA`, `funcB` are the functions outside the main function, they need to be unit-tested. This pattern is used to export functions for unit testing while still allowing the main function to run when the script is executed in a browser environment. If all the functions are inside the main function, just export an empty object.
+- To allow testing and avoid user script main function execution in unit test environment, every last lines of a user script will be like `if (globalThis.window) AliExpressTakeout()`.
 - the UserScript meta `@name` should be the second line of the file below the `// ==UserScript==` line
 - the meta `@downloadURL` and `@updateURL` should be the same URL, pointing to the raw file in the repository, e.g. `https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/linxo-aio.user.js` where `linxo-aio.user.js` is the filename
 - the meta `@match` should be the URL pattern where the script should run, but star pattern in the domain part is not allowed, for example `https://*.linxo.com/*` will fail, use `https://linxo.com/*` or `https://www.linxo.com/*` instead
@@ -94,7 +94,7 @@ pnpm check:oxlint       # Additional linting with Oxlint
 pnpm check:nx           # Run all Nx tasks (lint, test, build, typecheck)
 
 # Individual tools
-nx run-many -t typecheck # TypeScript type checking
+nx run-many -t tsgo      # TypeScript type checking
 nx run-many -t build     # Build all projects
 ```
 

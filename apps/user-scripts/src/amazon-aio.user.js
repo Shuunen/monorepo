@@ -275,8 +275,10 @@ function AmazonAio() {
       const ratingSection = utils.findOne(selectors.productRatingSection, product, true)
       if (!ratingSection) continue
       // @ts-expect-error it's ok
-      const children = Array.from(ratingSection.firstChild?.children)
+      const /** @type HTMLElement[] */ children = Array.from(ratingSection.firstChild?.children)
+      // @ts-expect-error it's ok
       const rating = getRating(children.at(0))
+      // @ts-expect-error it's ok
       const reviews = getReviews(children.at(-1))
       const { color, score, size } = score20Styled(rating, reviews)
       const { scoreByCurrency, scoreSection } = generateScoreSection({ color, product, rating, reviews, score, size })
@@ -302,4 +304,5 @@ function AmazonAio() {
 }
 
 if (globalThis.window) AmazonAio()
-else module.exports = { calcScore, maxScore, positionInInterval, score20Styled }
+
+export { calcScore, maxScore, positionInInterval, score20Styled }

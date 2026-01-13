@@ -3,7 +3,7 @@
 /**
  * Collection of utility functions to help with common tasks in my user scripts.
  */
-class Shuutils {
+export class Shuutils {
   id = ''
   version = '2.6.6'
   willDebug = false
@@ -567,10 +567,3 @@ class Shuutils {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`)
   }
 }
-
-if (globalThis.window === undefined)
-  // oxlint-disable-next-line no-commonjs, no-undef
-  module.exports = {
-    // biome-ignore lint/style/useNamingConvention: nope
-    Shuutils,
-  }

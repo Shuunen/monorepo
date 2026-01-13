@@ -1,21 +1,29 @@
 # Stats
 
+## TypeScript Tsc vs TsGo
+
+For typecheck using TypeScript/Tsc :
+
+`rm apps/stuff-finder/dist -rf && rm apps/stuff-finder/out-tsc/ -rf && hyperfine 'nx run stuff-finder:typecheck --skip-nx-cache' --runs 1`
+
+For ts-check using TypeScript native / TsGo :
+
+`rm apps/stuff-finder/dist -rf && rm apps/stuff-finder/out-tsc/ -rf && hyperfine 'nx run stuff-finder:
+ts-check --skip-nx-cache' --runs 1`
+
+| task                   | duration |
+| ---------------------- | -------- |
+| components:typecheck   | 9.3s     |
+| components:ts-check    | 5.8s     |
+| ---------------------- | -------- |
+| stuff-finder:typecheck | 14.5s    |
+| stuff-finder:ts-check  | 7.3s     |
+
+## Various
+
 Some tasks recently run in the monorepo on 2025-12-04 :
 
 | task                         | duration |
-| ---------------------------- | -------- |
-| components:typecheck         | 7.3s     |
-| stuff-finder:typecheck       | 3.6s     |
-| utils:typecheck              | 2.8s     |
-| vet-web:typecheck            | 2.4s     |
-| image-compare:typecheck      | 2.0s     |
-| sample-web-app:typecheck     | 1.8s     |
-| jozzo:typecheck              | 1.8s     |
-| recipes:typecheck            | 1.8s     |
-| regex-converter:typecheck    | 1.7s     |
-| user-scripts:typecheck       | 290ms    |
-| sample-web-app-e2e:typecheck | 283ms    |
-| config-sync:typecheck        | 204ms    |
 | ---------------------------- | -------- |
 | jozzo:build                  | 12.8s    |
 | vet-web:build                | 12.5s    |

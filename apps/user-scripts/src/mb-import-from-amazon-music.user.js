@@ -68,4 +68,3 @@ function MbImportFromAmazonMusic() {
 }
 
 if (globalThis.window) MbImportFromAmazonMusic()
-else module.exports = {}

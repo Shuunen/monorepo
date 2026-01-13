@@ -1,0 +1,6 @@
+{
+  "name": "stuff-finder",
+  "targets": {
+    "ts-check": {}
+  }
+}

@@ -53,4 +53,3 @@ function GooglePhotosEasyDelete() {
 }
 
 if (globalThis.window) GooglePhotosEasyDelete()
-else module.exports = {}

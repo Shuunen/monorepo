@@ -69,4 +69,3 @@ function BundlephobiaEverywhere() {
 }
 
 if (globalThis.window) BundlephobiaEverywhere()
-else module.exports = {}

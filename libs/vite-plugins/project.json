@@ -11,8 +11,6 @@
       },
       "outputs": ["{projectRoot}/src/index.js"]
     },
-    "typecheck": {
-      "outputs": ["{projectRoot}/out-tsc/vitest/**/*.d.ts", "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo", "{projectRoot}/types/**/*.d.ts", "{projectRoot}/tsconfig.lib.tsbuildinfo"]
-    }
+    "ts-check": {}
   }
 }

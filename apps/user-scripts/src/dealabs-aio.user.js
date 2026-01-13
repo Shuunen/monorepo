@@ -179,4 +179,3 @@ function DealabsAio() {
 }
 
 if (globalThis.window) DealabsAio()
-else module.exports = {}

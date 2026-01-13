@@ -162,4 +162,3 @@ function TextGuard() {
 }
 
 if (globalThis.window) TextGuard()
-else module.exports = {}

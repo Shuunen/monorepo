@@ -83,4 +83,3 @@ function InstagramWide() {
 }
 
 if (globalThis.window) InstagramWide()
-else module.exports = {}

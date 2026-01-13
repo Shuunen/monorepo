@@ -5,6 +5,7 @@
       "options": {
         "coverage.thresholds.100": false
       }
-    }
+    },
+    "ts-check": {}
   }
 }

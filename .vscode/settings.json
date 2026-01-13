@@ -41,6 +41,7 @@
     "télécom",
     "trmnl",
     "Trmnl",
+    "tsgo",
     "unstub",
     "utils",
     "vite",
@@ -53,6 +54,7 @@
   ],
   "javascript.format.insertSpaceAfterConstructor": false,
   "javascript.format.insertSpaceBeforeFunctionParenthesis": false,
+  "typescript.experimental.useTsgo": true,
   "typescript.format.insertSpaceAfterConstructor": false,
   "typescript.format.insertSpaceBeforeFunctionParenthesis": false,
   "typescript.tsdk": "node_modules\\typescript\\lib"

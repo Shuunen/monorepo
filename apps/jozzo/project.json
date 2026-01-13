@@ -1,0 +1,6 @@
+{
+  "name": "jozzo",
+  "targets": {
+    "ts-check": {}
+  }
+}

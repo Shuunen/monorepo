@@ -167,4 +167,3 @@ function TradeRepublicAio() {
 }
 
 if (globalThis.window) TradeRepublicAio()
-else module.exports = {}

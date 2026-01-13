@@ -47,4 +47,3 @@ function ImgUnblock() {
 }
 
 if (globalThis.window) ImgUnblock()
-else module.exports = {}

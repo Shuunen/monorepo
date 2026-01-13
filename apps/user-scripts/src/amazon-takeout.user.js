@@ -53,4 +53,3 @@ function AmazonTakeout() {
 }
 
 if (globalThis.window) AmazonTakeout()
-else module.exports = {}

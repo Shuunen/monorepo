@@ -240,7 +240,7 @@ function LbcListings() {
    * @returns {void}
    */
   function hideAdElement(element, cause = 'unknown') {
-    element.classList.add(...utils.tw('h-24 overflow-hidden opacity-50 grayscale transition-all duration-500 ease-in-out hover:h-[215px] hover:opacity-100 hover:filter-none'))
+    element.classList.add(...utils.tw('h-24 overflow-hidden opacity-50 grayscale transition-all duration-500 ease-in-out hover:h-53.75 hover:opacity-100 hover:filter-none'))
     element.parentElement?.classList.add(`${utils.id}-hidden`, `${utils.id}-hidden-cause-${cause}`)
   }
 
@@ -461,4 +461,3 @@ function LbcListings() {
 }
 
 if (globalThis.window) LbcListings()
-else module.exports = { getAdType, getElevatorInfo, getRoomsInfo, getSquareInfo, humanReadableFloor }

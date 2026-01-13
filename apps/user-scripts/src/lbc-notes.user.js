@@ -275,7 +275,7 @@ function LbcNotes() {
    * @returns {Promise<LbcNote|undefined>} a promise
    */
   async function loadNoteFromLocalStore(listingId) {
-    const note = await getNoteFromStore(`lbcNotes_${listingId}`)
+    const /** @type {LbcNote | undefined} */ note = await getNoteFromStore(`lbcNotes_${listingId}`)
     utils.debug(`${note?.noteId ? 'loaded note' : 'found no note'} for listing ${listingId} from local store :`, note)
     return note?.noteId ? note : undefined
   }
@@ -447,7 +447,7 @@ function LbcNotes() {
   function addNoteToPage(listingId) {
     utils.log('addNoteToPage', listingId)
     const note = createNoteElement(listingId)
-    note.classList.add(...utils.tw('fixed right-[37rem] bottom-40'))
+    note.classList.add(...utils.tw('fixed right-148 bottom-40'))
     document.body.append(note)
   }
   let isProcessing = false
@@ -505,4 +505,5 @@ function LbcNotes() {
 }
 
 if (globalThis.window) LbcNotes()
-else module.exports = { getListingId, getListingIdFromNote, getNoteIdFromNote, multipleAdDisplayed }
+
+export { getListingId, getListingIdFromNote, getNoteIdFromNote, multipleAdDisplayed }

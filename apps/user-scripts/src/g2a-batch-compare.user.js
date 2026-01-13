@@ -171,4 +171,3 @@ function G2aBatchCompare() {
 }
 
 if (globalThis.window) G2aBatchCompare()
-else module.exports = { injectModal }
