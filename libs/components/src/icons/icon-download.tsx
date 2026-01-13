@@ -1,5 +1,5 @@
 import { Download } from "lucide-react";
 
-export function IconDownload() {
-  return <Download />;
+export function IconDownload({ className }: { className?: string }) {
+  return <Download className={className} />;
 }
