@@ -26,15 +26,15 @@
 *.tsbuildinfo
 connect.lock
 coverage
-devfile.yaml
 dist
 node_modules
 out-tsc
 sample.*
+storybook-html-reports
 storybook-static
+storybook-tests.json
 test-output
 Thumbs.db
-*.tsbuildinfo
 tmp
 typings
 vite.config.*.timestamp*
