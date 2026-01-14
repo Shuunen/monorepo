@@ -18,6 +18,7 @@ export * from "./atoms/popover";
 export * from "./atoms/progress";
 export * from "./atoms/radio-group";
 export * from "./atoms/select";
+export * from "./atoms/select-long";
 export * from "./atoms/skeleton";
 export * from "./atoms/slider";
 export * from "./atoms/spinner";
