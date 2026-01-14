@@ -37,6 +37,7 @@ export * from "./lib/object-clone.js";
 export * from "./lib/object-deep.js";
 export * from "./lib/object-equal.js";
 export * from "./lib/object-flatten.js";
+export * from "./lib/object-is-empty.js";
 export * from "./lib/object-safe-assign.js";
 export * from "./lib/object-serializer.js";
 export * from "./lib/object-sort.js";
