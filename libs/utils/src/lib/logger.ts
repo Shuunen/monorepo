@@ -8,6 +8,7 @@ import { formatDate } from "./dates.js";
 import { isBrowserEnvironment } from "./environment.js";
 import { isVerbose } from "./flags.js";
 import type { ResultType } from "./result.js";
+import { stringify } from "./string-stringify.js";
 
 /**
  * Clean stuff to log
@@ -23,7 +24,7 @@ function clean(...stuff: Readonly<unknown[]>) {
     "gu",
   );
   return stuff
-    .map(thing => (typeof thing === "object" ? JSON.stringify(thing) : String(thing)))
+    .map(thing => stringify(thing))
     .join(" ")
     .replaceAll(ansiEscapeRegex, "")
     .replaceAll('"', "'");
