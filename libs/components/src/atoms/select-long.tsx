@@ -63,7 +63,6 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
     event.preventDefault();
     event.stopPropagation();
     if (props.onChange) {
-      // // oxlint-disable-next-line no-explicit-any
       props.onChange(undefined, undefined);
     }
     setSearch("");
