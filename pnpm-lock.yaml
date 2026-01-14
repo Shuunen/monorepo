@@ -71,9 +71,6 @@ importers:
       tiny-glob:
         specifier: ~0.2.9
         version: 0.2.9
-      tsx:
-        specifier: ~4.21.0
-        version: 4.21.0
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
