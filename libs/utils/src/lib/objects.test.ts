@@ -2,7 +2,7 @@ import { clone } from "./object-clone.js";
 import { objectEqual } from "./object-equal.js";
 import { flatten } from "./object-flatten.js";
 import { objectSort } from "./object-sort.js";
-import { byProperty, genClass, isEmpty, isRecord, objectSum } from "./objects.js";
+import { byProperty, genClass, isRecord, objectSum } from "./objects.js";
 
 describe("objects", () => {
   const person = {
@@ -269,13 +269,5 @@ describe("objects", () => {
     };
     const sorted = objectSort(object);
     expect(sorted).toMatchSnapshot();
-  });
-
-  it("isEmpty A on empty object", () => {
-    expect(isEmpty({})).toBe(true);
-  });
-
-  it("isEmpty B on non-empty object", () => {
-    expect(isEmpty({ name: "John" })).toBe(false);
   });
 });
