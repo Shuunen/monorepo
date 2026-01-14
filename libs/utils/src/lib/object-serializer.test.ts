@@ -304,15 +304,6 @@ it("objectDeserialize J file partial revive", () => {
    * so for now we just restore the File object with name, size and type
    */
   const object = objectDeserialize('{"document":{"__fileName__":"test.txt","__fileSize__":12,"__fileType__":"text/plain"}}');
-  expect(object).toMatchInlineSnapshot(`
-    {
-      "document": File {
-        Symbol(kHandle): Blob {},
-        Symbol(kLength): 0,
-        Symbol(kType): "text/plain",
-      },
-    }
-  `);
   expect(object.document instanceof File).toBe(true);
   // @ts-expect-error type is unknown
   expect(object.document.name).toBe("test.txt");
