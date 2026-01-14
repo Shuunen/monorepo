@@ -1,0 +1,33 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`object-flatten > flatten A object 1`] = `
+{
+  "age": 21,
+  "details.dateOfBirth": 2001-12-22T00:00:00.000Z,
+  "details.favouriteFood": "sushi",
+  "name": "John",
+  "nameRegex": /\\^jo/iu,
+  "nameValid": true,
+  "nameValidator": [Function],
+}
+`;
+
+exports[`object-flatten > flatten B object with a custom root path 1`] = `
+{
+  "person.age": 21,
+  "person.details.dateOfBirth": 2001-12-22T00:00:00.000Z,
+  "person.details.favouriteFood": "sushi",
+  "person.name": "John",
+  "person.nameRegex": /\\^jo/iu,
+  "person.nameValid": true,
+  "person.nameValidator": [Function],
+}
+`;
+
+exports[`object-flatten > flatten C object containing an array 1`] = `
+{
+  "collection[0]": "pikachu",
+  "collection[1]": "drake",
+  "name": "John",
+}
+`;
