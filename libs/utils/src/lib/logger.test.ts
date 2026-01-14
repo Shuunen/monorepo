@@ -102,10 +102,10 @@ it("logger clean J", () => {
   expect(loggerE.clean("an undefined ?", undefined)).toMatchInlineSnapshot('"an undefined ? undefined"');
 });
 it("logger clean K", () => {
-  expect(loggerE.clean("a date ?", new Date("2020-01-01"))).toMatchInlineSnapshot("\"a date ? '2020-01-01T00:00:00.000Z'\"");
+  expect(loggerE.clean("a date ?", new Date("2020-01-01"))).toMatchInlineSnapshot(`"a date ? {'__date__':'2020-01-01T00:00:00.000Z'}"`);
 });
 it("logger clean L", () => {
-  expect(loggerE.clean("a regexp ?", /Hello world{3,5}/u)).toMatchInlineSnapshot('"a regexp ? {}"');
+  expect(loggerE.clean("a regexp ?", /Hello world{3,5}/u)).toMatchInlineSnapshot(`"a regexp ? {'__regexFlags__':'u','__regexSource__':'Hello world{3,5}'}"`);
 }); // not supported for now
 
 it("logger F show", () => {
