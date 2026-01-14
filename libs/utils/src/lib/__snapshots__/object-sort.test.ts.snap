@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`objectSort C sort a complex object with null, undefined, etc 1`] = `
+{
+  "alpaca": {
+    "c1": 11,
+    "c2": 22,
+    "c3": 33,
+    "c4": undefined,
+  },
+  "keyA": undefined,
+  "keyB": 2,
+  "keyC": 3,
+  "names": [
+    "john",
+    null,
+    [
+      {
+        "b2": 2,
+        "c3": 3,
+      },
+    ],
+    "eddy",
+  ],
+  "zebra": {
+    "z1": 11,
+    "z2": null,
+    "z3": 33,
+  },
+}
+`;
