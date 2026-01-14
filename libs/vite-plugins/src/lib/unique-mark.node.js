@@ -54,7 +54,11 @@ export function generateMark({ commit = "", date = new Date(), version = "" }) {
   const readableDate = new Intl.DateTimeFormat("en-GB", { day: "2-digit", hour: "2-digit", minute: "2-digit", month: "2-digit", year: "numeric" }).format(date).replace(",", "");
   /* v8 ignore next -- @preserve */
   if (commit === "") {
-    finalCommit = execSync("git rev-parse --short HEAD", { cwd: process.cwd() }).toString().trim(); // NOSONAR
+    try {
+      finalCommit = execSync("git rev-parse --short HEAD", { cwd: process.cwd() }).toString().trim(); // NOSONAR
+    } catch {
+      finalCommit = "no-git-commit";
+    }
   }
   return `${version} - ${finalCommit} - ${readableDate}`;
 }
