@@ -4,7 +4,7 @@ import { type ContestState, calculateNewPan, calculateNewZoom, calculateSliderPo
 import type { ImageData } from './image.utils'
 
 describe('comparison.utils', () => {
-  describe('calculateNewZoom', () => {
+  describe(calculateNewZoom, () => {
     it('calculateNewZoom A should increase zoom when deltaY is negative', () => {
       const result = calculateNewZoom(1, -100)
       expect(result).toBeGreaterThan(1)
@@ -26,7 +26,7 @@ describe('comparison.utils', () => {
     })
   })
 
-  describe('calculateNewPan', () => {
+  describe(calculateNewPan, () => {
     it('calculateNewPan A should calculate correct pan position', () => {
       const dragStart: DragStartPosition = { panX: 10, panY: 20, x: 100, y: 200 }
       const result = calculateNewPan(dragStart, 150, 250)
@@ -50,7 +50,7 @@ describe('comparison.utils', () => {
     })
   })
 
-  describe('calculateSliderPosition', () => {
+  describe(calculateSliderPosition, () => {
     it('calculateSliderPosition A should calculate position within bounds', () => {
       const rect = { left: 0, width: 100 } as DOMRect
       const result = calculateSliderPosition(50, rect)
@@ -70,7 +70,7 @@ describe('comparison.utils', () => {
     })
   })
 
-  describe('getImageStyle', () => {
+  describe(getImageStyle, () => {
     it('getImageStyle A should return correct style with transition', () => {
       const result = getImageStyle({ x: 10, y: 20 }, 1.5, false)
       expect(result).toMatchInlineSnapshot(`
@@ -92,7 +92,7 @@ describe('comparison.utils', () => {
     })
   })
 
-  describe('getCursorType', () => {
+  describe(getCursorType, () => {
     it('getCursorType A should return grabbing when handle dragging', () => {
       const result = getCursorType(true, 1, false)
       expect(result).toBe('grabbing')
@@ -119,7 +119,7 @@ describe('comparison.utils', () => {
     })
   })
 
-  describe('shouldResetPan', () => {
+  describe(shouldResetPan, () => {
     it('shouldResetPan A should return true when zoom equals minZoom', () => {
       const result = shouldResetPan(minZoom)
       expect(result).toBe(true)
@@ -131,7 +131,7 @@ describe('comparison.utils', () => {
     })
   })
 
-  describe('createContestState', () => {
+  describe(createContestState, () => {
     it('createContestState A should create initial contest state', () => {
       const imageData: ImageData[] = [
         { filename: 'img1.jpg', url: 'url1' },
@@ -144,7 +144,7 @@ describe('comparison.utils', () => {
     })
   })
 
-  describe('getNextMatch', () => {
+  describe(getNextMatch, () => {
     it('getNextMatch A should return first match', () => {
       const state = createContestState([
         { filename: 'img1.jpg', url: 'url1' },
@@ -199,7 +199,7 @@ describe('comparison.utils', () => {
     })
   })
 
-  describe('selectWinner', () => {
+  describe(selectWinner, () => {
     it('selectWinner A should eliminate loser and advance to next match', () => {
       const imageData: ImageData[] = [
         { filename: 'img1.jpg', url: 'url1' },
@@ -281,7 +281,7 @@ describe('comparison.utils', () => {
     })
   })
 
-  describe('startContest', () => {
+  describe(startContest, () => {
     it('startContest A should set the first match', () => {
       const state = createContestState([
         { filename: 'img1.jpg', url: 'url1' },
@@ -294,7 +294,7 @@ describe('comparison.utils', () => {
     })
   })
 
-  describe('getNbFiles', () => {
+  describe(getNbFiles, () => {
     it('getNbFiles A should return 0 when no files are being dragged', () => {
       const mockEvent = { dataTransfer: { items: [] } } as unknown as DragEvent
       const result = getNbFiles(mockEvent)

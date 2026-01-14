@@ -23,7 +23,7 @@ describe('image.utils', () => {
     })
   })
 
-  describe('handleSingleFileUpload', () => {
+  describe(handleSingleFileUpload, () => {
     it('handleSingleFileUpload A should return early if file is undefined', () => {
       const onImageUpdate = vi.fn()
       handleSingleFileUpload(undefined, { imageSide: 'left', onImageUpdate })
@@ -49,7 +49,7 @@ describe('image.utils', () => {
     })
   })
 
-  describe('handleMultipleFilesUpload', () => {
+  describe(handleMultipleFilesUpload, () => {
     it('handleMultipleFilesUpload A should show error for single file', () => {
       const file = new File(['content'], 'test.jpg', { type: 'image/jpeg' })
       const fileList = { 0: file, item: () => file, length: 1 } as unknown as FileList
@@ -108,7 +108,7 @@ describe('image.utils', () => {
     })
   })
 
-  describe('fetchImageMetadata', () => {
+  describe(fetchImageMetadata, () => {
     it('fetchImageMetadata A should fetch and return image metadata', async () => {
       const result = await fetchImageMetadata('http://example.com/image.jpg')
       expect(objectSerialize(result)).toMatchInlineSnapshot(`"{"filename":"image.jpg","height":1080,"size":15,"width":1920}"`)
@@ -119,7 +119,7 @@ describe('image.utils', () => {
     })
   })
 
-  describe('getContainedSize', () => {
+  describe(getContainedSize, () => {
     it('getContainedSize A should scale width when aspect ratio is greater than max', () => {
       const result = getContainedSize({ imageHeight: 100, imageWidth: 200, maxHeight: 100, maxWidth: 150 })
       expect(objectSerialize(result)).toMatchInlineSnapshot(`"{"height":75,"width":150}"`)
@@ -136,7 +136,7 @@ describe('image.utils', () => {
     })
   })
 
-  describe('isDragLeavingContainer', () => {
+  describe(isDragLeavingContainer, () => {
     it('isDragLeavingContainer A should return true when target equals currentTarget', () => {
       const div = document.createElement('div')
       const event = { currentTarget: div, relatedTarget: null, target: div } as unknown as React.DragEvent

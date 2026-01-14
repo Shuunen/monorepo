@@ -1,0 +1,45 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`header-injector.cli.ts > main B should inject header into files without header 1`] = `
+{
+  "hasHeader": 1,
+  "moveHeader": 0,
+  "nbFixed": 1,
+  "noHeader": 1,
+  "readError": 0,
+  "writeError": 0,
+}
+`;
+
+exports[`header-injector.cli.ts > main C should count skipped when write fails 1`] = `
+{
+  "hasHeader": 0,
+  "moveHeader": 0,
+  "nbFixed": 0,
+  "noHeader": 1,
+  "readError": 0,
+  "writeError": 1,
+}
+`;
+
+exports[`header-injector.cli.ts > main D should count readError when read fails 1`] = `
+{
+  "hasHeader": 0,
+  "moveHeader": 0,
+  "nbFixed": 0,
+  "noHeader": 0,
+  "readError": 1,
+  "writeError": 0,
+}
+`;
+
+exports[`header-injector.cli.ts > main E should move header into files with header not on the first line 1`] = `
+{
+  "hasHeader": 1,
+  "moveHeader": 1,
+  "nbFixed": 0,
+  "noHeader": 0,
+  "readError": 0,
+  "writeError": 1,
+}
+`;

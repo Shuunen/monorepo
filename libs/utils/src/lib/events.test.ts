@@ -11,7 +11,7 @@ it("on, emit & off", () => {
   expect(callback).toHaveBeenCalledTimes(0);
   emit("foo", 42);
   emit("bar", "wow");
-  expect(callback).toHaveBeenCalledTimes(1);
+  expect(callback).toHaveBeenCalledOnce();
   // @ts-expect-error testing purpose
   expect(callback.mock.calls[0]?.[0]).toMatchInlineSnapshot(`42`);
   off(listener);
@@ -21,7 +21,7 @@ it("emit without data", () => {
   const callback = vi.fn();
   const listener = on("test-event", callback);
   emit("test-event");
-  expect(callback).toHaveBeenCalledTimes(1);
+  expect(callback).toHaveBeenCalledOnce();
   off(listener);
 });
 
@@ -30,6 +30,6 @@ it("on handles non-CustomEvent", () => {
   const element = document.createElement("div");
   const listener = on("click", callback, element);
   element.click();
-  expect(callback).toHaveBeenCalledTimes(1);
+  expect(callback).toHaveBeenCalledOnce();
   off(listener);
 });

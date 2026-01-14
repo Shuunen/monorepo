@@ -11,7 +11,7 @@ function renderRecipeMenu() {
   )
 }
 
-describe('RecipeMenu', () => {
+describe(RecipeMenu, () => {
   it('RecipeMenu A should render component successfully', () => {
     renderRecipeMenu()
     // Either loading state or loaded recipes should be present

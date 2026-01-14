@@ -705,7 +705,7 @@ describe('check-souvenirs.cli', () => {
 
   it('checkFilePathExtensionMp B should rename mp extension to mp4', async () => {
     const result = await checkFilePathExtensionMp(String.raw`D:\Souvenirs\test.mp`)
-    expect(mockRename).toHaveBeenCalledTimes(1)
+    expect(mockRename).toHaveBeenCalledOnce()
     expect(result).toBe(String.raw`D:\Souvenirs\test.mp4`)
   })
 
@@ -720,7 +720,7 @@ describe('check-souvenirs.cli', () => {
     const inputPath = path.normalize('/Souvenirs/test@file.jpg')
     const expectedPath = path.normalize('/Souvenirs/test-file.jpg')
     const result = await checkFilePathSpecialCharacters(inputPath)
-    expect(mockRename).toHaveBeenCalledTimes(1)
+    expect(mockRename).toHaveBeenCalledOnce()
     expect(alignForSnap(result)).toBe(alignForSnap(expectedPath))
   })
 
@@ -843,7 +843,7 @@ describe('check-souvenirs.cli', () => {
     expect(result1).toBe(true)
     const result2 = isMkvToolAvailable()
     expect(result2).toBe(true)
-    expect(mockSpawnSync).toHaveBeenCalledTimes(1)
+    expect(mockSpawnSync).toHaveBeenCalledOnce()
   })
 
   it('setFileDateViaMkvTool B should set date successfully when tool is available', () => {

@@ -5,7 +5,7 @@ import type { Rule } from './types'
 
 const sampleRule: Rule = { enabled: true, id: '1', pattern: 'foo', replacement: 'bar' }
 
-describe('RuleLine', () => {
+describe(RuleLine, () => {
   it('RuleLine A should render rule fields and call onChange/onRemove', () => {
     const onChange = vi.fn()
     const onRemove = vi.fn()
@@ -29,7 +29,7 @@ describe('RuleLine', () => {
   })
 })
 
-describe('Rules', () => {
+describe(Rules, () => {
   it('Rules A should render rules and allow add/remove/update', () => {
     let rules: Rule[] = [sampleRule]
     const setRules = vi.fn(r => {
