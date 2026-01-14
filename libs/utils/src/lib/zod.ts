@@ -25,17 +25,14 @@ export function numberSchema(options?: NumberSchemaOptions) {
       message: "Should be a number",
     })
     .transform(value => Number.parseInt(value, 10));
-
   const min = options?.min;
   if (min) {
     schema = schema.refine(value => value >= min, { message: `Minimum value is ${min}` });
   }
-
   const max = options?.max;
   if (max) {
     schema = schema.refine(value => value <= max, { message: `Minimum value is ${max}` });
   }
-
   return schema;
 }
 
@@ -53,10 +50,8 @@ export function optionalNumberSchema(options?: NumberSchemaOptions) {
   if (min !== undefined) {
     schema = schema.refine(value => value === undefined || value >= min, { message: `Minimum value is ${min}` });
   }
-
   if (max !== undefined) {
     schema = schema.refine(value => value === undefined || value <= max, { message: `Maximum value is ${max}` });
   }
-
   return schema.optional();
 }
