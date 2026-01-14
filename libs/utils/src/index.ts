@@ -48,6 +48,7 @@ export * from "./lib/result.js";
 export * from "./lib/sleep.js";
 export * from "./lib/state.js";
 export * from "./lib/storage.js";
+export * from "./lib/string-base64-to-file.js";
 export * from "./lib/string-base64.js";
 export * from "./lib/string-case.js";
 export * from "./lib/string-inject-mark.js";
