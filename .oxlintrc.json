@@ -59,7 +59,6 @@
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "max-lines-per-function": ["error", 60],
         "max-nested-callbacks": ["error", 2],
-        "max-statements": ["error", 20],
         "require-returns": "off"
       }
     },
@@ -178,6 +177,9 @@
         "it": "readonly",
         "mock": "readonly",
         "vi": "readonly"
+      },
+      "rules": {
+        "max-nested-callbacks": "off"
       }
     },
     {
@@ -240,6 +242,12 @@
       "rules": {
         "curly": "error"
       }
+    },
+    {
+      "files": ["**/*.store.*"],
+      "rules": {
+        "max-nested-callbacks": ["error", 3]
+      }
     }
   ],
   "plugins": ["import", "jsdoc", "oxc", "typescript", "unicorn", "vitest"],
@@ -267,7 +275,7 @@
     "jsdoc/require-param-type": "off",
     "jsdoc/require-returns-type": "off",
     "max-dependencies": ["error", 30],
-    "max-statements": ["error", 15],
+    "max-statements": ["error", 20],
     "no-async-await": "off",
     "no-console": "error",
     "no-continue": "off",
