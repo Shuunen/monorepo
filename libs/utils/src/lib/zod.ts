@@ -31,7 +31,7 @@ export function numberSchema(options?: NumberSchemaOptions) {
   }
   const max = options?.max;
   if (max) {
-    schema = schema.refine(value => value <= max, { message: `Minimum value is ${max}` });
+    schema = schema.refine(value => value <= max, { message: `Maximum value is ${max}` });
   }
   return schema;
 }
