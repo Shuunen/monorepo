@@ -65,6 +65,8 @@ Size L
 
 When I bought the Levi's one (24€ on Amz), the size mentioned was 110, which happened to be the total length of the belt (leather + buckle). The leather part alone was 105 cm.
 
+When I bought the Tommy Hilfiger one (25€ on Amz), the size mentioned was 110, which corresponds to nothing, the total length was 130 cm and the leather part alone was 125 cm.
+
 ## Body fat
 
 Waist measurement on 24/01/22 : 95 cm
