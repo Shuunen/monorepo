@@ -54,4 +54,4 @@ export type Mutable<Type> = {
 
 // source : https://github.com/sindresorhus/type-fest/blob/main/source/simplify.d.ts
 // oxlint-disable-next-line ban-types
-export type Simplify<Input> = { [KeyType in keyof Input]: Input[KeyType] } & {};
+export type Simplify<Input> = { [KeyType in keyof Input]: Input[KeyType] } & {}; // NOSONAR
