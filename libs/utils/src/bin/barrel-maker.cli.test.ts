@@ -1,7 +1,7 @@
 import { alignForSnap, Result } from "@monorepo/utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mockFiles = ["atoms/Button.tsx", "atoms/types.ts", "atoms/types.d.ts", "icons/Icon.tsx", "molecules/Card.tsx", "molecules/Card.test.tsx", "molecules/Card.stories.tsx"];
+const mockFiles = ["atoms/Button.tsx", "atoms/index.ts", "atoms/types.ts", "atoms/types.d.ts", "icons/Icon.tsx", "molecules/Card.tsx", "molecules/Card.test.tsx", "molecules/Card.stories.tsx"];
 
 describe("barrel-maker cli", () => {
   beforeEach(() => {

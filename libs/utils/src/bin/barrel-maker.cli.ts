@@ -24,6 +24,9 @@ function filterFile(filename: string) {
   if (filename.includes(".stories.")) {
     return false;
   }
+  if (filename.includes("index.")) {
+    return false;
+  }
   return true;
 }
 
