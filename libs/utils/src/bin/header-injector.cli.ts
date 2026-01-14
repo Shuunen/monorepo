@@ -37,14 +37,13 @@ export async function main(argv: string[]) {
   if (!args.header) {
     return Result.error("missing header argument");
   }
-
-  const files = await glob("**/!(*routeTree.gen|*.d).ts", { filesOnly: true });
+  const allFiles = await glob("**/*.ts", { filesOnly: true });
+  const files = allFiles.filter(file => !file.endsWith(".d.ts") && !file.endsWith(".gen.ts"));
   const header = `// ${args.header}`;
   logger.info(`Scanning headers of ${files.length} files...`);
   for (const file of files) {
     processFile(file, header, stats);
   }
-
   return Result.ok(stats);
 }
 
