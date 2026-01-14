@@ -1,7 +1,7 @@
 import { uniqueMark } from "@monorepo/vite-plugins";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vitest/config";
+import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
 export default defineConfig({
   build: {
@@ -25,7 +25,7 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      exclude: ["src/**/*.tsx"],
+      exclude: [...coverageConfigDefaults.exclude, "src/**/*.tsx"],
       include: ["src/molecules/**/*.ts", "src/atoms/**/*.ts"],
       provider: "v8" as const,
       reporter: [["text", { maxCols: 120 }], "lcov"],

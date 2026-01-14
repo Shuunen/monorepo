@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config";
+import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
 export default defineConfig({
   cacheDir: "../../node_modules/.vite/libs/utils",
@@ -6,7 +6,7 @@ export default defineConfig({
   root: __dirname,
   test: {
     coverage: {
-      exclude: ["src/index.ts", "dist/**", "**/*.config.ts", "**/*.d.ts"],
+      exclude: [...coverageConfigDefaults.exclude, "src/index.ts", "dist/**", "**/*.config.ts", "**/*.d.ts"],
       provider: "v8" as const,
       reporter: [["text", { maxCols: 120 }], "lcov", "html"],
       reportsDirectory: "./test-output/vitest/coverage",
