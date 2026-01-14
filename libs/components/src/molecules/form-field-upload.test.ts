@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { emptyFile, formatFileSize, imageExtensions, imageSchemaOptional, imageSchemaRequired } from "./form-field-upload.const";
 
-describe("formatFileSize", () => {
+describe(formatFileSize, () => {
   describe("without unit parameter", () => {
     it('should return "0" for 0 bytes', () => {
       expect(formatFileSize(0, false)).toMatchInlineSnapshot(`"0"`);
@@ -103,14 +103,14 @@ describe("formatFileSize", () => {
   });
 });
 
-describe("imageSchemaOptional", () => {
+describe("zod schema imageSchemaOptional", () => {
   it("should be valid to give an empty file to an optional schema", () => {
     const result = imageSchemaOptional.safeParse(emptyFile);
     expect(result.success).toMatchInlineSnapshot(`true`);
   });
 });
 
-describe("imageSchemaRequired", () => {
+describe("zod schema imageSchemaRequired", () => {
   it("should pass for valid document extensions", () => {
     for (const ext of imageExtensions) {
       const file = new File([""], `test-file.${ext}`, { type: `application/${ext}` });

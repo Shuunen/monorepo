@@ -114,6 +114,7 @@ it('toggle complete A task update completed on date', async () => {
   const task = taskMock({ completedOn: yesterday, once: 'day' })
   await toggleComplete(task)
   expect(task.isDone).toBe(false) // no a one time task, so we will have to do it again
+  // oxlint-disable-next-line vitest/prefer-describe-function-title
   expect(task.completedOn, today)
 })
 
@@ -127,9 +128,11 @@ it('toggle complete C switches task active state', async () => {
   const task = taskMock({ completedOn: yesterday, once: 'day' })
   expect(isTaskActive(task), 'task is active').toBe(true)
   await toggleComplete(task)
+  // oxlint-disable-next-line vitest/prefer-describe-function-title
   expect(task.isDone, 'task is not done').toBe(false)
   expect(isTaskActive(task), 'task is no more active').toBe(false)
   await toggleComplete(task)
+  // oxlint-disable-next-line vitest/prefer-describe-function-title
   expect(task.isDone, 'task still not done').toBe(false)
   expect(isTaskActive(task), 'task is active again').toBe(true)
 })

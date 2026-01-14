@@ -21,7 +21,7 @@ describe("zod", () => {
   });
 });
 
-describe("numberSchema", () => {
+describe(numberSchema, () => {
   it("empty options, with valid string", () => {
     const schema = numberSchema();
     expect(schema.safeParse("12").success).toBe(true);
@@ -58,7 +58,7 @@ describe("numberSchema", () => {
   });
 });
 
-describe("optionalNumberSchema", () => {
+describe(optionalNumberSchema, () => {
   it("undefined, with valid string", () => {
     const schema = optionalNumberSchema();
     expect(schema.safeParse(undefined).success).toBe(true);

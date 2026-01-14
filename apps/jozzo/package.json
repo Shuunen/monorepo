@@ -2,9 +2,9 @@
   "dependencies": {
     "@monorepo/utils": "workspace:*",
     "@monorepo/vite-plugins": "workspace:*",
-    "@mui/material": "~7.3.6",
+    "@mui/material": "~7.3.7",
     "@preact/preset-vite": "~2.10.2",
-    "preact": "~10.28.1",
+    "preact": "~10.28.2",
     "react-confetti-boom": "~2.0.1"
   },
   "name": "jozzo",

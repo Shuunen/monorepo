@@ -325,6 +325,7 @@
     ],
     "unicorn/no-useless-undefined": "off",
     "unicorn/prefer-spread": "off",
+    "vitest/prefer-called-times": "off",
     "vitest/prefer-to-be-falsy": "off",
     "vitest/prefer-to-be-truthy": "off"
   }

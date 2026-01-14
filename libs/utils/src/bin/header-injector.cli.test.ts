@@ -43,10 +43,7 @@ describe("header-injector.cli.ts", () => {
       return;
     }
     const metrics = result.value;
-    expect(metrics.hasHeader, "B hasHeader").toBe(1);
-    expect(metrics.noHeader, "B noHeader").toBe(1);
-    expect(metrics.moveHeader, "B moveHeader").toBe(0);
-    expect(metrics.nbFixed, "B nbFixed").toBe(1);
+    expect(metrics, "main B").toMatchSnapshot();
     expect(writeSpy).toHaveBeenCalledWith("b.ts", "// HEADER\nconsole.log(2)");
   });
 
@@ -62,10 +59,7 @@ describe("header-injector.cli.ts", () => {
       return;
     }
     const metrics = result.value;
-    expect(metrics.noHeader, "C noHeader").toBe(1);
-    expect(metrics.nbFixed, "C nbFixed").toBe(0);
-    expect(metrics.readError, "C readError").toBe(0);
-    expect(metrics.writeError, "C writeError").toBe(1);
+    expect(metrics, "main C").toMatchSnapshot();
   });
 
   it("main D should count readError when read fails", async () => {
@@ -79,9 +73,7 @@ describe("header-injector.cli.ts", () => {
       return;
     }
     const metrics = result.value;
-    expect(metrics.readError, "D readError").toBe(1);
-    expect(metrics.noHeader, "D noHeader").toBe(0);
-    expect(metrics.nbFixed, "D nbFixed").toBe(0);
+    expect(metrics, "main D").toMatchSnapshot();
   });
 
   it("main E should move header into files with header not on the first line", async () => {
@@ -94,10 +86,7 @@ describe("header-injector.cli.ts", () => {
       return;
     }
     const metrics = result.value;
-    expect(metrics.hasHeader, "B hasHeader").toBe(1);
-    expect(metrics.noHeader, "B noHeader").toBe(0);
-    expect(metrics.moveHeader, "B moveHeader").toBe(1);
-    expect(metrics.nbFixed, "B nbFixed").toBe(0);
+    expect(metrics, "main E").toMatchSnapshot();
     expect(writeSpy).toHaveBeenCalledWith("c.ts", "// HEADER\nconsole.log(3);");
   });
 

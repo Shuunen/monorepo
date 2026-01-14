@@ -36,7 +36,7 @@ describe("environment utils", () => {
     });
   }
 
-  describe("isDevEnvironment", () => {
+  describe(isDevEnvironment, () => {
     beforeEach(() => {
       vi.resetModules();
       vi.unstubAllEnvs();

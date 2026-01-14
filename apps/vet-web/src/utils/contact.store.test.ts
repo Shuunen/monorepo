@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { useFormStore } from './contact.store'
 
-describe('useFormStore', () => {
+describe(useFormStore, () => {
   beforeEach(() => {
     useFormStore.getState().resetForm()
   })

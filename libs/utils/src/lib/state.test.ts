@@ -46,7 +46,9 @@ it("state B with storage and specific keys to store", () => {
   storage.prefix = "stateB_";
   const { state: stateB } = createState({ age: 42, excluded: ":)", name: "Clara" }, storage, ["name", "age"]);
   expect(stateB.name, "name loaded from initial data because not in storage").toBe("Clara");
+  // oxlint-disable-next-line vitest/prefer-describe-function-title
   expect(stateB.age, "age loaded from storage that takes precedence over initial data because it is in the sync props").toBe(12);
+  // oxlint-disable-next-line vitest/prefer-describe-function-title
   expect(stateB.excluded, "excluded loaded from initial data event if present in storage, because it was not in the synced props").toBe(":)");
   stateB.name = "John";
   expect(stateB.name, "name changed in state").toBe("John");
@@ -58,9 +60,12 @@ it("state C with storage and all keys stored by default", () => {
   storage.media = { stateC_age: 12, stateC_included: ":D" } as unknown as Storage;
   storage.prefix = "stateC_";
   const { state: stateC } = createState({ age: 42, included: "but im gonna be ignored :(" }, storage);
+  // oxlint-disable-next-line vitest/prefer-describe-function-title
   expect(stateC.age, "age loaded from storage that takes precedence over initial data because it is in the sync props").toBe(12);
+  // oxlint-disable-next-line vitest/prefer-describe-function-title
   expect(stateC.included, "included loaded from storage that takes precedence over initial data because it is in the sync props").toBe(":D");
   stateC.age = 14;
+  // oxlint-disable-next-line vitest/prefer-describe-function-title
   expect(stateC.age, "age changed in state").toBe(14);
   expect(storage.get("age"), "age synced in storage").toMatchInlineSnapshot(`14`);
 });

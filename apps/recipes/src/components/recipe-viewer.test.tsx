@@ -15,7 +15,7 @@ function renderRecipeViewer(initialEntries = ['/recipes/plat/pizza']) {
   )
 }
 
-describe('RecipeViewer', () => {
+describe(RecipeViewer, () => {
   it('RecipeViewer A should show error when category parameter is missing', () => {
     renderRecipeViewer(['/recipes/plat'])
     expect(screen.getByText('Recette non trouvée')).toBeTruthy()

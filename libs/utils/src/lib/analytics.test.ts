@@ -32,7 +32,7 @@ it("analytics C with callbacks", () => {
   analytics.track("event-alt", { year: 2025 });
   expect(onTrack).toHaveBeenNthCalledWith(2, "event-alt", { year: 2025 });
   analytics.page();
-  expect(onPage).toHaveBeenCalledTimes(1);
+  expect(onPage).toHaveBeenCalledOnce();
   analytics.identify("user-id");
   expect(onIdentify).toHaveBeenNthCalledWith(1, "user-id", undefined);
   analytics.identify("user-id", { age: 35 });

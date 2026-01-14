@@ -8,7 +8,7 @@ const age2 = 2
 const age3 = 3
 const callsOnce = 1
 
-describe('useFormChangeDetector', () => {
+describe(useFormChangeDetector, () => {
   beforeEach(() => {
     vi.useFakeTimers()
   })

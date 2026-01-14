@@ -51,8 +51,8 @@ describe('database.utils', () => {
       { isThisMockedDataFromMock: true, limit: 100 },
       { isThisMockedDataFromMock: true, offset: 0 },
     ])
-    expect(databaseMock.Query.limit).toHaveBeenCalledTimes(1)
-    expect(databaseMock.Query.offset).toHaveBeenCalledTimes(1)
+    expect(databaseMock.Query.limit).toHaveBeenCalledOnce()
+    expect(databaseMock.Query.offset).toHaveBeenCalledOnce()
   })
 
   it('getItemsRemotely B failure', async () => {
