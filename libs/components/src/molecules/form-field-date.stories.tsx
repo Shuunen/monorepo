@@ -16,11 +16,6 @@ const meta = {
   },
   render: args => {
     type FormData = Record<string, unknown> | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
     const [submittedData, setSubmittedData] = useState<FormData>({});
     function onSubmit(data: FormData) {
       setSubmittedData(data);
@@ -28,8 +23,7 @@ const meta = {
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
@@ -95,13 +89,9 @@ export const WithInitialValue: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const dateInput = canvas.getByTestId("input-date-event-date") as HTMLInputElement;
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("verify initial value is displayed", () => {
       expect(dateInput).toHaveValue("2025-12-25");
-    });
-    await step("verify form data shows initial Date object", () => {
-      expect(formData).toContainHTML(stringify({ eventDate: new Date("2025-12-25") }, true));
     });
     await step("submit form with initial value", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -195,7 +185,6 @@ export const StringDateWithRender: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const dateInput = canvas.getByTestId("input-date-string-date") as HTMLInputElement;
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     expect(dateInput).toBeInTheDocument();
     expect(dateInput).toHaveAttribute("type", "date");
@@ -203,9 +192,6 @@ export const StringDateWithRender: Story = {
       await userEvent.clear(dateInput);
       await userEvent.type(dateInput, "2023-03-20");
       expect(dateInput).toHaveValue("2023-03-20");
-    });
-    await step("verify form data shows ISO string", () => {
-      expect(formData).toContainHTML(stringify({ stringDate: "2023-03-20" }, true));
     });
     await step("submit form", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });

@@ -16,11 +16,6 @@ const meta = {
   },
   render: args => {
     type FormData = Record<string, unknown> | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
     const [submittedData, setSubmittedData] = useState<FormData>({});
     function onSubmit(data: FormData) {
       setSubmittedData(data);
@@ -28,8 +23,7 @@ const meta = {
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
@@ -75,7 +69,6 @@ export const Basic: Story = {
     await userEvent.type(applicantInput, "Alice");
     await userEvent.click(submitButton);
     await expect(canvas.getByTestId("debug-data-submitted-data")).toContainHTML(stringify({ applicants: ["Alice"] }, true));
-    await expect(canvas.getByTestId("debug-data-form-data")).toContainHTML(stringify({ applicants: ["Alice"] }, true));
 
     const addButton = canvas.getByTestId("button-add-applicants");
     await userEvent.click(addButton);
@@ -83,13 +76,11 @@ export const Basic: Story = {
     await userEvent.type(applicantInput2, "Bob");
     await userEvent.click(submitButton);
     await expect(canvas.getByTestId("debug-data-submitted-data")).toContainHTML(stringify({ applicants: ["Alice", "Bob"] }, true));
-    await expect(canvas.getByTestId("debug-data-form-data")).toContainHTML(stringify({ applicants: ["Alice", "Bob"] }, true));
 
     const deleteButton = canvas.getByTestId("button-delete-applicants-1");
     await userEvent.click(deleteButton);
     await userEvent.click(submitButton);
     await expect(canvas.getByTestId("debug-data-submitted-data")).toContainHTML(stringify({ applicants: ["Alice"] }, true));
-    await expect(canvas.getByTestId("debug-data-form-data")).toContainHTML(stringify({ applicants: ["Alice"] }, true));
   },
 };
 

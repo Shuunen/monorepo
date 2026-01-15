@@ -4,6 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import type { AutoFormData } from "./auto-form.types";
 import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 import { fileSchema } from "./form-field-upload.const";
@@ -21,21 +22,14 @@ const meta = {
     layout: "centered",
   },
   render: args => {
-    type FormData = { document?: File } | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
-    const [submittedData, setSubmittedData] = useState<FormData>(undefined);
-    function onSubmit(data: FormData) {
+    const [submittedData, setSubmittedData] = useState<AutoFormData>();
+    function onSubmit(data: AutoFormData) {
       setSubmittedData(data);
       logger.showSuccess("Form submitted successfully");
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
@@ -73,12 +67,10 @@ export const Required: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("cannot submit form initially", () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       expect(submitButton).toBeEnabled();
-      expect(formData).toContainHTML("{}");
       expect(submittedData).toContainHTML("undefined");
     });
     await step("upload a file successfully and submit the form", async () => {
@@ -87,16 +79,13 @@ export const Required: Story = {
       const input = canvas.getByTestId("input-file-document-upload-idle") as HTMLInputElement;
       await userEvent.upload(input, file);
       await sleep(nbHueMax); // needed
-      expect(formData).toContainHTML("test-doc.pdf");
       expect(submittedData).toContainHTML("undefined");
       await userEvent.click(submitButton);
-      expect(formData).toContainHTML("test-doc.pdf");
       expect(submittedData).toContainHTML("test-doc.pdf");
     });
     await step("remove the file and check that form cannot be submitted", async () => {
       const removeButton = canvas.getByRole("button", { name: "Remove" });
       await userEvent.click(removeButton);
-      expect(formData).toContainHTML("{}");
       const errorMessage = canvas.getByTestId("form-message-document");
       expect(errorMessage).toHaveTextContent("Invalid input: expected file, received undefined");
     });
@@ -119,19 +108,16 @@ export const ExistingFile: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("shows the existing file in the upload field", () => {
       const fileInput = canvas.getByTestId("document-upload-success") as HTMLInputElement;
       expect(fileInput).toBeInTheDocument();
-      expect(formData).toContainHTML("test.txt");
       expect(submittedData).toContainHTML("undefined");
     });
     await step("submit the form with the existing file", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       expect(submitButton).not.toBeDisabled();
       await userEvent.click(submitButton);
-      expect(formData).toContainHTML("test.txt");
       expect(submittedData).toContainHTML("test.txt");
     });
   },
@@ -150,14 +136,12 @@ export const FileSchemaValidation: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("accepts valid pdf", async () => {
       const input = canvas.getByTestId("input-file-document-upload-idle") as HTMLInputElement;
       const file = new File(["test"], "document.pdf", { type: "application/pdf" });
       await userEvent.upload(input, file);
       await sleep(nbHueMax);
-      expect(formData).toContainHTML("document.pdf");
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       expect(submitButton).toBeEnabled();
       await userEvent.click(submitButton);
@@ -172,7 +156,6 @@ export const FileSchemaValidation: Story = {
       await sleep(nbHueMax);
       const errorMessage = canvas.getByTestId("form-message-document");
       expect(errorMessage).toHaveTextContent("File extension not allowed, accepted : pdf, jpg, png");
-      expect(formData).toContainHTML("document.txt");
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       expect(submitButton).toBeEnabled();
     });
@@ -208,9 +191,6 @@ export const ResponsiveLayout: Story = {
   },
   render: args => {
     type FormData = { document?: File } | undefined;
-    function onChange(data: Partial<FormData>) {
-      logger.info("Form data changed", data);
-    }
     function onSubmit(data: FormData) {
       logger.showSuccess("Form submitted successfully", data);
     }
@@ -219,19 +199,19 @@ export const ResponsiveLayout: Story = {
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">Full width</h2>
           <p className="text-muted-foreground text-sm">Full width with all elements visible</p>
-          <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+          <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         </div>
 
         <div className="space-y-2 max-w-xl">
           <h2 className="text-2xl font-bold">XLarge width</h2>
           <p className="text-muted-foreground text-sm">Constrained to ~768px width</p>
-          <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+          <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         </div>
 
         <div className="space-y-2 max-w-md">
           <h2 className="text-2xl font-bold">Medium width</h2>
           <p className="text-muted-foreground text-sm">Constrained to ~448px width</p>
-          <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+          <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         </div>
       </div>
     );

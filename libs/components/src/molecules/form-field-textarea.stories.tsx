@@ -16,11 +16,6 @@ const meta = {
   },
   render: args => {
     type FormData = Record<string, unknown> | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
     const [submittedData, setSubmittedData] = useState<FormData>({});
     function onSubmit(data: FormData) {
       setSubmittedData(data);
@@ -28,8 +23,7 @@ const meta = {
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
@@ -212,7 +206,6 @@ export const MultipleFields: Story = {
     const canvas = within(canvasElement);
     const summaryTextarea = canvas.getByTestId("textarea-summary") as HTMLTextAreaElement;
     const detailsTextarea = canvas.getByTestId("textarea-details") as HTMLTextAreaElement;
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("fill summary", async () => {
@@ -223,10 +216,6 @@ export const MultipleFields: Story = {
     await step("fill details", async () => {
       await userEvent.type(detailsTextarea, "These are the details");
       expect(detailsTextarea).toHaveValue("These are the details");
-    });
-
-    await step("verify form data shows both fields", () => {
-      expect(formData).toContainHTML(stringify({ details: "These are the details", summary: "This is the summary" }, true));
     });
 
     await step("submit form", async () => {

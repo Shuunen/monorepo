@@ -16,11 +16,6 @@ const meta = {
   },
   render: args => {
     type FormData = Record<string, unknown> | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
     const [submittedData, setSubmittedData] = useState<FormData>({});
     function onSubmit(data: FormData) {
       setSubmittedData(data);
@@ -28,8 +23,7 @@ const meta = {
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
@@ -94,7 +88,6 @@ export const LabelGeneration: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const canvasBody = within(canvasElement.ownerDocument.body);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("select color option", async () => {
       const colorTrigger = canvas.getByTestId("select-trigger-color");
@@ -141,7 +134,6 @@ export const LabelGeneration: Story = {
         priority: "critical",
         size: "large",
       };
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
   },
@@ -252,7 +244,6 @@ export const CustomLabels: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const canvasBody = within(canvasElement.ownerDocument.body);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("select country option", async () => {
       const countryTrigger = canvas.getByTestId("select-trigger-country");
@@ -285,7 +276,6 @@ export const CustomLabels: Story = {
         country: "fr",
         size: "lg",
       };
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
   },
