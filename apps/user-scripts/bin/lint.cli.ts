@@ -23,8 +23,8 @@ const regexIcon = /@icon\s+https:\/\/www\.google\.com\/s2\/favicons\?sz=64&domai
 const regexMainFuncKebab = /-([a-z])/g
 const regexMainFuncPascal = /^(..)/
 const regexMainFuncDef = (name: string) => new RegExp(`function ${name}\\(`)
-const regexExportPattern1 = /if \(globalThis\.window\) [A-Z][A-Za-z0-9_]*\(\)/
-const regexExportPattern2 = /if \(globalThis\.window\) [A-Z][A-Za-z0-9_]*\(\)\nelse module\.exports = \{.*\}/s
+const regexExportPattern1 = /if \(globalThis\.window\) (?:void )?[A-Z][A-Za-z0-9_]*\(\)/
+const regexExportPattern2 = /if \(globalThis\.window\) (?:void )?[A-Z][A-Za-z0-9_]*\(\)\nelse module\.exports = \{.*\}/s
 const regexIife = /\(function [A-Z][A-Za-z0-9_]*\(\) \{[\s\S]*\}\)\(\);/
 const regexFunctionDef = /function ([a-z][A-Za-z0-9_]*)\(/g
 const regexMainFunctionDef = /function ([A-Z][A-Za-z0-9_]*)\(/
