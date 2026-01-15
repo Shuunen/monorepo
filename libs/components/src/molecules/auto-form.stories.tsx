@@ -464,8 +464,8 @@ export const StepperStates: Story = {
     await step("verify step 2 readonly fields", async () => {
       const secondStepButton = canvas.getByRole("button", { name: "My pet Pet information and details" });
       expect(secondStepButton).toHaveAttribute("data-state", "readonly");
-      await userEvent.click(secondStepButton);
-      await sleep(100);
+      const submitButtonPreviousStep = canvas.getByRole("button", { name: "Next" });
+      await userEvent.click(submitButtonPreviousStep);
       expect(secondStepButton).toHaveAttribute("data-active", "true");
       const petNameInput = canvas.getByTestId("input-text-pet-name");
       expect(petNameInput).toBeInTheDocument();

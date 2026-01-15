@@ -2,9 +2,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@monorepo/utils";
 import { Link } from "@tanstack/react-router";
-import { debounce } from "es-toolkit";
-import { useEffect, useMemo, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "../atoms/button";
 import { Form } from "../atoms/form";
 import { IconHome } from "../icons/icon-home";
@@ -29,7 +28,6 @@ import { AutoFormSummaryStep } from "./auto-form-summary-step";
  * @param props the AutoForm props
  * @param props.schemas the Zod schemas for each step
  * @param props.onSubmit the function to call on form submission after summary confirmation
- * @param props.onChange the function to call on form data change
  * @param props.onCancel the function to call when cancel button is clicked
  * @param props.initialData the initial form data
  * @param props.logger optional logger for logging form events
@@ -45,7 +43,7 @@ import { AutoFormSummaryStep } from "./auto-form-summary-step";
  * @returns the AutoForm component
  */
 // oxlint-disable-next-line max-lines-per-function, max-statements
-export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = {}, logger, useSummaryStep, useSubmissionStep, showButtons = true, showCard, showLastStep, showMenu, size, labels, stepperWidth }: AutoFormProps) {
+export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger, useSummaryStep, useSubmissionStep, showButtons = true, showCard, showLastStep, showMenu, size, labels, stepperWidth }: AutoFormProps) {
   const [currentStep, setCurrentStep] = useState(showLastStep ? schemas.length - 1 : 0);
   const [showSummary, setShowSummary] = useState(false);
   const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined);
@@ -75,27 +73,12 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
   const form = useForm({ defaultValues, mode: "onBlur", resolver: zodResolver(filterSchema(currentSchema, formData)) });
   // Find a way to reset the form when schema changes.
   // useEffect(() => { form.reset(formData) }, [formData, form])
-  // Watch all form values and sync with formData
-  const watchedValues = useWatch({ control: form.control });
-  // biome-ignore lint/correctness/useExhaustiveDependencies: cannot add all dependencies because it causes infinite loop
-  useEffect(() => {
-    if (!watchedValues) {
-      return;
-    }
-    void updateFormData();
-  }, [watchedValues]);
-  /**
-   * Update form data state and call onChange callback if provided
-   */
+
   function updateFormDataSync() {
     const updatedData = { ...formData, ...form.getValues() };
     logger?.info("updateFormData", updatedData);
     setFormData(updatedData);
-    if (onChange) {
-      onChange(normalizeData(schemas, updatedData));
-    }
   }
-  const updateFormData = debounce(updateFormDataSync, 1);
   /**
    * Handle submission for the current step of a multi-step form
    * @param data partial form values for the current step as a Record<string, unknown>
@@ -109,7 +92,7 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
       void handleFinalSubmit();
     } else {
       setCurrentStep(prev => prev + 1);
-      updateFormData();
+      updateFormDataSync();
     }
   }
   /**
@@ -241,8 +224,8 @@ export function AutoForm({ schemas, onSubmit, onChange, onCancel, initialData = 
   function renderFormContent() {
     return (
       <Form {...form}>
-        <form onChange={updateFormData} onSubmit={form.handleSubmit(handleStepSubmit)}>
-          <AutoFormFields formData={formData} logger={logger} schema={currentSchema} showForm={showForm} state={stepMetadata?.state} />
+        <form onSubmit={form.handleSubmit(handleStepSubmit)}>
+          <AutoFormFields logger={logger} schema={currentSchema} showForm={showForm} state={stepMetadata?.state} />
           {showButtons && (
             <AutoFormNavigation
               centerButton={onCancel ? { onClick: onCancel } : undefined}

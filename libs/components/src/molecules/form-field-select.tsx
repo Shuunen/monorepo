@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { getFieldMetadataOrThrow, getZodEnumOptions } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 
-export function FormFieldSelect({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false }: FormFieldBaseProps) {
+export function FormFieldSelect({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { label = "", placeholder, state = "editable" } = metadata;
   const isDisabled = state === "disabled" || readonly;
@@ -13,7 +13,7 @@ export function FormFieldSelect({ fieldName, fieldSchema, formData, isOptional, 
     throw new Error(`Field "${fieldName}" is not an enum`);
   }
 
-  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
+  const props = { fieldName, fieldSchema, isOptional, logger, readonly };
   return (
     <FormFieldBase {...props}>
       {({ field }) => (

@@ -2,7 +2,7 @@ import { camelToKebabCase, slugify } from "@monorepo/utils";
 // oxlint-disable-next-line no-restricted-imports
 import { CircleXIcon, FileCheckIcon, FileTextIcon, FileUpIcon, FileXIcon, RotateCcwIcon, TrashIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { ControllerRenderProps } from "react-hook-form";
+import { type ControllerRenderProps, useFormContext } from "react-hook-form";
 import { Button } from "../atoms/button";
 import { FormControl } from "../atoms/form";
 import { Input } from "../atoms/input";
@@ -22,7 +22,7 @@ type FormFieldUploadProps = FormFieldBaseProps & {
 };
 
 // oxlint-disable-next-line max-lines-per-function, max-statements
-export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOptional, logger, readonly = false, shouldFail, onFileChange, onFileRemove, onFileUploadComplete, onFileUploadError }: FormFieldUploadProps) {
+export function FormFieldUpload({ accept, fieldName, fieldSchema, isOptional, logger, readonly = false, shouldFail, onFileChange, onFileRemove, onFileUploadComplete, onFileUploadError }: FormFieldUploadProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { placeholder, state = "editable" } = metadata;
   const isDisabled = ["disabled", "readonly"].includes(state);
@@ -64,9 +64,11 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const idleNoFile = uploadState === "idle" && !selectedFile;
+  const { watch } = useFormContext();
+  const fieldValue = watch(fieldName);
 
   useEffect(() => {
-    const currentValue = formData[fieldName] as File | undefined;
+    const currentValue = fieldValue as File | undefined;
     if (!currentValue) {
       return;
     }
@@ -76,7 +78,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
     setSelectedFile(currentValue);
     setUploadState("success");
     setUploadProgress(maxPercent);
-  }, [formData, fieldName]);
+  }, [fieldValue]);
 
   // Cleanup on unmount
   useEffect(() => () => uploadIntervalRef.current && clearInterval(uploadIntervalRef.current), []);
@@ -154,7 +156,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, formData, isOp
 
   const currentState = states[uploadState];
   const stateTestId = `upload-${uploadState}`;
-  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
+  const props = { fieldName, fieldSchema, isOptional, logger, readonly };
 
   return (
     <FormFieldBase {...props}>

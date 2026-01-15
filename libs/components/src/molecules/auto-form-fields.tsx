@@ -5,7 +5,6 @@ import { AutoFormField } from "./auto-form-field";
 
 type AutoFormFieldsProps = {
   schema: z.ZodObject;
-  formData: Record<string, unknown>;
   /** The state of the current step : 'readonly', 'editable', 'upcoming' */
   state?: AutoFormStepMetadata["state"];
   /** The logger instance to use if any */
@@ -14,11 +13,11 @@ type AutoFormFieldsProps = {
   showForm?: (options: AutoFormSubformOptions) => void;
 };
 
-export function AutoFormFields({ schema, formData, state: stepState, logger, showForm }: AutoFormFieldsProps) {
+export function AutoFormFields({ schema, state: stepState, logger, showForm }: AutoFormFieldsProps) {
   return (
     <>
       {Object.keys(schema.shape).map(fieldName => (
-        <AutoFormField fieldName={fieldName} fieldSchema={schema.shape[fieldName] as z.ZodTypeAny} formData={formData} key={fieldName} logger={logger} showForm={showForm} stepState={stepState} />
+        <AutoFormField fieldName={fieldName} fieldSchema={schema.shape[fieldName] as z.ZodTypeAny} key={fieldName} logger={logger} showForm={showForm} stepState={stepState} />
       ))}
     </>
   );

@@ -58,15 +58,17 @@ function Item({ item, index, identifier, isEmpty, icon, hasError, readonly, labe
 }
 
 // oxlint-disable-next-line max-lines-per-function
-export function FormFieldFormList({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false, showForm }: FormFieldBaseProps) {
+export function FormFieldFormList({ fieldName, fieldSchema, isOptional, logger, readonly = false, showForm }: FormFieldBaseProps) {
   const metadata = fieldSchema.meta() as AutoFormFieldFormsMetadata;
   const { label, maxItems, icon, identifier, labels } = metadata;
-  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
-  const items = (formData[fieldName] as Array<Record<string, unknown>>) || [];
-  const { setValue } = useFormContext();
+  const props = { fieldName, fieldSchema, isOptional, logger, readonly };
+  const { setValue, watch, getValues } = useFormContext();
+  const fieldValue = watch(fieldName);
+  const items = (fieldValue as Array<Record<string, unknown>>) || [];
   // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to run this once on mount
   useEffect(() => {
-    if (formData[fieldName] !== undefined) {
+    const currentValue = getValues(fieldName);
+    if (currentValue !== undefined) {
       return;
     }
     logger?.debug("initializing form list field value to empty array");
