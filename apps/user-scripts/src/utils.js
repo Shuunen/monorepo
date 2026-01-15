@@ -329,6 +329,41 @@ class Shuutils {
     document.body.insertAdjacentHTML('beforeend', `<style>${string}</style>`)
   }
   /**
+   * Load one or more TypeScript util files and attach their exports to this instance
+   * @param {string|string[]} files File name(s) to load, e.g. 'array-pick-one.ts' or ['array-pick-one.ts', 'sleep.ts']
+   * @returns {Promise<Shuutils>} this instance
+   */
+  async loadTs(files) {
+    // @ts-expect-error Babel is a global variable injected by the @require in the userscript metadata
+    if (!globalThis.Babel) {
+      this.error('Babel is not loaded, cannot load utils')
+      return this
+    }
+    const baseUrl = 'https://raw.githubusercontent.com/Shuunen/monorepo/master/libs/utils/src/lib/'
+    const fileList = Array.isArray(files) ? files : [files]
+    for (const file of fileList)
+      try {
+        const response = await fetch(baseUrl + file)
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+        const tsCode = await response.text()
+        // @ts-expect-error Babel is a global variable injected by the @require in the userscript metadata
+        const jsCode = globalThis.Babel.transform(tsCode, {
+          filename: file,
+          presets: ['typescript'],
+        }).code
+        const blob = new Blob([jsCode], { type: 'application/javascript' })
+        const url = URL.createObjectURL(blob)
+        const module = await import(url)
+        URL.revokeObjectURL(url)
+        // Attach all exports to this instance
+        Object.assign(this, module)
+        this.log(`Loaded : ${file}`)
+      } catch (error) {
+        this.error(`Failed to load ${file}`, error)
+      }
+    return this
+  }
+  /**
    * Console.log stuff with app id
    * @param  {...any} stuff the stuff to log
    * @returns {void}

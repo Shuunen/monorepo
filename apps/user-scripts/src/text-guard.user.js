@@ -5,10 +5,11 @@
 // @downloadURL  https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/text-guard.user.js
 // @updateURL    https://github.com/Shuunen/monorepo/raw/master/apps/user-scripts/src/text-guard.user.js
 // @namespace    https://github.com/Shuunen
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=saveur-biere.com
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=google.com
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
-// @version      1.0.4
+// @require      https://unpkg.com/@babel/standalone/babel.min.js
+// @version      1.0.5
 // ==/UserScript==
 
 // This script use two ways to find elements in the document:
@@ -16,7 +17,7 @@
 // 2. Using querySelectorAll
 // both methods are used to find elements containing a specific word in their text content, sometimes one method is more efficient than the other ¯\_(ツ)_/¯
 
-function TextGuard() {
+async function TextGuard() {
   const counts = {
     forbidden: 0,
   }
@@ -24,6 +25,10 @@ function TextGuard() {
   const hostExceptions = new Set(['localhost'])
   const elementExceptions = new Set(['br', 'circle', 'defs', 'ellipse', 'g', 'hr', 'iframe', 'line', 'link', 'meta', 'path', 'polygon', 'polyline', 'rect', 'script', 'style', 'svg', 'symbol', 'text', 'title', 'use'])
   const utils = new Shuutils('txt-grd')
+  await utils.loadTs(['array-pick-one.ts'])
+  const items = ['Deal 1', 'Deal 2', 'Deal 3']
+  // @ts-expect-error pickOne should exists after loading array-pick-one.ts
+  utils.log('Random pick:', utils.pickOne(items))
   /**
    * Handles the detection of a forbidden word.
    * @param {string} word the forbidden word that was detected.
@@ -161,4 +166,5 @@ function TextGuard() {
   observer.observe(document.body, { childList: true, subtree: true })
 }
 
-if (globalThis.window) TextGuard()
+// oxlint-disable-next-line unicorn/prefer-top-level-await
+if (globalThis.window) void TextGuard()
