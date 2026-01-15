@@ -505,5 +505,4 @@ function LbcNotes() {
 }
 
 if (globalThis.window) LbcNotes()
-
-export { getListingId, getListingIdFromNote, getNoteIdFromNote, multipleAdDisplayed }
+else module.exports = { getListingId, getListingIdFromNote, getNoteIdFromNote, multipleAdDisplayed }

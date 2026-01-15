@@ -245,7 +245,7 @@ See `.github/copilot-instructions.md` for detailed patterns:
 
 - Avoid IIFEs; use direct function calls
 - Main function name matches filename (PascalCase, e.g., `AliExpressTakeout` for `aliexpress-takeout.user.js`)
-- Export functions for testing: `if (globalThis.window) MainFunc()`
+- Export functions for testing: `if (globalThis.window) MainFunc() else module.exports = { helperFunc }`
 - Meta `@match` patterns: no wildcard domains (use `https://linxo.com/*` not `https://*.linxo.com/*`)
 - Meta `@downloadURL` and `@updateURL` should point to raw GitHub file
 

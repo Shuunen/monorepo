@@ -126,6 +126,7 @@ function GitlabBadge() {
 }
 
 if (globalThis.window) GitlabBadge()
+else module.exports = { animateCss, getNbContributions, injectStyles }
 
 injectStyles(`
 /*!

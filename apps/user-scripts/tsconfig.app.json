@@ -3,6 +3,7 @@
     "allowJs": true,
     "checkJs": true,
     "lib": ["dom", "ESNext"],
+    "module": "commonjs",
     "outDir": "dist",
     "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",

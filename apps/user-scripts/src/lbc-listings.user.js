@@ -461,3 +461,4 @@ function LbcListings() {
 }
 
 if (globalThis.window) LbcListings()
+else module.exports = { getAdType, getElevatorInfo, getRoomsInfo, getSquareInfo, humanReadableFloor }

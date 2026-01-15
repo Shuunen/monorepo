@@ -48,7 +48,7 @@ const regex = {
  * @param {string} text the text to search in
  * @returns {{mSize: string, mUnit: string, size: number}} the matched size/unit and size normalized in Go
  */
-export function getSize(text) {
+function getSize(text) {
   const matches = text.match(regex.sizes)
   const result = { mSize: '', mUnit: '', size: 0 }
   if (!matches) return result
@@ -194,3 +194,4 @@ function HddCleaner() {
 }
 
 if (globalThis.window) HddCleaner()
+else module.exports = { getSize }

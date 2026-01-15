@@ -304,5 +304,4 @@ function AmazonAio() {
 }
 
 if (globalThis.window) AmazonAio()
-
-export { calcScore, maxScore, positionInInterval, score20Styled }
+else module.exports = { calcScore, maxScore, positionInInterval, score20Styled }

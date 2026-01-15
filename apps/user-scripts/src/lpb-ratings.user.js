@@ -519,3 +519,4 @@ function LpbRatings() {
 }
 
 if (globalThis.window) LpbRatings()
+else module.exports = { cleanTitle, createReview }

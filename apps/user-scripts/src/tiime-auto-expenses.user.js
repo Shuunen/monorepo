@@ -328,3 +328,4 @@ function TiimeAutoExpenses() {
 }
 
 if (globalThis.window) TiimeAutoExpenses()
+else module.exports = { createButton }
