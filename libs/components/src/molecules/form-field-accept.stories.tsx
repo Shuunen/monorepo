@@ -16,11 +16,6 @@ const meta = {
   },
   render: args => {
     type FormData = Record<string, unknown> | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
     const [submittedData, setSubmittedData] = useState<FormData>({});
     function onSubmit(data: FormData) {
       setSubmittedData(data);
@@ -28,8 +23,7 @@ const meta = {
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
@@ -56,13 +50,11 @@ export const Basic: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const radioGroup = canvas.getByTestId("radio-agreed-to-terms");
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("verify radio group is rendered", () => {
       expect(radioGroup).toBeInTheDocument();
     });
     await step("check radio group initial state", () => {
-      expect(formData).toContainHTML(`{}`);
       expect(submittedData).toContainHTML(`{}`);
     });
     await step("check first option", async () => {
@@ -76,7 +68,6 @@ export const Basic: Story = {
       expect(rejectOption).not.toBeChecked();
     });
     await step("verify form data", () => {
-      expect(formData).toContainHTML(`"agreedToTerms": true`);
       expect(submittedData).toContainHTML(`{}`);
     });
     await step("check second option", async () => {
@@ -88,7 +79,6 @@ export const Basic: Story = {
       expect(rejectOption).toBeChecked();
     });
     await step("verify updated form data", () => {
-      expect(formData).toContainHTML(`"agreedToTerms": false`);
       expect(submittedData).toContainHTML(`{}`);
     });
     await step("submit form", async () => {

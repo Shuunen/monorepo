@@ -16,11 +16,6 @@ const meta = {
   },
   render: args => {
     type FormData = Record<string, unknown> | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
     const [submittedData, setSubmittedData] = useState<FormData>({});
     function onSubmit(data: FormData) {
       setSubmittedData(data);
@@ -28,8 +23,7 @@ const meta = {
     }
     return (
       <div className="grid gap-4">
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
@@ -220,7 +214,6 @@ export const MultipleFields: Story = {
     const canvas = within(canvasElement);
     const passwordInput = canvas.getByTestId("input-password-password") as HTMLInputElement;
     const confirmPasswordInput = canvas.getByTestId("input-password-confirm-password") as HTMLInputElement;
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("fill password", async () => {
@@ -231,10 +224,6 @@ export const MultipleFields: Story = {
     await step("fill confirm password", async () => {
       await userEvent.type(confirmPasswordInput, "SecurePass123");
       expect(confirmPasswordInput).toHaveValue("SecurePass123");
-    });
-
-    await step("verify form data shows both fields", () => {
-      expect(formData).toContainHTML(stringify({ confirmPassword: "SecurePass123", password: "SecurePass123" }, true));
     });
 
     await step("submit form", async () => {

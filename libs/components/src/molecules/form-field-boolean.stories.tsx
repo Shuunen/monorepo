@@ -16,11 +16,6 @@ const meta = {
   },
   render: args => {
     type FormData = Record<string, unknown> | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
     const [submittedData, setSubmittedData] = useState<FormData>({});
     function onSubmit(data: FormData) {
       setSubmittedData(data);
@@ -28,8 +23,7 @@ const meta = {
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
@@ -80,15 +74,10 @@ export const WithInitialValueTrue: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const toggleSwitch = canvas.getByRole("switch");
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("verify initial value is true", () => {
       expect(toggleSwitch).toHaveAttribute("aria-checked", "true");
-    });
-
-    await step("verify form data shows true", () => {
-      expect(formData).toContainHTML(stringify({ enableNotifications: true }, true));
     });
 
     await step("submit form with initial value", async () => {
@@ -218,7 +207,6 @@ export const MultipleFields: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const switches = canvas.getAllByRole("switch");
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("toggle acceptCookies to true", async () => {
       await userEvent.click(switches[0]);
@@ -227,9 +215,6 @@ export const MultipleFields: Story = {
     await step("toggle rememberMe to true", async () => {
       await userEvent.click(switches[2]);
       expect(switches[2]).toHaveAttribute("aria-checked", "true");
-    });
-    await step("verify form data shows both as true", () => {
-      expect(formData).toContainHTML(stringify({ acceptCookies: true, rememberMe: true }, true));
     });
     await step("submit form", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });

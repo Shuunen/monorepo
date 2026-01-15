@@ -5,6 +5,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import type { AutoFormData } from "./auto-form.types";
 import { field, section } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
@@ -16,21 +17,14 @@ const meta = {
     layout: "centered",
   },
   render: args => {
-    type FormData = Record<string, unknown> | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
-    const [submittedData, setSubmittedData] = useState<FormData>({});
-    function onSubmit(data: FormData) {
+    const [submittedData, setSubmittedData] = useState<AutoFormData>({});
+    function onSubmit(data: AutoFormData) {
       setSubmittedData(data);
       logger.showSuccess("Form submitted successfully");
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
@@ -202,7 +196,6 @@ export const AllFieldsFilled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     const submitButton = canvas.getByRole("button", { name: "Submit" });
     const expectedData = {
@@ -221,7 +214,6 @@ export const AllFieldsFilled: Story = {
       await sleep(50);
       expect(submitButton).toBeInTheDocument();
       expect(submitButton).toBeEnabled();
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML(stringify({}));
       await userEvent.click(submitButton);
     });

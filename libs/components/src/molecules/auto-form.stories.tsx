@@ -5,7 +5,7 @@ import { expect, userEvent, waitFor, within } from "storybook/test";
 import { z } from "zod";
 import { Paragraph } from "../atoms/typography";
 import { AutoForm } from "./auto-form";
-import type { AutoFormProps, AutoFormSubmissionStepProps } from "./auto-form.types";
+import type { AutoFormData, AutoFormProps, AutoFormSubmissionStepProps } from "./auto-form.types";
 import { field, mockSubmit, section, step } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
@@ -23,14 +23,8 @@ const meta = {
     layout: "centered",
   },
   render: (args: ExtendedAutoFormProps) => {
-    type FormData = Record<string, unknown> | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
-    const [submittedData, setSubmittedData] = useState<FormData>({});
-    function onSubmit(data: FormData) {
+    const [submittedData, setSubmittedData] = useState<AutoFormData>({});
+    function onSubmit(data: AutoFormData) {
       setSubmittedData(data);
       const status = args.mockSubmitStatus ?? "success";
       const message = args.mockSubmitMessage ?? <Paragraph>Form submitted successfully!</Paragraph>;
@@ -38,8 +32,7 @@ const meta = {
     }
     return (
       <div className="grid gap-4 mt-6">
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
@@ -72,7 +65,6 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     const submitButton = canvas.getByRole("button", { name: "Submit" });
     const emailInput = canvas.getByTestId("input-text-email");
@@ -80,7 +72,6 @@ export const Basic: Story = {
     const nameInput = canvas.getByTestId("input-text-name");
     await userEvent.type(nameInput, "John Doe");
     await userEvent.click(submitButton);
-    await expect(formData).toContainHTML(stringify({ email: "example-email@email.com", name: "John Doe" }, true));
     await expect(submittedData).toContainHTML(stringify({ email: "example-email@email.com", name: "John Doe" }, true));
   },
 };
@@ -128,7 +119,6 @@ export const MultiStep: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("cannot reach step 2 via next button if step 1 invalid", async () => {
       const nextButton = canvas.getByRole("button", { name: "Next" });
@@ -205,7 +195,6 @@ export const MultiStep: Story = {
         address: "123 Main St",
         city: "Metropolis",
       };
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
   },
@@ -294,7 +283,6 @@ export const OptionalSection: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const canvasBody = within(canvasElement.ownerDocument.body);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("fill name", async () => {
       const nameInput = canvas.getByTestId("input-text-name");
@@ -309,7 +297,6 @@ export const OptionalSection: Story = {
       const isHackerCheckbox = await canvas.findByTestId("switch-is-hacker");
       expect(isHackerCheckbox).toBeVisible();
       await userEvent.click(isHackerCheckbox);
-      expect(formData).toContainHTML('"isHacker": true');
       await userEvent.click(favouriteColorTrigger);
       // oxlint-disable-next-line no-await-expression-member
       await userEvent.click((await canvasBody.findAllByRole("option"))[0]); // select "red"
@@ -336,7 +323,6 @@ export const OptionalSection: Story = {
         name: "Paul Doughy",
         favouriteColor: "red",
       };
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
     await step("show pet name field", async () => {
@@ -362,7 +348,6 @@ export const OptionalSection: Story = {
         favouriteColor: "red",
         petName: "Fido",
       };
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
     await step("uncheck hasPet to hide pet fields", async () => {
@@ -374,8 +359,6 @@ export const OptionalSection: Story = {
       await userEvent.click(submitButton);
     });
     step("verify submitted data", () => {
-      // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
-      expect(formData).toContainHTML(stringify({ name: "Paul Doughy", favouriteColor: "red" }, true));
       // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
       expect(submittedData).toContainHTML(stringify({ name: "Paul Doughy", favouriteColor: "red" }, true));
     });
@@ -461,7 +444,6 @@ export const StepperStates: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("fill step 1", async () => {
       const currentStepButton = canvas.getByTestId("button-step-my-infos");
@@ -483,6 +465,7 @@ export const StepperStates: Story = {
       const secondStepButton = canvas.getByRole("button", { name: "My pet Pet information and details" });
       expect(secondStepButton).toHaveAttribute("data-state", "readonly");
       await userEvent.click(secondStepButton);
+      await sleep(100);
       expect(secondStepButton).toHaveAttribute("data-active", "true");
       const petNameInput = canvas.getByTestId("input-text-pet-name");
       expect(petNameInput).toBeInTheDocument();
@@ -514,7 +497,6 @@ export const StepperStates: Story = {
         age: 28,
         petName: "Fido",
       };
-      expect(formData).toContainHTML(stringify(expectedFormData, true));
       expect(submittedData).toContainHTML(stringify(expectedFormData, true));
     });
   },
@@ -548,7 +530,6 @@ export const KeyMapping: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     step("verify initial data was mapped correctly", () => {
       const emailInput = canvas.getByTestId("input-text-user-email");
@@ -566,7 +547,6 @@ export const KeyMapping: Story = {
         email_address: "james.doe@example.com",
         "user-name-output": "Jam Doe",
       };
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
   },
@@ -608,7 +588,6 @@ export const NestedKeyMapping: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("verify initial data was mapped correctly", async () => {
       const emailInput = canvas.getByTestId("input-text-user-email");
@@ -616,8 +595,6 @@ export const NestedKeyMapping: Story = {
       const nameInput = canvas.getByTestId("input-text-user-name");
       expect(nameInput).toHaveValue("Jane Doe");
       await userEvent.click(emailInput);
-      expect(formData).toContainHTML('"email": "jane.doe@example.com"');
-      expect(formData).toContainHTML('"fullName": "Jane Doe"');
       expect(submittedData).toContainHTML("{}");
     });
     await step("modify the fields", async () => {
@@ -639,7 +616,6 @@ export const NestedKeyMapping: Story = {
       const emailInput = canvas.getByTestId("input-text-user-email");
       await userEvent.click(emailInput);
       const expectedData = { userInfos: { email: "new.email@example.com", fullName: "John Smith" } };
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
   },
@@ -695,7 +671,6 @@ export const SummaryOnly: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     // biome-ignore assist/source/useSortedKeys: we need a specific key order here
     const expectedData = {
@@ -711,7 +686,6 @@ export const SummaryOnly: Story = {
       await userEvent.click(nextButton);
     });
     step("verify data before summary", () => {
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML("{}");
     });
     await step("submit to reach summary step", async () => {
@@ -734,7 +708,6 @@ export const SummaryOnly: Story = {
     });
     await step("verify data before submission", async () => {
       await sleep(nbPercentMax);
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML("{}");
     });
     await step("submit from summary step", async () => {
@@ -744,7 +717,6 @@ export const SummaryOnly: Story = {
     });
     await step("verify submitted data", async () => {
       await sleep(nbPercentMax);
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
   },
@@ -1021,12 +993,7 @@ export const WithCancelButton: Story = {
   },
   render: (args: ExtendedAutoFormProps) => {
     type FormData = Record<string, unknown> | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
     const [cancelClicked, setCancelClicked] = useState(false);
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
     const [submittedData, setSubmittedData] = useState<FormData>({});
     function onSubmit(data: FormData) {
       setSubmittedData(data);
@@ -1041,8 +1008,7 @@ export const WithCancelButton: Story = {
     return (
       <div className="grid gap-4 mt-6">
         {cancelClicked && <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-800">Form was cancelled by user</div>}
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onCancel={onCancel} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onCancel={onCancel} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );

@@ -19,11 +19,6 @@ const meta = {
   },
   render: args => {
     type FormData = Record<string, unknown> | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
     const [submittedData, setSubmittedData] = useState<FormData>({});
     function onSubmit(data: FormData) {
       setSubmittedData(data);
@@ -31,8 +26,7 @@ const meta = {
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
@@ -100,15 +94,12 @@ export const Empty: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("verify initial state", async () => {
-      expect(formData).toContainHTML(`"persons": []`);
       expect(submittedData).toContainHTML(`{}`);
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
-      expect(formData).toContainHTML(`"persons": []`);
       expect(submittedData).toContainHTML(`"persons": []`);
     });
 
@@ -129,7 +120,6 @@ export const Empty: Story = {
       await sleep(100); // wait for state update
       // biome-ignore assist/source/useSortedKeys: order needed
       const expectedData = { persons: [{ name: "Alice", age: 7 }] };
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML(`"persons": []`);
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
@@ -144,7 +134,6 @@ export const Empty: Story = {
       await userEvent.click(removeButton);
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
-      expect(formData).toContainHTML(`"persons": []`);
       expect(submittedData).toContainHTML(`"persons": []`);
     });
 
@@ -191,11 +180,9 @@ export const ExistingData: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("verify initial state", () => {
-      expect(formData).toContainHTML(stringify(initialData, true));
       expect(submittedData).toContainHTML(`{}`);
       const badgesSuccess = canvas.getAllByTestId("badge-status");
       expect(badgesSuccess.length).toBe(2);

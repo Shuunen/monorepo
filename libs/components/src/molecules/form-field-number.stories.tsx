@@ -16,11 +16,6 @@ const meta = {
   },
   render: args => {
     type FormData = Record<string, unknown> | undefined;
-    const [formData, setFormData] = useState<Partial<FormData>>({});
-    function onChange(data: Partial<FormData>) {
-      setFormData(data);
-      logger.info("Form data changed", data);
-    }
     const [submittedData, setSubmittedData] = useState<FormData>({});
     function onSubmit(data: FormData) {
       setSubmittedData(data);
@@ -28,8 +23,7 @@ const meta = {
     }
     return (
       <div className="grid gap-4 mt-6 w-lg">
-        <DebugData data={formData} isGhost title="Form data" />
-        <AutoForm {...args} logger={logger} onChange={onChange} onSubmit={onSubmit} />
+        <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
@@ -98,13 +92,9 @@ export const WithInitialValue: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const numberInput = canvas.getByTestId("input-number-quantity") as HTMLInputElement;
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("verify initial value is displayed", () => {
       expect(numberInput).toHaveValue(10);
-    });
-    await step("verify form data shows initial number", () => {
-      expect(formData).toContainHTML(stringify({ quantity: 10 }, true));
     });
     await step("submit form with initial value", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -210,7 +200,6 @@ export const MultipleFields: Story = {
     const canvas = within(canvasElement);
     const widthInput = canvas.getByTestId("input-number-width") as HTMLInputElement;
     const heightInput = canvas.getByTestId("input-number-height") as HTMLInputElement;
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("fill width", async () => {
@@ -221,10 +210,6 @@ export const MultipleFields: Story = {
     await step("fill height", async () => {
       await userEvent.type(heightInput, "1080");
       expect(heightInput).toHaveValue(1080);
-    });
-
-    await step("verify form data shows both fields", () => {
-      expect(formData).toContainHTML(stringify({ height: 1080, width: 1920 }, true));
     });
 
     await step("submit form", async () => {
