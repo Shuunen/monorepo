@@ -14,15 +14,15 @@ const settingsSchema = step(
 )
 
 export function Settings() {
+  /* v8 ignore start */
   function onSettingsChange(updatedSettings: Record<string, unknown>) {
-    /* v8 ignore start */
     if (objectEqual(state, updatedSettings)) return
     Object.assign(state, updatedSettings)
     setDarkTheme(state.darkTheme)
     logger.info(updatedSettings)
     logger.showSuccess('Settings updated successfully.')
-    /* v8 ignore stop */
   }
+  /* v8 ignore stop */
   return (
     <motion.div animate={{ opacity: 1 }} className="bg-accent min-h-screen flex flex-col gap-4 items-center justify-center" data-testid="settings-tab" initial={{ opacity: 0 }} transition={{ duration: 0.4 }}>
       <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: -20 }} transition={{ delay: 0.1, duration: 0.4 }}>
@@ -32,7 +32,7 @@ export function Settings() {
         <Paragraph>You can adjust your preferences here.</Paragraph>
       </motion.div>
       <div className="flex">
-        <AutoForm initialData={state} onChange={onSettingsChange} schemas={[settingsSchema]} showButtons={false} />
+        <AutoForm initialData={state} onSubmit={onSettingsChange} schemas={[settingsSchema]} showButtons={false} />
       </div>
     </motion.div>
   )

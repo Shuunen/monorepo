@@ -12,7 +12,6 @@ export type FormFieldBaseProps = {
   children?: (props: { field: ControllerRenderProps; fieldState: ControllerFieldState; formState: UseFormStateReturn<FieldValues> }) => React.ReactNode;
   fieldName: string;
   fieldSchema: z.ZodType;
-  formData: Record<string, unknown>;
   isOptional: boolean;
   readonly?: boolean;
   logger?: Logger;

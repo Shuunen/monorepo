@@ -12,8 +12,6 @@ export type AutoFormProps = {
   logger?: Logger;
   /** An array of Zod object schemas representing each step of the form. */
   schemas: z.ZodObject[];
-  /** Optional callback function invoked whenever the form data changes, providing the cleaned data. */
-  onChange?: (data: Record<string, unknown>) => void;
   /** Optional callback function invoked when the cancel button is clicked. */
   onCancel?: () => void;
   /** Initial data to pre-fill the form fields. */
@@ -108,9 +106,9 @@ export type AutoFormFieldSectionMetadata = { render: "section" } & FormFieldSect
  * example: `field(z.string(), { isVisible: (formData) => isLegalBaseWip(formData)" })`
  */
 export type AutoFormFieldConditionalMetadata = {
-  /** The name of another field that this field depends on. Supports field=value syntax for specific value checks. */
+  /** The name of another field that this field depends on. Supports field=value syntax for specific value checks. This should be use in favor of `isVisible` when possible for performance reasons. */
   dependsOn?: string;
-  /** More generic way to express condition on whether or not a field is visible. When provided, this function has precedence over `dependsOn` */
+  /** More generic way to express condition on whether or not a field is visible. When provided, this function has precedence over `dependsOn`. ⚠️ This should be used as last resort, because the field will be redraw every time*/
   // oxlint-disable-next-line no-explicit-any
   isVisible?: (formData: Record<string, any>) => boolean;
 };

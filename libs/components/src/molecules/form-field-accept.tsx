@@ -11,7 +11,7 @@ import { IconReject } from "../icons/icon-reject";
 import { checkZodBoolean, getFieldMetadataOrThrow } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 
-export function FormFieldAccept({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false }: FormFieldBaseProps) {
+export function FormFieldAccept({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { state = "editable" } = metadata;
   const { isBoolean, isBooleanLiteral } = checkZodBoolean(fieldSchema as z.ZodBoolean | z.ZodLiteral | z.ZodOptional<z.ZodBoolean>);
@@ -19,7 +19,7 @@ export function FormFieldAccept({ fieldName, fieldSchema, formData, isOptional, 
   if (!isBoolean) {
     throw new Error(`Field "${fieldName}" is not a boolean`);
   }
-  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
+  const props = { fieldName, fieldSchema, isOptional, logger, readonly };
   const idAccept = useId();
   const idReject = useId();
   const buttonClasses = cn("flex items-center space-x-2 border rounded-md px-4 py-3", {

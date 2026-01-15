@@ -3,14 +3,14 @@ import { Input } from "../atoms/input";
 import { getFieldMetadataOrThrow, isZodNumber } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 
-export function FormFieldNumber({ fieldName, fieldSchema, formData, isOptional, logger, readonly = false }: FormFieldBaseProps) {
+export function FormFieldNumber({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { placeholder, state = "editable" } = metadata;
   const isDisabled = state === "disabled" || readonly;
   if (!isZodNumber(fieldSchema)) {
     throw new Error(`Field "${fieldName}" is not a number`);
   }
-  const props = { fieldName, fieldSchema, formData, isOptional, logger, readonly };
+  const props = { fieldName, fieldSchema, isOptional, logger, readonly };
   return (
     <FormFieldBase {...props}>
       {({ field }) => (
