@@ -1,3 +1,3 @@
 export function Divider() {
-  return <div className="pb-18 bg-bottom bg-no-repeat opacity-40 mb-8" style={{ backgroundImage: 'url("/divider.svg")' }} />
+  return <div className="mb-8 bg-bottom bg-no-repeat pb-18 opacity-40" style={{ backgroundImage: 'url("/divider.svg")' }} />;
 }

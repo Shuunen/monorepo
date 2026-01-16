@@ -1,19 +1,17 @@
 <!doctype html>
 <html lang="en" class="h-full">
+  <head>
+    <title>Vet Web</title>
+    <base href="/" />
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="" name="unique-mark" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
 
-<head>
-  <title>Vet Web</title>
-  <base href="/">
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1" name="viewport">
-  <meta content="" name="unique-mark">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/src/styles.css">
-</head>
-
-<body class="flex flex-col dark:bg-stone-900 h-full bg-fixed bg-blue-50">
-  <div id="root" class="w-full max-w-5xl mx-auto dark:bg-stone-800 dark:text-white bg-gradient-to-b bg-fixed from-blue-50 to-white p-12 grow"></div>
-  <script type="module" src="/src/main.tsx"></script>
-</body>
-
+  <body class="flex h-full flex-col bg-blue-50 bg-fixed dark:bg-stone-900">
+    <div id="root" class="mx-auto w-full max-w-5xl grow bg-gradient-to-b from-blue-50 to-white bg-fixed p-12 dark:bg-stone-800 dark:text-white"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

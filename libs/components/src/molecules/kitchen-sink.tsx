@@ -2,7 +2,7 @@ import { useId } from "react";
 
 function ColorPaletteItem({ classes }: { classes: string }) {
   return (
-    <div className={`flex flex-col justify-center text-center p-4 rounded-lg shadow-lg ${classes}`}>
+    <div className={`flex flex-col justify-center rounded-lg p-4 text-center shadow-lg ${classes}`}>
       {classes.split(" ").map(className => (
         <div className="whitespace-nowrap" key={className}>
           {className}
@@ -56,8 +56,8 @@ function ColorPalette() {
 
 export function KitchenSink() {
   return (
-    <div className="flex flex-col min-h-screen" id={`kitchen-sink-${useId()}`} style={{ background: "radial-gradient(125% 125% at 50% 10%, #fff 40%, #6366f1 100%)" }}>
-      <div className="container mx-auto prose lg:prose-lg pt-24">
+    <div className="flex min-h-screen flex-col" id={`kitchen-sink-${useId()}`} style={{ background: "radial-gradient(125% 125% at 50% 10%, #fff 40%, #6366f1 100%)" }}>
+      <div className="container mx-auto prose pt-24 lg:prose-lg">
         <h1>Components</h1>
         <p>This kitchen sink let you see and experiment the catalog of components and the default styles provided.</p>
         <p>
@@ -69,8 +69,8 @@ export function KitchenSink() {
           Option 1 : use the <code>prose</code> class
         </h3>
         <p>
-          This current page is using the prose class to style the typography. If you inspect the elements, you will see that the <code>prose</code> class is applied to the container and that the typography elements like <code>h1</code>, <code>h2</code>, and <code>p</code> are styled without any
-          classes on them.
+          This current page is using the prose class to style the typography. If you inspect the elements, you will see that the <code>prose</code> class is applied to the container and that the typography elements like <code>h1</code>,{" "}
+          <code>h2</code>, and <code>p</code> are styled without any classes on them.
         </p>
 
         <h3>Option 2 : customize everything</h3>

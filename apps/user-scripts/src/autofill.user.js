@@ -17,21 +17,21 @@
  * @returns {void}
  */
 function triggerChange(element) {
-  element.dispatchEvent(new KeyboardEvent('change'))
-  element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
+  element.dispatchEvent(new KeyboardEvent("change"));
+  element.dispatchEvent(new Event("input", { bubbles: true, cancelable: true }));
 }
 
 function Autofill() {
-  const utils = new Shuutils('auto-fill')
+  const utils = new Shuutils("auto-fill");
   const data = {
-    email: atob('cm9tYWluLnJhY2FtaWVyQGdtYWlsLmNvbQ=='),
-    phone: atob('NjU4NDc2Nzg4'),
-  }
+    email: atob("cm9tYWluLnJhY2FtaWVyQGdtYWlsLmNvbQ=="),
+    phone: atob("NjU4NDc2Nzg4"),
+  };
   const selectors = {
     login: 'input[id*="mail"], input[name*="mail"], input[name*="ogin"], input[type*="mail"], input[name*="user"], input[name*="ident"]',
     phone: 'input[type*="phone"], input[name*="phone"], input[name*="mobile"], input[name*="tel"], input[inputmode="tel"]',
     phoneCountry: '[id="areaCode-+33"]',
-  }
+  };
   /**
    * Get the inputs matching the selector
    * @param {string} selector the selector to match
@@ -39,17 +39,17 @@ function Autofill() {
    */
   function getInputs(selector) {
     // @ts-expect-error it's ok ^^
-    return utils.findAll(selector, document, true)
+    return utils.findAll(selector, document, true);
   }
   /**
    * Fill the login input with the email
    */
   function fillLogin() {
     for (const input of getInputs(selectors.login)) {
-      if (input.type === 'password' || input.value.length > 0) continue
-      input.value = data.email
-      triggerChange(input)
-      utils.log('filled login', input)
+      if (input.type === "password" || input.value.length > 0) continue;
+      input.value = data.email;
+      triggerChange(input);
+      utils.log("filled login", input);
     }
   }
   /**
@@ -57,32 +57,32 @@ function Autofill() {
    */
   function fillPhone() {
     // select the right country before filling the phone
-    const country = utils.findOne(selectors.phoneCountry, document, true)
+    const country = utils.findOne(selectors.phoneCountry, document, true);
     if (country === undefined) {
-      utils.debug('no country selector found')
-      return
+      utils.debug("no country selector found");
+      return;
     }
-    country.click()
+    country.click();
     for (const input of getInputs(selectors.phone)) {
-      if (input.value.length > 0) continue
-      input.value = data.phone
-      triggerChange(input)
-      utils.log('filled phone', input)
+      if (input.value.length > 0) continue;
+      input.value = data.phone;
+      triggerChange(input);
+      utils.log("filled phone", input);
     }
   }
   /**
    * Init the autofill
    */
   function init() {
-    utils.log('autofill start...')
-    fillLogin()
-    fillPhone()
+    utils.log("autofill start...");
+    fillLogin();
+    fillPhone();
   }
   // oxlint-disable-next-line no-magic-numbers
-  const initDebounced = utils.debounce(init, 1000)
-  if (document.location.hostname === 'localhost') return
-  utils.onPageChange(() => initDebounced())
+  const initDebounced = utils.debounce(init, 1000);
+  if (document.location.hostname === "localhost") return;
+  utils.onPageChange(() => initDebounced());
 }
 
-if (globalThis.window) Autofill()
-else module.exports = { triggerChange }
+if (globalThis.window) Autofill();
+else module.exports = { triggerChange };

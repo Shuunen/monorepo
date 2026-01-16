@@ -1,26 +1,26 @@
-import { createState, debounce, isBrowserEnvironment, isTestEnvironment } from '@monorepo/utils'
-import { defaultCredentials } from '../constants'
-import type { Item } from '../types/item.types'
-import { defaultSound } from '../types/sounds.types'
-import { type AppStatus, defaultStatus } from '../types/status.types'
-import { type Display, defaultTheme } from '../types/theme.types'
-import { navigate } from './navigation.utils'
-import { storage } from './storage.utils'
+import { createState, debounce, isBrowserEnvironment, isTestEnvironment } from "@monorepo/utils";
+import { defaultCredentials } from "../constants";
+import type { Item } from "../types/item.types";
+import { defaultSound } from "../types/sounds.types";
+import { type AppStatus, defaultStatus } from "../types/status.types";
+import { type Display, defaultTheme } from "../types/theme.types";
+import { navigate } from "./navigation.utils";
+import { storage } from "./storage.utils";
 
 /**
  * Handle the status change
  * @param status the new status
  */
 function onStatusChangeSync(status: AppStatus) {
-  if (isTestEnvironment()) return
-  if (status === 'settings-required') navigate('/settings')
-  if (status === 'ready' && document.location.pathname.includes('/settings')) navigate('/')
+  if (isTestEnvironment()) return;
+  if (status === "settings-required") navigate("/settings");
+  if (status === "ready" && document.location.pathname.includes("/settings")) navigate("/");
 }
 
-const laptopWidth = 1500
+const laptopWidth = 1500;
 
 /* v8 ignore next */
-const defaultDisplay: Display = isBrowserEnvironment() && globalThis.screen.width < laptopWidth ? 'list' : 'card'
+const defaultDisplay: Display = isBrowserEnvironment() && globalThis.screen.width < laptopWidth ? "list" : "card";
 
 export const { state, watchState } = createState(
   {
@@ -35,15 +35,15 @@ export const { state, watchState } = createState(
     theme: defaultTheme,
   },
   storage,
-  ['credentials', 'display', 'items', 'itemsTimestamp', 'theme'], // avoid status persistence
-)
+  ["credentials", "display", "items", "itemsTimestamp", "theme"], // avoid status persistence
+);
 
-const statusDelay = 300
+const statusDelay = 300;
 
-const onStatusChange = debounce(onStatusChangeSync, statusDelay)
+const onStatusChange = debounce(onStatusChangeSync, statusDelay);
 
-watchState('status', () => {
-  void onStatusChange(state.status)
-})
+watchState("status", () => {
+  void onStatusChange(state.status);
+});
 
-export type State = typeof state
+export type State = typeof state;

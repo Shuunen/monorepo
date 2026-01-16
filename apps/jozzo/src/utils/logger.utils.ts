@@ -1,5 +1,5 @@
-import { Logger } from '@monorepo/utils'
+import { Logger } from "@monorepo/utils";
 
-export const logger = new Logger()
+export const logger = new Logger();
 
-logger.info('Unique mark : {{ unique-mark }}')
+logger.info("Unique mark : {{ unique-mark }}");

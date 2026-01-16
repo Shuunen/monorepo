@@ -68,7 +68,7 @@ in terms of ui/ux :
 1. a dashboard that shows global state
 2. a slider at the bottom that shows every levels/gauges and where visually we can already see a level/gauge that has not reach it's goal state/level/amount
 3. ideally we could see progressions over months or years
-  
+
 ## Benchmarks
 
 ### Build ts sources to js

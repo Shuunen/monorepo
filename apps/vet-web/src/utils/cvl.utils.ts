@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/style/useNamingConvention: it'ok here */
-import { z } from 'zod/v4'
-import type { CodeVersionLabel } from './cvl.types.ts'
+import { z } from "zod/v4";
+import type { CodeVersionLabel } from "./cvl.types.ts";
 
 export function cvlToSchema(list: CodeVersionLabel[]) {
   return z.union(
@@ -10,5 +10,5 @@ export function cvlToSchema(list: CodeVersionLabel[]) {
         Version: z.literal(cvl.Version),
       }),
     ),
-  )
+  );
 }

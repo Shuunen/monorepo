@@ -1,11 +1,11 @@
 /* v8 ignore start -- @preserve */
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import { App } from './app/app'
-import { Footer } from './app/footer'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import { App } from "./app/app";
+import { Footer } from "./app/footer";
 
-const root = createRoot(document.querySelector('#root') as HTMLElement)
+const root = createRoot(document.querySelector("#root") as HTMLElement);
 
 root.render(
   <StrictMode>
@@ -14,4 +14,4 @@ root.render(
     </BrowserRouter>
     <Footer />
   </StrictMode>,
-)
+);

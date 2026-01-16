@@ -7,7 +7,7 @@
 }
 
 .card {
-  @apply relative flex items-center justify-center content-center p-4 mt-5 mb-3 border border-stone-700 rounded-lg;
+  @apply relative mt-5 mb-3 flex content-center items-center justify-center rounded-lg border border-stone-700 p-4;
 }
 
 .card img {
@@ -43,11 +43,11 @@
 }
 
 .ruler.x {
-  @apply w-full h-0.5 -translate-y-2/4 left-0 top-2/4;
+  @apply top-2/4 left-0 h-0.5 w-full -translate-y-2/4;
 }
 
 .ruler.y {
-  @apply w-0.5 h-full -translate-x-2/4 left-2/4 top-0;
+  @apply top-0 left-2/4 h-full w-0.5 -translate-x-2/4;
 }
 
 .logo {
@@ -55,7 +55,7 @@
 }
 
 .icon {
-  @apply object-contain h-20;
+  @apply h-20 object-contain;
 }
 
 /* Hide the white bg arrow inside tooltip */

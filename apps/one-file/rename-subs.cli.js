@@ -1,18 +1,18 @@
 /* v8 ignore start -- @preserve */
-import { copyFileSync, readdirSync, readFileSync, renameSync, statSync, unlinkSync } from 'node:fs'
-import path from 'node:path'
-import { Logger } from '@monorepo/utils'
+import { copyFileSync, readdirSync, readFileSync, renameSync, statSync, unlinkSync } from "node:fs";
+import path from "node:path";
+import { Logger } from "@monorepo/utils";
 
 // Go into the Downloads\Azerty.S01.1080p.WEBRip.x265-RARBG folder
 // then use me like : node ~/Projects/github/monorepo/apps/one-file/rename-subs.cli.js
 
-const currentFolder = process.cwd()
-const kb = 1024
-const nbDecimals = 2
-const logger = new Logger()
-const subsFolder = path.join(currentFolder, 'Subs')
-const subsStat = statSync(subsFolder)
-if (!subsStat.isDirectory()) throw new Error(`Could not find subs folder ${subsFolder}`)
+const currentFolder = process.cwd();
+const kb = 1024;
+const nbDecimals = 2;
+const logger = new Logger();
+const subsFolder = path.join(currentFolder, "Subs");
+const subsStat = statSync(subsFolder);
+if (!subsStat.isDirectory()) throw new Error(`Could not find subs folder ${subsFolder}`);
 
 /**
  * Check if a subtitle file is a full caption
@@ -20,11 +20,11 @@ if (!subsStat.isDirectory()) throw new Error(`Could not find subs folder ${subsF
  * @returns {boolean} true if full caption
  */
 function isFullCaption(filepath) {
-  const content = readFileSync(filepath, 'utf8')
-  const nbBlocks = content.match(/\[[a-z\s]+\]/giu)?.length ?? 0
-  const minBlocks = 10
-  logger.debug(`File ${path.basename(filepath)} has ${nbBlocks} blocks`)
-  return nbBlocks > minBlocks
+  const content = readFileSync(filepath, "utf8");
+  const nbBlocks = content.match(/\[[a-z\s]+\]/giu)?.length ?? 0;
+  const minBlocks = 10;
+  logger.debug(`File ${path.basename(filepath)} has ${nbBlocks} blocks`);
+  return nbBlocks > minBlocks;
 }
 
 /**
@@ -34,35 +34,35 @@ function isFullCaption(filepath) {
  * @returns {void}
  */
 function bringSubTop(fromPath, language) {
-  const episodeLocation = -2
-  const toFilename = `${fromPath.split('\\').at(episodeLocation) ?? ''}.${language}.srt`
-  const toPath = path.join(currentFolder, toFilename)
-  const toStat = statSync(toPath, { throwIfNoEntry: false })
+  const episodeLocation = -2;
+  const toFilename = `${fromPath.split("\\").at(episodeLocation) ?? ""}.${language}.srt`;
+  const toPath = path.join(currentFolder, toFilename);
+  const toStat = statSync(toPath, { throwIfNoEntry: false });
   if (toStat?.isFile() ?? false) {
-    logger.debug(`File ${toPath} already exists`)
-    return
+    logger.debug(`File ${toPath} already exists`);
+    return;
   }
   if (isFullCaption(fromPath)) {
-    logger.debug(`File ${fromPath} seems to be a full caption`)
-    logger.debug(`Copy ${fromPath} to ${toPath}.fc`)
-    copyFileSync(fromPath, `${toPath}.fc`)
-    return
+    logger.debug(`File ${fromPath} seems to be a full caption`);
+    logger.debug(`Copy ${fromPath} to ${toPath}.fc`);
+    copyFileSync(fromPath, `${toPath}.fc`);
+    return;
   }
-  copyFileSync(fromPath, toPath)
+  copyFileSync(fromPath, toPath);
 }
 
-const subfolders = readdirSync(subsFolder)
+const subfolders = readdirSync(subsFolder);
 for (const subfolder of subfolders) {
-  const folderPath = path.join(subsFolder, subfolder)
-  const folderStat = statSync(folderPath)
-  if (!folderStat.isDirectory()) throw new Error(`Could not find folder ${folderPath}`)
-  const folderFiles = readdirSync(folderPath)
+  const folderPath = path.join(subsFolder, subfolder);
+  const folderStat = statSync(folderPath);
+  if (!folderStat.isDirectory()) throw new Error(`Could not find folder ${folderPath}`);
+  const folderFiles = readdirSync(folderPath);
   for (const file of folderFiles) {
-    const filePath = path.join(folderPath, file)
+    const filePath = path.join(folderPath, file);
     // oxlint-disable-next-line max-depth
-    if (file.toLowerCase().includes('french')) bringSubTop(filePath, 'fr')
+    if (file.toLowerCase().includes("french")) bringSubTop(filePath, "fr");
     // oxlint-disable-next-line max-depth
-    if (file.toLowerCase().includes('english')) bringSubTop(filePath, 'en')
+    if (file.toLowerCase().includes("english")) bringSubTop(filePath, "en");
   }
 }
 
@@ -74,41 +74,41 @@ for (const subfolder of subfolders) {
  */
 // oxlint-disable-next-line max-lines-per-function, max-statements
 function checkSubtitle(filename, language) {
-  const subPath = path.join(currentFolder, `${filename}.${language}.srt`)
-  const subStat = statSync(subPath, { throwIfNoEntry: false })
-  const subFcPath = `${subPath}.fc`
-  const subFcStat = statSync(subFcPath, { throwIfNoEntry: false })
-  const hasSub = subStat?.isFile() ?? false
-  const hasSubFc = subFcStat?.isFile() ?? false
+  const subPath = path.join(currentFolder, `${filename}.${language}.srt`);
+  const subStat = statSync(subPath, { throwIfNoEntry: false });
+  const subFcPath = `${subPath}.fc`;
+  const subFcStat = statSync(subFcPath, { throwIfNoEntry: false });
+  const hasSub = subStat?.isFile() ?? false;
+  const hasSubFc = subFcStat?.isFile() ?? false;
   if (hasSub && hasSubFc) {
-    unlinkSync(subFcPath)
-    return
+    unlinkSync(subFcPath);
+    return;
   }
   if (!hasSub && hasSubFc) {
-    renameSync(subFcPath, subPath)
-    return
+    renameSync(subFcPath, subPath);
+    return;
   }
   if (!(hasSub || hasSubFc)) {
-    logger.error(`Could not find ${subPath}`)
-    return
+    logger.error(`Could not find ${subPath}`);
+    return;
   }
-  const sizeInKb = (subStat?.size ?? 0) / kb
-  const minSizeInKb = 4
+  const sizeInKb = (subStat?.size ?? 0) / kb;
+  const minSizeInKb = 4;
   if (sizeInKb < minSizeInKb) {
-    logger.error(`File ${path.basename(subPath)} seems weirdly small (${sizeInKb.toFixed(nbDecimals)}Kb)`)
-    return
+    logger.error(`File ${path.basename(subPath)} seems weirdly small (${sizeInKb.toFixed(nbDecimals)}Kb)`);
+    return;
   }
-  logger.debug(`File ${subPath} seems ok`)
+  logger.debug(`File ${subPath} seems ok`);
 }
 
-const videoFile = /(?:\.mkv|\.mp4|\.avi|\.webm|\.mov|\.wmv|\.flv)$/iu
-const files = readdirSync(currentFolder)
+const videoFile = /(?:\.mkv|\.mp4|\.avi|\.webm|\.mov|\.wmv|\.flv)$/iu;
+const files = readdirSync(currentFolder);
 for (const file of files) {
-  if (!videoFile.test(file)) continue
-  const extensionLocation = -1
-  const filenameWithoutExtension = file.split('.').slice(0, extensionLocation).join('.')
-  checkSubtitle(filenameWithoutExtension, 'fr')
-  checkSubtitle(filenameWithoutExtension, 'en')
+  if (!videoFile.test(file)) continue;
+  const extensionLocation = -1;
+  const filenameWithoutExtension = file.split(".").slice(0, extensionLocation).join(".");
+  checkSubtitle(filenameWithoutExtension, "fr");
+  checkSubtitle(filenameWithoutExtension, "en");
 }
 
-logger.info('Copy and/or check done, every episode has fr/en subtitles !')
+logger.info("Copy and/or check done, every episode has fr/en subtitles !");

@@ -29,4 +29,4 @@ export const svgMockA = `<svg viewBox="0 0 388 240" xmlns="http://www.w3.org/200
 <path d="M 388.377 -3.102 173.477" fill="none" stroke-width="1.5" style="stroke: rgb(255, 255, 255); visibility: hidden;">
   <title>triangle-guides</title>
 </path>
-</svg>`
+</svg>`;

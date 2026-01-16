@@ -1,16 +1,16 @@
 // oxlint-disable no-null, no-magic-numbers
-import { array, boolean, fallback, maxLength, minValue, nonEmpty, nullish, number, object, picklist, pipe, string } from 'valibot'
-import { itemBoxes, itemStatus, uuidMaxLength } from '../constants'
+import { array, boolean, fallback, maxLength, minValue, nonEmpty, nullish, number, object, picklist, pipe, string } from "valibot";
+import { itemBoxes, itemStatus, uuidMaxLength } from "../constants";
 
-const itemRequiredStringSchema = pipe(string(), nonEmpty())
+const itemRequiredStringSchema = pipe(string(), nonEmpty());
 
 export const itemSchema = object({
   $createdAt: pipe(string(), nonEmpty()),
   $id: pipe(string(), nonEmpty(), maxLength(uuidMaxLength)),
-  barcode: fallback(string(), ''),
-  box: fallback(picklist(['', ...itemBoxes]), ''),
-  brand: fallback(string(), ''),
-  details: fallback(string(), ''),
+  barcode: fallback(string(), ""),
+  box: fallback(picklist(["", ...itemBoxes]), ""),
+  brand: fallback(string(), ""),
+  details: fallback(string(), ""),
   drawer: fallback(number(), -1),
   isPrinted: fallback(boolean(), false),
   name: itemRequiredStringSchema,
@@ -18,9 +18,9 @@ export const itemSchema = object({
   price: pipe(number(), minValue(0)),
   reference: itemRequiredStringSchema,
   status: picklist(itemStatus),
-})
+});
 
-export const itemsSchema = array(itemSchema)
+export const itemsSchema = array(itemSchema);
 
 export const itemModelSchema = object({
   barcode: fallback(nullish(string()), null),
@@ -34,4 +34,4 @@ export const itemModelSchema = object({
   price: fallback(nullish(pipe(number(), minValue(0))), null),
   reference: itemRequiredStringSchema, // required
   status: picklist(itemStatus), // required
-})
+});

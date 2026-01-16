@@ -13,13 +13,13 @@
 // ==/UserScript==
 
 function AuchanAio() {
-  const utils = new Shuutils('auchan-aio')
+  const utils = new Shuutils("auchan-aio");
   const uselessSelectors = {
-    productIcon: '.product-thumbnail__icon', // useless icon like "Frais", "Vegan", "Bio"...
-    promoCard: 'article.picture-thumbnail',
-    promoTag: '.product-flap', // best of promo tag above product
-    unitPrice: '.product-price__container', // unit price is not useful
-  }
+    productIcon: ".product-thumbnail__icon", // useless icon like "Frais", "Vegan", "Bio"...
+    promoCard: "article.picture-thumbnail",
+    promoTag: ".product-flap", // best of promo tag above product
+    unitPrice: ".product-price__container", // unit price is not useful
+  };
 
   /**
    * Hide an element for a reason
@@ -29,62 +29,62 @@ function AuchanAio() {
    */
   function hideElement(element, reason) {
     if (utils.willDebug) {
-      element.style.backgroundColor = 'red !important'
-      element.style.color = 'white !important'
-      element.style.boxShadow = '0 0 10px red'
-      element.style.opacity = '70'
+      element.style.backgroundColor = "red !important";
+      element.style.color = "white !important";
+      element.style.boxShadow = "0 0 10px red";
+      element.style.opacity = "70";
     } else {
-      element.style.display = 'none'
-      element.style.opacity = '0'
+      element.style.display = "none";
+      element.style.opacity = "0";
     }
-    element.dataset.hiddenCause = reason
+    element.dataset.hiddenCause = reason;
   }
 
   function hideUseless() {
-    let nb = 0
+    let nb = 0;
     for (const selector of Object.values(uselessSelectors))
       for (const node of utils.findAll(`${selector}:not([data-hidden-cause])`, document, true)) {
-        hideElement(node, 'useless')
-        nb += 1
+        hideElement(node, "useless");
+        nb += 1;
       }
-    if (nb > 0) utils.debug(`hideUseless has hidden ${nb} elements`)
+    if (nb > 0) utils.debug(`hideUseless has hidden ${nb} elements`);
   }
 
   function hideUnavailableProducts() {
-    const messages = utils.findAll('.product-unavailable__message', document, true)
-    let nb = 0
+    const messages = utils.findAll(".product-unavailable__message", document, true);
+    let nb = 0;
     for (const message of messages) {
-      const product = message.closest('article')
-      if (!product) throw new Error('No product found from unavailable message')
-      hideElement(product, 'unavailable')
-      nb += 1
+      const product = message.closest("article");
+      if (!product) throw new Error("No product found from unavailable message");
+      hideElement(product, "unavailable");
+      nb += 1;
     }
-    if (nb > 0) utils.debug(`hideUnavailableProducts has hidden ${nb} elements`)
+    if (nb > 0) utils.debug(`hideUnavailableProducts has hidden ${nb} elements`);
   }
 
   function enhancePricePerKgReadability() {
-    let nb = 0
-    const prices = utils.findAll('.product-thumbnail__attributes:not(.bolder)', document, true)
+    let nb = 0;
+    const prices = utils.findAll(".product-thumbnail__attributes:not(.bolder)", document, true);
     for (const price of prices) {
-      price.classList.add('bolder')
-      nb += 1
+      price.classList.add("bolder");
+      nb += 1;
     }
-    if (nb > 0) utils.debug(`enhancePricePerKgReadability has processed ${nb} elements`)
+    if (nb > 0) utils.debug(`enhancePricePerKgReadability has processed ${nb} elements`);
   }
 
-  function process(reason = 'unknown') {
-    utils.debug(`process called because "${reason}"`)
-    hideUseless()
-    hideUnavailableProducts()
-    enhancePricePerKgReadability()
+  function process(reason = "unknown") {
+    utils.debug(`process called because "${reason}"`);
+    hideUseless();
+    hideUnavailableProducts();
+    enhancePricePerKgReadability();
   }
 
   // oxlint-disable-next-line no-magic-numbers
-  const processDebounced = utils.debounce(process, 300)
-  globalThis.addEventListener('focus', () => processDebounced('focus'))
-  globalThis.addEventListener('click', () => processDebounced('click'))
-  globalThis.addEventListener('scroll', () => processDebounced('scroll'))
-  utils.onPageChange(() => processDebounced('page-change'))
+  const processDebounced = utils.debounce(process, 300);
+  globalThis.addEventListener("focus", () => processDebounced("focus"));
+  globalThis.addEventListener("click", () => processDebounced("click"));
+  globalThis.addEventListener("scroll", () => processDebounced("scroll"));
+  utils.onPageChange(() => processDebounced("page-change"));
 
   utils.injectStyles(`
   .product-thumbnail__attributes {
@@ -104,7 +104,7 @@ function AuchanAio() {
     width: auto;
     margin-bottom: 5px;
   }
-  `)
+  `);
 }
 
-if (globalThis.window) AuchanAio()
+if (globalThis.window) AuchanAio();

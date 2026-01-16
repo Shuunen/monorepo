@@ -401,7 +401,9 @@
       "size": [510, 170],
       "title": "About VRAM",
       "type": "MarkdownNote",
-      "widgets_values": ["For reference:\n- **fp8_scaled**: Requires about 20GB of VRAM.\n- **Original**: Requires about 32GB of VRAM.\n\n---\n\n供参考：\n-  **fp8_scaled** :  大概需要 20GB 左右 VRAM \n- **原始权重**:  原始权重，大概需要 32GB 左右 VRAM \n"]
+      "widgets_values": [
+        "For reference:\n- **fp8_scaled**: Requires about 20GB of VRAM.\n- **Original**: Requires about 32GB of VRAM.\n\n---\n\n供参考：\n-  **fp8_scaled** :  大概需要 20GB 左右 VRAM \n- **原始权重**:  原始权重，大概需要 32GB 左右 VRAM \n"
+      ]
     },
     {
       "bgcolor": "#653",

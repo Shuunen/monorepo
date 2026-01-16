@@ -1,1 +1,1 @@
-declare module '@camwiegert/typical'
+declare module "@camwiegert/typical";

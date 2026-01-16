@@ -22,10 +22,10 @@ export function FormFieldAccept({ fieldName, fieldSchema, isOptional, logger, re
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
   const idAccept = useId();
   const idReject = useId();
-  const buttonClasses = cn("flex items-center space-x-2 border rounded-md px-4 py-3", {
+  const buttonClasses = cn("flex items-center space-x-2 rounded-md border px-4 py-3", {
     "cursor-pointer hover:bg-gray-50": state === "editable",
   });
-  const iconClasses = cn("table bg-current/10 rounded p-2", { "bg-current/0": isDisabled });
+  const iconClasses = cn("table rounded bg-current/10 p-2", { "bg-current/0": isDisabled });
   const labelClasses = cn({ "cursor-pointer": state === "editable" });
   const initialValue = useCallback((field: ControllerRenderProps) => {
     if (field.value === true) {

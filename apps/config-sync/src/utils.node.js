@@ -1,14 +1,14 @@
-import { copyFile, mkdir } from 'node:fs/promises'
-import path from 'node:path'
-import { Logger } from '@monorepo/utils'
+import { copyFile, mkdir } from "node:fs/promises";
+import path from "node:path";
+import { Logger } from "@monorepo/utils";
 
 const regex = {
   carriageReturn: /\r\n/gu,
   clearSpaces: /\s*/gu,
   filename: /[/\\](?<name>[\w.-]+)$/u,
-}
+};
 
-export const logger = new Logger()
+export const logger = new Logger();
 
 /**
  * Get the filename from a filepath
@@ -16,8 +16,8 @@ export const logger = new Logger()
  * @returns {string} the filename
  * @example filename('C:\\Users\\me\\file.txt') // 'file.txt'
  */
-export function filename(filepath = '') {
-  return regex.filename.exec(filepath)?.groups?.name ?? ''
+export function filename(filepath = "") {
+  return regex.filename.exec(filepath)?.groups?.name ?? "";
 }
 
 /**
@@ -27,10 +27,10 @@ export function filename(filepath = '') {
  * @returns {string} the cleaned content
  */
 export function removeLinesMatching(content, regexList) {
-  const lines = content.split('\n')
+  const lines = content.split("\n");
   // oxlint-disable-next-line max-nested-callbacks
-  const filteredLines = lines.filter(line => !regexList.some(regex => regex.test(line)))
-  return filteredLines.join('\n').trim()
+  const filteredLines = lines.filter(line => !regexList.some(regex => regex.test(line)));
+  return filteredLines.join("\n").trim();
 }
 
 /**
@@ -40,10 +40,10 @@ export function removeLinesMatching(content, regexList) {
  * @returns {string} the content without the lines after the matching line
  */
 export function removeLinesAfter(content, regex) {
-  const lines = content.split('\n')
-  const index = lines.findIndex(line => regex.test(line))
-  if (index === -1) return content.trim()
-  return lines.slice(0, index).join('\n').trim()
+  const lines = content.split("\n");
+  const index = lines.findIndex(line => regex.test(line));
+  if (index === -1) return content.trim();
+  return lines.slice(0, index).join("\n").trim();
 }
 
 /**
@@ -52,7 +52,7 @@ export function removeLinesAfter(content, regex) {
  * @returns the processed content with unix line endings
  */
 export function useUnixCarriageReturn(content) {
-  return content.replace(regex.carriageReturn, '\n')
+  return content.replace(regex.carriageReturn, "\n");
 }
 
 /**
@@ -65,15 +65,15 @@ export function useUnixCarriageReturn(content) {
  */
 // oxlint-disable-next-line max-params
 export function clean(content, linesAfter, linesMatching, shouldClearSpaces = true) {
-  if (!content) return ''
-  let output = content
+  if (!content) return "";
+  let output = content;
   /* v8 ignore if -- @preserve */
-  if (linesAfter) output = removeLinesAfter(output, linesAfter)
+  if (linesAfter) output = removeLinesAfter(output, linesAfter);
   /* v8 ignore if -- @preserve */
-  if (linesMatching) output = removeLinesMatching(output, linesMatching)
+  if (linesMatching) output = removeLinesMatching(output, linesMatching);
   /* v8 ignore if -- @preserve */
-  if (shouldClearSpaces) output = output.replace(regex.clearSpaces, '')
-  return output
+  if (shouldClearSpaces) output = output.replace(regex.clearSpaces, "");
+  return output;
 }
 
 /**
@@ -84,10 +84,10 @@ export function clean(content, linesAfter, linesMatching, shouldClearSpaces = tr
  * @returns the normalized path
  */
 /* v8 ignore next -- @preserve */
-export function normalizePathWithSlash(filepath, shouldUseTilde = false, home = process.env.HOME ?? '') {
-  let outPath = path.normalize(filepath).replaceAll('\\', '/')
-  if (shouldUseTilde) outPath = outPath.replace(normalizePathWithSlash(home), '~')
-  return outPath
+export function normalizePathWithSlash(filepath, shouldUseTilde = false, home = process.env.HOME ?? "") {
+  let outPath = path.normalize(filepath).replaceAll("\\", "/");
+  if (shouldUseTilde) outPath = outPath.replace(normalizePathWithSlash(home), "~");
+  return outPath;
 }
 
 /**
@@ -99,13 +99,13 @@ export function normalizePathWithSlash(filepath, shouldUseTilde = false, home = 
 /* v8 ignore next -- @preserve */
 export async function copy(source, destination) {
   // destination will be created or overwritten by default.
-  const destinationFolder = destination.replace(filename(destination), '')
-  await mkdir(destinationFolder, { recursive: true })
+  const destinationFolder = destination.replace(filename(destination), "");
+  await mkdir(destinationFolder, { recursive: true });
 
   return copyFile(source, destination)
     .then(() => true)
     .catch(error => {
-      logger.error(error)
-      return false
-    })
+      logger.error(error);
+      return false;
+    });
 }

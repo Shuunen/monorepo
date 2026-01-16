@@ -1,4 +1,33 @@
-import { addColorCode, bgBlack, bgBlue, bgCyan, bgGray, bgGreen, bgMagenta, bgRed, bgWhite, bgYellow, black, blue, bold, cyan, dim, gray, green, inverse, isFirefox, italic, magenta, overline, red, reset, strikeThrough, underline, white, yellow } from "./colors.js";
+import {
+  addColorCode,
+  bgBlack,
+  bgBlue,
+  bgCyan,
+  bgGray,
+  bgGreen,
+  bgMagenta,
+  bgRed,
+  bgWhite,
+  bgYellow,
+  black,
+  blue,
+  bold,
+  cyan,
+  dim,
+  gray,
+  green,
+  inverse,
+  isFirefox,
+  italic,
+  magenta,
+  overline,
+  red,
+  reset,
+  strikeThrough,
+  underline,
+  white,
+  yellow,
+} from "./colors.js";
 
 it("is not Firefox", () => {
   expect(isFirefox()).toBe(false);

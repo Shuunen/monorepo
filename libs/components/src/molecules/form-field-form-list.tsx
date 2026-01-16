@@ -38,8 +38,8 @@ function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean 
 
 function Item({ item, index, identifier, isEmpty, icon, hasError, readonly, labels, onDeleteItem, onCompleteItem, field }: ItemProps) {
   return (
-    <div className={cn("flex min-w-md gap-4 items-center border border-gray-300 shadow p-4 rounded-xl hover:bg-gray-50 transition-colors")}>
-      <div className="bg-gray-100 p-2 rounded-xl">{icon}</div>
+    <div className={cn("flex min-w-md items-center gap-4 rounded-xl border border-gray-300 p-4 shadow transition-colors hover:bg-gray-50")}>
+      <div className="rounded-xl bg-gray-100 p-2">{icon}</div>
       <div className="flex flex-col gap-1">
         <ItemBadge hasError={hasError} isEmpty={isEmpty} />
         <Title className="whitespace-nowrap" level={3}>
@@ -111,13 +111,28 @@ export function FormFieldFormList({ fieldName, fieldSchema, isOptional, logger, 
       {({ field, fieldState, formState }) => {
         const hasError = Boolean(fieldState.error && formState.isSubmitted);
         return (
-          <div className="flex flex-col gap-4 mt-2">
+          <div className="mt-2 flex flex-col gap-4">
             <Title>{label}</Title>
             <Paragraph>{metadata.placeholder}</Paragraph>
             {items.map((item, index) => {
               const isEmptyItem = isEmpty(item);
               const itemIdentifier = identifier && !isEmptyItem ? identifier(item) : `Form ${index + 1}`;
-              return <Item field={field} hasError={hasError} icon={icon} identifier={itemIdentifier} index={index} isEmpty={isEmptyItem} item={item} key={itemIdentifier} labels={labels} onCompleteItem={onCompleteItem} onDeleteItem={onDeleteItem} readonly={readonly} />;
+              return (
+                <Item
+                  field={field}
+                  hasError={hasError}
+                  icon={icon}
+                  identifier={itemIdentifier}
+                  index={index}
+                  isEmpty={isEmptyItem}
+                  item={item}
+                  key={itemIdentifier}
+                  labels={labels}
+                  onCompleteItem={onCompleteItem}
+                  onDeleteItem={onDeleteItem}
+                  readonly={readonly}
+                />
+              );
             })}
             <div className="flex flex-col items-start gap-4">
               <Button disabled={maxItems !== undefined && items.length >= maxItems} name="add" onClick={() => addItem(field.onChange)} type="button" variant="secondary">
@@ -125,7 +140,7 @@ export function FormFieldFormList({ fieldName, fieldSchema, isOptional, logger, 
                 <IconReject className="size-5 rotate-45" />
               </Button>
               {/* we check isArray(fieldState.error) to know if the error is specifically about missing forms */}
-              {hasError && Array.isArray(fieldState.error) && <span className="text-destructive text-sm">Please complete all forms before submitting.</span>}
+              {hasError && Array.isArray(fieldState.error) && <span className="text-sm text-destructive">Please complete all forms before submitting.</span>}
             </div>
           </div>
         );

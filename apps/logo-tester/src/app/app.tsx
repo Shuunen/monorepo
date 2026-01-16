@@ -1,53 +1,53 @@
 // oxlint-disable no-magic-numbers
-import { AutoForm, Button, field, step, Title } from '@monorepo/components'
-import { copyToClipboard, Logger } from '@monorepo/utils'
-import { useState } from 'react'
-import { z } from 'zod'
-import { Criteria } from './criteria'
+import { AutoForm, Button, field, step, Title } from "@monorepo/components";
+import { copyToClipboard, Logger } from "@monorepo/utils";
+import { useState } from "react";
+import { z } from "zod";
+import { Criteria } from "./criteria";
 
 const uploadStep = step(
   z.object({
-    logoFile: field(z.file(), { label: 'Logo file' }),
-    logoIconFile: field(z.file(), { label: 'Icon file' }),
+    logoFile: field(z.file(), { label: "Logo file" }),
+    logoIconFile: field(z.file(), { label: "Icon file" }),
   }),
-)
+);
 
 const defaultFiles = {
-  icon: 'https://i.imgur.com/dhzaOgY.png',
-  logo: 'https://i.imgur.com/zo0aebs.png',
-}
+  icon: "https://i.imgur.com/dhzaOgY.png",
+  logo: "https://i.imgur.com/zo0aebs.png",
+};
 
-const logger = new Logger()
+const logger = new Logger();
 
 // oxlint-disable-next-line max-lines-per-function
 export function App() {
-  const [logoSrc, setLogoSrc] = useState(defaultFiles.logo)
-  const [iconSrc, setIconSrc] = useState(defaultFiles.icon)
-  const [points, setPoints] = useState<number[]>([])
+  const [logoSrc, setLogoSrc] = useState(defaultFiles.logo);
+  const [iconSrc, setIconSrc] = useState(defaultFiles.icon);
+  const [points, setPoints] = useState<number[]>([]);
   function onFileUpload(data: Record<string, unknown>) {
-    if ('logoFile' in data && data.logoFile instanceof File) {
-      const logoUrl = URL.createObjectURL(data.logoFile)
-      setLogoSrc(logoUrl)
+    if ("logoFile" in data && data.logoFile instanceof File) {
+      const logoUrl = URL.createObjectURL(data.logoFile);
+      setLogoSrc(logoUrl);
     }
-    if ('logoIconFile' in data && data.logoIconFile instanceof File) {
-      const iconUrl = URL.createObjectURL(data.logoIconFile)
-      setIconSrc(iconUrl)
+    if ("logoIconFile" in data && data.logoIconFile instanceof File) {
+      const iconUrl = URL.createObjectURL(data.logoIconFile);
+      setIconSrc(iconUrl);
     }
   }
   function setPointAtIndex(index: number, pointValue: number) {
     setPoints(prev => {
-      const newPoints = [...prev]
-      newPoints[index] = pointValue
-      return newPoints
-    })
+      const newPoints = [...prev];
+      newPoints[index] = pointValue;
+      return newPoints;
+    });
   }
   async function copyPoints() {
-    const pointsString = points.join('\t')
-    const result = await copyToClipboard(pointsString)
-    logger.showResult('Export', result, 'success')
+    const pointsString = points.join("\t");
+    const result = await copyToClipboard(pointsString);
+    logger.showResult("Export", result, "success");
   }
   return (
-    <div className="max-w-xl relative mx-auto grid gap-6 p-6">
+    <div className="relative mx-auto grid max-w-xl gap-6 p-6">
       <Title className="text-center text-5xl font-light">Logo Tester</Title>
       <Title level={3} variant="muted">
         This web app helps you test how your logo and icon will look like in different scenarios.
@@ -76,7 +76,7 @@ export function App() {
       <Criteria name="Readable logo on light background" onSelection={pointValue => setPointAtIndex(8, pointValue)} />
       <hr />
       <div className="card stripped-light">
-        <img alt="Logo on light background in grayscale" className="logo filter grayscale" src={logoSrc} />
+        <img alt="Logo on light background in grayscale" className="logo grayscale filter" src={logoSrc} />
       </div>
       <Criteria name="Readable logo on light background in black and white" onSelection={pointValue => setPointAtIndex(9, pointValue)} />
       <hr />
@@ -91,7 +91,7 @@ export function App() {
       <Criteria name="Readable logo on dark background" onSelection={pointValue => setPointAtIndex(11, pointValue)} />
       <hr />
       <div className="card stripped-dark">
-        <img alt="Logo on dark background inverted grayscale" className="logo filter grayscale invert" src={logoSrc} />
+        <img alt="Logo on dark background inverted grayscale" className="logo grayscale invert filter" src={logoSrc} />
       </div>
       <Criteria name="Readable logo on dark background in inverted black and white" onSelection={pointValue => setPointAtIndex(12, pointValue)} />
       <hr />
@@ -106,7 +106,7 @@ export function App() {
       <Criteria name="Readable logo when medium" onSelection={pointValue => setPointAtIndex(14, pointValue)} />
       <hr />
       <div className="card stripped-light">
-        <img alt="Inverted logo" className="logo filter invert" src={logoSrc} />
+        <img alt="Inverted logo" className="logo invert filter" src={logoSrc} />
       </div>
       <Criteria name="Readable logo when inverted" onSelection={pointValue => setPointAtIndex(15, pointValue)} />
       <hr />
@@ -132,7 +132,7 @@ export function App() {
       <hr />
       <div className="relative">
         <img alt="Android phone mock-up" className="relative z-10 w-xl" src="https://i.imgur.com/w2dOu18.png" />
-        <img alt="Icon on Android app" className="icon absolute z-0 object-contain" src={iconSrc} style={{ bottom: '79px', right: '205px', width: '30px' }} />
+        <img alt="Icon on Android app" className="icon absolute z-0 object-contain" src={iconSrc} style={{ bottom: "79px", right: "205px", width: "30px" }} />
       </div>
       <Criteria name="Logo as an app icon" onSelection={pointValue => setPointAtIndex(18, pointValue)} />
       <hr />
@@ -140,5 +140,5 @@ export function App() {
         Copy results to clipboard
       </Button>
     </div>
-  )
+  );
 }

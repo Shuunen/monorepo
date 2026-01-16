@@ -122,7 +122,7 @@ const listeners: Partial<Record<Properties, Listener[]>> = {};
 
 const handler = {
   set(target: typeof data, key: Properties, value: unknown): boolean {
-    listeners[key]?.forEach((callback) => {
+    listeners[key]?.forEach(callback => {
       callback();
     });
     return Reflect.set(target, key, value);

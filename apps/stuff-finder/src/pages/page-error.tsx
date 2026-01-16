@@ -1,9 +1,9 @@
-import PestControlIcon from '@mui/icons-material/PestControl'
-import { AppPageCard } from '../components/app-page-card'
-import { logger } from '../utils/logger.utils'
+import PestControlIcon from "@mui/icons-material/PestControl";
+import { AppPageCard } from "../components/app-page-card";
+import { logger } from "../utils/logger.utils";
 
 export function PageError({ code, ...properties }: Readonly<{ [key: string]: unknown; code?: string }>) {
-  logger.debug('PageError', { code, properties })
+  logger.debug("PageError", { code, properties });
   return (
     <AppPageCard cardTitle="Error" icon={PestControlIcon} pageCode="error" pageTitle={`Error ${code}`}>
       <div className="flex flex-col">
@@ -13,5 +13,5 @@ export function PageError({ code, ...properties }: Readonly<{ [key: string]: unk
         <p className="cursor-help opacity-10 hover:animate-pulse hover:opacity-20">Statically speaking, it&apos;s probably your fault.</p>
       </div>
     </AppPageCard>
-  )
+  );
 }

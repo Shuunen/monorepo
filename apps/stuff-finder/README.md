@@ -23,18 +23,18 @@
 
 ## Build sizes
 
-- 0.1.1 :  4KB html +  9KB css + 320KB js
-- 0.1.0 :  3KB html +  9KB css + 435KB js
-- 0.2.0 :  8KB html + 20KB css + 305KB js
+- 0.1.1 : 4KB html + 9KB css + 320KB js
+- 0.1.0 : 3KB html + 9KB css + 435KB js
+- 0.2.0 : 8KB html + 20KB css + 305KB js
 - 0.4.0 : 12KB html + 22KB css + 320KB js
 - 0.5.0 : 12KB html + 22KB css + 330KB js
-- 1.0.0 :  6KB html + 27KB css + 360KB js (migration to vite & preact with old code)
-- 1.1.0 :  6KB html + 27KB css + 445KB js (added mui + mui icons)
-- 1.2.0 :  3KB html + 26KB css + 622KB js (added notistack + preact-router)
-- 1.3.0 :  3KB html + 16KB css + 683KB js
-- 2.0.0 :  3KB html + 18KB css + 720KB js (more components, better design)
-- 2.1.0 :  1KB html + 18KB css + 726KB js
-- 2.2.0 :  1KB html + 18KB css + 691KB js (after making everything lazy & optimizing common deps)
+- 1.0.0 : 6KB html + 27KB css + 360KB js (migration to vite & preact with old code)
+- 1.1.0 : 6KB html + 27KB css + 445KB js (added mui + mui icons)
+- 1.2.0 : 3KB html + 26KB css + 622KB js (added notistack + preact-router)
+- 1.3.0 : 3KB html + 16KB css + 683KB js
+- 2.0.0 : 3KB html + 18KB css + 720KB js (more components, better design)
+- 2.1.0 : 1KB html + 18KB css + 726KB js
+- 2.2.0 : 1KB html + 18KB css + 691KB js (after making everything lazy & optimizing common deps)
 
 Check build stats in details by running `pnpm build:analyze`.
 

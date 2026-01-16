@@ -161,7 +161,7 @@ myArray.sort(byAge)
 accepted :
 
 ```ts
-const value = await fetch(url).then((response) => response.json());
+const value = await fetch(url).then(response => response.json());
 ```
 
 null / undefined is preferred

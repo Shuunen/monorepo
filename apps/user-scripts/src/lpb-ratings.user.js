@@ -393,7 +393,7 @@ chateau grand puy lacoste lacoste borie pauillac,5.0
 mouton cadet bordeaux rouge,3.0
 la prade mari gourmandise des bois,2.5
 chateau saint ahon haut medoc,4.0
-gallo family vineyards summer red,1.0`
+gallo family vineyards summer red,1.0`;
 
 /**
  * Clean a title string
@@ -402,24 +402,24 @@ gallo family vineyards summer red,1.0`
  */
 function cleanTitle(title) {
   return title
-    .replaceAll(/\([^(]+\)/gu, ' ') // remove parenthesis content(s)
-    .replaceAll(/\d{4}/gu, ' ') // remove year
-    .replaceAll(/['’-]/gu, ' ')
-    .normalize('NFD')
-    .replaceAll(/[^\d\sa-z]/giu, '')
+    .replaceAll(/\([^(]+\)/gu, " ") // remove parenthesis content(s)
+    .replaceAll(/\d{4}/gu, " ") // remove year
+    .replaceAll(/['’-]/gu, " ")
+    .normalize("NFD")
+    .replaceAll(/[^\d\sa-z]/giu, "")
     .toLowerCase() // from shuutils sanitize
-    .replaceAll(/\b(?:chateau|clos|cuvee|de|domaine|du|la|le|maison|vini)s?\b/gu, ' ') // remove common words
-    .replaceAll(/\s+/gu, ' ')
-    .trim()
+    .replaceAll(/\b(?:chateau|clos|cuvee|de|domaine|du|la|le|maison|vini)s?\b/gu, " ") // remove common words
+    .replaceAll(/\s+/gu, " ")
+    .trim();
 }
 
-const ratings = ratingsCsv.split('\n').map(line => {
-  const [title, rating] = line.split(',')
+const ratings = ratingsCsv.split("\n").map(line => {
+  const [title, rating] = line.split(",");
   return {
     rating: Number.parseFloat(rating),
     title: cleanTitle(title),
-  }
-})
+  };
+});
 
 /**
  * Creates a styled review element representing a user rating
@@ -428,95 +428,95 @@ const ratings = ratingsCsv.split('\n').map(line => {
  * @returns {HTMLDivElement} The styled review div element.
  */
 function createReview(name, rating) {
-  const review = document.createElement('div')
-  review.classList.add('my-review')
-  review.style.width = `${Math.max((rating / 5) * 100, 20)}%` // 5 stars will be 100% width
-  review.style.height = `${12}px`
-  review.style.margin = '2px 0'
-  review.style.borderRadius = `${5}px`
-  review.style.backgroundColor = 'red'
-  review.style.backgroundImage = 'url("https://i.pinimg.com/originals/d5/a7/cb/d5a7cb46e2f15a8fed10aaf1dd00965c.gif")'
-  review.style.backgroundBlendMode = 'color-dodge'
-  review.style.backgroundSize = '16px'
-  if (rating >= 3) review.style.backgroundColor = 'orange'
-  if (rating >= 4) review.style.backgroundColor = 'green'
-  review.title = `"${name}" rated ${rating} stars`
-  return review
+  const review = document.createElement("div");
+  review.classList.add("my-review");
+  review.style.width = `${Math.max((rating / 5) * 100, 20)}%`; // 5 stars will be 100% width
+  review.style.height = `${12}px`;
+  review.style.margin = "2px 0";
+  review.style.borderRadius = `${5}px`;
+  review.style.backgroundColor = "red";
+  review.style.backgroundImage = 'url("https://i.pinimg.com/originals/d5/a7/cb/d5a7cb46e2f15a8fed10aaf1dd00965c.gif")';
+  review.style.backgroundBlendMode = "color-dodge";
+  review.style.backgroundSize = "16px";
+  if (rating >= 3) review.style.backgroundColor = "orange";
+  if (rating >= 4) review.style.backgroundColor = "green";
+  review.title = `"${name}" rated ${rating} stars`;
+  return review;
 }
 
 // oxlint-disable-next-line max-lines-per-function, max-lines-per-function
 function LpbRatings() {
-  if (globalThis.matchMedia === undefined) return
+  if (globalThis.matchMedia === undefined) return;
   const fuseSettings = {
     includeScore: true,
-    keys: ['title'],
+    keys: ["title"],
     minMatchCharLength: 4,
     threshold: 0.4,
-  }
+  };
   // @ts-expect-error Fuse is globally available
   // biome-ignore lint/correctness/noUndeclaredVariables: globally available
-  const fuse = new Fuse(ratings, fuseSettings) // oxlint-disable-line no-undef
+  const fuse = new Fuse(ratings, fuseSettings); // oxlint-disable-line no-undef
 
-  const utils = new Shuutils('lpb-ratings')
+  const utils = new Shuutils("lpb-ratings");
   const selectors = {
     items: `.product-item:not(.${utils.id})`,
-    useless: '.product-catalog--out-stock, .footer-trustpilot, .footer-legal',
-    wineTitle: '.product-catalog__title',
-  }
+    useless: ".product-catalog--out-stock, .footer-trustpilot, .footer-legal",
+    wineTitle: ".product-catalog__title",
+  };
   function hideUseless() {
     for (const node of utils.findAll(selectors.useless, document, true))
-      if (utils.willDebug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
-      else node.style.display = 'none'
+      if (utils.willDebug) node.style = "background-color: red !important;color: white !important; box-shadow: 0 0 10px red;";
+      else node.style.display = "none";
   }
 
-  function searchRating(wine = '') {
-    const results = fuse.search(wine)
-    if (results.length === 0) return { isMatching: false }
-    const [result] = results
-    const percent = 100 - Math.round(result.score * 100)
-    if (percent < 50) return { isMatching: false }
-    const { rating = 0, title = '' } = result.item
-    if (wine.includes('rouge') && title.includes('blanc')) return { isMatching: false }
-    if (wine.includes('blanc') && title.includes('rouge')) return { isMatching: false }
-    return { isMatching: true, percent, rating, search: wine, title }
+  function searchRating(wine = "") {
+    const results = fuse.search(wine);
+    if (results.length === 0) return { isMatching: false };
+    const [result] = results;
+    const percent = 100 - Math.round(result.score * 100);
+    if (percent < 50) return { isMatching: false };
+    const { rating = 0, title = "" } = result.item;
+    if (wine.includes("rouge") && title.includes("blanc")) return { isMatching: false };
+    if (wine.includes("blanc") && title.includes("rouge")) return { isMatching: false };
+    return { isMatching: true, percent, rating, search: wine, title };
   }
 
   /**
    * @param {HTMLElement} item The item to inject the rating into
    */
   function injectRating(item) {
-    item.classList.add(utils.id)
-    const title = utils.findOne(selectors.wineTitle, item, true)
+    item.classList.add(utils.id);
+    const title = utils.findOne(selectors.wineTitle, item, true);
     if (!title) {
-      utils.error('no title found on item', item)
-      return
+      utils.error("no title found on item", item);
+      return;
     }
-    const domain = title.nextElementSibling
-    const wine = cleanTitle(`${domain?.textContent} ${title.textContent}`)
-    const result = searchRating(wine)
-    if (!result.isMatching) return
-    utils.log('found', result)
-    title.prepend(createReview(result.title, result.rating))
+    const domain = title.nextElementSibling;
+    const wine = cleanTitle(`${domain?.textContent} ${title.textContent}`);
+    const result = searchRating(wine);
+    if (!result.isMatching) return;
+    utils.log("found", result);
+    title.prepend(createReview(result.title, result.rating));
   }
 
   function injectRatings() {
-    for (const item of utils.findAll(selectors.items)) injectRating(item)
+    for (const item of utils.findAll(selectors.items)) injectRating(item);
   }
 
   async function init() {
-    const items = await utils.waitToDetect(selectors.items)
+    const items = await utils.waitToDetect(selectors.items);
     if (items === undefined) {
-      utils.log('no item found on this page')
-      return
+      utils.log("no item found on this page");
+      return;
     }
-    hideUseless()
-    injectRatings()
+    hideUseless();
+    injectRatings();
   }
 
-  const injectRatingsDebounced = utils.debounce(injectRatings, 500)
-  utils.onPageChange(init)
-  globalThis.addEventListener('DOMNodeInserted', () => injectRatingsDebounced())
+  const injectRatingsDebounced = utils.debounce(injectRatings, 500);
+  utils.onPageChange(init);
+  globalThis.addEventListener("DOMNodeInserted", () => injectRatingsDebounced());
 }
 
-if (globalThis.window) LpbRatings()
-else module.exports = { cleanTitle, createReview }
+if (globalThis.window) LpbRatings();
+else module.exports = { cleanTitle, createReview };

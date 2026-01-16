@@ -49,28 +49,28 @@ Online demo: [https://vet-web-app.netlify.app](https://vet-web-app.netlify.app/)
 ## Structure
 
 src/
-├── components/            # UI Components (Atomic Design)
-│   ├── atoms/             # Smallest reusable components (Button, Input, Label)
-│   ├── molecules/         # Grouped atoms forming functional components
-│   ├── organisms/         # Complex UI structures combining molecules
+├── components/ # UI Components (Atomic Design)
+│ ├── atoms/ # Smallest reusable components (Button, Input, Label)
+│ ├── molecules/ # Grouped atoms forming functional components
+│ ├── organisms/ # Complex UI structures combining molecules
 │
-├── utils/                 # Business logic and utilities
-│   ├── foobar.const.ts    # Foobar related constants
-│   ├── foobar.store.ts    # Foobar related Zustand store
-│   ├── foobar.utils.ts    # Foobar related utility functions
-│   ├── foobar.types.ts    # Foobar related TypeScript types
+├── utils/ # Business logic and utilities
+│ ├── foobar.const.ts # Foobar related constants
+│ ├── foobar.store.ts # Foobar related Zustand store
+│ ├── foobar.utils.ts # Foobar related utility functions
+│ ├── foobar.types.ts # Foobar related TypeScript types
 │
-├── pages/                 # Page components (LoginPage, DashboardPage)
-│        ├── App.tsx       # Main app entry point
+├── pages/ # Page components (LoginPage, DashboardPage)
+│ ├── App.tsx # Main app entry point
 │
-├── routes/                # TanStack app routing
-│   ├── __root.tsx.tsx     # Root route
-│   ├── index.tsx          # Home page
-│   ├── about.tsx          # About page
+├── routes/ # TanStack app routing
+│ ├── \_\_root.tsx.tsx # Root route
+│ ├── index.tsx # Home page
+│ ├── about.tsx # About page
 │
 ├── .gitignore
 ├── package.json
-├── README.md              # This file :p
+├── README.md # This file :p
 
 ## Thanks
 

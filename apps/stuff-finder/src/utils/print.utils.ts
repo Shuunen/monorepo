@@ -1,6 +1,6 @@
 /* v8 ignore next -- @preserve */
-import type { Item } from '../types/item.types'
-import { itemToLocation } from './item.utils'
+import type { Item } from "../types/item.types";
+import { itemToLocation } from "./item.utils";
 
 /**
  * Generate a name from an item
@@ -9,9 +9,9 @@ import { itemToLocation } from './item.utils'
  */
 function itemToPrintText(item: Item) {
   return [item.name, item.brand, item.details]
-    .join(' ')
-    .replaceAll(/\s{2,}/gu, ' ')
-    .trim()
+    .join(" ")
+    .replaceAll(/\s{2,}/gu, " ")
+    .trim();
 }
 
 /**
@@ -20,11 +20,11 @@ function itemToPrintText(item: Item) {
  * @returns the generated code like '123456'
  */
 function itemToPrintCode(item: Item) {
-  const reference = item.reference.trim()
-  if (reference.length > 0) return reference
-  const barcode = item.barcode.trim()
-  if (barcode.length > 0) return barcode
-  return ''
+  const reference = item.reference.trim();
+  if (reference.length > 0) return reference;
+  const barcode = item.barcode.trim();
+  if (barcode.length > 0) return barcode;
+  return "";
 }
 
 /**
@@ -37,5 +37,5 @@ export function itemToPrintData(item: Item) {
     location: itemToLocation(item, true),
     text: itemToPrintText(item),
     value: itemToPrintCode(item),
-  }
+  };
 }

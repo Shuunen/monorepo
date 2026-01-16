@@ -21,13 +21,19 @@ const cardButtonClickMock = fn();
 
 export const TextContent: Story = {
   args: {
-    children: <p className="px-6">Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat aspernatur ea architecto, consectetur dignissimos minima magni sed illum odio assumenda, soluta iure incidunt repudiandae. Incidunt voluptas provident eius sequi illum.</p>,
+    children: (
+      <p className="px-6">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat aspernatur ea architecto, consectetur dignissimos minima magni sed illum odio assumenda, soluta iure incidunt repudiandae. Incidunt voluptas provident eius sequi illum.
+      </p>
+    ),
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
     // Check that the text content is rendered inside the card
-    const paragraph = canvas.getByText("Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat aspernatur ea architecto, consectetur dignissimos minima magni sed illum odio assumenda, soluta iure incidunt repudiandae. Incidunt voluptas provident eius sequi illum.");
+    const paragraph = canvas.getByText(
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat aspernatur ea architecto, consectetur dignissimos minima magni sed illum odio assumenda, soluta iure incidunt repudiandae. Incidunt voluptas provident eius sequi illum.",
+    );
     expect(paragraph).toBeInTheDocument();
   },
 };
@@ -39,7 +45,9 @@ export const CompleteCard: Story = {
     // Check header, description, content, footer
     const title = canvas.getByText("Card Title");
     const description = canvas.getByText("Card Description");
-    const paragraph = canvas.getByText("Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat aspernatur ea architecto, consectetur dignissimos minima magni sed illum odio assumenda, soluta iure incidunt repudiandae. Incidunt voluptas provident eius sequi illum.");
+    const paragraph = canvas.getByText(
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat aspernatur ea architecto, consectetur dignissimos minima magni sed illum odio assumenda, soluta iure incidunt repudiandae. Incidunt voluptas provident eius sequi illum.",
+    );
     const footer = canvas.getByText("A nice footer");
 
     expect(title).toBeInTheDocument();

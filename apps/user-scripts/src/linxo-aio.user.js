@@ -15,45 +15,45 @@
 
 const authorizedCategories = new Set([
   // Vie courante
-  'Alimentation, supermarché',
-  'Snacks, repas au travail',
-  'Dépenses vie courante',
-  'Internet, TV, télécom',
-  'Shopping/e-Commerce',
+  "Alimentation, supermarché",
+  "Snacks, repas au travail",
+  "Dépenses vie courante",
+  "Internet, TV, télécom",
+  "Shopping/e-Commerce",
   // Logement, energies
-  'Electricité, gaz, chauffage',
-  'Assurance logement',
-  'Loyer',
+  "Electricité, gaz, chauffage",
+  "Assurance logement",
+  "Loyer",
   // Santé, prévoyance
-  'Cotis mutuelle, prévoyance',
+  "Cotis mutuelle, prévoyance",
   // Voyages, train, hôtels
   // Impôts, taxe habitation
-  'Impôts',
+  "Impôts",
   // Hors budget
   "Salaire/Revenus d'activité",
-])
+]);
 
 function LinxoAio() {
   /* globals Shuutils, RoughNotation */
-  const utils = new Shuutils('linxo-aio', true)
-  const processed = `${utils.id}-processed`
+  const utils = new Shuutils("linxo-aio", true);
+  const processed = `${utils.id}-processed`;
   const selectors = {
     labels: `td > div > img + div[title]:not(.${processed})`,
-  }
+  };
   /**
    * Check for wrong categories in the page
    */
   function checkWrongCategories() {
-    const labels = utils.findAll(selectors.labels)
+    const labels = utils.findAll(selectors.labels);
     for (const element of labels) {
-      const label = element.getAttribute('title')
-      if (label === null || authorizedCategories.has(label)) continue
-      element.classList.add(processed)
-      element.dataset.highlightReason = 'wrong-category'
+      const label = element.getAttribute("title");
+      if (label === null || authorizedCategories.has(label)) continue;
+      element.classList.add(processed);
+      element.dataset.highlightReason = "wrong-category";
       // oxlint-disable no-undef
       // biome-ignore lint/correctness/noUndeclaredVariables: RoughNotation exists
-      const annotation = RoughNotation.annotate(element, { color: 'yellow', type: 'highlight' })
-      annotation.show()
+      const annotation = RoughNotation.annotate(element, { color: "yellow", type: "highlight" });
+      annotation.show();
       // oxlint-enable no-undef
     }
   }
@@ -61,14 +61,14 @@ function LinxoAio() {
    * Process the page
    */
   function process() {
-    utils.log('processing')
-    checkWrongCategories()
+    utils.log("processing");
+    checkWrongCategories();
   }
-  const processDebounceTime = 500
-  const processDebounced = utils.debounce(process, processDebounceTime)
-  document.addEventListener('scroll', () => processDebounced())
-  utils.onPageChange(processDebounced)
-  setTimeout(processDebounced, processDebounceTime)
+  const processDebounceTime = 500;
+  const processDebounced = utils.debounce(process, processDebounceTime);
+  document.addEventListener("scroll", () => processDebounced());
+  utils.onPageChange(processDebounced);
+  setTimeout(processDebounced, processDebounceTime);
 }
 
-if (globalThis.window) LinxoAio()
+if (globalThis.window) LinxoAio();

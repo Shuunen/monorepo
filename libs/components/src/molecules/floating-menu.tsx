@@ -24,10 +24,10 @@ export function FloatingMenu({ actions = [], isLoading = false, isSettingsRequir
   }, []);
   return (
     <>
-      {isOpen && <div className="fixed bottom-0 right-0 z-10 size-full bg-linear-to-tl bg-black/20" data-component="speed-dial-backdrop" />}
+      {isOpen && <div className="fixed right-0 bottom-0 z-10 size-full bg-black/20 bg-linear-to-tl" data-component="speed-dial-backdrop" />}
       <Popover onOpenChange={setOpen}>
-        <PopoverTrigger className={cn("cursor-pointer transition-all bottom-5 right-5 fixed bg-primary p-4 rounded-full", isSettingsRequired ? "animate-pulse" : "opacity-50 hover:opacity-100")}>{icon}</PopoverTrigger>
-        <PopoverContent className="p-1 mr-5 mb-2 w-fit">
+        <PopoverTrigger className={cn("fixed right-5 bottom-5 cursor-pointer rounded-full bg-primary p-4 transition-all", isSettingsRequired ? "animate-pulse" : "opacity-50 hover:opacity-100")}>{icon}</PopoverTrigger>
+        <PopoverContent className="mr-5 mb-2 w-fit p-1">
           <Command>
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>

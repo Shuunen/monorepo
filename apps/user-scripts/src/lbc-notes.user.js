@@ -19,19 +19,19 @@
 
 const config = {
   averageNote: {
-    class: 'bg-yellow-200',
+    class: "bg-yellow-200",
     isDisplayed: false,
-    keyword: 'bof',
+    keyword: "bof",
   },
   badNote: {
-    class: 'bg-red-200',
+    class: "bg-red-200",
     isDisplayed: false,
-    keyword: 'nope',
+    keyword: "nope",
   },
   loading: {
-    class: 'loading',
+    class: "loading",
   },
-}
+};
 
 /**
  * @typedef {import('./lbc.types').IdbKeyvalGetter<LbcNote>} IdbKeyvalNoteGetter
@@ -52,8 +52,8 @@ const config = {
  */
 function getListingId(url = document.location.href) {
   // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-  const id = /\/(?<id>\d{5,15})\b/u.exec(url)?.groups?.id
-  return id ? Number.parseInt(id, 10) : undefined
+  const id = /\/(?<id>\d{5,15})\b/u.exec(url)?.groups?.id;
+  return id ? Number.parseInt(id, 10) : undefined;
 }
 
 /**
@@ -61,7 +61,7 @@ function getListingId(url = document.location.href) {
  * @returns {boolean} true if multiple ads are shown on the current page
  */
 function multipleAdDisplayed() {
-  return getListingId() === undefined
+  return getListingId() === undefined;
 }
 
 /**
@@ -70,9 +70,9 @@ function multipleAdDisplayed() {
  * @returns {number} the listing id
  */
 function getListingIdFromNote(noteElement) {
-  const listingIdString = noteElement.dataset.listingId
-  if (listingIdString === undefined) return 0
-  return Number.parseInt(listingIdString, 10)
+  const listingIdString = noteElement.dataset.listingId;
+  if (listingIdString === undefined) return 0;
+  return Number.parseInt(listingIdString, 10);
 }
 
 /**
@@ -81,51 +81,51 @@ function getListingIdFromNote(noteElement) {
  * @returns {string} the note id
  */
 function getNoteIdFromNote(noteElement) {
-  const noteIdString = noteElement.dataset.noteId
-  if (noteIdString === undefined) return ''
-  return noteIdString
+  const noteIdString = noteElement.dataset.noteId;
+  if (noteIdString === undefined) return "";
+  return noteIdString;
 }
 function LbcNotes() {
-  if (globalThis.matchMedia === undefined) return
+  if (globalThis.matchMedia === undefined) return;
   // oxlint-disable no-undef
   // biome-ignore lint/correctness/noUndeclaredVariables: globally available
-  const { clear: clearStore, get: getNoteFromStore, set: setInStore } = idbKeyval
+  const { clear: clearStore, get: getNoteFromStore, set: setInStore } = idbKeyval;
   // biome-ignore lint/correctness/noUndeclaredVariables: globally available
   tailwind.config = {
     corePlugins: {
       preflight: false,
     },
-  }
-  const utils = new Shuutils('lbc-nts')
+  };
+  const utils = new Shuutils("lbc-nts");
   // Remove me one day :)
-  utils.tw ||= classes => classes.split(' ')
+  utils.tw ||= classes => classes.split(" ");
   const cls = {
     marker: `${utils.id}-processed`,
-  }
+  };
   const uselessSelectors = {
     adWithDelivery: '[data-test-id="delivery-widget"]',
     floatingSidebar: '[class^="styles_sideColumn__"]',
-  }
+  };
   /* Init DB */
   // biome-ignore lint/correctness/noUndeclaredVariables: globally available
-  const { Client, Databases, ID, Query } = Appwrite
+  const { Client, Databases, ID, Query } = Appwrite;
   const db = {
-    databaseId: localStorage.getItem('lbcNotes_databaseId'),
-    endpoint: 'https://cloud.appwrite.io/v1',
-    notesCollectionId: localStorage.getItem('lbcNotes_notesCollectionId'),
-    project: localStorage.getItem('lbcNotes_project'),
-  }
+    databaseId: localStorage.getItem("lbcNotes_databaseId"),
+    endpoint: "https://cloud.appwrite.io/v1",
+    notesCollectionId: localStorage.getItem("lbcNotes_notesCollectionId"),
+    project: localStorage.getItem("lbcNotes_project"),
+  };
   if (!db.databaseId || !db.notesCollectionId) {
-    utils.showError('missing lbcNotes_databaseId or lbcNotes_notesCollectionId in localStorage')
-    return
+    utils.showError("missing lbcNotes_databaseId or lbcNotes_notesCollectionId in localStorage");
+    return;
   }
   if (!db.project) {
-    utils.showError('missing lbcNotes_project in localStorage')
-    return
+    utils.showError("missing lbcNotes_project in localStorage");
+    return;
   }
-  const client = new Client()
-  const databases = new Databases(client)
-  client.setEndpoint(db.endpoint).setProject(db.project)
+  const client = new Client();
+  const databases = new Databases(client);
+  client.setEndpoint(db.endpoint).setProject(db.project);
 
   /**
    * Clear all notes from local store
@@ -133,16 +133,16 @@ function LbcNotes() {
    * @returns {HTMLButtonElement} the clear store button
    */
   function getClearStoreButton(clearStoreCallback) {
-    const button = document.createElement('button')
-    button.textContent = 'Clear notes store'
-    button.classList.add(...utils.tw('fixed bottom-5 right-5 z-10 rounded-md border border-gray-600 bg-gray-100 px-2 py-1 opacity-30 transition-all duration-500 ease-in-out hover:opacity-100'))
-    button.addEventListener('click', () => {
+    const button = document.createElement("button");
+    button.textContent = "Clear notes store";
+    button.classList.add(...utils.tw("fixed bottom-5 right-5 z-10 rounded-md border border-gray-600 bg-gray-100 px-2 py-1 opacity-30 transition-all duration-500 ease-in-out hover:opacity-100"));
+    button.addEventListener("click", () => {
       // oxlint-disable-next-line no-alert
-      if (!confirm('Are you sure you want to clear all notes ?')) return
-      clearStoreCallback()
-      globalThis.location.reload()
-    })
-    return button
+      if (!confirm("Are you sure you want to clear all notes ?")) return;
+      clearStoreCallback();
+      globalThis.location.reload();
+    });
+    return button;
   }
 
   /**
@@ -152,17 +152,17 @@ function LbcNotes() {
    * @param {boolean} willHide true if the hide is active
    * @returns {void}
    */
-  function hideAdElement(element, cause = 'unknown', willHide = true) {
-    const id = 'lbc-nts'
-    if (!element) throw new Error(`no element to hide for cause "${cause}"`)
-    element.dataset.lbcAdHiddenCause = cause
-    element.classList.add(...utils.tw('overflow-hidden transition-all duration-500 ease-in-out hover:h-auto hover:opacity-100 hover:filter-none'))
-    element.classList.toggle('h-40', willHide)
-    element.classList.toggle('grayscale', willHide)
-    element.classList.toggle('opacity-40', willHide)
-    element.style.pointerEvents = 'auto'
-    element.parentElement?.classList.toggle(`${id}-hidden`, willHide)
-    element.parentElement?.classList.toggle(`${id}-hidden-cause-${cause}`, willHide)
+  function hideAdElement(element, cause = "unknown", willHide = true) {
+    const id = "lbc-nts";
+    if (!element) throw new Error(`no element to hide for cause "${cause}"`);
+    element.dataset.lbcAdHiddenCause = cause;
+    element.classList.add(...utils.tw("overflow-hidden transition-all duration-500 ease-in-out hover:h-auto hover:opacity-100 hover:filter-none"));
+    element.classList.toggle("h-40", willHide);
+    element.classList.toggle("grayscale", willHide);
+    element.classList.toggle("opacity-40", willHide);
+    element.style.pointerEvents = "auto";
+    element.parentElement?.classList.toggle(`${id}-hidden`, willHide);
+    element.parentElement?.classList.toggle(`${id}-hidden-cause-${cause}`, willHide);
   }
 
   /**
@@ -171,17 +171,17 @@ function LbcNotes() {
    * @returns {void}
    */
   function updateNoteStyle(noteElement) {
-    const noteContent = noteElement.value
-    const isAverage = noteContent.includes(config.averageNote.keyword)
-    const isBad = noteContent.includes(config.badNote.keyword)
-    noteElement.classList.toggle(config.averageNote.class, isAverage)
-    noteElement.classList.toggle(config.badNote.class, isBad)
-    if (!multipleAdDisplayed()) return
-    utils.log('multiple ad displayed')
+    const noteContent = noteElement.value;
+    const isAverage = noteContent.includes(config.averageNote.keyword);
+    const isBad = noteContent.includes(config.badNote.keyword);
+    noteElement.classList.toggle(config.averageNote.class, isAverage);
+    noteElement.classList.toggle(config.badNote.class, isBad);
+    if (!multipleAdDisplayed()) return;
+    utils.log("multiple ad displayed");
     // @ts-expect-error type mismatch
-    if (!config.averageNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, 'average-keyword', isAverage)
+    if (!config.averageNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, "average-keyword", isAverage);
     // @ts-expect-error type mismatch
-    if (isBad && !config.badNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, 'bad-keyword')
+    if (isBad && !config.badNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, "bad-keyword");
   }
 
   /**
@@ -190,9 +190,9 @@ function LbcNotes() {
    * @returns {void}
    */
   function saveNoteToStore(note) {
-    if (note.noteContent === '') return
-    utils.debug('save note to local store', note)
-    setInStore(`lbcNotes_${note.listingId}`, note)
+    if (note.noteContent === "") return;
+    utils.debug("save note to local store", note);
+    setInStore(`lbcNotes_${note.listingId}`, note);
   }
   /**
    * Callback when a note is saved successfully
@@ -201,15 +201,15 @@ function LbcNotes() {
    * @returns {void}
    */
   function saveNoteSuccess(note, noteElement) {
-    saveNoteToStore(note)
-    noteElement.dataset.noteId = note.noteId
-    noteElement.classList.remove(config.loading.class)
-    noteElement.classList.add(...utils.tw('bg-green-200'))
-    const delay = 1000
+    saveNoteToStore(note);
+    noteElement.dataset.noteId = note.noteId;
+    noteElement.classList.remove(config.loading.class);
+    noteElement.classList.add(...utils.tw("bg-green-200"));
+    const delay = 1000;
     setTimeout(() => {
-      noteElement.classList.remove(...utils.tw('bg-green-200'))
-      updateNoteStyle(noteElement)
-    }, delay)
+      noteElement.classList.remove(...utils.tw("bg-green-200"));
+      updateNoteStyle(noteElement);
+    }, delay);
   }
   /**
    * Callback when a note failed to save
@@ -219,10 +219,10 @@ function LbcNotes() {
    * @returns {void}
    */
   function saveNoteFailure(note, noteElement, error) {
-    utils.showError(`failed to ${note.noteId ? 'update' : 'create'} note for listing ${note.listingId}`)
-    utils.error(error)
-    noteElement.classList.remove(config.loading.class)
-    noteElement.classList.add(...utils.tw('border-4 border-red-500'))
+    utils.showError(`failed to ${note.noteId ? "update" : "create"} note for listing ${note.listingId}`);
+    utils.error(error);
+    noteElement.classList.remove(config.loading.class);
+    noteElement.classList.add(...utils.tw("border-4 border-red-500"));
   }
   /**
    * Save a note
@@ -230,27 +230,27 @@ function LbcNotes() {
    * @returns {Promise<void>} a promise
    */
   async function saveNote(noteElement) {
-    noteElement.classList.add(config.loading.class)
-    const noteContent = noteElement.value
-    const noteId = getNoteIdFromNote(noteElement)
-    const listingId = getListingIdFromNote(noteElement)
-    utils.log(`${noteId ? 'update' : 'create'} note for listing ${listingId} with content : ${noteContent}`)
+    noteElement.classList.add(config.loading.class);
+    const noteContent = noteElement.value;
+    const noteId = getNoteIdFromNote(noteElement);
+    const listingId = getListingIdFromNote(noteElement);
+    utils.log(`${noteId ? "update" : "create"} note for listing ${listingId} with content : ${noteContent}`);
     try {
-      if (!db.databaseId) throw new Error('db.databaseId is not defined')
-      if (!db.notesCollectionId) throw new Error('db.notesCollectionId is not defined')
-      const response = await (noteId ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note: noteContent }) : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note: noteContent }))
-      saveNoteSuccess({ listingId, noteContent, noteId: response.$id }, noteElement)
-      updateNoteStyle(noteElement) /* @ts-ignore */
+      if (!db.databaseId) throw new Error("db.databaseId is not defined");
+      if (!db.notesCollectionId) throw new Error("db.notesCollectionId is not defined");
+      const response = await (noteId ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note: noteContent }) : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note: noteContent }));
+      saveNoteSuccess({ listingId, noteContent, noteId: response.$id }, noteElement);
+      updateNoteStyle(noteElement); /* @ts-ignore */
     } catch (error) {
       if (!(error instanceof Error)) {
-        utils.showError('unknown error occurred')
-        return
+        utils.showError("unknown error occurred");
+        return;
       }
-      saveNoteFailure({ listingId, noteContent, noteId: '' }, noteElement, error)
+      saveNoteFailure({ listingId, noteContent, noteId: "" }, noteElement, error);
     }
   }
-  const saveNoteDebounceTime = 2000
-  const saveNoteDebounced = utils.debounce(saveNote, saveNoteDebounceTime)
+  const saveNoteDebounceTime = 2000;
+  const saveNoteDebounced = utils.debounce(saveNote, saveNoteDebounceTime);
 
   /**
    * Load a note from AppWrite
@@ -258,15 +258,15 @@ function LbcNotes() {
    * @returns {Promise<LbcNote>} a promise
    */
   async function loadNoteFromAppWrite(listingId) {
-    if (!db.databaseId) throw new Error('db.databaseId is not defined')
-    if (!db.notesCollectionId) throw new Error('db.notesCollectionId is not defined')
-    const notesByListingId = await databases.listDocuments(db.databaseId, db.notesCollectionId, [Query.equal('listingId', listingId)])
-    const [first] = notesByListingId.documents
-    const note = { listingId, noteContent: first?.note || '', noteId: first?.$id || '' }
-    if (note) utils.debug(`loaded note for listing ${listingId} from AppWrite`, note)
-    else utils.debug(`no note found for listing ${listingId} in AppWrite`)
-    saveNoteToStore(note)
-    return note
+    if (!db.databaseId) throw new Error("db.databaseId is not defined");
+    if (!db.notesCollectionId) throw new Error("db.notesCollectionId is not defined");
+    const notesByListingId = await databases.listDocuments(db.databaseId, db.notesCollectionId, [Query.equal("listingId", listingId)]);
+    const [first] = notesByListingId.documents;
+    const note = { listingId, noteContent: first?.note || "", noteId: first?.$id || "" };
+    if (note) utils.debug(`loaded note for listing ${listingId} from AppWrite`, note);
+    else utils.debug(`no note found for listing ${listingId} in AppWrite`);
+    saveNoteToStore(note);
+    return note;
   }
 
   /**
@@ -275,9 +275,9 @@ function LbcNotes() {
    * @returns {Promise<LbcNote|undefined>} a promise
    */
   async function loadNoteFromLocalStore(listingId) {
-    const /** @type {LbcNote | undefined} */ note = await getNoteFromStore(`lbcNotes_${listingId}`)
-    utils.debug(`${note?.noteId ? 'loaded note' : 'found no note'} for listing ${listingId} from local store :`, note)
-    return note?.noteId ? note : undefined
+    const /** @type {LbcNote | undefined} */ note = await getNoteFromStore(`lbcNotes_${listingId}`);
+    utils.debug(`${note?.noteId ? "loaded note" : "found no note"} for listing ${listingId} from local store :`, note);
+    return note?.noteId ? note : undefined;
   }
 
   /**
@@ -286,24 +286,24 @@ function LbcNotes() {
    * @returns {string} The price as a string, or empty string if not found
    */
   function getListingPrice(listingId) {
-    utils.log('getListingPrice for listingId', listingId)
-    let text = ''
-    const listingElement = utils.findOne(`[data-list-id="${listingId}"]`, document, true)
+    utils.log("getListingPrice for listingId", listingId);
+    let text = "";
+    const listingElement = utils.findOne(`[data-list-id="${listingId}"]`, document, true);
     if (listingElement) {
-      text = listingElement.dataset.price || ''
-      utils.log('getListingPrice, listingElement found:', listingElement, 'price:', text)
+      text = listingElement.dataset.price || "";
+      utils.log("getListingPrice, listingElement found:", listingElement, "price:", text);
     } else {
-      const priceElement = utils.findOne('[data-qa-id="adview_price"]', document, true)
-      utils.log('getListingPrice, priceElement found:', priceElement)
-      text = priceElement?.textContent?.trim() || ''
+      const priceElement = utils.findOne('[data-qa-id="adview_price"]', document, true);
+      utils.log("getListingPrice, priceElement found:", priceElement);
+      text = priceElement?.textContent?.trim() || "";
     }
-    if (text === '') {
-      utils.error(`getListingPrice, no price found for listing ${listingId}`)
-      return ''
+    if (text === "") {
+      utils.error(`getListingPrice, no price found for listing ${listingId}`);
+      return "";
     }
-    const { amount, currency } = utils.parsePrice(text)
-    utils.log(`found price for listing ${listingId} :`, { amount, currency, text })
-    return `${amount} ${currency}`
+    const { amount, currency } = utils.parsePrice(text);
+    utils.log(`found price for listing ${listingId} :`, { amount, currency, text });
+    return `${amount} ${currency}`;
   }
 
   /**
@@ -312,13 +312,13 @@ function LbcNotes() {
    * @param {string} content - The current content of the note
    * @returns {string} Prefilled note value with date and price if available
    */
-  function addTodayPrice(listingId, content = '') {
-    const today = new Date().toLocaleDateString('fr-FR')
-    const price = getListingPrice(listingId)
-    if (content === '') return price ? `${today} : ${price}\n` : `${today} \n` // If no content, return just the date and price if available
-    if (content.includes(config.badNote.keyword)) return content // no need to add the price if the note is already marked as bad
-    if (content.includes(price)) return content // If the price is already in the content, return it as is
-    return `${content}\n${today} : ${price}\n`
+  function addTodayPrice(listingId, content = "") {
+    const today = new Date().toLocaleDateString("fr-FR");
+    const price = getListingPrice(listingId);
+    if (content === "") return price ? `${today} : ${price}\n` : `${today} \n`; // If no content, return just the date and price if available
+    if (content.includes(config.badNote.keyword)) return content; // no need to add the price if the note is already marked as bad
+    if (content.includes(price)) return content; // If the price is already in the content, return it as is
+    return `${content}\n${today} : ${price}\n`;
   }
 
   /**
@@ -327,10 +327,10 @@ function LbcNotes() {
    * @returns {void}
    */
   function initNoteStyle(noteElement) {
-    noteElement.classList.add(...utils.tw('h-56 w-96'))
-    noteElement.classList.remove(config.loading.class)
-    noteElement.disabled = false
-    updateNoteStyle(noteElement)
+    noteElement.classList.add(...utils.tw("h-56 w-96"));
+    noteElement.classList.remove(config.loading.class);
+    noteElement.disabled = false;
+    updateNoteStyle(noteElement);
   }
 
   /**
@@ -339,14 +339,14 @@ function LbcNotes() {
    * @returns {Promise<void>} a promise
    */
   async function loadNote(noteElement) {
-    const listingId = getListingIdFromNote(noteElement)
-    utils.debug(`loading note for listing ${listingId}...`)
-    const { noteContent, noteId } = (await loadNoteFromLocalStore(listingId)) ?? (await loadNoteFromAppWrite(listingId))
-    noteElement.dataset.noteId = noteId
-    const updatedContent = addTodayPrice(listingId, noteContent)
-    noteElement.textContent = updatedContent
-    initNoteStyle(noteElement)
-    if (updatedContent !== noteContent) void saveNote(noteElement) // Save the updated content
+    const listingId = getListingIdFromNote(noteElement);
+    utils.debug(`loading note for listing ${listingId}...`);
+    const { noteContent, noteId } = (await loadNoteFromLocalStore(listingId)) ?? (await loadNoteFromAppWrite(listingId));
+    noteElement.dataset.noteId = noteId;
+    const updatedContent = addTodayPrice(listingId, noteContent);
+    noteElement.textContent = updatedContent;
+    initNoteStyle(noteElement);
+    if (updatedContent !== noteContent) void saveNote(noteElement); // Save the updated content
   }
 
   /**
@@ -355,14 +355,14 @@ function LbcNotes() {
    * @returns {HTMLTextAreaElement} the note element
    */
   function createNoteElement(listingId) {
-    const note = document.createElement('textarea')
-    note.placeholder = 'Add a note...'
-    note.dataset.listingId = listingId.toString()
-    note.classList.add(`${utils.id}--note`, config.loading.class, ...utils.tw('z-10 h-8 w-16 rounded-md border border-gray-400 bg-gray-100 p-2 transition-all duration-500 ease-in-out hover:z-20'))
-    note.addEventListener('keyup', () => saveNoteDebounced(note)) // keypress will not detect backspace
-    note.disabled = true
-    void loadNote(note)
-    return note
+    const note = document.createElement("textarea");
+    note.placeholder = "Add a note...";
+    note.dataset.listingId = listingId.toString();
+    note.classList.add(`${utils.id}--note`, config.loading.class, ...utils.tw("z-10 h-8 w-16 rounded-md border border-gray-400 bg-gray-100 p-2 transition-all duration-500 ease-in-out hover:z-20"));
+    note.addEventListener("keyup", () => saveNoteDebounced(note)); // keypress will not detect backspace
+    note.disabled = true;
+    void loadNote(note);
+    return note;
   }
 
   /**
@@ -372,43 +372,43 @@ function LbcNotes() {
    * @returns {void}
    */
   function addPriceToListing(listingElement, listingId) {
-    utils.debug('add the price to listing', listingId)
+    utils.debug("add the price to listing", listingId);
     if (!listingElement.parentElement) {
-      utils.showError(`addPriceToListing, no parent element found for listing ${listingId}`)
-      return
+      utils.showError(`addPriceToListing, no parent element found for listing ${listingId}`);
+      return;
     }
-    const priceElement = utils.findOne('[data-test-id="price"]', listingElement.parentElement, true)
+    const priceElement = utils.findOne('[data-test-id="price"]', listingElement.parentElement, true);
     if (!priceElement) {
-      utils.showError(`addPriceToListing, no price element found for listing ${listingId}`)
-      return
+      utils.showError(`addPriceToListing, no price element found for listing ${listingId}`);
+      return;
     }
-    const { amount, currency } = utils.parsePrice(priceElement.textContent ?? '')
+    const { amount, currency } = utils.parsePrice(priceElement.textContent ?? "");
     if (amount === 0) {
-      utils.error(`addPriceToListing, no price found for listing ${listingId}`, listingElement)
-      return
+      utils.error(`addPriceToListing, no price found for listing ${listingId}`, listingElement);
+      return;
     }
-    listingElement.dataset.price = `${amount} ${currency}` // Store the price in the listing element for later use
+    listingElement.dataset.price = `${amount} ${currency}`; // Store the price in the listing element for later use
   }
 
   function mosaicToList() {
-    const mosaic = utils.findOne('[data-test-id="listing-mosaic"]', document, true)
-    if (!mosaic) return
-    utils.showLog('mosaicToList, converting mosaic to list')
-    mosaic.style.display = 'flex'
-    mosaic.style.flexDirection = 'column'
-    mosaic.style.gap = '5rem'
-    const ads = utils.findAll('[data-test-id="ad"]', mosaic)
-    for (const ad of ads) ad.style.maxWidth = '72%'
-    const cards = utils.findAll('[data-test-id="adcard-consumer-goods-list"]', mosaic)
+    const mosaic = utils.findOne('[data-test-id="listing-mosaic"]', document, true);
+    if (!mosaic) return;
+    utils.showLog("mosaicToList, converting mosaic to list");
+    mosaic.style.display = "flex";
+    mosaic.style.flexDirection = "column";
+    mosaic.style.gap = "5rem";
+    const ads = utils.findAll('[data-test-id="ad"]', mosaic);
+    for (const ad of ads) ad.style.maxWidth = "72%";
+    const cards = utils.findAll('[data-test-id="adcard-consumer-goods-list"]', mosaic);
     for (const card of cards) {
-      card.style.display = 'flex'
-      card.style.flexDirection = 'row'
-      card.style.gap = '3rem'
+      card.style.display = "flex";
+      card.style.flexDirection = "row";
+      card.style.gap = "3rem";
     }
-    const images = utils.findAll('[data-test-id="image"]', mosaic)
+    const images = utils.findAll('[data-test-id="image"]', mosaic);
     for (const image of images) {
-      image.style.height = '300px'
-      image.style.width = '400px'
+      image.style.height = "300px";
+      image.style.width = "400px";
     }
   }
 
@@ -419,24 +419,24 @@ function LbcNotes() {
    * @returns {void}
    */
   function addNoteToListing(listingElement, listingId) {
-    utils.debug('add the note to listing', listingId)
-    addPriceToListing(listingElement, listingId) // Add the price to the listing
-    listingElement.dataset.listId = listingId.toString() // Store the listing id in the listing element for later use
-    const note = createNoteElement(listingId)
-    listingElement.parentElement?.classList.add(...utils.tw('relative'))
-    listingElement.parentElement?.append(note)
-    note.classList.add(...utils.tw('absolute top-10 translate-x-[330%]'))
+    utils.debug("add the note to listing", listingId);
+    addPriceToListing(listingElement, listingId); // Add the price to the listing
+    listingElement.dataset.listId = listingId.toString(); // Store the listing id in the listing element for later use
+    const note = createNoteElement(listingId);
+    listingElement.parentElement?.classList.add(...utils.tw("relative"));
+    listingElement.parentElement?.append(note);
+    note.classList.add(...utils.tw("absolute top-10 translate-x-[330%]"));
   }
   function addNotesToListings() {
-    utils.log('add note to each listing')
-    mosaicToList()
-    const listings = utils.findAll(`article[data-test-id="ad"] > a:not(.${cls.marker})`)
+    utils.log("add note to each listing");
+    mosaicToList();
+    const listings = utils.findAll(`article[data-test-id="ad"] > a:not(.${cls.marker})`);
     for (const listing of listings) {
-      if (!(listing instanceof HTMLAnchorElement)) continue
-      listing.classList.add(cls.marker)
-      const listingId = getListingId(listing.href)
-      if (listingId === undefined) utils.error('no listing id found for', listing)
-      else addNoteToListing(listing, listingId)
+      if (!(listing instanceof HTMLAnchorElement)) continue;
+      listing.classList.add(cls.marker);
+      const listingId = getListingId(listing.href);
+      if (listingId === undefined) utils.error("no listing id found for", listing);
+      else addNoteToListing(listing, listingId);
     }
   }
   /**
@@ -445,26 +445,26 @@ function LbcNotes() {
    * @returns {void}
    */
   function addNoteToPage(listingId) {
-    utils.log('addNoteToPage', listingId)
-    const note = createNoteElement(listingId)
-    note.classList.add(...utils.tw('fixed right-148 bottom-40'))
-    document.body.append(note)
+    utils.log("addNoteToPage", listingId);
+    const note = createNoteElement(listingId);
+    note.classList.add(...utils.tw("fixed right-148 bottom-40"));
+    document.body.append(note);
   }
-  let isProcessing = false
+  let isProcessing = false;
   /**
    * Start the process
    * @param {string} reason the reason to process
    * @returns {void}
    */
-  function process(reason = 'unknown') {
-    if (isProcessing) return
-    isProcessing = true
-    utils.log('process cause :', reason)
-    utils.hideElements(uselessSelectors, 'useless')
-    const id = getListingId()
-    if (id) addNoteToPage(id)
-    else addNotesToListings()
-    document.body.append(getClearStoreButton(clearStore))
+  function process(reason = "unknown") {
+    if (isProcessing) return;
+    isProcessing = true;
+    utils.log("process cause :", reason);
+    utils.hideElements(uselessSelectors, "useless");
+    const id = getListingId();
+    if (id) addNoteToPage(id);
+    else addNotesToListings();
+    document.body.append(getClearStoreButton(clearStore));
   }
 
   // @ts-expect-error GM_addStyle is globally available
@@ -496,13 +496,13 @@ function LbcNotes() {
       max-height: 140px;
       opacity: 1;
     }
-  `)
-  const processDebounceTime = 300
-  const processDebounced = utils.debounce(process, processDebounceTime)
-  globalThis.addEventListener('scroll', () => processDebounced('scroll-event'))
-  globalThis.addEventListener('load', () => processDebounced('load-event'))
-  utils.onPageChange(() => processDebounced('page-change-event'))
+  `);
+  const processDebounceTime = 300;
+  const processDebounced = utils.debounce(process, processDebounceTime);
+  globalThis.addEventListener("scroll", () => processDebounced("scroll-event"));
+  globalThis.addEventListener("load", () => processDebounced("load-event"));
+  utils.onPageChange(() => processDebounced("page-change-event"));
 }
 
-if (globalThis.window) LbcNotes()
-else module.exports = { getListingId, getListingIdFromNote, getNoteIdFromNote, multipleAdDisplayed }
+if (globalThis.window) LbcNotes();
+else module.exports = { getListingId, getListingIdFromNote, getNoteIdFromNote, multipleAdDisplayed };

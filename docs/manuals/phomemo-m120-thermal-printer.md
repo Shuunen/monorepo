@@ -71,7 +71,7 @@ After a dozen of tries, I managed to find the good conditions.
 Then, open this [CodePen](https://codepen.io/Shuunen/pen/vYjvMPE) or in a webpage use following code :
 
 ```html
-<div class="border border-black text-sm p-2 overflow-hidden" style="width:145px; height: 110px; aspect-ratio: 4/3;">
+<div class="overflow-hidden border border-black p-2 text-sm" style="width:145px; height: 110px; aspect-ratio: 4/3;">
   Print in 40x30mm<br />
   & no margin<br />
   I'm 145 x 110 px<br />

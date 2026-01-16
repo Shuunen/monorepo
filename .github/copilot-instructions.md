@@ -53,7 +53,7 @@ export const state = createState({
 });
 
 // Watch state changes
-watchState("isLoading", (value) => {
+watchState("isLoading", value => {
   /* handle change */
 });
 ```

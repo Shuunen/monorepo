@@ -85,7 +85,7 @@ type Props = { component: ({ className }: { className?: string | undefined }) =>
 function Icon({ component: Component }: Props) {
   return (
     <div className="flex items-center gap-4">
-      <div className="size-14 flex items-center justify-center transition-colors hover:bg-slate-800 hover:text-blue-300">
+      <div className="flex size-14 items-center justify-center transition-colors hover:bg-slate-800 hover:text-blue-300">
         <Component />
       </div>
       <DebugData data={`<${Component.name} />`} />
@@ -98,7 +98,7 @@ const meta = {
     layout: "centered",
   },
   render: () => (
-    <div className="grid gap-4 w-full md:grid-cols-3">
+    <div className="grid w-full gap-4 md:grid-cols-3">
       {icons.map(icon => (
         <Icon component={icon} key={icon.name} />
       ))}

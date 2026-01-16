@@ -1,6 +1,6 @@
-import { state } from './state.utils'
+import { state } from "./state.utils";
 
-it('state A default', () => {
+it("state A default", () => {
   expect(state).toMatchInlineSnapshot(`
     {
       "credentials": {
@@ -16,5 +16,5 @@ it('state A default', () => {
       "status": "loading",
       "theme": "light",
     }
-  `)
-})
+  `);
+});

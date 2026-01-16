@@ -136,7 +136,9 @@ export const OnChangeTest: Story = {
       expect(onChangeSpy).toHaveBeenCalledWith('{"name":"toto"}', expect.objectContaining({ label: "Toto" }));
     });
   },
-  render: args => <WithState {...args} className="w-96" getLabel={opt => opt.label} getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))} name="select-onchange" options={shortOptions} placeholder="Select a user" />,
+  render: args => (
+    <WithState {...args} className="w-96" getLabel={opt => opt.label} getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))} name="select-onchange" options={shortOptions} placeholder="Select a user" />
+  ),
 };
 
 export const CodeVersion: Story = {

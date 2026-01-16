@@ -31,7 +31,7 @@ const meta = {
       return mockSubmit(status, message);
     }
     return (
-      <div className="grid gap-4 mt-6">
+      <div className="mt-6 grid gap-4">
         <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
@@ -1006,8 +1006,8 @@ export const WithCancelButton: Story = {
       setCancelClicked(true);
     }
     return (
-      <div className="grid gap-4 mt-6">
-        {cancelClicked && <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-800">Form was cancelled by user</div>}
+      <div className="mt-6 grid gap-4">
+        {cancelClicked && <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-blue-800">Form was cancelled by user</div>}
         <AutoForm {...args} logger={logger} onCancel={onCancel} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
