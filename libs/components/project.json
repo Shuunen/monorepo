@@ -20,7 +20,15 @@
     "test-storybook": {
       "cache": true,
       "executor": "nx:run-commands",
-      "inputs": ["{projectRoot}/src/**/*.{ts,tsx,js,jsx}", "{projectRoot}/src/**/*.stories.{ts,tsx,js,jsx}", "{projectRoot}/.storybook/**/*", "{projectRoot}/vitest.storybook.config.ts", "{projectRoot}/vite.config.ts", "{projectRoot}/package.json", "{workspaceRoot}/package.json"],
+      "inputs": [
+        "{projectRoot}/src/**/*.{ts,tsx,js,jsx}",
+        "{projectRoot}/src/**/*.stories.{ts,tsx,js,jsx}",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/vitest.storybook.config.ts",
+        "{projectRoot}/vite.config.ts",
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/package.json"
+      ],
       "options": {
         "command": "vitest --config=vitest.storybook.config.ts --run",
         "cwd": "{projectRoot}"

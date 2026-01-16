@@ -1,9 +1,21 @@
 {
+  "[css]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
   "[json]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
   "[jsonc]": {
     "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "cSpell.language": "en-GB",
   "cSpell.words": [
@@ -16,6 +28,7 @@
     "clearable",
     "cssmodule",
     "debouncer",
+    "dequal",
     "devfile",
     "dialog",
     "dircolors",
@@ -25,12 +38,14 @@
     "fakepath",
     "Hilfiger",
     "jozzo",
+    "jridgewell",
     "linxo",
     "Linxo",
     "monday",
     "nodenext",
     "NOSONAR",
     "nrwl",
+    "oxfmt",
     "oxlint",
     "phomemo",
     "pyenv",
@@ -55,6 +70,8 @@
     "zenity",
     "zxing"
   ],
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
   "javascript.format.insertSpaceAfterConstructor": false,
   "javascript.format.insertSpaceBeforeFunctionParenthesis": false,
   "typescript.experimental.useTsgo": true,

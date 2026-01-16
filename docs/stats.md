@@ -40,6 +40,68 @@ Note 1 : Measurements done on 2026-01-13 on W11 LeDuc machine (AMD Ryzen 7 7800X
 Note 2 : [Github CI job](https://github.com/Shuunen/monorepo/actions/runs/20964951252/job/60252559800?pr=43)
 Note 3 : Durations above 2 seconds are rounded to ease comparison
 
+## Lint
+
+At some point I created these custom nx tasks in the root nx.json :
+
+```json
+"targetDefaults": {
+  "format": {
+    "cache": true,
+    "executor": "nx:run-commands",
+    "inputs": ["default"],
+    "options": {
+      "command": "oxfmt {projectRoot}",
+      "cwd": "{workspaceRoot}"
+    }
+  },
+  "lint": {
+    "cache": true,
+    "dependsOn": ["format", "project-lint"],
+    "executor": "nx:run-commands",
+    "inputs": ["default"],
+    "options": {
+      "commands": [
+        "echo 'Running oxlint...'",
+        "oxlint --deny-warnings --fix --fix-suggestions --fix-dangerously {projectRoot}",
+        "echo 'Lint with oxlint done ✅'",
+        "echo 'Running biome...'",
+        "biome check --error-on-warnings --write --unsafe {projectRoot}",
+        "echo 'Lint with biome done ✅'"
+      ],
+      "cwd": "{workspaceRoot}"
+    }
+  },
+}
+```
+
+The nx custom lint task was pre-running OxFmt to format the code before running OxLint and Biome to lint the code.
+
+So one lint run meant 3 tools running sequentially.
+
+`hyperfine 'nx run utils:lint --skip-nx-cache' 'nx run utils:format --skip-nx-cache'`
+
+| task         | duration |
+| ------------ | -------- |
+| utils:lint   | 4.0 s    |
+| utils:format | 2.1 s    |
+
+Total time for one project : 4.0 s (including nx spin-up time)
+
+On the whole monorepo :
+
+`hyperfine 'pnpm exec oxfmt' 'pnpm exec biome check --error-on-warnings --write --unsafe' 'pnpm exec oxlint --deny-warnings --fix --fix-suggestions --fix-dangerously'`
+
+| task   | duration |
+| ------ | -------- |
+| oxfmt  | 2.2 s    |
+| oxlint | 0.8 s    |
+| biome  | 1.4 s    |
+
+Total time for the whole monorepo : 4.4 s
+
+So it make no sense to have lint/format tasks per project.
+
 ## Various
 
 Some tasks recently run in the monorepo on 2025-12-04 :
