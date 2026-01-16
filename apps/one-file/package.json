@@ -4,7 +4,7 @@
     "7zip-min": "^2.1.0",
     "clipboardy": "^5.0.2",
     "cors": "^2.8.5",
-    "exiftool-vendored": "^35.0.0",
+    "exiftool-vendored": "^35.2.0",
     "express": "^5.2.1",
     "sharp": "^0.34.5"
   },
