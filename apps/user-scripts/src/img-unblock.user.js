@@ -13,37 +13,37 @@
 // ==/UserScript==
 
 function ImgUnblock() {
-  const proxyUrl = 'https://proxy.duckduckgo.com/iu/?u='
-  const utils = new Shuutils('img-unblock')
+  const proxyUrl = "https://proxy.duckduckgo.com/iu/?u=";
+  const utils = new Shuutils("img-unblock");
   const selectors = {
     images: 'a[href^="https://i.imgur.com/"]:not(.img-unblock)',
-  }
+  };
   function process() {
-    const images = utils.findAll(selectors.images)
+    const images = utils.findAll(selectors.images);
     for (const element of images) {
       if (!(element instanceof HTMLAnchorElement)) {
-        utils.error('element is not an anchor', element)
-        continue
+        utils.error("element is not an anchor", element);
+        continue;
       }
-      element.classList.add('img-unblock')
-      if (!element.href.includes('.jpg') && !element.href.includes('.png')) continue
-      utils.log('processing', element)
-      const source = proxyUrl + element.href
-      const img = document.createElement('img')
-      img.src = source
-      img.style.width = '100%'
-      element.href = source
-      if (!element.parentElement) continue
-      element.parentElement.append(img)
-      element.parentElement.style.display = 'flex'
-      element.parentElement.style.flexDirection = 'column'
+      element.classList.add("img-unblock");
+      if (!element.href.includes(".jpg") && !element.href.includes(".png")) continue;
+      utils.log("processing", element);
+      const source = proxyUrl + element.href;
+      const img = document.createElement("img");
+      img.src = source;
+      img.style.width = "100%";
+      element.href = source;
+      if (!element.parentElement) continue;
+      element.parentElement.append(img);
+      element.parentElement.style.display = "flex";
+      element.parentElement.style.flexDirection = "column";
     }
   }
-  const processDebounceTime = 500
-  const processDebounced = utils.debounce(process, processDebounceTime)
-  utils.log('set scroll listener')
-  document.addEventListener('scroll', () => processDebounced())
-  utils.onPageChange(processDebounced)
+  const processDebounceTime = 500;
+  const processDebounced = utils.debounce(process, processDebounceTime);
+  utils.log("set scroll listener");
+  document.addEventListener("scroll", () => processDebounced());
+  utils.onPageChange(processDebounced);
 }
 
-if (globalThis.window) ImgUnblock()
+if (globalThis.window) ImgUnblock();

@@ -13,7 +13,7 @@ export const defaultLabels = {
 } satisfies AutoFormProps["labels"];
 
 export const defaultIcons = {
-  editable: <IconEdit className="text-muted-foreground size-6" />,
-  readonly: <IconSuccess className="text-success size-6" />,
-  upcoming: <IconUpcoming className="text-muted-foreground size-6" />,
+  editable: <IconEdit className="size-6 text-muted-foreground" />,
+  readonly: <IconSuccess className="size-6 text-success" />,
+  upcoming: <IconUpcoming className="size-6 text-muted-foreground" />,
 } satisfies Record<NonNullable<AutoFormStepMetadata["state"]>, ReactNode>;

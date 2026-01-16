@@ -1,3 +1,3 @@
-import { Logger } from '@monorepo/utils'
+import { Logger } from "@monorepo/utils";
 
-export const logger = new Logger()
+export const logger = new Logger();

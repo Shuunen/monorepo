@@ -94,11 +94,11 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
       <SelectContent>
         {filterable && (
           <div>
-            <div className="flex flex-row h-9 items-center gap-2 px-3">
+            <div className="flex h-9 flex-row items-center gap-2 px-3">
               <IconSearch className="size-4 shrink-0 opacity-50" />
               <Input
                 aria-label={props.label ? `Search ${props.label.toLowerCase()}` : "Search options"}
-                className="h-9 w-full border-0 focus:outline-none! focus:ring-0! focus:border-transparent!"
+                className="h-9 w-full border-0 focus:border-transparent! focus:ring-0! focus:outline-none!"
                 name={`search-${props.name}`}
                 onChange={el => setSearch(el.target.value)}
                 onFocus={el => el.stopPropagation()}
@@ -111,7 +111,7 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
             <SelectSeparator />
           </div>
         )}
-        {visibleCount === 0 && filterable ? <div className="p-3 text-muted-foreground text-sm">No options found.</div> : undefined}
+        {visibleCount === 0 && filterable ? <div className="p-3 text-sm text-muted-foreground">No options found.</div> : undefined}
 
         {props.options.map(option => {
           const label = props.getLabel(option);

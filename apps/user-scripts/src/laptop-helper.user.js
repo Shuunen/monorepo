@@ -36,84 +36,90 @@
 // oxlint-disable no-magic-numbers
 // oxlint-disable max-lines
 // oxlint-disable no-immediate-mutation
+/** biome-ignore-all lint/suspicious/noAssignInExpressions: for a2b & b2a functions */
 
+/**
+ * Get the color for a given score percentage
+ * @param {number} percent - The score percentage
+ * @returns {string} The HSL color string
+ */
 function getColorForScore(percent) {
-  const alpha = 30
-  if (percent <= 35) return `hsl(0deg 100% 50% / ${alpha}%)` // red
-  if (percent <= 50) return `hsl(35deg 100% 50% / ${alpha}%)` // orange
-  if (percent <= 65) return `hsl(55deg 100% 50% / ${alpha}%)` // yellow
-  return `hsl(120deg 100% 50% / ${alpha}%)` // green
+  const alpha = 30;
+  if (percent <= 35) return `hsl(0deg 100% 50% / ${alpha}%)`; // red
+  if (percent <= 50) return `hsl(35deg 100% 50% / ${alpha}%)`; // orange
+  if (percent <= 65) return `hsl(55deg 100% 50% / ${alpha}%)`; // yellow
+  return `hsl(120deg 100% 50% / ${alpha}%)`; // green
 }
 
 function getScoresForRam(ram, score) {
-  const scores = {}
-  scores[`${ram}gb`] = score
-  scores[`${ram}go`] = score
-  scores[`${ram} gb`] = score
-  scores[`${ram} go`] = score
-  return scores
+  const scores = {};
+  scores[`${ram}gb`] = score;
+  scores[`${ram}go`] = score;
+  scores[`${ram} gb`] = score;
+  scores[`${ram} go`] = score;
+  return scores;
 }
 
 function getScoresForScreen(inches, score) {
-  const scores = {}
-  scores[`${inches} pouce`] = score
-  scores[`${inches}"`] = score
-  scores[`${String(inches).replace('.', ',')}"`] = score
-  scores[`${inches}”`] = score
-  scores[`${String(inches).replace('.', ',')}”`] = score
-  scores[`${inches} inch`] = score
-  scores[`${inches}in`] = score
-  return scores
+  const scores = {};
+  scores[`${inches} pouce`] = score;
+  scores[`${inches}"`] = score;
+  scores[`${String(inches).replace(".", ",")}"`] = score;
+  scores[`${inches}”`] = score;
+  scores[`${String(inches).replace(".", ",")}”`] = score;
+  scores[`${inches} inch`] = score;
+  scores[`${inches}in`] = score;
+  return scores;
 }
 
 function getScoresForWifi(wifi, score) {
-  const scores = {}
-  scores[`wifi ${wifi}`] = score
-  scores[`wifi${wifi}`] = score
-  scores[`wi-fi ${wifi}`] = score
-  return scores
+  const scores = {};
+  scores[`wifi ${wifi}`] = score;
+  scores[`wifi${wifi}`] = score;
+  scores[`wi-fi ${wifi}`] = score;
+  return scores;
 }
 
 function getScoreForRefresh(refresh, score) {
-  const scores = {}
-  scores[`${refresh}hz`] = score
-  scores[`${refresh} hz`] = score
-  return scores
+  const scores = {};
+  scores[`${refresh}hz`] = score;
+  scores[`${refresh} hz`] = score;
+  return scores;
 }
 
 function getScoreForResolution(resolution, score) {
-  const scores = {}
-  scores[`${resolution}p`] = score
-  scores[`${resolution} p`] = score
-  return scores
+  const scores = {};
+  scores[`${resolution}p`] = score;
+  scores[`${resolution} p`] = score;
+  return scores;
 }
 
 // oxlint-disable-next-line sort-keys
 const scoresByKeyword = {
-  ' tn ': 50,
+  " tn ": 50,
   backlit: 70,
   fhd: 30,
   fingerprint: 70,
-  'full hd': 30,
+  "full hd": 30,
   gtx: 70,
-  'keyboard light': 70,
+  "keyboard light": 70,
   led: 70,
   lock: 70,
   nvme: 80,
   oled: 70,
-  'power delivery': 70,
+  "power delivery": 70,
   rtx: 70,
   ssd: 70,
-  ...getScoreForResolution('1080', 30),
-  ...getScoreForResolution('1200', 60),
-  ...getScoreForResolution('1440', 70),
-  ...getScoreForResolution('1600', 70),
-  ...getScoreForResolution('1800', 70),
-  ...getScoreForResolution('2160', 70),
+  ...getScoreForResolution("1080", 30),
+  ...getScoreForResolution("1200", 60),
+  ...getScoreForResolution("1440", 70),
+  ...getScoreForResolution("1600", 70),
+  ...getScoreForResolution("1800", 70),
+  ...getScoreForResolution("2160", 70),
   ...getScoresForWifi(6, 70),
-  ...getScoresForWifi('ax', 70),
+  ...getScoresForWifi("ax", 70),
   ...getScoresForWifi(5, 50),
-  ...getScoresForWifi('ac', 50),
+  ...getScoresForWifi("ac", 50),
   ...getScoresForRam(16, 70),
   ...getScoresForRam(32, 70),
   ...getScoresForRam(8, 50),
@@ -134,7 +140,7 @@ const scoresByKeyword = {
   ...getScoreForRefresh(144, 70),
   ...getScoreForRefresh(165, 70),
   ...getScoreForRefresh(240, 70),
-}
+};
 
 // oxlint-disable-next-line no-abusive-eslint-disable
 /* oxlint-disable */
@@ -148,14 +154,14 @@ function b2a(a) {
     i,
     j,
     o,
-    b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+    b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
     k = 0,
     l = 0,
-    m = '',
-    n = []
-  if (!a) return a
+    m = "",
+    n = [];
+  if (!a) return a;
   do
-    (c = a.charCodeAt(k++)),
+    ((c = a.charCodeAt(k++)),
       (d = a.charCodeAt(k++)),
       (e = a.charCodeAt(k++)),
       (j = (c << 16) | (d << 8) | e),
@@ -164,11 +170,10 @@ function b2a(a) {
       (h = 63 & (j >> 6)),
       // biome-ignore lint/complexity/noCommaOperator: it's not my code
       (i = 63 & j),
-      (n[l++] = b.charAt(f) + b.charAt(g) + b.charAt(h) + b.charAt(i))
-  while (k < a.length)
-  // biome-ignore lint/suspicious/noAssignInExpressions: it's not my code
+      (n[l++] = b.charAt(f) + b.charAt(g) + b.charAt(h) + b.charAt(i)));
+  while (k < a.length);
   // biome-ignore lint/complexity/noCommaOperator: it's not my code
-  return (m = n.join('')), (o = a.length % 3), (o ? m.slice(0, o - 3) : m) + '==='.slice(o || 3)
+  return ((m = n.join("")), (o = a.length % 3), (o ? m.slice(0, o - 3) : m) + "===".slice(o || 3));
 }
 
 function a2b(a) {
@@ -178,13 +183,12 @@ function a2b(a) {
     e = {},
     f = 0,
     g = 0,
-    h = '',
+    h = "",
     i = String.fromCharCode,
-    j = a.length
-  for (b = 0; 64 > b; b++) e['ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.charAt(b)] = b
-  // biome-ignore lint/suspicious/noAssignInExpressions: it's not my code
-  for (c = 0; j > c; c++) for (b = e[a.charAt(c)], f = (f << 6) + b, g += 6; g >= 8; ) ((d = 255 & (f >>> (g -= 8))) || j - 2 > c) && (h += i(d))
-  return h
+    j = a.length;
+  for (b = 0; 64 > b; b++) e["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(b)] = b;
+  for (c = 0; j > c; c++) for (b = e[a.charAt(c)], f = (f << 6) + b, g += 6; g >= 8; ) ((d = 255 & (f >>> (g -= 8))) || j - 2 > c) && (h += i(d));
+  return h;
 }
 /* oxlint-enable */
 
@@ -194,7 +198,7 @@ function a2b(a) {
  * @returns {string} the encoded string
  */
 function stringToBase64(string_) {
-  return b2a(string_)
+  return b2a(string_);
 }
 
 /**
@@ -203,7 +207,7 @@ function stringToBase64(string_) {
  * @returns {string} the decoded string
  */
 function base64ToString(string_) {
-  return a2b(string_)
+  return a2b(string_);
 }
 
 // prepare cpu data
@@ -213,7 +217,7 @@ function base64ToString(string_) {
  * @returns {string} the cleaned CPU name
  */
 function cleanCpuName(name) {
-  return name.replaceAll(/amd|ryzen \d|core i\d-|gold|intel|pentium|pro|silver/giu, '').trim()
+  return name.replaceAll(/amd|ryzen \d|core i\d-|gold|intel|pentium|pro|silver/giu, "").trim();
 }
 
 const data = `AMD Ryzen 3 5125C	3 %
@@ -343,76 +347,76 @@ Intel Core i9-12900HK	83 %
 Intel Core i9-12900HX	21 %
 Intel Core i9-12950HX	21 %
 Intel Pentium Gold 7505	6 %
-Intel Pentium Silver N6000	3 %`
+Intel Pentium Silver N6000	3 %`;
 
-for (const line of data.split('\n')) {
-  const [cpuRaw, scoreRaw] = line.split('\t')
-  const cpu = cleanCpuName(cpuRaw)
-  const score = Number.parseInt(scoreRaw, 10)
-  scoresByKeyword[cpu] = score
+for (const line of data.split("\n")) {
+  const [cpuRaw, scoreRaw] = line.split("\t");
+  const cpu = cleanCpuName(cpuRaw);
+  const score = Number.parseInt(scoreRaw, 10);
+  scoresByKeyword[cpu] = score;
 }
 
 /**
  * Laptop Helper
  */
 function LaptopHelper() {
-  const utils = new Shuutils('lpt-hlp')
+  const utils = new Shuutils("lpt-hlp");
   const cls = {
     mark: `${utils.id}-mark`,
-  }
+  };
   const selectors = {
-    clearLinks: '.comparo_table_description a, .contenttable td a',
+    clearLinks: ".comparo_table_description a, .contenttable td a",
     desc: [
-      'h1',
-      '.specs > li',
-      'dd',
-      '.product_details_item',
-      '.infos_strenghts > li',
-      '.techSpecs-table td',
-      '.cd-features-list > li',
-      '.no-checkbox',
-      '.checkbox > a',
-      '.ProductShowcase__title__SBCBw',
-      'h1 + .a-unordered-list > li > span.a-list-item',
-      '.configuratorItem-mtmTable-description',
-      '.text-start label',
-      '.see-more > div > span',
-      '.tech-spec-content',
-      '.sd-ps-spec-item > div',
-      '.userHtml',
-      '.ps-iconography-specs-label',
-      '.c-product__description',
-      '.wp-block-table td',
-      '.keypoints__item',
-      '.comparo_table_description',
-      '.search tr > td',
-      '.secondary-title',
-      '.description p',
-      'p > strong',
-      '.prodDetAttrValue',
+      "h1",
+      ".specs > li",
+      "dd",
+      ".product_details_item",
+      ".infos_strenghts > li",
+      ".techSpecs-table td",
+      ".cd-features-list > li",
+      ".no-checkbox",
+      ".checkbox > a",
+      ".ProductShowcase__title__SBCBw",
+      "h1 + .a-unordered-list > li > span.a-list-item",
+      ".configuratorItem-mtmTable-description",
+      ".text-start label",
+      ".see-more > div > span",
+      ".tech-spec-content",
+      ".sd-ps-spec-item > div",
+      ".userHtml",
+      ".ps-iconography-specs-label",
+      ".c-product__description",
+      ".wp-block-table td",
+      ".keypoints__item",
+      ".comparo_table_description",
+      ".search tr > td",
+      ".secondary-title",
+      ".description p",
+      "p > strong",
+      ".prodDetAttrValue",
       '.v-list-item[role="listitem"]',
-      '.value > p',
-      '.contenttable td',
-      '.td-spec > span',
-      '.prod_details > li',
-      '.specs_details',
-      '.product-item-short-specs > p',
-      '.resulspace',
-      '.colorTipContent',
-      '.desc',
-      '.short_desc',
-      'div[data-asin] span.a-text-normal',
-      '.c-product__title',
-      '.pdt-info .title-3 a',
-      '.thread-title--list',
-      'article .libelle h3',
+      ".value > p",
+      ".contenttable td",
+      ".td-spec > span",
+      ".prod_details > li",
+      ".specs_details",
+      ".product-item-short-specs > p",
+      ".resulspace",
+      ".colorTipContent",
+      ".desc",
+      ".short_desc",
+      "div[data-asin] span.a-text-normal",
+      ".c-product__title",
+      ".pdt-info .title-3 a",
+      ".thread-title--list",
+      "article .libelle h3",
     ]
       .map(sel => `${sel}:not(.${cls.mark})`)
-      .join(','),
-  }
-  const keywords = Object.keys(scoresByKeyword)
-  utils.log(keywords.length, 'keywords with associated scores')
-  const keywordRegex = new RegExp(keywords.join('|'), 'giu')
+      .join(","),
+  };
+  const keywords = Object.keys(scoresByKeyword);
+  utils.log(keywords.length, "keywords with associated scores");
+  const keywordRegex = new RegExp(keywords.join("|"), "giu");
 
   /**
    * Annotate an element with a score
@@ -421,24 +425,24 @@ function LaptopHelper() {
    */
   // oxlint-disable-next-line max-lines-per-function, consistent-return
   function annotate(element) {
-    let { keyword } = element.dataset
-    keyword = scoresByKeyword[keyword] === undefined ? keyword.toLowerCase() : keyword
-    const score = scoresByKeyword[keyword]
-    if (score === undefined) return utils.error('no score found for', keyword)
-    utils.log('found score', score, 'for', keyword)
-    element.dataset.score = score
-    element.title = `Score : ${score}%`
-    const color = getColorForScore(score)
+    let { keyword } = element.dataset;
+    keyword = scoresByKeyword[keyword] === undefined ? keyword.toLowerCase() : keyword;
+    const score = scoresByKeyword[keyword];
+    if (score === undefined) return utils.error("no score found for", keyword);
+    utils.log("found score", score, "for", keyword);
+    element.dataset.score = score;
+    element.title = `Score : ${score}%`;
+    const color = getColorForScore(score);
     // @ts-expect-error RoughNotation is a global variable
     // oxlint-disable no-undef
     // biome-ignore lint/correctness/noUndeclaredVariables: it's a global var
-    let annotation = RoughNotation.annotate(element, { color, type: 'highlight' })
-    annotation.show()
+    let annotation = RoughNotation.annotate(element, { color, type: "highlight" });
+    annotation.show();
     if (score >= 80) {
       // @ts-expect-error RoughNotation is a global variable
       // biome-ignore lint/correctness/noUndeclaredVariables: it's a global var
-      annotation = RoughNotation.annotate(element.parentElement, { color: 'darkgreen', type: 'bracket' })
-      annotation.show()
+      annotation = RoughNotation.annotate(element.parentElement, { color: "darkgreen", type: "bracket" });
+      annotation.show();
     }
   }
   /**
@@ -446,12 +450,12 @@ function LaptopHelper() {
    */
   function checkItems() {
     for (const descElement of utils.findAll(selectors.desc, document, true)) {
-      descElement.classList.add(cls.mark)
-      descElement.innerHTML = descElement.innerHTML.replaceAll('&nbsp;', '')
-      const text = utils.readableString(descElement.textContent).toLowerCase().trim()
-      utils.log('checking :', text)
-      descElement.innerHTML = descElement.innerHTML.replace(keywordRegex, match => `<span class="${cls.mark}" style="display: inline-block" data-keyword="${match.replace('"', '”')}">${match}</span>`)
-      for (const markElement of utils.findAll(`.${cls.mark}`, descElement, true)) annotate(markElement)
+      descElement.classList.add(cls.mark);
+      descElement.innerHTML = descElement.innerHTML.replaceAll("&nbsp;", "");
+      const text = utils.readableString(descElement.textContent).toLowerCase().trim();
+      utils.log("checking :", text);
+      descElement.innerHTML = descElement.innerHTML.replace(keywordRegex, match => `<span class="${cls.mark}" style="display: inline-block" data-keyword="${match.replace('"', "”")}">${match}</span>`);
+      for (const markElement of utils.findAll(`.${cls.mark}`, descElement, true)) annotate(markElement);
     }
   }
   /**
@@ -459,30 +463,30 @@ function LaptopHelper() {
    */
   function clearLinks() {
     for (const link of utils.findAll(selectors.clearLinks, document, true)) {
-      if (typeof link.href !== 'string' || link.href.length < 2) continue
-      link.dataset.url = stringToBase64(link.href)
-      link.href = '#'
-      link.parentElement.addEventListener('mouseup', event => {
-        if (event.button !== 1) return
-        event.preventDefault()
-        globalThis.open(base64ToString(link.dataset.url), '_blank')
-      })
-      link.removeAttribute('title')
+      if (typeof link.href !== "string" || link.href.length < 2) continue;
+      link.dataset.url = stringToBase64(link.href);
+      link.href = "#";
+      link.parentElement.addEventListener("mouseup", event => {
+        if (event.button !== 1) return;
+        event.preventDefault();
+        globalThis.open(base64ToString(link.dataset.url), "_blank");
+      });
+      link.removeAttribute("title");
     }
   }
   /**
    * Process the page
    */
   function process() {
-    utils.log('processing')
-    clearLinks()
-    checkItems()
+    utils.log("processing");
+    clearLinks();
+    checkItems();
   }
-  const processDebounced = utils.debounce(process, 500)
-  document.addEventListener('scroll', processDebounced)
-  utils.onPageChange(processDebounced)
-  setTimeout(processDebounced, 1000)
+  const processDebounced = utils.debounce(process, 500);
+  document.addEventListener("scroll", processDebounced);
+  utils.onPageChange(processDebounced);
+  setTimeout(processDebounced, 1000);
 }
 
-if (globalThis.window) LaptopHelper()
-else module.exports = { a2b, b2a, base64ToString, cleanCpuName, getColorForScore, getScoreForRefresh, getScoreForResolution, getScoresForRam, getScoresForScreen, getScoresForWifi, stringToBase64 }
+if (globalThis.window) LaptopHelper();
+else module.exports = { a2b, b2a, base64ToString, cleanCpuName, getColorForScore, getScoreForRefresh, getScoreForResolution, getScoresForRam, getScoresForScreen, getScoresForWifi, stringToBase64 };

@@ -13,58 +13,58 @@
 // ==/UserScript==
 
 function MbImportFromAmazonMusic() {
-  const utils = new Shuutils('amazon-mb-export')
+  const utils = new Shuutils("amazon-mb-export");
   const selectors = {
     artist: '[data-feature-name="artistLink"',
     title: '[data-feature-name="dmusicProductTitle"]',
-  }
+  };
   function getTracks() {
     return utils.findAll('[id^="dmusic_tracklist_player_row"]').map((element, index) => ({
-      artist: '',
+      artist: "",
       duration: textFromSelector('[id^="dmusic_tracklist_duration"]', element),
-      name: textFromSelector('.TitleLink', element),
+      name: textFromSelector(".TitleLink", element),
       number: String(index + 1),
-    }))
+    }));
   }
   function mbImport() {
-    const details = textFromSelector('#productDetailsTable')
+    const details = textFromSelector("#productDetailsTable");
     const data = {
       app: {
-        id: 'mb-import-from-amazon-music',
-        title: 'Amazon to MB',
+        id: "mb-import-from-amazon-music",
+        title: "Amazon to MB",
       },
       artist: textFromSelector(selectors.artist),
-      date: { day: '0', month: '0', year: '0' },
+      date: { day: "0", month: "0", year: "0" },
       // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-      label: (details.match(/Label: (?<name>\S+)/u) || [])[1] || '',
+      label: (details.match(/Label: (?<name>\S+)/u) || [])[1] || "",
       title: textFromSelector(selectors.title),
       tracks: getTracks(),
       url: document.location.href,
-      urlType: '77',
-    }
+      urlType: "77",
+    };
     // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-    const dateMatches = details.match(/origine : (?<day>\d{1,2}) (?<month>\S+) (?<year>\d{4})/u)
+    const dateMatches = details.match(/origine : (?<day>\d{1,2}) (?<month>\S+) (?<year>\d{4})/u);
     if (dateMatches?.groups?.year) {
-      const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
-      data.date.year = dateMatches.groups.year
-      data.date.month = String(months.indexOf(dateMatches.groups.month) + 1)
-      data.date.day = dateMatches.groups.day
+      const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+      data.date.year = dateMatches.groups.year;
+      data.date.month = String(months.indexOf(dateMatches.groups.month) + 1);
+      data.date.day = dateMatches.groups.day;
     }
     if (data.title && data.artist) {
-      insertMbForm(data)
-      return
+      insertMbForm(data);
+      return;
     }
-    utils.warn('cannot insert MB form without title & artist')
+    utils.warn("cannot insert MB form without title & artist");
   }
   async function init() {
-    const title = await utils.waitToDetect(selectors.title)
+    const title = await utils.waitToDetect(selectors.title);
     if (title === undefined) {
-      utils.log('no music title found on this page')
-      return
+      utils.log("no music title found on this page");
+      return;
     }
-    mbImport()
+    mbImport();
   }
-  utils.onPageChange(init)
+  utils.onPageChange(init);
 }
 
-if (globalThis.window) MbImportFromAmazonMusic()
+if (globalThis.window) MbImportFromAmazonMusic();

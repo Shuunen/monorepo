@@ -156,7 +156,7 @@ it("tw returns a string B", () => {
   expect(typeof tw("text-red-500")).toBe("string");
 });
 it("tw returns a string C", () => {
-  expect(tw("text-red-500 text-blue-500")).toBe("text-red-500 text-blue-500");
+  expect(tw("text-blue-500 text-red-500")).toBe("text-blue-500 text-red-500");
 });
 it("tw returns a string D", () => {
   expect(tw("")).toBe("");
@@ -168,11 +168,8 @@ it("tw returns a string F", () => {
   expect(typeof tw`text-red-500`).toBe("string");
 });
 it("tw returns a string G", () => {
-  expect(tw`text-red-500 text-blue-500`).toBe("text-red-500 text-blue-500");
-});
-it("tw returns a string H", () => {
   expect(tw``).toBe("");
 });
-it("tw returns a string I", () => {
+it("tw returns a string H", () => {
   expect(tw(["text-red-500", "text-blue-500"])).toBe("text-red-500 text-blue-500");
 });

@@ -8,11 +8,11 @@ Pour 4 personnes :
 
 - 120 gr emmental râpé
 - 180 gr farine de blé T55 (pour pains)
-- 20  gr fécule de maïs
-- 4   cs huile d'olive vierge
+- 20 gr fécule de maïs
+- 4 cs huile d'olive vierge
 - 0,5 cc levure chimique (classique ou sans gluten)
 - 0,5 cc sel marin gris non iodé non fluoré
-- 10  gr sirop de sucre de canne
+- 10 gr sirop de sucre de canne
 
 ## Recette
 

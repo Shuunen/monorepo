@@ -19,9 +19,9 @@ export function FormFieldSection({ title, subtitle, description, code, line }: F
     <div className="grid gap-2">
       {title && <Title className="mt-4">{title}</Title>}
       {subtitle && <Title level={2}>{subtitle}</Title>}
-      {description && <Paragraph className="text-muted-foreground mb-4">{description}</Paragraph>}
+      {description && <Paragraph className="mb-4 text-muted-foreground">{description}</Paragraph>}
       {code && <DebugData data={code} />}
-      {line && <div className="border-t border-muted my-4" />}
+      {line && <div className="my-4 border-t border-muted" />}
     </div>
   );
 }

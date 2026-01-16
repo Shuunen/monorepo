@@ -28,7 +28,7 @@ const meta = {
       logger.showSuccess("Form submitted successfully");
     }
     return (
-      <div className="grid gap-4 mt-6 w-lg">
+      <div className="mt-6 grid w-lg gap-4">
         <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
@@ -195,22 +195,22 @@ export const ResponsiveLayout: Story = {
       logger.showSuccess("Form submitted successfully", data);
     }
     return (
-      <div className="grid gap-8 w-full mx-auto p-4">
+      <div className="mx-auto grid w-full gap-8 p-4">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">Full width</h2>
-          <p className="text-muted-foreground text-sm">Full width with all elements visible</p>
+          <p className="text-sm text-muted-foreground">Full width with all elements visible</p>
           <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         </div>
 
-        <div className="space-y-2 max-w-xl">
+        <div className="max-w-xl space-y-2">
           <h2 className="text-2xl font-bold">XLarge width</h2>
-          <p className="text-muted-foreground text-sm">Constrained to ~768px width</p>
+          <p className="text-sm text-muted-foreground">Constrained to ~768px width</p>
           <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         </div>
 
-        <div className="space-y-2 max-w-md">
+        <div className="max-w-md space-y-2">
           <h2 className="text-2xl font-bold">Medium width</h2>
-          <p className="text-muted-foreground text-sm">Constrained to ~448px width</p>
+          <p className="text-sm text-muted-foreground">Constrained to ~448px width</p>
           <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         </div>
       </div>

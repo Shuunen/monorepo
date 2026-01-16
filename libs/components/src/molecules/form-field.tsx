@@ -30,7 +30,7 @@ export function FormFieldBase(props: FormFieldBaseProps) {
       name={fieldName}
       render={({ field, fieldState, formState }) => (
         <FormItem
-          className={cn("py-2 items-start", {
+          className={cn("items-start py-2", {
             "indented border-l-2 pl-5": indented,
             "not-indented": !indented,
           })}

@@ -1,15 +1,15 @@
-import type { CapacitorConfig } from '@capacitor/cli'
+import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
   android: {
-    loggingBehavior: 'debug',
+    loggingBehavior: "debug",
   },
-  appId: 'shuunen.whatnow.app',
-  appName: 'what-now',
+  appId: "shuunen.whatnow.app",
+  appName: "what-now",
   server: {
-    androidScheme: 'http',
+    androidScheme: "http",
   },
-  webDir: 'dist',
-}
+  webDir: "dist",
+};
 
-export default config
+export default config;

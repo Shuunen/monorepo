@@ -1,10 +1,10 @@
 export type Rule = {
   /** unique identifier */
-  id: string
+  id: string;
   /** true if the rule is active */
-  enabled: boolean
+  enabled: boolean;
   /** the regex pattern to match */
-  pattern: string
+  pattern: string;
   /** the replacement string */
-  replacement: string
-}
+  replacement: string;
+};

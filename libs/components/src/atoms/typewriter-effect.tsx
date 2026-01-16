@@ -54,7 +54,7 @@ export const TypewriterEffect = ({
           return (
             <div className="inline-block" key={`word-${idx}`}>
               {word.text.map((char, index) => (
-                <motion.span className={cn(`dark:text-white text-black opacity-0 hidden`, word.className)} initial={{}} key={`char-${index}`}>
+                <motion.span className={cn(`hidden text-black opacity-0 dark:text-white`, word.className)} initial={{}} key={`char-${index}`}>
                   {char}
                 </motion.span>
               ))}
@@ -66,13 +66,13 @@ export const TypewriterEffect = ({
     );
   };
   return (
-    <div className={cn("text-base sm:text-xl md:text-3xl lg:text-5xl font-bold text-center", className)}>
+    <div className={cn("text-center text-base font-bold sm:text-xl md:text-3xl lg:text-5xl", className)}>
       {renderWords()}
       <motion.span
         animate={{
           opacity: 1,
         }}
-        className={cn("inline-block rounded-sm w-[4px] h-4 md:h-6 lg:h-10 bg-blue-500", cursorClassName)}
+        className={cn("inline-block h-4 w-[4px] rounded-sm bg-blue-500 md:h-6 lg:h-10", cursorClassName)}
         initial={{
           opacity: 0,
         }}
@@ -112,7 +112,7 @@ export const TypewriterEffectSmooth = ({
           return (
             <div className="inline-block" key={`word-${idx}`}>
               {word.text.map((char, index) => (
-                <span className={cn(`dark:text-white text-black `, word.className)} key={`char-${index}`}>
+                <span className={cn(`text-black dark:text-white`, word.className)} key={`char-${index}`}>
                   {char}
                 </span>
               ))}
@@ -125,7 +125,7 @@ export const TypewriterEffectSmooth = ({
   };
 
   return (
-    <div className={cn("flex space-x-1 my-6", className)}>
+    <div className={cn("my-6 flex space-x-1", className)}>
       <motion.div
         className="overflow-hidden pb-2"
         initial={{
@@ -141,7 +141,7 @@ export const TypewriterEffectSmooth = ({
         }}
       >
         <div
-          className="text-xs sm:text-base md:text-xl lg:text:3xl xl:text-5xl font-bold"
+          className="lg:text:3xl text-xs font-bold sm:text-base md:text-xl xl:text-5xl"
           style={{
             whiteSpace: "nowrap",
           }}
@@ -153,7 +153,7 @@ export const TypewriterEffectSmooth = ({
         animate={{
           opacity: 1,
         }}
-        className={cn("block rounded-sm w-[4px]  h-4 sm:h-6 xl:h-12 bg-blue-500", cursorClassName)}
+        className={cn("block h-4 w-[4px] rounded-sm bg-blue-500 sm:h-6 xl:h-12", cursorClassName)}
         initial={{
           opacity: 0,
         }}

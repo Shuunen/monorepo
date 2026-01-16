@@ -1,5 +1,5 @@
-import { Button } from '@monorepo/components'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { Button } from "@monorepo/components";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 function About() {
   return (
@@ -11,9 +11,9 @@ function About() {
         </Button>
       </Link>
     </div>
-  )
+  );
 }
 
-export const Route = createFileRoute('/about')({
+export const Route = createFileRoute("/about")({
   component: About,
-})
+});

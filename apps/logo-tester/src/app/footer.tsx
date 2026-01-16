@@ -1,9 +1,9 @@
-import { IconOwl, Paragraph } from '@monorepo/components'
+import { IconOwl, Paragraph } from "@monorepo/components";
 
 export function Footer() {
   return (
-    <footer className="grid gap-6 text-sm font-light p-12 bg-linear-to-t from-stone-950 to-stone-900">
-      <div className="flex gap-4 justify-center">
+    <footer className="grid gap-6 bg-linear-to-t from-stone-950 to-stone-900 p-12 text-sm font-light">
+      <div className="flex justify-center gap-4">
         <Paragraph>Licence : MIT</Paragraph>
         <div className="opacity-50">/</div>
         <Paragraph>Author : Shuunen</Paragraph>
@@ -12,7 +12,7 @@ export function Footer() {
           Sources on GitHub
         </a>
       </div>
-      <IconOwl className="size-16 opacity-10 mx-auto" />
+      <IconOwl className="mx-auto size-16 opacity-10" />
     </footer>
-  )
+  );
 }

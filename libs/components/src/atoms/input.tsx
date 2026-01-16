@@ -14,8 +14,8 @@ export function Input({ icon: Icon, ...props }: InputProps) {
   }
   return (
     <div className="relative">
-      <div className="absolute bg-transparent top-[8px] left-[8px]">
-        <Icon className={cn("w-[20px] h-[20px]", props.disabled && "text-gray-400 stroke-current")} />
+      <div className="absolute top-[8px] left-[8px] bg-transparent">
+        <Icon className={cn("h-[20px] w-[20px]", props.disabled && "stroke-current text-gray-400")} />
       </div>
       <ShadInput data-testid={testId} {...props} />
     </div>

@@ -13,27 +13,27 @@
 // ==/UserScript==
 
 function GooglePhotosEasyDelete() {
-  const app = { init: false, timeToWait: 200 }
-  const utils = new Shuutils('gp-ed')
+  const app = { init: false, timeToWait: 200 };
+  const utils = new Shuutils("gp-ed");
   const selectors = {
-    confirmBtn: 'button[autofocus]',
-    trash: '[data-delete-origin] button',
-  }
+    confirmBtn: "button[autofocus]",
+    trash: "[data-delete-origin] button",
+  };
   async function deleteCurrentPhoto() {
-    utils.log('deleting currently displayed photo...')
-    const trash = utils.findOne(selectors.trash)
+    utils.log("deleting currently displayed photo...");
+    const trash = utils.findOne(selectors.trash);
     if (!trash) {
-      utils.error('failed to find trash button')
-      return
+      utils.error("failed to find trash button");
+      return;
     }
-    trash.click()
-    await utils.sleep(app.timeToWait)
-    const confirmButton = utils.findOne(selectors.confirmBtn)
+    trash.click();
+    await utils.sleep(app.timeToWait);
+    const confirmButton = utils.findOne(selectors.confirmBtn);
     if (!confirmButton) {
-      utils.error('failed to find confirm button')
-      return
+      utils.error("failed to find confirm button");
+      return;
     }
-    confirmButton.click()
+    confirmButton.click();
   }
   /**
    * Handle keypress events
@@ -41,15 +41,15 @@ function GooglePhotosEasyDelete() {
    * @returns {void}
    */
   function onKeyPress(event) {
-    if (event.key === '!') void deleteCurrentPhoto()
+    if (event.key === "!") void deleteCurrentPhoto();
   }
   function init() {
-    if (app.init) return
-    utils.log('init !')
-    document.body.addEventListener('keypress', onKeyPress)
-    app.init = true
+    if (app.init) return;
+    utils.log("init !");
+    document.body.addEventListener("keypress", onKeyPress);
+    app.init = true;
   }
-  utils.onPageChange(init)
+  utils.onPageChange(init);
 }
 
-if (globalThis.window) GooglePhotosEasyDelete()
+if (globalThis.window) GooglePhotosEasyDelete();

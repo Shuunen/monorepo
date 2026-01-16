@@ -4,19 +4,19 @@
  * Collection of utility functions to help with common tasks in my user scripts.
  */
 class Shuutils {
-  id = ''
-  version = '2.6.6'
-  willDebug = false
+  id = "";
+  version = "2.6.6";
+  willDebug = false;
   /**
    * The ShuUserScriptUtils constructor
    * @param {string} id the user script id/name/marker like "lbc-dpe", "amz-aio"
    * @param {boolean} willDebug if true, will log more stuff
    * @example const utils = new Shuutils('lbc-dpe', true)
    */
-  constructor(id = 'shu-app', willDebug = false) {
-    this.id = id
-    this.willDebug = willDebug
-    this.debug('using Shuutils', this.version)
+  constructor(id = "shu-app", willDebug = false) {
+    this.id = id;
+    this.willDebug = willDebug;
+    this.debug("using Shuutils", this.version);
   }
   /**
    * Adds a toast notification to the document body.
@@ -28,15 +28,15 @@ class Shuutils {
    */
   // oxlint-disable-next-line max-params
   #toastAdd(type, message, delay = 0, padding = 14) {
-    const element = document.createElement('div')
-    element.setAttribute('class', 'shu-toast')
-    const last = document.querySelector('.shu-toast:nth-last-child(1 of .shu-toast)')?.getBoundingClientRect().top
-    const bottom = last === undefined ? 0 : globalThis.innerHeight - last
-    const { backgrounds, icon, iconStyle } = this.#toastStyle(type)
-    element.style = `position: fixed; display: flex; align-items: center; gap: 9px; bottom: ${bottom + padding}px; right: ${padding}px; z-index: 99999; padding: 12px 20px 11px 14px; background: linear-gradient(45deg, ${backgrounds[0]}, 20%, ${backgrounds[1]}); color: white; border-radius: 5px; box-shadow: 0 3px 7px 0 rgba(0,0,0,.5); font-size: 18px; opacity: 0; transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; transform: translateX(300px);`
-    element.innerHTML = `<span style="${iconStyle}border-radius: 50%; color: ${backgrounds[1]}; background-color: #ffffff90; width: 20px; height: 20px; text-align: center; font-weight: bolder; font-size: 12px;">${icon}</span><span style="margin-top: -1px;">${message}</span>`
-    this.#toastShow(element)
-    if (delay > 0) setTimeout(() => this.#toastHide(element), delay)
+    const element = document.createElement("div");
+    element.setAttribute("class", "shu-toast");
+    const last = document.querySelector(".shu-toast:nth-last-child(1 of .shu-toast)")?.getBoundingClientRect().top;
+    const bottom = last === undefined ? 0 : globalThis.innerHeight - last;
+    const { backgrounds, icon, iconStyle } = this.#toastStyle(type);
+    element.style = `position: fixed; display: flex; align-items: center; gap: 9px; bottom: ${bottom + padding}px; right: ${padding}px; z-index: 99999; padding: 12px 20px 11px 14px; background: linear-gradient(45deg, ${backgrounds[0]}, 20%, ${backgrounds[1]}); color: white; border-radius: 5px; box-shadow: 0 3px 7px 0 rgba(0,0,0,.5); font-size: 18px; opacity: 0; transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; transform: translateX(300px);`;
+    element.innerHTML = `<span style="${iconStyle}border-radius: 50%; color: ${backgrounds[1]}; background-color: #ffffff90; width: 20px; height: 20px; text-align: center; font-weight: bolder; font-size: 12px;">${icon}</span><span style="margin-top: -1px;">${message}</span>`;
+    this.#toastShow(element);
+    if (delay > 0) setTimeout(() => this.#toastHide(element), delay);
   }
   /**
    * Hides the toast element by applying a transform and removing it after a delay.
@@ -44,11 +44,11 @@ class Shuutils {
    * @param {number} [delay] - The delay in milliseconds before removing the element.
    */
   #toastHide(element, delay = 200) {
-    element.style.opacity = '0'
-    element.style.transform = 'translateX(300px)'
+    element.style.opacity = "0";
+    element.style.transform = "translateX(300px)";
     setTimeout(() => {
-      element.remove()
-    }, delay)
+      element.remove();
+    }, delay);
   }
   /**
    * Shows a toast element with a specified delay.
@@ -56,11 +56,11 @@ class Shuutils {
    * @param {number} [delay] - The delay in milliseconds before showing the toast.
    */
   #toastShow(element, delay = 100) {
-    document.body.append(element)
+    document.body.append(element);
     setTimeout(() => {
-      element.style.opacity = '1'
-      element.style.transform = 'translateX(0)'
-    }, delay)
+      element.style.opacity = "1";
+      element.style.transform = "translateX(0)";
+    }, delay);
   }
   /**
    * Get the style for a toast notification.
@@ -68,9 +68,9 @@ class Shuutils {
    * @returns {{backgrounds: string[], icon: string, iconStyle: string}} The style for the toast notification.
    */
   #toastStyle(type) {
-    if (type === 'success') return { backgrounds: ['MediumSeaGreen', 'SeaGreen'], icon: '&check;', iconStyle: 'line-height: 21px; text-indent: 1px;' }
-    if (type === 'error') return { backgrounds: ['FireBrick', 'Brown'], icon: 'x', iconStyle: 'line-height: 21.5px;' }
-    return { backgrounds: ['DodgerBlue', 'RoyalBlue'], icon: 'i', iconStyle: 'line-height: 21px;' }
+    if (type === "success") return { backgrounds: ["MediumSeaGreen", "SeaGreen"], icon: "&check;", iconStyle: "line-height: 21px; text-indent: 1px;" };
+    if (type === "error") return { backgrounds: ["FireBrick", "Brown"], icon: "x", iconStyle: "line-height: 21.5px;" };
+    return { backgrounds: ["DodgerBlue", "RoyalBlue"], icon: "i", iconStyle: "line-height: 21px;" };
   }
   /**
    * Animate an element with animate.css
@@ -82,11 +82,11 @@ class Shuutils {
   // oxlint-disable-next-line max-lines-per-function
   async animateCss(element, animation, canRemoveAfter = true) {
     await new Promise(resolve => {
-      const animationName = `animate__${animation}`
-      element.classList.add('animate__animated', animationName)
+      const animationName = `animate__${animation}`;
+      element.classList.add("animate__animated", animationName);
       if (!canRemoveAfter) {
-        resolve('Animation ended, no need to remove')
-        return
+        resolve("Animation ended, no need to remove");
+        return;
       }
       // When the animation ends, we clean the classes and resolve the Promise
       /**
@@ -94,12 +94,12 @@ class Shuutils {
        * @param {{ stopPropagation: () => void; }} event the event
        */
       function handleAnimationEnd(event) {
-        event.stopPropagation()
-        element.classList.remove('animate__animated', animationName)
-        resolve('Animation ended')
+        event.stopPropagation();
+        element.classList.remove("animate__animated", animationName);
+        resolve("Animation ended");
       }
-      element.addEventListener('animationend', handleAnimationEnd, { once: true })
-    })
+      element.addEventListener("animationend", handleAnimationEnd, { once: true });
+    });
   }
   /**
    * Capitalizes the first letter of a string, does not change the rest /!\
@@ -107,7 +107,7 @@ class Shuutils {
    * @returns {string} The capitalized string like 'Hello World'
    */
   capitalize(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1)
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
   /**
    * Copy data to the clipboard
@@ -116,10 +116,10 @@ class Shuutils {
    * @example await utils.copyToClipboard('hello world') // copies 'hello world' to the clipboard
    */
   async copyToClipboard(stuff) {
-    const text = typeof stuff === 'string' ? stuff : JSON.stringify(stuff)
-    this.log(`copying to clipboard : ${this.ellipsis(text)}`)
+    const text = typeof stuff === "string" ? stuff : JSON.stringify(stuff);
+    this.log(`copying to clipboard : ${this.ellipsis(text)}`);
     // oxlint-disable-next-line no-undef
-    await navigator.clipboard.writeText(text)
+    await navigator.clipboard.writeText(text);
   }
   /**
    * Debounce a function
@@ -132,15 +132,15 @@ class Shuutils {
   debounce(callback, waitFor) {
     /** @type {ReturnType<typeof setTimeout>} */
     // oxlint-disable-next-line init-declarations
-    let timeout
+    let timeout;
     return async (/** @type {any} */ ...parameters) =>
       await new Promise(resolve => {
-        clearTimeout(timeout)
+        clearTimeout(timeout);
         // oxlint-disable-next-line max-nested-callbacks
         timeout = setTimeout(() => {
-          resolve(callback(...parameters))
-        }, waitFor)
-      })
+          resolve(callback(...parameters));
+        }, waitFor);
+      });
   }
   /**
    * Console.log stuff with app id if debug is true
@@ -149,10 +149,10 @@ class Shuutils {
    * @example utils.debug('hello', 'world')
    */
   debug(...stuff) {
-    if (!this.willDebug) return
-    if (this.id.length > 0) stuff.unshift(`${this.id} :`)
+    if (!this.willDebug) return;
+    if (this.id.length > 0) stuff.unshift(`${this.id} :`);
     // biome-ignore lint/suspicious/noConsole: it's ok here :)
-    console.log(...stuff)
+    console.log(...stuff);
   }
   /**
    * Ellipsis a string to a given number of characters
@@ -162,10 +162,10 @@ class Shuutils {
    * @example utils.ellipsis('hello world', 5) // returns 'hello...'
    * @example utils.ellipsis('hello world', 11) // returns 'hello world'
    */
-  ellipsis(stringIn = '', maxLength = 50) {
-    const stringOut = stringIn.slice(0, maxLength)
-    if (stringOut === stringIn) return stringIn
-    return `${stringOut}...`
+  ellipsis(stringIn = "", maxLength = 50) {
+    const stringOut = stringIn.slice(0, maxLength);
+    if (stringOut === stringIn) return stringIn;
+    return `${stringOut}...`;
   }
   /**
    * Ellipsis a string to a given number of words
@@ -175,10 +175,10 @@ class Shuutils {
    * @example utils.ellipsisWords('hello world', 1) // returns 'hello...'
    * @example utils.ellipsisWords('hello world', 2) // returns 'hello world'
    */
-  ellipsisWords(stringIn = '', maxWords = 5) {
-    const stringOut = stringIn.split(' ').splice(0, maxWords).join(' ')
-    if (stringOut === stringIn) return stringIn
-    return `${stringOut}...`
+  ellipsisWords(stringIn = "", maxWords = 5) {
+    const stringOut = stringIn.split(" ").splice(0, maxWords).join(" ");
+    if (stringOut === stringIn) return stringIn;
+    return `${stringOut}...`;
   }
   /**
    * Console.error stuff with app id
@@ -187,9 +187,9 @@ class Shuutils {
    * @example utils.error('hello', 'world')
    */
   error(...stuff) {
-    if (this.id.length > 0) stuff.unshift(`${this.id} :`)
+    if (this.id.length > 0) stuff.unshift(`${this.id} :`);
     // biome-ignore lint/suspicious/noConsole: it's ok here :)
-    console.error(...stuff)
+    console.error(...stuff);
   }
   /**
    * Fill an input like a human would do
@@ -199,17 +199,17 @@ class Shuutils {
    * @example await utils.fillLikeHuman(input, 'hello world')
    */
   async fillLikeHuman(input, value) {
-    this.debug('fillLikeHuman', input, value)
-    input.focus()
+    this.debug("fillLikeHuman", input, value);
+    input.focus();
     for (const char of value) {
-      input.value += char
+      input.value += char;
       // oxlint-disable-next-line no-await-in-loop
-      await this.sleep(this.getRandomNumber(40, 80))
+      await this.sleep(this.getRandomNumber(40, 80));
     }
-    input.dispatchEvent(new Event('input', { bubbles: true }))
-    input.dispatchEvent(new Event('change', { bubbles: true }))
-    input.dispatchEvent(new Event('blur', { bubbles: true }))
-    input.blur()
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+    input.dispatchEvent(new Event("blur", { bubbles: true }));
+    input.blur();
   }
   /**
    * Find all elements in the DOM
@@ -221,11 +221,11 @@ class Shuutils {
    * @example utils.findAll('.not-exits') // returns an empty array
    */
   findAll(selector, scope = document, canFail = false) {
-    if (!selector || selector.length === 0 || selector.length === 1) this.error('incorrect selector : ', selector)
-    const items = Array.prototype.slice.call(scope.querySelectorAll(selector))
-    if (items.length > 0 && this.willDebug) this.log('found', items.length, `elements matching "${selector}"`)
-    else if (items.length <= 0 && !canFail) this.warn(`found no elements for selector "${selector}"`)
-    return items
+    if (!selector || selector.length === 0 || selector.length === 1) this.error("incorrect selector : ", selector);
+    const items = Array.prototype.slice.call(scope.querySelectorAll(selector));
+    if (items.length > 0 && this.willDebug) this.log("found", items.length, `elements matching "${selector}"`);
+    else if (items.length <= 0 && !canFail) this.warn(`found no elements for selector "${selector}"`);
+    return items;
   }
   /**
    * Find the first element in the DOM
@@ -236,7 +236,7 @@ class Shuutils {
    * @example utils.findFirst('div') // returns the first div found
    */
   findFirst(selector, scope = document, canFail = false) {
-    return this.findAll(selector, scope, canFail)[0]
+    return this.findAll(selector, scope, canFail)[0];
   }
   /**
    * Find the first element in the DOM
@@ -247,7 +247,7 @@ class Shuutils {
    * @example utils.findOne('div') // returns the first div found
    */
   findOne(selector, scope = document, canFail = false) {
-    return this.findAll(selector, scope, canFail)[0]
+    return this.findAll(selector, scope, canFail)[0];
   }
   /**
    * Get a random number between min and max
@@ -257,7 +257,7 @@ class Shuutils {
    * @example utils.getRandomNumber(0, 100) // returns a number between 0 and 100
    */
   getRandomNumber(min = 0, max = 100) {
-    return Math.floor(Math.random() * (max - min + 1) + min)
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
   /**
    * Console.groupCollapsed stuff with app id
@@ -266,9 +266,9 @@ class Shuutils {
    * @example utils.groupCollapsed('hello world')
    */
   groupCollapsed(...stuff) {
-    if (this.id.length > 0) stuff.unshift(`${this.id} :`)
+    if (this.id.length > 0) stuff.unshift(`${this.id} :`);
     // biome-ignore lint/suspicious/noConsole: it's ok here :)
-    console.groupCollapsed(...stuff)
+    console.groupCollapsed(...stuff);
   }
   /**
    * Console.groupEnd stuff with app id
@@ -277,7 +277,7 @@ class Shuutils {
    */
   groupEnd() {
     // biome-ignore lint/suspicious/noConsole: it's ok here :)
-    console.groupEnd()
+    console.groupEnd();
   }
   /**
    * Hide an element for a reason
@@ -287,15 +287,15 @@ class Shuutils {
    */
   hideElement(element, reason) {
     if (this.willDebug) {
-      element.style.backgroundColor = 'red !important'
-      element.style.color = 'white !important'
-      element.style.boxShadow = '0 0 10px red'
-      element.style.filter = 'blur(1px)'
+      element.style.backgroundColor = "red !important";
+      element.style.color = "white !important";
+      element.style.boxShadow = "0 0 10px red";
+      element.style.filter = "blur(1px)";
     }
-    element.style.display = this.willDebug ? element.style.display : 'none'
-    element.style.visibility = this.willDebug ? 'visible' : 'hidden'
-    element.style.opacity = this.willDebug ? '1' : '0'
-    element.dataset.hiddenCause = reason
+    element.style.display = this.willDebug ? element.style.display : "none";
+    element.style.visibility = this.willDebug ? "visible" : "hidden";
+    element.style.opacity = this.willDebug ? "1" : "0";
+    element.dataset.hiddenCause = reason;
   }
   /**
    * Hide elements for a reason
@@ -304,29 +304,29 @@ class Shuutils {
    * @returns {void}
    */
   hideElements(selectors, reason) {
-    let nb = 0
+    let nb = 0;
     for (const selector of Object.values(selectors))
       for (const node of this.findAll(`${selector}:not([data-hidden-cause])`, document, true)) {
-        this.hideElement(node, reason)
-        nb += 1
+        this.hideElement(node, reason);
+        nb += 1;
       }
-    if (nb > 0) this.debug(`hideElements has hidden ${nb} elements`)
+    if (nb > 0) this.debug(`hideElements has hidden ${nb} elements`);
   }
   /**
    * Inject styles in the DOM
    * @param {string} string the string to inject, can be a url or a css string
    * @returns {void}
    */
-  injectStyles(string = '') {
+  injectStyles(string = "") {
     if (string.length === 0) {
-      this.log('cannot inject empty style stuff')
-      return
+      this.log("cannot inject empty style stuff");
+      return;
     }
-    if (string.includes('://') && !string.includes('\n') && string.includes('.css')) {
-      document.querySelector('head')?.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
-      return
+    if (string.includes("://") && !string.includes("\n") && string.includes(".css")) {
+      document.querySelector("head")?.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="${string}" />`);
+      return;
     }
-    document.body.insertAdjacentHTML('beforeend', `<style>${string}</style>`)
+    document.body.insertAdjacentHTML("beforeend", `<style>${string}</style>`);
   }
   /**
    * Load one or more TypeScript util files and attach their exports to this instance
@@ -336,32 +336,32 @@ class Shuutils {
   async loadTs(files) {
     // @ts-expect-error Babel is a global variable injected by the @require in the userscript metadata
     if (!globalThis.Babel) {
-      this.error('Babel is not loaded, cannot load utils')
-      return this
+      this.error("Babel is not loaded, cannot load utils");
+      return this;
     }
-    const baseUrl = 'https://raw.githubusercontent.com/Shuunen/monorepo/master/libs/utils/src/lib/'
-    const fileList = Array.isArray(files) ? files : [files]
+    const baseUrl = "https://raw.githubusercontent.com/Shuunen/monorepo/master/libs/utils/src/lib/";
+    const fileList = Array.isArray(files) ? files : [files];
     for (const file of fileList)
       try {
-        const response = await fetch(baseUrl + file)
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
-        const tsCode = await response.text()
+        const response = await fetch(baseUrl + file);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const tsCode = await response.text();
         // @ts-expect-error Babel is a global variable injected by the @require in the userscript metadata
         const jsCode = globalThis.Babel.transform(tsCode, {
           filename: file,
-          presets: ['typescript'],
-        }).code
-        const blob = new Blob([jsCode], { type: 'application/javascript' })
-        const url = URL.createObjectURL(blob)
-        const module = await import(url)
-        URL.revokeObjectURL(url)
+          presets: ["typescript"],
+        }).code;
+        const blob = new Blob([jsCode], { type: "application/javascript" });
+        const url = URL.createObjectURL(blob);
+        const module = await import(url);
+        URL.revokeObjectURL(url);
         // Attach all exports to this instance
-        Object.assign(this, module)
-        this.log(`Loaded : ${file}`)
+        Object.assign(this, module);
+        this.log(`Loaded : ${file}`);
       } catch (error) {
-        this.error(`Failed to load ${file}`, error)
+        this.error(`Failed to load ${file}`, error);
       }
-    return this
+    return this;
   }
   /**
    * Console.log stuff with app id
@@ -369,9 +369,9 @@ class Shuutils {
    * @returns {void}
    */
   log(...stuff) {
-    if (this.id.length > 0) stuff.unshift(`${this.id} :`)
+    if (this.id.length > 0) stuff.unshift(`${this.id} :`);
     // biome-ignore lint/suspicious/noConsole: it's ok here :)
-    console.log(...stuff)
+    console.log(...stuff);
   }
   /**
    * Wait for location.href to change and call a callback
@@ -383,15 +383,15 @@ class Shuutils {
    */
   async onPageChange(
     callback = () => {
-      this.log('empty callback')
+      this.log("empty callback");
     },
-    last = '',
+    last = "",
     wait = 1000,
   ) {
-    await this.sleep(wait)
-    const current = document.location.href
-    if (current !== last) callback(current)
-    void this.onPageChange(callback, current, wait)
+    await this.sleep(wait);
+    const current = document.location.href;
+    if (current !== last) callback(current);
+    void this.onPageChange(callback, current, wait);
   }
   /**
    * Parse a price from a string
@@ -400,14 +400,15 @@ class Shuutils {
    */
   parsePrice(input) {
     // Normalize all space-like characters to regular space
-    const normalizedInput = input.replaceAll(/[\s\u00A0\u2000-\u200B\u202F\u205F\u3000]+/gu, ' ').trim()
+    const normalizedInput = input.replaceAll(/[\s\u00A0\u2000-\u200B\u202F\u205F\u3000]+/gu, " ").trim();
     // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-    const { currencyEnd, currencyStart, decimals, integers, integersOnly, sign = '' } = /^(?<sign>-)?\+?(?<currencyStart>[$€])? ?(?:(?<integers>[\d .,]+)(?<decimals>[.,]\d{2})|(?<integersOnly>[\d .,]+)) ?(?<currencyEnd>[$€])?$/u.exec(normalizedInput)?.groups ?? {}
-    const integer = (integers ?? integersOnly ?? '').replaceAll(/\D/gu, '')
-    const fraction = decimals ? decimals.slice(1) : '00'
-    const currency = currencyStart ?? currencyEnd ?? ''
-    const amount = Number.parseFloat(`${sign + integer}.${fraction}`)
-    return { amount, currency, normalizedInput }
+    const parsePriceRegex = /^(?<sign>-)?\+?(?<currencyStart>[$€])? ?(?:(?<integers>[\d .,]+)(?<decimals>[.,]\d{2})|(?<integersOnly>[\d .,]+)) ?(?<currencyEnd>[$€])?$/u;
+    const { currencyEnd, currencyStart, decimals, integers, integersOnly, sign = "" } = parsePriceRegex.exec(normalizedInput)?.groups ?? {};
+    const integer = (integers ?? integersOnly ?? "").replaceAll(/\D/gu, "");
+    const fraction = decimals ? decimals.slice(1) : "00";
+    const currency = currencyStart ?? currencyEnd ?? "";
+    const amount = Number.parseFloat(`${sign + integer}.${fraction}`);
+    return { amount, currency, normalizedInput };
   }
   /**
    * Pick a random element from an array
@@ -417,7 +418,7 @@ class Shuutils {
    * @example utils.pickRandom(['hello', 'world']) // returns 'world'
    */
   pickRandom(array) {
-    return array[Math.floor(Math.random() * array.length)]
+    return array[Math.floor(Math.random() * array.length)];
   }
   /**
    * Get a ranged score
@@ -426,14 +427,14 @@ class Shuutils {
    * @returns {number} the ranged score
    */
   rangedScore({ isHigherBetter, scoreMax, scoreMin, valueMax, valueMin }, value) {
-    const lineA = (scoreMin - scoreMax) / (valueMin - valueMax)
-    const lineB = scoreMax - valueMax * lineA
-    const score = value * lineA + lineB
-    if (score < scoreMin) return isHigherBetter ? scoreMin : scoreMax
-    if (score > scoreMax) return isHigherBetter ? scoreMax : scoreMin
-    const nbDecimals = scoreMax - scoreMin > 10 ? 0 : 2
-    const finalScore = isHigherBetter ? score : scoreMax - score
-    return this.round(finalScore, nbDecimals)
+    const lineA = (scoreMin - scoreMax) / (valueMin - valueMax);
+    const lineB = scoreMax - valueMax * lineA;
+    const score = value * lineA + lineB;
+    if (score < scoreMin) return isHigherBetter ? scoreMin : scoreMax;
+    if (score > scoreMax) return isHigherBetter ? scoreMax : scoreMin;
+    const nbDecimals = scoreMax - scoreMin > 10 ? 0 : 2;
+    const finalScore = isHigherBetter ? score : scoreMax - score;
+    return this.round(finalScore, nbDecimals);
   }
   /**
    * Make a string more readable for humans
@@ -444,14 +445,14 @@ class Shuutils {
   readableString(string) {
     return string
       .trim()
-      .replaceAll(/['’_.-]/gu, ' ')
-      .normalize('NFD')
-      .replaceAll(/[^\d\sa-z]/giu, '')
-      .replaceAll(/\s{2,}/gu, ' ') // from shuutils sanitize
-      .replaceAll(/<.+?>/gu, ' ') // remove content in tags
-      .replaceAll(/\W/gu, ' ') // remove non words
-      .replaceAll(/\s+/gu, ' ') // replace spaces with single space
-      .trim() // final trim
+      .replaceAll(/['’_.-]/gu, " ")
+      .normalize("NFD")
+      .replaceAll(/[^\d\sa-z]/giu, "")
+      .replaceAll(/\s{2,}/gu, " ") // from shuutils sanitize
+      .replaceAll(/<.+?>/gu, " ") // remove content in tags
+      .replaceAll(/\W/gu, " ") // remove non words
+      .replaceAll(/\s+/gu, " ") // replace spaces with single space
+      .trim(); // final trim
   }
   /**
    * Read clipboard content
@@ -459,11 +460,11 @@ class Shuutils {
    * @example const text = await utils.readClipboard()
    */
   async readClipboard() {
-    this.log('reading clipboard...')
+    this.log("reading clipboard...");
     // oxlint-disable-next-line no-undef
-    const text = await navigator.clipboard.readText()
-    this.log(`got this text from clipboard : ${this.ellipsis(text)}`)
-    return text
+    const text = await navigator.clipboard.readText();
+    this.log(`got this text from clipboard : ${this.ellipsis(text)}`);
+    return text;
   }
   /**
    * Remove accents from a string
@@ -472,7 +473,7 @@ class Shuutils {
    * @example utils.removeAccents('éàù') // returns 'eau'
    */
   removeAccents(string) {
-    return string.normalize('NFD').replaceAll(/[\u0300-\u036F]/gu, '')
+    return string.normalize("NFD").replaceAll(/[\u0300-\u036F]/gu, "");
   }
   /**
    * Round a number to a given number of decimals
@@ -482,7 +483,7 @@ class Shuutils {
    * @example utils.round(1.2345, 2) // returns 1.23
    */
   round(number, nbDecimals = 2) {
-    return Math.round(number * 10 ** nbDecimals) / 10 ** nbDecimals
+    return Math.round(number * 10 ** nbDecimals) / 10 ** nbDecimals;
   }
   /**
    * Display an error both in the console and as a toast
@@ -490,8 +491,8 @@ class Shuutils {
    * @returns {void}
    */
   showError(message) {
-    this.toastError(message)
-    this.error(message)
+    this.toastError(message);
+    this.error(message);
   }
   /**
    * Display a log both in the console and as a toast
@@ -499,8 +500,8 @@ class Shuutils {
    * @returns {void}
    */
   showLog(message) {
-    this.toastSuccess(message)
-    this.log(message)
+    this.toastSuccess(message);
+    this.log(message);
   }
   /**
    * Display a success both in the console and as a toast
@@ -508,8 +509,8 @@ class Shuutils {
    * @returns {void}
    */
   showSuccess(message) {
-    this.toastSuccess(message)
-    this.log(message)
+    this.toastSuccess(message);
+    this.log(message);
   }
   /**
    * Sleep for a given time
@@ -519,8 +520,8 @@ class Shuutils {
    */
   async sleep(ms) {
     await new Promise(resolve => {
-      setTimeout(resolve, ms)
-    })
+      setTimeout(resolve, ms);
+    });
   }
   /**
    * Throttle a function
@@ -531,15 +532,15 @@ class Shuutils {
    * @example const throttled = utils.throttle(myFunction, 500)
    */
   throttle(callback, timeout) {
-    let isReady = true
+    let isReady = true;
     return (/** @type {any} */ ...parameters) => {
-      if (!isReady) return
-      isReady = false
-      callback(...parameters)
+      if (!isReady) return;
+      isReady = false;
+      callback(...parameters);
       setTimeout(() => {
-        isReady = true
-      }, timeout)
-    }
+        isReady = true;
+      }, timeout);
+    };
   }
   /**
    * Displays an error toast message.
@@ -548,7 +549,7 @@ class Shuutils {
    * @example utils.toastError('hello world')
    */
   toastError(message, delay = 4000) {
-    this.#toastAdd('error', message, delay)
+    this.#toastAdd("error", message, delay);
   }
   /**
    * Displays an info toast message.
@@ -557,7 +558,7 @@ class Shuutils {
    * @example utils.toastInfo('hello world')
    */
   toastInfo(message, delay = 2000) {
-    this.#toastAdd('info', message, delay)
+    this.#toastAdd("info", message, delay);
   }
   /**
    * Displays a success toast message.
@@ -566,7 +567,7 @@ class Shuutils {
    * @example utils.toastSuccess('hello world')
    */
   toastSuccess(message, delay = 2000) {
-    this.#toastAdd('success', message, delay)
+    this.#toastAdd("success", message, delay);
   }
   /**
    * Enable tailwindcss intellisense and return an array of classes
@@ -574,7 +575,7 @@ class Shuutils {
    * @returns {string[]} the array of classes, e.g. ['h-56', 'w-96', 'rounded-md']
    */
   tw(classes) {
-    return classes.split(' ')
+    return classes.split(" ");
   }
   /**
    * WaitToDetect will wait for an element to be detected in the DOM and return it
@@ -584,14 +585,14 @@ class Shuutils {
    * @returns {Promise<HTMLElement|undefined>} the element found or undefined
    */
   async waitToDetect(selector, wait = 500, nbTries = 0) {
-    await this.sleep(wait)
-    const element = this.findOne(selector)
-    if (element) return element
+    await this.sleep(wait);
+    const element = this.findOne(selector);
+    if (element) return element;
     if (nbTries > 5) {
-      this.log(`stop searching after 5 fails to detect : "${selector}"`)
-      return undefined
+      this.log(`stop searching after 5 fails to detect : "${selector}"`);
+      return undefined;
     }
-    return await this.waitToDetect(selector, wait, nbTries + 1)
+    return await this.waitToDetect(selector, wait, nbTries + 1);
   }
   /**
    * Console.warn stuff with app id
@@ -599,7 +600,7 @@ class Shuutils {
    * @returns {void}
    */
   warn(...stuff) {
-    if (this.id.length > 0) stuff.unshift(`${this.id} :`)
+    if (this.id.length > 0) stuff.unshift(`${this.id} :`);
   }
 }
 
@@ -608,4 +609,4 @@ if (globalThis.window === undefined)
   module.exports = {
     // biome-ignore lint/style/useNamingConvention: nope
     Shuutils,
-  }
+  };

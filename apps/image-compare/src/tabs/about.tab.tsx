@@ -1,8 +1,8 @@
 // oxlint-disable id-length
 // oxlint-disable no-magic-numbers
-import { Paragraph, Title } from '@monorepo/components'
-import { cn } from '@monorepo/utils'
-import { motion, type Variants } from 'framer-motion'
+import { Paragraph, Title } from "@monorepo/components";
+import { cn } from "@monorepo/utils";
+import { motion, type Variants } from "framer-motion";
 
 const containerAnimation = {
   hidden: { opacity: 0 },
@@ -13,29 +13,29 @@ const containerAnimation = {
       staggerChildren: 0.15,
     },
   },
-} satisfies Variants
+} satisfies Variants;
 
 const textAnimation = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] }, y: 0 },
-} satisfies Variants
+} satisfies Variants;
 
 const imageAnimation = {
   hidden: { opacity: 0, scale: 0.95 },
   show: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] } },
-} satisfies Variants
+} satisfies Variants;
 
 function Num({ children: number }: { children: string }) {
-  return <span className="font-mono bg-blue-900 shadow-md shadow-accent-foreground/30 size-5 inline-flex justify-center leading-5 mx-1 rounded-full">{number}</span>
+  return <span className="mx-1 inline-flex size-5 justify-center rounded-full bg-blue-900 font-mono leading-5 shadow-md shadow-accent-foreground/30">{number}</span>;
 }
 
 export function About() {
-  const titleClasses = cn('text-4xl text-primary w-1/2 mx-auto text-center border-t pt-8 mt-10 border-primary/30')
+  const titleClasses = cn("mx-auto mt-10 w-1/2 border-t border-primary/30 pt-8 text-center text-4xl text-primary");
   return (
-    <div className="bg-accent flex flex-col gap-4 justify-center" data-testid="about-tab">
-      <motion.div animate="show" className="prose prose-xl mx-auto mb-20" initial="hidden" variants={containerAnimation}>
+    <div className="flex flex-col justify-center gap-4 bg-accent" data-testid="about-tab">
+      <motion.div animate="show" className="mx-auto prose prose-xl mb-20" initial="hidden" variants={containerAnimation}>
         <motion.div variants={textAnimation}>
-          <Title className={cn(titleClasses, 'border-0')} level={2}>
+          <Title className={cn(titleClasses, "border-0")} level={2}>
             Purpose
           </Title>
         </motion.div>
@@ -82,9 +82,9 @@ export function About() {
           <Paragraph>This tool is built with React and TypeScript, utilizing modern web technologies for a smooth and responsive user experience.</Paragraph>
         </motion.div>
         <motion.div variants={textAnimation}>
-          <Paragraph className="text-center font-mono py-4 opacity-50">__unique-mark__</Paragraph>
+          <Paragraph className="py-4 text-center font-mono opacity-50">__unique-mark__</Paragraph>
         </motion.div>
       </motion.div>
     </div>
-  )
+  );
 }

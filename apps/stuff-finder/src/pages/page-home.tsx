@@ -1,36 +1,36 @@
-import { Button } from '@monorepo/components'
-import { ThemeProvider } from '@mui/material/styles'
-import { type CSSProperties, useCallback, useMemo, useState } from 'react'
-import { AppPrompter } from '../components/app-prompter'
-import { AppQuickSearch } from '../components/app-quick-search'
-import { setPageTitle } from '../utils/browser.utils'
-import { logger } from '../utils/logger.utils'
-import { navigate } from '../utils/navigation.utils'
-import { listenUserSpeech } from '../utils/speech.utils'
-import { state, watchState } from '../utils/state.utils'
-import { theme } from '../utils/theme.utils'
+import { Button } from "@monorepo/components";
+import { ThemeProvider } from "@mui/material/styles";
+import { type CSSProperties, useCallback, useMemo, useState } from "react";
+import { AppPrompter } from "../components/app-prompter";
+import { AppQuickSearch } from "../components/app-quick-search";
+import { setPageTitle } from "../utils/browser.utils";
+import { logger } from "../utils/logger.utils";
+import { navigate } from "../utils/navigation.utils";
+import { listenUserSpeech } from "../utils/speech.utils";
+import { state, watchState } from "../utils/state.utils";
+import { theme } from "../utils/theme.utils";
 
-const triggerColumnClasses = 'flex w-full flex-col gap-3 text-gray-400 transition-colors hover:text-purple-600 duration-400 disabled:opacity-50 disabled:pointer-events-none'
+const triggerColumnClasses = "flex w-full flex-col gap-3 text-gray-400 transition-colors hover:text-purple-600 duration-400 disabled:opacity-50 disabled:pointer-events-none";
 
 // oxlint-disable-next-line max-lines-per-function
 export function PageHome({ ...properties }: Readonly<Record<string, unknown>>) {
-  logger.debug('PageHome', { properties })
-  setPageTitle('Home')
+  logger.debug("PageHome", { properties });
+  setPageTitle("Home");
 
-  const [isUsable, setIsUsable] = useState(state.status !== 'settings-required')
-  const ctaStyle = useMemo(() => (isUsable ? {} : ({ filter: 'grayscale(1)', opacity: 0.5, pointerEvents: 'none' } satisfies CSSProperties)), [isUsable])
+  const [isUsable, setIsUsable] = useState(state.status !== "settings-required");
+  const ctaStyle = useMemo(() => (isUsable ? {} : ({ filter: "grayscale(1)", opacity: 0.5, pointerEvents: "none" } satisfies CSSProperties)), [isUsable]);
 
-  watchState('status', () => {
-    setIsUsable(state.status !== 'settings-required')
-  })
+  watchState("status", () => {
+    setIsUsable(state.status !== "settings-required");
+  });
 
   const onSpeech = useCallback(() => {
-    state.status = 'listening'
+    state.status = "listening";
     listenUserSpeech((transcript: string) => {
-      logger.showInfo(`searching for "${transcript}"`)
-      navigate(`/search/${transcript}`)
-    })
-  }, [])
+      logger.showInfo(`searching for "${transcript}"`);
+      navigate(`/search/${transcript}`);
+    });
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -39,7 +39,7 @@ export function PageHome({ ...properties }: Readonly<Record<string, unknown>>) {
         <AppPrompter />
         <div className="grid gap-8 md:grid-cols-3 md:gap-6" style={ctaStyle}>
           <div className={triggerColumnClasses}>
-            <Button className="py-5.5" name="scan" onClick={() => navigate('/scan')}>
+            <Button className="py-5.5" name="scan" onClick={() => navigate("/scan")}>
               Scan it
             </Button>
             <svg className="h-8" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
@@ -69,5 +69,5 @@ export function PageHome({ ...properties }: Readonly<Record<string, unknown>>) {
         </div>
       </div>
     </ThemeProvider>
-  )
+  );
 }

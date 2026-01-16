@@ -1,24 +1,24 @@
-import type { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form'
+import type { FieldPath, FieldValues, UseFormReturn } from "react-hook-form";
 
 export type FieldBaseProps<TypeFieldValues extends FieldValues = FieldValues> = {
   /** the label above the field */
-  label?: string
+  label?: string;
   // biome-ignore lint/suspicious/noExplicitAny: we need that
-  form: UseFormReturn<any> // eslint-disable-line @typescript-eslint/no-explicit-any
+  form: UseFormReturn<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   /** the name of the field */
-  name: FieldPath<TypeFieldValues>
+  name: FieldPath<TypeFieldValues>;
   /** will show a red star if the label is defined */
-  isRequired: boolean
+  isRequired: boolean;
   /** placeholder text for the field */
-  placeholder?: string
+  placeholder?: string;
   /** disable the N/A checkbox */
-  disableNa?: boolean
-}
+  disableNa?: boolean;
+};
 
 /** The type of an option in a select or radio field */
 export type Option = {
   /** the label of the option */
-  label: string
+  label: string;
   /** the value of the option */
-  value: string
-}
+  value: string;
+};

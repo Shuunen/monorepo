@@ -13,41 +13,41 @@
 // ==/UserScript==
 
 const badges = {
-  bronze: 'https://i.imgur.com/APbU15u.png',
-  gold: 'https://i.imgur.com/hoWbQ3w.png',
-  silver: 'https://i.imgur.com/ZGeAId9.png',
-}
+  bronze: "https://i.imgur.com/APbU15u.png",
+  gold: "https://i.imgur.com/hoWbQ3w.png",
+  silver: "https://i.imgur.com/ZGeAId9.png",
+};
 
 const steps = {
   bronze: 10,
   silver: 20,
-}
+};
 
 async function getNbContributions() {
   // @ts-expect-error gon is a global variable set by Gitlab
   // oxlint-disable no-undef
   // biome-ignore lint/correctness/noUndeclaredVariables: it's a global variable set by Gitlab
-  const isOnUserProfile = gon.feature_category === 'user_profile'
+  const isOnUserProfile = gon.feature_category === "user_profile";
   // @ts-expect-error gon is a global variable set by Gitlab
   // biome-ignore lint/correctness/noUndeclaredVariables: it's a global variable set by Gitlab
-  const username = isOnUserProfile ? document.location.pathname.slice(1) : gon.current_username
-  if (!username) throw new Error('No username found, looked in global gon.current_username')
-  const url = `https://gitlab.com/users/${username}/calendar.json`
-  const data = await fetch(url)
-  const json = await data.json()
-  const nb = Object.values(json).at(-1)
-  if (!nb) throw new Error('No contribution found')
-  if (typeof nb !== 'number') throw new Error('Contribution found but not a number')
-  return nb
+  const username = isOnUserProfile ? document.location.pathname.slice(1) : gon.current_username;
+  if (!username) throw new Error("No username found, looked in global gon.current_username");
+  const url = `https://gitlab.com/users/${username}/calendar.json`;
+  const data = await fetch(url);
+  const json = await data.json();
+  const nb = Object.values(json).at(-1);
+  if (!nb) throw new Error("No contribution found");
+  if (typeof nb !== "number") throw new Error("Contribution found but not a number");
+  return nb;
 }
 
-function injectStyles(string = '') {
-  if (string.length === 0) return
-  if (string.includes('://') && !string.includes('\n') && string.includes('.css')) {
-    document.querySelector('head')?.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
-    return
+function injectStyles(string = "") {
+  if (string.length === 0) return;
+  if (string.includes("://") && !string.includes("\n") && string.includes(".css")) {
+    document.querySelector("head")?.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="${string}" />`);
+    return;
   }
-  document.body.insertAdjacentHTML('beforeend', `<style>${string}</style>`)
+  document.body.insertAdjacentHTML("beforeend", `<style>${string}</style>`);
 }
 
 /**
@@ -60,73 +60,74 @@ function injectStyles(string = '') {
  */
 async function animateCss(element, animation, canRemoveAfter = true) {
   return await new Promise(resolve => {
-    const animationName = `animate__${animation}`
-    element.classList.add('animate__animated', animationName)
+    const animationName = `animate__${animation}`;
+    element.classList.add("animate__animated", animationName);
     if (!canRemoveAfter) {
-      void resolve('Animation ended, no need to remove')
-      return
+      void resolve("Animation ended, no need to remove");
+      return;
     }
     // When the animation ends, we clean the classes and resolve the Promise
     element.addEventListener(
-      'animationend',
+      "animationend",
       // oxlint-disable-next-line max-nested-callbacks
       event => {
-        event.stopPropagation()
-        element.classList.remove('animate__animated', animationName)
-        void resolve('Animation ended')
+        event.stopPropagation();
+        element.classList.remove("animate__animated", animationName);
+        void resolve("Animation ended");
       },
       { once: true },
-    )
-  })
+    );
+  });
 }
 
 function GitlabBadge() {
-  const utils = new Shuutils('gtb-bdg')
+  const utils = new Shuutils("gtb-bdg");
   function getBadge() {
-    const badge = document.createElement('div')
-    badge.id = utils.id
-    badge.classList.add('animate__animated')
-    badge.style = 'cursor: grab; background-repeat: no-repeat;filter: drop-shadow(black 2px 4px 6px);position: fixed;top: 60px;right: 0px;z-index: 1000;width: 300px;height: 300px;font-size: 80px;font-weight: 800;text-align: center;line-height: 250px;'
-    return badge
+    const badge = document.createElement("div");
+    badge.id = utils.id;
+    badge.classList.add("animate__animated");
+    badge.style =
+      "cursor: grab; background-repeat: no-repeat;filter: drop-shadow(black 2px 4px 6px);position: fixed;top: 60px;right: 0px;z-index: 1000;width: 300px;height: 300px;font-size: 80px;font-weight: 800;text-align: center;line-height: 250px;";
+    return badge;
   }
-  const badge = getBadge()
-  let isHidden = false
-  badge.addEventListener('click', () => {
-    isHidden = true
-    void animateCss(badge, 'bounceOutUp', false)
-  })
-  document.body.append(badge)
-  let animationCount = 0
+  const badge = getBadge();
+  let isHidden = false;
+  badge.addEventListener("click", () => {
+    isHidden = true;
+    void animateCss(badge, "bounceOutUp", false);
+  });
+  document.body.append(badge);
+  let animationCount = 0;
   function animateBadge(hasContributionsChanged = false) {
-    if (animationCount === 0) void animateCss(badge, 'backInRight')
-    else void animateCss(badge, hasContributionsChanged ? 'tada' : 'pulse')
-    animationCount += 1
+    if (animationCount === 0) void animateCss(badge, "backInRight");
+    else void animateCss(badge, hasContributionsChanged ? "tada" : "pulse");
+    animationCount += 1;
   }
-  async function process(reason = 'unknown') {
+  async function process(reason = "unknown") {
     if (isHidden) {
-      utils.debug(`process called because ${reason} but badge has been hidden`)
-      return
+      utils.debug(`process called because ${reason} but badge has been hidden`);
+      return;
     }
-    const todayContributions = await getNbContributions()
-    utils.log(`process, reason ${reason}, found ${todayContributions} contributions`)
-    const previousContributions = Number(badge.textContent)
-    badge.textContent = String(todayContributions)
-    if (todayContributions < steps.bronze) badge.style.backgroundImage = `url(${badges.bronze})`
-    else if (todayContributions < steps.silver) badge.style.backgroundImage = `url(${badges.silver})`
-    else badge.style.backgroundImage = `url(${badges.gold})`
-    animateBadge(todayContributions !== previousContributions)
+    const todayContributions = await getNbContributions();
+    utils.log(`process, reason ${reason}, found ${todayContributions} contributions`);
+    const previousContributions = Number(badge.textContent);
+    badge.textContent = String(todayContributions);
+    if (todayContributions < steps.bronze) badge.style.backgroundImage = `url(${badges.bronze})`;
+    else if (todayContributions < steps.silver) badge.style.backgroundImage = `url(${badges.silver})`;
+    else badge.style.backgroundImage = `url(${badges.gold})`;
+    animateBadge(todayContributions !== previousContributions);
   }
-  const processDebounceTime = 1000
-  const processDebounced = utils.debounce(process, processDebounceTime)
-  globalThis.addEventListener('focus', () => {
-    void process('focus')
-  })
-  globalThis.addEventListener('click', () => processDebounced('click'))
-  utils.onPageChange(async () => await process('page-change'))
+  const processDebounceTime = 1000;
+  const processDebounced = utils.debounce(process, processDebounceTime);
+  globalThis.addEventListener("focus", () => {
+    void process("focus");
+  });
+  globalThis.addEventListener("click", () => processDebounced("click"));
+  utils.onPageChange(async () => await process("page-change"));
 }
 
-if (globalThis.window) GitlabBadge()
-else module.exports = { animateCss, getNbContributions, injectStyles }
+if (globalThis.window) GitlabBadge();
+else module.exports = { animateCss, getNbContributions, injectStyles };
 
 injectStyles(`
 /*!
@@ -253,4 +254,4 @@ injectStyles(`
   -webkit-animation-timing-function: ease-in-out;
   animation-timing-function: ease-in-out;
 }
-`)
+`);

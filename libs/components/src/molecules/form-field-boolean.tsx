@@ -19,7 +19,7 @@ export function FormFieldBoolean({ fieldName, fieldSchema, isOptional, logger, r
   return (
     <FormFieldBase {...props} showLabel={false}>
       {({ field }) => (
-        <div className="grid gap-2 mt-2">
+        <div className="mt-2 grid gap-2">
           <div className="flex gap-2">
             <FormControl>{isBooleanLiteral ? <Switch {...field} checked={booleanLiteralValue === true} disabled /> : <Switch {...field} checked={Boolean(field.value)} disabled={isDisabled} onCheckedChange={field.onChange} />}</FormControl>
             {/* we set optional to true all the times to hide the red star, does not make sense on a field that always have a value */}

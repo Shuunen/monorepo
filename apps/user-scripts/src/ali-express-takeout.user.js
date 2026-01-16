@@ -16,69 +16,69 @@
 // oxlint-disable no-magic-numbers
 
 function AliExpressTakeout() {
-  const utils = new Shuutils('alx-tko')
+  const utils = new Shuutils("alx-tko");
   const selectors = {
     details: '[data-pl="product-title"]',
     name: '[data-pl="product-title"]',
     photo: '[class^="image-view"] > div > img',
-  }
+  };
   /**
    * Handles the form submission event.
    * @param {object} values - The form values.
    */
   async function onSubmit(values) {
-    utils.log('Form submitted with', { values })
-    await utils.copyToClipboard(values)
-    utils.showSuccess('Data copied to clipboard')
+    utils.log("Form submitted with", { values });
+    await utils.copyToClipboard(values);
+    utils.showSuccess("Data copied to clipboard");
   }
   function getPrice() {
-    const price = textFromSelector('.product-price-value')
-    if (price === '') {
-      utils.showError('failed to get price from page')
-      return ''
+    const price = textFromSelector(".product-price-value");
+    if (price === "") {
+      utils.showError("failed to get price from page");
+      return "";
     }
-    return Math.round(Number.parseFloat(price.replace(',', '.'))).toString()
+    return Math.round(Number.parseFloat(price.replace(",", "."))).toString();
   }
   function getReference() {
-    const path = document.location.pathname.split('/').toReversed()[0] ?? ''
-    if (path === '') {
-      utils.showError('failed to get path from URL')
-      return ''
+    const path = document.location.pathname.split("/").toReversed()[0] ?? "";
+    if (path === "") {
+      utils.showError("failed to get path from URL");
+      return "";
     }
-    const reference = path.split('.')[0] ?? ''
-    if (reference === '') {
-      utils.showError('failed to get reference from path')
-      return ''
+    const reference = path.split(".")[0] ?? "";
+    if (reference === "") {
+      utils.showError("failed to get reference from path");
+      return "";
     }
-    return reference
+    return reference;
   }
   function startTakeout() {
-    const form = createMbForm({ id: utils.id, title: 'AliExpress Takeout' }, onSubmit)
-    for (const [key, selector] of Object.entries(selectors)) addMbField(form, key, textFromSelector(selector))
-    addMbField(form, 'brand', 'AliExpress')
-    addMbField(form, 'reference', getReference())
-    addMbField(form, 'price', getPrice())
-    addMbSubmit(form, 'Copy to clipboard')
-    document.body.append(form)
+    const form = createMbForm({ id: utils.id, title: "AliExpress Takeout" }, onSubmit);
+    for (const [key, selector] of Object.entries(selectors)) addMbField(form, key, textFromSelector(selector));
+    addMbField(form, "brand", "AliExpress");
+    addMbField(form, "reference", getReference());
+    addMbField(form, "price", getPrice());
+    addMbSubmit(form, "Copy to clipboard");
+    document.body.append(form);
   }
   /** @param {MouseEvent} event the click event */
   async function init(event) {
-    utils.debug('init')
-    const { target } = event
+    utils.debug("init");
+    const { target } = event;
     if (!(target instanceof HTMLElement)) {
-      utils.showError('target is not an HTMLElement')
-      return
+      utils.showError("target is not an HTMLElement");
+      return;
     }
-    if (!target.className.includes('image')) return
-    const photo = await utils.waitToDetect(selectors.photo)
+    if (!target.className.includes("image")) return;
+    const photo = await utils.waitToDetect(selectors.photo);
     if (photo === undefined) {
-      utils.showError('failed to find product photo on this page')
-      return
+      utils.showError("failed to find product photo on this page");
+      return;
     }
-    startTakeout()
+    startTakeout();
   }
-  const initDebounced = utils.debounce(init, 500)
-  globalThis.addEventListener('click', () => initDebounced())
+  const initDebounced = utils.debounce(init, 500);
+  globalThis.addEventListener("click", () => initDebounced());
 }
 
-if (globalThis.window) AliExpressTakeout()
+if (globalThis.window) AliExpressTakeout();

@@ -4,7 +4,7 @@
  * @returns {string[]} a new array with unique values
  */
 function mergeUnique(array) {
-  return [...new Set(array)]
+  return [...new Set(array)];
 }
 
 /**
@@ -13,10 +13,10 @@ function mergeUnique(array) {
  * @returns {string[]} the isolated and sorted lines
  */
 export function isolateLines(list) {
-  let lines = list.replaceAll(' ', '').split('\n')
-  lines = mergeUnique(lines)
-  lines = lines.filter(line => line.length > 0)
-  return lines.toSorted((lineA, lineB) => lineA.localeCompare(lineB))
+  let lines = list.replaceAll(" ", "").split("\n");
+  lines = mergeUnique(lines);
+  lines = lines.filter(line => line.length > 0);
+  return lines.toSorted((lineA, lineB) => lineA.localeCompare(lineB));
 }
 
 /**
@@ -25,5 +25,5 @@ export function isolateLines(list) {
  * @returns {string} the list as a string with line breaks
  */
 export function linesToList(lines) {
-  return lines.join('\n\n').trim()
+  return lines.join("\n\n").trim();
 }

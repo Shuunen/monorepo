@@ -3,8 +3,8 @@ packages:
   - libs/*
 
 onlyBuiltDependencies:
-  - '@swc/core'
-  - '@tailwindcss/oxide'
+  - "@swc/core"
+  - "@tailwindcss/oxide"
   - bun
   - electron
   - esbuild

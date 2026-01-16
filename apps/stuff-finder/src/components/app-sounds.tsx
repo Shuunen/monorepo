@@ -1,22 +1,22 @@
-import { useRef } from 'react'
-import { logger } from '../utils/logger.utils'
-import { state, watchState } from '../utils/state.utils'
+import { useRef } from "react";
+import { logger } from "../utils/logger.utils";
+import { state, watchState } from "../utils/state.utils";
 
 export function AppSounds() {
-  const barcodeReference = useRef<HTMLAudioElement>(null)
-  const notifyReference = useRef<HTMLAudioElement>(null)
-  const startReference = useRef<HTMLAudioElement>(null)
-  const stopReference = useRef<HTMLAudioElement>(null)
-  const errorReference = useRef<HTMLAudioElement>(null)
+  const barcodeReference = useRef<HTMLAudioElement>(null);
+  const notifyReference = useRef<HTMLAudioElement>(null);
+  const startReference = useRef<HTMLAudioElement>(null);
+  const stopReference = useRef<HTMLAudioElement>(null);
+  const errorReference = useRef<HTMLAudioElement>(null);
 
-  watchState('sound', () => {
-    logger.info('sound to play', state.sound)
-    if (state.sound === 'barcode') barcodeReference.current?.play()
-    if (state.sound === 'notify') notifyReference.current?.play()
-    if (state.sound === 'start') startReference.current?.play()
-    if (state.sound === 'stop') stopReference.current?.play()
-    if (state.sound === 'error') errorReference.current?.play()
-  })
+  watchState("sound", () => {
+    logger.info("sound to play", state.sound);
+    if (state.sound === "barcode") barcodeReference.current?.play();
+    if (state.sound === "notify") notifyReference.current?.play();
+    if (state.sound === "start") startReference.current?.play();
+    if (state.sound === "stop") stopReference.current?.play();
+    if (state.sound === "error") errorReference.current?.play();
+  });
   return (
     <>
       {/* biome-ignore lint/a11y/useMediaCaption: fix me */}
@@ -30,5 +30,5 @@ export function AppSounds() {
       {/* biome-ignore lint/a11y/useMediaCaption: fix me */}
       <audio preload="auto" ref={errorReference} src="/assets/windows-hardware-fail-mod.mp3" />
     </>
-  )
+  );
 }

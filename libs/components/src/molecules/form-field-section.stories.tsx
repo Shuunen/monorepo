@@ -109,7 +109,8 @@ ORDER BY created_at DESC`,
  */
 export const LongDescription: Story = {
   args: {
-    description: "By using this service, you agree to our Terms of Service and Privacy Policy. We are committed to protecting your data and ensuring a safe user experience. Please read our full terms before proceeding with your registration. If you have any questions, contact our support team.",
+    description:
+      "By using this service, you agree to our Terms of Service and Privacy Policy. We are committed to protecting your data and ensuring a safe user experience. Please read our full terms before proceeding with your registration. If you have any questions, contact our support team.",
     title: "Terms and Conditions",
   },
   play: ({ canvasElement }) => {
@@ -167,7 +168,7 @@ export const MultipleSections: Story = {
     expect(canvas.getByText(/POST \/api\/upload/)).toBeInTheDocument();
   },
   render: () => (
-    <div className="grid gap-6 w-lg">
+    <div className="grid w-lg gap-6">
       <FormFieldSection description="Ensure your data is in the correct format before uploading. Check our documentation for supported formats." line title="Step 1: Prepare Your Data" />
       <FormFieldSection code="POST /api/upload\nContent-Type: multipart/form-data" description="Select a file from your computer and upload it to our system." line title="Step 2: Upload File" />
       <FormFieldSection description="Review the uploaded data and confirm that everything looks correct before finalizing." title="Step 3: Verify Results" />

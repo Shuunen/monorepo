@@ -20,7 +20,7 @@ type AutoFormNavigationProps = {
 
 export function AutoFormNavigation({ leftButton, centerButton, rightButton }: AutoFormNavigationProps) {
   return (
-    <div className="flex justify-between pt-6 gap-2">
+    <div className="flex justify-between gap-2 pt-6">
       {leftButton ? (
         <Button disabled={leftButton.disabled} name="step-back" onClick={leftButton.onClick} type="button" variant="outline">
           Back

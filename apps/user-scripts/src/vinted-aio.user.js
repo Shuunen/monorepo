@@ -48,38 +48,38 @@ const styles = `
   .is-wide .container {
     width: 1600px;
   }
-`
+`;
 
 function VintedAio() {
-  const utils = new Shuutils('vinted-hide-selector')
-  utils.injectStyles(styles)
+  const utils = new Shuutils("vinted-hide-selector");
+  utils.injectStyles(styles);
   const uselessSelectors = {
-    'around-price': '[data-testid="service-fee-included-title"], [data-testid="service-fee-included-icon"]',
-    'favorite-link': '[href="/member/items/favourite_list"]',
+    "around-price": '[data-testid="service-fee-included-title"], [data-testid="service-fee-included-icon"]',
+    "favorite-link": '[href="/member/items/favourite_list"]',
     // 'follow-button': '[role="presentation"] > .web_ui__Cell__content > .web_ui__Cell__body > button.web_ui__Button__truncated',
-    'help-link': '[href="/help/360?access_channel=vinted_guide"]',
-    'law-text': '[data-testid="item-transparency-law--content"]',
-    promoted: '.feed-grid > .feed-grid__item.feed-grid__item--full-row',
-    'protection-text': '.item-page-sidebar-content > .web_ui__Card__card.web_ui__Card__overflowAuto:first-child + .web_ui__Card__card.web_ui__Card__overflowAuto',
-    'sell-button': '[href="/items/new"]',
-    'sidebar-discount': '[data-testid="item-sidebar-price-container"] > [data-testid="discount-badges-container"]',
-    spacer: '.web_ui__Spacer__x5-large.web_ui__Spacer__horizontal',
-    'useless-base-price': '[data-testid="item-price"]',
-  }
+    "help-link": '[href="/help/360?access_channel=vinted_guide"]',
+    "law-text": '[data-testid="item-transparency-law--content"]',
+    promoted: ".feed-grid > .feed-grid__item.feed-grid__item--full-row",
+    "protection-text": ".item-page-sidebar-content > .web_ui__Card__card.web_ui__Card__overflowAuto:first-child + .web_ui__Card__card.web_ui__Card__overflowAuto",
+    "sell-button": '[href="/items/new"]',
+    "sidebar-discount": '[data-testid="item-sidebar-price-container"] > [data-testid="discount-badges-container"]',
+    spacer: ".web_ui__Spacer__x5-large.web_ui__Spacer__horizontal",
+    "useless-base-price": '[data-testid="item-price"]',
+  };
   /**
    * Process the page and hide elements
    * @param {string} reason - The reason for processing
    */
-  function process(reason = 'unknown') {
-    utils.debug(`process called because "${reason}"`)
-    utils.hideElements(uselessSelectors, 'useless')
+  function process(reason = "unknown") {
+    utils.debug(`process called because "${reason}"`);
+    utils.hideElements(uselessSelectors, "useless");
   }
-  const processDebounceTime = 300
-  const processDebounced = utils.debounce((/** @type {string} */ reason) => process(reason), processDebounceTime)
-  globalThis.addEventListener('scroll', () => processDebounced('scroll'))
-  utils.onPageChange(() => processDebounced('page-change'))
-  document.addEventListener('DOMContentLoaded', () => process('initial-dom-loaded'))
-  process('initial-dom-ready')
+  const processDebounceTime = 300;
+  const processDebounced = utils.debounce((/** @type {string} */ reason) => process(reason), processDebounceTime);
+  globalThis.addEventListener("scroll", () => processDebounced("scroll"));
+  utils.onPageChange(() => processDebounced("page-change"));
+  document.addEventListener("DOMContentLoaded", () => process("initial-dom-loaded"));
+  process("initial-dom-ready");
 }
 
-if (globalThis.window) VintedAio()
+if (globalThis.window) VintedAio();

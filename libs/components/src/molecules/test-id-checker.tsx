@@ -129,7 +129,7 @@ function TestIdListItem({ id, index, occurrences, isValid }: TestIdInfo & { inde
   return (
     <li
       aria-label={`Highlight element with data-testid ${id}`}
-      className={cn("flex gap-2 whitespace-nowrap items-center border-b border-gray-100 cursor-pointer m-0 px-4 py-2 hover:bg-blue-50 transition-colors", isValid ? "text-black" : "text-red-500")}
+      className={cn("m-0 flex cursor-pointer items-center gap-2 border-b border-gray-100 px-4 py-2 whitespace-nowrap transition-colors hover:bg-blue-50", isValid ? "text-black" : "text-red-500")}
       onMouseEnter={() => {
         highlightManager.add(id);
       }}
@@ -163,8 +163,8 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
     return;
   }
   return (
-    <Card aria-label="data-testid checker" className="fixed text-sm gap-0 overflow-hidden bottom-6 py-0 right-6 z-100 max-h-11/12 w-auto min-w-[260px] shadow-lg">
-      <CardHeader className={cn("flex justify-between items-center pl-4 pr-2 py-2 text-white", hasErrors ? "bg-red-700" : "bg-blue-700")}>
+    <Card aria-label="data-testid checker" className="fixed right-6 bottom-6 z-100 max-h-11/12 w-auto min-w-[260px] gap-0 overflow-hidden py-0 text-sm shadow-lg">
+      <CardHeader className={cn("flex items-center justify-between py-2 pr-2 pl-4 text-white", hasErrors ? "bg-red-700" : "bg-blue-700")}>
         <CardTitle className="text-base">Data test id checker</CardTitle>
         <Button
           name="close-test-id-checker"
@@ -177,9 +177,9 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
           <XIcon />
         </Button>
       </CardHeader>
-      <CardContent className="p-0 overflow-y-auto">
+      <CardContent className="overflow-y-auto p-0">
         {testIds.length === INITIAL_INDEX ? (
-          <div className="text-gray-400 p-4 text-center">No data-testid found</div>
+          <div className="p-4 text-center text-gray-400">No data-testid found</div>
         ) : (
           <ul className="text-gray-300" ref={listElement}>
             {testIds.map((info, index) => (

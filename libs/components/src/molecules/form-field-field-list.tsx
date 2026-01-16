@@ -56,7 +56,7 @@ export function FormFieldFieldList({ fieldName, fieldSchema, isOptional, logger,
   return (
     <FormFieldBase {...props} showLabel={false}>
       {({ field }) => (
-        <div className="flex flex-col gap-4 mt-2">
+        <div className="mt-2 flex flex-col gap-4">
           <Title>{label}</Title>
           <Paragraph>{placeholder}</Paragraph>
           {items.map((_item, index) => (

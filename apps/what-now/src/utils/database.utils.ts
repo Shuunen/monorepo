@@ -1,16 +1,16 @@
-import { dateIso10, nbPercentMax, nbSpacesIndent, Result, slugify, toastError, toastSuccess } from '@monorepo/utils'
-import { Client, Databases, type Models, Query } from 'appwrite'
-import type { AppWriteTask, Task } from '../types'
-import { logger } from './logger.utils'
-import { state } from './state.utils'
+import { dateIso10, nbPercentMax, nbSpacesIndent, Result, slugify, toastError, toastSuccess } from "@monorepo/utils";
+import { Client, Databases, type Models, Query } from "appwrite";
+import type { AppWriteTask, Task } from "../types";
+import { logger } from "./logger.utils";
+import { state } from "./state.utils";
 
-const client = new Client()
-const database = new Databases(client)
-client.setEndpoint('https://cloud.appwrite.io/v1').setProject('what-now')
+const client = new Client();
+const database = new Databases(client);
+client.setEndpoint("https://cloud.appwrite.io/v1").setProject("what-now");
 
-export type AppWriteTaskModel = AppWriteTask & Models.Document
+export type AppWriteTaskModel = AppWriteTask & Models.Document;
 
-export const uuidMaxLength = 36
+export const uuidMaxLength = 36;
 
 /**
  * Convert a task from the database to a task in the app
@@ -19,14 +19,14 @@ export const uuidMaxLength = 36
  */
 export function modelToLocalTask(task: AppWriteTaskModel) {
   return {
-    completedOn: task['completed-on'],
+    completedOn: task["completed-on"],
     id: task.$id,
     isDone: task.done,
     minutes: task.minutes,
     name: task.name,
     once: task.once,
     reason: task.reason ?? undefined,
-  } satisfies Task
+  } satisfies Task;
 }
 
 /**
@@ -36,13 +36,13 @@ export function modelToLocalTask(task: AppWriteTaskModel) {
  */
 export function modelToRemoteTask(model: AppWriteTaskModel) {
   return {
-    'completed-on': model['completed-on'],
+    "completed-on": model["completed-on"],
     done: model.done,
     minutes: model.minutes,
     name: model.name,
     once: model.once,
     reason: model.reason,
-  } satisfies AppWriteTask
+  } satisfies AppWriteTask;
 }
 
 /**
@@ -52,13 +52,13 @@ export function modelToRemoteTask(model: AppWriteTaskModel) {
  */
 export function localToRemoteTask(task: Readonly<Task>) {
   return {
-    'completed-on': task.completedOn,
+    "completed-on": task.completedOn,
     done: task.isDone,
     minutes: task.minutes,
     name: task.name,
     once: task.once,
-    reason: task.reason ?? '',
-  } satisfies AppWriteTask
+    reason: task.reason ?? "",
+  } satisfies AppWriteTask;
 }
 
 /**
@@ -67,8 +67,8 @@ export function localToRemoteTask(task: Readonly<Task>) {
  * @returns the result of the operation
  */
 export function addTask(data: Readonly<AppWriteTask>) {
-  const id = slugify(data.name).slice(0, uuidMaxLength)
-  return Result.trySafe(database.createDocument(state.apiDatabase, state.apiCollection, id, data))
+  const id = slugify(data.name).slice(0, uuidMaxLength);
+  return Result.trySafe(database.createDocument(state.apiDatabase, state.apiCollection, id, data));
 }
 
 /**
@@ -77,8 +77,8 @@ export function addTask(data: Readonly<AppWriteTask>) {
  * @returns the result of the operation
  */
 export function updateTask(task: Readonly<Task>) {
-  const data = localToRemoteTask(task)
-  return Result.trySafe(database.updateDocument<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, task.id, data))
+  const data = localToRemoteTask(task);
+  return Result.trySafe(database.updateDocument<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, task.id, data));
 }
 
 /**
@@ -86,11 +86,11 @@ export function updateTask(task: Readonly<Task>) {
  * @returns the result of the operation
  */
 export async function getTasks() {
-  const result = await Result.trySafe(database.listDocuments<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, [Query.limit(nbPercentMax)]))
-  if (!result.ok) return result
-  const tasks = result.value.documents.map<Task>(task => modelToLocalTask(task))
-  logger.info(`found ${tasks.length} tasks on db`, tasks)
-  return Result.ok(tasks)
+  const result = await Result.trySafe(database.listDocuments<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, [Query.limit(nbPercentMax)]));
+  if (!result.ok) return result;
+  const tasks = result.value.documents.map<Task>(task => modelToLocalTask(task));
+  logger.info(`found ${tasks.length} tasks on db`, tasks);
+  return Result.ok(tasks);
 }
 
 /**
@@ -100,21 +100,21 @@ export async function getTasks() {
 /* v8 ignore next -- @preserve */
 // oxlint-disable-next-line max-statements
 export async function downloadData() {
-  const result = await Result.trySafe(database.listDocuments<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, [Query.limit(nbPercentMax)]))
+  const result = await Result.trySafe(database.listDocuments<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, [Query.limit(nbPercentMax)]));
   if (!result.ok) {
-    toastError('Failed to download data')
-    logger.error('failed to download data', result.error)
-    return
+    toastError("Failed to download data");
+    logger.error("failed to download data", result.error);
+    return;
   }
-  const json = JSON.stringify(result.value.documents, undefined, nbSpacesIndent)
-  const blob = new Blob([json], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = `${dateIso10()}_what-now_tasks.json`
-  document.body.append(link)
-  link.click()
-  link.remove()
-  URL.revokeObjectURL(url)
-  toastSuccess('Data downloaded')
+  const json = JSON.stringify(result.value.documents, undefined, nbSpacesIndent);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${dateIso10()}_what-now_tasks.json`;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  toastSuccess("Data downloaded");
 }

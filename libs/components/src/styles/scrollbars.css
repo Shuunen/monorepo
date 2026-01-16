@@ -8,10 +8,10 @@
     @apply size-2;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-background rounded;
+    @apply rounded bg-background;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-muted rounded border border-border;
+    @apply rounded border border-border bg-muted;
   }
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-muted-foreground/20;

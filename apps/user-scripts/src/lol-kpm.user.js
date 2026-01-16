@@ -13,9 +13,9 @@
 // ==/UserScript==
 
 function LolKpm() {
-  const utils = new Shuutils('lol-kpm')
-  const nbPercents = 100
-  const maxKpm = 1.8
+  const utils = new Shuutils("lol-kpm");
+  const nbPercents = 100;
+  const maxKpm = 1.8;
   /**
    * Calculates the percentage representation of the given KPM (kills per minute)
    * value relative to the maximum KPM, clamped between 0 and 100.
@@ -24,7 +24,7 @@ function LolKpm() {
    * @returns {number} The percentage value (0-100) representing the KPM.
    */
   function coolPercents(kpm) {
-    return Math.min(Math.max(Math.round((kpm / maxKpm) * nbPercents), 0), nbPercents)
+    return Math.min(Math.max(Math.round((kpm / maxKpm) * nbPercents), 0), nbPercents);
   }
   /**
    * Calculates and displays the kills per minute (KPM) for a given row element,
@@ -37,40 +37,40 @@ function LolKpm() {
    * @param {HTMLElement} row - The table row element containing match data.
    */
   function showKpmOnRow(row) {
-    const kdaPlate = row.querySelector('.kda-plate')
+    const kdaPlate = row.querySelector(".kda-plate");
     if (!kdaPlate || !kdaPlate.textContent) {
-      utils.showError('Could not find .kda-plate or its text content')
-      return
+      utils.showError("Could not find .kda-plate or its text content");
+      return;
     }
-    const kills = Number.parseInt(kdaPlate.textContent.split('/')[0], 10)
-    const dateDuration = row.querySelector('.date-duration')
+    const kills = Number.parseInt(kdaPlate.textContent.split("/")[0], 10);
+    const dateDuration = row.querySelector(".date-duration");
     if (!dateDuration || !dateDuration.textContent) {
-      utils.showError('Could not find .date-duration or its text content')
-      return
+      utils.showError("Could not find .date-duration or its text content");
+      return;
     }
     const time = dateDuration.textContent
-      .split(' ')[0]
-      .split(':')
-      .map(string => Number.parseInt(string, 10))
+      .split(" ")[0]
+      .split(":")
+      .map(string => Number.parseInt(string, 10));
     // oxlint-disable-next-line no-magic-numbers
-    const minutes = time.length === 3 ? 60 * time[0] + time[1] : time[0]
-    const element = document.createElement('div')
+    const minutes = time.length === 3 ? 60 * time[0] + time[1] : time[0];
+    const element = document.createElement("div");
     // oxlint-disable-next-line no-magic-numbers
-    const kpm = Math.round((kills / minutes) * 10) / 10
-    const score = coolPercents(kpm) // 5% ur bad, 100% super good
-    element.textContent = `${kpm} kills/min`
-    element.title = `You're ${score}% awesome`
+    const kpm = Math.round((kills / minutes) * 10) / 10;
+    const score = coolPercents(kpm); // 5% ur bad, 100% super good
+    element.textContent = `${kpm} kills/min`;
+    element.title = `You're ${score}% awesome`;
     // oxlint-disable-next-line no-magic-numbers
-    element.style = `white-space: nowrap; padding-right: 15px; font-size: ${kpm * 10 + 5}px; color: hsl(120, 100%, ${score}%); background-color: hsl(0, 0%, ${nbPercents - score}%);`
-    row.append(element)
-    row.classList.add('kpm-handled')
+    element.style = `white-space: nowrap; padding-right: 15px; font-size: ${kpm * 10 + 5}px; color: hsl(120, 100%, ${score}%); background-color: hsl(0, 0%, ${nbPercents - score}%);`;
+    row.append(element);
+    row.classList.add("kpm-handled");
   }
-  globalThis.addEventListener('DOMNodeInserted', event => {
-    const node = event.target
-    if (!(node instanceof HTMLElement) || !node.matches('ul[id^=match-history]')) return
-    const rows = utils.findAll('div[id^=game-summary]:not(.kpm-handled)', node, true)
-    for (const row of rows) showKpmOnRow(row)
-  })
+  globalThis.addEventListener("DOMNodeInserted", event => {
+    const node = event.target;
+    if (!(node instanceof HTMLElement) || !node.matches("ul[id^=match-history]")) return;
+    const rows = utils.findAll("div[id^=game-summary]:not(.kpm-handled)", node, true);
+    for (const row of rows) showKpmOnRow(row);
+  });
 }
 
-if (globalThis.window) LolKpm()
+if (globalThis.window) LolKpm();
