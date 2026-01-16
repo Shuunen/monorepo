@@ -74,7 +74,7 @@ export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger
   // Find a way to reset the form when schema changes.
   // useEffect(() => { form.reset(formData) }, [formData, form])
 
-  function updateFormDataSync() {
+  function updateFormData() {
     const updatedData = { ...formData, ...form.getValues() };
     logger?.info("updateFormData", updatedData);
     setFormData(updatedData);
@@ -92,7 +92,7 @@ export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger
       void handleFinalSubmit();
     } else {
       setCurrentStep(prev => prev + 1);
-      updateFormDataSync();
+      updateFormData();
     }
   }
   /**

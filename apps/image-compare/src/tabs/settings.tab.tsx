@@ -15,7 +15,7 @@ const settingsSchema = step(
 
 export function Settings() {
   /* v8 ignore start */
-  function onSettingsChange(updatedSettings: Record<string, unknown>) {
+  function onSubmit(updatedSettings: Record<string, unknown>) {
     if (objectEqual(state, updatedSettings)) return
     Object.assign(state, updatedSettings)
     setDarkTheme(state.darkTheme)
@@ -32,7 +32,7 @@ export function Settings() {
         <Paragraph>You can adjust your preferences here.</Paragraph>
       </motion.div>
       <div className="flex">
-        <AutoForm initialData={state} onSubmit={onSettingsChange} schemas={[settingsSchema]} showButtons={false} />
+        <AutoForm initialData={state} onSubmit={onSubmit} schemas={[settingsSchema]} />
       </div>
     </motion.div>
   )

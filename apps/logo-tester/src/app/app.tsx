@@ -24,7 +24,7 @@ export function App() {
   const [logoSrc, setLogoSrc] = useState(defaultFiles.logo)
   const [iconSrc, setIconSrc] = useState(defaultFiles.icon)
   const [points, setPoints] = useState<number[]>([])
-  function onFileChange(data: Record<string, unknown>) {
+  function onFileUpload(data: Record<string, unknown>) {
     if ('logoFile' in data && data.logoFile instanceof File) {
       const logoUrl = URL.createObjectURL(data.logoFile)
       setLogoSrc(logoUrl)
@@ -52,7 +52,7 @@ export function App() {
       <Title level={3} variant="muted">
         This web app helps you test how your logo and icon will look like in different scenarios.
       </Title>
-      <AutoForm onChange={onFileChange} schemas={[uploadStep]} showButtons={false} />
+      <AutoForm onSubmit={onFileUpload} schemas={[uploadStep]} />
       <hr />
       <div className="card stripped-light">
         <img alt="Logo on light background" className="logo" src={logoSrc} />
