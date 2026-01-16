@@ -1,0 +1,6 @@
+{
+  "name": "sample-web-app-e2e",
+  "targets": {
+    "ts-check": {}
+  }
+}

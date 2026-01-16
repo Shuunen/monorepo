@@ -3,16 +3,16 @@
   "assist": {
     "actions": {
       "source": {
-        "organizeImports": "on",
-        "useSortedAttributes": "on",
+        "organizeImports": "off",
+        "useSortedAttributes": "off",
         "useSortedKeys": "on",
-        "useSortedProperties": "on"
+        "useSortedProperties": "off"
       }
     }
   },
   "css": {
     "formatter": {
-      "enabled": true
+      "enabled": false
     },
     "parser": {
       "tailwindDirectives": true
@@ -40,16 +40,17 @@
     ]
   },
   "formatter": {
-    "enabled": true,
+    "enabled": false,
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
-    "lineWidth": 300
+    "lineWidth": 250
   },
   "javascript": {
     "formatter": {
       "arrowParentheses": "asNeeded",
       "bracketSpacing": true,
+      "enabled": false,
       "quoteStyle": "single",
       "semicolons": "asNeeded"
     }
@@ -59,8 +60,8 @@
       "enabled": true
     },
     "parser": {
-      "allowComments": false,
-      "allowTrailingCommas": false
+      "allowComments": true,
+      "allowTrailingCommas": true
     }
   },
   "linter": {
@@ -213,15 +214,6 @@
           "suspicious": {
             "noConsole": "off"
           }
-        }
-      }
-    },
-    {
-      "includes": ["libs/**"],
-      "javascript": {
-        "formatter": {
-          "quoteStyle": "double",
-          "semicolons": "always"
         }
       }
     },
