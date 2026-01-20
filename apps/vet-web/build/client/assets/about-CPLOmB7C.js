@@ -1,0 +1,2 @@
+/* unique-mark : 0.0.1 - 020b136 - 15/01/2026 17:48 */
+import{w as t,L as r}from"./chunk-EPOLDU6W-BX2fZM7Z.js";import{j as o}from"./index-Dura0Zb_.js";import{B as e}from"./button-CsmJcW-8.js";import"./form-field-upload.const-zFp1Gjmm.js";const l=t(function(){return o.jsxs("div",{className:"flex flex-col gap-4",children:[o.jsx("div",{children:"Hello from About!"}),o.jsx(r,{to:"/",children:o.jsx(e,{name:"go-home",variant:"destructive",children:"Go to home"})})]})});export{l as default};

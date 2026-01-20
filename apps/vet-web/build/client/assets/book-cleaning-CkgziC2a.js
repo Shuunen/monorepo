@@ -1,0 +1,2 @@
+/* unique-mark : 0.0.1 - 020b136 - 15/01/2026 17:48 */
+import"./index-Dura0Zb_.js";import{o as a,s as l,e as r,b as s}from"./form-field-upload.const-zFp1Gjmm.js";import{f as e,n as i}from"./auto-form.utils-BE3pKRFx.js";import{a as o}from"./age.utils-BFQTLvEs.js";a({email:e(r("Invalid email address"),{label:"Email Address",placeholder:"We'll never share your email"}),name:e(l().min(i,"Name is required"),{label:"Full Name",placeholder:"Enter your legal name"})});a({age:o,subscribe:e(s().optional(),{label:"Subscribe to newsletter",placeholder:"Check to subscribe"})});

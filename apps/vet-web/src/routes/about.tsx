@@ -1,7 +1,7 @@
-import { Button } from '@monorepo/components'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { Button } from "@monorepo/components";
+import { Link } from "react-router-dom";
 
-function About() {
+export default function About() {
   return (
     <div className="flex flex-col gap-4">
       <div>Hello from About!</div>
@@ -11,9 +11,5 @@ function About() {
         </Button>
       </Link>
     </div>
-  )
+  );
 }
-
-export const Route = createFileRoute('/about')({
-  component: About,
-})

@@ -1,23 +1,56 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "outDir": "dist",
-    "rootDir": "src",
-    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
-    "types": ["node", "@nx/react/typings/cssmodule.d.ts", "@nx/react/typings/image.d.ts", "vite/client"]
+    "jsxImportSource": "react",
+    "composite": false,
+    "incremental": false,
+    "noEmit": true,
+    "emitDeclarationOnly": false,
+    "declaration": false,
+    "declarationMap": false,
+
+    /* Standard Vite/RR7 settings */
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "target": "ESNext",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    
+    /* Ensure the generated types are at the top of the lookup */
+    "rootDirs": [".", "./.react-router/types"],
+    
+    "outDir": "../../dist/out-tsc",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    },
+    "types": [
+      "vite/client",
+      "node", 
+      "@nx/react/typings/cssmodule.d.ts", 
+      "@nx/react/typings/image.d.ts"
+    ]
   },
-  "exclude": ["out-tsc", "dist", "src/**/*.test.ts", "src/**/*.test.tsx", "vite.config.ts"],
-  "extends": "../../tsconfig.base.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "react-router.config.ts",
+    "vite.config.ts",
+    ".react-router/types/**/*" // Mandatory for RR7 route type safety
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx"
+  ],
   "references": [
-    {
-      "path": "../../libs/components/tsconfig.lib.json"
-    },
-    {
-      "path": "../../libs/utils/tsconfig.lib.json"
-    },
-    {
-      "path": "../../libs/vite-plugins/tsconfig.lib.json"
-    }
+    { "path": "../../libs/vite-plugins/tsconfig.lib.json" },
+    { "path": "../../libs/utils/tsconfig.lib.json" },
+    { "path": "../../libs/components/tsconfig.lib.json" }
   ]
 }

@@ -1,22 +1,37 @@
-import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@monorepo/components'
-import { Link } from '@tanstack/react-router'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@monorepo/components";
 
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 
 type BookCardProps = {
-  icon: ReactNode
-  title: string
-  description: string
+  icon: ReactNode;
+  title: string;
+  description: string;
   features: Array<{
-    icon: ReactNode
-    heading: string
-    text: string
-  }>
-  buttonText: string
-  buttonTo: string
-}
+    icon: ReactNode;
+    heading: string;
+    text: string;
+  }>;
+  buttonText: string;
+  buttonTo: string;
+};
 
-export function BookCard({ icon, title, description, features, buttonText, buttonTo }: BookCardProps) {
+export function BookCard({
+  icon,
+  title,
+  description,
+  features,
+  buttonText,
+  buttonTo,
+}: BookCardProps) {
   return (
     <Card>
       <CardHeader>
@@ -30,7 +45,7 @@ export function BookCard({ icon, title, description, features, buttonText, butto
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {features.map(feature => (
+          {features.map((feature) => (
             <div className="flex items-start" key={feature.heading}>
               {feature.icon}
               <div>
@@ -49,5 +64,5 @@ export function BookCard({ icon, title, description, features, buttonText, butto
         </Link>
       </CardFooter>
     </Card>
-  )
+  );
 }

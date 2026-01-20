@@ -1,9 +1,9 @@
+/// <reference types="vite/client" />
 /**
  * Check if the environment is a dev environment
  * @returns true if the environment is a dev environment
  */
 export function isDevEnvironment() {
-  // @ts-expect-error meta.env is Vite specific
   return import.meta.env.DEV === true;
 }
 
@@ -13,13 +13,30 @@ export function isDevEnvironment() {
  * @returns true if the environment is a test environment
  */
 export function isTestEnvironment(glob: Record<string, unknown> = globalThis) {
-  const properties = ["jest", "mocha", "playwright", "__vitest_environment__", "__vitest_required__", "__vitest_browser_runner__", "__vitest_browser__", "__vitest_worker__", "__coverage__", "STORYBOOK_ENV", "__STORYBOOK_ADDONS_CHANNEL__"];
-  const hasTestProp = properties.some(property => property in glob);
+  const properties = [
+    "jest",
+    "mocha",
+    "playwright",
+    "__vitest_environment__",
+    "__vitest_required__",
+    "__vitest_browser_runner__",
+    "__vitest_browser__",
+    "__vitest_worker__",
+    "__coverage__",
+    "STORYBOOK_ENV",
+    "__STORYBOOK_ADDONS_CHANNEL__",
+  ];
+  const hasTestProp = properties.some((property) => property in glob);
   if (hasTestProp) {
     return true;
   }
-  // @ts-expect-error type issue
-  const useBunTest = "Bun" in glob && glob?.Bun?.argv.join(" ").includes(".test.");
+  const useBunTest =
+    "Bun" in glob &&
+    typeof glob.Bun === "object" &&
+    glob.Bun !== null &&
+    "argv" in glob.Bun &&
+    Array.isArray((glob.Bun as { argv: string[] }).argv) &&
+    (glob.Bun as { argv: string[] }).argv.join(" ").includes(".test.");
   return useBunTest;
 }
 
@@ -28,7 +45,9 @@ export function isTestEnvironment(glob: Record<string, unknown> = globalThis) {
  * @param userAgent optional, the user agent to check, default is navigator.userAgent
  * @returns true if the environment is a browser environment
  */
-export function isBrowserEnvironment(userAgent = globalThis.navigator?.userAgent) {
+export function isBrowserEnvironment(
+  userAgent = globalThis.navigator?.userAgent
+) {
   if (!userAgent) {
     return false;
   }
