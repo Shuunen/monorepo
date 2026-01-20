@@ -154,16 +154,16 @@ function GithubAio() {
    * Process the page and hide elements
    * @param {string} reason - The reason for processing
    */
-  async function process(reason = "unknown") {
-    utils.debug(`process called because "${reason}"`);
+  async function start(reason = "unknown") {
+    utils.debug(`start called because "${reason}"`);
     await augmentUserRepos();
   }
-  const processDebounceTime = 300;
-  const processDebounced = utils.debounce((/** @type {string} */ reason) => process(reason), processDebounceTime);
-  globalThis.addEventListener("scroll", () => processDebounced("scroll"));
-  utils.onPageChange(() => processDebounced("page-change"));
-  document.addEventListener("DOMContentLoaded", () => process("initial-dom-loaded"));
-  void process("initial-dom-ready");
+  const startDebounceTime = 300;
+  const startDebounced = utils.debounce((/** @type {string} */ reason) => start(reason), startDebounceTime);
+  globalThis.addEventListener("scroll", () => startDebounced("scroll"));
+  utils.onPageChange(() => startDebounced("page-change"));
+  document.addEventListener("DOMContentLoaded", () => start("initial-dom-loaded"));
+  void start("initial-dom-ready");
 }
 
 if (globalThis.window) GithubAio();

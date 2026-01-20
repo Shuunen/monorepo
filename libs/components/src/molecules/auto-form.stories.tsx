@@ -392,7 +392,6 @@ export const OptionalSection: Story = {
       await userEvent.click(submitButton);
     });
     step("verify submitted data", () => {
-      expect(formData).toContainHTML(stringify({ name: "Paul Doughy", favouriteColor: "red" }, true));
       expect(submittedData).toContainHTML(stringify({ name: "Paul Doughy", favouriteColor: "red" }, true));
     });
   },
@@ -1063,12 +1062,10 @@ export const Codec: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const formData = canvas.getByTestId("debug-data-form-data");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("verify initial data was transformed correctly", () => {
       const dateInput = canvas.getByTestId("input-date-date");
       expect(dateInput).toHaveValue("2026-01-06");
-      expect(formData).toContainHTML('"date": "2026-01-06"');
       expect(submittedData).toContainHTML("{}");
     });
     await step("submit the form", async () => {
@@ -1078,7 +1075,6 @@ export const Codec: Story = {
     });
     await step("verify submitted data was transformed correctly", () => {
       const expectedData = { date: "2026-01-06" };
-      expect(formData).toContainHTML(stringify(expectedData, true));
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
   },

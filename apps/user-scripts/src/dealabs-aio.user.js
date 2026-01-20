@@ -159,8 +159,8 @@ function DealabsAio() {
     container.before(filterElement);
   }
 
-  function process() {
-    utils.log("processing");
+  function start() {
+    utils.log("starting processing");
     cleanClasses();
     cleanElements();
     onExcludersUpdate();
@@ -169,13 +169,13 @@ function DealabsAio() {
     utils.log("init !");
     insertStyles();
     insertFilter();
-    process();
+    start();
   }
   init();
   // oxlint-disable-next-line no-magic-numbers
-  const processDebounced = utils.debounce(process, 500);
+  const startDebounced = utils.debounce(start, 500);
 
-  document.addEventListener("scroll", () => processDebounced());
+  document.addEventListener("scroll", () => startDebounced());
 }
 
 if (globalThis.window) DealabsAio();

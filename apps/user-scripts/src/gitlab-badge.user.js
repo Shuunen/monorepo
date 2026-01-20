@@ -69,7 +69,6 @@ async function animateCss(element, animation, canRemoveAfter = true) {
     // When the animation ends, we clean the classes and resolve the Promise
     element.addEventListener(
       "animationend",
-      // oxlint-disable-next-line max-nested-callbacks
       event => {
         event.stopPropagation();
         element.classList.remove("animate__animated", animationName);
@@ -103,13 +102,13 @@ function GitlabBadge() {
     else void animateCss(badge, hasContributionsChanged ? "tada" : "pulse");
     animationCount += 1;
   }
-  async function process(reason = "unknown") {
+  async function start(reason = "unknown") {
     if (isHidden) {
-      utils.debug(`process called because ${reason} but badge has been hidden`);
+      utils.debug(`start called because ${reason} but badge has been hidden`);
       return;
     }
     const todayContributions = await getNbContributions();
-    utils.log(`process, reason ${reason}, found ${todayContributions} contributions`);
+    utils.log(`start, reason ${reason}, found ${todayContributions} contributions`);
     const previousContributions = Number(badge.textContent);
     badge.textContent = String(todayContributions);
     if (todayContributions < steps.bronze) badge.style.backgroundImage = `url(${badges.bronze})`;
@@ -117,13 +116,13 @@ function GitlabBadge() {
     else badge.style.backgroundImage = `url(${badges.gold})`;
     animateBadge(todayContributions !== previousContributions);
   }
-  const processDebounceTime = 1000;
-  const processDebounced = utils.debounce(process, processDebounceTime);
+  const startDebounceTime = 1000;
+  const startDebounced = utils.debounce(start, startDebounceTime);
   globalThis.addEventListener("focus", () => {
-    void process("focus");
+    void start("focus");
   });
-  globalThis.addEventListener("click", () => processDebounced("click"));
-  utils.onPageChange(async () => await process("page-change"));
+  globalThis.addEventListener("click", () => startDebounced("click"));
+  utils.onPageChange(async () => await start("page-change"));
 }
 
 if (globalThis.window) GitlabBadge();

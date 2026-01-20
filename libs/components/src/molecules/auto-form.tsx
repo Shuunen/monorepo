@@ -1,4 +1,3 @@
-// oxlint-disable max-lines
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@monorepo/utils";
 import { Link } from "@tanstack/react-router";
@@ -9,7 +8,7 @@ import { Form } from "../atoms/form";
 import { IconHome } from "../icons/icon-home";
 import { defaultIcons, defaultLabels } from "./auto-form.const";
 import type { AutoFormProps, AutoFormStepMetadata, AutoFormSubformOptions, AutoFormSubmissionStepProps } from "./auto-form.types";
-import { filterSchema, getStepMetadata, mapExternalDataToFormFields, normalizeData } from "./auto-form.utils";
+import { filterSchema, getInitialStep, getStepMetadata, mapExternalDataToFormFields, normalizeData } from "./auto-form.utils";
 import { AutoFormFields } from "./auto-form-fields";
 import { AutoFormNavigation } from "./auto-form-navigation";
 import { AutoFormStepper, type AutoFormStepperStep } from "./auto-form-stepper";
