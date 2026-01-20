@@ -3,6 +3,8 @@
 - [FAQ](#faq)
   - [Cannot find module](#cannot-find-module)
     - [Vitest](#vitest)
+  - [Shadcn](#shadcn)
+    - [How to add a new component from the Shadcn library to the project ?](#how-to-add-a-new-component-from-the-shadcn-library-to-the-project-)
   - [Storybook](#storybook)
     - [How to run the storybook ?](#how-to-run-the-storybook-)
     - [Where should I put my story ?](#where-should-i-put-my-story-)
@@ -33,6 +35,14 @@ Here for example we will clean components node_modules and re-run the same comma
 pnpm clean
 nx run components:test
 ```
+
+## Shadcn
+
+### How to add a new component from the Shadcn library to the project ?
+
+To import a new Shadcn component to the project use the command `pnpm add:shadcn foobar`. It will download the files from CLI Shadcn and move them to the right folder.
+
+_For exemple: `pnpm add:shadcn calendar`._
 
 ## Storybook
 

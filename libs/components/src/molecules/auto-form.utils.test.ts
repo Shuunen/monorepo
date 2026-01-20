@@ -11,6 +11,7 @@ import {
   getFieldMetadata,
   getFieldMetadataOrThrow,
   getFormFieldRender,
+  getInitialStep,
   getKeyMapping,
   getStepMetadata,
   getZodEnumOptions,
@@ -29,9 +30,13 @@ import {
   section,
   sectionsFromEditableSteps,
   step,
-  // oxlint-disable-next-line max-dependencies
-} from "./auto-form.utils";
+} from "./auto-form.utils"; // oxlint-disable-line max-dependencies
 import { imageSchemaOptional, imageSchemaRequired } from "./form-field-upload.const";
+
+const isoDateStringToDateInstance = z.codec(z.iso.date(), z.date(), {
+  decode: isoDateString => new Date(isoDateString),
+  encode: date => date.toISOString().split("T")[0],
+});
 
 describe("auto-form.utils", () => {
   // isZodEnum
@@ -407,6 +412,29 @@ describe("auto-form.utils", () => {
     const cleaned = normalizeDataForSchema(schema, data);
     expect(cleaned).toMatchInlineSnapshot(`{}`);
   });
+  it("normalizeDataForSchema I should handle codec", () => {
+    const schema = z.object({
+      date: field(z.string(), { label: "Date", codec: isoDateStringToDateInstance }),
+      userDate: field(z.string(), {
+        keyOut: "user.date",
+        label: "Date",
+        codec: isoDateStringToDateInstance,
+      }),
+    });
+    const data = {
+      date: new Date("2026-01-14"),
+      userDate: new Date("2026-01-14"),
+    };
+    const result = normalizeDataForSchema(schema, data);
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "date": "2026-01-14",
+        "user": {
+          "date": "2026-01-14",
+        },
+      }
+    `);
+  });
 
   // getKeyMapping
   it("getKeyMapping A should return undefined for both when no metadata", () => {
@@ -578,6 +606,25 @@ describe("auto-form.utils", () => {
     expect(result).toMatchInlineSnapshot(`
       {
         "userEmail": "test@example.com",
+      }
+    `);
+  });
+  it("mapExternalDataToFormFields J should use codec", () => {
+    const schema = z.object({
+      date: field(z.string(), { label: "Date", codec: isoDateStringToDateInstance }),
+      userDate: field(z.string(), { keyIn: "user.date", label: "Date", codec: isoDateStringToDateInstance }),
+    });
+    const externalData = {
+      date: "2026-01-14",
+      user: {
+        date: "2026-01-14",
+      },
+    };
+    const result = mapExternalDataToFormFields(schema, externalData);
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "date": 2026-01-14T00:00:00.000Z,
+        "userDate": 2026-01-14T00:00:00.000Z,
       }
     `);
   });
@@ -941,5 +988,26 @@ describe("auto-form.utils", () => {
     expect(result.submission.status).toBe("unknown-error");
     expect(result.submission.children).toBe("Unknown error message");
     expect(result.submission.detailsList).toEqual(["Network error occurred.", "Please retry submission."]);
+  });
+
+  // getInitialStep
+  const stepSchemas = [step(z.object(), { title: "Step 1", state: "readonly" }), step(z.object(), { title: "Step 2" }), step(z.object(), { title: "Step 3" })];
+
+  it("getInitialStep A should return the first editable step if `showFirstEditableStep` is true", () => {
+    expect(getInitialStep(stepSchemas, true)).toBe(1);
+    expect(getInitialStep(stepSchemas, true, true)).toBe(1);
+  });
+
+  it("getInitialStep b should fallback to the first step if noting is editable", () => {
+    const notEditableSchemas = [step(z.object(), { title: "Step 1", state: "readonly" }), step(z.object(), { title: "Step 1", state: "upcoming" })];
+    expect(getInitialStep(notEditableSchemas, true)).toBe(0);
+  });
+
+  it("getInitialStep C should return the last step if `showLastStep` is true", () => {
+    expect(getInitialStep(stepSchemas, false, true)).toBe(2);
+  });
+
+  it("getInitialStep D should return the first step as default step", () => {
+    expect(getInitialStep(stepSchemas)).toBe(0);
   });
 });

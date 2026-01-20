@@ -456,10 +456,10 @@ function LbcNotes() {
    * @param {string} reason the reason to process
    * @returns {void}
    */
-  function process(reason = "unknown") {
+  function start(reason = "unknown") {
     if (isProcessing) return;
     isProcessing = true;
-    utils.log("process cause :", reason);
+    utils.log("start cause :", reason);
     utils.hideElements(uselessSelectors, "useless");
     const id = getListingId();
     if (id) addNoteToPage(id);
@@ -497,11 +497,11 @@ function LbcNotes() {
       opacity: 1;
     }
   `);
-  const processDebounceTime = 300;
-  const processDebounced = utils.debounce(process, processDebounceTime);
-  globalThis.addEventListener("scroll", () => processDebounced("scroll-event"));
-  globalThis.addEventListener("load", () => processDebounced("load-event"));
-  utils.onPageChange(() => processDebounced("page-change-event"));
+  const startDebounceTime = 300;
+  const startDebounced = utils.debounce(start, startDebounceTime);
+  globalThis.addEventListener("scroll", () => startDebounced("scroll-event"));
+  globalThis.addEventListener("load", () => startDebounced("load-event"));
+  utils.onPageChange(() => startDebounced("page-change-event"));
 }
 
 if (globalThis.window) LbcNotes();

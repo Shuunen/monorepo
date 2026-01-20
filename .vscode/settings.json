@@ -2,7 +2,13 @@
   "[css]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
+  "[html]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
   "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[javascriptreact]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[json]": {
@@ -70,12 +76,26 @@
     "zenity",
     "zxing"
   ],
+  "css.lint.unknownAtRules": "ignore",
+  "cucumberautocomplete.smartSnippets": true,
+  "cucumberautocomplete.steps": ["**/tests/steps/*/*.ts"],
+  "cucumberautocomplete.strictGherkinCompletion": true,
+  "cucumberautocomplete.syncfeatures": "**/tests/features/**/*feature",
+  "editor.codeActionsOnSave": {
+    "source.addMissingImports.ts": "explicit",
+    "source.fixAll.biome": "explicit",
+    "source.fixAll.oxc": "explicit",
+    "source.fixAll.ts": "explicit",
+    "source.organizeImports": "explicit",
+    "source.removeUnusedImports": "explicit",
+    "source.sortImports": "explicit"
+  },
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.formatOnSave": true,
-  "javascript.format.insertSpaceAfterConstructor": false,
-  "javascript.format.insertSpaceBeforeFunctionParenthesis": false,
-  "typescript.experimental.useTsgo": true,
-  "typescript.format.insertSpaceAfterConstructor": false,
-  "typescript.format.insertSpaceBeforeFunctionParenthesis": false,
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "oxc.fixKind": "all",
+  "oxc.unusedDisableDirectives": "deny",
+  "typescript.experimental.useTsgo": true
 }

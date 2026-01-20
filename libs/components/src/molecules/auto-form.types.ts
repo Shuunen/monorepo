@@ -28,6 +28,8 @@ export type AutoFormProps = {
   // oxlint-enable no-explicit-any
   /** Whether to show the form inside a card layout, default is false */
   showCard?: boolean;
+  /** Whether to automatically show the first editable step on form load, default is false */
+  showFirstEditableStep?: boolean;
   /** Whether to automatically show the last available step on form load, default is false */
   showLastStep?: boolean;
   /** Whether to force show the stepper menu. If undefined, shows menu only when multiple steps exist. If true, always shows menu. If false, never shows menu. */
@@ -132,6 +134,8 @@ export type AutoFormFieldBaseMetadata = {
   keyIn?: string;
   /** Key to map submitted data output. Used when submitting data to external sources. */
   keyOut?: string;
+  /** Zod codec to transform input and ouput data. */
+  codec?: z.ZodCodec;
   /** Custom options for select/enum fields with label/value pairs. */
   options?: SelectOption[];
   /** Force the field to be rendered with a specific component, else use automatic field-schema detection */

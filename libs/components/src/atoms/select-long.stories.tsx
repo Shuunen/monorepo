@@ -1,10 +1,10 @@
+/** biome-ignore-all lint/style/useNamingConvention: it's ok here */
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
 import { SelectLong } from "./select-long";
 
 type BasicOptions = { label: string; value: string | { name: string } };
-// biome-ignore lint/style/useNamingConvention: can't rename this
 type CodeVersionOptions = { Code: string; Version: string; label: string };
 
 const shortOptions: BasicOptions[] = [
@@ -28,10 +28,8 @@ const longOptions: BasicOptions[] = [
 ];
 
 const codeVersionOptions: CodeVersionOptions[] = [
-  // biome-ignore lint/style/useNamingConvention: can't rename this
-  { Code: "X123", label: "Alpha", Version: "1.0" },
-  // biome-ignore lint/style/useNamingConvention: can't rename this
-  { Code: "Y234", label: "Beta", Version: "2.0" },
+  { Code: "X123", Version: "1.0", label: "Alpha" },
+  { Code: "Y234", Version: "2.0", label: "Beta" },
 ];
 
 function WithState<Option, Value = string>({ options, getValue, getLabel, onChange, ...props }: React.ComponentProps<typeof SelectLong<Option, Value>>) {
@@ -40,34 +38,34 @@ function WithState<Option, Value = string>({ options, getValue, getLabel, onChan
   return (
     <SelectLong
       {...props}
+      options={options}
       getLabel={getLabel}
       getValue={getValue}
+      value={selectedString as (string & Value) | undefined}
       onChange={(value, option) => {
-        // @ts-expect-error type mismatch
-        setSelectedString(option !== null ? String(getValue(option)) : undefined);
+        setSelectedString(option !== null ? String(getValue(option as Option)) : undefined);
         // call story's onChange (for assertion)
         onChange?.(value, option);
       }}
-      options={options}
-      value={selectedString as (string & Value) | undefined}
     />
   );
 }
 
 const meta: Meta<typeof SelectLong> = {
-  args: { onChange: fn() },
+  title: "Commons/Atoms/SelectLong",
   component: SelectLong,
+  tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },
-  tags: ["autodocs"],
-  title: "Commons/Atoms/SelectLong",
+  args: { onChange: fn() },
 } satisfies Meta<typeof SelectLong>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  render: args => <WithState {...args} className="w-96" name="select" placeholder="Select a user" options={shortOptions} getLabel={opt => opt.label} getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))} />,
   play: async ({ canvasElement, step }) => {
     const canvasBody = within(canvasElement.ownerDocument.body);
     const select = await canvasBody.findByTestId("select-trigger-select");
@@ -86,10 +84,10 @@ export const Default: Story = {
       expect(options[1]).toHaveAttribute("data-state", "checked");
     });
   },
-  render: args => <WithState {...args} className="w-96" getLabel={opt => opt.label} getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))} name="select" options={shortOptions} placeholder="Select a user" />,
 };
 
 export const Long: Story = {
+  render: args => <WithState {...args} name="select" className="w-96" placeholder="Select a user" options={longOptions} getLabel={opt => opt.label} getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))} />,
   play: async ({ canvasElement, step }) => {
     const canvasBody = within(canvasElement.ownerDocument.body);
     const select = await canvasBody.findByTestId("select-trigger-select");
@@ -109,10 +107,12 @@ export const Long: Story = {
       expect(options[12]).toHaveAttribute("data-state", "checked");
     });
   },
-  render: args => <WithState {...args} className="w-96" getLabel={opt => opt.label} getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))} name="select" options={longOptions} placeholder="Select a user" />,
 };
 
 export const OnChangeTest: Story = {
+  render: args => (
+    <WithState {...args} className="w-96" name="select-onchange" placeholder="Select a user" options={shortOptions} getLabel={opt => opt.label} getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))} />
+  ),
   play: async ({ canvasElement, step, args }) => {
     const onChangeSpy = args.onChange;
 
@@ -136,12 +136,10 @@ export const OnChangeTest: Story = {
       expect(onChangeSpy).toHaveBeenCalledWith('{"name":"toto"}', expect.objectContaining({ label: "Toto" }));
     });
   },
-  render: args => (
-    <WithState {...args} className="w-96" getLabel={opt => opt.label} getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))} name="select-onchange" options={shortOptions} placeholder="Select a user" />
-  ),
 };
 
 export const CodeVersion: Story = {
+  render: args => <WithState {...args} className="w-96" name="select-code" placeholder="Select a code & version" options={codeVersionOptions} getLabel={opt => opt.label} getValue={opt => `${opt.Code}`} />,
   play: async ({ canvasElement, step, args }) => {
     const onChangeSpy = args.onChange;
     const canvasBody = within(canvasElement.ownerDocument.body);
@@ -153,9 +151,7 @@ export const CodeVersion: Story = {
       expect(options).toHaveLength(2);
       await userEvent.click(options[0]);
       expect(select).toHaveTextContent("Alpha");
-      // biome-ignore lint/style/useNamingConvention: can't rename this
-      expect(onChangeSpy).toHaveBeenCalledWith("X123", expect.objectContaining({ Code: "X123", label: "Alpha", Version: "1.0" }));
+      expect(onChangeSpy).toHaveBeenCalledWith("X123", expect.objectContaining({ Code: "X123", Version: "1.0", label: "Alpha" }));
     });
   },
-  render: args => <WithState {...args} className="w-96" getLabel={opt => opt.label} getValue={opt => `${opt.Code}`} name="select-code" options={codeVersionOptions} placeholder="Select a code & version" />,
 };

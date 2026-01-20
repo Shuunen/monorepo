@@ -72,20 +72,19 @@ function AuchanAio() {
     if (nb > 0) utils.debug(`enhancePricePerKgReadability has processed ${nb} elements`);
   }
 
-  function process(reason = "unknown") {
-    utils.debug(`process called because "${reason}"`);
+  function start(reason = "unknown") {
+    utils.debug(`start called because "${reason}"`);
     hideUseless();
     hideUnavailableProducts();
     enhancePricePerKgReadability();
   }
 
   // oxlint-disable-next-line no-magic-numbers
-  const processDebounced = utils.debounce(process, 300);
-  globalThis.addEventListener("focus", () => processDebounced("focus"));
-  globalThis.addEventListener("click", () => processDebounced("click"));
-  globalThis.addEventListener("scroll", () => processDebounced("scroll"));
-  utils.onPageChange(() => processDebounced("page-change"));
-
+  const startDebounced = utils.debounce(start, 300);
+  globalThis.addEventListener("focus", () => startDebounced("focus"));
+  globalThis.addEventListener("click", () => startDebounced("click"));
+  globalThis.addEventListener("scroll", () => startDebounced("scroll"));
+  utils.onPageChange(() => startDebounced("page-change"));
   utils.injectStyles(`
   .product-thumbnail__attributes {
     font-size: 24px;

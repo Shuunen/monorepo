@@ -68,18 +68,18 @@ function InstagramWide() {
     }
   }
 
-  function process(reason = "unknown") {
-    utils.debug(`process called because "${reason}"`);
+  function start(reason = "unknown") {
+    utils.debug(`start called because "${reason}"`);
     utils.hideElements(uselessSelectors, "useless");
     enlargeMain();
     enlargeFeed();
     enlargeWrappers();
     showVideoControls();
   }
-  const processDebounceTime = 300;
-  const processDebounced = utils.debounce((/** @type {string | undefined} */ reason) => process(reason), processDebounceTime);
-  globalThis.addEventListener("scroll", () => processDebounced("scroll"));
-  utils.onPageChange(() => processDebounced("page-change"));
+  const startDebounceTime = 300;
+  const startDebounced = utils.debounce((/** @type {string | undefined} */ reason) => start(reason), startDebounceTime);
+  globalThis.addEventListener("scroll", () => startDebounced("scroll"));
+  utils.onPageChange(() => startDebounced("page-change"));
 }
 
 if (globalThis.window) InstagramWide();

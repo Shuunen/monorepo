@@ -292,15 +292,15 @@ function AmazonAio() {
   /**
    * Process the page
    */
-  const process = () => {
-    utils.log("process...");
+  const start = () => {
+    utils.log("starting...");
     deleteUseless();
     clearClassnames();
     injectScore();
   };
-  const processDebounced = utils.debounce(process, 500);
-  utils.onPageChange(processDebounced);
-  globalThis.addEventListener("scroll", () => processDebounced());
+  const startDebounced = utils.debounce(start, 500);
+  utils.onPageChange(startDebounced);
+  globalThis.addEventListener("scroll", () => startDebounced());
 }
 
 if (globalThis.window) AmazonAio();

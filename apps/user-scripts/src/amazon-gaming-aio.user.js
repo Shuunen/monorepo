@@ -140,7 +140,6 @@ function AmazonGamingAio() {
   function deleteUseless() {
     for (const selector of Object.values(deleteUselessSelectors))
       for (const node of utils.findAll(selector, document, true)) {
-        // oxlint-disable-next-line max-depth
         if (utils.willDebug) {
           node.style.backgroundColor = "red !important";
           node.style.color = "white !important";
@@ -280,9 +279,9 @@ function AmazonGamingAio() {
    * Process the page
    * @param {string} cause the cause of the process
    */
-  function process(cause = "") {
+  function start(cause = "") {
     if (cause === "dom-node-inserted:featured-content-thumbnail__overlay") return;
-    utils.log("process, cause :", cause);
+    utils.log("start, cause :", cause);
     deleteUseless();
     clearClassnames();
     hideClaimed();
@@ -291,9 +290,9 @@ function AmazonGamingAio() {
     showGridFlex();
   }
   // oxlint-disable-next-line no-magic-numbers
-  const processDebounced = utils.debounce(process, 500);
+  const startDebounced = utils.debounce(start, 500);
 
-  utils.onPageChange(() => processDebounced("page-change"));
+  utils.onPageChange(() => startDebounced("page-change"));
 
   /**
    * Handles page mutations
@@ -306,7 +305,7 @@ function AmazonGamingAio() {
     if (!(element instanceof HTMLElement)) return;
     if (element.className.includes("shu-toast")) return;
     utils.debug("mutation detected", mutations[0]);
-    processDebounced("mutation");
+    startDebounced("mutation");
   }
   const observer = new MutationObserver(onMutation);
   observer.observe(document.body, { childList: true, subtree: true });

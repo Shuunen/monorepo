@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { green, Logger, nbThird, Result, type ResultType, yellow } from "../../utils/src";
 
@@ -10,37 +10,47 @@ function exitWithError(message: string) {
   process.exit(1);
 }
 
-function moveComponent(component: string) {
-  const sourceFile = join(process.cwd(), "@shadcn", `${component}.tsx`);
+function moveAllShadcnComponents() {
+  const shadcnDir = join(process.cwd(), "libs", "components", "@shadcn");
   const targetDir = join(process.cwd(), "libs", "components", "src", "shadcn");
-  const targetFile = join(targetDir, `${component}.tsx`);
-  if (!existsSync(sourceFile)) {
-    exitWithError(`Source file not found: ${sourceFile}`);
+
+  if (!existsSync(shadcnDir)) {
+    return;
   }
-  try {
-    renameSync(sourceFile, targetFile);
-    logger.success(`Component moved`);
-    rmSync(join(process.cwd(), "@shadcn"), { force: true, recursive: true });
-  } catch (error) {
-    exitWithError(`Failed to move component: ${error instanceof Error ? error.message : String(error)}`);
+
+  const files = readdirSync(shadcnDir).filter(file => file.endsWith(".tsx"));
+  for (const componentFile of files) {
+    const sourceFile = join(shadcnDir, componentFile);
+    const targetFile = join(targetDir, componentFile);
+    try {
+      renameSync(sourceFile, targetFile);
+      logger.success(`Component ${componentFile} moved`);
+    } catch (error) {
+      logger.error(`Failed to move ${componentFile}: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
+  rmSync(shadcnDir, { force: true, recursive: true });
 }
 
 const useClientRegex = /"use client"\n*/;
 
-function fixImports(component: string) {
-  const filePath = join(process.cwd(), "libs", "components", "src", "shadcn", `${component}.tsx`);
-  let content = readFileSync(filePath, "utf8");
-  content = content.replaceAll("@shadcn/", "./").replace(useClientRegex, "");
-  writeFileSync(filePath, content, "utf8");
-  logger.success(`Imports fixed`);
+function fixAllImports() {
+  const targetDir = join(process.cwd(), "libs", "components", "src", "shadcn");
+  const files = readdirSync(targetDir).filter(file => file.endsWith(".tsx"));
+  for (const componentFile of files) {
+    const filePath = join(targetDir, componentFile);
+    let content = readFileSync(filePath, "utf8");
+    content = content.replaceAll("@shadcn/", "./").replace(useClientRegex, "");
+    writeFileSync(filePath, content, "utf8");
+    logger.success(`Imports fixed for ${componentFile}`);
+  }
 }
 
 function setupComponent(component: string): void {
   logger.success("Downloaded successfully");
   logger.info("Setup component...");
-  moveComponent(component);
-  fixImports(component);
+  moveAllShadcnComponents();
+  fixAllImports();
   // TODO : add the related story if it exists
   // https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry/ui
   logger.success(`ShadCn component ${green(component)} is now available to use 🚀`);
@@ -86,7 +96,6 @@ function executeCommand(component: string) {
     const errorOutput: string[] = [];
     setupOutputHandlers(child, errorOutput);
     child.on("close", createCloseHandler(component, errorOutput, resolve));
-    // oxlint-disable-next-line max-nested-callbacks
     child.on("error", error => void resolve(Result.error(`Command failed: ${error.message}`)));
   });
 }

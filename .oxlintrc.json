@@ -49,7 +49,10 @@
     "TextDecoder": "readonly",
     "TextEncoder": "readonly",
     "URL": "readonly",
-    "window": "readonly"
+    "window": "readonly",
+    "XMLSerializer": "readonly",
+    "XPathEvaluator": "readonly",
+    "XPathResult": "readonly"
   },
   "ignorePatterns": [".git", ".nx", "*.d.ts", "coverage", "dist", "node_modules", "out-tsc", "routeTree.gen.ts", "shadcn", "storybook-static", "test-output"],
   "overrides": [
@@ -114,7 +117,7 @@
       }
     },
     {
-      "files": ["*.schemas.ts", "schemas.ts"],
+      "files": ["*.schema.ts", "*.schemas.ts", "schemas.ts"],
       "rules": {
         "no-magic-numbers": "off",
         "sort-keys": "off"
@@ -232,7 +235,7 @@
       }
     },
     {
-      "files": ["libs/vite-plugins/**/*", "libs/components/.storybook/**/*"],
+      "files": ["libs/vite-plugins/**/*", "libs/components/.storybook/**/*", "apps/*-e2e/**"],
       "rules": {
         "no-console": "off"
       }

@@ -184,13 +184,13 @@ function HddCleaner() {
       }
     }
   }
-  function process() {
-    utils.log("processing");
+  function start() {
+    utils.log("starting");
     checkItems();
   }
-  const processDebounced = utils.debounce(process, 500);
-  document.addEventListener("scroll", () => processDebounced());
-  setTimeout(processDebounced, 1000);
+  const startDebounced = utils.debounce(start, 500);
+  document.addEventListener("scroll", () => startDebounced());
+  setTimeout(startDebounced, 1000);
 }
 
 if (globalThis.window) HddCleaner();
