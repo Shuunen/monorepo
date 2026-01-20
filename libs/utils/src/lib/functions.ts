@@ -8,12 +8,12 @@ export function hasOwn(object: object, property: string) {
   return Object.hasOwn(object, property);
 }
 
-// oxlint-disable no-empty-function, empty-brace-spaces
+// oxlint-disable no-empty-function
 /**
  * A function that returns void, handy for initializing variables.
  */
 export function functionReturningVoid(): void {} // NOSONAR
-// oxlint-enable no-empty-function, empty-brace-spaces
+// oxlint-enable no-empty-function
 
 /**
  * A function that returns `undefined`, handy for initializing variables.

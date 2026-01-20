@@ -29,7 +29,9 @@ function copyFile(sourceFile: string, targetFile: string, appName: string): void
   const content = readFileSync(sourceFile, "utf8");
   const updatedContent = content.replaceAll("sample-web-app", appName);
   const dir = dirname(targetFile);
-  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true });
+  }
   writeFileSync(targetFile, updatedContent);
   logger.debug(`Copied: ${targetFile}`);
 }
@@ -38,7 +40,9 @@ function copyFiles(appName: string): void {
   const sourceDir = join(process.cwd(), "apps", "sample-web-app");
   const targetDir = join(process.cwd(), "apps", appName);
   logger.info(`Creating app...`);
-  for (const file of filesToUse) copyFile(join(sourceDir, file), join(targetDir, file), appName);
+  for (const file of filesToUse) {
+    copyFile(join(sourceDir, file), join(targetDir, file), appName);
+  }
 }
 
 function updateTsConfig(appName: string): void {
@@ -66,8 +70,9 @@ function addApp(appName: string): void {
   logger.info(`You can now run your app with ${green(`nx dev ${appName}`)} or do any other usual command you like : build, test, etc.`);
 }
 
-if (appName) addApp(appName);
-else {
+if (appName) {
+  addApp(appName);
+} else {
   logger.error("Usage: pnpm run add:app <app-name>");
   process.exit(1);
 }

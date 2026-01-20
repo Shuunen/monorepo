@@ -9,7 +9,6 @@ const mimeTypeRegex = /:(?<mimeType>[^;]+);/; // NOSONAR
  * @param filename the output filename
  * @returns the base64 string
  */
-// oxlint-disable-next-line max-statements
 export function base64ToFile(base64: string, filename: string) {
   // Strip off the data URL prefix if present.
   const [dataUrlPrefix, base64String] = base64.split(",");

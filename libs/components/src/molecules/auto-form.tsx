@@ -35,6 +35,7 @@ import { AutoFormSummaryStep } from "./auto-form-summary-step";
  * @param props.useSubmissionStep whether to include a submission step after form submission
  * @param props.showButtons whether to show the default form buttons (Next, Back, Submit)
  * @param props.showCard whether to show the form inside a card layout
+ * @param props.showFirstEditableStep whether to automatically show the first editable step on form load
  * @param props.showLastStep whether to automatically show the last available step on form load
  * @param props.showMenu whether to force show the stepper menu, if undefined shows menu only when multiple steps exist
  * @param props.size the size of the form, can be 'auto', 'small', 'medium' or 'large', default is 'medium', 'auto' adapts to parent content
@@ -43,8 +44,8 @@ import { AutoFormSummaryStep } from "./auto-form-summary-step";
  * @returns the AutoForm component
  */
 // oxlint-disable-next-line max-lines-per-function, max-statements
-export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger, useSummaryStep, useSubmissionStep, showButtons = true, showCard, showLastStep, showMenu, size, labels, stepperWidth }: AutoFormProps) {
-  const [currentStep, setCurrentStep] = useState(showLastStep ? schemas.length - 1 : 0);
+export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger, useSummaryStep, useSubmissionStep, showButtons = true, showCard, showFirstEditableStep, showLastStep, showMenu, size, labels, stepperWidth }: AutoFormProps) {
+  const [currentStep, setCurrentStep] = useState(getInitialStep(schemas, showFirstEditableStep, showLastStep));
   const [showSummary, setShowSummary] = useState(false);
   const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined);
   const defaultValues = useMemo(() => {
