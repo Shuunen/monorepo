@@ -38,7 +38,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// biome-ignore assist/source/useSortedKeys: it's ok dude :p
 const applicantSchema = z.object({
   name: field(z.string().min(2), {
     label: "Child's Name",
@@ -118,7 +117,6 @@ export const Empty: Story = {
       const subFormSubmitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(subFormSubmitButton);
       await sleep(100); // wait for state update
-      // biome-ignore assist/source/useSortedKeys: order needed
       const expectedData = { persons: [{ name: "Alice", age: 7 }] };
       expect(submittedData).toContainHTML(`"persons": []`);
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -150,9 +148,7 @@ export const Empty: Story = {
 
 const initialData = {
   applicants: [
-    // biome-ignore assist/source/useSortedKeys: we need this order
     { name: "Alice", age: 7 },
-    // biome-ignore assist/source/useSortedKeys: we need this order
     { name: "Bob", age: 9 },
   ],
 };

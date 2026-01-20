@@ -96,12 +96,12 @@ function GitlabMr() {
   function hideStuff() {
     for (const element of utils.findAll(".shortcuts-todos, .nav-item.header-help")) element.remove();
   }
-  function process() {
+  function start() {
     void enhanceLinks();
     hideStuff();
   }
-  const processDebounced = utils.debounce(process, debounceTime);
-  utils.onPageChange(processDebounced);
+  const startDebounced = utils.debounce(start, debounceTime);
+  utils.onPageChange(startDebounced);
 }
 
 if (globalThis.window) GitlabMr();

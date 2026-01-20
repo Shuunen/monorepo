@@ -94,7 +94,6 @@ function getScoreForResolution(resolution, score) {
   return scores;
 }
 
-// oxlint-disable-next-line sort-keys
 const scoresByKeyword = {
   " tn ": 50,
   backlit: 70,
@@ -423,7 +422,6 @@ function LaptopHelper() {
    * @param {HTMLElement} element - The element to annotate
    * @returns {void}
    */
-  // oxlint-disable-next-line max-lines-per-function, consistent-return
   function annotate(element) {
     let { keyword } = element.dataset;
     keyword = scoresByKeyword[keyword] === undefined ? keyword.toLowerCase() : keyword;
@@ -477,15 +475,15 @@ function LaptopHelper() {
   /**
    * Process the page
    */
-  function process() {
-    utils.log("processing");
+  function start() {
+    utils.log("starting processing");
     clearLinks();
     checkItems();
   }
-  const processDebounced = utils.debounce(process, 500);
-  document.addEventListener("scroll", processDebounced);
-  utils.onPageChange(processDebounced);
-  setTimeout(processDebounced, 1000);
+  const startDebounced = utils.debounce(start, 500);
+  document.addEventListener("scroll", startDebounced);
+  utils.onPageChange(startDebounced);
+  setTimeout(startDebounced, 1000);
 }
 
 if (globalThis.window) LaptopHelper();

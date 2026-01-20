@@ -1410,7 +1410,7 @@ const registrationSchema = z.object({
 
 ```bash
 # Check TypeScript errors
-nx tsgo components
+nx ts-check components
 
 # Run unit tests
 nx test components
@@ -1551,7 +1551,7 @@ keyOut: "user.profile.firstName";
 
 ```bash
 # Validate TypeScript (required before commit)
-nx tsgo components
+nx ts-check components
 
 # Run unit tests (required before commit)
 nx test components

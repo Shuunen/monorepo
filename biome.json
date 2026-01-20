@@ -32,6 +32,8 @@
       "!!**/node_modules",
       "!!**/out-tsc",
       "!!**/routeTree.gen.ts",
+      "!!**/*.schema.json",
+      "!!**/openapi*",
       "!!**/shadcn",
       "!!**/storybook-static",
       "!!**/test-output",
@@ -128,16 +130,6 @@
       }
     },
     {
-      "assist": {
-        "actions": {
-          "source": {
-            "useSortedKeys": "off"
-          }
-        }
-      },
-      "includes": ["**/*.schemas.ts", "**/schemas.ts"]
-    },
-    {
       "includes": ["**/*.jsx", "**/*.tsx"],
       "linter": {
         "rules": {
@@ -146,6 +138,16 @@
           }
         }
       }
+    },
+    {
+      "assist": {
+        "actions": {
+          "source": {
+            "useSortedKeys": "off"
+          }
+        }
+      },
+      "includes": ["**/*.js", "**/*.ts", "**/*.tsx"]
     },
     {
       "includes": ["**/routes/**/*.tsx"],
@@ -208,11 +210,24 @@
       }
     },
     {
-      "includes": ["libs/vite-plugins/**", "libs/components/.storybook/**"],
+      "includes": ["libs/vite-plugins/**", "libs/components/.storybook/**", "apps/*-e2e/**"],
       "linter": {
         "rules": {
           "suspicious": {
             "noConsole": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/*-e2e/**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noNodejsModules": "off"
+          },
+          "style": {
+            "useNamingConvention": "off"
           }
         }
       }
@@ -226,6 +241,70 @@
         }
       },
       "includes": ["libs/**/package.json"]
+    },
+    {
+      "includes": ["**/code-table/*", "**/ct-*", "**/st-*", "**/code-table*"],
+      "linter": {
+        "rules": {
+          "performance": {
+            "useTopLevelRegex": "off"
+          },
+          "style": {
+            "useNamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/schemas/**/*", "**/api/**/*", "**/*.schemas.ts", "**/*.schema.ts", "**/*.use-cases.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useNamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/foobar-webui/**/*"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noStaticElementInteractions": "off",
+            "useAltText": "off",
+            "useKeyWithClickEvents": "off"
+          },
+          "complexity": {
+            "noExcessiveCognitiveComplexity": "off",
+            "noUselessFragments": "off"
+          },
+          "correctness": {
+            "noInvalidUseBeforeDeclaration": "off",
+            "noNestedComponentDefinitions": "off",
+            "useExhaustiveDependencies": "off",
+            "useHookAtTopLevel": "off",
+            "useJsxKeyInIterable": "off",
+            "useUniqueElementIds": "off"
+          },
+          "nursery": {
+            "noFloatingPromises": "off"
+          },
+          "performance": {
+            "useTopLevelRegex": "off"
+          },
+          "style": {
+            "useNamingConvention": "off"
+          },
+          "suspicious": {
+            "noArrayIndexKey": "off",
+            "noDocumentCookie": "off",
+            "noEmptyBlockStatements": "off",
+            "noExplicitAny": "off",
+            "noExportsInTest": "off",
+            "noShadowRestrictedNames": "off"
+          }
+        }
+      }
     }
   ],
   "vcs": {

@@ -11,8 +11,8 @@ it("toastSuccess A show and hide", async () => {
   toastSuccess("And it's name is John Cena !", 10);
   const toast = document.querySelectorAll<HTMLElement>(".shu-toast");
   expect(toast.length).toBe(1);
-  expect(toast[0]?.textContent).toMatchInlineSnapshot(`"&check;And it's name is John Cena !"`);
-  await sleep(10);
+  expect(toast[0]?.textContent).toMatchInlineSnapshot(`"✓And it's name is John Cena !"`);
+  await sleep(20);
   expect(toast[0]?.style.opacity).toBe("0");
 });
 

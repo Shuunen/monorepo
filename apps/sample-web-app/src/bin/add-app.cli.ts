@@ -30,6 +30,7 @@ function copyFile(sourceFile: string, targetFile: string, appName: string): void
   const updatedContent = content.replaceAll("sample-web-app", appName);
   const dir = dirname(targetFile);
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+
   writeFileSync(targetFile, updatedContent);
   logger.debug(`Copied: ${targetFile}`);
 }

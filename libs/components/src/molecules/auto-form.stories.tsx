@@ -186,7 +186,6 @@ export const MultiStep: Story = {
       await userEvent.click(submitButton);
     });
     step("verify submitted data", () => {
-      // biome-ignore assist/source/useSortedKeys: should not sort keys here
       const expectedData = {
         email: "john.doe@example.com",
         name: "John Doe",
@@ -220,8 +219,45 @@ export const ShowLastStep: Story = {
   },
 };
 
+const readonlyStep1Schema = step(
+  z.object({
+    email: field(z.email("Invalid email address"), {
+      label: "Email Address",
+      placeholder: "We'll never share your email",
+      state: "readonly",
+    }),
+    name: field(z.string().min(2, "Name is required"), {
+      label: "Full Name",
+      placeholder: "Enter your legal name",
+      state: "readonly",
+    }),
+  }),
+  { state: "readonly" },
+);
+
+/**
+ * Multi-step form starting at the first editable step with showFirstEditableStep prop.
+ * Useful when you want users to fill the first editable step without going through readonly steps.
+ */
+export const ShowFirstEditableStep: Story = {
+  args: {
+    initialData: {
+      email: "mary.jane@example.com",
+      name: "Mary Jane",
+      subscribe: false,
+    },
+    schemas: [readonlyStep1Schema, step2Schema, step3Schema],
+    showFirstEditableStep: true,
+  },
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const firstStepTrigger = canvas.queryByRole("button", { name: "Step 2" });
+    expect(firstStepTrigger).toHaveAttribute("data-state", "editable");
+    expect(firstStepTrigger).toHaveAttribute("data-active", "true");
+  },
+};
+
 const optionalSectionStep1Schema = step(
-  // biome-ignore assist/source/useSortedKeys: we need a specific key order here
   z.object({
     name: field(z.string().min(2, "Name is required"), {
       label: "Full Name",
@@ -244,7 +280,6 @@ const optionalSectionStep1Schema = step(
 );
 
 const optionalSectionStep2Schema = step(
-  // biome-ignore assist/source/useSortedKeys: we need a specific key order here
   z.object({
     hasPet: field(z.boolean().optional(), {
       excluded: true, // avoid including this field in the final submitted data
@@ -318,7 +353,6 @@ export const OptionalSection: Story = {
     await step("succeed at submitting without pet", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
-      // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
       const expectedData = {
         name: "Paul Doughy",
         favouriteColor: "red",
@@ -342,7 +376,6 @@ export const OptionalSection: Story = {
     await step("submit button enabled and submit successfully", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
-      // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
       const expectedData = {
         name: "Paul Doughy",
         favouriteColor: "red",
@@ -359,14 +392,12 @@ export const OptionalSection: Story = {
       await userEvent.click(submitButton);
     });
     step("verify submitted data", () => {
-      // biome-ignore assist/source/useSortedKeys: it's okay to not sort keys here
       expect(submittedData).toContainHTML(stringify({ name: "Paul Doughy", favouriteColor: "red" }, true));
     });
   },
 };
 
 const editableStep1Schema = step(
-  // biome-ignore assist/source/useSortedKeys: we need a specific key order here
   z.object({
     myInfosSection: section({
       description: "You can fill these fields to tell us more about you",
@@ -397,7 +428,6 @@ const editableStep1Schema = step(
 );
 
 const readonlyStep2Schema = step(
-  // biome-ignore assist/source/useSortedKeys: we need a specific key order here
   z.object({
     petName: field(z.string().min(2, "Pet name is required"), {
       label: "Pet Name",
@@ -491,7 +521,6 @@ export const StepperStates: Story = {
       await userEvent.click(proceedButton);
     });
     await step("verify submitted data", () => {
-      // biome-ignore assist/source/useSortedKeys: we need a specific key order here
       const expectedFormData = {
         name: "Jane Doe-Rollin",
         age: 28,
@@ -672,7 +701,6 @@ export const SummaryOnly: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
-    // biome-ignore assist/source/useSortedKeys: we need a specific key order here
     const expectedData = {
       email: "jane.doe@example.com",
       name: "Jane Doe",
@@ -1012,6 +1040,43 @@ export const WithCancelButton: Story = {
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
+  },
+};
+
+export const Codec: Story = {
+  args: {
+    initialData: {
+      date: "2026-01-06",
+    },
+    schemas: [
+      z.object({
+        date: field(z.date(), {
+          codec: z.codec(z.iso.date(), z.date(), {
+            decode: isoDateString => new Date(isoDateString),
+            encode: date => date.toISOString().split("T")[0],
+          }),
+          label: "Date",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+    await step("verify initial data was transformed correctly", () => {
+      const dateInput = canvas.getByTestId("input-date-date");
+      expect(dateInput).toHaveValue("2026-01-06");
+      expect(submittedData).toContainHTML("{}");
+    });
+    await step("submit the form", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      expect(submitButton).not.toBeDisabled();
+      await userEvent.click(submitButton);
+    });
+    await step("verify submitted data was transformed correctly", () => {
+      const expectedData = { date: "2026-01-06" };
+      expect(submittedData).toContainHTML(stringify(expectedData, true));
+    });
   },
 };
 

@@ -1,3 +1,4 @@
+/* c8 ignore start */
 import type { Logger } from "@monorepo/utils";
 import type { ComponentType } from "react";
 import type { z } from "zod";
@@ -35,7 +36,6 @@ type ComponentRegistry = {
   [RenderType in Exclude<NonNullable<ReturnType<typeof getFormFieldRender>>, "section" | "field-list">]: ComponentType<FieldComponentProps>;
 };
 
-/* c8 ignore start */
 export const componentRegistry: ComponentRegistry = {
   accept: FormFieldAccept,
   boolean: FormFieldBoolean,
@@ -48,4 +48,3 @@ export const componentRegistry: ComponentRegistry = {
   textarea: FormFieldTextarea,
   upload: FormFieldUpload,
 } as const;
-/* c8 ignore stop */

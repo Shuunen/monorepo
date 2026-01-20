@@ -42,8 +42,11 @@ describe("header-injector.cli.ts", () => {
     if (!result.ok) {
       return;
     }
-    const metrics = result.value;
-    expect(metrics, "main B").toMatchSnapshot();
+    const { hasHeader, noHeader, moveHeader, nbFixed } = result.value;
+    expect(hasHeader, "B hasHeader").toBe(1);
+    expect(noHeader, "B noHeader").toBe(1);
+    expect(moveHeader, "B moveHeader").toBe(0);
+    expect(nbFixed, "B nbFixed").toBe(1);
     expect(writeSpy).toHaveBeenCalledWith("b.ts", "// HEADER\nconsole.log(2)");
   });
 
@@ -58,8 +61,11 @@ describe("header-injector.cli.ts", () => {
     if (!result.ok) {
       return;
     }
-    const metrics = result.value;
-    expect(metrics, "main C").toMatchSnapshot();
+    const { readError, noHeader, writeError, nbFixed } = result.value;
+    expect(noHeader, "C noHeader").toBe(1);
+    expect(nbFixed, "C nbFixed").toBe(0);
+    expect(readError, "C readError").toBe(0);
+    expect(writeError, "C writeError").toBe(1);
   });
 
   it("main D should count readError when read fails", async () => {
@@ -72,8 +78,10 @@ describe("header-injector.cli.ts", () => {
     if (!result.ok) {
       return;
     }
-    const metrics = result.value;
-    expect(metrics, "main D").toMatchSnapshot();
+    const { readError, noHeader, nbFixed } = result.value;
+    expect(readError, "D readError").toBe(1);
+    expect(noHeader, "D noHeader").toBe(0);
+    expect(nbFixed, "D nbFixed").toBe(0);
   });
 
   it("main E should move header into files with header not on the first line", async () => {
@@ -85,8 +93,11 @@ describe("header-injector.cli.ts", () => {
     if (!result.ok) {
       return;
     }
-    const metrics = result.value;
-    expect(metrics, "main E").toMatchSnapshot();
+    const { hasHeader, noHeader, moveHeader, nbFixed } = result.value;
+    expect(hasHeader, "B hasHeader").toBe(1);
+    expect(noHeader, "B noHeader").toBe(0);
+    expect(moveHeader, "B moveHeader").toBe(1);
+    expect(nbFixed, "B nbFixed").toBe(0);
     expect(writeSpy).toHaveBeenCalledWith("c.ts", "// HEADER\nconsole.log(3);");
   });
 

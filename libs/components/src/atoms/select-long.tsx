@@ -1,7 +1,7 @@
 // oxlint-disable no-duplicate-imports
 // oxlint-disable max-lines-per-function
 import { cn } from "@monorepo/utils";
-import { type ComponentProps, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { IconSearch } from "../icons/icon-search";
 import { IconX } from "../icons/icon-x";
 import { Button } from "./button";
@@ -25,14 +25,13 @@ export type SelectLongProps<Option, Value = string> = ComponentProps<typeof Shad
 
 const minValuesForFilter = 10;
 
+const valueToString = (val: unknown): string | undefined => (val === undefined ? undefined : String(val));
+
 export function SelectLong<Option, Value = string>(props: SelectLongProps<Option, Value>) {
   const [search, setSearch] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // oxlint-disable-next-line consistent-function-scoping
-  const valueToString = (val: Value | undefined): string | undefined => (val === undefined ? undefined : String(val));
 
   const selectedStringValue = props.value === null || props.value === undefined ? undefined : valueToString(props.value);
 
@@ -63,6 +62,7 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
     event.preventDefault();
     event.stopPropagation();
     if (props.onChange) {
+      // // oxlint-disable-next-line no-explicit-any
       props.onChange(undefined, undefined);
     }
     setSearch("");
@@ -80,13 +80,13 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
   const visibleCount = props.options.filter(isOptionVisible).length;
 
   return (
-    <Select disabled={props.disabled} name={props.name} onOpenChange={handleOpenChange} onValueChange={handleSelectChange} value={selectedStringValue}>
+    <Select disabled={props.disabled} name={props.name} value={selectedStringValue} onValueChange={handleSelectChange} onOpenChange={handleOpenChange}>
       <div className="relative">
-        <SelectTrigger className={cn(props.className, props.clearable && Boolean(selectedStringValue) && "gap-9")} name={props.name}>
+        <SelectTrigger name={props.name} className={cn(props.className, props.clearable && Boolean(selectedStringValue) && "gap-9")}>
           <SelectValue placeholder={props.placeholder || "Select an option"} />
         </SelectTrigger>
         {props.clearable && Boolean(selectedStringValue) && (
-          <Button className="absolute right-7 -translate-y-9" name={`${props.name}-clear`} onClick={handleClear} size="icon" type="button" variant="ghost">
+          <Button size="icon" name={`${props.name}-clear`} type="button" variant="ghost" className="absolute right-7 -translate-y-9" onClick={handleClear}>
             <IconX />
           </Button>
         )}
@@ -97,15 +97,15 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
             <div className="flex h-9 flex-row items-center gap-2 px-3">
               <IconSearch className="size-4 shrink-0 opacity-50" />
               <Input
+                ref={inputRef}
+                name={`search-${props.name}`}
+                value={search}
+                onKeyDown={el => el.stopPropagation()}
+                onFocus={el => el.stopPropagation()}
+                onChange={el => setSearch(el.target.value)}
+                placeholder={props.label ? `Search ${props.label?.toLowerCase()}...` : "Search option..."}
                 aria-label={props.label ? `Search ${props.label.toLowerCase()}` : "Search options"}
                 className="h-9 w-full border-0 focus:border-transparent! focus:ring-0! focus:outline-none!"
-                name={`search-${props.name}`}
-                onChange={el => setSearch(el.target.value)}
-                onFocus={el => el.stopPropagation()}
-                onKeyDown={el => el.stopPropagation()}
-                placeholder={props.label ? `Search ${props.label?.toLowerCase()}...` : "Search option..."}
-                ref={inputRef}
-                value={search}
               />
             </div>
             <SelectSeparator />
@@ -117,7 +117,7 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
           const label = props.getLabel(option);
           const value = String(props.getValue(option));
           return (
-            <SelectItem hidden={!isOptionVisible(option)} key={value} value={value}>
+            <SelectItem key={value} value={value} hidden={!isOptionVisible(option)}>
               {label}
             </SelectItem>
           );

@@ -98,7 +98,6 @@ export const itemForm = {
   columns: 10,
   errorMessage: "",
   // oxlint-disable sort-keys
-  // biome-ignore assist/source/useSortedKeys: needed
   fields: {
     name: createTextField({ columns: 5, isRequired: true, label: "Name" }),
     brand: createTextField({ columns: 3, label: "Brand" }),

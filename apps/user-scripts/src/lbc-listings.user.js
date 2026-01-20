@@ -437,7 +437,7 @@ function LbcListings() {
    * Start the process
    * @returns {void}
    */
-  function process() {
+  function start() {
     const dataElement = document.querySelector("#__NEXT_DATA__");
     if (!dataElement) {
       utils.error("no data element found");
@@ -454,10 +454,10 @@ function LbcListings() {
     for (const ad of ads) processAd(ad);
     removeViewedStyles();
   }
-  const processDebounceTime = 1000;
-  const processDebounced = utils.debounce(process, processDebounceTime);
-  globalThis.addEventListener("scroll", () => processDebounced());
-  globalThis.addEventListener("load", () => processDebounced());
+  const startDebounceTime = 1000;
+  const startDebounced = utils.debounce(start, startDebounceTime);
+  globalThis.addEventListener("scroll", () => startDebounced());
+  globalThis.addEventListener("load", () => startDebounced());
 }
 
 if (globalThis.window) LbcListings();

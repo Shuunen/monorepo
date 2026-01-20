@@ -52,7 +52,6 @@ export default defineConfig({
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    // biome-ignore lint/style/useNamingConvention: can't change the name of this option
     baseURL: baseUrl,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",

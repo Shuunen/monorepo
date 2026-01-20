@@ -1,7 +1,6 @@
 import type { Decorator, Preview } from "@storybook/react-vite";
 import { createRootRoute, createRouter, RouterProvider } from "@tanstack/react-router";
 // Import Tailwind CSS styles for Storybook
-// oxlint-disable-next-line no-unassigned-import
 import "../src/styles.css";
 import "./tw.css";
 

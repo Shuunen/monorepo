@@ -245,7 +245,7 @@ function AmazonHideProductsByKeywords() {
   /**
    * Process the page
    */
-  function process() {
+  function start() {
     detectNewPage();
   }
   /**
@@ -258,8 +258,8 @@ function AmazonHideProductsByKeywords() {
     onExcludersUpdate();
   }
   init();
-  const processDebounced = utils.debounce(process, app.debounceTime);
-  document.addEventListener("scroll", () => processDebounced());
+  const startDebounced = utils.debounce(start, app.debounceTime);
+  document.addEventListener("scroll", () => startDebounced());
 }
 
 if (globalThis.window) AmazonHideProductsByKeywords();

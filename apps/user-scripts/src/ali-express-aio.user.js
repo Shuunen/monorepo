@@ -12,7 +12,7 @@
 // @version      1.0.4
 // ==/UserScript==
 
-// oxlint-disable no-magic-numbers, max-lines-per-function
+// oxlint-disable no-magic-numbers
 
 /**
  * @param {HTMLImageElement} img the image to extend
@@ -97,13 +97,13 @@ function AliExpressAio() {
   /**
    * Process the page
    */
-  const process = () => {
-    utils.log("process...");
+  const start = () => {
+    utils.log("start...");
     processProductCards();
     processItemRows();
   };
-  const processDebounced = utils.debounce(process, 1000);
-  globalThis.addEventListener("scroll", () => processDebounced());
+  const startDebounced = utils.debounce(start, 1000);
+  globalThis.addEventListener("scroll", () => startDebounced());
 }
 
 if (globalThis.window) AliExpressAio();

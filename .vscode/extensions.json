@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "alexkrechik.cucumberautocomplete",
+    "biomejs.biome",
     "bradlc.vscode-tailwindcss",
     "davidanson.vscode-markdownlint",
     "ms-playwright.playwright",
@@ -11,8 +12,8 @@
     "siarheikuchuk.gherkin-beautifier-vs-code-plugin",
     "streetsidesoftware.code-spell-checker-british-english",
     "streetsidesoftware.code-spell-checker",
-    "yzhang.markdown-all-in-one",
+    "typescriptteam.native-preview",
     "yoavbls.pretty-ts-errors",
-    "typescriptteam.native-preview"
+    "yzhang.markdown-all-in-one"
   ]
 }

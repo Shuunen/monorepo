@@ -60,15 +60,15 @@ function LinxoAio() {
   /**
    * Process the page
    */
-  function process() {
-    utils.log("processing");
+  function start() {
+    utils.log("starting processing");
     checkWrongCategories();
   }
-  const processDebounceTime = 500;
-  const processDebounced = utils.debounce(process, processDebounceTime);
-  document.addEventListener("scroll", () => processDebounced());
-  utils.onPageChange(processDebounced);
-  setTimeout(processDebounced, processDebounceTime);
+  const startDebounceTime = 500;
+  const startDebounced = utils.debounce(start, startDebounceTime);
+  document.addEventListener("scroll", () => startDebounced());
+  utils.onPageChange(startDebounced);
+  setTimeout(startDebounced, startDebounceTime);
 }
 
 if (globalThis.window) LinxoAio();

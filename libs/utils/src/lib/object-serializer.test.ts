@@ -2,7 +2,6 @@ import { objectDeserialize, objectSerialize } from "./object-serializer.js";
 
 const person = {
   age: 21,
-  // oxlint-disable-next-line no-null
   canPush: null,
   details: { dateOfBirth: new Date("2001-12-22"), favoriteFood: "sushi", hatedFood: undefined },
   isNameValid: true,
@@ -37,7 +36,6 @@ it("objectSerialize E function", () => {
   expect(objectSerialize({ func: add })).toMatchInlineSnapshot(String.raw`"{"func":{"__function__":"function add(numberA, numberB) {\n  return numberA + numberB;\n}"}}"`);
 });
 it("objectSerialize F object with sort", () => {
-  // biome-ignore assist/source/useSortedKeys: needed
   expect(objectSerialize({ object: { name: "John", age: 42 }, id: 123_456 }, true)).toMatchInlineSnapshot('"{"id":123456,"object":{"age":42,"name":"John"}}"');
 });
 it("objectSerialize G person", () => {
@@ -95,7 +93,6 @@ it("objectSerialize J handle undefined", () => {
 });
 
 it("objectSerialize K with sorted keys", () => {
-  // biome-ignore assist/source/useSortedKeys: needed
   const object = { keyC: 3, keyA: undefined, keyB: 2 };
   const serialized = JSON.stringify(objectSerialize(object, true));
   expect(serialized).toMatchInlineSnapshot(`""{\\"keyB\\":2,\\"keyC\\":3}""`);
@@ -254,7 +251,6 @@ it("objectDeserialize H person", () => {
     }
   `);
   expect(object.age).toBe(21);
-  // oxlint-disable-next-line no-null
   expect(object.canPush).toBe(null);
   // @ts-expect-error type is unknown
   expect(object.details.dateOfBirth instanceof Date).toBe(true);

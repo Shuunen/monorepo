@@ -70,16 +70,16 @@ function VintedAio() {
    * Process the page and hide elements
    * @param {string} reason - The reason for processing
    */
-  function process(reason = "unknown") {
+  function start(reason = "unknown") {
     utils.debug(`process called because "${reason}"`);
     utils.hideElements(uselessSelectors, "useless");
   }
-  const processDebounceTime = 300;
-  const processDebounced = utils.debounce((/** @type {string} */ reason) => process(reason), processDebounceTime);
-  globalThis.addEventListener("scroll", () => processDebounced("scroll"));
-  utils.onPageChange(() => processDebounced("page-change"));
-  document.addEventListener("DOMContentLoaded", () => process("initial-dom-loaded"));
-  process("initial-dom-ready");
+  const startDebounceTime = 300;
+  const startDebounced = utils.debounce((/** @type {string} */ reason) => start(reason), startDebounceTime);
+  globalThis.addEventListener("scroll", () => startDebounced("scroll"));
+  utils.onPageChange(() => startDebounced("page-change"));
+  document.addEventListener("DOMContentLoaded", () => start("initial-dom-loaded"));
+  start("initial-dom-ready");
 }
 
 if (globalThis.window) VintedAio();

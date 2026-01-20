@@ -18,7 +18,7 @@ function ImgUnblock() {
   const selectors = {
     images: 'a[href^="https://i.imgur.com/"]:not(.img-unblock)',
   };
-  function process() {
+  function start() {
     const images = utils.findAll(selectors.images);
     for (const element of images) {
       if (!(element instanceof HTMLAnchorElement)) {
@@ -39,11 +39,11 @@ function ImgUnblock() {
       element.parentElement.style.flexDirection = "column";
     }
   }
-  const processDebounceTime = 500;
-  const processDebounced = utils.debounce(process, processDebounceTime);
+  const startDebounceTime = 500;
+  const startDebounced = utils.debounce(start, startDebounceTime);
   utils.log("set scroll listener");
-  document.addEventListener("scroll", () => processDebounced());
-  utils.onPageChange(processDebounced);
+  document.addEventListener("scroll", () => startDebounced());
+  utils.onPageChange(startDebounced);
 }
 
 if (globalThis.window) ImgUnblock();
