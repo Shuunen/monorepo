@@ -20,7 +20,7 @@
     "react-dom": "~19.2.3",
     "react-hook-form": "^7.71.1",
     "react-router-dom": "^7.12.0",
-    "storybook": "^10.1.11",
+    "storybook": "^10.2.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "~4.1.18",
     "tiny-glob": "~0.2.9",
