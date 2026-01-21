@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import { createActor } from "xstate";
 import type { z } from "zod";
 
-export function useMachineSchemas<InitialData>(machine: Parameters<typeof createActor>[0], initialData: InitialData) {
+export function useMachineSchemas<Input>(machine: Parameters<typeof createActor>[0], input: Input) {
   const [schemas, setSchemas] = useState<z.ZodObject[]>([]);
   useEffect(() => {
-    const initialState = { input: { formData: initialData } };
-    const actor = createActor(machine, initialState);
+    const actor = createActor(machine, { input });
     function handleStateChange(state: { context: { schemas: z.ZodObject[] } }) {
       setSchemas(state.context.schemas);
     }
@@ -16,6 +15,6 @@ export function useMachineSchemas<InitialData>(machine: Parameters<typeof create
       subscription.unsubscribe();
       actor.stop();
     };
-  }, [initialData, machine]);
+  }, [input, machine]);
   return schemas;
 }
