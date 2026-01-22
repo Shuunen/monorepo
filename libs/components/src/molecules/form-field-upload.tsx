@@ -2,7 +2,7 @@ import { camelToKebabCase, slugify } from "@monorepo/utils";
 // oxlint-disable-next-line no-restricted-imports
 import { CircleXIcon, FileCheckIcon, FileTextIcon, FileUpIcon, FileXIcon, RotateCcwIcon, TrashIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { type ControllerRenderProps, useFormContext } from "react-hook-form";
+import { type ControllerRenderProps, useWatch } from "react-hook-form";
 import { Button } from "../atoms/button";
 import { FormControl } from "../atoms/form";
 import { Input } from "../atoms/input";
@@ -64,8 +64,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, isOptional, lo
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const idleNoFile = uploadState === "idle" && !selectedFile;
-  const { watch } = useFormContext();
-  const fieldValue = watch(fieldName);
+  const fieldValue = useWatch({ name: fieldName });
 
   useEffect(() => {
     const currentValue = fieldValue as File | undefined;
@@ -166,7 +165,7 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, isOptional, lo
           {idleNoFile ? (
             <Input accept={accept} disabled={isDisabled} name={`${testId}-${stateTestId}`} onChange={event => handleFileSelect(event, field.onChange)} placeholder={placeholder || currentState.message} ref={fileInputRef} type="file" />
           ) : (
-            <div className="flex gap-3 overflow-hidden rounded-md border border-input bg-background p-3" data-testid={`${testId}-${stateTestId}`}>
+            <div className="flex w-full gap-3 overflow-hidden rounded-md border border-input bg-background p-3" data-testid={`${testId}-${stateTestId}`}>
               <aside className="mt-0.5">{currentState.icon}</aside>
               <main className="flex max-w-full grow flex-col gap-1 overflow-hidden">
                 <div className="flex justify-between gap-3">

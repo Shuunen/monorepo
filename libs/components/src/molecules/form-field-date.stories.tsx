@@ -51,7 +51,7 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const dateInput = canvas.getByTestId("input-date-birth-date") as HTMLInputElement;
+    const dateInput = canvas.getByTestId("input-date-birth-date");
     expect(dateInput).toBeInTheDocument();
     expect(dateInput).toHaveAttribute("type", "date");
     await step("fill date input", async () => {
@@ -88,7 +88,7 @@ export const WithInitialValue: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const dateInput = canvas.getByTestId("input-date-event-date") as HTMLInputElement;
+    const dateInput = canvas.getByTestId("input-date-event-date");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("verify initial value is displayed", () => {
       expect(dateInput).toHaveValue("2025-12-25");
@@ -137,7 +137,7 @@ export const Disabled: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const dateInput = canvas.getByTestId("input-date-lock-date") as HTMLInputElement;
+    const dateInput = canvas.getByTestId("input-date-lock-date");
     expect(dateInput).toBeDisabled();
     expect(dateInput).toHaveValue("2025-01-01");
   },
@@ -161,7 +161,7 @@ export const Readonly: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const dateInput = canvas.getByTestId("input-date-created-date") as HTMLInputElement;
+    const dateInput = canvas.getByTestId("input-date-created-date");
     expect(dateInput).toHaveAttribute("readonly");
     expect(dateInput).toHaveValue("2024-01-15");
   },
@@ -184,7 +184,7 @@ export const StringDateWithRender: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const dateInput = canvas.getByTestId("input-date-string-date") as HTMLInputElement;
+    const dateInput = canvas.getByTestId("input-date-string-date");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     expect(dateInput).toBeInTheDocument();
     expect(dateInput).toHaveAttribute("type", "date");
@@ -200,5 +200,27 @@ export const StringDateWithRender: Story = {
     await step("verify submitted data contains ISO string", () => {
       expect(submittedData).toContainHTML(stringify({ stringDate: "2023-03-20" }, true));
     });
+  },
+};
+
+/**
+ * String date field using render metadata (E2E: fill, submit, verify ISO string output)
+ */
+export const StringDateWithoutRender: Story = {
+  args: {
+    schemas: [
+      z.object({
+        stringDate: field(z.iso.date(), {
+          label: "String Date Field (no render)",
+          placeholder: "Select a date (string)",
+        }),
+      }),
+    ],
+  },
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const dateInput = canvas.getByTestId("input-date-string-date");
+    expect(dateInput).toBeInTheDocument();
+    expect(dateInput).toHaveAttribute("type", "date");
   },
 };

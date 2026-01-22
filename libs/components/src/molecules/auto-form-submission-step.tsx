@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../atoms/tooltip";
 import { Title } from "../atoms/typography";
 import { IconError } from "../icons/icon-error";
@@ -8,52 +7,16 @@ import { IconWarning } from "../icons/icon-warning";
 import { cn } from "../shadcn/utils";
 import type { AutoFormSubmissionStepProps } from "./auto-form.types";
 
-function getTitleByStatus(status: AutoFormSubmissionStepProps["status"]) {
-  if (status === "loading") {
-    return "Please wait...";
-  }
-  if (status === "success") {
-    return "Success";
-  }
-  if (status === "warning") {
-    return "Warning";
-  }
-  if (status === "error") {
-    return "Error";
-  }
-  return "Unknown error";
-}
-
-function getIconByStatus(status: AutoFormSubmissionStepProps["status"]) {
-  if (status === "loading") {
-    return;
-  }
-  if (status === "success") {
-    return <IconSuccess />;
-  }
-  if (status === "warning") {
-    return <IconWarning />;
-  }
-  return <IconError />;
-}
-
-function getColorByStatus(status: AutoFormSubmissionStepProps["status"]) {
-  if (status === "loading") {
-    return cn("text-inherit");
-  }
-  if (status === "success") {
-    return cn("text-success");
-  }
-  if (status === "warning") {
-    return cn("text-warning");
-  }
-  return cn("text-destructive");
-}
+const statusConfig = {
+  error: { color: "text-destructive", icon: <IconError />, title: "Error" },
+  loading: { color: "text-inherit", icon: undefined, title: "Please wait..." },
+  success: { color: "text-success", icon: <IconSuccess />, title: "Success" },
+  "unknown-error": { color: "text-destructive", icon: <IconError />, title: "Unknown error" },
+  warning: { color: "text-warning", icon: <IconWarning />, title: "Warning" },
+} as const;
 
 export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetailsList = [], children }: AutoFormSubmissionStepProps) {
-  const title = useMemo(() => getTitleByStatus(status), [status]);
-  const icon = useMemo(() => getIconByStatus(status), [status]);
-  const color = useMemo(() => getColorByStatus(status), [status]);
+  const { title, icon, color } = statusConfig[status];
   return (
     <div className="grid gap-4" data-testid={`app-status-${status}`}>
       <Title className={cn("flex items-center gap-3", color)} level={1}>

@@ -1,21 +1,20 @@
+// oxlint-disable import/max-dependencies
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@monorepo/utils";
+import { cn, nbPercentMax, scrollToElement, sleep } from "@monorepo/utils";
 import { Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../atoms/button";
 import { Form } from "../atoms/form";
 import { IconHome } from "../icons/icon-home";
-import { defaultIcons, defaultLabels } from "./auto-form.const";
-import type { AutoFormProps, AutoFormStepMetadata, AutoFormSubformOptions, AutoFormSubmissionStepProps } from "./auto-form.types";
-import { filterSchema, getInitialStep, getStepMetadata, mapExternalDataToFormFields, normalizeData } from "./auto-form.utils";
 import { AutoFormFields } from "./auto-form-fields";
 import { AutoFormNavigation } from "./auto-form-navigation";
-import { AutoFormStepper, type AutoFormStepperStep } from "./auto-form-stepper";
+import { AutoFormStepper } from "./auto-form-stepper";
 import { AutoFormSubmissionStep } from "./auto-form-submission-step";
 import { AutoFormSummaryStep } from "./auto-form-summary-step";
-
-// run this command to check e2e tests `nx run components:test-storybook --skip-nx-cache` and run this command to check unit tests `nx run components:test --skip-nx-cache`
+import { defaultIcons, defaultLabels } from "./auto-form.const";
+import type { AutoFormProps, AutoFormSubformOptions, AutoFormSubmissionStepProps } from "./auto-form.types";
+import { buildStepperSteps, filterSchema, getDefaultValues, getInitialStep, getLastAccessibleStepIndex, getStepMetadata, isStepClickable, normalizeData } from "./auto-form.utils";
 
 /**
  * AutoForm is a black box, all in one form generator, takes Zod schemas in and build the ui, handle validation, state management, navigation, submission, etc.:
@@ -47,25 +46,10 @@ export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger
   const [currentStep, setCurrentStep] = useState(getInitialStep(schemas, showFirstEditableStep, showLastStep));
   const [showSummary, setShowSummary] = useState(false);
   const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined);
-  const defaultValues = useMemo(() => {
-    const allMappedData: Record<string, unknown> = {};
-    for (const schema of schemas) {
-      const schemaMappedData = mapExternalDataToFormFields(schema, initialData);
-      Object.assign(allMappedData, schemaMappedData);
-    }
-    return allMappedData;
-  }, [schemas, initialData]);
+  const defaultValues = useMemo(() => getDefaultValues(schemas, initialData), [schemas, initialData]);
   const [formData, setFormData] = useState<Record<string, unknown>>(defaultValues);
   const currentSchema = schemas[currentStep];
-  const lastAccessibleStepIndex = useMemo(() => {
-    for (let index = schemas.length - 1; index >= 0; index -= 1) {
-      const stepMeta = getStepMetadata(schemas[index]);
-      if (stepMeta?.state !== "upcoming") {
-        return index;
-      }
-    }
-    return schemas.length - 1;
-  }, [schemas]);
+  const lastAccessibleStepIndex = useMemo(() => getLastAccessibleStepIndex(schemas), [schemas]);
   const isLastStep = currentStep === lastAccessibleStepIndex;
   const finalLabels = { ...defaultLabels, ...labels };
   const [mode, setMode] = useState<"initial" | "subform">("initial");
@@ -85,14 +69,14 @@ export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger
    * @returns void
    */
   function handleStepSubmit() {
-    logger?.info("Step form submitted");
+    updateFormData();
+    logger?.info("Step form submitted", { formData });
     if (isLastStep && useSummaryStep) {
       setShowSummary(true);
     } else if (isLastStep) {
       void handleFinalSubmit();
     } else {
       setCurrentStep(prev => prev + 1);
-      updateFormData();
     }
   }
   /**
@@ -125,11 +109,7 @@ export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger
    * @param stepIndex the step index
    */
   function handleStepClick(stepIndex: number) {
-    if (submissionProps && (submissionProps.status === "success" || submissionProps.status === "warning")) {
-      return;
-    }
-    const stepMeta = getStepMetadata(schemas[stepIndex]);
-    if (stepMeta?.state === "upcoming") {
+    if (!isStepClickable(schemas, stepIndex, submissionProps?.status)) {
       return;
     }
     if (submissionProps) {
@@ -140,47 +120,45 @@ export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger
     }
     setCurrentStep(stepIndex);
   }
+
+  const backToInitialMode = useCallback(async () => {
+    setMode("initial");
+    await sleep(nbPercentMax);
+    if (subformOptions?.querySelectorForScroll) {
+      scrollToElement(subformOptions.querySelectorForScroll);
+    }
+  }, [subformOptions]);
+
   /**
    * Shows a form
    * @param options the options for the subform
    * @param options.schema the Zod schema for the current step
    * @param options.initialData the initial data for the subform
    * @param options.onSubmit the function to call on form submission
+   * @param options.querySelectorForScroll the query selector to the element to scroll after submit
    * @returns boolean indicating if the form should be shown
    */
-  function showForm({ schema, initialData, onSubmit }: AutoFormSubformOptions) {
-    setMode("subform");
-    setSubformOptions({
-      initialData,
-      onSubmit: data => {
-        onSubmit(data);
-        setMode("initial");
-      },
-      schema,
-    });
-  }
-  // Step states and icons
-  let lastSection = "" as AutoFormStepMetadata["section"];
-  const steps = schemas.map<AutoFormStepperStep>((schema, idx) => {
-    const stepMeta = getStepMetadata(schema);
-    const { title = `Step ${idx + 1}`, subtitle, suffix, section: currentSection, state: metaState } = stepMeta ?? {};
-    const section = currentSection !== lastSection && currentSection ? currentSection : undefined;
-    lastSection = currentSection;
-    const state = metaState ?? "editable";
-    return {
-      active: idx === currentStep && !showSummary && !submissionProps,
-      icon: defaultIcons[state],
-      idx,
-      section,
-      state,
-      subtitle,
-      suffix,
-      title,
-    } satisfies AutoFormStepperStep;
-  });
+  const showForm = useCallback(
+    ({ schema, initialData, onSubmit, querySelectorForScroll }: AutoFormSubformOptions) => {
+      setMode("subform");
+      setSubformOptions({
+        initialData,
+        onSubmit: data => {
+          onSubmit(data);
+          void backToInitialMode();
+        },
+        querySelectorForScroll,
+        schema,
+      });
+    },
+    [backToInitialMode],
+  );
+  const steps = useMemo(() => buildStepperSteps({ currentStep, hasSubmission: Boolean(submissionProps), icons: defaultIcons, schemas, showSummary }), [schemas, currentStep, showSummary, submissionProps]);
   const stepMetadata = getStepMetadata(currentSchema);
   const isStepperDisabled = submissionProps?.status === "success";
   const shouldShowStepper = (showMenu === undefined ? schemas.length > 1 : showMenu) && mode !== "subform";
+  const cancelButton = onCancel ? { onClick: onCancel } : undefined;
+
   function renderSubmissionContent() {
     if (!submissionProps) {
       return;
@@ -190,7 +168,7 @@ export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger
     return (
       <>
         <AutoFormSubmissionStep {...submissionProps} />
-        {showBackButton && <AutoFormNavigation centerButton={onCancel ? { onClick: onCancel } : undefined} leftButton={{ onClick: handleBack }} />}
+        {showBackButton && <AutoFormNavigation centerButton={cancelButton} leftButton={{ onClick: handleBack }} />}
         {showHomeButton && (
           <div className="pt-6">
             <Button asChild name="home">
@@ -203,48 +181,28 @@ export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger
       </>
     );
   }
+
   function renderSummaryContent() {
     return (
       <>
         <AutoFormSummaryStep formData={formData} schemas={schemas} />
-        {showButtons && (
-          <AutoFormNavigation
-            centerButton={onCancel ? { onClick: onCancel } : undefined}
-            leftButton={{ onClick: handleBack }}
-            rightButton={{
-              label: finalLabels.summaryStepButton,
-              name: "summary-proceed",
-              onClick: handleFinalSubmit,
-            }}
-          />
-        )}
+        {showButtons && <AutoFormNavigation centerButton={cancelButton} leftButton={{ onClick: handleBack }} rightButton={{ label: finalLabels.summaryStepButton, name: "summary-proceed", onClick: handleFinalSubmit }} />}
       </>
     );
   }
+
   function renderFormContent() {
+    const rightButton = isLastStep ? { label: finalLabels.lastStepButton, name: "last-step-submit", type: "submit" as const } : { label: finalLabels.nextStep, name: "step-next", type: "submit" as const };
     return (
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleStepSubmit)}>
           <AutoFormFields logger={logger} schema={currentSchema} showForm={showForm} state={stepMetadata?.state} />
-          {showButtons && (
-            <AutoFormNavigation
-              centerButton={onCancel ? { onClick: onCancel } : undefined}
-              leftButton={currentStep > 0 ? { onClick: handleBack } : undefined}
-              rightButton={
-                isLastStep
-                  ? {
-                      label: finalLabels.lastStepButton,
-                      name: "last-step-submit",
-                      type: "submit",
-                    }
-                  : { label: finalLabels.nextStep, name: "step-next", type: "submit" }
-              }
-            />
-          )}
+          {showButtons && <AutoFormNavigation centerButton={cancelButton} leftButton={currentStep > 0 ? { onClick: handleBack } : undefined} rightButton={rightButton} />}
         </form>
       </Form>
     );
   }
+
   function renderSubformContent() {
     if (!subformOptions) {
       return;
@@ -252,13 +210,14 @@ export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger
     logger?.info("Rendering subform", subformOptions);
     return (
       <>
-        <Button name="subform-back" onClick={() => setMode("initial")}>
+        <Button name="subform-back" onClick={backToInitialMode}>
           Back
         </Button>
         <AutoForm initialData={subformOptions.initialData} onSubmit={subformOptions.onSubmit} schemas={[subformOptions.schema]} />
       </>
     );
   }
+
   function renderContent() {
     if (submissionProps) {
       return renderSubmissionContent();
@@ -271,6 +230,7 @@ export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger
     }
     return renderFormContent();
   }
+
   return (
     <div
       className={cn("mx-auto flex w-full", {

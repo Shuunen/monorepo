@@ -111,7 +111,7 @@ export type AutoFormFieldSectionMetadata = { render: "section" } & FormFieldSect
  */
 export type AutoFormFieldConditionalMetadata = {
   /** The name of another field that this field depends on. Supports field=value syntax for specific value checks. This should be use in favor of `isVisible` when possible for performance reasons. */
-  dependsOn?: string;
+  dependsOn?: string | string[];
   /** More generic way to express condition on whether or not a field is visible. When provided, this function has precedence over `dependsOn`. ⚠️ This should be used as last resort, because the field will be redraw every time*/
   // oxlint-disable-next-line no-explicit-any
   isVisible?: (formData: Record<string, any>) => boolean;
@@ -188,6 +188,8 @@ export type AutoFormSubformOptions = {
   schema: z.ZodObject;
   /** Initial data to pre-fill the subform fields. */
   initialData: Record<string, unknown>;
+  /** The query selector to the element to scroll after submit */
+  querySelectorForScroll: string;
   /** Callback function invoked when the subform is submitted, returning the submission data. */
   onSubmit: (data: Record<string, unknown>) => void;
 };

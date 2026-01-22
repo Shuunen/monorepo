@@ -31,7 +31,7 @@ const meta = {
       return mockSubmit(status, message);
     }
     return (
-      <div className="mt-6 grid gap-4">
+      <div className="mt-12 grid min-w-lg gap-4">
         <AutoForm {...args} logger={logger} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
@@ -63,6 +63,16 @@ export const Basic: Story = {
   args: {
     schemas: [basicSchema],
   },
+};
+
+/**
+ * Single step form with basic fields with E2E test
+ */
+export const BasicTests: Story = {
+  tags: ["!dev"],
+  args: {
+    schemas: [basicSchema],
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
@@ -73,6 +83,60 @@ export const Basic: Story = {
     await userEvent.type(nameInput, "John Doe");
     await userEvent.click(submitButton);
     await expect(submittedData).toContainHTML(stringify({ email: "example-email@email.com", name: "John Doe" }, true));
+  },
+};
+
+const basicWithDefaultsSchema = z.object({
+  email: field(z.email("Invalid email address"), {
+    label: "Email Address",
+    placeholder: "We'll never share your email",
+  }),
+  name: field(z.string().min(2, "Name is required"), {
+    label: "Full Name",
+    placeholder: "Enter your legal name",
+  }),
+  acceptTerms: field(z.boolean(), {
+    label: "Accept terms and conditions (checked by default)",
+    placeholder: "Check to accept",
+  }),
+  subscribe: field(z.boolean(), {
+    label: "Subscribe to newsletter (unchecked by default)",
+    placeholder: "Check to subscribe",
+  }),
+});
+
+/**
+ * Single step form with basic fields and default values
+ */
+export const BasicWithDefaults: Story = {
+  args: {
+    schemas: [basicWithDefaultsSchema],
+    initialData: {
+      email: "JohnRom@yopmail.eu",
+      name: "John Rom",
+      acceptTerms: true,
+      subscribe: false,
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+    const emailInput = canvas.getByTestId("input-text-email");
+    expect(emailInput).toHaveValue("JohnRom@yopmail.eu");
+    const nameInput = canvas.getByTestId("input-text-name");
+    expect(nameInput).toHaveValue("John Rom");
+    const acceptTermsCheckbox = canvas.getByTestId("switch-accept-terms");
+    expect(acceptTermsCheckbox).toBeChecked();
+    expect(acceptTermsCheckbox.getAttribute("value")).toBe("true");
+    const subscribeCheckbox = canvas.getByTestId("switch-subscribe");
+    expect(subscribeCheckbox).not.toBeChecked();
+    expect(subscribeCheckbox.getAttribute("value")).toBe("false");
+    const issues = canvas.queryAllByRole("alert");
+    expect(issues.map(el => el.textContent).join(",")).toBe("");
+    const submitButton = canvas.getByRole("button", { name: "Submit" });
+    expect(submitButton).toBeEnabled();
+    await userEvent.click(submitButton);
+    expect(submittedData).toContainHTML(stringify({ email: "JohnRom@yopmail.eu", name: "John Rom", acceptTerms: true, subscribe: false }, true));
   },
 };
 
@@ -296,6 +360,12 @@ const optionalSectionStep2Schema = step(
       label: "Pet Age",
       placeholder: "Enter your pet age if you know it",
     }),
+    petNameExplanations: field(z.string().optional(), {
+      dependsOn: ["hasPet", "petName=Rominou"],
+      label: "Pet Name Explanations",
+      placeholder: "Explain why you named your pet as your favorite colleague",
+      render: "textarea",
+    }),
   }),
   {
     subtitle: "Pet information and details",
@@ -371,7 +441,11 @@ export const OptionalSection: Story = {
     });
     await step("fill pet name", async () => {
       const petNameInput = await canvas.findByTestId("input-text-pet-name");
-      await userEvent.type(petNameInput, "Fido");
+      await userEvent.type(petNameInput, "Rominou");
+    });
+    await step("fill pet name explanations", async () => {
+      const petNameExplanationsInput = await canvas.findByTestId("textarea-pet-name-explanations");
+      await userEvent.type(petNameExplanationsInput, "I'm secretly in love with him");
     });
     await step("submit button enabled and submit successfully", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -379,7 +453,8 @@ export const OptionalSection: Story = {
       const expectedData = {
         name: "Paul Doughy",
         favouriteColor: "red",
-        petName: "Fido",
+        petName: "Rominou",
+        petNameExplanations: "I'm secretly in love with him",
       };
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
