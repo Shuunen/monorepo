@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/a11y/useValidAnchor: fix that later */
-import { slugify } from "@monorepo/utils";
+import { slugify, stringify } from "@monorepo/utils";
 import { TableCell } from "../atoms/table";
 import { IconDownload } from "../icons/icon-download";
 
@@ -19,21 +19,27 @@ function downloadFile(file: File) {
   URL.revokeObjectURL(url);
 }
 
-export function FormSummaryFieldValue(props: Props) {
-  if (props.value === undefined) {
+export function FormSummaryFieldValue({ value, name }: Props) {
+  // @ts-expect-error includes doesn't allow unknown as parameter
+  // oxlint-disable-next-line unicorn/no-null
+  if ([undefined, null].includes(value)) {
     return <TableCell className="overflow-hidden text-ellipsis italic opacity-30">not specified</TableCell>;
   }
 
-  if (props.value instanceof File) {
+  if (value instanceof Date) {
+    return <TableCell className="overflow-hidden text-ellipsis">{String(value)}</TableCell>;
+  }
+
+  if (value instanceof File) {
     return (
       <TableCell className="overflow-hidden text-ellipsis">
         {/** biome-ignore lint/a11y/noStaticElementInteractions: fix that later */}
-        <a className="flex cursor-pointer items-center gap-2 underline" data-testid={slugify(`summary-file-${props.name}`)} onClick={() => downloadFile(props.value as File)}>
-          <IconDownload /> {props.value.name}
+        <a className="flex cursor-pointer items-center gap-2 underline" data-testid={slugify(`summary-file-${name}`)} onClick={() => downloadFile(value as File)}>
+          <IconDownload /> {value.name}
         </a>
       </TableCell>
     );
   }
 
-  return <TableCell className="overflow-hidden text-ellipsis">{String(props.value)}</TableCell>;
+  return <TableCell className="overflow-hidden text-ellipsis">{stringify(value)}</TableCell>;
 }
