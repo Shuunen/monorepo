@@ -4,7 +4,7 @@ export type ItemProps = {
   item: Record<string, unknown>;
   index: number;
   identifier: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   isEmpty: boolean;
   hasError: boolean;
   readonly: boolean;
