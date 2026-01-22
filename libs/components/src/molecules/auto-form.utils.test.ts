@@ -2,20 +2,25 @@ import { createElement } from "react";
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import {
+  buildStepperSteps,
   checkZodBoolean,
   field,
   fields,
   filterDataForSummary,
   filterSchema,
   forms,
+  getDefaultValues,
   getFieldMetadata,
   getFieldMetadataOrThrow,
   getFormFieldRender,
   getInitialStep,
   getKeyMapping,
+  getLastAccessibleStepIndex,
   getStepMetadata,
   getZodEnumOptions,
   isFieldVisible,
+  isStepClickable,
+  isZodArray,
   isZodBoolean,
   isZodDate,
   isZodEnum,
@@ -253,27 +258,46 @@ describe("auto-form.utils", () => {
   it("parseDependsOn A should parse simple field name", () => {
     const result = parseDependsOn("fieldName");
     expect(result).toMatchInlineSnapshot(`
-      {
-        "fieldName": "fieldName",
-      }
+      [
+        {
+          "fieldName": "fieldName",
+        },
+      ]
     `);
   });
   it("parseDependsOn B should parse field=value syntax", () => {
     const result = parseDependsOn("breed=dog");
     expect(result).toMatchInlineSnapshot(`
-      {
-        "expectedValue": "dog",
-        "fieldName": "breed",
-      }
+      [
+        {
+          "expectedValue": "dog",
+          "fieldName": "breed",
+        },
+      ]
     `);
   });
   it("parseDependsOn C should handle field names with special characters", () => {
     const result = parseDependsOn("userEmail=test@example.com");
     expect(result).toMatchInlineSnapshot(`
-      {
-        "expectedValue": "test@example.com",
-        "fieldName": "userEmail",
-      }
+      [
+        {
+          "expectedValue": "test@example.com",
+          "fieldName": "userEmail",
+        },
+      ]
+    `);
+  });
+  it("parseDependsOn D should parse multiple field names", () => {
+    const result = parseDependsOn(["fieldName", "fieldName2"]);
+    expect(result).toMatchInlineSnapshot(`
+      [
+        {
+          "fieldName": "fieldName",
+        },
+        {
+          "fieldName": "fieldName2",
+        },
+      ]
     `);
   });
 
@@ -432,6 +456,54 @@ describe("auto-form.utils", () => {
         "user": {
           "date": "2026-01-14",
         },
+      }
+    `);
+  });
+  it("normalizeDataForSchema J should handle ZodArray", () => {
+    const schema = z.object({ a: z.array(z.string()).meta({ label: "A" }) });
+    const data = { a: ["foo", "bar"] };
+    const cleaned = normalizeDataForSchema(schema, data);
+    expect(cleaned).toMatchInlineSnapshot(`
+      {
+        "a": [
+          "foo",
+          "bar",
+        ],
+      }
+    `);
+  });
+  it("normalizeDataForSchema K should handle array with codec", () => {
+    const schema = z.object({
+      userDates: z.array(
+        z
+          .object({
+            date: field(z.string(), { label: "Date", codec: isoDateStringToDateInstance }),
+            userDate: field(z.string(), {
+              keyOut: "user.date",
+              label: "Date",
+              codec: isoDateStringToDateInstance,
+            }),
+          })
+          .optional(),
+      ),
+    });
+    const data = {
+      userDates: [
+        {
+          date: new Date("2026-01-14"),
+          userDate: new Date("2026-01-14"),
+        },
+      ],
+    };
+    const result = normalizeDataForSchema(schema, data);
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "userDates": [
+          {
+            "date": "2026-01-14",
+            "userDate": "2026-01-14",
+          },
+        ],
       }
     `);
   });
@@ -628,6 +700,52 @@ describe("auto-form.utils", () => {
       }
     `);
   });
+  it("mapExternalDataToFormFields L should handle array using codec", () => {
+    const schema = z.object({
+      users: z.array(
+        z.object({
+          date: field(z.string(), { label: "Date", codec: isoDateStringToDateInstance }),
+          userDate: field(z.string(), { label: "Date", codec: isoDateStringToDateInstance }),
+        }),
+      ),
+    });
+    const externalData = {
+      users: [
+        {
+          date: "2026-01-14",
+          userDate: "2026-01-14",
+        },
+      ],
+    };
+    const result = mapExternalDataToFormFields(schema, externalData);
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "users": [
+          {
+            "date": 2026-01-14T00:00:00.000Z,
+            "userDate": 2026-01-14T00:00:00.000Z,
+          },
+        ],
+      }
+    `);
+  });
+  it("mapExternalDataToFormFields L should handle array using codec with optional", () => {
+    const schema = z.object({
+      users: z.array(field(z.string().optional(), { label: "Date", codec: isoDateStringToDateInstance })),
+    });
+    const externalData = {
+      users: ["2026-01-14"],
+    };
+    const result = mapExternalDataToFormFields(schema, externalData);
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "users": [
+          2026-01-14T00:00:00.000Z,
+        ],
+      }
+    `);
+  });
+
   // fields
   it("fields A should create a ZodArray", () => {
     const schema = fields(z.object({ name: z.string() }), {});
@@ -1009,5 +1127,120 @@ describe("auto-form.utils", () => {
 
   it("getInitialStep D should return the first step as default step", () => {
     expect(getInitialStep(stepSchemas)).toBe(0);
+  });
+
+  // isZodArray
+  it("isZodArray A should return true for ZodArray", () => {
+    const schema = z.array(z.string());
+    expect(isZodArray(schema)).toBe(true);
+  });
+  it("isZodArray B should return true for optional ZodArray", () => {
+    const schema = z.array(z.string()).optional();
+    expect(isZodArray(schema)).toBe(true);
+  });
+  it("isZodArray C should return false for non-array schema", () => {
+    const schema = z.string();
+    expect(isZodArray(schema)).toBe(false);
+  });
+  it("isZodArray D should return false for optional non-array schema", () => {
+    const schema = z.string().optional();
+    expect(isZodArray(schema)).toBe(false);
+  });
+
+  // getDefaultValues
+  it("getDefaultValues A should compute default values from schemas", () => {
+    const schema1 = z.object({ name: z.string().meta({ label: "Name" }) });
+    const schema2 = z.object({ age: z.number().meta({ label: "Age" }) });
+    const initialData = { age: 30, name: "John" };
+    const result = getDefaultValues([schema1, schema2], initialData);
+    expect(result).toEqual({ age: 30, name: "John" });
+  });
+  it("getDefaultValues B should handle keyIn mapping", () => {
+    const schema = z.object({ userName: z.string().meta({ keyIn: "user.name", label: "Name" }) });
+    const initialData = { user: { name: "Jane" } };
+    const result = getDefaultValues([schema], initialData);
+    expect(result).toEqual({ userName: "Jane" });
+  });
+  it("getDefaultValues C should handle empty initial data", () => {
+    const schema = z.object({ name: z.string().meta({ label: "Name" }) });
+    const result = getDefaultValues([schema], {});
+    expect(result).toEqual({});
+  });
+
+  // getLastAccessibleStepIndex
+  it("getLastAccessibleStepIndex A should return last non-upcoming step index", () => {
+    const schemas = [step(z.object(), { state: "editable" }), step(z.object(), { state: "editable" }), step(z.object(), { state: "upcoming" })];
+    expect(getLastAccessibleStepIndex(schemas)).toBe(1);
+  });
+  it("getLastAccessibleStepIndex B should return last index if no upcoming steps", () => {
+    const schemas = [step(z.object(), { state: "editable" }), step(z.object(), { state: "readonly" })];
+    expect(getLastAccessibleStepIndex(schemas)).toBe(1);
+  });
+  it("getLastAccessibleStepIndex C should return last index if all upcoming", () => {
+    const schemas = [step(z.object(), { state: "upcoming" }), step(z.object(), { state: "upcoming" })];
+    expect(getLastAccessibleStepIndex(schemas)).toBe(1);
+  });
+
+  // isStepClickable
+  it("isStepClickable A should return false if submission status is success", () => {
+    const schemas = [step(z.object(), { state: "editable" })];
+    expect(isStepClickable(schemas, 0, "success")).toBe(false);
+  });
+  it("isStepClickable B should return false if submission status is warning", () => {
+    const schemas = [step(z.object(), { state: "editable" })];
+    expect(isStepClickable(schemas, 0, "warning")).toBe(false);
+  });
+  it("isStepClickable C should return false if step is upcoming", () => {
+    const schemas = [step(z.object(), { state: "upcoming" })];
+    expect(isStepClickable(schemas, 0)).toBe(false);
+  });
+  it("isStepClickable D should return true for editable step without submission", () => {
+    const schemas = [step(z.object(), { state: "editable" })];
+    expect(isStepClickable(schemas, 0)).toBe(true);
+  });
+  it("isStepClickable E should return true for readonly step", () => {
+    const schemas = [step(z.object(), { state: "readonly" })];
+    expect(isStepClickable(schemas, 0)).toBe(true);
+  });
+
+  // buildStepperSteps
+  const mockIcons = { editable: createElement("span", {}, "edit"), readonly: createElement("span", {}, "read"), upcoming: createElement("span", {}, "up") };
+
+  it("buildStepperSteps A should build steps from schemas", () => {
+    const schemas = [step(z.object(), { title: "Step 1" }), step(z.object(), { title: "Step 2" })];
+    const result = buildStepperSteps({ currentStep: 0, hasSubmission: false, icons: mockIcons, schemas, showSummary: false });
+    expect(result).toHaveLength(2);
+    expect(result[0].title).toBe("Step 1");
+    expect(result[0].active).toBe(true);
+    expect(result[1].title).toBe("Step 2");
+    expect(result[1].active).toBe(false);
+  });
+  it("buildStepperSteps B should mark correct step as active", () => {
+    const schemas = [step(z.object(), { title: "Step 1" }), step(z.object(), { title: "Step 2" })];
+    const result = buildStepperSteps({ currentStep: 1, hasSubmission: false, icons: mockIcons, schemas, showSummary: false });
+    expect(result[0].active).toBe(false);
+    expect(result[1].active).toBe(true);
+  });
+  it("buildStepperSteps C should not mark any step active when showing summary", () => {
+    const schemas = [step(z.object(), { title: "Step 1" })];
+    const result = buildStepperSteps({ currentStep: 0, hasSubmission: false, icons: mockIcons, schemas, showSummary: true });
+    expect(result[0].active).toBe(false);
+  });
+  it("buildStepperSteps D should not mark any step active when has submission", () => {
+    const schemas = [step(z.object(), { title: "Step 1" })];
+    const result = buildStepperSteps({ currentStep: 0, hasSubmission: true, icons: mockIcons, schemas, showSummary: false });
+    expect(result[0].active).toBe(false);
+  });
+  it("buildStepperSteps E should use default title when not provided", () => {
+    const schemas = [z.object()];
+    const result = buildStepperSteps({ currentStep: 0, hasSubmission: false, icons: mockIcons, schemas, showSummary: false });
+    expect(result[0].title).toBe("Step 1");
+  });
+  it("buildStepperSteps F should handle sections", () => {
+    const schemas = [step(z.object(), { section: "Section A", title: "Step 1" }), step(z.object(), { section: "Section A", title: "Step 2" }), step(z.object(), { section: "Section B", title: "Step 3" })];
+    const result = buildStepperSteps({ currentStep: 0, hasSubmission: false, icons: mockIcons, schemas, showSummary: false });
+    expect(result[0].section).toBe("Section A");
+    expect(result[1].section).toBeUndefined();
+    expect(result[2].section).toBe("Section B");
   });
 });

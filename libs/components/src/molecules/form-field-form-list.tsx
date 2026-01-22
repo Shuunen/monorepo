@@ -1,6 +1,6 @@
 import { cn, isEmpty } from "@monorepo/utils";
 import { useEffect } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { Badge } from "../atoms/badge";
 import { Button } from "../atoms/button";
@@ -12,6 +12,7 @@ import { IconReject } from "../icons/icon-reject";
 import { IconTrash } from "../icons/icon-trash";
 import { IconUpcoming } from "../icons/icon-upcoming";
 import type { AutoFormFieldFormsMetadata } from "./auto-form.types";
+import { field, mapExternalDataToFormFields, normalizeData } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import type { ItemProps } from "./form-field-form-list.utils";
 
@@ -31,15 +32,15 @@ function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean 
   return (
     <Badge className="align-top" name="status" variant={variant}>
       {icon}
-      <span className="-mt-0.5">{label}</span>
+      {label}
     </Badge>
   );
 }
 
 function Item({ item, index, identifier, isEmpty, icon, hasError, readonly, labels, onDeleteItem, onCompleteItem, field }: ItemProps) {
   return (
-    <div className={cn("flex min-w-md items-center gap-4 rounded-xl border border-gray-300 p-4 shadow transition-colors hover:bg-gray-50")}>
-      <div className="rounded-xl bg-gray-100 p-2">{icon}</div>
+    <div className={cn("flex min-w-md items-center gap-4 rounded-xl border border-gray-300 p-4 shadow transition-colors hover:bg-gray-50")} data-testid={`${field.name}-${index}`}>
+      {icon && <div className="rounded-xl bg-gray-100 p-2">{icon}</div>}
       <div className="flex flex-col gap-1">
         <ItemBadge hasError={hasError} isEmpty={isEmpty} />
         <Title className="whitespace-nowrap" level={3}>
@@ -58,12 +59,14 @@ function Item({ item, index, identifier, isEmpty, icon, hasError, readonly, labe
 }
 
 // oxlint-disable-next-line max-lines-per-function
-export function FormFieldFormList({ fieldName, fieldSchema, isOptional, logger, readonly = false, showForm }: FormFieldBaseProps) {
+export function FormFieldFormList({ fieldName, stepState, fieldSchema, isOptional, logger, readonly = false, showForm }: FormFieldBaseProps) {
   const metadata = fieldSchema.meta() as AutoFormFieldFormsMetadata;
   const { label, maxItems, icon, identifier, labels } = metadata;
-  const props = { fieldName, fieldSchema, isOptional, logger, readonly };
-  const { setValue, watch, getValues } = useFormContext();
-  const fieldValue = watch(fieldName);
+  const fieldState = "state" in metadata ? metadata.state : undefined;
+  const state = fieldState ?? stepState ?? "editable";
+  const props = { fieldName, fieldSchema, isOptional, logger, readonly: state === "readonly" || readonly };
+  const { setValue, getValues } = useFormContext();
+  const fieldValue = useWatch({ name: fieldName });
   const items = (fieldValue as Array<Record<string, unknown>>) || [];
   // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to run this once on mount
   useEffect(() => {
@@ -100,10 +103,17 @@ export function FormFieldFormList({ fieldName, fieldSchema, isOptional, logger, 
   function onCompleteItem(onChange: (value: unknown) => void, indexToComplete: number, itemData: Record<string, unknown>) {
     const schema = (fieldSchema as z.ZodArray<z.ZodObject>).element;
     const onSubmit = (data: Record<string, unknown>) => {
-      const newItems = items.map((item, index) => (index === indexToComplete ? data : item));
+      const mappedData = mapExternalDataToFormFields(schema, data);
+      logger?.info("data from subform", { data, mappedData });
+      const newItems = items.map((item, index) => (index === indexToComplete ? mappedData : item));
       onChange(newItems);
     };
-    showForm?.({ initialData: itemData, onSubmit, schema });
+    showForm?.({
+      initialData: normalizeData([schema], itemData),
+      onSubmit,
+      querySelectorForScroll: `[data-testid='${field.name}-${indexToComplete}']`,
+      schema,
+    });
   }
 
   return (
@@ -111,12 +121,13 @@ export function FormFieldFormList({ fieldName, fieldSchema, isOptional, logger, 
       {({ field, fieldState, formState }) => {
         const hasError = Boolean(fieldState.error && formState.isSubmitted);
         return (
-          <div className="mt-2 flex flex-col gap-4">
-            <Title>{label}</Title>
-            <Paragraph>{metadata.placeholder}</Paragraph>
+          <div className="flex flex-col gap-4">
+            {label && <Title>{label}</Title>}
+            {metadata.placeholder && <Paragraph>{metadata.placeholder}</Paragraph>}
             {items.map((item, index) => {
               const isEmptyItem = isEmpty(item);
               const itemIdentifier = identifier && !isEmptyItem ? identifier(item) : `Form ${index + 1}`;
+              logger?.info({ fieldState, hasError });
               return (
                 <Item
                   field={field}
@@ -135,7 +146,7 @@ export function FormFieldFormList({ fieldName, fieldSchema, isOptional, logger, 
               );
             })}
             <div className="flex flex-col items-start gap-4">
-              <Button disabled={maxItems !== undefined && items.length >= maxItems} name="add" onClick={() => addItem(field.onChange)} type="button" variant="secondary">
+              <Button className={cn({ hidden: readonly })} disabled={maxItems !== undefined && items.length >= maxItems} name="add" onClick={() => addItem(field.onChange)} type="button" variant="secondary">
                 {labels?.addButton ?? "Add item"}
                 <IconReject className="size-5 rotate-45" />
               </Button>
