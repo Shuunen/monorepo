@@ -85,8 +85,9 @@ const paragraphVariants = cva("leading-relaxed", {
 });
 
 export function Paragraph({ children, variant = "default", className = "" }: ParagraphProps) {
+  const role = variant === "error" ? "alert" : undefined;
   return (
-    <p className={cn(paragraphVariants({ variant }), className)} data-testid="paragraph">
+    <p role={role} className={cn(paragraphVariants({ variant }), className)} data-testid={slugify(`paragraph-${variant}`)}>
       {children}
     </p>
   );
