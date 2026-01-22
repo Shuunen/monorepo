@@ -17,7 +17,7 @@ import { FormFieldUpload } from "./form-field-upload";
 
 export type AutoFormFieldProps = {
   fieldName: string;
-  fieldSchema: z.ZodTypeAny;
+  fieldSchema: z.ZodType;
   stepState?: AutoFormStepMetadata["state"];
   logger?: Logger;
   /** make auto-form switch from initial render mode to subform mode */
@@ -26,7 +26,7 @@ export type AutoFormFieldProps = {
 
 type FieldComponentProps = {
   fieldName: string;
-  fieldSchema: z.ZodTypeAny;
+  fieldSchema: z.ZodType;
   isOptional: boolean;
   logger?: Logger;
   readonly: boolean;
