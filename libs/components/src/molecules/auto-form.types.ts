@@ -53,6 +53,8 @@ export type AutoFormProps = {
   stepperWidth?: number;
 };
 
+export type AutoFormStepState = "readonly" | "editable" | "upcoming";
+
 /**
  * Metadata describing the configuration and behavior of a step in an auto-generated multi-step form.
  * Applied to the schema object itself using `.meta()`.
@@ -61,7 +63,7 @@ export type AutoFormProps = {
 export type AutoFormStepMetadata = Simplify<
   Pick<AutoFormStepperStep, "title" | "section" | "subtitle" | "suffix" | "indent"> & {
     /** The interaction state of the step */
-    state?: "readonly" | "editable" | "upcoming";
+    state?: AutoFormStepState;
   }
 >;
 
