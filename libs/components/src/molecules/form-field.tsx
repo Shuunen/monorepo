@@ -3,7 +3,7 @@ import type { ControllerFieldState, ControllerRenderProps, FieldValues, UseFormS
 import type { z } from "zod";
 import { FormField, FormItem, FormMessage } from "../atoms/form";
 import { cn } from "../shadcn/utils";
-import type { AutoFormSubformOptions } from "./auto-form.types";
+import type { AutoFormStepState, AutoFormSubformOptions } from "./auto-form.types";
 import { getFieldMetadataOrThrow } from "./auto-form.utils";
 import "./form-field.css";
 import { FormFieldLabel } from "./form-field.utils";
@@ -13,6 +13,7 @@ export type FormFieldBaseProps = {
   fieldName: string;
   fieldSchema: z.ZodType;
   isOptional: boolean;
+  stepState?: AutoFormStepState;
   readonly?: boolean;
   logger?: Logger;
   showLabel?: boolean;
