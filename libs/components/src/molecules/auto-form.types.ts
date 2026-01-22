@@ -80,7 +80,7 @@ export type AutoFormFieldsMetadata = Simplify<
 export type AutoFormFieldFormsMetadata = Simplify<
   AutoFormFieldBaseMetadata & {
     /** Icon to display alongside the form list title */
-    icon: JSX.Element;
+    icon?: JSX.Element;
     /** Function to generate the label for each item in the list, based on its data, for example data => `${data.name} (${data.age} years)` */
     identifier?: (data: Record<string, unknown>) => string;
     /** Custom labels for the form list */
