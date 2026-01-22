@@ -32,7 +32,7 @@ export function FormSummary(props: FormSummaryProps) {
           <TableBody>
             {entries.map(([key, data]) => (
               <TableRow className="grid grid-cols-2" key={key}>
-                <TableCell>{data.label}</TableCell>
+                <TableCell className="overflow-hidden text-ellipsis">{data.label}</TableCell>
                 <FormSummaryFieldValue name={key} value={data.value} />
               </TableRow>
             ))}
