@@ -253,6 +253,29 @@ describe("auto-form.utils", () => {
     const schema = z.string().meta({ isVisible: () => false, label: "A" });
     expect(isFieldVisible(schema, {})).toBe(false);
   });
+  it("isFieldVisible K should handle field!=value syntax with matching value (should be hidden)", () => {
+    const schema = z.string().meta({ dependsOn: "breed!=dog", label: "A" });
+    expect(isFieldVisible(schema, { breed: "dog" })).toBe(false);
+  });
+  it("isFieldVisible L should handle field!=value syntax with non-matching value (should be visible)", () => {
+    const schema = z.string().meta({ dependsOn: "breed!=dog", label: "A" });
+    expect(isFieldVisible(schema, { breed: "cat" })).toBe(true);
+  });
+  it("isFieldVisible M should handle field!=value syntax with missing field", () => {
+    const schema = z.string().meta({ dependsOn: "breed!=dog", label: "A" });
+    expect(isFieldVisible(schema, {})).toBe(true);
+  });
+  it("isFieldVisible N should handle field!=value syntax with numeric values", () => {
+    const schema = z.string().meta({ dependsOn: "age!=5", label: "A" });
+    expect(isFieldVisible(schema, { age: 5 })).toBe(false);
+    expect(isFieldVisible(schema, { age: 10 })).toBe(true);
+  });
+  it("isFieldVisible O should handle mixed = and != operators in array", () => {
+    const schema = z.string().meta({ dependsOn: ["type=premium", "status!=inactive"], label: "A" });
+    expect(isFieldVisible(schema, { status: "active", type: "premium" })).toBe(true);
+    expect(isFieldVisible(schema, { status: "inactive", type: "premium" })).toBe(false);
+    expect(isFieldVisible(schema, { status: "active", type: "basic" })).toBe(false);
+  });
 
   // parseDependsOn
   it("parseDependsOn A should parse simple field name", () => {
@@ -272,6 +295,7 @@ describe("auto-form.utils", () => {
         {
           "expectedValue": "dog",
           "fieldName": "breed",
+          "operator": "=",
         },
       ]
     `);
@@ -283,6 +307,7 @@ describe("auto-form.utils", () => {
         {
           "expectedValue": "test@example.com",
           "fieldName": "userEmail",
+          "operator": "=",
         },
       ]
     `);
@@ -296,6 +321,47 @@ describe("auto-form.utils", () => {
         },
         {
           "fieldName": "fieldName2",
+        },
+      ]
+    `);
+  });
+  it("parseDependsOn E should parse field!=value syntax", () => {
+    const result = parseDependsOn("breed!=dog");
+    expect(result).toMatchInlineSnapshot(`
+      [
+        {
+          "expectedValue": "dog",
+          "fieldName": "breed",
+          "operator": "!=",
+        },
+      ]
+    `);
+  });
+  it("parseDependsOn F should handle field names with special characters using !=", () => {
+    const result = parseDependsOn("userEmail!=test@example.com");
+    expect(result).toMatchInlineSnapshot(`
+      [
+        {
+          "expectedValue": "test@example.com",
+          "fieldName": "userEmail",
+          "operator": "!=",
+        },
+      ]
+    `);
+  });
+  it("parseDependsOn G should parse mixed operators in array", () => {
+    const result = parseDependsOn(["type=premium", "status!=inactive"]);
+    expect(result).toMatchInlineSnapshot(`
+      [
+        {
+          "expectedValue": "premium",
+          "fieldName": "type",
+          "operator": "=",
+        },
+        {
+          "expectedValue": "inactive",
+          "fieldName": "status",
+          "operator": "!=",
         },
       ]
     `);

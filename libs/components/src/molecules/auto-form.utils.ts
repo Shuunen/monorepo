@@ -1,5 +1,5 @@
 // oxlint-disable max-lines
-import { getNested, isString, Logger, nbPercentMax, Result, setNested, sleep, stringify } from "@monorepo/utils";
+import { getNested, isString, Logger, nbPercentMax, nbSecond, nbThird, Result, setNested, sleep, stringify } from "@monorepo/utils";
 import type { ReactNode } from "react";
 import { z } from "zod";
 import type { AutoFormData, AutoFormFieldFormsMetadata, AutoFormFieldMetadata, AutoFormFieldSectionMetadata, AutoFormFieldsMetadata, AutoFormStepMetadata, AutoFormSubmissionStepProps, AutoFormSummarySection, SelectOption } from "./auto-form.types";
@@ -133,15 +133,32 @@ export function isZodString(fieldSchema: z.ZodType) {
   return isZodType(fieldSchema, "string");
 }
 
+export type DependsOnOperator = "=" | "!=";
+
+export type ParsedDependsOn = {
+  fieldName: string;
+  expectedValue?: string;
+  operator?: DependsOnOperator;
+};
+
 /**
  * Parses a dependsOn string to extract field name and optional expected value.
  * Supports formats like:
  * - 'fieldName' - checks if fieldName is truthy
  * - 'fieldName=value' - checks if fieldName equals value
+ * - 'fieldName!=value' - checks if fieldName is different from value
  * @param dependsOn the dependsOn string to parse
- * @returns an object with fieldName and optional expectedValue
+ * @returns an object with fieldName, optional expectedValue, and optional operator
  */
-export function parseDependsOnSingleValue(dependsOn: string): { fieldName: string; expectedValue?: string } {
+export function parseDependsOnSingleValue(dependsOn: string): ParsedDependsOn {
+  const notEqualsIndex = dependsOn.indexOf("!=");
+  if (notEqualsIndex !== -1) {
+    return {
+      expectedValue: dependsOn.slice(notEqualsIndex + nbThird),
+      fieldName: dependsOn.slice(0, notEqualsIndex),
+      operator: "!=",
+    };
+  }
   const equalsIndex = dependsOn.indexOf("=");
   if (equalsIndex === -1) {
     return { fieldName: dependsOn };
@@ -149,6 +166,7 @@ export function parseDependsOnSingleValue(dependsOn: string): { fieldName: strin
   return {
     expectedValue: dependsOn.slice(equalsIndex + 1),
     fieldName: dependsOn.slice(0, equalsIndex),
+    operator: "=",
   };
 }
 
@@ -157,12 +175,13 @@ export function parseDependsOnSingleValue(dependsOn: string): { fieldName: strin
  * Supports formats like:
  * - 'fieldName' - checks if fieldName is truthy
  * - 'fieldName=value' - checks if fieldName equals value
+ * - 'fieldName!=value' - checks if fieldName is different from value
  * - ['fieldName', 'fieldName2] - checks if fieldName and fieldName2 are truthy
  * - ['fieldName=value', fieldName2=value] - checks if fieldName and fieldName2 equal value
  * @param dependsOn the dependsOn string or array of string to parse
- * @returns an array of object with fieldName and optional expectedValue
+ * @returns an array of object with fieldName, optional expectedValue, and optional operator
  */
-export function parseDependsOn(dependsOn: string | string[]): { fieldName: string; expectedValue?: string }[] {
+export function parseDependsOn(dependsOn: string | string[]): ParsedDependsOn[] {
   return isString(dependsOn) ? [parseDependsOnSingleValue(dependsOn)] : dependsOn.map(value => parseDependsOnSingleValue(value));
 }
 
@@ -183,11 +202,12 @@ export function isFieldVisible(fieldSchema: z.ZodType, formData: AutoFormData) {
   if (!("dependsOn" in metadata) || !metadata.dependsOn) {
     return true;
   }
-  return parseDependsOn(metadata.dependsOn).every(({ fieldName, expectedValue }) => {
+  return parseDependsOn(metadata.dependsOn).every(({ fieldName, expectedValue, operator }) => {
     const fieldValue = formData[fieldName];
-    // If expectedValue is specified, check for equality
+    // If expectedValue is specified, check based on operator
     if (expectedValue !== undefined) {
-      return stringify(fieldValue) === expectedValue;
+      const isEqual = stringify(fieldValue) === expectedValue;
+      return operator === "!=" ? !isEqual : isEqual;
     }
     // Otherwise, check for truthiness
     return Boolean(fieldValue);
