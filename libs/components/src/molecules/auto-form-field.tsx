@@ -14,8 +14,20 @@ export const AutoFormField = memo(({ fieldName, fieldSchema, stepState, logger, 
   const metadata = getFieldMetadata(fieldSchema) ?? {};
 
   const hasIsVisible = metadata && "isVisible" in metadata && metadata.isVisible;
-  // oxlint-disable-next-line max-nested-callbacks
-  const dependenciesFieldName = useMemo(() => (metadata && "dependsOn" in metadata && metadata.dependsOn ? parseDependsOn(metadata.dependsOn).map(dependency => dependency.fieldName) : undefined), [metadata]);
+  const dependenciesFieldName = useMemo(() => {
+    if (!(metadata && "dependsOn" in metadata && metadata.dependsOn)) {
+      return undefined;
+    }
+    // oxlint-disable-next-line max-nested-callbacks
+    const fieldNames = parseDependsOn(metadata.dependsOn).flatMap(dependency => dependency.map(condition => condition.fieldName));
+    const seenFieldNames = new Set<string>();
+    for (const fieldNameDependency of fieldNames) {
+      if (!seenFieldNames.has(fieldNameDependency)) {
+        seenFieldNames.add(fieldNameDependency);
+      }
+    }
+    return [...seenFieldNames];
+  }, [metadata]);
 
   const watchedDependencies = useWatch({ disabled: !dependenciesFieldName, name: dependenciesFieldName as string[] });
   const watchedAll = useWatch({ disabled: !hasIsVisible });

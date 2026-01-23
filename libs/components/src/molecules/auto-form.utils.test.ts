@@ -276,15 +276,63 @@ describe("auto-form.utils", () => {
     expect(isFieldVisible(schema, { status: "inactive", type: "premium" })).toBe(false);
     expect(isFieldVisible(schema, { status: "active", type: "basic" })).toBe(false);
   });
+  // OR functionality tests
+  it("isFieldVisible P should handle OR group - first condition matches", () => {
+    const schema = z.string().meta({ dependsOn: [["breed=dog", "breed=cat"]], label: "A" });
+    expect(isFieldVisible(schema, { breed: "dog" })).toBe(true);
+  });
+  it("isFieldVisible Q should handle OR group - second condition matches", () => {
+    const schema = z.string().meta({ dependsOn: [["breed=dog", "breed=cat"]], label: "A" });
+    expect(isFieldVisible(schema, { breed: "cat" })).toBe(true);
+  });
+  it("isFieldVisible R should handle OR group - no condition matches (hidden)", () => {
+    const schema = z.string().meta({ dependsOn: [["breed=dog", "breed=cat"]], label: "A" });
+    expect(isFieldVisible(schema, { breed: "bird" })).toBe(false);
+  });
+  it("isFieldVisible S should handle (A OR B) AND C - all satisfied", () => {
+    const schema = z.string().meta({ dependsOn: [["type=dog", "type=cat"], "hasOwner"], label: "A" });
+    expect(isFieldVisible(schema, { hasOwner: true, type: "dog" })).toBe(true);
+    expect(isFieldVisible(schema, { hasOwner: true, type: "cat" })).toBe(true);
+  });
+  it("isFieldVisible T should handle (A OR B) AND C - OR satisfied but AND not", () => {
+    const schema = z.string().meta({ dependsOn: [["type=dog", "type=cat"], "hasOwner"], label: "A" });
+    expect(isFieldVisible(schema, { hasOwner: false, type: "dog" })).toBe(false);
+    expect(isFieldVisible(schema, { hasOwner: false, type: "cat" })).toBe(false);
+  });
+  it("isFieldVisible U should handle (A OR B) AND C - AND satisfied but OR not", () => {
+    const schema = z.string().meta({ dependsOn: [["type=dog", "type=cat"], "hasOwner"], label: "A" });
+    expect(isFieldVisible(schema, { hasOwner: true, type: "bird" })).toBe(false);
+  });
+  it("isFieldVisible V should handle (A OR B) AND (C OR D)", () => {
+    const schema = z.string().meta({
+      dependsOn: [
+        ["type=dog", "type=cat"],
+        ["status=active", "status=pending"],
+      ],
+      label: "A",
+    });
+    expect(isFieldVisible(schema, { status: "active", type: "dog" })).toBe(true);
+    expect(isFieldVisible(schema, { status: "pending", type: "cat" })).toBe(true);
+    expect(isFieldVisible(schema, { status: "inactive", type: "dog" })).toBe(false);
+    expect(isFieldVisible(schema, { status: "active", type: "bird" })).toBe(false);
+  });
+  it("isFieldVisible W should handle OR with != operator", () => {
+    const schema = z.string().meta({ dependsOn: [["status!=inactive", "override=true"]], label: "A" });
+    expect(isFieldVisible(schema, { status: "active" })).toBe(true);
+    expect(isFieldVisible(schema, { override: "true", status: "inactive" })).toBe(true);
+    expect(isFieldVisible(schema, { override: "false", status: "inactive" })).toBe(false);
+  });
 
   // parseDependsOn
   it("parseDependsOn A should parse simple field name", () => {
     const result = parseDependsOn("fieldName");
     expect(result).toMatchInlineSnapshot(`
       [
-        {
-          "fieldName": "fieldName",
-        },
+        [
+          {
+            "fieldName": "fieldName",
+          },
+        ],
       ]
     `);
   });
@@ -292,11 +340,13 @@ describe("auto-form.utils", () => {
     const result = parseDependsOn("breed=dog");
     expect(result).toMatchInlineSnapshot(`
       [
-        {
-          "expectedValue": "dog",
-          "fieldName": "breed",
-          "operator": "=",
-        },
+        [
+          {
+            "expectedValue": "dog",
+            "fieldName": "breed",
+            "operator": "=",
+          },
+        ],
       ]
     `);
   });
@@ -304,24 +354,30 @@ describe("auto-form.utils", () => {
     const result = parseDependsOn("userEmail=test@example.com");
     expect(result).toMatchInlineSnapshot(`
       [
-        {
-          "expectedValue": "test@example.com",
-          "fieldName": "userEmail",
-          "operator": "=",
-        },
+        [
+          {
+            "expectedValue": "test@example.com",
+            "fieldName": "userEmail",
+            "operator": "=",
+          },
+        ],
       ]
     `);
   });
-  it("parseDependsOn D should parse multiple field names", () => {
+  it("parseDependsOn D should parse multiple field names (AND)", () => {
     const result = parseDependsOn(["fieldName", "fieldName2"]);
     expect(result).toMatchInlineSnapshot(`
       [
-        {
-          "fieldName": "fieldName",
-        },
-        {
-          "fieldName": "fieldName2",
-        },
+        [
+          {
+            "fieldName": "fieldName",
+          },
+        ],
+        [
+          {
+            "fieldName": "fieldName2",
+          },
+        ],
       ]
     `);
   });
@@ -329,11 +385,13 @@ describe("auto-form.utils", () => {
     const result = parseDependsOn("breed!=dog");
     expect(result).toMatchInlineSnapshot(`
       [
-        {
-          "expectedValue": "dog",
-          "fieldName": "breed",
-          "operator": "!=",
-        },
+        [
+          {
+            "expectedValue": "dog",
+            "fieldName": "breed",
+            "operator": "!=",
+          },
+        ],
       ]
     `);
   });
@@ -341,28 +399,103 @@ describe("auto-form.utils", () => {
     const result = parseDependsOn("userEmail!=test@example.com");
     expect(result).toMatchInlineSnapshot(`
       [
-        {
-          "expectedValue": "test@example.com",
-          "fieldName": "userEmail",
-          "operator": "!=",
-        },
+        [
+          {
+            "expectedValue": "test@example.com",
+            "fieldName": "userEmail",
+            "operator": "!=",
+          },
+        ],
       ]
     `);
   });
-  it("parseDependsOn G should parse mixed operators in array", () => {
+  it("parseDependsOn G should parse mixed operators in array (AND)", () => {
     const result = parseDependsOn(["type=premium", "status!=inactive"]);
     expect(result).toMatchInlineSnapshot(`
       [
-        {
-          "expectedValue": "premium",
-          "fieldName": "type",
-          "operator": "=",
-        },
-        {
-          "expectedValue": "inactive",
-          "fieldName": "status",
-          "operator": "!=",
-        },
+        [
+          {
+            "expectedValue": "premium",
+            "fieldName": "type",
+            "operator": "=",
+          },
+        ],
+        [
+          {
+            "expectedValue": "inactive",
+            "fieldName": "status",
+            "operator": "!=",
+          },
+        ],
+      ]
+    `);
+  });
+  it("parseDependsOn H should parse OR group (nested array)", () => {
+    const result = parseDependsOn([["fieldName", "fieldName2"]]);
+    expect(result).toMatchInlineSnapshot(`
+      [
+        [
+          {
+            "fieldName": "fieldName",
+          },
+          {
+            "fieldName": "fieldName2",
+          },
+        ],
+      ]
+    `);
+  });
+  it("parseDependsOn I should parse (A OR B) AND C", () => {
+    const result = parseDependsOn([["field1", "field2"], "field3"]);
+    expect(result).toMatchInlineSnapshot(`
+      [
+        [
+          {
+            "fieldName": "field1",
+          },
+          {
+            "fieldName": "field2",
+          },
+        ],
+        [
+          {
+            "fieldName": "field3",
+          },
+        ],
+      ]
+    `);
+  });
+  it("parseDependsOn J should parse (A OR B) AND (C OR D)", () => {
+    const result = parseDependsOn([
+      ["field1=a", "field2=b"],
+      ["field3=c", "field4=d"],
+    ]);
+    expect(result).toMatchInlineSnapshot(`
+      [
+        [
+          {
+            "expectedValue": "a",
+            "fieldName": "field1",
+            "operator": "=",
+          },
+          {
+            "expectedValue": "b",
+            "fieldName": "field2",
+            "operator": "=",
+          },
+        ],
+        [
+          {
+            "expectedValue": "c",
+            "fieldName": "field3",
+            "operator": "=",
+          },
+          {
+            "expectedValue": "d",
+            "fieldName": "field4",
+            "operator": "=",
+          },
+        ],
       ]
     `);
   });
