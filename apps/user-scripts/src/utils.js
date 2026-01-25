@@ -1,4 +1,4 @@
-// oxlint-disable no-console,unambiguous,max-lines,no-magic-numbers, class-methods-use-this
+// oxlint-disable no-console,max-lines,no-magic-numbers, class-methods-use-this
 
 /**
  * Collection of utility functions to help with common tasks in my user scripts.
@@ -79,7 +79,6 @@ class Shuutils {
    * @param {boolean} canRemoveAfter if true, will remove the animation classes after the animation ends
    * @returns {Promise<void>} nothing
    */
-  // oxlint-disable-next-line max-lines-per-function
   async animateCss(element, animation, canRemoveAfter = true) {
     await new Promise(resolve => {
       const animationName = `animate__${animation}`;
@@ -136,7 +135,6 @@ class Shuutils {
     return async (/** @type {any} */ ...parameters) =>
       await new Promise(resolve => {
         clearTimeout(timeout);
-        // oxlint-disable-next-line max-nested-callbacks
         timeout = setTimeout(() => {
           resolve(callback(...parameters));
         }, waitFor);
