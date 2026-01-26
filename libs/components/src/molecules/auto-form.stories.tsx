@@ -759,6 +759,24 @@ const step2SummarySchema = step(
   },
 );
 
+const step2SummarySchemaWithDependsOn = step(
+  z.object({
+    age: field(z.number().min(0).max(120), {
+      label: "Age",
+      placeholder: "Enter your age",
+    }),
+    additional: field(z.string().min(10, "At least 10 characters"), {
+      label: "Add additional information about you",
+      render: "textarea",
+      dependsOn: ["age=30"],
+    }),
+  }),
+  {
+    subtitle: "Additional information about you",
+    title: "Additional Details",
+  },
+);
+
 /**
  * Multi-step form with summary step
  */
@@ -1115,6 +1133,36 @@ export const WithCancelButton: Story = {
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>
     );
+  },
+};
+
+export const ErrorWithDependsOn: Story = {
+  args: {
+    initialData: {
+      email: "jane.doe@example.com",
+      name: "Jane Doe",
+      subscribe: true,
+    },
+    schemas: [step1SummarySchema, step2SummarySchemaWithDependsOn],
+    useSummaryStep: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("navigate to last step", async () => {
+      const nextButton = canvas.getByRole("button", { name: "Next" });
+      await userEvent.click(nextButton);
+    });
+    await step("change age to 30 and submit", async () => {
+      const inputAge = canvas.getByTestId("input-number-age");
+      await userEvent.type(inputAge, "30");
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify error on submit", () => {
+      const errorField = canvas.getByTestId("form-message-additional");
+      expect(errorField).toBeInTheDocument();
+      expect(errorField.textContent).toContain("Invalid input");
+    });
   },
 };
 
