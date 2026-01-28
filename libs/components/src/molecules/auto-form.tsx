@@ -54,9 +54,11 @@ export function AutoForm({ schemas, onSubmit, onCancel, initialData = {}, logger
   const finalLabels = { ...defaultLabels, ...labels };
   const [mode, setMode] = useState<"initial" | "subform">("initial");
   const [subformOptions, setSubformOptions] = useState<AutoFormSubformOptions | undefined>(undefined);
-  const form = useForm({ defaultValues, mode: "onBlur", resolver: zodResolver(filterSchema(currentSchema, formData)) });
-  // Find a way to reset the form when schema changes.
-  // useEffect(() => { form.reset(formData) }, [formData, form])
+  const form = useForm({
+    defaultValues,
+    mode: "onBlur",
+    resolver: (values, context, options) => zodResolver(filterSchema(currentSchema, values))(values, context, options),
+  });
 
   function updateFormData() {
     const updatedData = { ...formData, ...form.getValues() };
