@@ -1,6 +1,14 @@
 import type { ReactNode } from "react";
 import { Button } from "../atoms/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../atoms/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../atoms/dialog";
 import { Spinner } from "../atoms/spinner";
 
 export type ConfirmDialogProps = {
@@ -26,7 +34,13 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
         {props.children}
         <DialogFooter>
           <DialogClose asChild>
-            <Button disabled={props.loading} name="modal-cancel" onClick={props.onCancel} type="button" variant="secondary">
+            <Button
+              disabled={props.loading}
+              name="modal-cancel"
+              onClick={props.onCancel}
+              type="button"
+              variant="secondary"
+            >
               {props.loading ? <Spinner /> : undefined}
               {props.cancel}
             </Button>

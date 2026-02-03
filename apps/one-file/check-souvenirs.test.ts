@@ -65,7 +65,16 @@ vi.mock("exiftool-vendored", () => ({
         const minutes = Number.parseInt(tzMatch[3], 10);
         tzoffsetMinutes = sign * (hours * 60 + minutes);
       }
-      return new ExifDateTime(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds(), tzoffsetMinutes);
+      return new ExifDateTime(
+        date.getFullYear(),
+        date.getMonth() + 1,
+        date.getDate(),
+        date.getHours(),
+        date.getMinutes(),
+        date.getSeconds(),
+        date.getMilliseconds(),
+        tzoffsetMinutes,
+      );
     }
   },
   // biome-ignore lint/style/useNamingConvention: its ok
@@ -473,13 +482,21 @@ describe("check-souvenirs.cli", () => {
     mockSpawnSync.mockReturnValueOnce({ error: null, status: 0, stdout: "mkvpropedit v1.0.0" });
     const exifDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0);
     await setFileDate("test.mkv", exifDate);
-    expect(mockSpawnSync).toHaveBeenCalledWith("mkvpropedit.exe", ["test.mkv", "--edit", "info", "--set", "date=2006-08-15"], { encoding: "utf8" });
+    expect(mockSpawnSync).toHaveBeenCalledWith(
+      "mkvpropedit.exe",
+      ["test.mkv", "--edit", "info", "--set", "date=2006-08-15"],
+      { encoding: "utf8" },
+    );
     expect(count.dateFixes).toBe(1);
   });
 
   it("checkFileDate A should handle file without DateTimeOriginal", async () => {
     mockRead.mockResolvedValue({});
-    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: "", previousFilePath: "" });
+    await checkFileDate({
+      currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+      nextFilePath: "",
+      previousFilePath: "",
+    });
     expect(mockRead).toHaveBeenCalled();
   });
 
@@ -487,7 +504,11 @@ describe("check-souvenirs.cli", () => {
     const originalDate = new ExifDateTime(2005, 8, 15, 12, 30, 45, 0);
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
-    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: "", previousFilePath: "" });
+    await checkFileDate({
+      currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+      nextFilePath: "",
+      previousFilePath: "",
+    });
     expect(mockWrite).toHaveBeenCalled();
   });
 
@@ -495,7 +516,11 @@ describe("check-souvenirs.cli", () => {
     const originalDate = new ExifDateTime(2006, 7, 15, 12, 30, 45, 0);
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
-    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: "", previousFilePath: "" });
+    await checkFileDate({
+      currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+      nextFilePath: "",
+      previousFilePath: "",
+    });
     expect(mockWrite).toHaveBeenCalled();
   });
 
@@ -503,14 +528,22 @@ describe("check-souvenirs.cli", () => {
     const originalDate = new ExifDateTime(2005, 7, 15, 12, 30, 45, 0);
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
-    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: "", previousFilePath: "" });
+    await checkFileDate({
+      currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+      nextFilePath: "",
+      previousFilePath: "",
+    });
     expect(mockWrite).toHaveBeenCalled();
   });
 
   it("checkFileDate E should handle string DateTimeOriginal", async () => {
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: "2005-08-15T12:30:45" });
-    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: "", previousFilePath: "" });
+    await checkFileDate({
+      currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+      nextFilePath: "",
+      previousFilePath: "",
+    });
     expect(mockWrite).toHaveBeenCalled();
   });
 
@@ -518,7 +551,11 @@ describe("check-souvenirs.cli", () => {
     const correctDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0);
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: correctDate });
-    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: "", previousFilePath: "" });
+    await checkFileDate({
+      currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+      nextFilePath: "",
+      previousFilePath: "",
+    });
     expect(mockWrite).not.toHaveBeenCalled();
   });
 
@@ -526,7 +563,11 @@ describe("check-souvenirs.cli", () => {
     const originalDate = new ExifDateTime(2005, 8, 15, 12, 30, 45, 0);
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
-    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\random.jpg`, nextFilePath: "", previousFilePath: "" });
+    await checkFileDate({
+      currentFilePath: String.raw`D:\Souvenirs\random.jpg`,
+      nextFilePath: "",
+      previousFilePath: "",
+    });
     expect(mockWrite).not.toHaveBeenCalled();
   });
 
@@ -534,7 +575,11 @@ describe("check-souvenirs.cli", () => {
     const originalDate = new ExifDateTime(2006, 7, 15, 12, 30, 45, 0);
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
-    await checkFileDate({ currentFilePath: String.raw`D:\Souvenirs\2006\random.jpg`, nextFilePath: "", previousFilePath: "" });
+    await checkFileDate({
+      currentFilePath: String.raw`D:\Souvenirs\2006\random.jpg`,
+      nextFilePath: "",
+      previousFilePath: "",
+    });
     expect(mockWrite).not.toHaveBeenCalled();
   });
 
@@ -542,7 +587,15 @@ describe("check-souvenirs.cli", () => {
     const siblingDate = new ExifDateTime(2006, 8, 14, 10, 20, 30, 0);
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
-    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: "", previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg` }, "2006", "08");
+    await setFileDateBasedOnSiblings(
+      {
+        currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+        nextFilePath: "",
+        previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg`,
+      },
+      "2006",
+      "08",
+    );
     expect(mockWrite).toHaveBeenCalled();
   });
 
@@ -550,27 +603,49 @@ describe("check-souvenirs.cli", () => {
     const siblingDate = new ExifDateTime(2006, 8, 16, 14, 25, 35, 0);
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
-    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\next.jpg`, previousFilePath: "" }, "2006", "08");
+    await setFileDateBasedOnSiblings(
+      {
+        currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+        nextFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\next.jpg`,
+        previousFilePath: "",
+      },
+      "2006",
+      "08",
+    );
     expect(mockWrite).toHaveBeenCalled();
   });
 
   it("setFileDateBasedOnSiblings C should handle no siblings with dates", async () => {
     mockRead.mockResolvedValue({});
     await setFileDateBasedOnSiblings(
-      { currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\next.jpg`, previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg` },
+      {
+        currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+        nextFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\next.jpg`,
+        previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg`,
+      },
       "2006",
       "08",
     );
     expect(mockWrite).toHaveBeenCalled();
     const lastCall = mockWrite.mock.calls.at(-1);
-    expect(stringify(lastCall).split("tzoffsetMinutes")[0]).toMatchInlineSnapshot(`"["D:\\\\Souvenirs\\\\2006\\\\2006-08_House\\\\test.jpg",{"DateTimeOriginal":{"year":2006,"month":8,"day":1,"hour":0,"minute":0,"second":0,"millisecond":0,""`);
+    expect(stringify(lastCall).split("tzoffsetMinutes")[0]).toMatchInlineSnapshot(
+      `"["D:\\\\Souvenirs\\\\2006\\\\2006-08_House\\\\test.jpg",{"DateTimeOriginal":{"year":2006,"month":8,"day":1,"hour":0,"minute":0,"second":0,"millisecond":0,""`,
+    );
   });
 
   it("setFileDateBasedOnSiblings D should correct year from sibling date", async () => {
     const siblingDate = new ExifDateTime(2005, 8, 14, 10, 20, 30, 0);
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
-    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: "", previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg` }, "2006", "08");
+    await setFileDateBasedOnSiblings(
+      {
+        currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+        nextFilePath: "",
+        previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg`,
+      },
+      "2006",
+      "08",
+    );
     expect(mockWrite).toHaveBeenCalled();
     const writeCall = mockWrite.mock.calls[0];
     expect(writeCall[1].DateTimeOriginal.year).toBe(2006);
@@ -580,7 +655,15 @@ describe("check-souvenirs.cli", () => {
     const siblingDate = new ExifDateTime(2006, 7, 14, 10, 20, 30, 0);
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
-    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: "", previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg` }, "2006", "08");
+    await setFileDateBasedOnSiblings(
+      {
+        currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+        nextFilePath: "",
+        previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg`,
+      },
+      "2006",
+      "08",
+    );
     expect(mockWrite).toHaveBeenCalled();
     const writeCall = mockWrite.mock.calls[0];
     expect(writeCall[1].DateTimeOriginal.month).toBe(8);
@@ -589,24 +672,44 @@ describe("check-souvenirs.cli", () => {
   it("setFileDateBasedOnSiblings F should handle string DateTimeOriginal from sibling", async () => {
     // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: "2006-08-14T10:20:30" });
-    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: "", previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg` }, "2006", "08");
+    await setFileDateBasedOnSiblings(
+      {
+        currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
+        nextFilePath: "",
+        previousFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\prev.jpg`,
+      },
+      "2006",
+      "08",
+    );
     expect(mockWrite).toHaveBeenCalled();
   });
 
   it("setFileDateBasedOnSiblings G should handle no siblings", async () => {
-    await setFileDateBasedOnSiblings({ currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: "", previousFilePath: "" }, "2007", "08");
+    await setFileDateBasedOnSiblings(
+      { currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`, nextFilePath: "", previousFilePath: "" },
+      "2007",
+      "08",
+    );
     expect(mockWrite).toHaveBeenCalled();
   });
 
   it("checkFile A should check file and update count", async () => {
     mockRead.mockResolvedValue({});
-    await checkFile({ currentFilePath: String.raw`D:\Souvenirs\2006\test.jpg`, nextFilePath: "", previousFilePath: "" });
+    await checkFile({
+      currentFilePath: String.raw`D:\Souvenirs\2006\test.jpg`,
+      nextFilePath: "",
+      previousFilePath: "",
+    });
     expect(count.scanned).toBe(1);
   });
 
   it("checkFile B should check non-photo files", async () => {
     mockRead.mockResolvedValue({});
-    await checkFile({ currentFilePath: String.raw`D:\Souvenirs\2006\video.mp4`, nextFilePath: "", previousFilePath: "" });
+    await checkFile({
+      currentFilePath: String.raw`D:\Souvenirs\2006\video.mp4`,
+      nextFilePath: "",
+      previousFilePath: "",
+    });
     expect(count.scanned).toBe(1);
   });
 
@@ -832,13 +935,17 @@ describe("check-souvenirs.cli", () => {
     mockSpawnSync.mockReturnValueOnce({ error: "string error", status: 1, stdout: "" });
     const result = isMkvToolAvailable();
     expect(result).toBe(false);
-    expect(logger.inMemoryLogs.some(log => log.includes("Version test failed") && log.includes("string error"))).toBe(true);
+    expect(logger.inMemoryLogs.some(log => log.includes("Version test failed") && log.includes("string error"))).toBe(
+      true,
+    );
   });
 
   it("setFileDateViaMkvTool A should handle tool not available", () => {
     mockSpawnSync.mockReturnValueOnce({ error: new Error("Command not found"), status: 1, stdout: "" });
     setFileDateViaMkvTool(String.raw`D:\Souvenirs\2006\video.mkv`, "2006-01-01");
-    expect(logger.inMemoryLogs.some(log => log.includes("Cannot set date because") && log.includes("tool is not available"))).toBe(true);
+    expect(
+      logger.inMemoryLogs.some(log => log.includes("Cannot set date because") && log.includes("tool is not available")),
+    ).toBe(true);
   });
 
   it("isMkvToolAvailable C should cache and return true when mkvpropedit is available", () => {
@@ -857,7 +964,11 @@ describe("check-souvenirs.cli", () => {
     expect(resultAvailable).toBe(true);
     mockSpawnSync.mockReturnValueOnce({ error: null, status: 0, stdout: "" });
     setFileDateViaMkvTool(String.raw`D:\Souvenirs\2006\video.mkv`, "2006-01-01");
-    expect(mockSpawnSync).toHaveBeenLastCalledWith("mkvpropedit.exe", [String.raw`D:\Souvenirs\2006\video.mkv`, "--edit", "info", "--set", "date=2006-01-01"], { encoding: "utf8" });
+    expect(mockSpawnSync).toHaveBeenLastCalledWith(
+      "mkvpropedit.exe",
+      [String.raw`D:\Souvenirs\2006\video.mkv`, "--edit", "info", "--set", "date=2006-01-01"],
+      { encoding: "utf8" },
+    );
     expect(count.dateFixes).toBe(1);
   });
 
@@ -874,6 +985,8 @@ describe("check-souvenirs.cli", () => {
     isMkvToolAvailable();
     mockSpawnSync.mockReturnValueOnce({ error: new Error("Spawn failed"), status: 1, stdout: "" });
     setFileDateViaMkvTool(String.raw`D:\Souvenirs\2006\video.mkv`, "2006-01-01");
-    expect(logger.inMemoryLogs.some(log => log.includes("Failed to set date for file") && log.includes("using mkvpropedit"))).toBe(true);
+    expect(
+      logger.inMemoryLogs.some(log => log.includes("Failed to set date for file") && log.includes("using mkvpropedit")),
+    ).toBe(true);
   });
 });

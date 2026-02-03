@@ -45,7 +45,9 @@ export async function search(input: string) {
   logger.info("search, input", { input });
   const { default: Fuse } = await import("fuse.js/basic");
   const fuse = new Fuse(state.items, fuseOptions);
-  const result = state.items.find(item => item.reference.toLowerCase() === input.toLowerCase() || item.barcode.toLowerCase() === input.toLowerCase());
+  const result = state.items.find(
+    item => item.reference.toLowerCase() === input.toLowerCase() || item.barcode.toLowerCase() === input.toLowerCase(),
+  );
   if (result !== undefined) {
     navigate(`/item/details/${result.$id}/single`);
     return { header: "", results: [] };

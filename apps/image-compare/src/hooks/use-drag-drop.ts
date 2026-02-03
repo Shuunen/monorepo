@@ -1,7 +1,13 @@
 // oxlint-disable id-length, no-magic-numbers, max-lines-per-function
 import { useState } from "react";
 import { getNbFiles } from "../utils/comparison.utils";
-import { handleMultipleFilesUpload, handleSingleFileUpload, type ImageData, type ImageMetadata, isDragLeavingContainer } from "../utils/image.utils";
+import {
+  handleMultipleFilesUpload,
+  handleSingleFileUpload,
+  type ImageData,
+  type ImageMetadata,
+  isDragLeavingContainer,
+} from "../utils/image.utils";
 
 type UseDragDropReturn = {
   handleDragEnter: (e: React.DragEvent) => void;

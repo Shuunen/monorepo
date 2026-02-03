@@ -13,5 +13,7 @@ it("toUnixPath C /a", () => {
 });
 
 it("toUnixPath D windows style", () => {
-  expect(toUnixPath(String.raw`C:\Users\Huei\AppData\Roaming`)).toMatchInlineSnapshot(`"C:/Users/Huei/AppData/Roaming"`);
+  expect(toUnixPath(String.raw`C:\Users\Huei\AppData\Roaming`)).toMatchInlineSnapshot(
+    `"C:/Users/Huei/AppData/Roaming"`,
+  );
 });

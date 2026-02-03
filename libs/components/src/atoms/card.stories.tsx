@@ -23,7 +23,9 @@ export const TextContent: Story = {
   args: {
     children: (
       <p className="px-6">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat aspernatur ea architecto, consectetur dignissimos minima magni sed illum odio assumenda, soluta iure incidunt repudiandae. Incidunt voluptas provident eius sequi illum.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat aspernatur ea architecto, consectetur
+        dignissimos minima magni sed illum odio assumenda, soluta iure incidunt repudiandae. Incidunt voluptas provident
+        eius sequi illum.
       </p>
     ),
   },
@@ -74,7 +76,11 @@ export const CompleteCard: Story = {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat aspernatur ea architecto, consectetur dignissimos minima magni sed illum odio assumenda, soluta iure incidunt repudiandae. Incidunt voluptas provident eius sequi illum.</p>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat aspernatur ea architecto, consectetur
+          dignissimos minima magni sed illum odio assumenda, soluta iure incidunt repudiandae. Incidunt voluptas
+          provident eius sequi illum.
+        </p>
       </CardContent>
       <CardFooter>A nice footer</CardFooter>
     </Card>

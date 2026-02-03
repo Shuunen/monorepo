@@ -25,7 +25,9 @@ export async function makeProxyRequest(targetUrl: string, body: unknown) {
   });
   let data: unknown = undefined;
   const contentType = response.headers.get("content-type");
-  const parseResult = contentType?.includes("application/json") ? await Result.trySafe(response.json()) : await Result.trySafe(response.text());
+  const parseResult = contentType?.includes("application/json")
+    ? await Result.trySafe(response.json())
+    : await Result.trySafe(response.text());
   const { value, error } = Result.unwrap(parseResult);
   /* v8 ignore if -- @preserve */
   if (!error) data = value;
@@ -46,8 +48,10 @@ export async function handleProxyResponse(targetUrl: string, body: unknown, res:
 
 export async function webhookHandler(req: Request, res: Response) {
   const targetUrl = req.query.url;
-  if (typeof targetUrl !== "string") return res.status(httpBadRequest).json({ error: "Target URL is required as query parameter: ?url=..." });
-  if (!targetUrl) return res.status(httpBadRequest).json({ error: "Target URL is required as query parameter: ?url=..." });
+  if (typeof targetUrl !== "string")
+    return res.status(httpBadRequest).json({ error: "Target URL is required as query parameter: ?url=..." });
+  if (!targetUrl)
+    return res.status(httpBadRequest).json({ error: "Target URL is required as query parameter: ?url=..." });
   if (!validateUrl(targetUrl)) return res.status(httpBadRequest).json({ error: "Invalid URL provided" });
   await handleProxyResponse(targetUrl, req.body, res);
 }

@@ -7,7 +7,11 @@
  * @param defaultValue the default value to return if the path does not exist
  * @returns the value at the specified path
  */
-export function getNested(object: Record<string, unknown> | undefined, path: string | Array<string | number>, defaultValue?: unknown) {
+export function getNested(
+  object: Record<string, unknown> | undefined,
+  path: string | Array<string | number>,
+  defaultValue?: unknown,
+) {
   const pathArray = typeof path === "string" ? path.split(".") : path;
   let result: unknown = object;
   for (const key of pathArray) {

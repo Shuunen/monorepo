@@ -21,5 +21,13 @@ export function AppFormFieldCheckbox({ field, id, updateField }: Properties) {
     [id, updateField],
   );
 
-  return <FormControlLabel control={checkboxControl(field.value)} id={id} label={field.label} onChange={onChange} required={field.isRequired} />;
+  return (
+    <FormControlLabel
+      control={checkboxControl(field.value)}
+      id={id}
+      label={field.label}
+      onChange={onChange}
+      required={field.isRequired}
+    />
+  );
 }

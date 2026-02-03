@@ -1,4 +1,14 @@
-import { dateIso10, storage as lsStorage, nbHueMax, nbPercentMax, nbSpacesIndent, Result, sleep, slugify, toastSuccess } from "@monorepo/utils";
+import {
+  dateIso10,
+  storage as lsStorage,
+  nbHueMax,
+  nbPercentMax,
+  nbSpacesIndent,
+  Result,
+  sleep,
+  slugify,
+  toastSuccess,
+} from "@monorepo/utils";
 import { Client, Databases, type Models, Query, Storage } from "appwrite";
 import { safeParse } from "valibot";
 import { defaultImage, uuidMaxLength } from "../constants";
@@ -144,7 +154,12 @@ export async function getItemsRemotely() {
   let shouldCheckNextPage = true;
   while (shouldCheckNextPage) {
     // oxlint-disable-next-line no-await-in-loop
-    const result = await Result.trySafe(database.listDocuments<ItemModel>(state.credentials.databaseId, state.credentials.collectionId, [Query.limit(nbPercentMax), Query.offset(offset)]));
+    const result = await Result.trySafe(
+      database.listDocuments<ItemModel>(state.credentials.databaseId, state.credentials.collectionId, [
+        Query.limit(nbPercentMax),
+        Query.offset(offset),
+      ]),
+    );
     if (!result.ok) return result;
     if (result.value.documents.length === 0) shouldCheckNextPage = false;
     else {
@@ -218,7 +233,9 @@ export async function addItemRemotely(item: Item, currentState = state) {
   const { collectionId, databaseId } = currentState.credentials;
   const payload = itemToAppWriteModel(data.value);
   if (!payload.ok) return payload;
-  const post = await Result.trySafe(database.createDocument<ItemModel>(databaseId, collectionId, id.value, payload.value));
+  const post = await Result.trySafe(
+    database.createDocument<ItemModel>(databaseId, collectionId, id.value, payload.value),
+  );
   if (!post.ok) return post;
   const parse = safeParse(itemSchema, post.value);
   if (!parse.success) return Result.error(parse.issues.map(issue => issue.message).join(", "));
@@ -246,7 +263,9 @@ export async function updateItemRemotely(item: Item, currentState = state) {
   if (data.value.$id.length === 0) return Result.error(`item id is empty in ${JSON.stringify(data.value)}`);
   const payload = itemToAppWriteModel(data.value);
   if (!payload.ok) return payload;
-  const post = await Result.trySafe(database.updateDocument<ItemModel>(databaseId, collectionId, data.value.$id, payload.value));
+  const post = await Result.trySafe(
+    database.updateDocument<ItemModel>(databaseId, collectionId, data.value.$id, payload.value),
+  );
   if (!post.ok) return post;
   const parse = safeParse(itemSchema, post.value);
   if (!parse.success) return Result.error(parse.issues.map(issue => issue.message).join(", "));

@@ -38,7 +38,10 @@ export function ControlButtons({ contestState, onLeftImageUpload, onReset, onRig
       {/* v8 ignore start -- @preserve */}
       <div className={cn({ hidden: isContestMode || isContestComplete })}>
         <label className="cursor-pointer" htmlFor="right-upload">
-          <Button name="right-upload" onClick={() => document.querySelector<HTMLButtonElement>("#right-upload")?.click()}>
+          <Button
+            name="right-upload"
+            onClick={() => document.querySelector<HTMLButtonElement>("#right-upload")?.click()}
+          >
             <Upload />
             Change right image
           </Button>

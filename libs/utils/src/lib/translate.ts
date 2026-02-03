@@ -51,7 +51,11 @@ export function handlePlural(translated: string, data?: Readonly<Record<string, 
  * @param data the data to fill the template, like { name: "world" }
  * @returns the translated message, like "hello world" or "bonjour world"
  */
-export function translate(lang: Lang, message: Readonly<Record<string, string>> | string, data?: Readonly<Record<string, unknown>>) {
+export function translate(
+  lang: Lang,
+  message: Readonly<Record<string, string>> | string,
+  data?: Readonly<Record<string, unknown>>,
+) {
   // oxlint-enable require-param-description
   const translated = typeof message === "string" ? message : message[lang];
   if (translated === undefined) {
@@ -80,5 +84,6 @@ export function localePath(path: string, targetLang: Lang = defaultLang) {
  * @example const $t = getTranslator('en')
  */
 export function getTranslator(lang: Lang) {
-  return (message: Readonly<Record<string, string>> | string, data?: Readonly<Record<string, unknown>>) => translate(lang, message, data);
+  return (message: Readonly<Record<string, string>> | string, data?: Readonly<Record<string, unknown>>) =>
+    translate(lang, message, data);
 }

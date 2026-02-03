@@ -4,14 +4,44 @@ import { clsx } from "clsx";
 import { DeleteIcon, PlusCircleIcon } from "lucide-react";
 import type { Rule } from "./types";
 
-export function RuleLine({ rule, onChange, onRemove }: { rule: Rule; onChange: (key: keyof Rule, value: string | boolean) => void; onRemove: () => void }) {
+export function RuleLine({
+  rule,
+  onChange,
+  onRemove,
+}: {
+  rule: Rule;
+  onChange: (key: keyof Rule, value: string | boolean) => void;
+  onRemove: () => void;
+}) {
   const inputClasses = clsx("grow", rule.enabled ? "border-primary/50" : "bg-muted/50 opacity-75");
   return (
     <div className="flex items-center gap-4">
-      <Switch checked={rule.enabled} name={`rule-${rule.id}`} onCheckedChange={checked => onChange("enabled", checked)} />
-      <Input className={inputClasses} name={`rule-${rule.id}-pattern`} onChange={event => onChange("pattern", event.target.value)} placeholder="replace in" value={rule.pattern} />
-      <Input className={inputClasses} name={`rule-${rule.id}-replacement`} onChange={event => onChange("replacement", event.target.value)} placeholder="replace out" value={rule.replacement} />
-      <Button className={clsx("-ml-2 hover:text-red-500", rule.enabled ? "text-primary" : "text-muted-foreground/50")} name="delete" onClick={onRemove} size="icon" variant="ghost">
+      <Switch
+        checked={rule.enabled}
+        name={`rule-${rule.id}`}
+        onCheckedChange={checked => onChange("enabled", checked)}
+      />
+      <Input
+        className={inputClasses}
+        name={`rule-${rule.id}-pattern`}
+        onChange={event => onChange("pattern", event.target.value)}
+        placeholder="replace in"
+        value={rule.pattern}
+      />
+      <Input
+        className={inputClasses}
+        name={`rule-${rule.id}-replacement`}
+        onChange={event => onChange("replacement", event.target.value)}
+        placeholder="replace out"
+        value={rule.replacement}
+      />
+      <Button
+        className={clsx("-ml-2 hover:text-red-500", rule.enabled ? "text-primary" : "text-muted-foreground/50")}
+        name="delete"
+        onClick={onRemove}
+        size="icon"
+        variant="ghost"
+      >
         <DeleteIcon className="size-5" />
       </Button>
     </div>
@@ -39,7 +69,12 @@ export function Rules({ rules, setRules }: { rules: Rule[]; setRules: (rules: Ru
       </div>
       <Card className="flex flex-col gap-2 bg-white p-6">
         {rules.map(rule => (
-          <RuleLine key={rule.id} onChange={(key, value) => updateRule(rule.id, key, value)} onRemove={() => removeRule(rule.id)} rule={rule} />
+          <RuleLine
+            key={rule.id}
+            onChange={(key, value) => updateRule(rule.id, key, value)}
+            onRemove={() => removeRule(rule.id)}
+            rule={rule}
+          />
         ))}
       </Card>
     </div>

@@ -1,6 +1,14 @@
 import { camelToKebabCase, slugify } from "@monorepo/utils";
 // oxlint-disable-next-line no-restricted-imports
-import { CircleXIcon, FileCheckIcon, FileTextIcon, FileUpIcon, FileXIcon, RotateCcwIcon, TrashIcon } from "lucide-react";
+import {
+  CircleXIcon,
+  FileCheckIcon,
+  FileTextIcon,
+  FileUpIcon,
+  FileXIcon,
+  RotateCcwIcon,
+  TrashIcon,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { type ControllerRenderProps, useWatch } from "react-hook-form";
 import { Button } from "../atoms/button";
@@ -10,7 +18,13 @@ import { Progress } from "../atoms/progress";
 import { cn } from "../shadcn/utils";
 import { getFieldMetadataOrThrow } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
-import { formatFileSize, maxPercent, uploadDurationFail, uploadDurationSuccess, uploadPercentFail } from "./form-field-upload.const";
+import {
+  formatFileSize,
+  maxPercent,
+  uploadDurationFail,
+  uploadDurationSuccess,
+  uploadPercentFail,
+} from "./form-field-upload.const";
 
 type FormFieldUploadProps = FormFieldBaseProps & {
   accept?: string;
@@ -22,7 +36,19 @@ type FormFieldUploadProps = FormFieldBaseProps & {
 };
 
 // oxlint-disable-next-line max-lines-per-function, max-statements
-export function FormFieldUpload({ accept, fieldName, fieldSchema, isOptional, logger, readonly = false, shouldFail, onFileChange, onFileRemove, onFileUploadComplete, onFileUploadError }: FormFieldUploadProps) {
+export function FormFieldUpload({
+  accept,
+  fieldName,
+  fieldSchema,
+  isOptional,
+  logger,
+  readonly = false,
+  shouldFail,
+  onFileChange,
+  onFileRemove,
+  onFileUploadComplete,
+  onFileUploadError,
+}: FormFieldUploadProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { placeholder, state = "editable" } = metadata;
   const isDisabled = ["disabled", "readonly"].includes(state);
@@ -36,7 +62,9 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, isOptional, lo
     retry: { action: retryUpload, icon: RotateCcwIcon, label: "Retry" },
   };
   const [uploadState, setUploadState] = useState<UploadType>("idle");
-  const sizeProgress = selectedFile?.size ? `(${formatFileSize(selectedFile.size * (uploadProgress / maxPercent))} / ${formatFileSize(selectedFile.size)})` : "";
+  const sizeProgress = selectedFile?.size
+    ? `(${formatFileSize(selectedFile.size * (uploadProgress / maxPercent))} / ${formatFileSize(selectedFile.size)})`
+    : "";
   const states = {
     error: {
       // oxlint-disable-next-line no-nested-ternary
@@ -163,9 +191,20 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, isOptional, lo
       {({ field }) => (
         <FormControl>
           {idleNoFile ? (
-            <Input accept={accept} disabled={isDisabled} name={`${testId}-${stateTestId}`} onChange={event => handleFileSelect(event, field.onChange)} placeholder={placeholder || currentState.message} ref={fileInputRef} type="file" />
+            <Input
+              accept={accept}
+              disabled={isDisabled}
+              name={`${testId}-${stateTestId}`}
+              onChange={event => handleFileSelect(event, field.onChange)}
+              placeholder={placeholder || currentState.message}
+              ref={fileInputRef}
+              type="file"
+            />
           ) : (
-            <div className="flex w-full gap-3 overflow-hidden rounded-md border border-input bg-background p-3" data-testid={`${testId}-${stateTestId}`}>
+            <div
+              className="flex w-full gap-3 overflow-hidden rounded-md border border-input bg-background p-3"
+              data-testid={`${testId}-${stateTestId}`}
+            >
               <aside className="mt-0.5">{currentState.icon}</aside>
               <main className="flex max-w-full grow flex-col gap-1 overflow-hidden">
                 <div className="flex justify-between gap-3">
@@ -176,7 +215,14 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, isOptional, lo
 
                   <div className="flex">
                     {currentState.buttons.map(button => (
-                      <Button key={`button-${button.label}`} name={`upload-action-${slugify(button.label)}`} onClick={() => button.action(field.onChange)} size="sm" title={button.label} variant="ghost">
+                      <Button
+                        key={`button-${button.label}`}
+                        name={`upload-action-${slugify(button.label)}`}
+                        onClick={() => button.action(field.onChange)}
+                        size="sm"
+                        title={button.label}
+                        variant="ghost"
+                      >
                         {button.label}
                         <button.icon className="size-4" />
                       </Button>
@@ -186,8 +232,23 @@ export function FormFieldUpload({ accept, fieldName, fieldSchema, isOptional, lo
 
                 {uploadState !== "idle" && (
                   <div className="flex items-center">
-                    <Progress className={cn("h-1 flex-1", uploadState === "success" && "[&>div]:bg-success", uploadState === "error" && "[&>div]:bg-destructive")} value={uploadProgress} />
-                    <span className={cn("min-w-12 text-right text-sm font-medium", uploadState === "success" && "text-success", uploadState === "error" && "text-destructive")}>{Math.round(uploadProgress)}%</span>
+                    <Progress
+                      className={cn(
+                        "h-1 flex-1",
+                        uploadState === "success" && "[&>div]:bg-success",
+                        uploadState === "error" && "[&>div]:bg-destructive",
+                      )}
+                      value={uploadProgress}
+                    />
+                    <span
+                      className={cn(
+                        "min-w-12 text-right text-sm font-medium",
+                        uploadState === "success" && "text-success",
+                        uploadState === "error" && "text-destructive",
+                      )}
+                    >
+                      {Math.round(uploadProgress)}%
+                    </span>
                   </div>
                 )}
               </main>

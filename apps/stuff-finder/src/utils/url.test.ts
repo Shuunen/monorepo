@@ -1,13 +1,17 @@
 import { getAsin, normalizePhotoUrl, urlToUuid } from "./url.utils";
 
 it("urlToUuid A", () => {
-  expect(urlToUuid("https://wrapapi.com/use/jojo/deyes/json/0.0.2?code=3760052142741&wrapAPIKey=xyz")).toEqual("wrapapicomusejojodeyesjson002code3760052142741");
+  expect(urlToUuid("https://wrapapi.com/use/jojo/deyes/json/0.0.2?code=3760052142741&wrapAPIKey=xyz")).toEqual(
+    "wrapapicomusejojodeyesjson002code3760052142741",
+  );
 });
 it("urlToUuid B", () => {
   expect(urlToUuid("https://")).toEqual("");
 });
 it("urlToUuid C", () => {
-  expect(urlToUuid("https://wrapapi.com/use/jojo/deyes/json/0.0.2?code=3760052142741")).toEqual("wrapapicomusejojodeyesjson002code3760052142741");
+  expect(urlToUuid("https://wrapapi.com/use/jojo/deyes/json/0.0.2?code=3760052142741")).toEqual(
+    "wrapapicomusejojodeyesjson002code3760052142741",
+  );
 });
 
 it("getAsin A", () => {
@@ -24,38 +28,62 @@ it("getAsin D", () => {
 });
 
 it("normalizePhotoUrl A", () => {
-  expect(normalizePhotoUrl("https://m.media-amazon.com/images/I/41eTyK5fGVL._SY90_.jpg")).toMatchInlineSnapshot('"https://m.media-amazon.com/images/I/41eTyK5fGVL._SL500_.jpg"');
+  expect(normalizePhotoUrl("https://m.media-amazon.com/images/I/41eTyK5fGVL._SY90_.jpg")).toMatchInlineSnapshot(
+    '"https://m.media-amazon.com/images/I/41eTyK5fGVL._SL500_.jpg"',
+  );
 });
 it("normalizePhotoUrl A bis", () => {
-  expect(normalizePhotoUrl("https://m.media-amazon.com/images/I/41eTyK5fGVL._SX90_.jpg")).toMatchInlineSnapshot('"https://m.media-amazon.com/images/I/41eTyK5fGVL._SL500_.jpg"');
+  expect(normalizePhotoUrl("https://m.media-amazon.com/images/I/41eTyK5fGVL._SX90_.jpg")).toMatchInlineSnapshot(
+    '"https://m.media-amazon.com/images/I/41eTyK5fGVL._SL500_.jpg"',
+  );
 });
 it("normalizePhotoUrl B", () => {
-  expect(normalizePhotoUrl("https://m.media-amazon.com/images/I/41eTyK5fGVL._AC_SL1500_.jpg")).toMatchInlineSnapshot('"https://m.media-amazon.com/images/I/41eTyK5fGVL._SL500_.jpg"');
+  expect(normalizePhotoUrl("https://m.media-amazon.com/images/I/41eTyK5fGVL._AC_SL1500_.jpg")).toMatchInlineSnapshot(
+    '"https://m.media-amazon.com/images/I/41eTyK5fGVL._SL500_.jpg"',
+  );
 });
 it("normalizePhotoUrl C", () => {
   expect(normalizePhotoUrl("https://my-server-L1500_.jpg")).toMatchInlineSnapshot('"https://my-server-L1500_.jpg"');
 });
 it("normalizePhotoUrl D", () => {
-  expect(normalizePhotoUrl("https://img.kwcdn.com/product/1e29826bd4/963d0c2a-db96-4253-8dde-3d617ad0e4c3_800x800.jpeg?imageView2/2/w/300/q/70/format/webp")).toMatchInlineSnapshot(
+  expect(
+    normalizePhotoUrl(
+      "https://img.kwcdn.com/product/1e29826bd4/963d0c2a-db96-4253-8dde-3d617ad0e4c3_800x800.jpeg?imageView2/2/w/300/q/70/format/webp",
+    ),
+  ).toMatchInlineSnapshot(
     '"https://img.kwcdn.com/product/1e29826bd4/963d0c2a-db96-4253-8dde-3d617ad0e4c3_800x800.jpeg?imageView2/2/w/500/q/70/format/webp"',
   );
 });
 it("normalizePhotoUrl E", () => {
-  expect(normalizePhotoUrl("https://images-eu.ssl-images-amazon.com/images/I/71Jn92-Km8L._AC_UL160_SR160,160_.jpg")).toMatchInlineSnapshot('"https://images-eu.ssl-images-amazon.com/images/I/71Jn92-Km8L._SL500_.jpg"');
+  expect(
+    normalizePhotoUrl("https://images-eu.ssl-images-amazon.com/images/I/71Jn92-Km8L._AC_UL160_SR160,160_.jpg"),
+  ).toMatchInlineSnapshot('"https://images-eu.ssl-images-amazon.com/images/I/71Jn92-Km8L._SL500_.jpg"');
 });
 it("normalizePhotoUrl F", () => {
-  expect(normalizePhotoUrl("https://contents.mediadecathlon.com/p2383266/k$d2f0d767bdc9b064e7e28216ab817e35/sq/SPRAY+GACHETTE+SOLAIRE+ACTIVE+IP50+250+ML.webp?f=100x100")).toMatchInlineSnapshot(
+  expect(
+    normalizePhotoUrl(
+      "https://contents.mediadecathlon.com/p2383266/k$d2f0d767bdc9b064e7e28216ab817e35/sq/SPRAY+GACHETTE+SOLAIRE+ACTIVE+IP50+250+ML.webp?f=100x100",
+    ),
+  ).toMatchInlineSnapshot(
     '"https://contents.mediadecathlon.com/p2383266/k$d2f0d767bdc9b064e7e28216ab817e35/sq/SPRAY+GACHETTE+SOLAIRE+ACTIVE+IP50+250+ML.webp?f=500x500"',
   );
 });
 it("normalizePhotoUrl G", () => {
-  expect(normalizePhotoUrl("https://m.media-amazon.com/images/I/41z6iny2jTL._SS142_.jpg")).toMatchInlineSnapshot('"https://m.media-amazon.com/images/I/41z6iny2jTL._SL500_.jpg"');
+  expect(normalizePhotoUrl("https://m.media-amazon.com/images/I/41z6iny2jTL._SS142_.jpg")).toMatchInlineSnapshot(
+    '"https://m.media-amazon.com/images/I/41z6iny2jTL._SL500_.jpg"',
+  );
 });
 it("normalizePhotoUrl H", () => {
-  expect(normalizePhotoUrl("https://ae01.alicdn.com/kf/S8a947aca823d4f4e9b26cd232f319cc6i.jpg_220x220.jpg")).toMatchInlineSnapshot(`"https://ae01.alicdn.com/kf/S8a947aca823d4f4e9b26cd232f319cc6i.jpg_500x500q85.jpg"`);
+  expect(
+    normalizePhotoUrl("https://ae01.alicdn.com/kf/S8a947aca823d4f4e9b26cd232f319cc6i.jpg_220x220.jpg"),
+  ).toMatchInlineSnapshot(`"https://ae01.alicdn.com/kf/S8a947aca823d4f4e9b26cd232f319cc6i.jpg_500x500q85.jpg"`);
 });
 it("normalizePhotoUrl I", () => {
-  expect(normalizePhotoUrl("https://ae-pic-a1.aliexpress-media.com/kf/S4c8a070043c446cca2f5ef55ba3962f8J.jpg_960x960q75.jpg_.avif")).toMatchInlineSnapshot(
+  expect(
+    normalizePhotoUrl(
+      "https://ae-pic-a1.aliexpress-media.com/kf/S4c8a070043c446cca2f5ef55ba3962f8J.jpg_960x960q75.jpg_.avif",
+    ),
+  ).toMatchInlineSnapshot(
     `"https://ae-pic-a1.aliexpress-media.com/kf/S4c8a070043c446cca2f5ef55ba3962f8J.jpg_500x500q85.jpg"`,
   );
 });

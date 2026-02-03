@@ -51,7 +51,15 @@ export function injectMark(content, placeholder, mark) {
  */
 export function generateMark({ commit = "", date = new Date(), version = "" }) {
   let finalCommit = commit;
-  const readableDate = new Intl.DateTimeFormat("en-GB", { day: "2-digit", hour: "2-digit", minute: "2-digit", month: "2-digit", year: "numeric" }).format(date).replace(",", "");
+  const readableDate = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  })
+    .format(date)
+    .replace(",", "");
   /* v8 ignore next -- @preserve */
   if (commit === "") {
     try {
@@ -95,7 +103,9 @@ export function injectMarkInAsset({ asset, fileName, mark, placeholder }) {
 export function injectMarkInAssets(assets, placeholder, version) {
   const mark = generateMark({ version });
   console.log("Injecting unique mark into HTML, JS, and CSS files...");
-  const targets = Object.keys(assets).filter(fileName => fileName.endsWith(".html") || fileName.endsWith(".js") || fileName.endsWith(".css"));
+  const targets = Object.keys(assets).filter(
+    fileName => fileName.endsWith(".html") || fileName.endsWith(".js") || fileName.endsWith(".css"),
+  );
   for (const fileName of targets) {
     injectMarkInAsset({
       asset: assets[fileName],

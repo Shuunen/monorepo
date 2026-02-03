@@ -25,7 +25,8 @@ export function parseClipboard(clipboard: string) {
 export function validateCredentials(databaseId?: string, collectionId?: string) {
   const uuidRegex = /^[\w-]{1,36}$/u;
   const isDatabaseValid = databaseId !== undefined && typeof databaseId === "string" && uuidRegex.test(databaseId);
-  const isCollectionValid = collectionId !== undefined && typeof collectionId === "string" && uuidRegex.test(collectionId);
+  const isCollectionValid =
+    collectionId !== undefined && typeof collectionId === "string" && uuidRegex.test(collectionId);
   return isDatabaseValid && isCollectionValid;
 }
 
@@ -37,7 +38,11 @@ export function validateCredentials(databaseId?: string, collectionId?: string) 
 export function checkUrlCredentials(hash = "") {
   logger.info("check credentials", hash.length > 0 ? `and detected hash "${hash}"` : "");
   const matches = /#(?<database>[\w-]{1,36})&(?<collection>[\w-]{1,36})/u.exec(hash);
-  if (matches?.groups?.database !== undefined && matches.groups.collection !== undefined && validateCredentials(matches.groups.database, matches.groups.collection)) {
+  if (
+    matches?.groups?.database !== undefined &&
+    matches.groups.collection !== undefined &&
+    validateCredentials(matches.groups.database, matches.groups.collection)
+  ) {
     state.apiDatabase = matches.groups.database;
     state.apiCollection = matches.groups.collection;
     logger.info("credentials found in hash");

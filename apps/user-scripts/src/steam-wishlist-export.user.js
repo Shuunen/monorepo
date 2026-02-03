@@ -74,7 +74,8 @@ function SteamWishlistExport() {
   function injectButton() {
     const button = document.createElement("button");
     button.textContent = "Export list to JSON";
-    button.style = "position: fixed; cursor: pointer; top: 70px; right: 20px; padding: 10px 24px; font-size: 20px; z-index: 1000; ";
+    button.style =
+      "position: fixed; cursor: pointer; top: 70px; right: 20px; padding: 10px 24px; font-size: 20px; z-index: 1000; ";
     button.addEventListener("click", () => {
       void copyGames();
     });

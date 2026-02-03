@@ -8,7 +8,9 @@ import { applyRules } from "./utils";
 
 function getSearchParams(): URLSearchParams {
   /* v8 ignore next -- @preserve */
-  return globalThis.URLSearchParams === undefined ? new globalThis.window.URLSearchParams(globalThis.location.search) : new globalThis.URLSearchParams(globalThis.location.search);
+  return globalThis.URLSearchParams === undefined
+    ? new globalThis.window.URLSearchParams(globalThis.location.search)
+    : new globalThis.URLSearchParams(globalThis.location.search);
 }
 
 export function Converter() {
@@ -42,11 +44,22 @@ export function Converter() {
       <div className="grid gap-8 md:grid-cols-2">
         <div>
           <h2 className="mt-2 mb-2">input</h2>
-          <Textarea className="h-80 w-full rounded-xl border bg-white p-3 shadow" name="input" onChange={event => setInput(event.target.value)} placeholder="Paste your text here..." value={input} />
+          <Textarea
+            className="h-80 w-full rounded-xl border bg-white p-3 shadow"
+            name="input"
+            onChange={event => setInput(event.target.value)}
+            placeholder="Paste your text here..."
+            value={input}
+          />
         </div>
         <div>
           <h2 className="mt-2 mb-2 text-secondary">output</h2>
-          <Textarea className="h-80 w-full rounded-xl border bg-white p-3 shadow" name="output" readOnly value={output} />
+          <Textarea
+            className="h-80 w-full rounded-xl border bg-white p-3 shadow"
+            name="output"
+            readOnly
+            value={output}
+          />
         </div>
       </div>
       <div className="col-span-2 mt-8">

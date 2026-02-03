@@ -9,7 +9,9 @@ describe(RuleLine, () => {
   it("RuleLine A should render rule fields and call onChange/onRemove", () => {
     const onChange = vi.fn();
     const onRemove = vi.fn();
-    const { getByPlaceholderText, getByRole } = render(<RuleLine onChange={onChange} onRemove={onRemove} rule={sampleRule} />);
+    const { getByPlaceholderText, getByRole } = render(
+      <RuleLine onChange={onChange} onRemove={onRemove} rule={sampleRule} />,
+    );
     fireEvent.change(getByPlaceholderText("replace in"), { target: { value: "baz" } });
     expect(onChange).toHaveBeenCalledWith("pattern", "baz");
     fireEvent.change(getByPlaceholderText("replace out"), { target: { value: "qux" } });

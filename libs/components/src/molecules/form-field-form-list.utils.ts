@@ -11,6 +11,10 @@ export type ItemProps = {
   readonly: boolean;
   labels?: AutoFormFieldFormsMetadata["labels"];
   onDeleteItem: (onChange: (value: unknown) => void, indexToDelete: number) => void;
-  onCompleteItem: (onChange: (value: unknown) => void, indexToComplete: number, itemData: Record<string, unknown>) => void;
+  onCompleteItem: (
+    onChange: (value: unknown) => void,
+    indexToComplete: number,
+    itemData: Record<string, unknown>,
+  ) => void;
   field: ControllerRenderProps;
 };

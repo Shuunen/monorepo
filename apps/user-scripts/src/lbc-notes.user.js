@@ -135,7 +135,11 @@ function LbcNotes() {
   function getClearStoreButton(clearStoreCallback) {
     const button = document.createElement("button");
     button.textContent = "Clear notes store";
-    button.classList.add(...utils.tw("fixed bottom-5 right-5 z-10 rounded-md border border-gray-600 bg-gray-100 px-2 py-1 opacity-30 transition-all duration-500 ease-in-out hover:opacity-100"));
+    button.classList.add(
+      ...utils.tw(
+        "fixed bottom-5 right-5 z-10 rounded-md border border-gray-600 bg-gray-100 px-2 py-1 opacity-30 transition-all duration-500 ease-in-out hover:opacity-100",
+      ),
+    );
     button.addEventListener("click", () => {
       // oxlint-disable-next-line no-alert
       if (!confirm("Are you sure you want to clear all notes ?")) return;
@@ -156,7 +160,11 @@ function LbcNotes() {
     const id = "lbc-nts";
     if (!element) throw new Error(`no element to hide for cause "${cause}"`);
     element.dataset.lbcAdHiddenCause = cause;
-    element.classList.add(...utils.tw("overflow-hidden transition-all duration-500 ease-in-out hover:h-auto hover:opacity-100 hover:filter-none"));
+    element.classList.add(
+      ...utils.tw(
+        "overflow-hidden transition-all duration-500 ease-in-out hover:h-auto hover:opacity-100 hover:filter-none",
+      ),
+    );
     element.classList.toggle("h-40", willHide);
     element.classList.toggle("grayscale", willHide);
     element.classList.toggle("opacity-40", willHide);
@@ -178,8 +186,9 @@ function LbcNotes() {
     noteElement.classList.toggle(config.badNote.class, isBad);
     if (!multipleAdDisplayed()) return;
     utils.log("multiple ad displayed");
-    // @ts-expect-error type mismatch
-    if (!config.averageNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, "average-keyword", isAverage);
+    if (!config.averageNote.isDisplayed)
+      // @ts-expect-error type mismatch
+      hideAdElement(noteElement.previousElementSibling, "average-keyword", isAverage);
     // @ts-expect-error type mismatch
     if (isBad && !config.badNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, "bad-keyword");
   }
@@ -238,7 +247,9 @@ function LbcNotes() {
     try {
       if (!db.databaseId) throw new Error("db.databaseId is not defined");
       if (!db.notesCollectionId) throw new Error("db.notesCollectionId is not defined");
-      const response = await (noteId ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note: noteContent }) : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note: noteContent }));
+      const response = await (noteId
+        ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note: noteContent })
+        : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note: noteContent }));
       saveNoteSuccess({ listingId, noteContent, noteId: response.$id }, noteElement);
       updateNoteStyle(noteElement); /* @ts-ignore */
     } catch (error) {
@@ -260,7 +271,9 @@ function LbcNotes() {
   async function loadNoteFromAppWrite(listingId) {
     if (!db.databaseId) throw new Error("db.databaseId is not defined");
     if (!db.notesCollectionId) throw new Error("db.notesCollectionId is not defined");
-    const notesByListingId = await databases.listDocuments(db.databaseId, db.notesCollectionId, [Query.equal("listingId", listingId)]);
+    const notesByListingId = await databases.listDocuments(db.databaseId, db.notesCollectionId, [
+      Query.equal("listingId", listingId),
+    ]);
     const [first] = notesByListingId.documents;
     const note = { listingId, noteContent: first?.note || "", noteId: first?.$id || "" };
     if (note) utils.debug(`loaded note for listing ${listingId} from AppWrite`, note);
@@ -341,7 +354,8 @@ function LbcNotes() {
   async function loadNote(noteElement) {
     const listingId = getListingIdFromNote(noteElement);
     utils.debug(`loading note for listing ${listingId}...`);
-    const { noteContent, noteId } = (await loadNoteFromLocalStore(listingId)) ?? (await loadNoteFromAppWrite(listingId));
+    const { noteContent, noteId } =
+      (await loadNoteFromLocalStore(listingId)) ?? (await loadNoteFromAppWrite(listingId));
     noteElement.dataset.noteId = noteId;
     const updatedContent = addTodayPrice(listingId, noteContent);
     noteElement.textContent = updatedContent;
@@ -358,7 +372,13 @@ function LbcNotes() {
     const note = document.createElement("textarea");
     note.placeholder = "Add a note...";
     note.dataset.listingId = listingId.toString();
-    note.classList.add(`${utils.id}--note`, config.loading.class, ...utils.tw("z-10 h-8 w-16 rounded-md border border-gray-400 bg-gray-100 p-2 transition-all duration-500 ease-in-out hover:z-20"));
+    note.classList.add(
+      `${utils.id}--note`,
+      config.loading.class,
+      ...utils.tw(
+        "z-10 h-8 w-16 rounded-md border border-gray-400 bg-gray-100 p-2 transition-all duration-500 ease-in-out hover:z-20",
+      ),
+    );
     note.addEventListener("keyup", () => saveNoteDebounced(note)); // keypress will not detect backspace
     note.disabled = true;
     void loadNote(note);

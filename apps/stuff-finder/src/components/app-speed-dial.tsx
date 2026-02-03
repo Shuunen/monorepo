@@ -25,7 +25,10 @@ const actions = [
 ];
 
 // oxlint-disable-next-line max-lines-per-function
-export function AppSpeedDial({ isLoading = false, isSettingsRequired = false }: Readonly<{ isLoading?: boolean; isSettingsRequired?: boolean }>) {
+export function AppSpeedDial({
+  isLoading = false,
+  isSettingsRequired = false,
+}: Readonly<{ isLoading?: boolean; isSettingsRequired?: boolean }>) {
   const [isOpen, setOpen] = useState(false);
   const toggleOpen = useCallback(() => {
     setOpen(!isOpen);
@@ -42,10 +45,16 @@ export function AppSpeedDial({ isLoading = false, isSettingsRequired = false }: 
   const onMouseLeave = useCallback(() => {
     onMouse("leave");
   }, [onMouse]);
-  const options: Partial<FabProps> = { color: "default", sx: { backgroundColor: "white", color: "purple", opacity: 0.7 } } as const;
+  const options: Partial<FabProps> = {
+    color: "default",
+    sx: { backgroundColor: "white", color: "purple", opacity: 0.7 },
+  } as const;
   const icon = useMemo(() => (isLoading ? <HourglassTop /> : <SpeedDialIcon />), [isLoading]);
   // oxlint-disable-next-line max-nested-callbacks
-  const availableActions = useMemo(() => (isSettingsRequired ? actions.filter(action => ["Home", "Settings"].includes(action.name)) : actions), [isSettingsRequired]);
+  const availableActions = useMemo(
+    () => (isSettingsRequired ? actions.filter(action => ["Home", "Settings"].includes(action.name)) : actions),
+    [isSettingsRequired],
+  );
   const { pathname: path } = useLocation();
   const [isQuickSearchAvailable, setQuickSearchAvailability] = useState(false);
   useEffect(() => {
@@ -57,15 +66,30 @@ export function AppSpeedDial({ isLoading = false, isSettingsRequired = false }: 
       <Fade in={isOpen}>
         {/* biome-ignore lint/a11y/useKeyWithClickEvents: later */}
         {/* biome-ignore lint/a11y/noStaticElementInteractions: just a div */}
-        <div className="absolute right-0 bottom-0 z-10 size-full bg-linear-to-tl" data-component="speed-dial-backdrop" onClick={toggleOpen} />
+        <div
+          className="absolute right-0 bottom-0 z-10 size-full bg-linear-to-tl"
+          data-component="speed-dial-backdrop"
+          onClick={toggleOpen}
+        />
       </Fade>
-      <div className="pointer-events-none fixed right-5 bottom-5 z-20 flex items-end md:right-10 md:bottom-10 print:hidden" data-component="speed-dial">
+      <div
+        className="pointer-events-none fixed right-5 bottom-5 z-20 flex items-end md:right-10 md:bottom-10 print:hidden"
+        data-component="speed-dial"
+      >
         <Fade in={isQuickSearchAvailable}>
           <div className="pointer-events-auto mb-2">
             <AppQuickSearch mode="floating" />
           </div>
         </Fade>
-        <SpeedDial ariaLabel="Actions" FabProps={options} icon={icon} onClick={toggleOpen} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} open={isOpen}>
+        <SpeedDial
+          ariaLabel="Actions"
+          FabProps={options}
+          icon={icon}
+          onClick={toggleOpen}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          open={isOpen}
+        >
           {availableActions.map(action => (
             <SpeedDialAction
               icon={action.icon}

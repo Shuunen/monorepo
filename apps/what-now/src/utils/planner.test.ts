@@ -248,7 +248,9 @@ describe("planner utils", () => {
     const dateModifications = {};
     const task2 = { ...mockTask, id: "task-2" };
     const tasks = [mockTask, task2];
-    vi.mocked(databaseUtils.updateTask).mockResolvedValueOnce(Result.ok(mockAppWriteTask)).mockResolvedValueOnce(Result.error("failure"));
+    vi.mocked(databaseUtils.updateTask)
+      .mockResolvedValueOnce(Result.ok(mockAppWriteTask))
+      .mockResolvedValueOnce(Result.error("failure"));
     const result = await saveTaskModifications(modifications, dateModifications, tasks);
     expect(result.ok).toBe(false);
   });

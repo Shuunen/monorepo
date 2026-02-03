@@ -114,8 +114,11 @@ export function getNextMatch(state: ContestState): ContestMatch | undefined {
 }
 
 export function selectWinner(state: ContestState, winnerId: number): ContestState {
-  const loserInCurrentMatch = state.currentMatch?.leftImage.id === winnerId ? state.currentMatch.rightImage : state.currentMatch?.leftImage;
-  const updatedAllImages = state.allImages.map(img => (img.id === loserInCurrentMatch?.id ? { ...img, eliminated: true } : img));
+  const loserInCurrentMatch =
+    state.currentMatch?.leftImage.id === winnerId ? state.currentMatch.rightImage : state.currentMatch?.leftImage;
+  const updatedAllImages = state.allImages.map(img =>
+    img.id === loserInCurrentMatch?.id ? { ...img, eliminated: true } : img,
+  );
   const updatedMatchesCompletedInRound = state.matchesCompletedInRound + 1;
   const nextMatch = getNextMatch({ ...state, matchesCompletedInRound: updatedMatchesCompletedInRound });
   if (nextMatch)

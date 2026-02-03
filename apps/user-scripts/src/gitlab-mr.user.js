@@ -89,9 +89,17 @@ function GitlabMr() {
     text.classList.add("label");
     link.after(text);
     link.parentElement.style.display = "none";
-    await addButton(link.parentElement, "MR affectée(s)", link.href.replace("assignee_username", "wip=no&assignee_username"));
+    await addButton(
+      link.parentElement,
+      "MR affectée(s)",
+      link.href.replace("assignee_username", "wip=no&assignee_username"),
+    );
     await utils.sleep(debounceTime);
-    await addButton(link.parentElement, "MR ouverte(s)", `${link.href.replace("assignee_username", "author_username")}&state=opened`);
+    await addButton(
+      link.parentElement,
+      "MR ouverte(s)",
+      `${link.href.replace("assignee_username", "author_username")}&state=opened`,
+    );
   }
   function hideStuff() {
     for (const element of utils.findAll(".shortcuts-todos, .nav-item.header-help")) element.remove();

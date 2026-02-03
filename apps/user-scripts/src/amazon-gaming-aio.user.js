@@ -128,7 +128,8 @@ function AmazonGamingAio() {
     productLine: ".s-item-container",
   };
   const deleteUselessSelectors = {
-    badges: '.featured-content, [data-a-target="badge-new"],.featured-content-shoveler, [data-a-target="badge-ends-soon"]',
+    badges:
+      '.featured-content, [data-a-target="badge-new"],.featured-content-shoveler, [data-a-target="badge-ends-soon"]',
     gameNight: '[data-a-target="GameNightBannerSectionRootHome"]',
     lunaGaming: "#offer-section-LUNA",
     sections:
@@ -156,7 +157,8 @@ function AmazonGamingAio() {
    * Clear classnames
    */
   function clearClassnames() {
-    for (const selector of Object.values(clearClassSelectors)) for (const node of utils.findAll(selector, document, true)) node.className = "";
+    for (const selector of Object.values(clearClassSelectors))
+      for (const node of utils.findAll(selector, document, true)) node.className = "";
   }
   /**
    * Check if a grid is empty and hide it

@@ -87,10 +87,19 @@ export const Showcase: Story = {
 
       <div className="space-y-4">
         <p className="text-sm text-muted-foreground">Paragraphs</p>
-        <Paragraph variant="default">This is a default paragraph with some sample text to demonstrate the typography styling. It has relaxed leading for better readability.</Paragraph>
-        <Paragraph variant="primary">This is a primary paragraph with some sample text to demonstrate the typography styling.</Paragraph>
-        <Paragraph variant="muted">This is a muted paragraph with some sample text to demonstrate the typography styling.</Paragraph>
-        <Paragraph variant="secondary">This is a secondary paragraph with some sample text to demonstrate the typography styling.</Paragraph>
+        <Paragraph variant="default">
+          This is a default paragraph with some sample text to demonstrate the typography styling. It has relaxed
+          leading for better readability.
+        </Paragraph>
+        <Paragraph variant="primary">
+          This is a primary paragraph with some sample text to demonstrate the typography styling.
+        </Paragraph>
+        <Paragraph variant="muted">
+          This is a muted paragraph with some sample text to demonstrate the typography styling.
+        </Paragraph>
+        <Paragraph variant="secondary">
+          This is a secondary paragraph with some sample text to demonstrate the typography styling.
+        </Paragraph>
       </div>
     </div>
   ),

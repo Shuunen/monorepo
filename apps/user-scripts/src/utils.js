@@ -68,7 +68,12 @@ class Shuutils {
    * @returns {{backgrounds: string[], icon: string, iconStyle: string}} The style for the toast notification.
    */
   #toastStyle(type) {
-    if (type === "success") return { backgrounds: ["MediumSeaGreen", "SeaGreen"], icon: "&check;", iconStyle: "line-height: 21px; text-indent: 1px;" };
+    if (type === "success")
+      return {
+        backgrounds: ["MediumSeaGreen", "SeaGreen"],
+        icon: "&check;",
+        iconStyle: "line-height: 21px; text-indent: 1px;",
+      };
     if (type === "error") return { backgrounds: ["FireBrick", "Brown"], icon: "x", iconStyle: "line-height: 21.5px;" };
     return { backgrounds: ["DodgerBlue", "RoyalBlue"], icon: "i", iconStyle: "line-height: 21px;" };
   }
@@ -399,9 +404,17 @@ class Shuutils {
   parsePrice(input) {
     // Normalize all space-like characters to regular space
     const normalizedInput = input.replaceAll(/[\s\u00A0\u2000-\u200B\u202F\u205F\u3000]+/gu, " ").trim();
-    // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-    const parsePriceRegex = /^(?<sign>-)?\+?(?<currencyStart>[$€])? ?(?:(?<integers>[\d .,]+)(?<decimals>[.,]\d{2})|(?<integersOnly>[\d .,]+)) ?(?<currencyEnd>[$€])?$/u;
-    const { currencyEnd, currencyStart, decimals, integers, integersOnly, sign = "" } = parsePriceRegex.exec(normalizedInput)?.groups ?? {};
+    const parsePriceRegex =
+      // biome-ignore lint/performance/useTopLevelRegex: FIX me later
+      /^(?<sign>-)?\+?(?<currencyStart>[$€])? ?(?:(?<integers>[\d .,]+)(?<decimals>[.,]\d{2})|(?<integersOnly>[\d .,]+)) ?(?<currencyEnd>[$€])?$/u;
+    const {
+      currencyEnd,
+      currencyStart,
+      decimals,
+      integers,
+      integersOnly,
+      sign = "",
+    } = parsePriceRegex.exec(normalizedInput)?.groups ?? {};
     const integer = (integers ?? integersOnly ?? "").replaceAll(/\D/gu, "");
     const fraction = decimals ? decimals.slice(1) : "00";
     const currency = currencyStart ?? currencyEnd ?? "";

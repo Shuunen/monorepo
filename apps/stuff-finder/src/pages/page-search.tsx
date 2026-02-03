@@ -30,7 +30,12 @@ export function PageSearch() {
   }, [input]);
 
   return (
-    <AppPageCard cardTitle="Search" icon={SearchIcon} pageCode="search" pageTitle={`Search for “${ellipsis(input, maxNameLength)}”`}>
+    <AppPageCard
+      cardTitle="Search"
+      icon={SearchIcon}
+      pageCode="search"
+      pageTitle={`Search for “${ellipsis(input, maxNameLength)}”`}
+    >
       <div className="flex max-h-[90%] flex-col items-center gap-3 sm:gap-5 md:max-h-full">
         <h2 className="text-center">{header}</h2>
         {results.length > 0 && (

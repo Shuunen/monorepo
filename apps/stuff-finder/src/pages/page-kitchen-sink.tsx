@@ -14,10 +14,38 @@ const items = [
   { ...emptyItem, name: "ok without resize", reference: "le chat de feu" },
   { ...emptyItem, name: "NOK without resize", reference: "le chat de feu vert" },
   { ...emptyItem, name: "ok resized to 2", reference: "le chat de feu vert" },
-  { ...emptyItem, box: "Red" as Item["box"], brand: "3 chars box name", drawer: 3, name: "This is a box test", reference: "12345678901234567890wq" },
-  { ...emptyItem, box: "Blue", brand: "4 chars box name", drawer: 4, name: "This is a box test", reference: "12345678901234567890wq" },
-  { ...emptyItem, box: "Green", brand: "5 chars box name", drawer: 5, name: "This is a box test", reference: "12345678901234567890wq" },
-  { ...emptyItem, box: "Yellow", brand: "6 chars box name", drawer: 6, name: "This is a box test", reference: "12345678901234567890wq" },
+  {
+    ...emptyItem,
+    box: "Red" as Item["box"],
+    brand: "3 chars box name",
+    drawer: 3,
+    name: "This is a box test",
+    reference: "12345678901234567890wq",
+  },
+  {
+    ...emptyItem,
+    box: "Blue",
+    brand: "4 chars box name",
+    drawer: 4,
+    name: "This is a box test",
+    reference: "12345678901234567890wq",
+  },
+  {
+    ...emptyItem,
+    box: "Green",
+    brand: "5 chars box name",
+    drawer: 5,
+    name: "This is a box test",
+    reference: "12345678901234567890wq",
+  },
+  {
+    ...emptyItem,
+    box: "Yellow",
+    brand: "6 chars box name",
+    drawer: 6,
+    name: "This is a box test",
+    reference: "12345678901234567890wq",
+  },
 ] satisfies Item[];
 
 export function PageKitchenSink() {

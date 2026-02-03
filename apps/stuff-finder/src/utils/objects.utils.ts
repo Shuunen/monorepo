@@ -12,8 +12,11 @@ export function sortListsEntries<Type = Record<string, string[]>>(record: Type) 
   /* v8 ignore next -- @preserve */
   for (const [name, values] of entries)
     if (Array.isArray(values)) {
-      // oxlint-disable-next-line new-cap
-      const updatedValues = ["", ...values.toSorted((valueA: string, valueB: string) => Intl.Collator().compare(valueA, valueB))];
+      const updatedValues = [
+        "",
+        // oxlint-disable-next-line new-cap
+        ...values.toSorted((valueA: string, valueB: string) => Intl.Collator().compare(valueA, valueB)),
+      ];
       (output as Record<string, string[]>)[name] = arrayUnique(updatedValues);
     }
   return output;

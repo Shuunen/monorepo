@@ -43,7 +43,9 @@ it("memoize B testing memoized function", () => {
 });
 
 it("memoize C invalid callback given", () => {
-  expect(() => memoize(1 as unknown as () => void)).toThrowErrorMatchingInlineSnapshot(`[TypeError: memoize callback parameter should be a function]`);
+  expect(() => memoize(1 as unknown as () => void)).toThrowErrorMatchingInlineSnapshot(
+    `[TypeError: memoize callback parameter should be a function]`,
+  );
 });
 
 type Parent = { age?: number; firstName: string; lastName: string };

@@ -32,7 +32,13 @@ const codeVersionOptions: CodeVersionOptions[] = [
   { Code: "Y234", Version: "2.0", label: "Beta" },
 ];
 
-function WithState<Option, Value = string>({ options, getValue, getLabel, onChange, ...props }: React.ComponentProps<typeof SelectLong<Option, Value>>) {
+function WithState<Option, Value = string>({
+  options,
+  getValue,
+  getLabel,
+  onChange,
+  ...props
+}: React.ComponentProps<typeof SelectLong<Option, Value>>) {
   const [selectedString, setSelectedString] = useState<string | undefined>(undefined);
 
   return (
@@ -65,7 +71,17 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: args => <WithState {...args} className="w-96" name="select" placeholder="Select a user" options={shortOptions} getLabel={opt => opt.label} getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))} />,
+  render: args => (
+    <WithState
+      {...args}
+      className="w-96"
+      name="select"
+      placeholder="Select a user"
+      options={shortOptions}
+      getLabel={opt => opt.label}
+      getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))}
+    />
+  ),
   play: async ({ canvasElement, step }) => {
     const canvasBody = within(canvasElement.ownerDocument.body);
     const select = await canvasBody.findByTestId("select-trigger-select");
@@ -87,7 +103,17 @@ export const Default: Story = {
 };
 
 export const Long: Story = {
-  render: args => <WithState {...args} name="select" className="w-96" placeholder="Select a user" options={longOptions} getLabel={opt => opt.label} getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))} />,
+  render: args => (
+    <WithState
+      {...args}
+      name="select"
+      className="w-96"
+      placeholder="Select a user"
+      options={longOptions}
+      getLabel={opt => opt.label}
+      getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))}
+    />
+  ),
   play: async ({ canvasElement, step }) => {
     const canvasBody = within(canvasElement.ownerDocument.body);
     const select = await canvasBody.findByTestId("select-trigger-select");
@@ -111,7 +137,15 @@ export const Long: Story = {
 
 export const OnChangeTest: Story = {
   render: args => (
-    <WithState {...args} className="w-96" name="select-onchange" placeholder="Select a user" options={shortOptions} getLabel={opt => opt.label} getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))} />
+    <WithState
+      {...args}
+      className="w-96"
+      name="select-onchange"
+      placeholder="Select a user"
+      options={shortOptions}
+      getLabel={opt => opt.label}
+      getValue={opt => (typeof opt.value === "string" ? opt.value : JSON.stringify(opt.value))}
+    />
   ),
   play: async ({ canvasElement, step, args }) => {
     const onChangeSpy = args.onChange;
@@ -139,7 +173,17 @@ export const OnChangeTest: Story = {
 };
 
 export const CodeVersion: Story = {
-  render: args => <WithState {...args} className="w-96" name="select-code" placeholder="Select a code & version" options={codeVersionOptions} getLabel={opt => opt.label} getValue={opt => `${opt.Code}`} />,
+  render: args => (
+    <WithState
+      {...args}
+      className="w-96"
+      name="select-code"
+      placeholder="Select a code & version"
+      options={codeVersionOptions}
+      getLabel={opt => opt.label}
+      getValue={opt => `${opt.Code}`}
+    />
+  ),
   play: async ({ canvasElement, step, args }) => {
     const onChangeSpy = args.onChange;
     const canvasBody = within(canvasElement.ownerDocument.body);
@@ -151,7 +195,10 @@ export const CodeVersion: Story = {
       expect(options).toHaveLength(2);
       await userEvent.click(options[0]);
       expect(select).toHaveTextContent("Alpha");
-      expect(onChangeSpy).toHaveBeenCalledWith("X123", expect.objectContaining({ Code: "X123", Version: "1.0", label: "Alpha" }));
+      expect(onChangeSpy).toHaveBeenCalledWith(
+        "X123",
+        expect.objectContaining({ Code: "X123", Version: "1.0", label: "Alpha" }),
+      );
     });
   },
 };

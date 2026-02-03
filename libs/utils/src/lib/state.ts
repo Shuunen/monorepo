@@ -10,9 +10,14 @@ type StateCallback = (() => void) | ((updatedKey: string, updatedValue?: unknown
  * @returns The state object and a watch function
  */
 // oxlint-disable-next-line max-lines-per-function
-export function createState<State extends object>(data: State, stateStorage?: ShuutilsStorage, onlyStoreKeys: Array<keyof State> = []) {
+export function createState<State extends object>(
+  data: State,
+  stateStorage?: ShuutilsStorage,
+  onlyStoreKeys: Array<keyof State> = [],
+) {
   type StateKey = keyof State;
-  const useStorage = (key: string | symbol) => stateStorage !== undefined && (onlyStoreKeys.length === 0 || onlyStoreKeys.includes(key as StateKey));
+  const useStorage = (key: string | symbol) =>
+    stateStorage !== undefined && (onlyStoreKeys.length === 0 || onlyStoreKeys.includes(key as StateKey));
   const listeners: Partial<Record<StateKey, StateCallback[]>> = {};
   const handler: ProxyHandler<State> = {
     get(target: State, key: string | symbol) {

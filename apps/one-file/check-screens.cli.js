@@ -8,7 +8,10 @@ import { blue, ellipsis, green, isTestEnvironment, Logger, red, slugify, yellow 
 const parameters = process.argv;
 const expectedNbParameters = 2;
 const logger = new Logger();
-if (parameters.length <= expectedNbParameters) logger.info('Targeting current folder, you can also specify a specific path, ex : node one-file/check-screens.cli.js "U:\\Screens\\" \n');
+if (parameters.length <= expectedNbParameters)
+  logger.info(
+    'Targeting current folder, you can also specify a specific path, ex : node one-file/check-screens.cli.js "U:\\Screens\\" \n',
+  );
 const screensPath = path.normalize(parameters[expectedNbParameters] ?? process.cwd());
 const shouldShowFirst = parameters.includes("--first");
 const regex = {
@@ -45,7 +48,13 @@ function renameIfNecessary(name) {
   const baseName = path.basename(name);
   const extensionName = path.extname(baseName);
   const nameWithoutExtension = baseName.slice(0, -extensionName.length);
-  const cleanName = nameWithoutExtension.replace(regex.underscoreOrDot, " ").replace(regex.yearInParens, " $<year> ").replace(regex.qb, " ").replace(regex.letterBracket, "$<letter> $<bracket>").replace(regex.spaces, " ") + extensionName;
+  const cleanName =
+    nameWithoutExtension
+      .replace(regex.underscoreOrDot, " ")
+      .replace(regex.yearInParens, " $<year> ")
+      .replace(regex.qb, " ")
+      .replace(regex.letterBracket, "$<letter> $<bracket>")
+      .replace(regex.spaces, " ") + extensionName;
   if (baseName === cleanName || isTestEnvironment()) return cleanName;
   logger.info(`Renaming : \n - ${red(name)}\nto : \n - ${green(cleanName)}\n`);
   renameSync(path.join(screensPath, name), path.join(screensPath, cleanName));

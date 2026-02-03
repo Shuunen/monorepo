@@ -14,7 +14,10 @@ const parameters = process.argv;
 const minSimilarity = 0.68; // 68% similarity is the minimum to consider two names as similar
 const expectedNbParameters = 2;
 const logger = new Logger({ willOutputToMemory: true });
-if (parameters.length <= expectedNbParameters) logger.info(String.raw`Targeting current folder, you can also specify a specific path, ex : node one-file/check-screens.cli.js "U:\Screens\"`);
+if (parameters.length <= expectedNbParameters)
+  logger.info(
+    String.raw`Targeting current folder, you can also specify a specific path, ex : node one-file/check-screens.cli.js "U:\Screens\"`,
+  );
 const appsPath = path.normalize(parameters[expectedNbParameters] ?? process.cwd());
 const colors = [red, green, blue, yellow];
 let colorIndex = 0;
@@ -31,7 +34,6 @@ const checkArchives = parameters.includes("--check");
  * @param {string} secondString the second string
  * @returns {number} the similarity between the two strings
  */
-// oxlint-disable-next-line max-lines-per-function, max-statements
 function stringsSimilarity(firstString, secondString) {
   const first = firstString.replaceAll(/\s+/gu, "");
   const second = secondString.replaceAll(/\s+/gu, "");
@@ -156,7 +158,8 @@ function checkCloseName(groupNames, groupName) {
     const nameA = groupNameA.split("_")[0] ?? "";
     const nameB = groupName.split("_")[0] ?? "";
     const similarity = stringsSimilarity(nameA, nameB);
-    if (similarity >= minSimilarity) logger.warn(`${similarity * nbPercentMax}% similar : ${color(groupName)} and ${color(groupNameA)}`);
+    if (similarity >= minSimilarity)
+      logger.warn(`${similarity * nbPercentMax}% similar : ${color(groupName)} and ${color(groupNameA)}`);
   }
 }
 
@@ -171,7 +174,6 @@ function checkArchive(archive) {
   if (!readableExtensions.has(extension)) return;
   const expectedFolder = archive.replace(`.${extension}`, "");
   return new Promise(resolve => {
-    // oxlint-disable-next-line max-nested-callbacks
     sevenZip.list(pathToArchive, (error, content) => {
       if (error) logger.error(`Error while listing ${color(archive)}`, error);
       // oxlint-disable-next-line max-nested-callbacks
@@ -179,8 +181,13 @@ function checkArchive(archive) {
       if (firstFolder === undefined) logger.error(`Failed to find a folder in : ${color(archive)}`);
       else logger.debug(`${archive} content`, firstFolder);
       const isValid = firstFolder?.name === expectedFolder;
-      if (!isValid && firstFolder) logger.warn(`Found ${color(firstFolder.name)} instead of ${color(expectedFolder)} in ${color(archive)}`);
-      if (!isValid) writeFileSync(path.join(currentFolder, `check-apps-error-${expectedFolder}.json`), JSON.stringify(content, undefined, nbSpaces));
+      if (!isValid && firstFolder)
+        logger.warn(`Found ${color(firstFolder.name)} instead of ${color(expectedFolder)} in ${color(archive)}`);
+      if (!isValid)
+        writeFileSync(
+          path.join(currentFolder, `check-apps-error-${expectedFolder}.json`),
+          JSON.stringify(content, undefined, nbSpaces),
+        );
       void resolve();
     });
   });
@@ -217,7 +224,8 @@ function checkNameFormat(name) {
   const invalidChar = invalidCharsRegex.exec(name)?.groups?.invalid;
   if (invalidChar !== undefined) logger.warn(`Invalid chars in : ${color(name)}, found : ${color(invalidChar)}`);
   const invalidVersion = invalidVersionRegex.exec(name)?.groups?.invalid;
-  if (invalidVersion !== undefined) logger.warn(`Invalid version in : ${color(name)}, found : ${color(invalidVersion)}`);
+  if (invalidVersion !== undefined)
+    logger.warn(`Invalid version in : ${color(name)}, found : ${color(invalidVersion)}`);
   const date = nameFormatRegex.exec(name)?.groups?.date;
   if (date === undefined) logger.warn(`Missing date in : ${color(name)}, should be like ${name}_2042-11`);
 }

@@ -7,8 +7,10 @@ import { Result } from "./result.js";
  * @returns Base64 encoded string
  */
 export function toBase64(str: string) {
-  // oxlint-disable-next-line id-length
-  return globalThis.btoa(encodeURIComponent(str).replaceAll(/%([0-9A-F]{2})/g, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16))));
+  return globalThis.btoa(
+    // oxlint-disable-next-line id-length
+    encodeURIComponent(str).replaceAll(/%([0-9A-F]{2})/g, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16))),
+  );
 }
 
 /**

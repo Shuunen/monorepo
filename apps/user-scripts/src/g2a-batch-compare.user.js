@@ -18,13 +18,15 @@
 
 function injectModal() {
   const backdrop = document.createElement("div");
-  backdrop.style = "display: flex; z-index: 100; width: 100%; height: 100%; background-color: rgba(0,0,0,.5); position: fixed; top: 0; left: 0;";
+  backdrop.style =
+    "display: flex; z-index: 100; width: 100%; height: 100%; background-color: rgba(0,0,0,.5); position: fixed; top: 0; left: 0;";
   backdrop.dataset.close = true;
   backdrop.addEventListener("click", event => {
     if (event.target.dataset.close === "true") backdrop.remove();
   });
   const modal = document.createElement("div");
-  modal.style = "z-index: 200; position: relative; max-height: 90%; overflow-y: auto; margin: auto; padding: 32px 24px; background: floralwhite; width: 800px;";
+  modal.style =
+    "z-index: 200; position: relative; max-height: 90%; overflow-y: auto; margin: auto; padding: 32px 24px; background: floralwhite; width: 800px;";
   modal.innerHTML = `
       <h1 style=" margin: 1rem 0 2rem; text-align: center; text-decoration: underline; ">
         <a target="_blank" href="https://github.com/Shuunen/user-scripts/">G2A Batch Compare</a>
@@ -41,7 +43,13 @@ function G2aBatchCompare() {
 
   const utils = new Shuutils("g2a-bcp");
   function cleanGameName(string) {
-    const output = string.toLowerCase().split(" deluxe edition")[0].split(" definitive edition")[0].split(" standard edition")[0].split(" (")[0].split("steam")[0];
+    const output = string
+      .toLowerCase()
+      .split(" deluxe edition")[0]
+      .split(" definitive edition")[0]
+      .split(" standard edition")[0]
+      .split(" (")[0]
+      .split("steam")[0];
     return utils.readableString(output);
   }
   function same(stringA, stringB) {
@@ -78,7 +86,10 @@ function G2aBatchCompare() {
           `<a class="price" href="https://store.steampowered.com/app/${game.id}" target="_blank">${game.price} €</a>`,
           Math.round(game.priceLocal),
         );
-        if (game.priceLocal > 0) cells.push(`<a class="price" href="${game.priceLocalUrl}" target="_blank">${Math.round(game.priceLocal)} €</a>`);
+        if (game.priceLocal > 0)
+          cells.push(
+            `<a class="price" href="${game.priceLocalUrl}" target="_blank">${Math.round(game.priceLocal)} €</a>`,
+          );
         else cells.push(`<a class="no-price" href="${game.priceLocalSearchUrl}" target="_blank">no price found</a>`);
         return `<tr><td>${cells.join("</td><td>")}</td></tr>`;
       })
@@ -156,7 +167,8 @@ function G2aBatchCompare() {
   function injectButton() {
     const button = document.createElement("button");
     button.textContent = `Compare ${list.length} prices`;
-    button.style = "position: fixed; cursor: pointer; top: 70px; right: 20px; padding: 10px 24px; font-size: 20px; z-index: 50; ";
+    button.style =
+      "position: fixed; cursor: pointer; top: 70px; right: 20px; padding: 10px 24px; font-size: 20px; z-index: 50; ";
     button.addEventListener("click", () => {
       void showModal();
     });

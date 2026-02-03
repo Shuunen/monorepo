@@ -9,20 +9,41 @@ describe("control-buttons", () => {
   const mockReset = vi.fn();
 
   it("ControlButtons A should render all buttons in normal mode", () => {
-    render(<ControlButtons contestState={undefined} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />);
+    render(
+      <ControlButtons
+        contestState={undefined}
+        onLeftImageUpload={mockLeftUpload}
+        onReset={mockReset}
+        onRightImageUpload={mockRightUpload}
+      />,
+    );
     const buttons = screen.getAllByRole("button");
     expect(buttons.length).toBe(3);
   });
 
   it("ControlButtons B should call reset handler when reset button is clicked", () => {
-    render(<ControlButtons contestState={undefined} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />);
+    render(
+      <ControlButtons
+        contestState={undefined}
+        onLeftImageUpload={mockLeftUpload}
+        onReset={mockReset}
+        onRightImageUpload={mockRightUpload}
+      />,
+    );
     const resetButton = screen.getByText("Reset view");
     fireEvent.click(resetButton);
     expect(mockReset).toHaveBeenCalledOnce();
   });
 
   it("ControlButtons C should display Reset View text in normal mode", () => {
-    render(<ControlButtons contestState={undefined} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />);
+    render(
+      <ControlButtons
+        contestState={undefined}
+        onLeftImageUpload={mockLeftUpload}
+        onReset={mockReset}
+        onRightImageUpload={mockRightUpload}
+      />,
+    );
     const resetText = screen.getByText("Reset view");
     expect(resetText).toBeTruthy();
   });
@@ -42,7 +63,14 @@ describe("control-buttons", () => {
       round: 1,
       winner: undefined,
     };
-    const { container } = render(<ControlButtons contestState={contestState} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />);
+    const { container } = render(
+      <ControlButtons
+        contestState={contestState}
+        onLeftImageUpload={mockLeftUpload}
+        onReset={mockReset}
+        onRightImageUpload={mockRightUpload}
+      />,
+    );
     const hiddenDivs = container.querySelectorAll(".hidden");
     expect(hiddenDivs.length).toBeGreaterThan(0);
   });
@@ -62,7 +90,14 @@ describe("control-buttons", () => {
       round: 1,
       winner: undefined,
     };
-    render(<ControlButtons contestState={contestState} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />);
+    render(
+      <ControlButtons
+        contestState={contestState}
+        onLeftImageUpload={mockLeftUpload}
+        onReset={mockReset}
+        onRightImageUpload={mockRightUpload}
+      />,
+    );
     const exitText = screen.getByText("Exit contest");
     expect(exitText).toBeTruthy();
   });
@@ -78,13 +113,27 @@ describe("control-buttons", () => {
       round: 1,
       winner: { eliminated: false, filename: "winner.jpg", id: 0, url: "url" },
     };
-    const { container } = render(<ControlButtons contestState={contestState} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />);
+    const { container } = render(
+      <ControlButtons
+        contestState={contestState}
+        onLeftImageUpload={mockLeftUpload}
+        onReset={mockReset}
+        onRightImageUpload={mockRightUpload}
+      />,
+    );
     const hiddenDivs = container.querySelectorAll(".hidden");
     expect(hiddenDivs.length).toBeGreaterThan(0);
   });
 
   it("ControlButtons G should trigger file input when left upload button is clicked", () => {
-    const { container } = render(<ControlButtons contestState={undefined} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />);
+    const { container } = render(
+      <ControlButtons
+        contestState={undefined}
+        onLeftImageUpload={mockLeftUpload}
+        onReset={mockReset}
+        onRightImageUpload={mockRightUpload}
+      />,
+    );
     const leftButton = screen.getAllByRole("button").find(btn => btn.textContent?.includes("Left Image"));
     if (leftButton) {
       fireEvent.click(leftButton);
@@ -94,7 +143,14 @@ describe("control-buttons", () => {
   });
 
   it("ControlButtons H should trigger file input when right upload button is clicked", () => {
-    const { container } = render(<ControlButtons contestState={undefined} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />);
+    const { container } = render(
+      <ControlButtons
+        contestState={undefined}
+        onLeftImageUpload={mockLeftUpload}
+        onReset={mockReset}
+        onRightImageUpload={mockRightUpload}
+      />,
+    );
     const rightButton = screen.getAllByRole("button").find(btn => btn.textContent?.includes("Right Image"));
     if (rightButton) {
       fireEvent.click(rightButton);
@@ -104,7 +160,14 @@ describe("control-buttons", () => {
   });
 
   it("ControlButtons I should call onLeftImageUpload when left file input changes", () => {
-    const { container } = render(<ControlButtons contestState={undefined} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />);
+    const { container } = render(
+      <ControlButtons
+        contestState={undefined}
+        onLeftImageUpload={mockLeftUpload}
+        onReset={mockReset}
+        onRightImageUpload={mockRightUpload}
+      />,
+    );
     const fileInput = container.querySelector("#left-upload");
     if (fileInput) {
       const file = new File(["content"], "test.jpg", { type: "image/jpeg" });
@@ -114,7 +177,14 @@ describe("control-buttons", () => {
   });
 
   it("ControlButtons J should call onRightImageUpload when right file input changes", () => {
-    const { container } = render(<ControlButtons contestState={undefined} onLeftImageUpload={mockLeftUpload} onReset={mockReset} onRightImageUpload={mockRightUpload} />);
+    const { container } = render(
+      <ControlButtons
+        contestState={undefined}
+        onLeftImageUpload={mockLeftUpload}
+        onReset={mockReset}
+        onRightImageUpload={mockRightUpload}
+      />,
+    );
     const fileInput = container.querySelector("#right-upload");
     if (fileInput) {
       const file = new File(["content"], "test.jpg", { type: "image/jpeg" });

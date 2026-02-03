@@ -1,4 +1,19 @@
-import { nbFifth, nbFourth, nbHslMin, nbHueMax, nbHueStep, nbLightnessMax, nbLongHex, nbRgbMax, nbSaturationMax, nbSecond, nbSeventh, nbShortHex, nbSixth, nbThird } from "./constants.js";
+import {
+  nbFifth,
+  nbFourth,
+  nbHslMin,
+  nbHueMax,
+  nbHueStep,
+  nbLightnessMax,
+  nbLongHex,
+  nbRgbMax,
+  nbSaturationMax,
+  nbSecond,
+  nbSeventh,
+  nbShortHex,
+  nbSixth,
+  nbThird,
+} from "./constants.js";
 import { Result } from "./result.js";
 
 /**
@@ -21,7 +36,9 @@ export function hexToRgb(hex: string) {
       colorRed: Number(`0x${hex[nbSecond]}${hex[nbThird]}`),
     });
   }
-  return Result.error(`Invalid HEX color provided : ${hex}, should have a length of ${nbShortHex} or ${nbLongHex} instead of : ${hex.length}`);
+  return Result.error(
+    `Invalid HEX color provided : ${hex}, should have a length of ${nbShortHex} or ${nbLongHex} instead of : ${hex.length}`,
+  );
 }
 
 // Credits to https://css-tricks.com/converting-color-spaces-in-javascript/

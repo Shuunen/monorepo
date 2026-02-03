@@ -1,5 +1,5 @@
 /* v8 ignore start -- @preserve */
-// oxlint-disable max-depth, no-bitwise, no-magic-numbers, max-nested-callbacks, max-lines-per-function
+// oxlint-disable no-bitwise, no-magic-numbers, max-nested-callbacks, max-lines-per-function
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
@@ -79,7 +79,14 @@ server.on("upgrade", (request, socket) => {
   const key = request.headers["sec-websocket-key"];
   const acceptKey = createHash("sha1").update(`${key}258EAFA5-E914-47DA-95CA-C5AB0DC85B11`).digest("base64");
 
-  const headers = ["HTTP/1.1 101 Switching Protocols", "Upgrade: websocket", "Connection: Upgrade", `Sec-WebSocket-Accept: ${acceptKey}`, "", ""];
+  const headers = [
+    "HTTP/1.1 101 Switching Protocols",
+    "Upgrade: websocket",
+    "Connection: Upgrade",
+    `Sec-WebSocket-Accept: ${acceptKey}`,
+    "",
+    "",
+  ];
 
   socket.write(headers.join("\r\n"));
 

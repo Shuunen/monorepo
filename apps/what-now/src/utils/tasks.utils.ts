@@ -1,4 +1,15 @@
-import { dateIso10, daysAgoIso10, nbBefore, nbDaysInMonth, nbDaysInWeek, nbDaysInYear, nbMsInDay, nbMsInMinute, Result, readableTimeAgo } from "@monorepo/utils";
+import {
+  dateIso10,
+  daysAgoIso10,
+  nbBefore,
+  nbDaysInMonth,
+  nbDaysInWeek,
+  nbDaysInYear,
+  nbMsInDay,
+  nbMsInMinute,
+  Result,
+  readableTimeAgo,
+} from "@monorepo/utils";
 import type { Task } from "../types";
 import { getTasks, updateTask } from "./database.utils";
 import { logger } from "./logger.utils";
@@ -88,7 +99,8 @@ export function isDataOlderThan(milliseconds: number) {
 
 export async function loadTasks(reason: string) {
   if (!state.isSetup) return Result.error("not setup, cannot load tasks");
-  if (state.tasks.length > 0 && !isDataOlderThan(Number(nbMsInMinute))) return Result.ok(`tasks are fresh (${readableTimeAgo(Date.now() - state.tasksTimestamp)})`);
+  if (state.tasks.length > 0 && !isDataOlderThan(Number(nbMsInMinute)))
+    return Result.ok(`tasks are fresh (${readableTimeAgo(Date.now() - state.tasksTimestamp)})`);
   const result = await fetchList(reason);
   if (!result.ok) return result;
   logger.info("found", result.value.length, "task(s)");
@@ -98,7 +110,8 @@ export async function loadTasks(reason: string) {
 }
 
 export function dispatchTask(task: Task, index = 0) {
-  if (["day", "yes"].includes(task.once)) return Result.error(task.once === "yes" ? "one-time task, cannot dispatch" : "daily task, nothing to dispatch");
+  if (["day", "yes"].includes(task.once))
+    return Result.error(task.once === "yes" ? "one-time task, cannot dispatch" : "daily task, nothing to dispatch");
   const delay = daysRecurrence(task);
   const position = index % delay;
   const completionDate = daysAgoIso10(nbBefore * position + delay);
@@ -132,6 +145,14 @@ export function toggleComplete(task: Task) {
  * @returns a task mock
  */
 export function taskMock(fields: Partial<Task> = {}): Task {
-  const { completedOn = daysAgoIso10(0), id = "id-123", isDone = false, minutes = 20, name = "a super task", once = "day", reason } = { ...fields };
+  const {
+    completedOn = daysAgoIso10(0),
+    id = "id-123",
+    isDone = false,
+    minutes = 20,
+    name = "a super task",
+    once = "day",
+    reason,
+  } = { ...fields };
   return { completedOn, id, isDone, minutes, name, once, reason } satisfies Task;
 }

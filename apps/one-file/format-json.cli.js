@@ -32,7 +32,10 @@ function getFiles(folderPath) {
  * @returns {string} the path
  */
 function getPath() {
-  if (process.argv.length <= expectedNbParameters) throw new Error(String.raw`this script need a path as argument like : format-json.js my-file.json or format-json.js "C:\My Folder\"`);
+  if (process.argv.length <= expectedNbParameters)
+    throw new Error(
+      String.raw`this script need a path as argument like : format-json.js my-file.json or format-json.js "C:\My Folder\"`,
+    );
   return path.normalize(process.argv[expectedNbParameters] ?? "");
 }
 

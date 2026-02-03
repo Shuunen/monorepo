@@ -3,7 +3,22 @@ import { daysAgoIso10, daysFromNow, functionReturningVoid, sleep } from "@monore
 import { expect, it, vi } from "vitest";
 import { addTask, localToRemoteTask } from "./database.utils";
 import { state } from "./state.utils";
-import { byActive, completeTask, daysRecurrence, daysSinceCompletion, dispatchTask, dispatchTasksAndUpdate, fetchList, isDataOlderThan, isTaskActive, loadTasks, minutesRemaining, taskMock, toggleComplete, unCompleteTask } from "./tasks.utils";
+import {
+  byActive,
+  completeTask,
+  daysRecurrence,
+  daysSinceCompletion,
+  dispatchTask,
+  dispatchTasksAndUpdate,
+  fetchList,
+  isDataOlderThan,
+  isTaskActive,
+  loadTasks,
+  minutesRemaining,
+  taskMock,
+  toggleComplete,
+  unCompleteTask,
+} from "./tasks.utils";
 
 const today = daysAgoIso10(0);
 const yesterday = daysAgoIso10(1);
@@ -327,7 +342,11 @@ it("unComplete A", async () => {
 });
 
 it("should sort tasks by active A", () => {
-  const tasks = [taskMock({ completedOn: today, name: "b", once: "day" }), taskMock({ completedOn: yesterday, name: "a", once: "day" }), taskMock({ name: "c", once: "month" })];
+  const tasks = [
+    taskMock({ completedOn: today, name: "b", once: "day" }),
+    taskMock({ completedOn: yesterday, name: "a", once: "day" }),
+    taskMock({ name: "c", once: "month" }),
+  ];
   const sortedTasks = Array.from(tasks).toSorted(byActive);
   expect(sortedTasks[0]?.name).toBe("a");
 });

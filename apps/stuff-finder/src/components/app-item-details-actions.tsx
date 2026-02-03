@@ -42,7 +42,18 @@ export function AppItemDetailsActions({ item }: Readonly<{ item: Item }>) {
   }
 
   async function doClone() {
-    const data = { barcode: item.barcode, box: item.box, brand: item.brand, details: item.details, drawer: item.drawer.toString(), name: item.name, photo: item.photos[0], price: item.price.toString(), reference: item.reference, status: item.status };
+    const data = {
+      barcode: item.barcode,
+      box: item.box,
+      brand: item.brand,
+      details: item.details,
+      drawer: item.drawer.toString(),
+      name: item.name,
+      photo: item.photos[0],
+      price: item.price.toString(),
+      reference: item.reference,
+      status: item.status,
+    };
     logger.info("cloning item", data);
     await copyToClipboard(data);
     navigate("/item/add");
@@ -68,7 +79,13 @@ export function AppItemDetailsActions({ item }: Readonly<{ item: Item }>) {
 
   return (
     <div>
-      <IconButton aria-controls={isOpen ? "basic-menu" : undefined} aria-expanded={isOpen ? "true" : undefined} aria-haspopup="true" aria-label="more" onClick={handleClick}>
+      <IconButton
+        aria-controls={isOpen ? "basic-menu" : undefined}
+        aria-expanded={isOpen ? "true" : undefined}
+        aria-haspopup="true"
+        aria-label="more"
+        onClick={handleClick}
+      >
         <MoreDots />
       </IconButton>
       <Menu anchorEl={anchorElement} onClose={closeMenu} open={isOpen}>
@@ -91,7 +108,12 @@ export function AppItemDetailsActions({ item }: Readonly<{ item: Item }>) {
           Delete
         </MenuItem>
       </Menu>
-      <Dialog aria-describedby="alert-dialog-description" aria-labelledby="alert-dialog-title" onClose={closeDialog} open={isDialogOpen}>
+      <Dialog
+        aria-describedby="alert-dialog-description"
+        aria-labelledby="alert-dialog-title"
+        onClose={closeDialog}
+        open={isDialogOpen}
+      >
         <DialogTitle>Delete item ?</DialogTitle>
         <DialogContent>
           <DialogContentText>We need to confirm the deletion of this item.</DialogContentText>

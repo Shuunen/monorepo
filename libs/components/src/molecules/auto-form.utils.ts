@@ -2,7 +2,17 @@
 import { getNested, isString, Logger, nbPercentMax, Result, setNested, sleep, stringify } from "@monorepo/utils";
 import type { ReactNode } from "react";
 import { z } from "zod";
-import type { AutoFormData, AutoFormFieldFormsMetadata, AutoFormFieldMetadata, AutoFormFieldSectionMetadata, AutoFormFieldsMetadata, AutoFormStepMetadata, AutoFormSubmissionStepProps, AutoFormSummarySection, SelectOption } from "./auto-form.types";
+import type {
+  AutoFormData,
+  AutoFormFieldFormsMetadata,
+  AutoFormFieldMetadata,
+  AutoFormFieldSectionMetadata,
+  AutoFormFieldsMetadata,
+  AutoFormStepMetadata,
+  AutoFormSubmissionStepProps,
+  AutoFormSummarySection,
+  SelectOption,
+} from "./auto-form.types";
 
 /**
  * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
@@ -19,7 +29,10 @@ export function getZodEnumOptions(fieldSchema: z.ZodType) {
   let rawOptions: string[] = [];
   if (fieldSchema.type === "enum") {
     rawOptions = (fieldSchema as z.ZodEnum).options as string[];
-  } else if (fieldSchema.type === "optional" && (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.type === "enum") {
+  } else if (
+    fieldSchema.type === "optional" &&
+    (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.type === "enum"
+  ) {
     rawOptions = (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.options as string[];
   } else {
     return Result.error("failed to get enum options from schema");
@@ -39,7 +52,8 @@ export function getZodEnumOptions(fieldSchema: z.ZodType) {
  */
 function isZodType(fieldSchema: z.ZodType, type: z.ZodType["type"]) {
   const isType = fieldSchema.type === type;
-  const isTypeLiteral = fieldSchema.type === "optional" && (fieldSchema as z.ZodOptional<z.ZodType>).def.innerType.type === type;
+  const isTypeLiteral =
+    fieldSchema.type === "optional" && (fieldSchema as z.ZodOptional<z.ZodType>).def.innerType.type === type;
   return isType || isTypeLiteral;
 }
 
@@ -71,7 +85,10 @@ export function checkZodBoolean(fieldSchema: z.ZodType) {
     isBooleanLiteral = (fieldSchema as z.ZodLiteral).value === true || (fieldSchema as z.ZodLiteral).value === false;
     isBoolean = isBooleanLiteral;
     booleanLiteralValue = Boolean((fieldSchema as z.ZodLiteral).value);
-  } else if (fieldSchema.type === "optional" && (fieldSchema as z.ZodOptional<z.ZodBoolean>).def.innerType.type === "boolean") {
+  } else if (
+    fieldSchema.type === "optional" &&
+    (fieldSchema as z.ZodOptional<z.ZodBoolean>).def.innerType.type === "boolean"
+  ) {
     isBoolean = true;
   }
   return { booleanLiteralValue, isBoolean, isBooleanLiteral };
@@ -163,7 +180,9 @@ export function parseDependsOnSingleValue(dependsOn: string): { fieldName: strin
  * @returns an array of object with fieldName and optional expectedValue
  */
 export function parseDependsOn(dependsOn: string | string[]): { fieldName: string; expectedValue?: string }[] {
-  return isString(dependsOn) ? [parseDependsOnSingleValue(dependsOn)] : dependsOn.map(value => parseDependsOnSingleValue(value));
+  return isString(dependsOn)
+    ? [parseDependsOnSingleValue(dependsOn)]
+    : dependsOn.map(value => parseDependsOnSingleValue(value));
 }
 
 /**
@@ -236,7 +255,15 @@ export function getKeyMapping(metadata?: AutoFormFieldMetadata): {
   return { keyIn, keyOut };
 }
 
-function getDataForField({ fieldSchema, externalData, sourceKey }: { fieldSchema: z.ZodType; externalData: AutoFormData; sourceKey: string }) {
+function getDataForField({
+  fieldSchema,
+  externalData,
+  sourceKey,
+}: {
+  fieldSchema: z.ZodType;
+  externalData: AutoFormData;
+  sourceKey: string;
+}) {
   const isSourceKeyNested = sourceKey.includes(".");
   const hasData = sourceKey in externalData || isSourceKeyNested;
 
@@ -488,7 +515,10 @@ function sectionsFromEditableStep(schema: z.ZodObject, data: AutoFormData) {
  * @param message the message to shows on submission step
  * @returns the simulated submission result
  */
-export async function mockSubmit(status: AutoFormSubmissionStepProps["status"], message: ReactNode): Promise<{ submission: AutoFormSubmissionStepProps }> {
+export async function mockSubmit(
+  status: AutoFormSubmissionStepProps["status"],
+  message: ReactNode,
+): Promise<{ submission: AutoFormSubmissionStepProps }> {
   const logger = new Logger();
   await sleep(nbPercentMax); // simulate api/network delay
   const submission: AutoFormSubmissionStepProps = {
@@ -747,7 +777,13 @@ type BuildStepperStepsOptions = {
  * @param options.icons Icons for each step state
  * @returns Array of stepper steps
  */
-export function buildStepperSteps({ schemas, currentStep, showSummary, hasSubmission, icons }: BuildStepperStepsOptions) {
+export function buildStepperSteps({
+  schemas,
+  currentStep,
+  showSummary,
+  hasSubmission,
+  icons,
+}: BuildStepperStepsOptions) {
   let lastSection = "" as AutoFormStepMetadata["section"];
   return schemas.map((schema, idx) => {
     const stepMeta = getStepMetadata(schema);

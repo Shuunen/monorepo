@@ -33,18 +33,24 @@ function MbImportFromSpotify() {
         id: "mb-import-from-spotify",
         title: "Spotify to MB",
       },
-      // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-      artist: textFromSelector('.entity-info.media h2 a, .os-content a[href^="/artist/"]') || textFromSelector(".entity-info.media h2").match(/^.+\b\s(?<artist>.+)$/u)?.groups?.artist || "",
+      artist:
+        textFromSelector('.entity-info.media h2 a, .os-content a[href^="/artist/"]') ||
+        // biome-ignore lint/performance/useTopLevelRegex: FIX me later
+        textFromSelector(".entity-info.media h2").match(/^.+\b\s(?<artist>.+)$/u)?.groups?.artist ||
+        "",
       date: { day: "0", month: "0", year: "0" },
-      // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-      label: textFromSelector('.copyrights li, .os-content p[as="p"]').match(/[\d\s©℗]+(?<label>.*)/u)?.groups?.label || "",
+      label:
+        // biome-ignore lint/performance/useTopLevelRegex: FIX me later
+        textFromSelector('.copyrights li, .os-content p[as="p"]').match(/[\d\s©℗]+(?<label>.*)/u)?.groups?.label || "",
       title: textFromSelector(selectors.title),
       tracks: getTracks(),
       url: document.location.href,
       urlType: "85",
     };
-    // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-    const dateMatches = textFromSelector('script[type="application/ld+json"]').match(/datePublished":"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/u);
+    const dateMatches = textFromSelector('script[type="application/ld+json"]').match(
+      // biome-ignore lint/performance/useTopLevelRegex: FIX me later
+      /datePublished":"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/u,
+    );
     if (dateMatches?.groups?.day) {
       data.date.year = dateMatches.groups.year;
       data.date.month = dateMatches.groups.month;

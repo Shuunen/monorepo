@@ -959,7 +959,9 @@ describe("auto-form.utils", () => {
   });
   it("getFieldMetadataOrThrow C should throw when schema is section metadata", () => {
     const schema = section({ title: "Section" });
-    expect(() => getFieldMetadataOrThrow("testField", schema)).toThrow('Cannot render field "testField" with section metadata');
+    expect(() => getFieldMetadataOrThrow("testField", schema)).toThrow(
+      'Cannot render field "testField" with section metadata',
+    );
   });
 
   // field
@@ -1109,7 +1111,11 @@ describe("auto-form.utils", () => {
   });
 
   // getInitialStep
-  const stepSchemas = [step(z.object(), { title: "Step 1", state: "readonly" }), step(z.object(), { title: "Step 2" }), step(z.object(), { title: "Step 3" })];
+  const stepSchemas = [
+    step(z.object(), { title: "Step 1", state: "readonly" }),
+    step(z.object(), { title: "Step 2" }),
+    step(z.object(), { title: "Step 3" }),
+  ];
 
   it("getInitialStep A should return the first editable step if `showFirstEditableStep` is true", () => {
     expect(getInitialStep(stepSchemas, true)).toBe(1);
@@ -1117,7 +1123,10 @@ describe("auto-form.utils", () => {
   });
 
   it("getInitialStep b should fallback to the first step if noting is editable", () => {
-    const notEditableSchemas = [step(z.object(), { title: "Step 1", state: "readonly" }), step(z.object(), { title: "Step 1", state: "upcoming" })];
+    const notEditableSchemas = [
+      step(z.object(), { title: "Step 1", state: "readonly" }),
+      step(z.object(), { title: "Step 1", state: "upcoming" }),
+    ];
     expect(getInitialStep(notEditableSchemas, true)).toBe(0);
   });
 
@@ -1169,7 +1178,11 @@ describe("auto-form.utils", () => {
 
   // getLastAccessibleStepIndex
   it("getLastAccessibleStepIndex A should return last non-upcoming step index", () => {
-    const schemas = [step(z.object(), { state: "editable" }), step(z.object(), { state: "editable" }), step(z.object(), { state: "upcoming" })];
+    const schemas = [
+      step(z.object(), { state: "editable" }),
+      step(z.object(), { state: "editable" }),
+      step(z.object(), { state: "upcoming" }),
+    ];
     expect(getLastAccessibleStepIndex(schemas)).toBe(1);
   });
   it("getLastAccessibleStepIndex B should return last index if no upcoming steps", () => {
@@ -1204,11 +1217,21 @@ describe("auto-form.utils", () => {
   });
 
   // buildStepperSteps
-  const mockIcons = { editable: createElement("span", {}, "edit"), readonly: createElement("span", {}, "read"), upcoming: createElement("span", {}, "up") };
+  const mockIcons = {
+    editable: createElement("span", {}, "edit"),
+    readonly: createElement("span", {}, "read"),
+    upcoming: createElement("span", {}, "up"),
+  };
 
   it("buildStepperSteps A should build steps from schemas", () => {
     const schemas = [step(z.object(), { title: "Step 1" }), step(z.object(), { title: "Step 2" })];
-    const result = buildStepperSteps({ currentStep: 0, hasSubmission: false, icons: mockIcons, schemas, showSummary: false });
+    const result = buildStepperSteps({
+      currentStep: 0,
+      hasSubmission: false,
+      icons: mockIcons,
+      schemas,
+      showSummary: false,
+    });
     expect(result).toHaveLength(2);
     expect(result[0].title).toBe("Step 1");
     expect(result[0].active).toBe(true);
@@ -1217,28 +1240,62 @@ describe("auto-form.utils", () => {
   });
   it("buildStepperSteps B should mark correct step as active", () => {
     const schemas = [step(z.object(), { title: "Step 1" }), step(z.object(), { title: "Step 2" })];
-    const result = buildStepperSteps({ currentStep: 1, hasSubmission: false, icons: mockIcons, schemas, showSummary: false });
+    const result = buildStepperSteps({
+      currentStep: 1,
+      hasSubmission: false,
+      icons: mockIcons,
+      schemas,
+      showSummary: false,
+    });
     expect(result[0].active).toBe(false);
     expect(result[1].active).toBe(true);
   });
   it("buildStepperSteps C should not mark any step active when showing summary", () => {
     const schemas = [step(z.object(), { title: "Step 1" })];
-    const result = buildStepperSteps({ currentStep: 0, hasSubmission: false, icons: mockIcons, schemas, showSummary: true });
+    const result = buildStepperSteps({
+      currentStep: 0,
+      hasSubmission: false,
+      icons: mockIcons,
+      schemas,
+      showSummary: true,
+    });
     expect(result[0].active).toBe(false);
   });
   it("buildStepperSteps D should not mark any step active when has submission", () => {
     const schemas = [step(z.object(), { title: "Step 1" })];
-    const result = buildStepperSteps({ currentStep: 0, hasSubmission: true, icons: mockIcons, schemas, showSummary: false });
+    const result = buildStepperSteps({
+      currentStep: 0,
+      hasSubmission: true,
+      icons: mockIcons,
+      schemas,
+      showSummary: false,
+    });
     expect(result[0].active).toBe(false);
   });
   it("buildStepperSteps E should use default title when not provided", () => {
     const schemas = [z.object()];
-    const result = buildStepperSteps({ currentStep: 0, hasSubmission: false, icons: mockIcons, schemas, showSummary: false });
+    const result = buildStepperSteps({
+      currentStep: 0,
+      hasSubmission: false,
+      icons: mockIcons,
+      schemas,
+      showSummary: false,
+    });
     expect(result[0].title).toBe("Step 1");
   });
   it("buildStepperSteps F should handle sections", () => {
-    const schemas = [step(z.object(), { section: "Section A", title: "Step 1" }), step(z.object(), { section: "Section A", title: "Step 2" }), step(z.object(), { section: "Section B", title: "Step 3" })];
-    const result = buildStepperSteps({ currentStep: 0, hasSubmission: false, icons: mockIcons, schemas, showSummary: false });
+    const schemas = [
+      step(z.object(), { section: "Section A", title: "Step 1" }),
+      step(z.object(), { section: "Section A", title: "Step 2" }),
+      step(z.object(), { section: "Section B", title: "Step 3" }),
+    ];
+    const result = buildStepperSteps({
+      currentStep: 0,
+      hasSubmission: false,
+      icons: mockIcons,
+      schemas,
+      showSummary: false,
+    });
     expect(result[0].section).toBe("Section A");
     expect(result[1].section).toBeUndefined();
     expect(result[2].section).toBe("Section B");

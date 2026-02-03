@@ -1,6 +1,15 @@
 import { expect, it } from "vitest";
 import type { FfProbeOutput } from "./take-screenshot.types";
-import { emptyMetadata, getFfmpegCommand, getScreenshotFilename, getTargets, parseUserInput, parseVideoMetadata, readableDuration, readableSize } from "./take-screenshot.utils";
+import {
+  emptyMetadata,
+  getFfmpegCommand,
+  getScreenshotFilename,
+  getTargets,
+  parseUserInput,
+  parseVideoMetadata,
+  readableDuration,
+  readableSize,
+} from "./take-screenshot.utils";
 
 const ffProbeOutputA = { streams: [] };
 
@@ -243,19 +252,33 @@ it("readableSize F", () => {
 });
 
 it("getScreenshotFilename A", () => {
-  expect(getScreenshotFilename(3600, { duration: 789, height: 1080, size: 123_456_789, title: "plop" })).toBe("plop 01h00m00s 118mo 1080p 00h13m09s.jpg");
+  expect(getScreenshotFilename(3600, { duration: 789, height: 1080, size: 123_456_789, title: "plop" })).toBe(
+    "plop 01h00m00s 118mo 1080p 00h13m09s.jpg",
+  );
 });
 it("getScreenshotFilename B", () => {
-  expect(getScreenshotFilename(126, { duration: 1_000_000, height: 720, size: 1_000_000_000, title: "The little John and the Doe are awaiting the arrival of the big John (2013) Encoded by HurrayXXX_36 x265 10bit HDR DTS-HD-MA" })).toBe(
+  expect(
+    getScreenshotFilename(126, {
+      duration: 1_000_000,
+      height: 720,
+      size: 1_000_000_000,
+      title:
+        "The little John and the Doe are awaiting the arrival of the big John (2013) Encoded by HurrayXXX_36 x265 10bit HDR DTS-HD-MA",
+    }),
+  ).toBe(
     "The little John and the Doe are awaiting the arrival of the big John (2013) Encoded by HurrayXXX_36 x265 10bit HDR DTS-HD-MA 00h02m06s 954mo 720p 13h46m40s.jpg",
   );
 });
 it("getScreenshotFilename C", () => {
-  expect(getScreenshotFilename(0, { duration: 0, height: 0, size: 0, title: "" })).toBe("00h00m00s 0mo 0p 00h00m00s.jpg");
+  expect(getScreenshotFilename(0, { duration: 0, height: 0, size: 0, title: "" })).toBe(
+    "00h00m00s 0mo 0p 00h00m00s.jpg",
+  );
 });
 
 it("getFfmpegCommand A", () => {
-  expect(getFfmpegCommand({ screenPath: "plop.jpg", totalSeconds: 120, videoPath: "plop.mp4" })).toBe('ffmpeg -ss 120 -i "plop.mp4" -frames:v 1 -q:v 1 -update 1 "plop.jpg"');
+  expect(getFfmpegCommand({ screenPath: "plop.jpg", totalSeconds: 120, videoPath: "plop.mp4" })).toBe(
+    'ffmpeg -ss 120 -i "plop.mp4" -frames:v 1 -q:v 1 -update 1 "plop.jpg"',
+  );
 });
 
 it("getTargets A", () => {

@@ -39,7 +39,8 @@ type Story = StoryObj<typeof meta>;
 const allFieldsSchema = z.object({
   // Boolean (Switch)
   booleanCode: section({
-    description: "The default render of a ZodBoolean : a toggle switch. For more details, check the FormFieldBoolean story.",
+    description:
+      "The default render of a ZodBoolean : a toggle switch. For more details, check the FormFieldBoolean story.",
     title: "Boolean",
   }),
   booleanField: field(z.boolean().optional(), {
@@ -51,7 +52,8 @@ const allFieldsSchema = z.object({
   }),
   // Accept (Radio buttons with Accept/Reject)
   acceptTitle: section({
-    description: "A custom render of a ZodBoolean. This field displays accept/reject options. For more details, check the FormFieldAccept story.",
+    description:
+      "A custom render of a ZodBoolean. This field displays accept/reject options. For more details, check the FormFieldAccept story.",
     title: "Boolean accept",
   }),
   acceptField: field(z.boolean().optional(), {
@@ -63,7 +65,8 @@ const allFieldsSchema = z.object({
   }),
   // Date
   dateCode: section({
-    description: "The default render of a ZodDate : a date picker field for selecting a single day. For more details, check the FormFieldDate story.",
+    description:
+      "The default render of a ZodDate : a date picker field for selecting a single day. For more details, check the FormFieldDate story.",
     title: "Date",
   }),
   dateField: field(z.date().optional(), {
@@ -75,7 +78,8 @@ const allFieldsSchema = z.object({
   }),
   // String as Date
   stringDateCode: section({
-    description: "A custom render of a ZodString. This field will also render as a date picker. For more details, check the FormFieldDate story.",
+    description:
+      "A custom render of a ZodString. This field will also render as a date picker. For more details, check the FormFieldDate story.",
     title: "Date string",
   }),
   stringDateField: field(z.string().optional(), {
@@ -100,7 +104,8 @@ const allFieldsSchema = z.object({
   }),
   // Select
   selectCode: section({
-    description: "A dropdown select field for choosing from predefined options. For more details, check the FormFieldSelect story.",
+    description:
+      "A dropdown select field for choosing from predefined options. For more details, check the FormFieldSelect story.",
     title: "Select",
   }),
   selectField: field(z.enum(["option1", "option2", "option3"]).optional(), {
@@ -124,7 +129,8 @@ const allFieldsSchema = z.object({
   }),
   // Text input
   textCode: section({
-    description: "The default render of a ZodString : a basic single-line text input field. For more details, check the FormFieldText story.",
+    description:
+      "The default render of a ZodString : a basic single-line text input field. For more details, check the FormFieldText story.",
     title: "Text",
   }),
   textField: field(z.string().optional(), {
@@ -136,7 +142,8 @@ const allFieldsSchema = z.object({
   }),
   // Textarea
   textareaCode: section({
-    description: "A custom render of a ZodString. This field will render as a multi-line text input. For more details, check the FormFieldTextarea story.",
+    description:
+      "A custom render of a ZodString. This field will render as a multi-line text input. For more details, check the FormFieldTextarea story.",
     title: "Textarea",
   }),
   textareaField: field(z.string().optional(), {
@@ -149,7 +156,8 @@ const allFieldsSchema = z.object({
   }),
   // Password
   passwordCode: section({
-    description: "A custom render of a ZodString. This field renders as a password input field. For more details, check the FormFieldPassword story.",
+    description:
+      "A custom render of a ZodString. This field renders as a password input field. For more details, check the FormFieldPassword story.",
     title: "Password",
   }),
   passwordField: field(z.string().optional(), {

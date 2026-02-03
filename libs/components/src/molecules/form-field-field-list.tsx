@@ -10,7 +10,13 @@ import type { AutoFormFieldsMetadata } from "./auto-form.types";
 import { getFieldMetadata, getFormFieldRender } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 
-function AutoFormField({ fieldName, fieldSchema, stepState, logger, readonly }: AutoFormFieldProps & { readonly: boolean }) {
+function AutoFormField({
+  fieldName,
+  fieldSchema,
+  stepState,
+  logger,
+  readonly,
+}: AutoFormFieldProps & { readonly: boolean }) {
   const isOptional = fieldSchema instanceof z.ZodOptional;
   const metadata = getFieldMetadata(fieldSchema) ?? {};
   const fieldState = "state" in metadata ? metadata.state : undefined;
@@ -27,7 +33,14 @@ function AutoFormField({ fieldName, fieldSchema, stepState, logger, readonly }: 
   return <Component {...props} />;
 }
 
-export function FormFieldFieldList({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
+// oxlint-disable-next-line max-lines-per-function
+export function FormFieldFieldList({
+  fieldName,
+  fieldSchema,
+  isOptional,
+  logger,
+  readonly = false,
+}: FormFieldBaseProps) {
   const metadata = fieldSchema.meta() as AutoFormFieldsMetadata;
   const { maxItems, label, placeholder } = metadata;
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
@@ -63,15 +76,33 @@ export function FormFieldFieldList({ fieldName, fieldSchema, isOptional, logger,
             // biome-ignore lint/suspicious/noArrayIndexKey: we need the index to be the key
             <div className="flex gap-2" key={index}>
               <div className="flex-1">
-                <AutoFormField fieldName={`${fieldName}.${index}`} fieldSchema={itemSchema} logger={logger} readonly={readonly} />
+                <AutoFormField
+                  fieldName={`${fieldName}.${index}`}
+                  fieldSchema={itemSchema}
+                  logger={logger}
+                  readonly={readonly}
+                />
               </div>
               {index === 0 && (
-                <Button className={cn("mt-7.5", { hidden: readonly })} disabled={items.length >= (maxItems ?? Infinity)} name={`add-${fieldName}`} onClick={() => addItem(field.onChange)} type="button" variant="ghost">
+                <Button
+                  className={cn("mt-7.5", { hidden: readonly })}
+                  disabled={items.length >= (maxItems ?? Infinity)}
+                  name={`add-${fieldName}`}
+                  onClick={() => addItem(field.onChange)}
+                  type="button"
+                  variant="ghost"
+                >
                   <IconReject className="size-4 rotate-45" />
                 </Button>
               )}
               {index !== 0 && (
-                <Button className={cn("mt-7.5", { hidden: readonly })} name={`delete-${fieldName}-${index}`} onClick={() => onDeleteItem(field.onChange, index)} type="button" variant="ghost">
+                <Button
+                  className={cn("mt-7.5", { hidden: readonly })}
+                  name={`delete-${fieldName}-${index}`}
+                  onClick={() => onDeleteItem(field.onChange, index)}
+                  type="button"
+                  variant="ghost"
+                >
                   <IconMinus className="size-4" />
                 </Button>
               )}

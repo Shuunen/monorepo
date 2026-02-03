@@ -1,5 +1,5 @@
 /* v8 ignore start -- @preserve */
-// oxlint-disable max-lines, no-eval, require-returns, no-magic-numbers, max-nested-callbacks, require-param-description
+// oxlint-disable max-lines, no-eval, require-returns, no-magic-numbers, require-param-description
 import { exec } from "node:child_process";
 import { readdir, readFile, renameSync, stat, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -14,7 +14,8 @@ import type { FfProbeOutput, FfProbeOutputStream } from "./take-screenshot.types
 const { argv } = process;
 const expectedNbParameters = 2;
 const logger = new Logger();
-if (argv.length <= expectedNbParameters) logger.info('Targeting current folder, you can also specify a specific path, ex : check-videos.js "U:\\Movies\\" \n');
+if (argv.length <= expectedNbParameters)
+  logger.info('Targeting current folder, you can also specify a specific path, ex : check-videos.js "U:\\Movies\\" \n');
 const videosPath = path.normalize(argv[expectedNbParameters] ?? process.cwd());
 const willRename = argv.includes("--rename") || argv.includes("--fix");
 const willProcessOnlyOne = argv.includes("--process-one") || argv.includes("--one");
@@ -46,7 +47,9 @@ function shouldRename(actual = "", expected = "") {
   const diff = Math.abs(actual.length - expected.length);
   const toleratedDiff = Math.round(actual.length / 10);
   if (diff <= toleratedDiff) return true;
-  logger.info(`Avoid renaming, too much diff between : \n - actual filename : ${actual} \n - expected filename : ${expected}`);
+  logger.info(
+    `Avoid renaming, too much diff between : \n - actual filename : ${actual} \n - expected filename : ${expected}`,
+  );
   return false;
 }
 
@@ -74,13 +77,15 @@ const utils = {
    * @param title
    * @returns the cleaned title
    */
-  cleanTitle: (title = "") => title.replace("PSArips.com | ", "").replace(regex.cleanTitle, " ").replace(regex.cleanTitleSpaces, " ").trim(),
+  cleanTitle: (title = "") =>
+    title.replace("PSArips.com | ", "").replace(regex.cleanTitle, " ").replace(regex.cleanTitleSpaces, " ").trim(),
   /**
    *
    * @param string
    * @param length
    */
-  ellipsis: (string = "", length = 0) => (string.length > length ? `${string.slice(0, Math.max(0, length - 3))}...` : string),
+  ellipsis: (string = "", length = 0) =>
+    string.length > length ? `${string.slice(0, Math.max(0, length - 3))}...` : string,
   /**
    *
    * @param filepath
@@ -102,17 +107,20 @@ const utils = {
    * Get the video metadata from a filepath
    * @param filepath
    */
-  // oxlint-disable-next-line max-lines-per-function
   getVideoMetadata: async (filepath: string) => {
-    const output = await utils.shellCommand(`ffprobe -show_format -show_streams -print_format json -v quiet -i "${filepath}" `);
+    const output = await utils.shellCommand(
+      `ffprobe -show_format -show_streams -print_format json -v quiet -i "${filepath}" `,
+    );
     if (typeof output !== "string") throw new Error("ffprobe output is not a string");
     if (!output.startsWith("{")) throw new Error(`ffprobe output should be JSON but got :${output}`);
     const result = parseJson<FfProbeOutput>(output);
     if (!result.ok) throw new Error(`ffprobe output is not valid JSON : ${result.error}`);
     // logger.info(utils.prettyPrint(data))
     const media = result.value.format;
-    // biome-ignore lint/style/useNamingConvention: ffprobe uses snake_case
-    const video = result.value.streams?.find((/** @type {{ codec_type: string; }} */ stream) => stream.codec_type === "video") ?? { avg_frame_rate: "", codec_name: "", codec_type: "", color_transfer: "", duration: "", height: 0, width: 0 };
+    const video = result.value.streams?.find(
+      (/** @type {{ codec_type: string; }} */ stream) => stream.codec_type === "video",
+      // biome-ignore lint/style/useNamingConvention: ffprobe uses snake_case
+    ) ?? { avg_frame_rate: "", codec_name: "", codec_type: "", color_transfer: "", duration: "", height: 0, width: 0 };
     const title = utils.cleanTitle(media?.tags?.title);
     const extension = path.extname(filepath).slice(1);
     const filename = title.length > 0 ? `${title}.${extension}` : "";
@@ -144,8 +152,10 @@ const utils = {
     if (video?.codec_type === undefined) return false;
     const hasPq = video.color_transfer === "smpte2084";
     const hasHlg = video.color_transfer === "arib-std-b67";
-    const hasDolbyVision = video.side_data_list?.some(data => data.side_data_type === "DOVI configuration record") ?? false;
-    const hasHdr10Plus = video.side_data_list?.some(data => data.side_data_type === "HDR Dynamic Metadata SMPTE2094-40 (HDR10+)") ?? false;
+    const hasDolbyVision =
+      video.side_data_list?.some(data => data.side_data_type === "DOVI configuration record") ?? false;
+    const hasHdr10Plus =
+      video.side_data_list?.some(data => data.side_data_type === "HDR Dynamic Metadata SMPTE2094-40 (HDR10+)") ?? false;
     return hasPq || hasHlg || hasDolbyVision || hasHdr10Plus;
   },
   /**
@@ -238,9 +248,13 @@ class CheckVideos {
   async checkOne(filename: string) {
     const filepath = path.join(videosPath, path.normalize(filename));
     const meta = await utils.getVideoMetadata(filepath);
-    if (willSetTitle && filename !== meta.filename) await utils.setVideoTitle(filepath, filename.length > meta.filename.length ? filename : meta.filename);
-    // oxlint-disable-next-line no-unused-expressions
-    if (shouldRename(filename, meta.filename)) willDryRun ? logger.info(`Would rename file to ${red(meta.filename)}\n`) : renameSync(filepath, path.join(videosPath, path.normalize(meta.filename)));
+    if (willSetTitle && filename !== meta.filename)
+      await utils.setVideoTitle(filepath, filename.length > meta.filename.length ? filename : meta.filename);
+    if (shouldRename(filename, meta.filename))
+      // oxlint-disable-next-line no-unused-expressions
+      willDryRun
+        ? logger.info(`Would rename file to ${red(meta.filename)}\n`)
+        : renameSync(filepath, path.join(videosPath, path.normalize(meta.filename)));
     listing += `${filename},${meta.title}\n`;
     const entry = `${utils.ellipsis(filename, 50).padEnd(50)}  ${String(meta.sizeGb).padStart(4)} Gb  ${meta.codec.padEnd(5)} ${String(meta.height).padStart(4)}p  ${String(meta.bitrateKbps).padStart(4)} kbps  ${String(meta.fps).padStart(2)} fps`;
     if (meta.isDvdRip ? this.checkDvdRip(meta, entry) : this.checkBlurayRip(meta, entry)) return;
@@ -343,7 +357,6 @@ class CheckVideos {
   /**
    * Report the findings
    */
-  // oxlint-disable-next-line max-lines-per-function, max-statements
   report() {
     const types = Object.keys(this.detected);
     if (types.length === 0) {
@@ -355,11 +368,11 @@ class CheckVideos {
     for (const type of types) {
       logger.info("\u001B[100m%s\u001B[0m", `\n${type} :`);
       const videos = this.detected[type] ?? [];
+      // @ts-expect-error to sorted
       for (const [index, file] of videos.toSorted((videoA, videoB) => byValueAsc(videoA, videoB)).entries()) {
         const isEven = !(index % 2);
         const line = ` - ${file}`;
         total += 1;
-        // oxlint-disable-next-line max-depth
         if (isEven) logger.info("\u001B[91m%s\u001B[0m", line);
         else logger.info(line);
       }

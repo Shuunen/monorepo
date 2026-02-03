@@ -1,4 +1,4 @@
-// oxlint-disable no-magic-numbers, id-length
+// oxlint-disable id-length
 import { Logger } from "@monorepo/utils";
 import { motion } from "framer-motion";
 import { useMemo, useRef } from "react";
@@ -11,7 +11,15 @@ import { useDragDrop } from "../hooks/use-drag-drop";
 import { useImageState } from "../hooks/use-image-state";
 import { usePanZoom } from "../hooks/use-pan-zoom";
 import { useSlider } from "../hooks/use-slider";
-import { createContestState, defaultSliderPosition, headerAndControlsHeight, minHeight, minWidth, padding, startContest } from "../utils/comparison.utils";
+import {
+  createContestState,
+  defaultSliderPosition,
+  headerAndControlsHeight,
+  minHeight,
+  minWidth,
+  padding,
+  startContest,
+} from "../utils/comparison.utils";
 import { getContainedSize } from "../utils/image.utils";
 
 // oxlint-disable-next-line max-lines-per-function
@@ -19,11 +27,36 @@ export function Comparison() {
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const logger = useMemo(() => new Logger(), []);
 
-  const { leftImage, leftImageMetadata, rightImage, rightImageMetadata, setLeftImage, setLeftImageMetadata, setRightImage, setRightImageMetadata } = useImageState();
+  const {
+    leftImage,
+    leftImageMetadata,
+    rightImage,
+    rightImageMetadata,
+    setLeftImage,
+    setLeftImageMetadata,
+    setRightImage,
+    setRightImageMetadata,
+  } = useImageState();
 
-  const { cursor, handleMouseDownOnImage, handleMouseMove: panMouseMove, handleMouseUpOrLeave: panMouseUpOrLeave, imageStyle, isPanning, setPan, setZoom, zoom } = usePanZoom(imageContainerRef, leftImageMetadata, rightImageMetadata);
+  const {
+    cursor,
+    handleMouseDownOnImage,
+    handleMouseMove: panMouseMove,
+    handleMouseUpOrLeave: panMouseUpOrLeave,
+    imageStyle,
+    isPanning,
+    setPan,
+    setZoom,
+    zoom,
+  } = usePanZoom(imageContainerRef, leftImageMetadata, rightImageMetadata);
 
-  const { handleMouseDownOnHandle, handleMouseMove: sliderMouseMove, handleMouseUpOrLeave: sliderMouseUpOrLeave, setSliderPosition, sliderPosition } = useSlider(imageContainerRef);
+  const {
+    handleMouseDownOnHandle,
+    handleMouseMove: sliderMouseMove,
+    handleMouseUpOrLeave: sliderMouseUpOrLeave,
+    setSliderPosition,
+    sliderPosition,
+  } = useSlider(imageContainerRef);
 
   const { contestState, handleSelectWinner, setContestState } = useContestMode({
     onLeftImageUpdate: setLeftImage,
@@ -33,7 +66,17 @@ export function Comparison() {
   });
 
   /* v8 ignore start */
-  const { handleDragEnter, handleDragLeave, handleDragOver, handleDrop, handleLeftImageUpload, handleRightImageUpload, isDraggingLeft, isDraggingOver, nbDraggedFiles } = useDragDrop({
+  const {
+    handleDragEnter,
+    handleDragLeave,
+    handleDragOver,
+    handleDrop,
+    handleLeftImageUpload,
+    handleRightImageUpload,
+    isDraggingLeft,
+    isDraggingOver,
+    nbDraggedFiles,
+  } = useDragDrop({
     onContestStart: images => {
       const state = createContestState(images);
       setContestState(startContest(state));
@@ -73,7 +116,12 @@ export function Comparison() {
     if (!metadata?.width || !metadata?.height) return { containerHeight: "auto", containerWidth: "100%" };
     const maxWidth = window.innerWidth - padding;
     const maxHeight = window.innerHeight - headerAndControlsHeight;
-    const containedSize = getContainedSize({ imageHeight: metadata.height, imageWidth: metadata.width, maxHeight, maxWidth });
+    const containedSize = getContainedSize({
+      imageHeight: metadata.height,
+      imageWidth: metadata.width,
+      maxHeight,
+      maxWidth,
+    });
     const zoomedWidth = Math.round(containedSize.width * zoom);
     const zoomedHeight = Math.round(containedSize.height * zoom);
     return {
@@ -84,12 +132,32 @@ export function Comparison() {
   /* v8 ignore stop */
 
   return (
-    <div className="flex h-[calc(100vh-56px)] grow flex-col items-center justify-center overflow-hidden bg-accent p-6" data-testid="comparison-tab">
-      <motion.div animate={{ opacity: 1, width: containerWidth, y: 0 }} className="flex flex-col" initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.5, staggerChildren: 0.1, width: { duration: 0.3, ease: "easeInOut" } }}>
-        <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: -10 }} transition={{ delay: 0.1, duration: 0.4 }}>
-          <ContestHeader contestState={contestState} leftImageMetadata={leftImageMetadata} rightImageMetadata={rightImageMetadata} />
+    <div
+      className="flex h-[calc(100vh-56px)] grow flex-col items-center justify-center overflow-hidden bg-accent p-6"
+      data-testid="comparison-tab"
+    >
+      <motion.div
+        animate={{ opacity: 1, width: containerWidth, y: 0 }}
+        className="flex flex-col"
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.5, staggerChildren: 0.1, width: { duration: 0.3, ease: "easeInOut" } }}
+      >
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: -10 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+        >
+          <ContestHeader
+            contestState={contestState}
+            leftImageMetadata={leftImageMetadata}
+            rightImageMetadata={rightImageMetadata}
+          />
         </motion.div>
-        <motion.div animate={{ opacity: 1, scale: 1 }} initial={{ opacity: 0, scale: 0.95 }} transition={{ delay: 0.2, duration: 0.4 }}>
+        <motion.div
+          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+        >
           <ImageViewer
             containerHeight={containerHeight}
             contestState={contestState}
@@ -115,11 +183,24 @@ export function Comparison() {
             zoom={zoom}
           />
         </motion.div>
-        <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 10 }} transition={{ delay: 0.3, duration: 0.4 }}>
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 10 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
+        >
           <SliderControl onValueChange={setSliderPosition} value={sliderPosition} />
         </motion.div>
-        <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 10 }} transition={{ delay: 0.4, duration: 0.4 }}>
-          <ControlButtons contestState={contestState} onLeftImageUpload={handleLeftImageUpload} onReset={handleReset} onRightImageUpload={handleRightImageUpload} />
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 10 }}
+          transition={{ delay: 0.4, duration: 0.4 }}
+        >
+          <ControlButtons
+            contestState={contestState}
+            onLeftImageUpload={handleLeftImageUpload}
+            onReset={handleReset}
+            onRightImageUpload={handleRightImageUpload}
+          />
         </motion.div>
       </motion.div>
     </div>

@@ -37,9 +37,26 @@ function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean 
   );
 }
 
-function Item({ item, index, identifier, isEmpty, icon, hasError, readonly, labels, onDeleteItem, onCompleteItem, field }: ItemProps) {
+function Item({
+  item,
+  index,
+  identifier,
+  isEmpty,
+  icon,
+  hasError,
+  readonly,
+  labels,
+  onDeleteItem,
+  onCompleteItem,
+  field,
+}: ItemProps) {
   return (
-    <div className={cn("flex min-w-md items-center gap-4 rounded-xl border border-gray-300 p-4 shadow transition-colors hover:bg-gray-50")} data-testid={`${field.name}-${index}`}>
+    <div
+      className={cn(
+        "flex min-w-md items-center gap-4 rounded-xl border border-gray-300 p-4 shadow transition-colors hover:bg-gray-50",
+      )}
+      data-testid={`${field.name}-${index}`}
+    >
       {icon && <div className="rounded-xl bg-gray-100 p-2">{icon}</div>}
       <div className="flex flex-col gap-1">
         <ItemBadge hasError={hasError} isEmpty={isEmpty} />
@@ -47,10 +64,22 @@ function Item({ item, index, identifier, isEmpty, icon, hasError, readonly, labe
           {identifier}
         </Title>
       </div>
-      <Button className={cn("ml-auto", { hidden: readonly })} name="delete" onClick={() => onDeleteItem(field.onChange, index)} type="button" variant="outline">
+      <Button
+        className={cn("ml-auto", { hidden: readonly })}
+        name="delete"
+        onClick={() => onDeleteItem(field.onChange, index)}
+        type="button"
+        variant="outline"
+      >
         <IconTrash />
       </Button>
-      <Button className={cn({ hidden: readonly })} name="complete" onClick={() => onCompleteItem(field.onChange, index, item)} type="button" variant="outline">
+      <Button
+        className={cn({ hidden: readonly })}
+        name="complete"
+        onClick={() => onCompleteItem(field.onChange, index, item)}
+        type="button"
+        variant="outline"
+      >
         {labels?.completeButton ?? "Complete"}
         <IconChevronRight className="size-5" />
       </Button>
@@ -59,7 +88,15 @@ function Item({ item, index, identifier, isEmpty, icon, hasError, readonly, labe
 }
 
 // oxlint-disable-next-line max-lines-per-function
-export function FormFieldFormList({ fieldName, stepState, fieldSchema, isOptional, logger, readonly = false, showForm }: FormFieldBaseProps) {
+export function FormFieldFormList({
+  fieldName,
+  stepState,
+  fieldSchema,
+  isOptional,
+  logger,
+  readonly = false,
+  showForm,
+}: FormFieldBaseProps) {
   const metadata = fieldSchema.meta() as AutoFormFieldFormsMetadata;
   const { label, maxItems, icon, identifier, labels } = metadata;
   const fieldState = "state" in metadata ? metadata.state : undefined;
@@ -100,7 +137,11 @@ export function FormFieldFormList({ fieldName, stepState, fieldSchema, isOptiona
    * @param itemData data of the item to complete
    * @param indexToComplete index of the item to complete
    */
-  function onCompleteItem(onChange: (value: unknown) => void, indexToComplete: number, itemData: Record<string, unknown>) {
+  function onCompleteItem(
+    onChange: (value: unknown) => void,
+    indexToComplete: number,
+    itemData: Record<string, unknown>,
+  ) {
     const schema = (fieldSchema as z.ZodArray<z.ZodObject>).element;
     const onSubmit = (data: Record<string, unknown>) => {
       const mappedData = mapExternalDataToFormFields(schema, data);
@@ -146,12 +187,21 @@ export function FormFieldFormList({ fieldName, stepState, fieldSchema, isOptiona
               );
             })}
             <div className="flex flex-col items-start gap-4">
-              <Button className={cn({ hidden: readonly })} disabled={maxItems !== undefined && items.length >= maxItems} name="add" onClick={() => addItem(field.onChange)} type="button" variant="secondary">
+              <Button
+                className={cn({ hidden: readonly })}
+                disabled={maxItems !== undefined && items.length >= maxItems}
+                name="add"
+                onClick={() => addItem(field.onChange)}
+                type="button"
+                variant="secondary"
+              >
                 {labels?.addButton ?? "Add item"}
                 <IconReject className="size-5 rotate-45" />
               </Button>
               {/* we check isArray(fieldState.error) to know if the error is specifically about missing forms */}
-              {hasError && Array.isArray(fieldState.error) && <span className="text-sm text-destructive">Please complete all forms before submitting.</span>}
+              {hasError && Array.isArray(fieldState.error) && (
+                <span className="text-sm text-destructive">Please complete all forms before submitting.</span>
+              )}
             </div>
           </div>
         );

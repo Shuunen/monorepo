@@ -465,7 +465,8 @@ function LpbRatings() {
   };
   function hideUseless() {
     for (const node of utils.findAll(selectors.useless, document, true))
-      if (utils.willDebug) node.style = "background-color: red !important;color: white !important; box-shadow: 0 0 10px red;";
+      if (utils.willDebug)
+        node.style = "background-color: red !important;color: white !important; box-shadow: 0 0 10px red;";
       else node.style.display = "none";
   }
 

@@ -31,7 +31,11 @@ export type MultipleImagesUpdateCallbacks = {
   onContestStart: (images: ImageData[]) => void;
 };
 
-export function readImageFile(file: File, onSuccess: (dataUrl: string) => void, onError: (error: string) => void): void {
+export function readImageFile(
+  file: File,
+  onSuccess: (dataUrl: string) => void,
+  onError: (error: string) => void,
+): void {
   const reader = new FileReader();
   // oxlint-disable-next-line prefer-add-event-listener
   reader.onload = event => {
@@ -116,7 +120,12 @@ function loadTwoImages(files: FileList, callbacks: TwoImagesUpdateCallbacks): vo
       onLeftImageUpdate(dataUrl);
       if (onLeftMetadataUpdate) {
         const dimensions = await getImageDimensions(dataUrl);
-        onLeftMetadataUpdate({ filename: file1.name, height: dimensions.height, size: file1.size, width: dimensions.width });
+        onLeftMetadataUpdate({
+          filename: file1.name,
+          height: dimensions.height,
+          size: file1.size,
+          width: dimensions.width,
+        });
       }
       logger.info("Left image updated via drag and drop.");
     },
@@ -128,7 +137,12 @@ function loadTwoImages(files: FileList, callbacks: TwoImagesUpdateCallbacks): vo
       onRightImageUpdate(dataUrl);
       if (onRightMetadataUpdate) {
         const dimensions = await getImageDimensions(dataUrl);
-        onRightMetadataUpdate({ filename: file2.name, height: dimensions.height, size: file2.size, width: dimensions.width });
+        onRightMetadataUpdate({
+          filename: file2.name,
+          height: dimensions.height,
+          size: file2.size,
+          width: dimensions.width,
+        });
       }
       logger.info("Right image updated via drag and drop.");
     },
@@ -136,7 +150,10 @@ function loadTwoImages(files: FileList, callbacks: TwoImagesUpdateCallbacks): vo
   );
 }
 
-export function handleMultipleFilesUpload(files: FileList, callbacks: MultipleImagesUpdateCallbacks | TwoImagesUpdateCallbacks): void {
+export function handleMultipleFilesUpload(
+  files: FileList,
+  callbacks: MultipleImagesUpdateCallbacks | TwoImagesUpdateCallbacks,
+): void {
   if (files.length === requiredFilesCount && "onLeftImageUpdate" in callbacks) loadTwoImages(files, callbacks);
   else if (files.length > requiredFilesCount && "onContestStart" in callbacks) loadImagesForContest(files, callbacks);
   else if (files.length === 1) logger.showError("Please drop 2 or more images to compare.");
@@ -147,7 +164,12 @@ export function isDragLeavingContainer(event: React.DragEvent): boolean {
 }
 /* v8 ignore stop */
 
-export function getContainedSize(params: { imageHeight: number; imageWidth: number; maxHeight: number; maxWidth: number }) {
+export function getContainedSize(params: {
+  imageHeight: number;
+  imageWidth: number;
+  maxHeight: number;
+  maxWidth: number;
+}) {
   const { imageWidth, imageHeight, maxWidth, maxHeight } = params;
   const aspectRatio = imageWidth / imageHeight;
   const maxAspectRatio = maxWidth / maxHeight;

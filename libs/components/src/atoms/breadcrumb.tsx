@@ -1,5 +1,11 @@
 import { IconChevronRight } from "../icons/icon-chevron-right";
-import { BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, Breadcrumb as ShadBreadcrumb } from "../shadcn/breadcrumb";
+import {
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  Breadcrumb as ShadBreadcrumb,
+} from "../shadcn/breadcrumb";
 import { cn } from "../shadcn/utils";
 
 type Props = Readonly<{
@@ -9,7 +15,13 @@ type Props = Readonly<{
 
 function BreadcrumbSeparator({ children, className, ...props }: React.ComponentProps<"span">) {
   return (
-    <span aria-hidden="true" className={cn("[&>svg]:size-3.5", className)} data-slot="breadcrumb-separator" role="presentation" {...props}>
+    <span
+      aria-hidden="true"
+      className={cn("[&>svg]:size-3.5", className)}
+      data-slot="breadcrumb-separator"
+      role="presentation"
+      {...props}
+    >
       {children ?? <IconChevronRight />}
     </span>
   );

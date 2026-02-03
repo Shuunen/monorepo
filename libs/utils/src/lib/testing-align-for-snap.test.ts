@@ -49,6 +49,8 @@ describe("testing-align-for-snap", () => {
     const div2 = document.createElement("div");
     div2.textContent = String.raw`Path: \\documents\\file.pdf`;
     const array = ["Date: 6/25/2024, 11:21:23 AM", null, undefined, div1, div2];
-    expect(alignForSnap(array)).toMatchInlineSnapshot(`"Date: xx/xx/xxxx xx:xx:xx | null | undefined | File created on xx/xx/xxxx xx:xx:xx | Path: /documents/file.pdf"`);
+    expect(alignForSnap(array)).toMatchInlineSnapshot(
+      `"Date: xx/xx/xxxx xx:xx:xx | null | undefined | File created on xx/xx/xxxx xx:xx:xx | Path: /documents/file.pdf"`,
+    );
   });
 });

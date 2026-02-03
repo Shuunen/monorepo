@@ -163,7 +163,12 @@ function insertMbForm({ app, artist, date, label, title, tracks, url, urlType })
   addMbField(form, "labels.0.name", label);
   addMbField(form, "urls.0.url", url, true);
   addMbField(form, "urls.0.link_type", urlType, true);
-  addMbField(form, "edit_note", `Release ${url} imported using github.com/Shuunen/user-scripts/blob/master/src/${app.id}.user.js`, true);
+  addMbField(
+    form,
+    "edit_note",
+    `Release ${url} imported using github.com/Shuunen/user-scripts/blob/master/src/${app.id}.user.js`,
+    true,
+  );
   addMbSubmit(form);
   document.body.append(form);
 }

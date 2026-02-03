@@ -23,7 +23,29 @@ async function TextGuard() {
   };
   const forbiddenWords = ["23 rue du Berry"];
   const hostExceptions = new Set(["localhost"]);
-  const elementExceptions = new Set(["br", "circle", "defs", "ellipse", "g", "hr", "iframe", "line", "link", "meta", "path", "polygon", "polyline", "rect", "script", "style", "svg", "symbol", "text", "title", "use"]);
+  const elementExceptions = new Set([
+    "br",
+    "circle",
+    "defs",
+    "ellipse",
+    "g",
+    "hr",
+    "iframe",
+    "line",
+    "link",
+    "meta",
+    "path",
+    "polygon",
+    "polyline",
+    "rect",
+    "script",
+    "style",
+    "svg",
+    "symbol",
+    "text",
+    "title",
+    "use",
+  ]);
   const utils = new Shuutils("txt-grd");
   await utils.loadTs(["array-pick-one.ts"]);
   const items = ["Deal 1", "Deal 2", "Deal 3"];
@@ -64,7 +86,12 @@ async function TextGuard() {
    */
   function findElementsByXpath(word) {
     const needle = sanitize(word);
-    const results = document.evaluate(`//*[contains(translate(text(),"ABCDEFGHIJKLMNOPQRSTUVWXYZ ,","abcdefghijklmnopqrstuvwxyz "),"${needle}")]`, document, undefined, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE);
+    const results = document.evaluate(
+      `//*[contains(translate(text(),"ABCDEFGHIJKLMNOPQRSTUVWXYZ ,","abcdefghijklmnopqrstuvwxyz "),"${needle}")]`,
+      document,
+      undefined,
+      XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+    );
     const elements = [];
     for (let index = 0; index < results.snapshotLength; index += 1) {
       const node = results.snapshotItem(index);

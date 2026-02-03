@@ -28,7 +28,9 @@ it("color hexToRgb D", () => {
 it("color hexToRgb E", () => {
   const result = Result.unwrap(hexToRgb("#00"));
   expect(result.value).toBeUndefined();
-  expect(result.error).toMatchInlineSnapshot(`"Invalid HEX color provided : #00, should have a length of 4 or 7 instead of : 3"`);
+  expect(result.error).toMatchInlineSnapshot(
+    `"Invalid HEX color provided : #00, should have a length of 4 or 7 instead of : 3"`,
+  );
 });
 
 it("color hexToHsl A red short", () => {

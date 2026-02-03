@@ -9,7 +9,11 @@ import "./form-field.css";
 import { FormFieldLabel } from "./form-field.utils";
 
 export type FormFieldBaseProps = {
-  children?: (props: { field: ControllerRenderProps; fieldState: ControllerFieldState; formState: UseFormStateReturn<FieldValues> }) => React.ReactNode;
+  children?: (props: {
+    field: ControllerRenderProps;
+    fieldState: ControllerFieldState;
+    formState: UseFormStateReturn<FieldValues>;
+  }) => React.ReactNode;
   fieldName: string;
   fieldSchema: z.ZodType;
   isOptional: boolean;

@@ -26,8 +26,13 @@ const scoreRules = { scoreMax: 2, scoreMin: 0 };
 const priceRules = { ...scoreRules, isHigherBetter: false, valueMax: 12_000, valueMin: 6000 };
 const mileageRules = { ...scoreRules, isHigherBetter: false, valueMax: 130_000, valueMin: 70_000 };
 const nbMonths = 12;
-const nbPercents = 100;
-const yearRules = { ...scoreRules, isHigherBetter: true, valueMax: new Date().getFullYear(), valueMin: new Date().getFullYear() - nbMonths };
+const nbPercent = 100;
+const yearRules = {
+  ...scoreRules,
+  isHigherBetter: true,
+  valueMax: new Date().getFullYear(),
+  valueMin: new Date().getFullYear() - nbMonths,
+};
 
 /* oxlint-disable no-magic-numbers */
 // oxlint-disable-next-line sort-keys
@@ -101,8 +106,14 @@ function humanReadableFloor(floorNumber) {
 function getElevatorInfo(ad) {
   const elevator = ad.attributes.find(attribute => attribute.key === "elevator");
   if (elevator === undefined) return {};
-  // oxlint-disable-next-line no-nested-ternary
-  const text = elevator.value === "1" ? "ascenseur" : elevator.value === "2" ? "pas d'ascenseur" : `unknown elevator value "${elevator.value}"`;
+  const text =
+    // oxlint-disable-next-line no-nested-ternary
+    elevator.value === "1"
+      ? "ascenseur"
+      : // oxlint-disable-next-line unicorn/no-nested-ternary
+        elevator.value === "2"
+        ? "pas d'ascenseur"
+        : `unknown elevator value "${elevator.value}"`;
   const half = 0.5;
   const score = elevator.value === "2" ? half : 1;
   return { score, text };
@@ -240,7 +251,11 @@ function LbcListings() {
    * @returns {void}
    */
   function hideAdElement(element, cause = "unknown") {
-    element.classList.add(...utils.tw("h-24 overflow-hidden opacity-50 grayscale transition-all duration-500 ease-in-out hover:h-53.75 hover:opacity-100 hover:filter-none"));
+    element.classList.add(
+      ...utils.tw(
+        "h-24 overflow-hidden opacity-50 grayscale transition-all duration-500 ease-in-out hover:h-53.75 hover:opacity-100 hover:filter-none",
+      ),
+    );
     element.parentElement?.classList.add(`${utils.id}-hidden`, `${utils.id}-hidden-cause-${cause}`);
   }
 
@@ -297,7 +312,15 @@ function LbcListings() {
    * @returns {LbcCustomInfo[]} the custom infos
    */
   function getCustomInfosHousing(ad) {
-    return [getOwnerInfo(ad, true), getDpeInfos(ad), getLocationInfo(ad), getSquareInfo(ad), getRoomsInfo(ad), getFloorNumberInfo(ad), getElevatorInfo(ad)];
+    return [
+      getOwnerInfo(ad, true),
+      getDpeInfos(ad),
+      getLocationInfo(ad),
+      getSquareInfo(ad),
+      getRoomsInfo(ad),
+      getFloorNumberInfo(ad),
+      getElevatorInfo(ad),
+    ];
   }
   /**
    * Get custom infos from a car ad
@@ -316,7 +339,7 @@ function LbcListings() {
     const gearbox = ad.attributes.find(attribute => attribute.key === "gearbox")?.value_label.toLowerCase() ?? "";
     // oxlint-disable-next-line no-magic-numbers
     if (gearbox) infos.push({ score: gearbox === "automatique" ? 1.2 : 1, text: `boite : ${gearbox}` });
-    const price = ad.price_cents / nbPercents;
+    const price = ad.price_cents / nbPercent;
     if (price) infos.push({ score: utils.rangedScore(priceRules, price), text: `prix : ${price} €` });
     return infos;
   }
@@ -357,8 +380,9 @@ function LbcListings() {
       const line = document.createElement("div");
       line.classList.add(...utils.tw("text-right"));
       if (info.text) line.textContent = info.text;
-      // oxlint-disable-next-line no-magic-numbers
-      if (info.score !== undefined && !info.text?.includes("score")) line.title += `${info.text?.split(" : ")[0] ?? ""} score : ${info.score.toFixed(2)}`;
+      if (info.score !== undefined && !info.text?.includes("score"))
+        // oxlint-disable-next-line no-magic-numbers
+        line.title += `${info.text?.split(" : ")[0] ?? ""} score : ${info.score.toFixed(2)}`;
       line.classList.add(...getInfoClasses(info));
       panel.append(line);
     }
@@ -401,7 +425,7 @@ function LbcListings() {
     else if (type === "car") infos.push(...getCustomInfosCar(ad));
     else utils.warn("un handled ad type", { ad, type });
     const score = infos.reduce((total, info) => total * (info.score ?? 1), 1);
-    const scoreRounded = Math.round(score * nbPercents) / nbPercents;
+    const scoreRounded = Math.round(score * nbPercent) / nbPercent;
     // oxlint-disable-next-line no-nested-ternary, no-magic-numbers
     const classes = scoreRounded > 1 ? (scoreRounded > 2 ? ["text-4xl", "font-bold"] : ["text-2xl", "font-bold"]) : [];
     infos.push({ classes, score: scoreRounded, text: `score : ${scoreRounded}` });

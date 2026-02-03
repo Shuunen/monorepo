@@ -20,7 +20,12 @@ export function setPageTitle(title: string) {
 
 export function clearElementsForPrint() {
   logger.info("clearing elements for print");
-  const selector = ["#synology-download-notification-stack", "synology-download-content", "[at-magnifier-wrapper]", ".shu-toast"];
+  const selector = [
+    "#synology-download-notification-stack",
+    "synology-download-content",
+    "[at-magnifier-wrapper]",
+    ".shu-toast",
+  ];
   const elements = Array.from(document.querySelectorAll(selector.join(",")));
   for (const element of elements) element.remove();
 }

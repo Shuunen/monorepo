@@ -94,7 +94,9 @@ function AmazonPricePerWeight() {
   function shadeBadProducts() {
     const elements = utils.findAll(selectors.pantry, document, true);
     for (const element of elements) {
-      const item = element.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+      const item =
+        element.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
+          .parentElement;
       item.style.filter = "grayscale(100%)";
       item.style.opacity = 0.5;
       item.style.order = 1000;

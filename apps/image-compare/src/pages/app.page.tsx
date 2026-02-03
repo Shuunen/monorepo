@@ -3,7 +3,8 @@ import { About } from "../tabs/about.tab";
 import { Comparison } from "../tabs/comparison.tab";
 import { Settings } from "../tabs/settings.tab";
 
-const navClasses = ({ isActive }: { isActive: boolean }) => `transition-colors ${isActive ? "text-primary underline underline-offset-20" : "text-primary/30 hover:text-primary"}`;
+const navClasses = ({ isActive }: { isActive: boolean }) =>
+  `transition-colors ${isActive ? "text-primary underline underline-offset-20" : "text-primary/30 hover:text-primary"}`;
 
 export function App() {
   return (

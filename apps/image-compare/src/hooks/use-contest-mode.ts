@@ -16,6 +16,7 @@ type UseContestModeCallbacks = {
   onRightMetadataUpdate: (metadata: ImageMetadata) => void;
 };
 
+// oxlint-disable-next-line max-lines-per-function
 export function useContestMode(callbacks: UseContestModeCallbacks): UseContestModeReturn {
   const [contestState, setContestState] = useState<ContestState | undefined>(undefined);
   const callbacksRef = useRef(callbacks);
@@ -29,10 +30,16 @@ export function useContestMode(callbacks: UseContestModeCallbacks): UseContestMo
       callbacksRef.current.onLeftImageUpdate(contestState.currentMatch.leftImage.url);
       callbacksRef.current.onRightImageUpdate(contestState.currentMatch.rightImage.url);
       void fetchImageMetadata(contestState.currentMatch.leftImage.url).then(metadata => {
-        callbacksRef.current.onLeftMetadataUpdate({ ...metadata, filename: contestState.currentMatch?.leftImage.filename ?? metadata.filename });
+        callbacksRef.current.onLeftMetadataUpdate({
+          ...metadata,
+          filename: contestState.currentMatch?.leftImage.filename ?? metadata.filename,
+        });
       });
       void fetchImageMetadata(contestState.currentMatch.rightImage.url).then(metadata => {
-        callbacksRef.current.onRightMetadataUpdate({ ...metadata, filename: contestState.currentMatch?.rightImage.filename ?? metadata.filename });
+        callbacksRef.current.onRightMetadataUpdate({
+          ...metadata,
+          filename: contestState.currentMatch?.rightImage.filename ?? metadata.filename,
+        });
       });
     }
   }, [contestState]);
