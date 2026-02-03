@@ -1,6 +1,11 @@
 import { capitalize, clone } from "@monorepo/utils";
 import type { Item, ItemSuggestions } from "../types/item.types";
-import type { WrapApiAliExResponse, WrapApiAngboResponse, WrapApiCampoResponse, WrapApiDeyesResponse } from "../types/requests.types";
+import type {
+  WrapApiAliExResponse,
+  WrapApiAngboResponse,
+  WrapApiCampoResponse,
+  WrapApiDeyesResponse,
+} from "../types/requests.types";
 import { get } from "./browser.utils";
 import { logger } from "./logger.utils";
 import { state } from "./state.utils";
@@ -44,7 +49,10 @@ export async function addSuggestionsFromWrap<ResponseType>(endpoint: string, get
 }
 
 export async function addSuggestionsFromDeyes(suggestions: ItemSuggestions, code: string, getMethod = get) {
-  const { data, success } = await addSuggestionsFromWrap<WrapApiDeyesResponse>(`deyes/json/0.0.2?code=${code}`, getMethod);
+  const { data, success } = await addSuggestionsFromWrap<WrapApiDeyesResponse>(
+    `deyes/json/0.0.2?code=${code}`,
+    getMethod,
+  );
   if (!success) return;
   logger.debug("deyes data", data);
   suggestions.name.push(data.name);
@@ -58,7 +66,10 @@ export async function addSuggestionsFromDeyes(suggestions: ItemSuggestions, code
 }
 
 export async function addSuggestionsFromAngbo(suggestions: ItemSuggestions, string_: string, getMethod = get) {
-  const { data, success } = await addSuggestionsFromWrap<WrapApiAngboResponse>(`angbo/search/0.0.3?id=${string_}`, getMethod);
+  const { data, success } = await addSuggestionsFromWrap<WrapApiAngboResponse>(
+    `angbo/search/0.0.3?id=${string_}`,
+    getMethod,
+  );
   if (!success) return;
   logger.debug("angbo data", data);
   suggestions.name.push(data.title);
@@ -68,7 +79,10 @@ export async function addSuggestionsFromAngbo(suggestions: ItemSuggestions, stri
 }
 
 export async function addSuggestionsFromAliEx(suggestions: ItemSuggestions, string_: string, getMethod = get) {
-  const { data, success } = await addSuggestionsFromWrap<WrapApiAliExResponse>(`aliex/search/0.0.1?str=${string_}`, getMethod);
+  const { data, success } = await addSuggestionsFromWrap<WrapApiAliExResponse>(
+    `aliex/search/0.0.1?str=${string_}`,
+    getMethod,
+  );
   if (!success) return;
   logger.debug("AliEx data", data);
   for (const item of data.items) {
@@ -80,7 +94,10 @@ export async function addSuggestionsFromAliEx(suggestions: ItemSuggestions, stri
 }
 
 export async function addSuggestionsFromCampo(suggestions: ItemSuggestions, string_: string, getMethod = get) {
-  const { data, success } = await addSuggestionsFromWrap<WrapApiCampoResponse>(`alcampo/search/0.0.3?str=${string_}`, getMethod);
+  const { data, success } = await addSuggestionsFromWrap<WrapApiCampoResponse>(
+    `alcampo/search/0.0.3?str=${string_}`,
+    getMethod,
+  );
   if (!success) return;
   logger.debug("campo data", data);
   for (const item of data.items) {

@@ -25,7 +25,10 @@ export function useImageState(): UseImageStateReturn {
 
   useEffect(() => {
     const loadDefaultMetadata = async () => {
-      const [leftMeta, rightMeta] = await Promise.all([fetchImageMetadata(defaultImages.before), fetchImageMetadata(defaultImages.after)]);
+      const [leftMeta, rightMeta] = await Promise.all([
+        fetchImageMetadata(defaultImages.before),
+        fetchImageMetadata(defaultImages.after),
+      ]);
       setLeftImageMetadata(leftMeta);
       setRightImageMetadata(rightMeta);
     };

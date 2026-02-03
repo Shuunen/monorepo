@@ -109,13 +109,16 @@ function useConfettiEffects() {
   const confettiProbability = 0.7;
   const tossCoin = useCallback(() => Math.random() > confettiProbability, []);
 
-  // oxlint-disable-next-line max-params
-  const throwConfetti = useCallback(async (originX: number, originY: number, angle: number, sound: HTMLAudioElement | null) => {
-    void sound?.play();
-    // oxlint-disable-next-line id-length
-    void confetti({ angle, origin: { x: originX, y: originY } });
-    await sleep(nbRgbMax);
-  }, []);
+  const throwConfetti = useCallback(
+    // oxlint-disable-next-line max-params
+    async (originX: number, originY: number, angle: number, sound: HTMLAudioElement | null) => {
+      void sound?.play();
+      // oxlint-disable-next-line id-length
+      void confetti({ angle, origin: { x: originX, y: originY } });
+      await sleep(nbRgbMax);
+    },
+    [],
+  );
 
   const throwConfettiAround = useCallback(
     async (element: HTMLElement) => {

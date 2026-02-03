@@ -15,7 +15,12 @@ const statusConfig = {
   warning: { color: "text-warning", icon: <IconWarning />, title: "Warning" },
 } as const;
 
-export function AutoFormSubmissionStep({ status, detailsList = [], tooltipDetailsList = [], children }: AutoFormSubmissionStepProps) {
+export function AutoFormSubmissionStep({
+  status,
+  detailsList = [],
+  tooltipDetailsList = [],
+  children,
+}: AutoFormSubmissionStepProps) {
   const { title, icon, color } = statusConfig[status];
   return (
     <div className="grid gap-4" data-testid={`app-status-${status}`}>

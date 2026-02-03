@@ -55,17 +55,24 @@ function setupComponent(component: string): void {
   // https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry/ui
   logger.success(`ShadCn component ${green(component)} is now available to use 🚀`);
   logger.info("Next steps : create an atom that will expose it to monorepo apps, then create a story for it.");
-  logger.info("Check for an existing story online https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry/ui");
+  logger.info(
+    "Check for an existing story online https://github.com/lloydrichards/shadcn-storybook-registry/tree/main/registry/ui",
+  );
 }
 
-function createCloseHandler(component: string, errorOutput: string[], resolve: (value: ResultType<string, string>) => void) {
+function createCloseHandler(
+  component: string,
+  errorOutput: string[],
+  resolve: (value: ResultType<string, string>) => void,
+) {
   return (code: number | null) => {
     if (code === 0) {
       setupComponent(component);
       resolve(Result.ok("component setup"));
     } else {
       const exitCode = code ?? "unknown";
-      const errorMessage = errorOutput.length > 0 ? errorOutput.join("\n") : `Command failed with exit code ${exitCode}`;
+      const errorMessage =
+        errorOutput.length > 0 ? errorOutput.join("\n") : `Command failed with exit code ${exitCode}`;
       resolve(Result.error(errorMessage));
     }
   };

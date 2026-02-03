@@ -37,7 +37,10 @@ export function PageItemPrint() {
   const onHighlightChange = useCallback((_event: unknown, isChecked: boolean) => {
     setIsHighlighted(isChecked);
   }, []);
-  const highlightSwitch = useMemo(() => <Switch checked={isHighlighted} onChange={onHighlightChange} />, [isHighlighted, onHighlightChange]);
+  const highlightSwitch = useMemo(
+    () => <Switch checked={isHighlighted} onChange={onHighlightChange} />,
+    [isHighlighted, onHighlightChange],
+  );
   const onPrint = useCallback(async () => {
     clearElementsForPrint();
     setIsPrintMode(true);
@@ -67,7 +70,14 @@ export function PageItemPrint() {
             <div className="flex flex-col items-center pt-3 md:flex-row md:items-start">
               <AppBarcode isHighlighted={isHighlighted} item={item} size={size} />
               <div className="flex flex-col gap-3 md:ml-6 md:items-start">
-                <ToggleButtonGroup aria-label="Size" color="primary" exclusive={true} onChange={onSizeChange} size="small" value={size}>
+                <ToggleButtonGroup
+                  aria-label="Size"
+                  color="primary"
+                  exclusive={true}
+                  onChange={onSizeChange}
+                  size="small"
+                  value={size}
+                >
                   {Object.keys(printSizes).map(one => (
                     <ToggleButton key={one} value={one}>
                       {one}

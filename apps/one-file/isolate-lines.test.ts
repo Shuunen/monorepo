@@ -3,7 +3,9 @@ import { isolateLines, linesToList } from "./isolate-lines.utils";
 
 describe("isolate-lines", () => {
   it("isolateLines A should process complex input with duplicates and spaces", () => {
-    expect(isolateLines("xyz\nudp://9.7zip.t0:2750  xyz  \n \n \n http://ubuntu.com:80/announce  \n  ab-cd\n\n  ab-cd ")).toMatchInlineSnapshot(`
+    expect(
+      isolateLines("xyz\nudp://9.7zip.t0:2750  xyz  \n \n \n http://ubuntu.com:80/announce  \n  ab-cd\n\n  ab-cd "),
+    ).toMatchInlineSnapshot(`
       [
         "ab-cd",
         "http://ubuntu.com:80/announce",

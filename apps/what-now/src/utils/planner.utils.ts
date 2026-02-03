@@ -3,7 +3,22 @@ import type { Task } from "../types";
 import { updateTask } from "./database.utils";
 import { daysRecurrence, daysSinceCompletion } from "./tasks.utils";
 
-export const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+export const weekDays = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 export const daysInWeek = 14;
 // oxlint-disable-next-line no-magic-numbers
 export const allDayIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
@@ -20,8 +35,20 @@ export const triWeeklyFrequency = 21;
 export const monthlyFrequency = 28;
 
 // Valid frequency options in ascending order (higher frequency = lower number)
-// oxlint-disable-next-line no-magic-numbers
-export const validFrequencies = [dayFrequency, 2, 3, 4, 5, 6, weekFrequency, biWeeklyFrequency, triWeeklyFrequency, monthlyFrequency];
+export const validFrequencies = [
+  dayFrequency,
+  // oxlint-disable no-magic-numbers
+  2,
+  3,
+  4,
+  5,
+  6,
+  // oxlint-enable no-magic-numbers
+  weekFrequency,
+  biWeeklyFrequency,
+  triWeeklyFrequency,
+  monthlyFrequency,
+];
 
 /**
  * Converts days recurrence to frequency string
@@ -100,7 +127,8 @@ function calculateWeeklyTaskDays(daysSinceComplete: number, recurrence: number):
   for (let dayIndex = 0; dayIndex < daysInWeek; dayIndex += 1) {
     const daysFromToday = dayIndex - currentDayOfWeek;
     const totalDaysFromLastCompletion = daysSinceComplete + daysFromToday;
-    if (totalDaysFromLastCompletion >= recurrence && totalDaysFromLastCompletion % recurrence === 0) taskDays.push(dayIndex);
+    if (totalDaysFromLastCompletion >= recurrence && totalDaysFromLastCompletion % recurrence === 0)
+      taskDays.push(dayIndex);
   }
   return taskDays;
 }
@@ -187,17 +215,25 @@ async function processUpdatePromises(updatePromises: Promise<unknown>[]) {
  * @param tasks - Array of all tasks
  * @returns Promise that resolves when save is complete
  */
-export function saveTaskModifications(frequencyModifications: Record<string, number>, dateModifications: Record<string, string>, tasks: Task[]) {
+export function saveTaskModifications(
+  frequencyModifications: Record<string, number>,
+  dateModifications: Record<string, string>,
+  tasks: Task[],
+) {
   const updatePromises: Promise<unknown>[] = [];
 
   // Handle frequency modifications
   const frequencyEntries = Object.entries(frequencyModifications);
-  const frequencyPromises = frequencyEntries.map(([taskId, newDays]) => createTaskUpdatePromise(taskId, newDays, tasks));
+  const frequencyPromises = frequencyEntries.map(([taskId, newDays]) =>
+    createTaskUpdatePromise(taskId, newDays, tasks),
+  );
   updatePromises.push(...frequencyPromises);
 
   // Handle date modifications
   const dateEntries = Object.entries(dateModifications);
-  const datePromises = dateEntries.map(([taskId, newCompletedOn]) => createTaskDateUpdatePromise(taskId, newCompletedOn, tasks));
+  const datePromises = dateEntries.map(([taskId, newCompletedOn]) =>
+    createTaskDateUpdatePromise(taskId, newCompletedOn, tasks),
+  );
   updatePromises.push(...datePromises);
 
   return processUpdatePromises(updatePromises);

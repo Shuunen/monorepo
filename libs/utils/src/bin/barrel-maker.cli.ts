@@ -60,7 +60,14 @@ export async function make({ header = "", target, index = "index.ts", ext }: Mak
   const out = path.join(process.cwd(), index);
   logger.info("Listing entries", target);
   const files = await glob(target, { filesOnly: true });
-  const list = files.filter(file => filterFile(file)).map(file => `export ${file.includes("types") ? "type " : ""}* from "./${ext === undefined ? file : removeExtension(file) + ext}";`.replace(path.sep, "/"));
+  const list = files
+    .filter(file => filterFile(file))
+    .map(file =>
+      `export ${file.includes("types") ? "type " : ""}* from "./${ext === undefined ? file : removeExtension(file) + ext}";`.replace(
+        path.sep,
+        "/",
+      ),
+    );
   const content = `${header}${list.toSorted().join("\n")}\n`;
   logger.info("Into barrel file", out);
   writeFileSync(out, content);

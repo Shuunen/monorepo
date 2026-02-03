@@ -4,7 +4,18 @@ import type React from "react";
 
 // source : https://ui.aceternity.com/components/background-gradient
 
-export const BackgroundGradient = ({ children, className, containerClassName, animate = true }: { children?: React.ReactNode; className?: string; containerClassName?: string; animate?: boolean }) => {
+// oxlint-disable-next-line max-lines-per-function
+export const BackgroundGradient = ({
+  children,
+  className,
+  containerClassName,
+  animate = true,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+  containerClassName?: string;
+  animate?: boolean;
+}) => {
   const variants = {
     animate: {
       backgroundPosition: ["0, 50%", "100% 50%", "0 50%"],
@@ -14,7 +25,7 @@ export const BackgroundGradient = ({ children, className, containerClassName, an
     },
   };
   return (
-    <div className={cn("group relative p-[4px]", containerClassName)}>
+    <div className={cn("group relative p-1", containerClassName)}>
       <motion.div
         animate={animate ? "animate" : undefined}
         className={cn(

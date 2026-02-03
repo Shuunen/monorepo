@@ -3,7 +3,13 @@ import { Input } from "../atoms/input";
 import { getFieldMetadataOrThrow } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 
-export function FormFieldPassword({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
+export function FormFieldPassword({
+  fieldName,
+  fieldSchema,
+  isOptional,
+  logger,
+  readonly = false,
+}: FormFieldBaseProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { placeholder, state = "editable" } = metadata;
   const isDisabled = state === "disabled" || readonly;
@@ -12,7 +18,14 @@ export function FormFieldPassword({ fieldName, fieldSchema, isOptional, logger, 
     <FormFieldBase {...props}>
       {({ field }) => (
         <FormControl>
-          <Input {...field} disabled={isDisabled} placeholder={placeholder} readOnly={readonly} type="password" value={field.value || ""} />
+          <Input
+            {...field}
+            disabled={isDisabled}
+            placeholder={placeholder}
+            readOnly={readonly}
+            type="password"
+            value={field.value || ""}
+          />
         </FormControl>
       )}
     </FormFieldBase>

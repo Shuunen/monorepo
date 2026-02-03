@@ -9,7 +9,15 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 }
 
-function ImageInfosColumn({ infos, doReverse = false, win }: { infos: ImageMetadata; doReverse?: boolean; win?: boolean }) {
+function ImageInfosColumn({
+  infos,
+  doReverse = false,
+  win,
+}: {
+  infos: ImageMetadata;
+  doReverse?: boolean;
+  win?: boolean;
+}) {
   const data = [
     { label: "name", value: infos.filename },
     { label: "size", value: formatFileSize(infos.size) },

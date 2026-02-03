@@ -12,7 +12,16 @@ const INTERVAL = 1000;
 const MIN_OCCURRENCES = 2;
 const INITIAL_INDEX = 0;
 const INDEX_INCREMENT = 1;
-const HIGHLIGHT_CLASSES = ["!outline", "!outline-2", "!outline-dashed", "!outline-blue-500", "!outline-offset-2", "!z-50", "!bg-blue-500/20", "!text-black"] as const;
+const HIGHLIGHT_CLASSES = [
+  "!outline",
+  "!outline-2",
+  "!outline-dashed",
+  "!outline-blue-500",
+  "!outline-offset-2",
+  "!z-50",
+  "!bg-blue-500/20",
+  "!text-black",
+] as const;
 
 type TestIdInfo = {
   id: string;
@@ -129,7 +138,10 @@ function TestIdListItem({ id, index, occurrences, isValid }: TestIdInfo & { inde
   return (
     <li
       aria-label={`Highlight element with data-testid ${id}`}
-      className={cn("m-0 flex cursor-pointer items-center gap-2 border-b border-gray-100 px-4 py-2 whitespace-nowrap transition-colors hover:bg-blue-50", isValid ? "text-black" : "text-red-500")}
+      className={cn(
+        "m-0 flex cursor-pointer items-center gap-2 border-b border-gray-100 px-4 py-2 whitespace-nowrap transition-colors hover:bg-blue-50",
+        isValid ? "text-black" : "text-red-500",
+      )}
       onMouseEnter={() => {
         highlightManager.add(id);
       }}
@@ -163,8 +175,16 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
     return;
   }
   return (
-    <Card aria-label="data-testid checker" className="fixed right-6 bottom-6 z-100 max-h-11/12 w-auto min-w-[260px] gap-0 overflow-hidden py-0 text-sm shadow-lg">
-      <CardHeader className={cn("flex items-center justify-between py-2 pr-2 pl-4 text-white", hasErrors ? "bg-red-700" : "bg-blue-700")}>
+    <Card
+      aria-label="data-testid checker"
+      className="fixed right-6 bottom-6 z-100 max-h-11/12 w-auto min-w-[260px] gap-0 overflow-hidden py-0 text-sm shadow-lg"
+    >
+      <CardHeader
+        className={cn(
+          "flex items-center justify-between py-2 pr-2 pl-4 text-white",
+          hasErrors ? "bg-red-700" : "bg-blue-700",
+        )}
+      >
         <CardTitle className="text-base">Data test id checker</CardTitle>
         <Button
           name="close-test-id-checker"

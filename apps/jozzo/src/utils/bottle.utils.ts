@@ -51,7 +51,7 @@ export function getBottle(fillWith: Color, size = defaultBottleSize) {
  * @param amount the amount of colors to pour, if not provided, pour all colors possible
  * @returns the bottles after pouring
  */
-// oxlint-disable-next-line max-lines-per-function, max-statements
+// oxlint-disable-next-line max-statements
 export function pour(from: Readonly<Bottle>, to: Readonly<Bottle>, amount?: number) {
   const cloneFrom = Array.from(from);
   const cloneTo = Array.from(to);
@@ -63,11 +63,12 @@ export function pour(from: Readonly<Bottle>, to: Readonly<Bottle>, amount?: numb
   let nbPoured = 0;
 
   for (let index = to.length - 1; index >= 0 && nbPoured < amountToPour; index -= 1) {
-    logger.info(`looking at b at index ${index}, color there is ${to[index] === "" ? "none" : to[index]}, nbPoured ${nbPoured}, lastColor ${lastColor}`);
+    logger.info(
+      `looking at b at index ${index}, color there is ${to[index] === "" ? "none" : to[index]}, nbPoured ${nbPoured}, lastColor ${lastColor}`,
+    );
     if (to[index] === "") {
       const colorIndex = getFirstColorIndex(cloneFrom);
       const color = cloneFrom[colorIndex];
-      // oxlint-disable-next-line max-depth
       if (lastColor !== undefined && lastColor !== color) {
         logger.info(`skipping because lastColor (${lastColor}) is different from color (${color})`);
         break;
@@ -125,8 +126,13 @@ export function mixBottles(bottles: Bottle[]) {
     const { bottleWithColors, bottleWithColorsIndex } = getRandomBottleWithColors(mixedBottles);
     if (bottleWithSpaceIndex === bottleWithColorsIndex) continue;
     const nbSpaces = bottleWithSpace.filter(color => color === "").length;
-    const nbColorsToPour = randomNumber(1, Math.max(bottleWithColors.filter(color => color !== "").length - 1, nbSpaces));
-    logger.info(`pouring ${nbColorsToPour} colors from bottle ${bottleWithColorsIndex} ${asciiBottle(bottleWithColors)} to bottle ${bottleWithSpaceIndex} ${asciiBottle(bottleWithSpace)}`);
+    const nbColorsToPour = randomNumber(
+      1,
+      Math.max(bottleWithColors.filter(color => color !== "").length - 1, nbSpaces),
+    );
+    logger.info(
+      `pouring ${nbColorsToPour} colors from bottle ${bottleWithColorsIndex} ${asciiBottle(bottleWithColors)} to bottle ${bottleWithSpaceIndex} ${asciiBottle(bottleWithSpace)}`,
+    );
     const [from, to] = pour(bottleWithColors, bottleWithSpace, nbColorsToPour);
     mixedBottles[bottleWithColorsIndex] = from;
     mixedBottles[bottleWithSpaceIndex] = to;

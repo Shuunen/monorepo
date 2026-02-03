@@ -45,7 +45,16 @@ type Story = StoryObj<typeof meta>;
 export const UniqueTestIds: Story = {
   args: {
     description: "On this page we only have unique data-testid attributes.",
-    testIds: ["header-section", "title", "description", "content-section", "primary-button", "search-input", "footer-section", "copyright-text"],
+    testIds: [
+      "header-section",
+      "title",
+      "description",
+      "content-section",
+      "primary-button",
+      "search-input",
+      "footer-section",
+      "copyright-text",
+    ],
   },
 };
 

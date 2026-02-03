@@ -19,7 +19,8 @@ export const Loading: Story = {
   args: {
     children: (
       <Paragraph>
-        Your order <strong className="font-medium">XX11234654</strong> is being submitted, please wait until the process is finished.
+        Your order <strong className="font-medium">XX11234654</strong> is being submitted, please wait until the process
+        is finished.
       </Paragraph>
     ),
     status: "loading",
@@ -54,7 +55,8 @@ export const WarningWithDetails: Story = {
   args: {
     children: (
       <Paragraph>
-        Your order <strong className="font-medium">XX1123465423</strong> has been successfully submitted with some warnings.
+        Your order <strong className="font-medium">XX1123465423</strong> has been successfully submitted with some
+        warnings.
       </Paragraph>
     ),
     detailsList: ["Some optional documents were missing."],
@@ -67,7 +69,8 @@ export const ErrorWithDetails: Story = {
   args: {
     children: (
       <Paragraph>
-        Your order <strong className="font-medium">XX1123465433</strong> was not submitted, some errors prevent it from being processed:
+        Your order <strong className="font-medium">XX1123465433</strong> was not submitted, some errors prevent it from
+        being processed:
       </Paragraph>
     ),
     detailsList: ["Document X is invalid.", "Please contact support."],

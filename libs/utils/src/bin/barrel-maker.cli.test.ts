@@ -1,7 +1,16 @@
 import { alignForSnap, Result } from "@monorepo/utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mockFiles = ["atoms/Button.tsx", "atoms/index.ts", "atoms/types.ts", "atoms/types.d.ts", "icons/Icon.tsx", "molecules/Card.tsx", "molecules/Card.test.tsx", "molecules/Card.stories.tsx"];
+const mockFiles = [
+  "atoms/Button.tsx",
+  "atoms/index.ts",
+  "atoms/types.ts",
+  "atoms/types.d.ts",
+  "icons/Icon.tsx",
+  "molecules/Card.tsx",
+  "molecules/Card.test.tsx",
+  "molecules/Card.stories.tsx",
+];
 
 describe("barrel-maker cli", () => {
   beforeEach(() => {
@@ -55,7 +64,16 @@ describe("barrel-maker cli", () => {
   it("main B with args", async () => {
     // @ts-expect-error import issue
     const { main } = await import("./barrel-maker.cli");
-    const { value } = Result.unwrap(await main(["node", "script.ts", "--target=./{atoms,icons,molecules}/*.tsx", "--ext=.js", "--header=ACME", "--index=index.js"]));
+    const { value } = Result.unwrap(
+      await main([
+        "node",
+        "script.ts",
+        "--target=./{atoms,icons,molecules}/*.tsx",
+        "--ext=.js",
+        "--header=ACME",
+        "--index=index.js",
+      ]),
+    );
     // @ts-expect-error import issue
     expect(value?.content).toMatchSnapshot();
     // @ts-expect-error import issue
@@ -67,7 +85,9 @@ describe("barrel-maker cli", () => {
   it("main C without header", async () => {
     // @ts-expect-error import issue
     const { main } = await import("./barrel-maker.cli");
-    const { value } = Result.unwrap(await main(["node", "script.ts", "--target=./{atoms,icons,molecules}/*.tsx", "--ext=.js", "--index=index.js"]));
+    const { value } = Result.unwrap(
+      await main(["node", "script.ts", "--target=./{atoms,icons,molecules}/*.tsx", "--ext=.js", "--index=index.js"]),
+    );
     // @ts-expect-error import issue
     expect(value?.content).toMatchSnapshot();
     // @ts-expect-error import issue

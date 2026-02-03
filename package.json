@@ -103,6 +103,7 @@
     "clean:folders": "rm -rf ./*/*/out-tsc ./*/*/test-output ./*/*/dist && echo clean:folders success",
     "clean:modules": "rm -rf ./node_modules/ ./*/*/node_modules/ && pnpm install --force && echo clean:modules success",
     "clean:nx": "nx reset && echo clean:nx success",
+    "clean:v2": "rm -rf ./*/*/out-tsc ./*/*/test-output ./*/*/dist && pnpm install --force && echo clean:v2 success",
     "cs": "bun apps/config-sync",
     "dev": "nx dev components",
     "lint": "pnpm lint:oxfmt && pnpm lint:oxlint && pnpm lint:biome && echo lint success",
@@ -122,10 +123,10 @@
     "test": "nx run-many -t test && echo test success",
     "test:update": "nx run-many -t test --update && echo test:update success",
     "up:deps": "pnpm update --recursive --latest && echo up:deps success",
-    "up:nx": "npx nx@latest migrate latest && echo up:nx success",
-    "up:sb": "npx storybook@latest upgrade && echo up:sb success",
+    "up:nx": "pnpx nx@latest migrate latest && echo up:nx success",
+    "up:sb": "pnpx storybook@latest upgrade && echo up:sb success",
     "up:shadcn": "bun libs/components/bin/update.cli.ts",
-    "up:taze": "npx taze major --write && echo up:taze success"
+    "up:taze": "pnpx taze major --write && echo up:taze success"
   },
   "version": "1.0.0"
 }

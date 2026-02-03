@@ -20,7 +20,6 @@ const report = { errors: [], infos: [], success: [], suggestions: [], warnings: 
  * @param {import('./types.js').File} file the file to synchronize
  * @returns {Promise<number>} the number of things you have to do in Life
  */
-// oxlint-disable-next-line max-statements
 async function sync(file) {
   process.stdout.write(".");
   const { areEquals, destination, source } = file;
@@ -39,7 +38,9 @@ async function sync(file) {
   }
   if (areEquals) return report.success.push(`sync is up to date : ${source.filepath}`);
   report.infos.push(`file should be sync manually : ${source.filepath}`);
-  return report.suggestions.push(`merge ${relativeBackupPath}/${filename(destination.filepath)} ${normalizePathWithSlash(source.filepath, true)}`);
+  return report.suggestions.push(
+    `merge ${relativeBackupPath}/${filename(destination.filepath)} ${normalizePathWithSlash(source.filepath, true)}`,
+  );
 }
 
 /**
@@ -53,7 +54,12 @@ async function start() {
   if (isDebug) for (const info of report.infos) logger.info(info);
   if (isDebug) for (const success of report.success) logger.info(green(success));
   if (report.suggestions.length > 0)
-    logger.info("\n TODO :\n=====\n1. review changes on this repo if any\n2. run these to compare backup & local files :\n\n", report.suggestions.join("\n "), "\n", gray("tip : you can check the configs/changes folder to see the cleaned changes"));
+    logger.info(
+      "\n TODO :\n=====\n1. review changes on this repo if any\n2. run these to compare backup & local files :\n\n",
+      report.suggestions.join("\n "),
+      "\n",
+      gray("tip : you can check the configs/changes folder to see the cleaned changes"),
+    );
   else logger.info(green("\n\nSync done, no actions required :)"));
 }
 

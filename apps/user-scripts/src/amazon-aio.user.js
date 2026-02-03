@@ -45,7 +45,8 @@ const calcScore = (rating, reviews, explanation = false) => {
   let score = ratingScore + reviewsScore;
   if (reviewsScore === 0) score *= 0.3;
   if (reviewsScore === 1) score *= 0.5;
-  if (explanation) return `${score}pts (rating: ${rating}, ratingScore: ${ratingScore}, reviews: ${reviews}, reviewsScore: ${reviewsScore})`;
+  if (explanation)
+    return `${score}pts (rating: ${rating}, ratingScore: ${ratingScore}, reviews: ${reviews}, reviewsScore: ${reviewsScore})`;
   return score;
 };
 
@@ -80,7 +81,8 @@ function AmazonAio() {
   };
   const deleteUselessSelectors = {
     ads: '.s-left-ads-item, .nav-swmslot, .GB-M-COMMON.GB-SHOVELER, #pdagSparkleAdFeedback, #detail-ilm_div, #quickPromoBucketContent, #sp_detail, #hqpWrapper, #productAlert_feature_div, #navSwmHoliday, #quickPromoDivId, [cel_widget_id^="adplacements"], [data-cel-widget^="percolate"], [data-cel-widget="nav_sitewide_msg"], [cel_widget_id^="dpx-sponsored"]',
-    badges: 'span.rush-component[data-component-type="s-coupon-component"], .a-badge-label, #acBadge_feature_div, #zeitgeistBadge_feature_div, .dotdBadge, .a-row.DEAL_OF_THE_DAY',
+    badges:
+      'span.rush-component[data-component-type="s-coupon-component"], .a-badge-label, #acBadge_feature_div, #zeitgeistBadge_feature_div, .dotdBadge, .a-row.DEAL_OF_THE_DAY',
     buyPack: "#sims-fbt",
     comparison: "#HLCXComparisonWidget_feature_div",
     dashButtons: "#digitalDashHighProminence_feature_div",
@@ -98,13 +100,15 @@ function AmazonAio() {
    */
   function deleteUseless() {
     // node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
-    for (const selector of Object.values(deleteUselessSelectors)) for (const node of utils.findAll(selector, document, true)) node.remove();
+    for (const selector of Object.values(deleteUselessSelectors))
+      for (const node of utils.findAll(selector, document, true)) node.remove();
   }
   /**
    * Clear classnames of some elements to remove their styles
    */
   function clearClassnames() {
-    for (const selector of Object.values(clearClassSelectors)) for (const node of utils.findAll(selector, document, true)) node.className = "";
+    for (const selector of Object.values(clearClassSelectors))
+      for (const node of utils.findAll(selector, document, true)) node.className = "";
   }
   /**
    * Get the price in a text
@@ -165,8 +169,14 @@ function AmazonAio() {
     const pricePerWeightSection = document.createElement("div");
     if (pricePerWeightElement) {
       const text = pricePerWeightElement.textContent;
-      // biome-ignore lint/performance/useTopLevelRegex: FIX ME later
-      const { currencyPer = "", pricePer = "", unitPer = "" } = /(?<pricePer>\d?\s?\d+[,.]\d+)(?<currencyPer>€)\/(?<unitPer>\w+)/u.exec(pricePerWeightElement.textContent ?? "")?.groups ?? {};
+      const {
+        currencyPer = "",
+        pricePer = "",
+        unitPer = "",
+        // biome-ignore lint/performance/useTopLevelRegex: FIX ME later
+      } = /(?<pricePer>\d?\s?\d+[,.]\d+)(?<currencyPer>€)\/(?<unitPer>\w+)/u.exec(
+        pricePerWeightElement.textContent ?? "",
+      )?.groups ?? {};
       const priceParsed = getPrice(pricePer);
       const priceRound = Math.round(priceParsed);
       if (pricePer === "") utils.warn("failed to find price in :", text);
@@ -191,8 +201,14 @@ function AmazonAio() {
         utils.log("failed to find unit in :", title);
         return;
       }
-      // oxlint-disable-next-line no-nested-ternary
-      const grams = unitPer.toLowerCase() === "g" ? Number.parseInt(weightPer, 10) : unitPer.toLowerCase() === "kg" ? Number.parseInt(weightPer, 10) * 1000 : 0;
+      const grams =
+        // oxlint-disable-next-line no-nested-ternary
+        unitPer.toLowerCase() === "g"
+          ? Number.parseInt(weightPer, 10)
+          : // oxlint-disable-next-line unicorn/no-nested-ternary
+            unitPer.toLowerCase() === "kg"
+            ? Number.parseInt(weightPer, 10) * 1000
+            : 0;
       if (grams === 0) {
         utils.warn("failed to find calc grams in", { title, unitPer, weightPer });
         return;
@@ -287,7 +303,14 @@ function AmazonAio() {
       product.dataset.amzAioScore = Math.round(score * score * scoreByCurrency * 70).toString();
     }
     // sort by score & apply position
-    for (const [index, product] of products.toSorted((productA, productB) => Number.parseFloat(productB.dataset.amzAioScore ?? "0") - Number.parseFloat(productA.dataset.amzAioScore ?? "0")).entries()) product.style.order = index.toString();
+    for (const [index, product] of products
+      .toSorted(
+        (productA, productB) =>
+          Number.parseFloat(productB.dataset.amzAioScore ?? "0") -
+          Number.parseFloat(productA.dataset.amzAioScore ?? "0"),
+      )
+      .entries())
+      product.style.order = index.toString();
   }
   /**
    * Process the page

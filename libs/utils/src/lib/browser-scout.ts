@@ -158,7 +158,9 @@ export function browserContext() {
     isMobile: isMobile(userAgent),
     language: isBrowser ? globalThis.navigator.language : "Unknown language",
     os: getOperatingSystem(userAgent),
-    platform: isBrowser ? ((globalThis.navigator as NavigatorUserAgent).userAgentData?.platform ?? "Unknown platform") : "Unknown platform",
+    platform: isBrowser
+      ? ((globalThis.navigator as NavigatorUserAgent).userAgentData?.platform ?? "Unknown platform")
+      : "Unknown platform",
     screenHeight: isBrowser ? globalThis.screen.height : 0,
     screenWidth: isBrowser ? globalThis.screen.width : 0,
     url: isBrowser ? globalThis.location.href : "Unknown url",

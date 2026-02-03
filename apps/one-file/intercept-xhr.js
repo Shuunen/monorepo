@@ -1,5 +1,5 @@
 /* v8 ignore start -- @preserve */
-// oxlint-disable no-console, no-magic-numbers, no-undef, prefer-rest-params, no-extend-native
+// oxlint-disable no-console, no-magic-numbers, prefer-rest-params
 const lastRequest = { method: "", url: "" };
 
 // biome-ignore lint/style/useNamingConvention: it's a Class
@@ -10,8 +10,9 @@ function XhrProxy() {
   instance.addEventListener(
     "readystatechange",
     () => {
-      // biome-ignore lint/suspicious/noConsole: old POC
-      if (instance.readyState === 4 && instance.status !== 200) console.log(`HTTP Error ${instance.status} on ${lastRequest.method} ${lastRequest.url}`);
+      if (instance.readyState === 4 && instance.status !== 200)
+        // biome-ignore lint/suspicious/noConsole: old POC
+        console.log(`HTTP Error ${instance.status} on ${lastRequest.method} ${lastRequest.url}`);
     },
     false,
   );

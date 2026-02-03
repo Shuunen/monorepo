@@ -57,19 +57,36 @@ describe("contest-header", () => {
       winner: { eliminated: false, filename: "winner.jpg", id: 0, url: "winner-url" },
     };
     const winnerMetadata: ImageMetadata = { filename: "winner.jpg", height: 1080, size: 100000, width: 1920 };
-    render(<ContestHeader contestState={completeState} leftImageMetadata={winnerMetadata} rightImageMetadata={winnerMetadata} />);
+    render(
+      <ContestHeader
+        contestState={completeState}
+        leftImageMetadata={winnerMetadata}
+        rightImageMetadata={winnerMetadata}
+      />,
+    );
     const filenames = screen.getAllByText("winner.jpg");
     expect(filenames.length).toBeGreaterThan(0);
   });
 
   it("ContestHeader E should not display image info during contest mode", () => {
-    render(<ContestHeader contestState={mockContestState} leftImageMetadata={{ filename: "image1.jpg", height: 800, size: 50000, width: 600 }} rightImageMetadata={{ filename: "image2.jpg", height: 800, size: 60000, width: 600 }} />);
+    render(
+      <ContestHeader
+        contestState={mockContestState}
+        leftImageMetadata={{ filename: "image1.jpg", height: 800, size: 50000, width: 600 }}
+        rightImageMetadata={{ filename: "image2.jpg", height: 800, size: 60000, width: 600 }}
+      />,
+    );
     const filename = screen.queryByText("image1.jpg");
     expect(filename).toBeNull();
   });
 
   it("ContestHeader F should not have a title when no contest state is provided", () => {
-    render(<ContestHeader leftImageMetadata={{ filename: "image1.jpg", height: 800, size: 50000, width: 600 }} rightImageMetadata={{ filename: "image2.jpg", height: 800, size: 60000, width: 600 }} />);
+    render(
+      <ContestHeader
+        leftImageMetadata={{ filename: "image1.jpg", height: 800, size: 50000, width: 600 }}
+        rightImageMetadata={{ filename: "image2.jpg", height: 800, size: 60000, width: 600 }}
+      />,
+    );
     const title = screen.queryByRole("heading");
     expect(title).toBeNull();
   });

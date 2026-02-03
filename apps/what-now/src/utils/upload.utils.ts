@@ -1,5 +1,12 @@
 import { parseJson, Result, toastError, toastSuccess } from "@monorepo/utils";
-import { type AppWriteTaskModel, addTask, getTasks, modelToLocalTask, modelToRemoteTask, updateTask } from "./database.utils";
+import {
+  type AppWriteTaskModel,
+  addTask,
+  getTasks,
+  modelToLocalTask,
+  modelToRemoteTask,
+  updateTask,
+} from "./database.utils";
 import { logger } from "./logger.utils";
 
 /**
@@ -31,7 +38,9 @@ export async function readJsonFile(file: File) {
   const result = parseJson<AppWriteTaskModel[]>(text);
   if (!result.ok) return Result.error(result.error);
   // Validate each task has required properties
-  for (const [index, task] of result.value.entries()) if (!task.name || !task.once || typeof task.minutes !== "number") return Result.error(`Task at index ${index} is missing required properties (name, once, minutes)`);
+  for (const [index, task] of result.value.entries())
+    if (!task.name || !task.once || typeof task.minutes !== "number")
+      return Result.error(`Task at index ${index} is missing required properties (name, once, minutes)`);
   return Result.ok(result.value);
 }
 
@@ -40,7 +49,10 @@ export async function readJsonFile(file: File) {
  * @param task - The uploaded task
  * @param results - Results object to update
  */
-async function updateExistingTask(task: AppWriteTaskModel, results: { created: number; errors: string[]; updated: number }) {
+async function updateExistingTask(
+  task: AppWriteTaskModel,
+  results: { created: number; errors: string[]; updated: number },
+) {
   const localTask = modelToLocalTask(task);
   const result = await updateTask(localTask);
   if (result.ok) {
@@ -69,7 +81,11 @@ async function createNewTask(task: AppWriteTaskModel, results: { created: number
  * @param existingTaskIds - Set of existing task IDs
  * @param results - Results object to update
  */
-async function processTaskUpload(task: AppWriteTaskModel, existingTaskIds: Set<string>, results: { created: number; errors: string[]; updated: number }) {
+async function processTaskUpload(
+  task: AppWriteTaskModel,
+  existingTaskIds: Set<string>,
+  results: { created: number; errors: string[]; updated: number },
+) {
   const taskExists = existingTaskIds.has(task.$id);
   if (taskExists) await updateExistingTask(task, results);
   else await createNewTask(task, results);

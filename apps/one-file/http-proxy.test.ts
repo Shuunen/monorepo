@@ -1,6 +1,15 @@
 import type { Request, Response } from "express";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { app, handleProxyResponse, handleWebhookError, makeProxyRequest, startServer, validateUrl, webhookHandler, webhookRoute } from "./http-proxy.cli";
+import {
+  app,
+  handleProxyResponse,
+  handleWebhookError,
+  makeProxyRequest,
+  startServer,
+  validateUrl,
+  webhookHandler,
+  webhookRoute,
+} from "./http-proxy.cli";
 
 vi.mock("express", () => {
   const mockJson = vi.fn(() => vi.fn());

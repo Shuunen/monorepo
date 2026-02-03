@@ -60,7 +60,8 @@ function VintedAio() {
     "help-link": '[href="/help/360?access_channel=vinted_guide"]',
     "law-text": '[data-testid="item-transparency-law--content"]',
     promoted: ".feed-grid > .feed-grid__item.feed-grid__item--full-row",
-    "protection-text": ".item-page-sidebar-content > .web_ui__Card__card.web_ui__Card__overflowAuto:first-child + .web_ui__Card__card.web_ui__Card__overflowAuto",
+    "protection-text":
+      ".item-page-sidebar-content > .web_ui__Card__card.web_ui__Card__overflowAuto:first-child + .web_ui__Card__card.web_ui__Card__overflowAuto",
     "sell-button": '[href="/items/new"]',
     "sidebar-discount": '[data-testid="item-sidebar-price-container"] > [data-testid="discount-badges-container"]',
     spacer: ".web_ui__Spacer__x5-large.web_ui__Spacer__horizontal",

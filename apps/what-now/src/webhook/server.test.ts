@@ -24,7 +24,12 @@ function stopServer(proc: ChildProcess | undefined) {
   if (proc) proc.kill();
 }
 
-async function request(path: string, method: "GET" | "POST" = "GET", body?: RequestInit["body"], headers?: RequestInit["headers"]) {
+async function request(
+  path: string,
+  method: "GET" | "POST" = "GET",
+  body?: RequestInit["body"],
+  headers?: RequestInit["headers"],
+) {
   const url = `http://localhost:3000${path}`;
   const options = { body, headers, method } satisfies RequestInit;
   try {
@@ -70,7 +75,9 @@ describe("server.cli.ts (integration)", () => {
     if (!result.ok) throw new Error(`Request B failed : ${result.error}`);
     const { status, response } = result.value;
     expect(status).toBe(404);
-    expect(alignForSnap(response)).toMatchInlineSnapshot(`"{"datetime":"xxxx-xx-xx xx:xx:xx","message":"Not Found","ok":false,"progress":0}"`);
+    expect(alignForSnap(response)).toMatchInlineSnapshot(
+      `"{"datetime":"xxxx-xx-xx xx:xx:xx","message":"Not Found","ok":false,"progress":0}"`,
+    );
   });
 
   it("C should respond 400 to POST /set-progress with empty body", async () => {
@@ -89,7 +96,9 @@ describe("server.cli.ts (integration)", () => {
   });
 
   it("D should respond 200 to POST /set-progress with valid body", async () => {
-    const result = await request("/set-progress", "POST", "progress=75&remaining=30&nextTask=Review code", { "Content-Type": "application/x-www-form-urlencoded" });
+    const result = await request("/set-progress", "POST", "progress=75&remaining=30&nextTask=Review code", {
+      "Content-Type": "application/x-www-form-urlencoded",
+    });
     if (!result.ok) throw new Error(`Request D failed : ${result.error}`);
     const { status, response } = result.value;
     expect(status).toBe(200);
@@ -128,19 +137,42 @@ describe("server.cli.ts (unit)", () => {
   });
 
   it("getHueColor A should map percent to hue", () => {
-    expect(serverModule.getHueColor(50)).toBe(Math.round((50 * serverModule.options.hueMax) / serverModule.options.maxProgress));
+    expect(serverModule.getHueColor(50)).toBe(
+      Math.round((50 * serverModule.options.hueMax) / serverModule.options.maxProgress),
+    );
   });
 
   it("getHueColorBody A should return correct JSON for 100", () => {
-    expect(JSON.parse(serverModule.getHueColorBody(100))).toMatchObject({ bri: 255, hue: serverModule.options.hueMax, on: false, sat: 255 });
+    expect(JSON.parse(serverModule.getHueColorBody(100))).toMatchObject({
+      bri: 255,
+      hue: serverModule.options.hueMax,
+      on: false,
+      sat: 255,
+    });
   });
   it("getHueColorBody B should return correct JSON for 0", () => {
     expect(JSON.parse(serverModule.getHueColorBody(0))).toMatchObject({ bri: 255, hue: 0, on: true, sat: 255 });
   });
 
   it("jsonResponse A should format response", () => {
-    const resp = serverModule.jsonResponse({ data: "d", message: "msg", nextTask: "t", ok: true, progress: 1, remaining: 2, response: "r" });
-    expect(JSON.parse(resp)).toMatchObject({ data: "d", message: "msg", nextTask: "t", ok: true, progress: 1, remaining: 2, response: "r" });
+    const resp = serverModule.jsonResponse({
+      data: "d",
+      message: "msg",
+      nextTask: "t",
+      ok: true,
+      progress: 1,
+      remaining: 2,
+      response: "r",
+    });
+    expect(JSON.parse(resp)).toMatchObject({
+      data: "d",
+      message: "msg",
+      nextTask: "t",
+      ok: true,
+      progress: 1,
+      remaining: 2,
+      response: "r",
+    });
   });
 
   it("sendCorsHeaders A should set headers", () => {
@@ -171,14 +203,18 @@ describe("server.cli.ts (unit)", () => {
   it("respondNotFound A should write 404", () => {
     const res = { end: vi.fn(), writeHead: vi.fn() } as unknown as http.ServerResponse;
     serverModule.respondNotFound(res);
-    expect(res.writeHead).toHaveBeenCalledWith(serverModule.options.codes.notFound, { "Content-Type": "application/json" });
+    expect(res.writeHead).toHaveBeenCalledWith(serverModule.options.codes.notFound, {
+      "Content-Type": "application/json",
+    });
     expect(res.end).toHaveBeenCalled();
   });
 
   it("respondBadRequest A should write 400", () => {
     const res = { end: vi.fn(), writeHead: vi.fn() } as unknown as http.ServerResponse;
     serverModule.respondBadRequest({ message: "bad", nextTask: undefined, progress: 0, remaining: undefined, res });
-    expect(res.writeHead).toHaveBeenCalledWith(serverModule.options.codes.badRequest, { "Content-Type": "application/json" });
+    expect(res.writeHead).toHaveBeenCalledWith(serverModule.options.codes.badRequest, {
+      "Content-Type": "application/json",
+    });
     expect(res.end).toHaveBeenCalled();
   });
 

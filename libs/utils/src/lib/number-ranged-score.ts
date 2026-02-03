@@ -11,7 +11,16 @@ import { round } from "./number-round.js";
  * @param value the value to score
  * @returns the ranged score
  */
-export function rangedScore({ isHigherBetter, scoreMax, scoreMin, valueMax, valueMin }: Readonly<{ isHigherBetter: boolean; scoreMax: number; scoreMin: number; valueMax: number; valueMin: number }>, value: number) {
+export function rangedScore(
+  {
+    isHigherBetter,
+    scoreMax,
+    scoreMin,
+    valueMax,
+    valueMin,
+  }: Readonly<{ isHigherBetter: boolean; scoreMax: number; scoreMin: number; valueMax: number; valueMin: number }>,
+  value: number,
+) {
   const lineA = (scoreMin - scoreMax) / (valueMin - valueMax);
   const lineB = scoreMax - valueMax * lineA;
   const score = value * lineA + lineB;

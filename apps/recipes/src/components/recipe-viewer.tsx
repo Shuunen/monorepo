@@ -35,7 +35,6 @@ function LoadingMessage() {
 }
 
 /* v8 ignore next -- @preserve */
-// oxlint-disable-next-line max-lines-per-function
 export function RecipeViewer() {
   const { category, recipe } = useParams<RecipeParams>();
   const [RecipeComponent, setRecipeComponent] = useState<React.ComponentType | undefined>(undefined);
@@ -75,7 +74,12 @@ export function RecipeViewer() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center" data-testid="recipe">
-      <Button asChild className="fixed bottom-4 z-10 flex rounded-xl border-2 border-orange-800" name="back-home" variant="outline">
+      <Button
+        asChild
+        className="fixed bottom-4 z-10 flex rounded-xl border-2 border-orange-800"
+        name="back-home"
+        variant="outline"
+      >
         <Link to="/">
           <MoveLeftIcon />
           Retour à l'accueil

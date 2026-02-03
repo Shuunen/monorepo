@@ -79,16 +79,26 @@ export function ImageViewer({
       {/* v8 ignore start -- @preserve */}
       <motion.div
         animate={{ opacity: isDraggingOver ? 1 : 0 }}
-        className={cn("pointer-events-none absolute inset-1 z-50 flex items-center justify-center rounded-2xl border-5 border-dashed", { "bg-chart-3/40 border-chart-3": nbDraggedFiles >= 3, "bg-primary/40 border-primary": nbDraggedFiles < 3 })}
+        className={cn(
+          "pointer-events-none absolute inset-1 z-50 flex items-center justify-center rounded-2xl border-5 border-dashed",
+          { "bg-chart-3/40 border-chart-3": nbDraggedFiles >= 3, "bg-primary/40 border-primary": nbDraggedFiles < 3 },
+        )}
         initial={{ opacity: 0 }}
         style={{ display: isDraggingOver ? "flex" : "none" }}
         transition={{ duration: 0.2 }}
       >
         {nbDraggedFiles === 1 && (
-          <motion.div animate={{ scale: isDraggingOver ? 1 : 0.9 }} className="flex w-full justify-around" initial={{ scale: 0.9 }} transition={{ duration: 0.2 }}>
+          <motion.div
+            animate={{ scale: isDraggingOver ? 1 : 0.9 }}
+            className="flex w-full justify-around"
+            initial={{ scale: 0.9 }}
+            transition={{ duration: 0.2 }}
+          >
             <motion.div
               animate={{ scale: isDraggingLeft ? 1.2 : 1 }}
-              className={cn("rounded-lg bg-background/80 px-6 py-3 text-lg font-semibold text-foreground", { "bg-secondary/90": isDraggingLeft })}
+              className={cn("rounded-lg bg-background/80 px-6 py-3 text-lg font-semibold text-foreground", {
+                "bg-secondary/90": isDraggingLeft,
+              })}
               initial={{ scale: 0.9 }}
               transition={{ duration: 0.2 }}
             >
@@ -96,7 +106,9 @@ export function ImageViewer({
             </motion.div>
             <motion.div
               animate={{ scale: isDraggingLeft ? 1 : 1.2 }}
-              className={cn("rounded-lg bg-background/80 px-6 py-3 text-lg font-semibold text-foreground", { "bg-secondary/90": !isDraggingLeft })}
+              className={cn("rounded-lg bg-background/80 px-6 py-3 text-lg font-semibold text-foreground", {
+                "bg-secondary/90": !isDraggingLeft,
+              })}
               initial={{ scale: 0.9 }}
               transition={{ duration: 0.3 }}
             >
@@ -105,19 +117,34 @@ export function ImageViewer({
           </motion.div>
         )}
         {nbDraggedFiles === 2 && (
-          <motion.div animate={{ scale: isDraggingOver ? 1 : 0.9 }} className="rounded-lg bg-background/80 px-6 py-3 text-lg font-semibold text-foreground" initial={{ scale: 0.9 }} transition={{ duration: 0.2 }}>
+          <motion.div
+            animate={{ scale: isDraggingOver ? 1 : 0.9 }}
+            className="rounded-lg bg-background/80 px-6 py-3 text-lg font-semibold text-foreground"
+            initial={{ scale: 0.9 }}
+            transition={{ duration: 0.2 }}
+          >
             Drop these 2 images to compare them
           </motion.div>
         )}
         {nbDraggedFiles >= 3 && (
-          <motion.div animate={{ scale: isDraggingOver ? 1 : 0.9 }} className="rounded-lg bg-background/80 px-6 py-3 text-lg font-semibold text-foreground" initial={{ scale: 0.9 }} transition={{ duration: 0.2 }}>
+          <motion.div
+            animate={{ scale: isDraggingOver ? 1 : 0.9 }}
+            className="rounded-lg bg-background/80 px-6 py-3 text-lg font-semibold text-foreground"
+            initial={{ scale: 0.9 }}
+            transition={{ duration: 0.2 }}
+          >
             Drop these {nbDraggedFiles} images to start a contest
           </motion.div>
         )}
       </motion.div>
       {/* v8 ignore stop -- @preserve */}
 
-      <motion.div animate={{ opacity: 1 }} className="pointer-events-none absolute inset-0 select-none" initial={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+      <motion.div
+        animate={{ opacity: 1 }}
+        className="pointer-events-none absolute inset-0 select-none"
+        initial={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
         <img alt="right" className="size-full object-contain" src={rightImage} style={imageStyle} />
       </motion.div>
 
@@ -135,7 +162,10 @@ export function ImageViewer({
 
       <motion.div
         animate={{ opacity: 1 }}
-        className={cn("absolute top-0 bottom-0 w-1 cursor-ew-resize bg-primary mix-blend-difference shadow-lg transition-colors", { "pointer-events-none": isDraggingOver })}
+        className={cn(
+          "absolute top-0 bottom-0 w-1 cursor-ew-resize bg-primary mix-blend-difference shadow-lg transition-colors",
+          { "pointer-events-none": isDraggingOver },
+        )}
         initial={{ opacity: 0 }}
         onMouseDown={onMouseDownOnHandle}
         style={{ left: `${sliderPosition[0]}%` }}
@@ -156,20 +186,40 @@ export function ImageViewer({
       </motion.div>
       <motion.div
         animate={{ opacity: 1, scale: 1 }}
-        className={cn("pointer-events-none absolute right-2 bottom-2 rounded bg-accent/50 px-2 py-1 text-xs text-accent-foreground")}
+        className={cn(
+          "pointer-events-none absolute right-2 bottom-2 rounded bg-accent/50 px-2 py-1 text-xs text-accent-foreground",
+        )}
         initial={{ opacity: 0, scale: 0.8 }}
         transition={{ delay: 0.2, duration: 0.3 }}
       >
         Zoom: {Math.round(zoom * 100)}%
       </motion.div>
       {/* v8 ignore start -- @preserve */}
-      <motion.div animate={{ opacity: isContestMode ? 1 : 0, y: isContestMode ? 0 : 20 }} className={cn("absolute bottom-2 left-2", { "pointer-events-none": isDraggingOver })} initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.3 }}>
-        <Button name="choose-left" onClick={() => onSelectWinner(contestState?.currentMatch?.leftImage.id ?? 0)} variant="secondary">
+      <motion.div
+        animate={{ opacity: isContestMode ? 1 : 0, y: isContestMode ? 0 : 20 }}
+        className={cn("absolute bottom-2 left-2", { "pointer-events-none": isDraggingOver })}
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Button
+          name="choose-left"
+          onClick={() => onSelectWinner(contestState?.currentMatch?.leftImage.id ?? 0)}
+          variant="secondary"
+        >
           Choose left image
         </Button>
       </motion.div>
-      <motion.div animate={{ opacity: isContestMode ? 1 : 0, y: isContestMode ? 0 : 20 }} className={cn("absolute right-2 bottom-2", { "pointer-events-none": isDraggingOver })} initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.3 }}>
-        <Button name="choose-right" onClick={() => onSelectWinner(contestState?.currentMatch?.rightImage.id ?? 0)} variant="secondary">
+      <motion.div
+        animate={{ opacity: isContestMode ? 1 : 0, y: isContestMode ? 0 : 20 }}
+        className={cn("absolute right-2 bottom-2", { "pointer-events-none": isDraggingOver })}
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Button
+          name="choose-right"
+          onClick={() => onSelectWinner(contestState?.currentMatch?.rightImage.id ?? 0)}
+          variant="secondary"
+        >
           Choose right image
         </Button>
       </motion.div>

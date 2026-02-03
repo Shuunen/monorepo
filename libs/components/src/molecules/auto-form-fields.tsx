@@ -17,7 +17,14 @@ export function AutoFormFields({ schema, state: stepState, logger, showForm }: A
   return (
     <>
       {Object.keys(schema.shape).map(fieldName => (
-        <AutoFormField fieldName={fieldName} fieldSchema={schema.shape[fieldName] as z.ZodType} key={fieldName} logger={logger} showForm={showForm} stepState={stepState} />
+        <AutoFormField
+          fieldName={fieldName}
+          fieldSchema={schema.shape[fieldName] as z.ZodType}
+          key={fieldName}
+          logger={logger}
+          showForm={showForm}
+          stepState={stepState}
+        />
       ))}
     </>
   );

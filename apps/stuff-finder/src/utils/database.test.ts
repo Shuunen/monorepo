@@ -69,7 +69,9 @@ describe("database.utils", () => {
     expect(result.ok).toBe(true);
     const remoteItems = Result.unwrap(result).value;
     expect(remoteItems).toHaveLength(2);
-    expect(remoteItems?.map(({ $id }) => $id).join(", ")).toMatchInlineSnapshot(`"some-item-uuid-a, some-other-item-uuid-b"`);
+    expect(remoteItems?.map(({ $id }) => $id).join(", ")).toMatchInlineSnapshot(
+      `"some-item-uuid-a, some-other-item-uuid-b"`,
+    );
     expect(remoteItems).toMatchSnapshot();
     expect(databaseMock.listDocuments).toHaveBeenNthCalledWith(1, "databaseA", "collectionA", [
       { isThisMockedDataFromMock: true, limit: 100 },
@@ -138,7 +140,13 @@ describe("database.utils", () => {
     const result = await addItemRemotely(item);
     expect(mockFetch).toHaveBeenNthCalledWith(1, photoUrl);
     expect(databaseMock.createFile).toHaveBeenCalledTimes(0);
-    expect(databaseMock.createDocument).toHaveBeenNthCalledWith(1, "databaseA", "collectionA", expect.anything(), expect.anything());
+    expect(databaseMock.createDocument).toHaveBeenNthCalledWith(
+      1,
+      "databaseA",
+      "collectionA",
+      expect.anything(),
+      expect.anything(),
+    );
     expect(result.ok).toBe(true);
     const photos = Result.unwrap(result).value?.photos;
     expect(photos?.[0]).toMatchInlineSnapshot(`"https://example.com/photo.png"`);
@@ -252,7 +260,9 @@ describe("database.utils", () => {
     expect(result.ok).toBe(true);
     const photos = Result.unwrap(result).value?.photos;
     expect(photos).toHaveLength(3);
-    expect(photos?.join(", ")).toMatchInlineSnapshot(`"reference-b-photo-0-jpg, a-bucket-photo-uuid, reference-b-photo-2-jpg"`);
+    expect(photos?.join(", ")).toMatchInlineSnapshot(
+      `"reference-b-photo-0-jpg, a-bucket-photo-uuid, reference-b-photo-2-jpg"`,
+    );
     expect(mockFetch).toHaveBeenCalledTimes(2);
     expect(mockFetch).toHaveBeenNthCalledWith(1, photoUrlA);
     expect(mockFetch).toHaveBeenNthCalledWith(2, photoUrlC);
@@ -291,7 +301,9 @@ describe("database.utils", () => {
   });
 
   it("itemIdToImageUrl A", () => {
-    expect(itemIdToImageUrl("hehe")).toMatchInlineSnapshot(`"https://cloud.appwrite.io/v1/storage/buckets/bucketA/files/hehe/view?project=stuff-finder&mode=admin"`);
+    expect(itemIdToImageUrl("hehe")).toMatchInlineSnapshot(
+      `"https://cloud.appwrite.io/v1/storage/buckets/bucketA/files/hehe/view?project=stuff-finder&mode=admin"`,
+    );
   });
 
   it("itemToImageUrl A empty photo", () => {
@@ -299,17 +311,25 @@ describe("database.utils", () => {
   });
 
   it("itemToImageUrl B with photo", () => {
-    expect(itemToImageUrl(mockItem({ photos: ["photo-uuid"] }))).toMatchInlineSnapshot(`"https://cloud.appwrite.io/v1/storage/buckets/bucketA/files/photo-uuid/view?project=stuff-finder&mode=admin"`);
+    expect(itemToImageUrl(mockItem({ photos: ["photo-uuid"] }))).toMatchInlineSnapshot(
+      `"https://cloud.appwrite.io/v1/storage/buckets/bucketA/files/photo-uuid/view?project=stuff-finder&mode=admin"`,
+    );
   });
 
   it("itemPhotoToImageUrl A not url", () => {
     const photo = itemPhotoToImageUrl("photo-uuid");
-    expect(photo).toMatchInlineSnapshot(`"https://cloud.appwrite.io/v1/storage/buckets/bucketA/files/photo-uuid/view?project=stuff-finder&mode=admin"`);
+    expect(photo).toMatchInlineSnapshot(
+      `"https://cloud.appwrite.io/v1/storage/buckets/bucketA/files/photo-uuid/view?project=stuff-finder&mode=admin"`,
+    );
   });
 
   it("itemPhotoToImageUrl B appwrite url", () => {
-    const photo = itemPhotoToImageUrl("https://cloud.appwrite.io/v1/storage/buckets/bucketA/files/photo-uuid/view?project=stuff-finder");
-    expect(photo).toMatchInlineSnapshot(`"https://cloud.appwrite.io/v1/storage/buckets/bucketA/files/photo-uuid/view?project=stuff-finder&mode=admin"`);
+    const photo = itemPhotoToImageUrl(
+      "https://cloud.appwrite.io/v1/storage/buckets/bucketA/files/photo-uuid/view?project=stuff-finder",
+    );
+    expect(photo).toMatchInlineSnapshot(
+      `"https://cloud.appwrite.io/v1/storage/buckets/bucketA/files/photo-uuid/view?project=stuff-finder&mode=admin"`,
+    );
   });
 
   it("itemPhotoToImageUrl C external url", () => {
@@ -330,7 +350,9 @@ describe("database.utils", () => {
   });
 
   it("downloadUrl A", async () => {
-    await expect(downloadUrl("http://files.com/42.txt", "my-file.txt")).rejects.toThrowErrorMatchingInlineSnapshot(`[ReferenceError: document is not defined]`);
+    await expect(downloadUrl("http://files.com/42.txt", "my-file.txt")).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[ReferenceError: document is not defined]`,
+    );
   });
 
   it("downloadImages A success empty", () => {
@@ -347,11 +369,15 @@ describe("database.utils", () => {
   it("downloadImages C failure with 2 images", async () => {
     const files = [mockFile({ $id: "some-image-file-uuid-a" }), mockFile({ $id: "some-other-image-file-uuid-b" })];
     databaseMock.listFiles.mockResolvedValueOnce({ files, total: 2 });
-    await expect(downloadImages()).rejects.toThrowErrorMatchingInlineSnapshot(`[ReferenceError: document is not defined]`);
+    await expect(downloadImages()).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[ReferenceError: document is not defined]`,
+    );
   });
 
   it("downloadItems A failing", async () => {
-    await expect(downloadItems()).rejects.toThrowErrorMatchingInlineSnapshot(`[ReferenceError: document is not defined]`);
+    await expect(downloadItems()).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[ReferenceError: document is not defined]`,
+    );
   });
 
   it("Query.limit A", () => {
@@ -387,7 +413,9 @@ describe("database.utils", () => {
     expect(result.ok).toBe(true);
     const images = Result.unwrap(result).value;
     expect(images).toHaveLength(2);
-    expect(images?.map(({ $id }) => $id).join(", ")).toMatchInlineSnapshot(`"some-image-file-uuid-a, some-other-image-file-uuid-b"`);
+    expect(images?.map(({ $id }) => $id).join(", ")).toMatchInlineSnapshot(
+      `"some-image-file-uuid-a, some-other-image-file-uuid-b"`,
+    );
     expect(images).toMatchSnapshot();
     expect(databaseMock.listFiles).toHaveBeenNthCalledWith(1, "bucketA", [
       { isThisMockedDataFromMock: true, limit: 100 },
@@ -460,7 +488,11 @@ describe("database.utils", () => {
     logger.disable();
     mockFetch.mockResolvedValueOnce(new Response(new Blob([], { type: "image/jpeg" })));
     databaseMock.createFile.mockRejectedValueOnce(new Error("requested ID already exists"));
-    databaseMock.createFile.mockResolvedValueOnce({ $id: "file-name-jpg", bucketId: "bucketA", isThisMockedDataFromMock: true });
+    databaseMock.createFile.mockResolvedValueOnce({
+      $id: "file-name-jpg",
+      bucketId: "bucketA",
+      isThisMockedDataFromMock: true,
+    });
     const result = await uploadImage("file-name.jpg", "https://example.com/photo.jpg");
     expect(result.ok).toBe(true);
     expect(Result.unwrap(result).value).toMatchInlineSnapshot(`"file-name-jpg"`);
@@ -484,7 +516,11 @@ describe("database.utils", () => {
 
   it("deleteImageRemotely A success", async () => {
     logger.disable();
-    databaseMock.deleteFile.mockResolvedValueOnce({ $id: "some-image-file-uuid", bucketId: "bucketA", isThisMockedDataFromMock: true });
+    databaseMock.deleteFile.mockResolvedValueOnce({
+      $id: "some-image-file-uuid",
+      bucketId: "bucketA",
+      isThisMockedDataFromMock: true,
+    });
     const result = await deleteImageRemotely("image-uuid");
     expect(result.ok).toBe(true);
     expect(Result.unwrap(result).value).toMatchInlineSnapshot(`
@@ -510,8 +546,16 @@ describe("database.utils", () => {
 
   it("deleteItemRemotely A success", async () => {
     logger.disable();
-    databaseMock.deleteDocument.mockResolvedValueOnce({ $id: "some-item-uuid", collectionId: "collectionA", databaseId: "databaseA", isThisMockedDataFromMock: true });
-    const item = mockItem({ $id: "item-uuid", photos: ["photo-uuid-1", "https://hehe.fr/photo-2.jpg", "photo-uuid-3"] });
+    databaseMock.deleteDocument.mockResolvedValueOnce({
+      $id: "some-item-uuid",
+      collectionId: "collectionA",
+      databaseId: "databaseA",
+      isThisMockedDataFromMock: true,
+    });
+    const item = mockItem({
+      $id: "item-uuid",
+      photos: ["photo-uuid-1", "https://hehe.fr/photo-2.jpg", "photo-uuid-3"],
+    });
     const result = await deleteItemRemotely(item);
     expect(result.ok).toBe(true);
     expect(databaseMock.deleteDocument).toHaveBeenNthCalledWith(1, "databaseA", "collectionA", "item-uuid");

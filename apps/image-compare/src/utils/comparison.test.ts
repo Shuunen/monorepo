@@ -318,7 +318,9 @@ describe("comparison.utils", () => {
     });
 
     it("getNbFiles B should count only file items", () => {
-      const mockEvent = { dataTransfer: { items: [{ kind: "file" }, { kind: "string" }, { kind: "file" }] } } as unknown as DragEvent;
+      const mockEvent = {
+        dataTransfer: { items: [{ kind: "file" }, { kind: "string" }, { kind: "file" }] },
+      } as unknown as DragEvent;
       const result = getNbFiles(mockEvent);
       expect(result).toBe(2);
     });

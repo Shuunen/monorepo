@@ -52,7 +52,10 @@ type TitleProps = VariantProps<typeof titleVariants> & {
 export function Title({ children, level = 1, variant = "default", className = "" }: TitleProps) {
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
   return (
-    <Tag className={cn(titleVariants({ level, variant }), className)} data-testid={slugify(`title-${getNodeText(children)}`)}>
+    <Tag
+      className={cn(titleVariants({ level, variant }), className)}
+      data-testid={slugify(`title-${getNodeText(children)}`)}
+    >
       {children}
     </Tag>
   );
@@ -87,7 +90,11 @@ const paragraphVariants = cva("leading-relaxed", {
 export function Paragraph({ children, variant = "default", className = "" }: ParagraphProps) {
   const role = variant === "error" ? "alert" : undefined;
   return (
-    <p role={role} className={cn(paragraphVariants({ variant }), className)} data-testid={slugify(`paragraph-${variant}`)}>
+    <p
+      role={role}
+      className={cn(paragraphVariants({ variant }), className)}
+      data-testid={slugify(`paragraph-${variant}`)}
+    >
       {children}
     </p>
   );

@@ -40,7 +40,8 @@ function groupRecipesByCategory(recipes: Recipe[]): Record<string, Recipe[]> {
     if (!grouped[recipe.category]) grouped[recipe.category] = [];
     grouped[recipe.category].push(recipe);
   }
-  for (const category of Object.keys(grouped)) grouped[category].sort((first, second) => first.name.localeCompare(second.name));
+  for (const category of Object.keys(grouped))
+    grouped[category].sort((first, second) => first.name.localeCompare(second.name));
   return grouped;
 }
 
@@ -92,7 +93,9 @@ export function RecipeMenu() {
         ))}
         <Divider />
       </div>
-      <span className="mb-8 block w-full text-center text-sm text-gray-500 italic text-shadow-md text-shadow-white">__unique-mark__</span>
+      <span className="mb-8 block w-full text-center text-sm text-gray-500 italic text-shadow-md text-shadow-white">
+        __unique-mark__
+      </span>
       <IconOwl className="w-12 text-yellow-400" />
     </div>
   );

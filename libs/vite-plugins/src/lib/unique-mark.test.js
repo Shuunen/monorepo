@@ -1,4 +1,13 @@
-import { addColorCode, generateMark, getProjectVersion, injectMark, injectMarkInAsset, injectMarkInAssets, uniqueMark, yellow } from "./unique-mark.node";
+import {
+  addColorCode,
+  generateMark,
+  getProjectVersion,
+  injectMark,
+  injectMarkInAsset,
+  injectMarkInAssets,
+  uniqueMark,
+  yellow,
+} from "./unique-mark.node";
 
 describe("vite-plugin-unique-mark", () => {
   it("addColorCode A wraps string with color codes", () => {
@@ -45,8 +54,10 @@ describe("vite-plugin-unique-mark", () => {
     },
     e: {
       example: "placeholder inside a JSX function call",
-      input: 'O.jsx(wt.div,{variants:cn,children:O.jsx("div",{className:"text-center text-sm font-mono pb-4",id:"my-placeholder"})})]})})}',
-      output: 'O.jsx(wt.div,{variants:cn,children:O.jsx("div",{className:"text-center text-sm font-mono pb-4",id:"my-placeholder",children:"MARK"})})]})})}',
+      input:
+        'O.jsx(wt.div,{variants:cn,children:O.jsx("div",{className:"text-center text-sm font-mono pb-4",id:"my-placeholder"})})]})})}',
+      output:
+        'O.jsx(wt.div,{variants:cn,children:O.jsx("div",{className:"text-center text-sm font-mono pb-4",id:"my-placeholder",children:"MARK"})})]})})}',
     },
     f: {
       example: "empty string",
@@ -75,8 +86,10 @@ describe("vite-plugin-unique-mark", () => {
     },
     k: {
       example: "complex string with multiple placeholders",
-      input: 'Hello __my-placeholder__ I like <meta name="my-placeholder" content="..." /> and <div id="my-placeholder" class="mt-6 p-4">OLD-mark</div> :)',
-      output: 'Hello MARK I like <meta name="my-placeholder" content="MARK" /> and <div id="my-placeholder" class="mt-6 p-4">MARK</div> :)',
+      input:
+        'Hello __my-placeholder__ I like <meta name="my-placeholder" content="..." /> and <div id="my-placeholder" class="mt-6 p-4">OLD-mark</div> :)',
+      output:
+        'Hello MARK I like <meta name="my-placeholder" content="MARK" /> and <div id="my-placeholder" class="mt-6 p-4">MARK</div> :)',
     },
   };
 

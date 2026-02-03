@@ -186,7 +186,9 @@ function a2b(a) {
     i = String.fromCharCode,
     j = a.length;
   for (b = 0; 64 > b; b++) e["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(b)] = b;
-  for (c = 0; j > c; c++) for (b = e[a.charAt(c)], f = (f << 6) + b, g += 6; g >= 8; ) ((d = 255 & (f >>> (g -= 8))) || j - 2 > c) && (h += i(d));
+  for (c = 0; j > c; c++)
+    for (b = e[a.charAt(c)], f = (f << 6) + b, g += 6; g >= 8; )
+      ((d = 255 & (f >>> (g -= 8))) || j - 2 > c) && (h += i(d));
   return h;
 }
 /* oxlint-enable */
@@ -452,7 +454,11 @@ function LaptopHelper() {
       descElement.innerHTML = descElement.innerHTML.replaceAll("&nbsp;", "");
       const text = utils.readableString(descElement.textContent).toLowerCase().trim();
       utils.log("checking :", text);
-      descElement.innerHTML = descElement.innerHTML.replace(keywordRegex, match => `<span class="${cls.mark}" style="display: inline-block" data-keyword="${match.replace('"', "”")}">${match}</span>`);
+      descElement.innerHTML = descElement.innerHTML.replace(
+        keywordRegex,
+        match =>
+          `<span class="${cls.mark}" style="display: inline-block" data-keyword="${match.replace('"', "”")}">${match}</span>`,
+      );
       for (const markElement of utils.findAll(`.${cls.mark}`, descElement, true)) annotate(markElement);
     }
   }
@@ -487,4 +493,17 @@ function LaptopHelper() {
 }
 
 if (globalThis.window) LaptopHelper();
-else module.exports = { a2b, b2a, base64ToString, cleanCpuName, getColorForScore, getScoreForRefresh, getScoreForResolution, getScoresForRam, getScoresForScreen, getScoresForWifi, stringToBase64 };
+else
+  module.exports = {
+    a2b,
+    b2a,
+    base64ToString,
+    cleanCpuName,
+    getColorForScore,
+    getScoreForRefresh,
+    getScoreForResolution,
+    getScoresForRam,
+    getScoresForScreen,
+    getScoresForWifi,
+    stringToBase64,
+  };

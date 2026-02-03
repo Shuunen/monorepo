@@ -61,8 +61,14 @@ export function App() {
       <Criteria name="Inspiring slogan" onSelection={pointValue => setPointAtIndex(1, pointValue)} />
       <Criteria name="Readable slogan" onSelection={pointValue => setPointAtIndex(2, pointValue)} />
       <Criteria name="Tech, computer emotion" onSelection={pointValue => setPointAtIndex(3, pointValue)} />
-      <Criteria name="Professional, organized, structured emotion" onSelection={pointValue => setPointAtIndex(4, pointValue)} />
-      <Criteria name="Human, social, sharing, supportive emotion" onSelection={pointValue => setPointAtIndex(5, pointValue)} />
+      <Criteria
+        name="Professional, organized, structured emotion"
+        onSelection={pointValue => setPointAtIndex(4, pointValue)}
+      />
+      <Criteria
+        name="Human, social, sharing, supportive emotion"
+        onSelection={pointValue => setPointAtIndex(5, pointValue)}
+      />
       <hr />
       <div className="card stripped-light">
         <img alt="Icon only" className="icon" src={iconSrc} />
@@ -78,12 +84,18 @@ export function App() {
       <div className="card stripped-light">
         <img alt="Logo on light background in grayscale" className="logo grayscale filter" src={logoSrc} />
       </div>
-      <Criteria name="Readable logo on light background in black and white" onSelection={pointValue => setPointAtIndex(9, pointValue)} />
+      <Criteria
+        name="Readable logo on light background in black and white"
+        onSelection={pointValue => setPointAtIndex(9, pointValue)}
+      />
       <hr />
       <div className="card bg-transparent">
         <img alt="Logo on transparent background" className="logo" src={logoSrc} />
       </div>
-      <Criteria name="Readable logo on transparent background" onSelection={pointValue => setPointAtIndex(10, pointValue)} />
+      <Criteria
+        name="Readable logo on transparent background"
+        onSelection={pointValue => setPointAtIndex(10, pointValue)}
+      />
       <hr />
       <div className="card stripped-dark">
         <img alt="Logo on dark background" className="logo" src={logoSrc} />
@@ -93,7 +105,10 @@ export function App() {
       <div className="card stripped-dark">
         <img alt="Logo on dark background inverted grayscale" className="logo grayscale invert filter" src={logoSrc} />
       </div>
-      <Criteria name="Readable logo on dark background in inverted black and white" onSelection={pointValue => setPointAtIndex(12, pointValue)} />
+      <Criteria
+        name="Readable logo on dark background in inverted black and white"
+        onSelection={pointValue => setPointAtIndex(12, pointValue)}
+      />
       <hr />
       <div className="card stripped-light">
         <img alt="Small logo" className="logo h-16!" src={logoSrc} />
@@ -118,21 +133,50 @@ export function App() {
       <Criteria name="Balanced logo" onSelection={pointValue => setPointAtIndex(16, pointValue)} />
       <hr />
       <div className="card stripped-light grid! grid-cols-3 gap-x-12 px-14! py-12!">
-        <img alt="Amazon logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/603px-Amazon_logo.svg.png" />
-        <img alt="Coca-Cola logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/512px-Coca-Cola_logo.svg.png" />
-        <img alt="LG logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/LG_logo_%282014%29.svg/600px-LG_logo_%282014%29.svg.png" />
-        <img alt="Microsoft logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Microsoft_logo_%282012%29.svg/512px-Microsoft_logo_%282012%29.svg.png" />
-        <img alt="Google logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1920px-Google_2015_logo.svg.png" />
+        <img
+          alt="Amazon logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/603px-Amazon_logo.svg.png"
+        />
+        <img
+          alt="Coca-Cola logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/512px-Coca-Cola_logo.svg.png"
+        />
+        <img
+          alt="LG logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/LG_logo_%282014%29.svg/600px-LG_logo_%282014%29.svg.png"
+        />
+        <img
+          alt="Microsoft logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Microsoft_logo_%282012%29.svg/512px-Microsoft_logo_%282012%29.svg.png"
+        />
+        <img
+          alt="Google logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1920px-Google_2015_logo.svg.png"
+        />
         <img alt="Your logo among famous brands" className="my-5 object-contain" src={logoSrc} />
-        <img alt="Spotify logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/2024_Spotify_Logo.svg/langfr-1920px-2024_Spotify_Logo.svg.png" />
-        <img alt="Firefox logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Firefox_logo_and_wordmark_%28horizontal%29%2C_2013.png/800px-Firefox_logo_and_wordmark_%28horizontal%29%2C_2013.png" />
-        <img alt="PayPal logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/1920px-PayPal.svg.png" />
+        <img
+          alt="Spotify logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/2024_Spotify_Logo.svg/langfr-1920px-2024_Spotify_Logo.svg.png"
+        />
+        <img
+          alt="Firefox logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Firefox_logo_and_wordmark_%28horizontal%29%2C_2013.png/800px-Firefox_logo_and_wordmark_%28horizontal%29%2C_2013.png"
+        />
+        <img
+          alt="PayPal logo"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/1920px-PayPal.svg.png"
+        />
       </div>
       <Criteria name="Unique logo that stands out" onSelection={pointValue => setPointAtIndex(17, pointValue)} />
       <hr />
       <div className="relative">
         <img alt="Android phone mock-up" className="relative z-10 w-xl" src="https://i.imgur.com/w2dOu18.png" />
-        <img alt="Icon on Android app" className="icon absolute z-0 object-contain" src={iconSrc} style={{ bottom: "79px", right: "205px", width: "30px" }} />
+        <img
+          alt="Icon on Android app"
+          className="icon absolute z-0 object-contain"
+          src={iconSrc}
+          style={{ bottom: "79px", right: "205px", width: "30px" }}
+        />
       </div>
       <Criteria name="Logo as an app icon" onSelection={pointValue => setPointAtIndex(18, pointValue)} />
       <hr />

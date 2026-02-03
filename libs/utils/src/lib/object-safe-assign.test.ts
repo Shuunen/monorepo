@@ -25,7 +25,8 @@ it("object assign C limitation, overwrite with null", () => {
 });
 
 it("object assign D limitation, loose side data", () => {
-  expect(Object.assign({ details: { age: 42, type: "years" }, name: "John" }, { details: { age: 21 }, name: "Claire" })).toMatchInlineSnapshot(`
+  expect(Object.assign({ details: { age: 42, type: "years" }, name: "John" }, { details: { age: 21 }, name: "Claire" }))
+    .toMatchInlineSnapshot(`
     {
       "details": {
         "age": 21,
@@ -54,7 +55,9 @@ it("safe assign C does not overwrite with null", () => {
 });
 
 it("safe assign D does not loose side data", () => {
-  expect(safeAssign({ details: { age: 42, type: "years" }, name: "John" }, { details: { age: 21 }, name: "Claire" })).toStrictEqual({
+  expect(
+    safeAssign({ details: { age: 42, type: "years" }, name: "John" }, { details: { age: 21 }, name: "Claire" }),
+  ).toStrictEqual({
     details: { age: 21, type: "years" },
     name: "Claire",
   });

@@ -44,7 +44,9 @@ export function deleteFile(filePath: string, reason: string) {
  */
 export function renameFile(oldFilePath: string, newFilePath: string) {
   if (!options.dry) renameSync(oldFilePath, newFilePath);
-  logger.info(`${options.dry ? "Should rename" : "Renamed"} file : ${yellow(path.basename(oldFilePath))} to ${green(path.basename(newFilePath))}`);
+  logger.info(
+    `${options.dry ? "Should rename" : "Renamed"} file : ${yellow(path.basename(oldFilePath))} to ${green(path.basename(newFilePath))}`,
+  );
   count.renamed += 1;
 }
 
@@ -55,7 +57,6 @@ export function renameFile(oldFilePath: string, newFilePath: string) {
  * @example cleanFileName('video (2160p_25fps_AV1-128kbit_AAC-French).mp4') // returns 'video.mp4'
  * @example cleanFileName('video (English_ASR).srt') // returns 'video.en.srt'
  */
-// oxlint-disable-next-line max-lines-per-function
 export function cleanFileName(file: string): string {
   return (
     file
@@ -76,7 +77,10 @@ export function cleanFileName(file: string): string {
       // remove parenthesis, brackets, exclamation marks, and other special characters
       .replaceAll(/[()[\]_'¿]/g, " ")
       // remove emojis
-      .replaceAll(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, "")
+      .replaceAll(
+        /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
+        "",
+      )
       // rollback apostrophes
       .replaceAll("@APOSTROPHE@", "’")
       // remove extra spaces

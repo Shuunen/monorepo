@@ -38,7 +38,11 @@ function TradeRepublicAio() {
    */
   function meterText(injected, spent, date) {
     const [day, month] = date.split("/");
-    const readableDate = new Date(data.currentYear, Number(month) - 1, Number(day)).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    const readableDate = new Date(data.currentYear, Number(month) - 1, Number(day)).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
     return `since ${readableDate.toLowerCase()} : ${injected.toFixed(2).replace(".", ",")} € injected and ${spent.toFixed(2).replace(".", ",")} € spent`;
   }
 

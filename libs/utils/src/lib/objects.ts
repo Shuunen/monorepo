@@ -84,7 +84,11 @@ function genClassObjectKeys(object: Record<string, GenClassTypes>, keys: string[
  * @param cls optional, additional classes to add, ex: "add-me"
  * @returns ready to use string class list, ex: "enabled size-large add-me"
  */
-export function genClass(object: GenClassTypes | GenClassTypes[] | Record<string, GenClassTypes>, keys: string[] = [], cls: GenClassTypes[] = []) {
+export function genClass(
+  object: GenClassTypes | GenClassTypes[] | Record<string, GenClassTypes>,
+  keys: string[] = [],
+  cls: GenClassTypes[] = [],
+) {
   const list = clone(cls);
   if (object === null || object === undefined) {
     list.unshift("");

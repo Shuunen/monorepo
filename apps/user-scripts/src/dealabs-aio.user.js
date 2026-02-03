@@ -38,12 +38,14 @@ function DealabsAio() {
     descriptions: ".cept-description-container",
   };
   function cleanElements() {
-    // @ts-expect-error it's ok
-    for (const key of Object.keys(uselessElements)) for (const node of utils.findAll(uselessElements[key], document, true)) node.remove();
+    for (const key of Object.keys(uselessElements))
+      // @ts-expect-error it's ok
+      for (const node of utils.findAll(uselessElements[key], document, true)) node.remove();
   }
   function cleanClasses() {
-    // @ts-expect-error it's ok
-    for (const key of Object.keys(uselessClasses)) for (const node of utils.findAll(uselessClasses[key], document, true)) node.classList = [];
+    for (const key of Object.keys(uselessClasses))
+      // @ts-expect-error it's ok
+      for (const node of utils.findAll(uselessClasses[key], document, true)) node.classList = [];
   }
   function insertStyles() {
     const styleTag = document.createElement("style");

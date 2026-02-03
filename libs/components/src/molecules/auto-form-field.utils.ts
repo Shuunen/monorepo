@@ -33,7 +33,10 @@ type FieldComponentProps = {
 };
 
 type ComponentRegistry = {
-  [RenderType in Exclude<NonNullable<ReturnType<typeof getFormFieldRender>>, "section" | "field-list">]: ComponentType<FieldComponentProps>;
+  [RenderType in Exclude<
+    NonNullable<ReturnType<typeof getFormFieldRender>>,
+    "section" | "field-list"
+  >]: ComponentType<FieldComponentProps>;
 };
 
 export const componentRegistry: ComponentRegistry = {

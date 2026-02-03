@@ -56,7 +56,11 @@ function ColorPalette() {
 
 export function KitchenSink() {
   return (
-    <div className="flex min-h-screen flex-col" id={`kitchen-sink-${useId()}`} style={{ background: "radial-gradient(125% 125% at 50% 10%, #fff 40%, #6366f1 100%)" }}>
+    <div
+      className="flex min-h-screen flex-col"
+      id={`kitchen-sink-${useId()}`}
+      style={{ background: "radial-gradient(125% 125% at 50% 10%, #fff 40%, #6366f1 100%)" }}
+    >
       <div className="container mx-auto prose pt-24 lg:prose-lg">
         <h1>Components</h1>
         <p>This kitchen sink let you see and experiment the catalog of components and the default styles provided.</p>
@@ -69,13 +73,15 @@ export function KitchenSink() {
           Option 1 : use the <code>prose</code> class
         </h3>
         <p>
-          This current page is using the prose class to style the typography. If you inspect the elements, you will see that the <code>prose</code> class is applied to the container and that the typography elements like <code>h1</code>,{" "}
-          <code>h2</code>, and <code>p</code> are styled without any classes on them.
+          This current page is using the prose class to style the typography. If you inspect the elements, you will see
+          that the <code>prose</code> class is applied to the container and that the typography elements like{" "}
+          <code>h1</code>, <code>h2</code>, and <code>p</code> are styled without any classes on them.
         </p>
 
         <h3>Option 2 : customize everything</h3>
         <p>
-          If you don't want to use the <code>prose</code> class, you can customize the typography styles by applying Tailwind CSS classes directly to the unstyled elements.
+          If you don't want to use the <code>prose</code> class, you can customize the typography styles by applying
+          Tailwind CSS classes directly to the unstyled elements.
         </p>
         <p>For example :</p>
         <p className="text-lg">This is a paragraph with large text.</p>
@@ -84,7 +90,8 @@ export function KitchenSink() {
 
         <h3>Links</h3>
         <p>
-          Links are styled using the <code>prose</code> class as well. You can see that they have a <a href="#kitchen-sink">default color</a>, an underline and a hover effect.
+          Links are styled using the <code>prose</code> class as well. You can see that they have a{" "}
+          <a href="#kitchen-sink">default color</a>, an underline and a hover effect.
         </p>
 
         <h2>Colors</h2>

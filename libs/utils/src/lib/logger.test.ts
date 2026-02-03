@@ -81,10 +81,14 @@ it("logger clean C", () => {
   expect(loggerE.clean("an array ?", [12, 42])).toMatchInlineSnapshot('"an array ? [12,42]"');
 });
 it("logger clean D", () => {
-  expect(loggerE.clean("a function ?", () => "Hello world")).toMatchInlineSnapshot("\"a function ? () => 'Hello world'\"");
+  expect(loggerE.clean("a function ?", () => "Hello world")).toMatchInlineSnapshot(
+    "\"a function ? () => 'Hello world'\"",
+  );
 });
 it("logger clean E", () => {
-  expect(loggerE.clean("an object ?", { isFull: true, keyA: 1, keyB: "John" })).toMatchInlineSnapshot("\"an object ? {'isFull':true,'keyA':1,'keyB':'John'}\"");
+  expect(loggerE.clean("an object ?", { isFull: true, keyA: 1, keyB: "John" })).toMatchInlineSnapshot(
+    "\"an object ? {'isFull':true,'keyA':1,'keyB':'John'}\"",
+  );
 });
 it("logger clean F", () => {
   expect(loggerE.clean("a boolean ?", true)).toMatchInlineSnapshot('"a boolean ? true"');
@@ -102,10 +106,14 @@ it("logger clean J", () => {
   expect(loggerE.clean("an undefined ?", undefined)).toMatchInlineSnapshot('"an undefined ? undefined"');
 });
 it("logger clean K", () => {
-  expect(loggerE.clean("a date ?", new Date("2020-01-01"))).toMatchInlineSnapshot(`"a date ? {'__date__':'2020-01-01T00:00:00.000Z'}"`);
+  expect(loggerE.clean("a date ?", new Date("2020-01-01"))).toMatchInlineSnapshot(
+    `"a date ? {'__date__':'2020-01-01T00:00:00.000Z'}"`,
+  );
 });
 it("logger clean L", () => {
-  expect(loggerE.clean("a regexp ?", /Hello world{3,5}/u)).toMatchInlineSnapshot(`"a regexp ? {'__regexFlags__':'u','__regexSource__':'Hello world{3,5}'}"`);
+  expect(loggerE.clean("a regexp ?", /Hello world{3,5}/u)).toMatchInlineSnapshot(
+    `"a regexp ? {'__regexFlags__':'u','__regexSource__':'Hello world{3,5}'}"`,
+  );
 }); // not supported for now
 
 it("logger F show", () => {

@@ -11,7 +11,10 @@ import type { Option } from "./form.types.ts";
  * @param form - The form object from react-hook-form.
  * @param callback - A function that takes the form values
  */
-export function useFormChangeDetector<InputValues extends FieldValues>(form: UseFormReturn<InputValues>, callback: (values: InputValues) => void) {
+export function useFormChangeDetector<InputValues extends FieldValues>(
+  form: UseFormReturn<InputValues>,
+  callback: (values: InputValues) => void,
+) {
   /* v8 ignore start -- @preserve */
   // eslint-disable-next-line no-magic-numbers
   const debouncedCallback = debounce(callback, 300);

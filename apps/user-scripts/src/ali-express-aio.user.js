@@ -88,12 +88,14 @@ function AliExpressAio() {
    * Process the product cards
    * @returns {void[]} nothing
    */
-  const processProductCards = () => utils.findAll(".list.product-card:not(.ali-aio-handled)").map(element => processProductCard(element));
+  const processProductCards = () =>
+    utils.findAll(".list.product-card:not(.ali-aio-handled)").map(element => processProductCard(element));
   /**
    * Process the item rows
    * @returns {void[]} nothing
    */
-  const processItemRows = () => utils.findAll(".items-list > .item:not(.ali-aio-handled)").map(element => processItemRow(element));
+  const processItemRows = () =>
+    utils.findAll(".items-list > .item:not(.ali-aio-handled)").map(element => processItemRow(element));
   /**
    * Process the page
    */

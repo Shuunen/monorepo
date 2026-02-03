@@ -16,7 +16,8 @@ const messages = {
   },
   validation: {
     maxChar: "Le champ doit contenir un seul caractère | Le champ doit contenir {count} caractères maximum",
-    minChar: "Le champ doit contenir au moins un caractère | Le champ doit contenir plus d'un caractère | Le champ doit contenir au moins {count} caractères",
+    minChar:
+      "Le champ doit contenir au moins un caractère | Le champ doit contenir plus d'un caractère | Le champ doit contenir au moins {count} caractères",
   },
 };
 
@@ -72,31 +73,47 @@ it("$t D root existing translation key", () => {
   expect($t(messages.actions.login)).toMatchInlineSnapshot(`"Log in"`);
 });
 it("$t E root existing translation key with data", () => {
-  expect($t(messages.notifications.itemAddedOn, { time: "jour de la baguette" })).toMatchInlineSnapshot(`"Item added on jour de la baguette"`);
+  expect($t(messages.notifications.itemAddedOn, { time: "jour de la baguette" })).toMatchInlineSnapshot(
+    `"Item added on jour de la baguette"`,
+  );
 });
 it("$t F singular / plural : singular", () => {
-  expect($t(messages.validation.maxChar, { count: 1, fieldName: "name" })).toMatchInlineSnapshot(`"Le champ doit contenir un seul caractère"`);
+  expect($t(messages.validation.maxChar, { count: 1, fieldName: "name" })).toMatchInlineSnapshot(
+    `"Le champ doit contenir un seul caractère"`,
+  );
 });
 it("$t G singular / plural : plural", () => {
-  expect($t(messages.validation.maxChar, { count: 12, fieldName: "name" })).toMatchInlineSnapshot(`"Le champ doit contenir 12 caractères maximum"`);
+  expect($t(messages.validation.maxChar, { count: 12, fieldName: "name" })).toMatchInlineSnapshot(
+    `"Le champ doit contenir 12 caractères maximum"`,
+  );
 });
 it("$t H none / singular / plural : none", () => {
-  expect($t(messages.validation.minChar, { count: 0, fieldName: "name" })).toMatchInlineSnapshot(`"Le champ doit contenir au moins un caractère"`);
+  expect($t(messages.validation.minChar, { count: 0, fieldName: "name" })).toMatchInlineSnapshot(
+    `"Le champ doit contenir au moins un caractère"`,
+  );
 });
 it("$t I none / singular / plural : singular", () => {
-  expect($t(messages.validation.minChar, { count: 1, fieldName: "name" })).toMatchInlineSnapshot(`"Le champ doit contenir plus d'un caractère"`);
+  expect($t(messages.validation.minChar, { count: 1, fieldName: "name" })).toMatchInlineSnapshot(
+    `"Le champ doit contenir plus d'un caractère"`,
+  );
 });
 it("$t J none / singular / plural : plural", () => {
-  expect($t(messages.validation.minChar, { count: 12, fieldName: "name" })).toMatchInlineSnapshot(`"Le champ doit contenir au moins 12 caractères"`);
+  expect($t(messages.validation.minChar, { count: 12, fieldName: "name" })).toMatchInlineSnapshot(
+    `"Le champ doit contenir au moins 12 caractères"`,
+  );
 });
 it("$t K missing data for pluralization", () => {
   expect($t(messages.validation.minChar)).toMatchInlineSnapshot(`"Le champ doit contenir plus d'un caractère"`);
 });
 it("$t L missing count in data for pluralization", () => {
-  expect($t(messages.validation.minChar, { fieldName: "name" })).toMatchInlineSnapshot(`"Le champ doit contenir plus d'un caractère"`);
+  expect($t(messages.validation.minChar, { fieldName: "name" })).toMatchInlineSnapshot(
+    `"Le champ doit contenir plus d'un caractère"`,
+  );
 });
 it("$t M missing current language", () => {
-  expect($t({ es: "Muy bien" })).toMatchInlineSnapshot(`"missing translation for message "{"es":"Muy bien"}" and lang "en""`);
+  expect($t({ es: "Muy bien" })).toMatchInlineSnapshot(
+    `"missing translation for message "{"es":"Muy bien"}" and lang "en""`,
+  );
 });
 
 it("getLangFromPath A", () => {

@@ -22,7 +22,14 @@ export type AnalyticsOptions = Readonly<{
  * @returns the analytics object
  */
 // oxlint-disable-next-line max-lines-per-function
-export function createAnalytics({ app = "app-default", onIdentify, onPage, onTrack, willLog = false, willPile = false }: AnalyticsOptions | undefined = {}) {
+export function createAnalytics({
+  app = "app-default",
+  onIdentify,
+  onPage,
+  onTrack,
+  willLog = false,
+  willPile = false,
+}: AnalyticsOptions | undefined = {}) {
   const pile: string[] = [];
   const logger = willLog ? new Logger() : undefined;
   /**

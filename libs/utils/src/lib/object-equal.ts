@@ -7,6 +7,10 @@ import { objectSerialize } from "./object-serializer.js";
  * @param willSortKeys if true, the order of keys will be sorted alpha before comparison
  * @returns true if the two objects are deeply equal
  */
-export function objectEqual(objectA: Readonly<Record<string, unknown>>, objectB: Readonly<Record<string, unknown>>, willSortKeys = false) {
+export function objectEqual(
+  objectA: Readonly<Record<string, unknown>>,
+  objectB: Readonly<Record<string, unknown>>,
+  willSortKeys = false,
+) {
   return objectSerialize(objectA, willSortKeys) === objectSerialize(objectB, willSortKeys);
 }

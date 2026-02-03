@@ -80,7 +80,9 @@ function SaveurBiereRatings() {
     let data = {};
     if (localStorage.getItem(storageKey) === null) {
       utils.log("fetching rating for :", name);
-      data = await fetch(`https://wrapapi.com/use/jojo/untappd/history/0.0.1?user=${user}&search=${name}&wrapAPIKey=${wrapApiKey}`)
+      data = await fetch(
+        `https://wrapapi.com/use/jojo/untappd/history/0.0.1?user=${user}&search=${name}&wrapAPIKey=${wrapApiKey}`,
+      )
         .then(async response => await response.json())
         .then(response => response.data);
       utils.log(`fetched ${data ? "" : "EMPTY "}data`, data, "for item", name);
@@ -93,7 +95,8 @@ function SaveurBiereRatings() {
       data = JSON.parse(data);
     }
     injectRating(titleElement.parentElement, data);
-    if (titleElement.tagName !== "A") titleElement.outerHTML = `<a href="https://www.saveur-biere.com/fr/search-result/${name}" target="_blank">${name}</a>`;
+    if (titleElement.tagName !== "A")
+      titleElement.outerHTML = `<a href="https://www.saveur-biere.com/fr/search-result/${name}" target="_blank">${name}</a>`;
   }
   // oxlint-enable max-lines-per-function, consistent-return, complexity
   function injectRatings() {
@@ -115,7 +118,8 @@ function SaveurBiereRatings() {
   }
   function deleteUseless() {
     for (const node of utils.findAll(selectors.useless, document, true))
-      if (utils.app.debug) node.style = "background-color: red !important;color: white !important; box-shadow: 0 0 10px red;";
+      if (utils.app.debug)
+        node.style = "background-color: red !important;color: white !important; box-shadow: 0 0 10px red;";
       else node.remove();
   }
   async function init() {

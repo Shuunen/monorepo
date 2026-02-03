@@ -26,7 +26,9 @@ describe("string-template", () => {
     expect(fillTemplate("John {name}", data)).toBe("John Wick");
   });
   it("fillTemplate E a template string with long key data", () => {
-    expect(fillTemplate("Andy : {{ key_ToHappiness }} !", data)).toMatchInlineSnapshot(`"Andy : Roo-doo-doot-da-doo !"`);
+    expect(fillTemplate("Andy : {{ key_ToHappiness }} !", data)).toMatchInlineSnapshot(
+      `"Andy : Roo-doo-doot-da-doo !"`,
+    );
   });
   it("fillTemplate F a template string with unknown key", () => {
     expect(fillTemplate("John {unknown_key}", data)).toBe("John {unknown_key}");

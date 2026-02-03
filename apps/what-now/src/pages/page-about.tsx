@@ -8,7 +8,12 @@ export function PageAbout() {
       <h1>About</h1>
       <p>
         This webapp has been deployed from this open-source code{" "}
-        <a className="border-b" href="https://github.com/Shuunen/monorepo/tree/master/apps/what-now" rel="noopener noreferrer" target="_blank">
+        <a
+          className="border-b"
+          href="https://github.com/Shuunen/monorepo/tree/master/apps/what-now"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
           on Github
         </a>
         .

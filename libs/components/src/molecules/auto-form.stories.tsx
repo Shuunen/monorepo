@@ -136,7 +136,9 @@ export const BasicWithDefaults: Story = {
     const submitButton = canvas.getByRole("button", { name: "Submit" });
     expect(submitButton).toBeEnabled();
     await userEvent.click(submitButton);
-    expect(submittedData).toContainHTML(stringify({ email: "JohnRom@yopmail.eu", name: "John Rom", acceptTerms: true, subscribe: false }, true));
+    expect(submittedData).toContainHTML(
+      stringify({ email: "JohnRom@yopmail.eu", name: "John Rom", acceptTerms: true, subscribe: false }, true),
+    );
   },
 };
 
@@ -1128,7 +1130,11 @@ export const WithCancelButton: Story = {
     }
     return (
       <div className="mt-6 grid gap-4">
-        {cancelClicked && <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-blue-800">Form was cancelled by user</div>}
+        {cancelClicked && (
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-blue-800">
+            Form was cancelled by user
+          </div>
+        )}
         <AutoForm {...args} logger={logger} onCancel={onCancel} onSubmit={onSubmit} />
         <DebugData data={submittedData} isGhost title="Submitted data" />
       </div>

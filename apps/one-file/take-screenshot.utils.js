@@ -60,12 +60,18 @@ export function getTargets(modulo, minutesBase, secondsBase) {
  * @returns {Target[]} like [{ minutes: 0, seconds: 12 }], [{minutes: 0, seconds: 11}, {minutes: 0, seconds: 12}, {minutes: 0, seconds: 13}] or [{minutes: 21, seconds: 4}, {minutes: 21, seconds: 5}, {minutes: 21, seconds: 6},{minutes: 21, seconds: 7}, {minutes: 21, seconds: 8}]
  */
 export function parseUserInput(userInput) {
-  const { minutesOrSeconds = "", moduloMarker = "", moduloMaybe = "", secondsMaybe = "" } = regex.userInput.exec(userInput)?.groups ?? {};
+  const {
+    minutesOrSeconds = "",
+    moduloMarker = "",
+    moduloMaybe = "",
+    secondsMaybe = "",
+  } = regex.userInput.exec(userInput)?.groups ?? {};
   if (minutesOrSeconds === "") return [];
   const secondsBase = Number.parseInt(secondsMaybe || minutesOrSeconds, 10);
   const minutesBase = secondsMaybe === "" ? 0 : Number.parseInt(minutesOrSeconds, 10);
-  // oxlint-disable-next-line no-nested-ternary, no-magic-numbers
-  const modulo = moduloMaybe === "" ? (moduloMarker === "" ? 0 : 5) : Number.parseInt(moduloMaybe.replaceAll(/\D/gu, ""), 10);
+  const modulo =
+    // oxlint-disable-next-line no-nested-ternary, no-magic-numbers
+    moduloMaybe === "" ? (moduloMarker === "" ? 0 : 5) : Number.parseInt(moduloMaybe.replaceAll(/\D/gu, ""), 10);
   return getTargets(modulo, minutesBase, secondsBase);
 }
 

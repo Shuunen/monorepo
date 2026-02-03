@@ -99,7 +99,15 @@ export function PageItemAddEdit({ isEdit = false }: Readonly<{ isEdit?: boolean 
       const item = formToItem(form);
       const isDifferent = initialItem ? !areItemsEquivalent(initialItem, item) : true;
       const isValid = error === "" && isDifferent && form.isValid;
-      logger.debug("onChange", { form, initialItem, isDifferent, isValid, item, sumA: initialSum, sumB: objectSum(item) });
+      logger.debug("onChange", {
+        form,
+        initialItem,
+        isDifferent,
+        isValid,
+        item,
+        sumA: initialSum,
+        sumB: objectSum(item),
+      });
       setLastForm(form);
       setCanSubmit(isValid);
       checkExistingSetError(item);
@@ -129,19 +137,45 @@ export function PageItemAddEdit({ isEdit = false }: Readonly<{ isEdit?: boolean 
   if (isEdit && initialItem === undefined) return <>Cannot edit, item with id &quot;{id}&quot; not found ;(</>;
 
   return (
-    <AppPageCard cardTitle={`${isEdit ? "Edit" : "Add"} item`} icon={isEdit ? EditOutlinedIcon : AddCircleOutlineIcon} pageCode={`item-${isEdit ? "edit" : "add"}`} pageTitle={`${isEdit ? "Edit" : "Add"} item`}>
+    <AppPageCard
+      cardTitle={`${isEdit ? "Edit" : "Add"} item`}
+      icon={isEdit ? EditOutlinedIcon : AddCircleOutlineIcon}
+      pageCode={`item-${isEdit ? "edit" : "add"}`}
+      pageTitle={`${isEdit ? "Edit" : "Add"} item`}
+    >
       <div className="mb-20 flex max-h-[90%] flex-col overflow-x-hidden overflow-y-auto md:mb-0 md:max-h-full">
-        {Boolean(isEdit) && <p className="text-center">Please fill in the form below to edit the item, you can change any field you want 🔄</p>}
-        {!isEdit && <p className="text-center">Please fill in the form below to add a new item, no worry, you will be able to edit it later if needed ✏️</p>}
-        {id !== "" && initialForm.fields.reference.value === "" && <p>Here is the keyword you search previously : {id}</p>}
+        {Boolean(isEdit) && (
+          <p className="text-center">
+            Please fill in the form below to edit the item, you can change any field you want 🔄
+          </p>
+        )}
+        {!isEdit && (
+          <p className="text-center">
+            Please fill in the form below to add a new item, no worry, you will be able to edit it later if needed ✏️
+          </p>
+        )}
+        {id !== "" && initialForm.fields.reference.value === "" && (
+          <p>Here is the keyword you search previously : {id}</p>
+        )}
         <div className="flex flex-col items-end gap-6 md:flex-row">
-          <img alt="item visual" className="w-auto justify-self-center p-4 md:max-h-80 md:w-1/3 md:max-w-72" ref={photoReference} src={itemPhotoToImageUrl(initialForm.fields.photo.value)} />
+          <img
+            alt="item visual"
+            className="w-auto justify-self-center p-4 md:max-h-80 md:w-1/3 md:max-w-72"
+            ref={photoReference}
+            src={itemPhotoToImageUrl(initialForm.fields.photo.value)}
+          />
           <div className="w-full place-self-center pr-4 md:pr-0">
             <AppForm error={error} initialForm={initialForm} onChange={onChange} />
           </div>
         </div>
         <div className="flex justify-center">
-          <Button disabled={!canSubmit} loading={isLoading} onClick={onSubmit} startIcon={<SaveIcon />} variant="contained">
+          <Button
+            disabled={!canSubmit}
+            loading={isLoading}
+            onClick={onSubmit}
+            startIcon={<SaveIcon />}
+            variant="contained"
+          >
             {isEdit ? "Save" : "Create"}
           </Button>
         </div>

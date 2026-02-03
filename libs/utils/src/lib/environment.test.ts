@@ -26,7 +26,11 @@ describe("environment utils", () => {
   const browserSamples = [
     ["A we want dev env by default to not be detected as browser", undefined, false],
     ["B by skipping the isHappyDom guard, the dev env is indeed detected as browser", "hey", true],
-    ["C headless browser should not be detected as browser", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/121.0.0.0 Safari/537.36", false],
+    [
+      "C headless browser should not be detected as browser",
+      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/121.0.0.0 Safari/537.36",
+      false,
+    ],
     ["D empty userAgent should not be detected as browser", "", false],
   ] as const;
 

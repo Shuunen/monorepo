@@ -196,7 +196,9 @@ describe("objects", () => {
   });
 
   it("objectSum K same when key sorted", () => {
-    expect(objectSum({ keyA: 1, keyB: 2, keyC: 3 }, true) === objectSum({ keyC: 3, keyA: 1, keyB: 2 }, true)).toBe(true);
+    expect(objectSum({ keyA: 1, keyB: 2, keyC: 3 }, true) === objectSum({ keyC: 3, keyA: 1, keyB: 2 }, true)).toBe(
+      true,
+    );
   });
 
   it("objectEqual A true for empty objects", () => {
@@ -217,7 +219,9 @@ describe("objects", () => {
     expect(objectEqual({ bar: 2, fool: 1 }, { bar: 2, fool: 1 })).toBe(true);
   });
   it("objectEqual F true for deeply nested objects", () => {
-    expect(objectEqual({ fool: { bar: "foo", regex: /^ho\d+$/iu } }, { fool: { bar: "foo", regex: /^ho\d+$/iu } })).toBe(true);
+    expect(
+      objectEqual({ fool: { bar: "foo", regex: /^ho\d+$/iu } }, { fool: { bar: "foo", regex: /^ho\d+$/iu } }),
+    ).toBe(true);
   });
   it("objectEqual H false with objects containing different literals", () => {
     expect(objectEqual({ bar: 1, fool: 1 }, { bar: 2, fool: 1 })).toBe(false);

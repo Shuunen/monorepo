@@ -16,7 +16,13 @@ export function AppItemDetails({ item }: Readonly<{ item: Item }>) {
         <AppItemDetailsActions item={item} />
       </div>
       <div className="relative flex aspect-square w-full max-w-[40vh] min-w-40 flex-col md:max-w-72 md:min-w-64">
-        <img alt={item.name} className="absolute top-0 size-full object-contain md:p-4" data-test="item-detail-image" loading="lazy" src={itemToImageUrl(item)} />
+        <img
+          alt={item.name}
+          className="absolute top-0 size-full object-contain md:p-4"
+          data-test="item-detail-image"
+          loading="lazy"
+          src={itemToImageUrl(item)}
+        />
       </div>
       <div className="mb-12 flex min-w-96 flex-col items-start justify-start gap-3 sm:mr-6 sm:mb-0">
         <h1>
@@ -28,12 +34,22 @@ export function AppItemDetails({ item }: Readonly<{ item: Item }>) {
           <div className="font-medium">{itemLocation || "Unknown"}</div>
         </div>
         <div className="flex flex-wrap justify-start gap-3 md:flex-nowrap">
-          {item.brand.length > 0 && <AppItemDetailsChip label={item.brand} link={`/search/${item.brand}`} tooltip="Brand, click to search" />}
+          {item.brand.length > 0 && (
+            <AppItemDetailsChip label={item.brand} link={`/search/${item.brand}`} tooltip="Brand, click to search" />
+          )}
           {item.price > 0 && <AppItemDetailsChip label={`${item.price} €`} tooltip="Price, click to copy" />}
-          {item.reference.length > 0 && <AppItemDetailsChip label={item.reference} tooltip="Reference, click to copy" />}
+          {item.reference.length > 0 && (
+            <AppItemDetailsChip label={item.reference} tooltip="Reference, click to copy" />
+          )}
           {item.barcode.length > 0 && <AppItemDetailsChip label={item.barcode} tooltip="Barcode, click to copy" />}
           {item.status.length > 0 && <AppItemDetailsChip label={item.status} tooltip="Status, click to copy" />}
-          <AppItemDetailsChip color="primary" icon={PrintIcon} label={item.isPrinted ? "printed" : "not printed"} link={`/item/print/${item.$id}`} tooltip="Click to print" />
+          <AppItemDetailsChip
+            color="primary"
+            icon={PrintIcon}
+            label={item.isPrinted ? "printed" : "not printed"}
+            link={`/item/print/${item.$id}`}
+            tooltip="Click to print"
+          />
         </div>
       </div>
     </div>

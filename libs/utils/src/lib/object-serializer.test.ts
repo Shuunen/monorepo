@@ -24,19 +24,27 @@ it("objectSerialize A string", () => {
   expect(objectSerialize({ name: "John" })).toBe('{"name":"John"}');
 });
 it("objectSerialize B date", () => {
-  expect(objectSerialize({ date: new Date("2021-01-01T00:00:00.000Z") })).toMatchInlineSnapshot(`"{"date":{"__date__":"2021-01-01T00:00:00.000Z"}}"`);
+  expect(objectSerialize({ date: new Date("2021-01-01T00:00:00.000Z") })).toMatchInlineSnapshot(
+    `"{"date":{"__date__":"2021-01-01T00:00:00.000Z"}}"`,
+  );
 });
 it("objectSerialize C regex", () => {
-  expect(objectSerialize({ regex: /^ho\d+$/iu })).toMatchInlineSnapshot(String.raw`"{"regex":{"__regexFlags__":"iu","__regexSource__":"^ho\\d+$"}}"`);
+  expect(objectSerialize({ regex: /^ho\d+$/iu })).toMatchInlineSnapshot(
+    String.raw`"{"regex":{"__regexFlags__":"iu","__regexSource__":"^ho\\d+$"}}"`,
+  );
 });
 it("objectSerialize D arrow function", () => {
   expect(objectSerialize({ func: () => 42 })).toMatchInlineSnapshot(`"{"func":{"__function__":"() => 42"}}"`);
 });
 it("objectSerialize E function", () => {
-  expect(objectSerialize({ func: add })).toMatchInlineSnapshot(String.raw`"{"func":{"__function__":"function add(numberA, numberB) {\n  return numberA + numberB;\n}"}}"`);
+  expect(objectSerialize({ func: add })).toMatchInlineSnapshot(
+    String.raw`"{"func":{"__function__":"function add(numberA, numberB) {\n  return numberA + numberB;\n}"}}"`,
+  );
 });
 it("objectSerialize F object with sort", () => {
-  expect(objectSerialize({ object: { name: "John", age: 42 }, id: 123_456 }, true)).toMatchInlineSnapshot('"{"id":123456,"object":{"age":42,"name":"John"}}"');
+  expect(objectSerialize({ object: { name: "John", age: 42 }, id: 123_456 }, true)).toMatchInlineSnapshot(
+    '"{"id":123456,"object":{"age":42,"name":"John"}}"',
+  );
 });
 it("objectSerialize G person", () => {
   expect(objectSerialize(person)).toMatchInlineSnapshot(
@@ -123,7 +131,9 @@ it("objectSerialize M with indentation", () => {
 
 it("objectSerialize N file", () => {
   const file = new File(["file content"], "test.txt", { type: "text/plain" });
-  expect(objectSerialize({ document: file })).toMatchInlineSnapshot(`"{"document":{"__fileName__":"test.txt","__fileSize__":12,"__fileType__":"text/plain"}}"`);
+  expect(objectSerialize({ document: file })).toMatchInlineSnapshot(
+    `"{"document":{"__fileName__":"test.txt","__fileSize__":12,"__fileType__":"text/plain"}}"`,
+  );
 });
 
 it("objectDeserialize A string", () => {
@@ -167,7 +177,9 @@ it("objectDeserialize D arrow function", () => {
 });
 
 it("objectDeserialize E function", () => {
-  const object = objectDeserialize(String.raw`{"func":{"__function__":"function add(numberA, numberB) {\n  return numberA + numberB;\n}"}}`);
+  const object = objectDeserialize(
+    String.raw`{"func":{"__function__":"function add(numberA, numberB) {\n  return numberA + numberB;\n}"}}`,
+  );
   expect(object).toMatchInlineSnapshot(`
     {
       "func": [Function],
@@ -178,7 +190,9 @@ it("objectDeserialize E function", () => {
 });
 
 it("objectDeserialize F nested Date", () => {
-  const object = objectDeserialize('{"age":21,"details":{"dateOfBirth":{"__date__":"2001-12-22T00:00:00.000Z"},"favoriteFood":"sushi"},"name":"John","nameValid":true}');
+  const object = objectDeserialize(
+    '{"age":21,"details":{"dateOfBirth":{"__date__":"2001-12-22T00:00:00.000Z"},"favoriteFood":"sushi"},"name":"John","nameValid":true}',
+  );
   expect(object).toMatchInlineSnapshot(`
     {
       "age": 21,
@@ -299,7 +313,9 @@ it("objectDeserialize J file partial revive", () => {
    * We cannot restore the content of the file because it would require the serializer to async read the file data
    * so for now we just restore the File object with name, size and type
    */
-  const object = objectDeserialize('{"document":{"__fileName__":"test.txt","__fileSize__":12,"__fileType__":"text/plain"}}');
+  const object = objectDeserialize(
+    '{"document":{"__fileName__":"test.txt","__fileSize__":12,"__fileType__":"text/plain"}}',
+  );
   expect(object.document instanceof File).toBe(true);
   // @ts-expect-error type is unknown
   expect(object.document.name).toBe("test.txt");

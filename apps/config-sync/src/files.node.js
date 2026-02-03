@@ -8,14 +8,14 @@ const currentFolderPath = import.meta.dirname;
 const changesFolderPath = path.join(currentFolderPath, "..", "changes");
 
 const home = process.env.HOME ?? "";
-const appData = process.env.APPDATA ?? (process.platform === "darwin" ? `${home}Library/Preferences` : `${home}/.config`);
+const appData =
+  process.env.APPDATA ?? (process.platform === "darwin" ? `${home}Library/Preferences` : `${home}/.config`);
 const isWindows = process.env.APPDATA === appData;
 // const prgFiles = 'C:/Program Files'
 logger.info(`Using home directory : ${home}`);
 logger.info(`Using app data directory : ${appData}`);
 logger.info(`Detected platform : ${isWindows ? "Windows" : "Linux"}, process.platform is "${process.platform}"`);
 
-// oxlint-disable sort-keys
 /** @type {import('./types.js').Config[]} */
 const configs = [
   { source: `${home}/.bash_aliases` },
@@ -25,7 +25,10 @@ const configs = [
   // { source: `${appData}/HandBrake/settings.json`, renameTo: 'handbrake-settings.json' },
   { source: `${appData}/kupfer/kupfer.cfg` },
   { source: `${appData}/mpv/mpv.conf` },
-  { removeLinesMatching: [/@Size/, /(Qt6|qt5)/, /(Cookies|CurrentTab|geometry|LastViewedPage|Sizes|Width)=/], source: `${appData}/qBittorrent/qBittorrent.conf` },
+  {
+    removeLinesMatching: [/@Size/, /(Qt6|qt5)/, /(Cookies|CurrentTab|geometry|LastViewedPage|Sizes|Width)=/],
+    source: `${appData}/qBittorrent/qBittorrent.conf`,
+  },
   { source: `${home}/.gitconfig-anatec` },
   { source: `${home}/.gitconfig-collectif-energie` },
   { source: `${home}/.gitconfig-github` },
@@ -38,12 +41,20 @@ const configs = [
 
 const windowsConfigs = [
   { renameTo: ".bashrc-windows", source: `${home}/.bashrc` },
-  { removeLinesAfter: /\[History\]/u, removeLinesMatching: [/^(?:pos=|proxyType=)/u], source: `${appData}/Launchy/launchy.ini` },
+  {
+    removeLinesAfter: /\[History\]/u,
+    removeLinesMatching: [/^(?:pos=|proxyType=)/u],
+    source: `${appData}/Launchy/launchy.ini`,
+  },
   { renameTo: "espanso-config.yml", source: "D:/Apps/Espanso/.espanso/config/default.yml" },
   { renameTo: "espanso-match.yml", source: "D:/Apps/Espanso/.espanso/match/base.yml" },
   {
     removeLinesAfter: /PowerpointSlideLayout=ppLayoutPictureWithCaption/u,
-    removeLinesMatching: [/^(?:BaseIconSize|ImgurUploadHistory|LastCapturedRegion|LastSaveWithVersion|LastUpdateCheck|OutputFileAsFull|OutputFilePath|DeletedBuildInCommands|Win10BorderCrop|Commands=)/u, /MS Paint/u, /Paint\.NET/u],
+    removeLinesMatching: [
+      /^(?:BaseIconSize|ImgurUploadHistory|LastCapturedRegion|LastSaveWithVersion|LastUpdateCheck|OutputFileAsFull|OutputFilePath|DeletedBuildInCommands|Win10BorderCrop|Commands=)/u,
+      /MS Paint/u,
+      /Paint\.NET/u,
+    ],
     source: `${appData}/Greenshot/Greenshot.ini`,
   },
 ];
@@ -67,7 +78,6 @@ const linuxConfigs = [
   // { source: `${home}/.local/share/nautilus/scripts/Shrink all pdf`},
   // { source: `${home}/.local/share/nautilus/scripts/Take screenshot`},
 ];
-// oxlint-enable sort-keys
 
 configs.push(...(isWindows ? windowsConfigs : linuxConfigs));
 
@@ -81,7 +91,8 @@ const currentFolder = import.meta.dirname;
 function getDetails(filepath) {
   const isExisting = existsSync(filepath);
   const content = isExisting ? readFileSync(filepath, "utf8") : "";
-  const updatedContent = content.includes("\r") && !filepath.includes(".qbtheme") ? useUnixCarriageReturn(content) : content; // qbtheme files does not like \n
+  const updatedContent =
+    content.includes("\r") && !filepath.includes(".qbtheme") ? useUnixCarriageReturn(content) : content; // qbtheme files does not like \n
   const isContentEquals = content === updatedContent;
   if (!isContentEquals) writeFile(filepath, updatedContent);
   return { content: updatedContent, filepath, isExisting };
@@ -106,10 +117,18 @@ function isEquals(file, config) {
   const { destination, source } = file;
   const { removeLinesAfter, removeLinesMatching } = config;
   const filename = getFilename(config);
-  const areEquals = clean(source.content, removeLinesAfter, removeLinesMatching) === clean(destination.content, removeLinesAfter, removeLinesMatching);
+  const areEquals =
+    clean(source.content, removeLinesAfter, removeLinesMatching) ===
+    clean(destination.content, removeLinesAfter, removeLinesMatching);
   if (!areEquals) {
-    writeFileSync(path.join(changesFolderPath, `${filename}-source.log`), clean(source.content, removeLinesAfter, removeLinesMatching, false));
-    writeFileSync(path.join(changesFolderPath, `${filename}-destination.log`), clean(destination.content, removeLinesAfter, removeLinesMatching, false));
+    writeFileSync(
+      path.join(changesFolderPath, `${filename}-source.log`),
+      clean(source.content, removeLinesAfter, removeLinesMatching, false),
+    );
+    writeFileSync(
+      path.join(changesFolderPath, `${filename}-destination.log`),
+      clean(destination.content, removeLinesAfter, removeLinesMatching, false),
+    );
   }
   return areEquals;
 }

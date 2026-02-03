@@ -32,7 +32,8 @@ export function AppItemDetailsChip({ color = "default", icon: Icon, label, link,
     [link, tooltip],
   );
 
-  const attributes: Record<string, unknown> = Icon === undefined ? {} : { className: "reverse pr-3!", icon: <Icon className="-ml-2!" /> };
+  const attributes: Record<string, unknown> =
+    Icon === undefined ? {} : { className: "reverse pr-3!", icon: <Icon className="-ml-2!" /> };
 
   return (
     <Tooltip data-component="item-details-chip" title={tooltip}>

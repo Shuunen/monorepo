@@ -1,6 +1,17 @@
-// oxlint-disable max-lines-per-function, max-nested-callbacks, no-magic-numbers, id-length, no-nested-ternary
+// oxlint-disable max-lines-per-function, id-length, no-nested-ternary
 import { type MouseEvent, type MouseEventHandler, type RefObject, useEffect, useRef, useState } from "react";
-import { calculateNewPan, calculateNewZoom, type DragStartPosition, headerAndControlsHeight, minHeight, minWidth, minZoom, type PanPosition, padding, shouldResetPan } from "../utils/comparison.utils";
+import {
+  calculateNewPan,
+  calculateNewZoom,
+  type DragStartPosition,
+  headerAndControlsHeight,
+  minHeight,
+  minWidth,
+  minZoom,
+  type PanPosition,
+  padding,
+  shouldResetPan,
+} from "../utils/comparison.utils";
 import { getContainedSize, type ImageMetadata } from "../utils/image.utils";
 
 type UsePanZoomReturn = {
@@ -19,7 +30,11 @@ type UsePanZoomReturn = {
   zoom: number;
 };
 
-export function usePanZoom(imageContainerRef: RefObject<HTMLDivElement | null>, leftImageMetadata: ImageMetadata | undefined, rightImageMetadata: ImageMetadata | undefined): UsePanZoomReturn {
+export function usePanZoom(
+  imageContainerRef: RefObject<HTMLDivElement | null>,
+  leftImageMetadata: ImageMetadata | undefined,
+  rightImageMetadata: ImageMetadata | undefined,
+): UsePanZoomReturn {
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState<PanPosition>({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
@@ -41,7 +56,12 @@ export function usePanZoom(imageContainerRef: RefObject<HTMLDivElement | null>, 
       }
       const maxWidth = window.innerWidth - padding;
       const maxHeight = window.innerHeight - headerAndControlsHeight;
-      const containedSize = getContainedSize({ imageHeight: metadata.height, imageWidth: metadata.width, maxHeight, maxWidth });
+      const containedSize = getContainedSize({
+        imageHeight: metadata.height,
+        imageWidth: metadata.width,
+        maxHeight,
+        maxWidth,
+      });
       const newZoom = calculateNewZoom(zoom, e.deltaY);
       const wouldBeWidth = containedSize.width * newZoom;
       const wouldBeHeight = containedSize.height * newZoom;

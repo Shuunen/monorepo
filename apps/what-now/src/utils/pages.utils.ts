@@ -20,5 +20,10 @@ export function useActions() {
       name,
     } satisfies FloatingMenuAction;
   }
-  return [getAction(HomeIcon, "Tasks", "/"), getAction(CalendarIcon, "Planner", "/planner"), getAction(SettingsIcon, "Settings", "/settings"), getAction(CircleQuestionMarkIcon, "About", "/about")];
+  return [
+    getAction(HomeIcon, "Tasks", "/"),
+    getAction(CalendarIcon, "Planner", "/planner"),
+    getAction(SettingsIcon, "Settings", "/settings"),
+    getAction(CircleQuestionMarkIcon, "About", "/about"),
+  ];
 }

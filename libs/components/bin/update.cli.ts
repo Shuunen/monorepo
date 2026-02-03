@@ -8,7 +8,9 @@ const logger = new Logger();
 function listComponents(startFrom?: string): string[] {
   const targetDir = join(process.cwd(), "libs", "components", "src", "shadcn");
   const files = readdirSync(targetDir);
-  const components = files.filter(file => file.endsWith(".tsx") && file !== "utils.ts").map(file => file.replace(".tsx", ""));
+  const components = files
+    .filter(file => file.endsWith(".tsx") && file !== "utils.ts")
+    .map(file => file.replace(".tsx", ""));
   if (!startFrom) {
     return components;
   }

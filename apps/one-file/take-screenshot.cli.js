@@ -5,7 +5,12 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { createInterface } from "node:readline";
 import { consoleLog, Logger, nbFourth, nbPixelSm, nbSecondsInMinute, nbThird, sleep } from "@monorepo/utils";
-import { getFfmpegCommand, getScreenshotFilename, parseUserInput, parseVideoMetadata } from "./take-screenshot.utils.js";
+import {
+  getFfmpegCommand,
+  getScreenshotFilename,
+  parseUserInput,
+  parseVideoMetadata,
+} from "./take-screenshot.utils.js";
 
 /**
  * @typedef {import('./take-screenshot.types').Metadata} Metadata
@@ -45,7 +50,6 @@ async function logAdd(...stuff) {
  */
 function shellCommand(cmd) {
   return new Promise(resolve => {
-    // oxlint-disable-next-line max-nested-callbacks
     exec(cmd, (error, stdout, stderr) => {
       if (error) logger.error(error);
       void resolve(stdout || stderr);
@@ -107,7 +111,9 @@ async function getTasks(input) {
   const meta = await getVideoMetadata(videoPath);
   if (meta.title.length <= videoName.length) meta.title = videoName;
   await logAdd(`\n- videoPath : ${videoPath}\n- videoName : ${videoName}\n- title : ${meta.title}`);
-  const targetsTotalSeconds = parseUserInput(input).map(({ minutes, seconds }) => minutes * nbSecondsInMinute + seconds);
+  const targetsTotalSeconds = parseUserInput(input).map(
+    ({ minutes, seconds }) => minutes * nbSecondsInMinute + seconds,
+  );
   return targetsTotalSeconds.map(totalSeconds => getTask(totalSeconds, meta));
 }
 

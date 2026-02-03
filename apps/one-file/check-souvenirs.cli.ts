@@ -19,7 +19,10 @@ const expectedNbParameters = 2;
 export const currentFolder = process.cwd();
 export const logger = new Logger({ willOutputToMemory: true });
 /* v8 ignore next -- @preserve */
-if (argv.length <= expectedNbParameters) logger.info('Targeting current folder, you can also specify a specific path, ex : check-souvenirs.cli.ts "D:\\Souvenirs\\" \n');
+if (argv.length <= expectedNbParameters)
+  logger.info(
+    'Targeting current folder, you can also specify a specific path, ex : check-souvenirs.cli.ts "D:\\Souvenirs\\" \n',
+  );
 const photosPath = path.normalize(argv[expectedNbParameters] ?? currentFolder);
 
 const progressBar = new SingleBar(
@@ -36,7 +39,8 @@ export const options = {
   /** When dry active, avoid file modifications, useful for testing purposes */
   dry: argv.includes("--dry"),
   /** Glob pattern to check files */
-  globPattern: "**/*.{3gp,3GP,avi,AVI,avif,AVIF,flv,FLV,jpg,JPG,jpeg,JPEG,gif,GIF,mov,MOV,png,PNG,MP,mkv,MKV,mp4,MP4,webp,WEBP,wmv,WMV,webm,WEBM}",
+  globPattern:
+    "**/*.{3gp,3GP,avi,AVI,avif,AVIF,flv,FLV,jpg,JPG,jpeg,JPEG,gif,GIF,mov,MOV,png,PNG,MP,mkv,MKV,mp4,MP4,webp,WEBP,wmv,WMV,webm,WEBM}",
   /** When true, process only the first file, useful for testing purposes */
   one: argv.includes("--process-one") || argv.includes("--one"),
 };
@@ -64,7 +68,8 @@ export const count = {
 
 export function dateFromPath(filePath: string) {
   const yearAndMonth = regex.yearAndMonth.exec(filePath)?.groups;
-  if (yearAndMonth) return Result.ok({ month: yearAndMonth.month === "00" ? undefined : yearAndMonth.month, year: yearAndMonth.year });
+  if (yearAndMonth)
+    return Result.ok({ month: yearAndMonth.month === "00" ? undefined : yearAndMonth.month, year: yearAndMonth.year });
   const year = regex.year.exec(filePath)?.groups;
   if (year) return Result.ok({ month: undefined, year: year.year });
   return Result.ok({ month: undefined, year: undefined });
@@ -129,7 +134,6 @@ export function setFileDateViaExifTool(file: string, date: ExifDateTime) {
       })
       .finally(async () => {
         // created by exif tool
-        // oxlint-disable-next-line max-nested-callbacks
         await unlink(`${file}_original`).catch(functionReturningVoid);
       })
   );
@@ -163,10 +167,14 @@ export function setFileDateViaMkvTool(file: string, date: string) {
   }
   try {
     // Example to set mkv date on windows : mkvpropedit.exe 2016-02-15_Journal.mkv --edit info --set "date=1974-05-22"
-    const result = spawnSync("mkvpropedit.exe", [file, "--edit", "info", "--set", `date=${date}`], { encoding: "utf8" });
+    const result = spawnSync("mkvpropedit.exe", [file, "--edit", "info", "--set", `date=${date}`], {
+      encoding: "utf8",
+    });
     if (result.error) throw result.error;
     if (result.status !== 0) {
-      logger.error(`Failed to set date, mkvpropedit exited with ${red(`stderr: ${result.stderr.trim()}`)} ${yellow(`stdout: ${result.stdout.trim()}`)}`);
+      logger.error(
+        `Failed to set date, mkvpropedit exited with ${red(`stderr: ${result.stderr.trim()}`)} ${yellow(`stdout: ${result.stdout.trim()}`)}`,
+      );
       return;
     }
     logger.debug(`Successfully set date for file ${green(file)}.`);
@@ -176,7 +184,6 @@ export function setFileDateViaMkvTool(file: string, date: string) {
   }
 }
 
-// oxlint-disable-next-line max-lines-per-function
 export function setFileDate(file: string, date: ExifDateTime) {
   const isoString = date?.toString()?.split("T")[0];
   if (isoString === undefined) {
@@ -211,8 +218,12 @@ export function getNewExifDateBasedOnExistingDate({
   exifMonthIncorrect: boolean;
   exifDate: Date;
 }) {
-  const newYear = exifYearIncorrect && pathYear ? Number.parseInt(pathYear, 10) : (originalExifDate?.year ?? exifDate.getFullYear());
-  const newMonth = exifMonthIncorrect && pathMonth ? Number.parseInt(pathMonth, 10) : (originalExifDate?.month ?? exifDate.getMonth() + 1);
+  const newYear =
+    exifYearIncorrect && pathYear ? Number.parseInt(pathYear, 10) : (originalExifDate?.year ?? exifDate.getFullYear());
+  const newMonth =
+    exifMonthIncorrect && pathMonth
+      ? Number.parseInt(pathMonth, 10)
+      : (originalExifDate?.month ?? exifDate.getMonth() + 1);
   let day = originalExifDate?.day ?? exifDate.getDate();
   const daysInMonth = new Date(newYear, newMonth, 0).getDate();
   if (day > daysInMonth) day = daysInMonth;
@@ -228,17 +239,37 @@ export function getNewExifDateBasedOnExistingDate({
   return ExifDateTime.fromISO(isoString) as ExifDateTime;
 }
 
-export async function checkFileDateTimeOriginal({ file, dateTimeOriginal, pathYear, pathMonth }: { file: string; dateTimeOriginal: string | ExifDateTime; pathYear: string; pathMonth?: string }) {
-  const originalExifDate = dateTimeOriginal instanceof ExifDateTime ? dateTimeOriginal : ExifDateTime.fromISO(dateTimeOriginal);
+export async function checkFileDateTimeOriginal({
+  file,
+  dateTimeOriginal,
+  pathYear,
+  pathMonth,
+}: {
+  file: string;
+  dateTimeOriginal: string | ExifDateTime;
+  pathYear: string;
+  pathMonth?: string;
+}) {
+  const originalExifDate =
+    dateTimeOriginal instanceof ExifDateTime ? dateTimeOriginal : ExifDateTime.fromISO(dateTimeOriginal);
   const exifDate = toDate(dateTimeOriginal);
   const exifYear = exifDate.getFullYear().toString();
   const exifYearIncorrect = exifYear !== pathYear;
   const exifMonth = (exifDate.getMonth() + 1).toString().padStart(nbThird, "0");
   const exifMonthIncorrect = pathMonth !== undefined && exifMonth !== pathMonth;
-  if (exifYearIncorrect) logger.info(`Year mismatch for file ${file} : ${green(pathYear)} (from path), ${red(exifYear)} (from EXIF)`);
-  if (exifMonthIncorrect) logger.info(`Month mismatch for file ${file} : ${green(pathMonth)} (from path), ${red(exifMonth)} (from EXIF)`);
+  if (exifYearIncorrect)
+    logger.info(`Year mismatch for file ${file} : ${green(pathYear)} (from path), ${red(exifYear)} (from EXIF)`);
+  if (exifMonthIncorrect)
+    logger.info(`Month mismatch for file ${file} : ${green(pathMonth)} (from path), ${red(exifMonth)} (from EXIF)`);
   if (exifYearIncorrect || exifMonthIncorrect) {
-    const newExifDate = getNewExifDateBasedOnExistingDate({ exifDate, exifMonthIncorrect, exifYearIncorrect, originalExifDate, pathMonth, pathYear });
+    const newExifDate = getNewExifDateBasedOnExistingDate({
+      exifDate,
+      exifMonthIncorrect,
+      exifYearIncorrect,
+      originalExifDate,
+      pathMonth,
+      pathYear,
+    });
     await setFileDate(file, newExifDate);
   } else {
     logger.debug(`DateTimeOriginal EXIF tag is correct for file ${blue(file)}`);
@@ -254,8 +285,12 @@ export async function getExifDateFromSiblings(file: File): Promise<ExifDateTime 
       const tags = await exif.read(sibling);
       if (!tags.DateTimeOriginal) continue;
       /* v8 ignore next -- @preserve */
-      logger.debug(`Found DateTimeOriginal in sibling file ${sibling} : ${green(tags.DateTimeOriginal.toString() ?? "undefined")}`);
-      return tags.DateTimeOriginal instanceof ExifDateTime ? tags.DateTimeOriginal : (ExifDateTime.fromISO(tags.DateTimeOriginal) as ExifDateTime);
+      logger.debug(
+        `Found DateTimeOriginal in sibling file ${sibling} : ${green(tags.DateTimeOriginal.toString() ?? "undefined")}`,
+      );
+      return tags.DateTimeOriginal instanceof ExifDateTime
+        ? tags.DateTimeOriginal
+        : (ExifDateTime.fromISO(tags.DateTimeOriginal) as ExifDateTime);
     }
     return undefined;
   })();
@@ -274,7 +309,14 @@ export async function getNewExifDateBasedOnSiblings(file: File, pathYear: string
   const exifYearIncorrect = exifYear !== pathYear;
   const exifMonth = (exifDate.getMonth() + 1).toString().padStart(nbThird, "0");
   const exifMonthIncorrect = pathMonth !== undefined && exifMonth !== pathMonth;
-  const newExifDate = getNewExifDateBasedOnExistingDate({ exifDate, exifMonthIncorrect, exifYearIncorrect, originalExifDate: referenceDate, pathMonth, pathYear });
+  const newExifDate = getNewExifDateBasedOnExistingDate({
+    exifDate,
+    exifMonthIncorrect,
+    exifYearIncorrect,
+    originalExifDate: referenceDate,
+    pathMonth,
+    pathYear,
+  });
   return newExifDate;
 }
 
@@ -298,7 +340,13 @@ export async function checkFileDate(file: File) {
   }
   const tags = await exif.read(file.currentFilePath);
   logger.debug(`Extracted DateTimeOriginal from exif : DateTimeOriginal=${tags.DateTimeOriginal ?? "undefined"}`);
-  if (tags.DateTimeOriginal) await checkFileDateTimeOriginal({ dateTimeOriginal: tags.DateTimeOriginal, file: file.currentFilePath, pathMonth, pathYear });
+  if (tags.DateTimeOriginal)
+    await checkFileDateTimeOriginal({
+      dateTimeOriginal: tags.DateTimeOriginal,
+      file: file.currentFilePath,
+      pathMonth,
+      pathYear,
+    });
   else await setFileDateBasedOnSiblings(file, pathYear, pathMonth);
 }
 
@@ -327,7 +375,11 @@ export function cleanFilePath(filePath: string): string {
   const basename = path.basename(filePath);
   const extension = path.extname(basename);
   const nameWithoutExtension = basename.slice(0, basename.length - extension.length);
-  const cleanName = nameWithoutExtension.replaceAll(forbiddenCharsInFileName, "-").replaceAll(/-+/g, "-").replace(trailingDashes, "").trim();
+  const cleanName = nameWithoutExtension
+    .replaceAll(forbiddenCharsInFileName, "-")
+    .replaceAll(/-+/g, "-")
+    .replace(trailingDashes, "")
+    .trim();
   const newFileName = cleanName + extension;
   const newFilePath = path.join(path.dirname(filePath), newFileName);
   const directoryPath = path.dirname(filePath);
@@ -350,7 +402,6 @@ export async function checkFilePathSpecialCharacters(filePath: string): Promise<
   return newFilePath;
 }
 
-// oxlint-disable-next-line max-statements
 export async function checkPngTransparency(filePath: string) {
   const extension = path.extname(filePath).toLowerCase();
   if (extension !== ".png") return filePath; // no need to check other file types
@@ -437,7 +488,11 @@ export async function checkFiles(files: string[]) {
   // await Promise.all(files.map((file, index) => checkFile({ currentFilePath: file, nextFilePath: files[index + 1] ?? '', previousFilePath: files[index - 1] ?? '' })))
   for (const [index, file] of files.entries()) {
     // oxlint-disable-next-line no-await-in-loop
-    await checkFile({ currentFilePath: file, nextFilePath: files[index + 1] ?? "", previousFilePath: files[index - 1] ?? "" });
+    await checkFile({
+      currentFilePath: file,
+      nextFilePath: files[index + 1] ?? "",
+      previousFilePath: files[index - 1] ?? "",
+    });
     progressBar.update(index + 1);
   }
   progressBar.stop();
@@ -455,7 +510,9 @@ export function showReport() {
   logger.info(`- ${count.skipped > 0 ? blue(count.skipped.toString()) : "0"} files skipped`);
   logger.info(`- ${count.dateFixes > 0 ? green(count.dateFixes.toString()) : "0"} date fixes applied`);
   logger.info(`- ${count.conversions > 0 ? green(count.conversions.toString()) : "0"} png to jpg conversions`);
-  logger.info(`- ${count.specialCharsFixes > 0 ? green(count.specialCharsFixes.toString()) : "0"} special characters fixes applied`);
+  logger.info(
+    `- ${count.specialCharsFixes > 0 ? green(count.specialCharsFixes.toString()) : "0"} special characters fixes applied`,
+  );
   logger.info(`- ${count.errors > 0 ? red(count.errors.toString()) : "0"} errors`);
   logger.info(`- ${count.warnings > 0 ? yellow(count.warnings.toString()) : "0"} warnings`);
   if (count.errors + count.warnings === 0) logger.success("Nice no issues found ( ͡° ͜ʖ ͡°)");

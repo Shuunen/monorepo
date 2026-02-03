@@ -12,11 +12,15 @@ describe("repo-banner", () => {
   });
 
   it("replaceAndCheck A", () => {
-    expect(replaceAndCheck("Hello world !", /(?<before>Hello )world(?<after> !)/gu, "there")).toMatchInlineSnapshot('"Hello there !"');
+    expect(replaceAndCheck("Hello world !", /(?<before>Hello )world(?<after> !)/gu, "there")).toMatchInlineSnapshot(
+      '"Hello there !"',
+    );
   });
 
   it("replaceAndCheck B generate error", () => {
-    expect(replaceAndCheck("Hello world !", /(?<before>Hello )world(?<after> !)/gu, "world")).toMatchInlineSnapshot('"Hello world !"');
+    expect(replaceAndCheck("Hello world !", /(?<before>Hello )world(?<after> !)/gu, "world")).toMatchInlineSnapshot(
+      '"Hello world !"',
+    );
   });
 
   it("replaceAndCheckById A", () => {

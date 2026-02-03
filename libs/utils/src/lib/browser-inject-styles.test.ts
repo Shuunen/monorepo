@@ -14,7 +14,9 @@ it("injectStyles A empty", () => {
 
 it("injectStyles B url", () => {
   const result = Result.unwrap(injectStyles("https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"));
-  expect(result.value).toMatchInlineSnapshot(`"injectStyles : injected <link> with url "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css""`);
+  expect(result.value).toMatchInlineSnapshot(
+    `"injectStyles : injected <link> with url "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css""`,
+  );
   expect(result.error).toBeUndefined();
 });
 

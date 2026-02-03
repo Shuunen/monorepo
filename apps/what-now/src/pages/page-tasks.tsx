@@ -18,7 +18,10 @@ export function PageTasks() {
   watchState("statusInfo", () => setInfo(state.statusInfo));
   watchState("statusProgress", () => setProgress(state.statusProgress));
   return (
-    <div className={cn("mx-auto flex grow flex-col justify-center gap-4 py-24", state.isSetup ? "" : "text-center")} data-testid="page-tasks">
+    <div
+      className={cn("mx-auto flex grow flex-col justify-center gap-4 py-24", state.isSetup ? "" : "text-center")}
+      data-testid="page-tasks"
+    >
       <h1 className="mb-2 -ml-2 font-bold">
         <span className="opacity-80">What</span> Now <span className="font-light opacity-10">?</span>
       </h1>

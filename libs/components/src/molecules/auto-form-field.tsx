@@ -14,8 +14,14 @@ export const AutoFormField = memo(({ fieldName, fieldSchema, stepState, logger, 
   const metadata = getFieldMetadata(fieldSchema) ?? {};
 
   const hasIsVisible = metadata && "isVisible" in metadata && metadata.isVisible;
-  // oxlint-disable-next-line max-nested-callbacks
-  const dependenciesFieldName = useMemo(() => (metadata && "dependsOn" in metadata && metadata.dependsOn ? parseDependsOn(metadata.dependsOn).map(dependency => dependency.fieldName) : undefined), [metadata]);
+  const dependenciesFieldName = useMemo(
+    () =>
+      metadata && "dependsOn" in metadata && metadata.dependsOn
+        ? // oxlint-disable-next-line max-nested-callbacks
+          parseDependsOn(metadata.dependsOn).map(dependency => dependency.fieldName)
+        : undefined,
+    [metadata],
+  );
 
   const watchedDependencies = useWatch({ disabled: !dependenciesFieldName, name: dependenciesFieldName as string[] });
   const watchedAll = useWatch({ disabled: !hasIsVisible });

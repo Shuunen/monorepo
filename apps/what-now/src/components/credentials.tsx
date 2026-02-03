@@ -8,9 +8,30 @@ import { logger } from "../utils/logger.utils";
 import { type CredentialField, state } from "../utils/state.utils";
 
 const fields = [
-  { href: "https://cloud.appwrite.io/", label: "AppWrite database id", link: "dashboard", maxlength: 100, name: "appwrite-database-id", pattern: String.raw`^\w+$` },
-  { href: "https://cloud.appwrite.io/", label: "AppWrite collection id", link: "dashboard", maxlength: 100, name: "appwrite-collection-id", pattern: String.raw`^\w+$` },
-  { href: "https://github.com/Shuunen/monorepo/blob/master/apps/what-now/docs/webhook.md", label: "Webhook", link: "webhook", maxlength: 150, name: "webhook", pattern: "^https?://.+$" },
+  {
+    href: "https://cloud.appwrite.io/",
+    label: "AppWrite database id",
+    link: "dashboard",
+    maxlength: 100,
+    name: "appwrite-database-id",
+    pattern: String.raw`^\w+$`,
+  },
+  {
+    href: "https://cloud.appwrite.io/",
+    label: "AppWrite collection id",
+    link: "dashboard",
+    maxlength: 100,
+    name: "appwrite-collection-id",
+    pattern: String.raw`^\w+$`,
+  },
+  {
+    href: "https://github.com/Shuunen/monorepo/blob/master/apps/what-now/docs/webhook.md",
+    label: "Webhook",
+    link: "webhook",
+    maxlength: 150,
+    name: "webhook",
+    pattern: "^https?://.+$",
+  },
 ] as const;
 
 type FormData = {

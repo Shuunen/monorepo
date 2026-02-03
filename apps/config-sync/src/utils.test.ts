@@ -1,5 +1,12 @@
 import { expect, it } from "vitest";
-import { clean, filename, normalizePathWithSlash, removeLinesAfter, removeLinesMatching, useUnixCarriageReturn } from "./utils.node";
+import {
+  clean,
+  filename,
+  normalizePathWithSlash,
+  removeLinesAfter,
+  removeLinesMatching,
+  useUnixCarriageReturn,
+} from "./utils.node";
 
 const content = `
 ; How many days between every update check? (0=no checks)
@@ -67,7 +74,12 @@ TornEdgeEffectSettings=Darkness
 `;
 
 it("clean A", () => {
-  expect(clean(contentGreenShot, /\[Editor\]/u, [/^(?:LastCapturedRegion|LastUpdateCheck|OutputFileAsFull|Commands=)/u, /(?:MS Paint)/u])).toBe(";Greenshotcoreconfiguration[Core];Greenshoteditorconfiguration");
+  expect(
+    clean(contentGreenShot, /\[Editor\]/u, [
+      /^(?:LastCapturedRegion|LastUpdateCheck|OutputFileAsFull|Commands=)/u,
+      /(?:MS Paint)/u,
+    ]),
+  ).toBe(";Greenshotcoreconfiguration[Core];Greenshoteditorconfiguration");
 });
 it("clean B", () => {
   expect(clean("", /test/u, [/^test/u])).toBe("");

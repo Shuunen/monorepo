@@ -41,6 +41,7 @@
     "KeyboardEvent": "readonly",
     "localStorage": "readonly",
     "Node": "readonly",
+    "NodeFilter": "readonly",
     "NodeList": "readonly",
     "process": "readonly",
     "setInterval": "readonly",

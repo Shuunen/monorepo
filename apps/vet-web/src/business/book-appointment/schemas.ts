@@ -4,7 +4,10 @@ import { z } from "zod";
 import { ageInput } from "../../utils/age.utils";
 import { breedInput } from "../../utils/breed.utils";
 
-const identifier = field(z.string().regex(/^FR\d{4}$/u, "Identifier must be FR and 4 digits"), { label: "Pet identifier", placeholder: "FR0000" });
+const identifier = field(z.string().regex(/^FR\d{4}$/u, "Identifier must be FR and 4 digits"), {
+  label: "Pet identifier",
+  placeholder: "FR0000",
+});
 
 export const step1AnimalDetails = step(
   z.object({
@@ -13,7 +16,11 @@ export const step1AnimalDetails = step(
     age: ageInput,
     breed: breedInput,
     knowsParent: field(z.boolean().optional(), { label: "I know the mother" }),
-    parentIdentifier: field(z.string(), { dependsOn: "knowsParent", label: "Mother identifier", placeholder: "Enter pet ID or microchip number" }),
+    parentIdentifier: field(z.string(), {
+      dependsOn: "knowsParent",
+      label: "Mother identifier",
+      placeholder: "Enter pet ID or microchip number",
+    }),
   }),
   { title: "1. Animal Details" },
 );

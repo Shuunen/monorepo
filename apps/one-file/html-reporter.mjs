@@ -1,4 +1,4 @@
-// oxlint-disable no-plusplus, no-magic-numbers, max-lines-per-function
+// oxlint-disable no-plusplus, no-magic-numbers
 import { gray, green } from "@monorepo/utils";
 import { logger } from "./repo-banner.utils";
 
@@ -34,7 +34,8 @@ export class HtmlReporter {
     this.setState(states.scanComplete);
     const expectedTotal = this.tags + this.attr + this.text + this.styles + this.css;
     /* v8 ignore if -- @preserve */
-    if (this.total !== expectedTotal) throw new Error(`Total length (${this.total}) does not match the sum of sub-stats (${expectedTotal})`);
+    if (this.total !== expectedTotal)
+      throw new Error(`Total length (${this.total}) does not match the sum of sub-stats (${expectedTotal})`);
   }
 
   /**
@@ -97,7 +98,12 @@ export class HtmlReporter {
    */
   setState(newState) {
     if (this.debug) {
-      const context = this.readable(this.index - 2, gray) + this.readable(this.index - 1, gray) + this.readable(this.index, green) + this.readable(this.index + 1, gray) + this.readable(this.index + 2, gray);
+      const context =
+        this.readable(this.index - 2, gray) +
+        this.readable(this.index - 1, gray) +
+        this.readable(this.index, green) +
+        this.readable(this.index + 1, gray) +
+        this.readable(this.index + 2, gray);
       const stateChange = `${this.state} ${gray("=>")} ${newState}`;
       const stats = `tags:${this.tags.toString().padEnd(3)} attr:${this.attr.toString().padEnd(3)} text:${this.text.toString().padEnd(3)}`;
       logger.info(`${this.index.toString().padEnd(4)} ${stateChange.padEnd(28)} ${stats.padEnd(24)} ${context}`);
