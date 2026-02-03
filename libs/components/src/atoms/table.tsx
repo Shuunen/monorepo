@@ -1,5 +1,11 @@
 import { cn } from "@monorepo/utils";
-import { TableBody as ShadTableBody, TableCell as ShadTableCell, TableHead as ShadTableHead, TableHeader as ShadTableHeader, TableRow as ShadTableRow } from "../shadcn/table";
+import {
+  TableBody as ShadTableBody,
+  TableCell as ShadTableCell,
+  TableHead as ShadTableHead,
+  TableHeader as ShadTableHeader,
+  TableRow as ShadTableRow,
+} from "../shadcn/table";
 
 export function TableRow({ className, ...props }: React.ComponentProps<typeof ShadTableRow>) {
   const classes = cn(className, "border-slate-200");

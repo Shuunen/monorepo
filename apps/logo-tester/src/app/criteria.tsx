@@ -37,7 +37,15 @@ export function Criteria({ name, onSelection }: CriteriaProps) {
         {points.map(point => (
           <Tooltip key={point.value}>
             <TooltipTrigger asChild name={point.hint}>
-              <Button className={cn("h-5 hover:text-yellow-300", { "text-slate-500": value !== point.value, "text-yellow-500": point.value <= value })} name={point.hint} onClick={() => onClick(point.value)} variant="link">
+              <Button
+                className={cn("h-5 hover:text-yellow-300", {
+                  "text-slate-500": value !== point.value,
+                  "text-yellow-500": point.value <= value,
+                })}
+                name={point.hint}
+                onClick={() => onClick(point.value)}
+                variant="link"
+              >
                 <StarIcon className="size-5" fill={cn({ "var(--color-yellow-800)": point.value <= value })} />
               </Button>
             </TooltipTrigger>

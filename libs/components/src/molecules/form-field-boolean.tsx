@@ -11,7 +11,9 @@ export function FormFieldBoolean({ fieldName, fieldSchema, isOptional, logger, r
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { placeholder, state = "editable", label } = metadata;
   const isDisabled = state === "disabled" || readonly;
-  const { booleanLiteralValue, isBoolean, isBooleanLiteral } = checkZodBoolean(fieldSchema as z.ZodBoolean | z.ZodLiteral | z.ZodOptional<z.ZodBoolean>);
+  const { booleanLiteralValue, isBoolean, isBooleanLiteral } = checkZodBoolean(
+    fieldSchema as z.ZodBoolean | z.ZodLiteral | z.ZodOptional<z.ZodBoolean>,
+  );
   if (!isBoolean) {
     throw new Error(`Field "${fieldName}" is not a boolean`);
   }
@@ -21,12 +23,25 @@ export function FormFieldBoolean({ fieldName, fieldSchema, isOptional, logger, r
       {({ field }) => (
         <div className="mt-2 grid gap-2">
           <div className="flex gap-2">
-            <FormControl>{isBooleanLiteral ? <Switch {...field} checked={booleanLiteralValue === true} disabled /> : <Switch {...field} checked={Boolean(field.value)} disabled={isDisabled} onCheckedChange={field.onChange} />}</FormControl>
+            <FormControl>
+              {isBooleanLiteral ? (
+                <Switch {...field} checked={booleanLiteralValue === true} disabled />
+              ) : (
+                <Switch
+                  {...field}
+                  checked={Boolean(field.value)}
+                  disabled={isDisabled}
+                  onCheckedChange={field.onChange}
+                />
+              )}
+            </FormControl>
             {/* we set optional to true all the times to hide the red star, does not make sense on a field that always have a value */}
             <FormFieldLabel className={cn({ "cursor-pointer": !isDisabled })} isOptional={true} label={label} />
           </div>
           {placeholder && <FormDescription name={fieldName}>{placeholder}</FormDescription>}
-          {field.value === undefined && <Paragraph variant="error">Field value of "{fieldName}" is neither true or false</Paragraph>}
+          {field.value === undefined && (
+            <Paragraph variant="error">Field value of "{fieldName}" is neither true or false</Paragraph>
+          )}
         </div>
       )}
     </FormFieldBase>

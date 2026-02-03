@@ -56,7 +56,9 @@ export const Default: Story = {
 
     await step("hover over trigger", async () => {
       await userEvent.hover(triggerBtn);
-      await waitFor(() => expect(canvasElement.ownerDocument.body.querySelector("[data-radix-popper-content-wrapper]")).toBeVisible());
+      await waitFor(() =>
+        expect(canvasElement.ownerDocument.body.querySelector("[data-radix-popper-content-wrapper]")).toBeVisible(),
+      );
     });
 
     await step("unhover trigger", async () => {

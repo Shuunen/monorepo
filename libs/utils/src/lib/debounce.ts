@@ -4,7 +4,10 @@
  * @param waitFor the time to wait before calling the function
  * @returns promise with a resolve type of the original function’s return type
  */
-export const debounce = <Method extends (...parameters: Parameters<Method>) => ReturnType<Method>>(callback: Method, waitFor: number) => {
+export const debounce = <Method extends (...parameters: Parameters<Method>) => ReturnType<Method>>(
+  callback: Method,
+  waitFor: number,
+) => {
   // oxlint-disable-next-line init-declarations
   let timeout: ReturnType<typeof setTimeout>;
   // oxlint-disable-next-line require-await

@@ -2,13 +2,31 @@
 import { Button, FloatingMenu } from "@monorepo/components";
 import { dateIso10, formatDate } from "@monorepo/utils";
 // oxlint-disable-next-line no-restricted-imports
-import { ArrowLeftRightIcon, CalendarIcon, DownloadIcon, MinusIcon, MoveLeftIcon, MoveRightIcon, PlusIcon, SaveIcon, UploadIcon } from "lucide-react";
+import {
+  ArrowLeftRightIcon,
+  CalendarIcon,
+  DownloadIcon,
+  MinusIcon,
+  MoveLeftIcon,
+  MoveRightIcon,
+  PlusIcon,
+  SaveIcon,
+  UploadIcon,
+} from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Task } from "../types";
 import { downloadData, getTasks } from "../utils/database.utils";
 import { logger } from "../utils/logger.utils";
 import { useActions } from "../utils/pages.utils";
-import { createTaskDistribution, dailyRecurrence, getHigherFrequency, getLowerFrequency, getTaskColor, saveTaskModifications, weekDays } from "../utils/planner.utils";
+import {
+  createTaskDistribution,
+  dailyRecurrence,
+  getHigherFrequency,
+  getLowerFrequency,
+  getTaskColor,
+  saveTaskModifications,
+  weekDays,
+} from "../utils/planner.utils";
 import { daysRecurrence, daysSinceCompletion, dispatchTasks, isTaskActive } from "../utils/tasks.utils";
 import { handleTasksUpload } from "../utils/upload.utils";
 
@@ -50,16 +68,40 @@ function TaskCardControls({
   const iconClasses = "size-3";
   return (
     <div className="absolute top-0.5 right-0.5 grid grid-cols-2 gap-1.5 opacity-10 sepia hover:opacity-100 hover:sepia-0">
-      <Button className={btnClasses} disabled={!canIncrease} name="increase" onClick={onIncrease} variant={canIncrease ? "destructive" : "ghost"}>
+      <Button
+        className={btnClasses}
+        disabled={!canIncrease}
+        name="increase"
+        onClick={onIncrease}
+        variant={canIncrease ? "destructive" : "ghost"}
+      >
         <PlusIcon className={iconClasses} />
       </Button>
-      <Button className={btnClasses} disabled={!canDecrease} name="decrease" onClick={onDecrease} variant={canDecrease ? "secondary" : "ghost"}>
+      <Button
+        className={btnClasses}
+        disabled={!canDecrease}
+        name="decrease"
+        onClick={onDecrease}
+        variant={canDecrease ? "secondary" : "ghost"}
+      >
         <MinusIcon className={iconClasses} />
       </Button>
-      <Button className={btnClasses} disabled={!canMove} name="before" onClick={onBefore} variant={canMove ? "default" : "ghost"}>
+      <Button
+        className={btnClasses}
+        disabled={!canMove}
+        name="before"
+        onClick={onBefore}
+        variant={canMove ? "default" : "ghost"}
+      >
         <MoveLeftIcon className={iconClasses} />
       </Button>
-      <Button className={btnClasses} disabled={!canMove} name="after" onClick={onAfter} variant={canMove ? "default" : "ghost"}>
+      <Button
+        className={btnClasses}
+        disabled={!canMove}
+        name="after"
+        onClick={onAfter}
+        variant={canMove ? "default" : "ghost"}
+      >
         <MoveRightIcon className={iconClasses} />
       </Button>
     </div>
@@ -75,6 +117,7 @@ function TaskCardControls({
  * @param properties.onDateChange - Handler for date changes
  * @returns JSX element for the task card
  */
+// oxlint-disable-next-line max-lines-per-function
 function TaskCard({
   task,
   modifications,
@@ -116,10 +159,23 @@ function TaskCard({
   const title = `${task.name} (${task.minutes} min, completed ${daysSinceCompletion(task)} days ago)`;
 
   return (
-    <div className={`rounded border-2 px-2 py-1 text-xs ${colorClass} ${isModified ? "ring-2 ring-yellow-400/50" : ""} group relative w-full truncate text-left`} data-completed-on={task.completedOn} data-once={task.once} title={title}>
+    <div
+      className={`rounded border-2 px-2 py-1 text-xs ${colorClass} ${isModified ? "ring-2 ring-yellow-400/50" : ""} group relative w-full truncate text-left`}
+      data-completed-on={task.completedOn}
+      data-once={task.once}
+      title={title}
+    >
       <div className="truncate font-medium">{task.name}</div>
       <div className="text-xs opacity-75">{recurrenceLabel}</div>
-      <TaskCardControls canDecrease={canDecrease} canIncrease={canIncrease} canMove={canMove} onAfter={handleAfter} onBefore={handleBefore} onDecrease={handleDecrease} onIncrease={handleIncrease} />
+      <TaskCardControls
+        canDecrease={canDecrease}
+        canIncrease={canIncrease}
+        canMove={canMove}
+        onAfter={handleAfter}
+        onBefore={handleBefore}
+        onDecrease={handleDecrease}
+        onIncrease={handleIncrease}
+      />
     </div>
   );
 }
@@ -154,14 +210,22 @@ function DayColumn({
   isToday?: boolean;
 }) {
   return (
-    <div className={`flex min-h-96 w-full flex-col border-r border-gray-600/30 last:border-r-0 ${isToday ? "bg-yellow-100/10" : ""}`}>
+    <div
+      className={`flex min-h-96 w-full flex-col border-r border-gray-600/30 last:border-r-0 ${isToday ? "bg-yellow-100/10" : ""}`}
+    >
       <div className="flex flex-col border-b border-gray-600/30 bg-gray-800/40 p-3 text-center leading-6 font-medium text-gray-200">
         {dayName}
         <span className="ml-2 opacity-75">{realDate}</span>
       </div>
       <div className="flex grow flex-col gap-2 p-3">
         {tasks.map(task => (
-          <TaskCard key={`${task.id}-${realDate}`} modifications={modifications} onDateChange={onDateChange} onFrequencyChange={onFrequencyChange} task={task} />
+          <TaskCard
+            key={`${task.id}-${realDate}`}
+            modifications={modifications}
+            onDateChange={onDateChange}
+            onFrequencyChange={onFrequencyChange}
+            task={task}
+          />
         ))}
       </div>
     </div>
@@ -201,7 +265,15 @@ function PlannerContent({
           const isToday = columnDate.toDateString() === today.toDateString();
           return (
             <div className="min-w-48 shrink-0" key={realDate}>
-              <DayColumn dayName={dayName} isToday={isToday} modifications={modifications} onDateChange={onDateChange} onFrequencyChange={onFrequencyChange} realDate={realDate} tasks={tasksByDay[index]} />
+              <DayColumn
+                dayName={dayName}
+                isToday={isToday}
+                modifications={modifications}
+                onDateChange={onDateChange}
+                onFrequencyChange={onFrequencyChange}
+                realDate={realDate}
+                tasks={tasksByDay[index]}
+              />
             </div>
           );
         })}
@@ -243,7 +315,8 @@ function calculatePlannerMetrics(tasks: Task[], modifications: Record<string, nu
     totalFrequency += currentRecurrence;
   }
 
-  const averageFrequency = activeTasksCount > 0 ? Math.round((totalFrequency / activeTasksCount) * decimalPrecision) / decimalPrecision : 0;
+  const averageFrequency =
+    activeTasksCount > 0 ? Math.round((totalFrequency / activeTasksCount) * decimalPrecision) / decimalPrecision : 0;
 
   return { activeTasksCount, averageFrequency, averageTasksPerDay, averageTimePerDay };
 }
@@ -320,7 +393,11 @@ function useFrequencyChange(setModifications: React.Dispatch<React.SetStateActio
  * @param setModifications - Setter for modifications
  * @returns Date change handler
  */
-function useDateChange(tasks: Task[], modifications: TaskModifications, setModifications: React.Dispatch<React.SetStateAction<TaskModifications>>) {
+function useDateChange(
+  tasks: Task[],
+  modifications: TaskModifications,
+  setModifications: React.Dispatch<React.SetStateAction<TaskModifications>>,
+) {
   return useCallback(
     (taskId: string, direction: "before" | "after") => {
       const task = tasks.find(currentTask => currentTask.id === taskId);
@@ -349,7 +426,8 @@ function usePlannerTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [modifications, setModifications] = useState<TaskModifications>({ completedOn: {}, frequency: {} });
   const [saving, setSaving] = useState(false);
-  const hasModifications = Object.keys(modifications.frequency || {}).length > 0 || Object.keys(modifications.completedOn || {}).length > 0;
+  const hasModifications =
+    Object.keys(modifications.frequency || {}).length > 0 || Object.keys(modifications.completedOn || {}).length > 0;
 
   async function loadTasks() {
     const load = await getTasks();
@@ -398,7 +476,19 @@ function usePlannerTasks() {
  * @param properties.saving - Whether save operation is in progress
  * @returns JSX element for the planner header
  */
-function PlannerHeader({ onTasksUpload, onTasksDispatch, onSaveModifications, hasModifications, saving }: { onTasksUpload: () => void; onTasksDispatch: () => void; onSaveModifications: () => void; hasModifications: boolean; saving: boolean }) {
+function PlannerHeader({
+  onTasksUpload,
+  onTasksDispatch,
+  onSaveModifications,
+  hasModifications,
+  saving,
+}: {
+  onTasksUpload: () => void;
+  onTasksDispatch: () => void;
+  onSaveModifications: () => void;
+  hasModifications: boolean;
+  saving: boolean;
+}) {
   const showDispatch = false;
   return (
     <header className="sticky top-0 z-10 rounded-lg border-b border-gray-600/30 backdrop-blur-sm">
@@ -441,7 +531,11 @@ function PlannerHeader({ onTasksUpload, onTasksDispatch, onSaveModifications, ha
  * @param loadTasks - Function to reload tasks
  * @returns Object containing action handlers
  */
-function usePlannerActions(tasks: Task[], setTasks: React.Dispatch<React.SetStateAction<Task[]>>, loadTasks: () => Promise<void>) {
+function usePlannerActions(
+  tasks: Task[],
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
+  loadTasks: () => Promise<void>,
+) {
   const handleTasksDispatch = useCallback(async () => {
     const active = tasks.filter(task => isTaskActive(task));
     logger.info("dispatching active tasks...", { active });
@@ -466,15 +560,36 @@ function usePlannerActions(tasks: Task[], setTasks: React.Dispatch<React.SetStat
  */
 export function PagePlanner() {
   const actions = useActions();
-  const { handleDateChange, handleFrequencyChange, handleSaveModifications, setTasks, hasModifications, modifications, saving, tasks, loadTasks } = usePlannerTasks();
+  const {
+    handleDateChange,
+    handleFrequencyChange,
+    handleSaveModifications,
+    setTasks,
+    hasModifications,
+    modifications,
+    saving,
+    tasks,
+    loadTasks,
+  } = usePlannerTasks();
   const { handleTasksDispatch, handleTasksUploadAndReload } = usePlannerActions(tasks, setTasks, loadTasks);
   const tasksWithModifications = applyModificationsToTasks(tasks, modifications);
   const tasksByDay = createTaskDistribution(tasksWithModifications, modifications.frequency || {});
 
   return (
     <div className="flex grow flex-col justify-center" data-testid="page-planner">
-      <PlannerHeader hasModifications={hasModifications} onSaveModifications={handleSaveModifications} onTasksDispatch={handleTasksDispatch} onTasksUpload={handleTasksUploadAndReload} saving={saving} />
-      <PlannerContent modifications={modifications.frequency || {}} onDateChange={handleDateChange} onFrequencyChange={handleFrequencyChange} tasksByDay={tasksByDay} />
+      <PlannerHeader
+        hasModifications={hasModifications}
+        onSaveModifications={handleSaveModifications}
+        onTasksDispatch={handleTasksDispatch}
+        onTasksUpload={handleTasksUploadAndReload}
+        saving={saving}
+      />
+      <PlannerContent
+        modifications={modifications.frequency || {}}
+        onDateChange={handleDateChange}
+        onFrequencyChange={handleFrequencyChange}
+        tasksByDay={tasksByDay}
+      />
       <PlannerMetrics modifications={modifications.frequency || {}} tasks={tasks} />
       <FloatingMenu actions={actions} />
     </div>

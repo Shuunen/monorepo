@@ -16,15 +16,18 @@ type Guideline = {
 };
 
 const regexUserScriptName = /^\/\/ ==UserScript==\n\/\/ @name/m;
-const regexDownloadUrl = /@downloadURL\s+https:\/\/github.com\/Shuunen\/monorepo\/raw\/master\/apps\/user-scripts\/src\/.+\.user\.js/;
-const regexUpdateUrl = /@updateURL\s+https:\/\/github.com\/Shuunen\/monorepo\/raw\/master\/apps\/user-scripts\/src\/.+\.user\.js/;
+const regexDownloadUrl =
+  /@downloadURL\s+https:\/\/github.com\/Shuunen\/monorepo\/raw\/master\/apps\/user-scripts\/src\/.+\.user\.js/;
+const regexUpdateUrl =
+  /@updateURL\s+https:\/\/github.com\/Shuunen\/monorepo\/raw\/master\/apps\/user-scripts\/src\/.+\.user\.js/;
 const regexMatchDomain = /\*\.[^\s]+\.com/;
 const regexIcon = /@icon\s+https:\/\/www\.google\.com\/s2\/favicons\?sz=64&domain=[^\s]+/;
 const regexMainFuncKebab = /-([a-z])/g;
 const regexMainFuncPascal = /^(..)/;
 const regexMainFuncDef = (name: string) => new RegExp(`function ${name}\\(`);
 const regexExportPattern1 = /if \(globalThis\.window\) (?:void )?[A-Z][A-Za-z0-9_]*\(\)/;
-const regexExportPattern2 = /if \(globalThis\.window\) (?:void )?[A-Z][A-Za-z0-9_]*\(\)\nelse module\.exports = \{.*\}/s;
+const regexExportPattern2 =
+  /if \(globalThis\.window\) (?:void )?[A-Z][A-Za-z0-9_]*\(\)\nelse module\.exports = \{.*\}/s;
 const regexIife = /\(function [A-Z][A-Za-z0-9_]*\(\) \{[\s\S]*\}\)\(\);/;
 const regexFunctionDef = /function ([a-z][A-Za-z0-9_]*)\(/g;
 const regexMainFunctionDef = /function ([A-Z][A-Za-z0-9_]*)\(/;
@@ -107,8 +110,9 @@ const guidelines: Guideline[] = [
     check: (content: string, filePath?: string) => {
       if (!filePath) return false;
       const baseName = path.basename(filePath, ".user.js");
-      // oxlint-disable-next-line id-length
-      const expectedName = baseName.replace(regexMainFuncKebab, (_, character) => character.toUpperCase()).replace(regexMainFuncPascal, matchGroup => matchGroup[0].toUpperCase() + matchGroup[1]);
+      const expectedName = baseName
+        .replace(regexMainFuncKebab, (_substr, character) => character.toUpperCase())
+        .replace(regexMainFuncPascal, matchGroup => matchGroup[0].toUpperCase() + matchGroup[1]);
       return regexMainFuncDef(expectedName).test(content);
     },
     error: "main function name does not match filename (PascalCase)",
@@ -135,12 +139,15 @@ const guidelines: Guideline[] = [
     },
     error: (content: string) => {
       const outsideFunctions = getOutsideFunctions(content);
-      if (outsideFunctions.length === 0) return "camelCase functions outside main PascalCase function must be exported via module.exports";
+      if (outsideFunctions.length === 0)
+        return "camelCase functions outside main PascalCase function must be exported via module.exports";
       const exportsMatch = regexModuleExports.exec(content);
-      if (!exportsMatch) return `camelCase functions outside main PascalCase function must be exported via module.exports. Missing functions: ${outsideFunctions.join(", ")}`;
+      if (!exportsMatch)
+        return `camelCase functions outside main PascalCase function must be exported via module.exports. Missing functions: ${outsideFunctions.join(", ")}`;
       const exported = exportsMatch[1];
       const missingFunctions = outsideFunctions.filter(fn => !exported.includes(fn));
-      if (missingFunctions.length === 0) return "camelCase functions outside main PascalCase function must be exported via module.exports";
+      if (missingFunctions.length === 0)
+        return "camelCase functions outside main PascalCase function must be exported via module.exports";
       return `camelCase functions outside main PascalCase function must be exported via module.exports. Missing functions: ${missingFunctions.join(", ")}`;
     },
     name: "outside function export",

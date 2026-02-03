@@ -169,9 +169,21 @@ export const MultipleSections: Story = {
   },
   render: () => (
     <div className="grid w-lg gap-6">
-      <FormFieldSection description="Ensure your data is in the correct format before uploading. Check our documentation for supported formats." line title="Step 1: Prepare Your Data" />
-      <FormFieldSection code="POST /api/upload\nContent-Type: multipart/form-data" description="Select a file from your computer and upload it to our system." line title="Step 2: Upload File" />
-      <FormFieldSection description="Review the uploaded data and confirm that everything looks correct before finalizing." title="Step 3: Verify Results" />
+      <FormFieldSection
+        description="Ensure your data is in the correct format before uploading. Check our documentation for supported formats."
+        line
+        title="Step 1: Prepare Your Data"
+      />
+      <FormFieldSection
+        code="POST /api/upload\nContent-Type: multipart/form-data"
+        description="Select a file from your computer and upload it to our system."
+        line
+        title="Step 2: Upload File"
+      />
+      <FormFieldSection
+        description="Review the uploaded data and confirm that everything looks correct before finalizing."
+        title="Step 3: Verify Results"
+      />
     </div>
   ),
 };

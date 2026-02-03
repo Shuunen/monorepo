@@ -17,7 +17,12 @@ it("array unique B", () => {
   expect(arrayUnique(["plop", "plop", 2, "plop", "plop", 3, "plop"])).toStrictEqual(["plop", 2, 3]);
 });
 it("array unique C", () => {
-  expect(arrayUnique([{ name: "John" }, "plop", { name: "John" }, 3, "plop"])).toStrictEqual([{ name: "John" }, "plop", { name: "John" }, 3]);
+  expect(arrayUnique([{ name: "John" }, "plop", { name: "John" }, 3, "plop"])).toStrictEqual([
+    { name: "John" },
+    "plop",
+    { name: "John" },
+    3,
+  ]);
 });
 
 it("remove value from array case A", () => {

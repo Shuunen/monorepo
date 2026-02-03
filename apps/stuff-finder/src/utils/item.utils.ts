@@ -1,7 +1,21 @@
-import { capitalize, clone, isTestEnvironment, nbMsInMinute, objectSum, Result, readableTimeAgo } from "@monorepo/utils";
+import {
+  capitalize,
+  clone,
+  isTestEnvironment,
+  nbMsInMinute,
+  objectSum,
+  Result,
+  readableTimeAgo,
+} from "@monorepo/utils";
 import { boxRooms, itemBoxes, itemDrawers, itemStatus } from "../constants";
 import type { Item } from "../types/item.types";
-import { addItemRemotely, deleteItemRemotely, getItemsRemotely, removeAppWriteFields, updateItemRemotely } from "./database.utils";
+import {
+  addItemRemotely,
+  deleteItemRemotely,
+  getItemsRemotely,
+  removeAppWriteFields,
+  updateItemRemotely,
+} from "./database.utils";
 import { createCheckboxField, createSelectField, createTextField, type Form } from "./forms.utils";
 import { logger } from "./logger.utils";
 import { state } from "./state.utils";
@@ -29,7 +43,8 @@ export function itemBoxToRoom(box: Item["box"]) {
   const isLetterBox = letterBoxFormat.test(box);
   const letter = box[0];
   if (letter === undefined) return undefined;
-  for (const [location, boxes] of Object.entries(boxRooms)) if (boxes.includes(isLetterBox ? letter : box)) return location as keyof typeof boxRooms;
+  for (const [location, boxes] of Object.entries(boxRooms))
+    if (boxes.includes(isLetterBox ? letter : box)) return location as keyof typeof boxRooms;
   return undefined;
 }
 
@@ -104,12 +119,28 @@ export const itemForm = {
     price: createTextField({ columns: 2, isRequired: true, label: "Price", regex: /^\d{1,5}$/u, unit: "€" }),
     // line
     details: createTextField({ columns: 5, label: "Details", maxLength: 200 }),
-    reference: createTextField({ columns: 3, isRequired: true, label: "Reference", maxLength: 30, regex: /^[\w/-]{3,50}$/u }),
+    reference: createTextField({
+      columns: 3,
+      isRequired: true,
+      label: "Reference",
+      maxLength: 30,
+      regex: /^[\w/-]{3,50}$/u,
+    }),
     status: createSelectField({ columns: 2, label: "Status", options: valuesToOptions(itemStatus), value: "bought" }),
     // line
     photo: createTextField({ columns: 5, label: "Photo", regex: /^.+$/u }),
-    box: createSelectField({ columns: 3, label: "Box", options: valuesToOptions(itemBoxes, true), regex: /^[\p{L}\s&()]{3,100}$/u }),
-    drawer: createSelectField({ columns: 2, label: "Drawer", options: valuesToOptions(itemDrawers, true), regex: /\d/u }),
+    box: createSelectField({
+      columns: 3,
+      label: "Box",
+      options: valuesToOptions(itemBoxes, true),
+      regex: /^[\p{L}\s&()]{3,100}$/u,
+    }),
+    drawer: createSelectField({
+      columns: 2,
+      label: "Drawer",
+      options: valuesToOptions(itemDrawers, true),
+      regex: /\d/u,
+    }),
     // hidden
     barcode: createTextField({ isVisible: false, label: "Barcode", maxLength: 30 }),
     isPrinted: createCheckboxField({ isVisible: false, label: "Printed" }),
@@ -227,7 +258,8 @@ export function isDataOlderThan(milliseconds: number, itemsTimestamp = state.ite
 }
 
 export async function getItems(items = state.items, itemsTimestamp = state.itemsTimestamp) {
-  if (items.length > 0 && !isDataOlderThan(nbMsInMinute, itemsTimestamp)) return Result.ok(`tasks are fresh (${readableTimeAgo(Date.now() - itemsTimestamp)})`);
+  if (items.length > 0 && !isDataOlderThan(nbMsInMinute, itemsTimestamp))
+    return Result.ok(`tasks are fresh (${readableTimeAgo(Date.now() - itemsTimestamp)})`);
   state.status = "loading";
   const result = await getItemsRemotely();
   if (!result.ok) return result;

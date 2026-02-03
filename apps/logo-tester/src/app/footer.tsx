@@ -8,7 +8,12 @@ export function Footer() {
         <div className="opacity-50">/</div>
         <Paragraph>Author : Shuunen</Paragraph>
         <div className="opacity-50">/</div>
-        <a className="underline" href="https://github.com/Shuunen/monorepo/tree/master/apps/logo-tester" rel="noreferrer" target="_blank">
+        <a
+          className="underline"
+          href="https://github.com/Shuunen/monorepo/tree/master/apps/logo-tester"
+          rel="noreferrer"
+          target="_blank"
+        >
           Sources on GitHub
         </a>
       </div>

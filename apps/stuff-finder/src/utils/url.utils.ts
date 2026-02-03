@@ -37,5 +37,9 @@ export function getAsin(url: string) {
  * @returns the normalized url
  */
 export function normalizePhotoUrl(url: string, size = 500) {
-  return url.replace(photoRegex.amazon, `._SL${size}_.jpg`).replace(photoRegex.temu, `/w/${size}/`).replace(photoRegex.decathlon, `f=${size}x${size}`).replace(photoRegex.aliexpress, `_${size}x${size}q85.jpg`);
+  return url
+    .replace(photoRegex.amazon, `._SL${size}_.jpg`)
+    .replace(photoRegex.temu, `/w/${size}/`)
+    .replace(photoRegex.decathlon, `f=${size}x${size}`)
+    .replace(photoRegex.aliexpress, `_${size}x${size}q85.jpg`);
 }

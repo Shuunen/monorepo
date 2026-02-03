@@ -25,7 +25,17 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      exclude: ["src/utils/browser.utils.ts", "src/utils/speech.utils.ts", "src/utils/database.mock.ts", "src/utils/state.utils.ts", "src/constants.ts", "src/types/*.ts", "**/*.tsx", "**/*.d.ts", "**/*.css"],
+      exclude: [
+        "src/utils/browser.utils.ts",
+        "src/utils/speech.utils.ts",
+        "src/utils/database.mock.ts",
+        "src/utils/state.utils.ts",
+        "src/constants.ts",
+        "src/types/*.ts",
+        "**/*.tsx",
+        "**/*.d.ts",
+        "**/*.css",
+      ],
       include: ["src"],
       provider: "v8" as const,
       reporter: [["text", { maxCols: 120 }], "lcov", "html"],

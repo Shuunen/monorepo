@@ -1,5 +1,12 @@
 import { clone } from "@monorepo/utils";
-import { alignClipboard, createCheckboxField, createSelectField, optionsToLabels, updateForm, validateForm } from "./forms.utils";
+import {
+  alignClipboard,
+  createCheckboxField,
+  createSelectField,
+  optionsToLabels,
+  updateForm,
+  validateForm,
+} from "./forms.utils";
 import { settingsForm } from "./settings.utils";
 
 describe("forms.utils", () => {

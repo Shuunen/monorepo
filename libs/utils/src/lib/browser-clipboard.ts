@@ -8,7 +8,15 @@ import { ellipsis } from "./strings.js";
  * @param willLog if true, will console log the data before copying
  * @returns a Result object
  */
-export async function copyToClipboard(stuff: number | Readonly<Record<string, unknown>> | readonly Readonly<Record<string, unknown>>[] | readonly string[] | string, willLog = false) {
+export async function copyToClipboard(
+  stuff:
+    | number
+    | Readonly<Record<string, unknown>>
+    | readonly Readonly<Record<string, unknown>>[]
+    | readonly string[]
+    | string,
+  willLog = false,
+) {
   let text = "";
   try {
     text = typeof stuff === "string" ? stuff : JSON.stringify(stuff);

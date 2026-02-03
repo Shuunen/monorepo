@@ -19,7 +19,10 @@ const pagesWithInputs = new Set(["/item/add", "/item/add:id", "/item/edit/:id"])
 
 const focusDelay = 100;
 
-export function AppQuickSearch({ mode, placeholder = "Quick search..." }: Readonly<{ mode: "floating" | "static"; placeholder?: string }>) {
+export function AppQuickSearch({
+  mode,
+  placeholder = "Quick search...",
+}: Readonly<{ mode: "floating" | "static"; placeholder?: string }>) {
   const searchReference = useRef<HTMLInputElement>(null);
   const [isUsable, setIsUsable] = useState(state.status !== "settings-required");
   const { pathname: path } = useLocation();
@@ -53,8 +56,12 @@ export function AppQuickSearch({ mode, placeholder = "Quick search..." }: Readon
   }, [isUsable, path]);
 
   const theme = {
-    common: tw("h-11 w-full max-w-xs rounded-md border-2 border-purple-500 px-3 text-lg text-purple-900 shadow-md transition-all hover:shadow-lg md:text-base"),
-    floating: tw("w-32 pb-1 opacity-60 focus-within:w-56 focus-within:bg-white focus-within:opacity-100 focus-within:outline-purple-500 hover:opacity-100"),
+    common: tw(
+      "h-11 w-full max-w-xs rounded-md border-2 border-purple-500 px-3 text-lg text-purple-900 shadow-md transition-all hover:shadow-lg md:text-base",
+    ),
+    floating: tw(
+      "w-32 pb-1 opacity-60 focus-within:w-56 focus-within:bg-white focus-within:opacity-100 focus-within:outline-purple-500 hover:opacity-100",
+    ),
     static: tw("bg-white placeholder:text-center"),
   };
 

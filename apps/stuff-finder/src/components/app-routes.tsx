@@ -7,13 +7,25 @@ import { AppLoader } from "./app-loader";
 const AsyncPageHome = lazy(() => import("../pages/page-home").then(({ PageHome }) => ({ default: PageHome })));
 const AsyncPageError = lazy(() => import("../pages/page-error").then(({ PageError }) => ({ default: PageError })));
 const AsyncPageScan = lazy(() => import("../pages/page-scan").then(({ PageScan }) => ({ default: PageScan })));
-const AsyncPageItemAddEdit = lazy(() => import("../pages/page-item-add-edit").then(({ PageItemAddEdit }) => ({ default: PageItemAddEdit })));
-const AsyncPageItemDetails = lazy(() => import("../pages/page-item-details").then(({ PageItemDetails }) => ({ default: PageItemDetails })));
-const AsyncPageItemPrint = lazy(() => import("../pages/page-item-print").then(({ PageItemPrint }) => ({ default: PageItemPrint })));
+const AsyncPageItemAddEdit = lazy(() =>
+  import("../pages/page-item-add-edit").then(({ PageItemAddEdit }) => ({ default: PageItemAddEdit })),
+);
+const AsyncPageItemDetails = lazy(() =>
+  import("../pages/page-item-details").then(({ PageItemDetails }) => ({ default: PageItemDetails })),
+);
+const AsyncPageItemPrint = lazy(() =>
+  import("../pages/page-item-print").then(({ PageItemPrint }) => ({ default: PageItemPrint })),
+);
 const AsyncPageSearch = lazy(() => import("../pages/page-search").then(({ PageSearch }) => ({ default: PageSearch })));
-const AsyncPageSettings = lazy(() => import("../pages/page-settings").then(({ PageSettings }) => ({ default: PageSettings })));
-const AsyncPageMetrics = lazy(() => import("../pages/page-metrics").then(({ PageMetrics }) => ({ default: PageMetrics })));
-const AsyncPageKitchenSink = lazy(() => import("../pages/page-kitchen-sink").then(({ PageKitchenSink }) => ({ default: PageKitchenSink })));
+const AsyncPageSettings = lazy(() =>
+  import("../pages/page-settings").then(({ PageSettings }) => ({ default: PageSettings })),
+);
+const AsyncPageMetrics = lazy(() =>
+  import("../pages/page-metrics").then(({ PageMetrics }) => ({ default: PageMetrics })),
+);
+const AsyncPageKitchenSink = lazy(() =>
+  import("../pages/page-kitchen-sink").then(({ PageKitchenSink }) => ({ default: PageKitchenSink })),
+);
 // oxlint-enable max-nested-callbacks
 
 export function AppRoutes() {

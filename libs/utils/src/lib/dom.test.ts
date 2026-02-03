@@ -1,5 +1,27 @@
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
-import { backdrop, css, div, dom, em, findAll, findOne, h1, h2, h3, icon, img, li, link, scrollToHeightSync, small, strong, text, tw, ul, waitToDetect } from "./dom.js";
+import {
+  backdrop,
+  css,
+  div,
+  dom,
+  em,
+  findAll,
+  findOne,
+  h1,
+  h2,
+  h3,
+  icon,
+  img,
+  li,
+  link,
+  scrollToHeightSync,
+  small,
+  strong,
+  text,
+  tw,
+  ul,
+  waitToDetect,
+} from "./dom.js";
 import { Result } from "./result.js";
 
 if (!GlobalRegistrator.isRegistered) {

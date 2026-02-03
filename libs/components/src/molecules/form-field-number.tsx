@@ -5,8 +5,18 @@ import { Input } from "../atoms/input";
 import { getFieldMetadataOrThrow, isZodNumber } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 
-function NumberInput({ field, disabled, placeholder }: { field: ControllerRenderProps; disabled: boolean; placeholder?: string }) {
-  const [localValue, setLocalValue] = useState(() => (field.value === undefined || field.value === null ? "" : String(field.value)));
+function NumberInput({
+  field,
+  disabled,
+  placeholder,
+}: {
+  field: ControllerRenderProps;
+  disabled: boolean;
+  placeholder?: string;
+}) {
+  const [localValue, setLocalValue] = useState(() =>
+    field.value === undefined || field.value === null ? "" : String(field.value),
+  );
 
   return (
     <FormControl>
@@ -34,5 +44,9 @@ export function FormFieldNumber({ fieldName, fieldSchema, isOptional, logger, re
     throw new Error(`Field "${fieldName}" is not a number`);
   }
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
-  return <FormFieldBase {...props}>{({ field }) => <NumberInput disabled={isDisabled} field={field} placeholder={placeholder} />}</FormFieldBase>;
+  return (
+    <FormFieldBase {...props}>
+      {({ field }) => <NumberInput disabled={isDisabled} field={field} placeholder={placeholder} />}
+    </FormFieldBase>
+  );
 }

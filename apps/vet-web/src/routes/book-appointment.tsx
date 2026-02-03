@@ -50,7 +50,17 @@ function Form({ input }: { input: Input }) {
   const onSubmit = () => mockSubmit("success", "Appointment booked successfully!");
   return (
     <div className="flex flex-col gap-4">
-      {schemas.length > 0 && <AutoForm initialData={input.formData} onSubmit={onSubmit} schemas={schemas} showLastStep showMenu={true} useSubmissionStep useSummaryStep />}
+      {schemas.length > 0 && (
+        <AutoForm
+          initialData={input.formData}
+          onSubmit={onSubmit}
+          schemas={schemas}
+          showLastStep
+          showMenu={true}
+          useSubmissionStep
+          useSummaryStep
+        />
+      )}
       <DebugData data={input} isGhost title="Input" />
     </div>
   );

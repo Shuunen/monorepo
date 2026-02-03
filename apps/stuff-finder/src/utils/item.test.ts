@@ -3,7 +3,22 @@ import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { alignForSnap, clone, nbMsInMinute, Result, sleep } from "@monorepo/utils";
 import { databaseMock } from "./database.mock";
 import { removeAppWriteFields } from "./database.utils";
-import { addItem, areItemsEquivalent, boxStringToBox, deleteItem, drawerStringToDrawer, formToItem, getItems, isDataOlderThan, itemBoxToRoom, itemForm, itemToForm, itemToLocation, statusStringToStatus, updateItem } from "./item.utils";
+import {
+  addItem,
+  areItemsEquivalent,
+  boxStringToBox,
+  deleteItem,
+  drawerStringToDrawer,
+  formToItem,
+  getItems,
+  isDataOlderThan,
+  itemBoxToRoom,
+  itemForm,
+  itemToForm,
+  itemToLocation,
+  statusStringToStatus,
+  updateItem,
+} from "./item.utils";
 import { logger } from "./logger.utils";
 import { mockFetch, mockItem, mockState } from "./mock.utils";
 
@@ -33,7 +48,13 @@ describe("item.utils", () => {
     const result = await addItem(item, state);
     expect(result.ok).toBe(true); // should be a success to have added the item remotely & locally
     expect(result).toMatchSnapshot();
-    expect(databaseMock.createDocument).toHaveBeenNthCalledWith(1, "databaseA", "collectionA", "reference-b", removeAppWriteFields(item));
+    expect(databaseMock.createDocument).toHaveBeenNthCalledWith(
+      1,
+      "databaseA",
+      "collectionA",
+      "reference-b",
+      removeAppWriteFields(item),
+    );
     expect(state.items).toHaveLength(3); // because we just added a new item, the number of items should increase
   });
 
@@ -45,7 +66,13 @@ describe("item.utils", () => {
     const result = await updateItem(item1, state);
     expect(result.ok).toBe(true); // should be a success to have updated the item remotely & locally
     expect(result).toMatchSnapshot();
-    expect(databaseMock.updateDocument).toHaveBeenNthCalledWith(1, "databaseA", "collectionA", "1", removeAppWriteFields(item1));
+    expect(databaseMock.updateDocument).toHaveBeenNthCalledWith(
+      1,
+      "databaseA",
+      "collectionA",
+      "1",
+      removeAppWriteFields(item1),
+    );
     expect(state.items).toHaveLength(2); // because we just updated an existing item, the number of items should not change
   });
 
@@ -74,7 +101,9 @@ describe("item.utils", () => {
     const result = await deleteItem(itemA, stateA);
     expect(result.ok).toBe(true);
     expect(databaseMock.deleteDocument).toHaveBeenNthCalledWith(1, "databaseA", "collectionA", "itemA");
-    expect(JSON.stringify(Result.unwrap(result).value)).toMatchInlineSnapshot(`"{"$id":"itemA","collectionId":"collectionA","databaseId":"databaseA","isThisMockedDataFromMock":true}"`);
+    expect(JSON.stringify(Result.unwrap(result).value)).toMatchInlineSnapshot(
+      `"{"$id":"itemA","collectionId":"collectionA","databaseId":"databaseA","isThisMockedDataFromMock":true}"`,
+    );
     logger.enable();
   });
 

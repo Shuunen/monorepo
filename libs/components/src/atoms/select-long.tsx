@@ -33,12 +33,14 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const selectedStringValue = props.value === null || props.value === undefined ? undefined : valueToString(props.value);
+  const selectedStringValue =
+    props.value === null || props.value === undefined ? undefined : valueToString(props.value);
 
   const filterable = props.options.length > minValuesForFilter;
 
   // Hide, don't remove because of radix behaviours
-  const isOptionVisible = (option: Option) => !filterable || props.getLabel(option).toLowerCase().includes(search.toLowerCase());
+  const isOptionVisible = (option: Option) =>
+    !filterable || props.getLabel(option).toLowerCase().includes(search.toLowerCase());
 
   const handleSelectChange = (strValue: string) => {
     const selectedOption = props.options.find(opt => String(props.getValue(opt)) === strValue);
@@ -80,13 +82,29 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
   const visibleCount = props.options.filter(isOptionVisible).length;
 
   return (
-    <Select disabled={props.disabled} name={props.name} value={selectedStringValue} onValueChange={handleSelectChange} onOpenChange={handleOpenChange}>
+    <Select
+      disabled={props.disabled}
+      name={props.name}
+      value={selectedStringValue}
+      onValueChange={handleSelectChange}
+      onOpenChange={handleOpenChange}
+    >
       <div className="relative">
-        <SelectTrigger name={props.name} className={cn(props.className, props.clearable && Boolean(selectedStringValue) && "gap-9")}>
+        <SelectTrigger
+          name={props.name}
+          className={cn(props.className, props.clearable && Boolean(selectedStringValue) && "gap-9")}
+        >
           <SelectValue placeholder={props.placeholder || "Select an option"} />
         </SelectTrigger>
         {props.clearable && Boolean(selectedStringValue) && (
-          <Button size="icon" name={`${props.name}-clear`} type="button" variant="ghost" className="absolute right-7 -translate-y-9" onClick={handleClear}>
+          <Button
+            size="icon"
+            name={`${props.name}-clear`}
+            type="button"
+            variant="ghost"
+            className="absolute right-7 -translate-y-9"
+            onClick={handleClear}
+          >
             <IconX />
           </Button>
         )}
@@ -111,7 +129,9 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
             <SelectSeparator />
           </div>
         )}
-        {visibleCount === 0 && filterable ? <div className="p-3 text-sm text-muted-foreground">No options found.</div> : undefined}
+        {visibleCount === 0 && filterable ? (
+          <div className="p-3 text-sm text-muted-foreground">No options found.</div>
+        ) : undefined}
 
         {props.options.map(option => {
           const label = props.getLabel(option);

@@ -302,7 +302,12 @@ export class Logger {
    * @example logger.result("another operation", result, 'success', 'warn')
    */
   // oxlint-disable-next-line max-params
-  public result(message: string, result: ResultType<unknown, unknown>, okLevel: "info" | "success" = "info", errorLevel: "error" | "warn" = "error") {
+  public result(
+    message: string,
+    result: ResultType<unknown, unknown>,
+    okLevel: "info" | "success" = "info",
+    errorLevel: "error" | "warn" = "error",
+  ) {
     if (result.ok) {
       this[okLevel](message, "result was ok and returned :", result.value);
     } else {
@@ -320,7 +325,12 @@ export class Logger {
    * @example logger.showResult("another operation", result, 'success', 'warn')
    */
   // oxlint-disable-next-line max-params
-  public showResult(message: string, result: ResultType<unknown, unknown>, okLevel: "info" | "success" = "info", errorLevel: "error" | "warn" = "error") {
+  public showResult(
+    message: string,
+    result: ResultType<unknown, unknown>,
+    okLevel: "info" | "success" = "info",
+    errorLevel: "error" | "warn" = "error",
+  ) {
     this.result(message, result, okLevel, errorLevel);
     /* v8 ignore next 7 -- @preserve */
     if (isBrowserEnvironment()) {

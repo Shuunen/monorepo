@@ -1,5 +1,15 @@
 import { Button } from "@monorepo/components";
-import { copyToClipboard, debounce, functionReturningVoid, objectSerialize, off, on, parseJson, Result, readClipboard } from "@monorepo/utils";
+import {
+  copyToClipboard,
+  debounce,
+  functionReturningVoid,
+  objectSerialize,
+  off,
+  on,
+  parseJson,
+  Result,
+  readClipboard,
+} from "@monorepo/utils";
 import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { alignClipboard, type Form, updateForm, validateForm } from "../utils/forms.utils";
 import { logger } from "../utils/logger.utils";
@@ -18,7 +28,14 @@ type Properties<FormType extends Form> = Readonly<{
 }>;
 
 // oxlint-disable-next-line max-lines-per-function
-export function AppForm<FormType extends Form>({ children, error: parentError = "", initialForm, onChange = functionReturningVoid, onSubmit = undefined, suggestions = {} }: Properties<FormType>) {
+export function AppForm<FormType extends Form>({
+  children,
+  error: parentError = "",
+  initialForm,
+  onChange = functionReturningVoid,
+  onSubmit = undefined,
+  suggestions = {},
+}: Properties<FormType>) {
   const [form, setForm] = useState(initialForm);
 
   const { hasChanged, updatedForm } = validateForm(form);
@@ -59,7 +76,8 @@ export function AppForm<FormType extends Form>({ children, error: parentError = 
     if (rawClip.value === "") return Result.ok("clipboard is empty");
     const clip = alignClipboard(rawClip.value);
     const { error, value } = Result.unwrap(parseJson(clip));
-    if (error || typeof value !== "object" || value === null) return Result.error(`error parsing clipboard data : ${objectSerialize({ clip, error, rawClip, value })}`);
+    if (error || typeof value !== "object" || value === null)
+      return Result.error(`error parsing clipboard data : ${objectSerialize({ clip, error, rawClip, value })}`);
     const { hasChanged, updatedForm } = updateForm(form, value);
     if (!hasChanged) return Result.ok("no changes made");
     setForm(updatedForm);
@@ -68,8 +86,10 @@ export function AppForm<FormType extends Form>({ children, error: parentError = 
   }, [form]);
 
   useEffect(() => {
-    // oxlint-disable-next-line max-nested-callbacks
-    const handler = on("focus", () => checkDataInClipboard().then(result => logger.result("clipboard data checked on focus", result)));
+    const handler = on("focus", () =>
+      // oxlint-disable-next-line max-nested-callbacks
+      checkDataInClipboard().then(result => logger.result("clipboard data checked on focus", result)),
+    );
     if (document.hasFocus())
       checkDataInClipboard()
         .then(result => logger.result("clipboard data checked on initial focus", result))
@@ -81,12 +101,22 @@ export function AppForm<FormType extends Form>({ children, error: parentError = 
   const canSubmit = form.isValid && form.isTouched && errorMessage.length === 0;
 
   return (
-    <form autoComplete="off" className={`grid w-full gap-6 md:min-w-176 ${gridClass(form.columns)}`} noValidate={true} onSubmit={onFormSubmit} spellCheck={false}>
+    <form
+      autoComplete="off"
+      className={`grid w-full gap-6 md:min-w-176 ${gridClass(form.columns)}`}
+      noValidate={true}
+      onSubmit={onFormSubmit}
+      spellCheck={false}
+    >
       {Object.entries(form.fields).map(([id, field]) => (
         <div className={`grid w-full ${field.isVisible ? "" : "hidden"} ${colSpanClass(field.columns)}`} key={id}>
-          {field.type === "text" && <AppFormFieldText field={field} form={form} id={id} suggestions={suggestions} updateField={updateField} />}
+          {field.type === "text" && (
+            <AppFormFieldText field={field} form={form} id={id} suggestions={suggestions} updateField={updateField} />
+          )}
           {field.type === "checkbox" && <AppFormFieldCheckbox field={field} id={id} updateField={updateField} />}
-          {field.type === "select" && <AppFormFieldSelect field={field} form={form} id={id} updateField={updateField} />}
+          {field.type === "select" && (
+            <AppFormFieldSelect field={field} form={form} id={id} updateField={updateField} />
+          )}
         </div>
       ))}
       <div className="order-last flex justify-center md:col-span-full">

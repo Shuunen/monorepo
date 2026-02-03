@@ -48,7 +48,9 @@ function updateTsConfig(appName: string): void {
   const tsConfig = JSON.parse(readFileSync(tsConfigPath, "utf8"));
   tsConfig.references.push({ path: `./apps/${appName}` });
   // sort the references array for nicer git diffs
-  tsConfig.references.sort((referenceA: { path: string }, referenceB: { path: string }) => referenceA.path.localeCompare(referenceB.path));
+  tsConfig.references.sort((referenceA: { path: string }, referenceB: { path: string }) =>
+    referenceA.path.localeCompare(referenceB.path),
+  );
   writeFileSync(tsConfigPath, JSON.stringify(tsConfig, undefined, nbSpacesIndent));
   logger.debug(`Updated tsconfig.json`);
 }
@@ -64,7 +66,9 @@ function addApp(appName: string): void {
   updateTsConfig(appName);
   installDependencies();
   logger.success(`Created a new app in ${green(`apps/${appName}`)} 👌`);
-  logger.info(`You can now run your app with ${green(`nx dev ${appName}`)} or do any other usual command you like : build, test, etc.`);
+  logger.info(
+    `You can now run your app with ${green(`nx dev ${appName}`)} or do any other usual command you like : build, test, etc.`,
+  );
 }
 
 if (appName) addApp(appName);

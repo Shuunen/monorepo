@@ -16,7 +16,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: "A file upload field component with progress tracking, validation, and error handling. Integrates with AutoForm for automatic form generation.",
+        component:
+          "A file upload field component with progress tracking, validation, and error handling. Integrates with AutoForm for automatic form generation.",
       },
     },
     layout: "centered",
@@ -181,7 +182,8 @@ export const ResponsiveLayout: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Demonstrates the FormFieldUpload responsiveness across different viewport sizes. Resize your browser window or use the viewport toolbar to see how the component adapts to mobile, tablet, and desktop screens.",
+        story:
+          "Demonstrates the FormFieldUpload responsiveness across different viewport sizes. Resize your browser window or use the viewport toolbar to see how the component adapts to mobile, tablet, and desktop screens.",
       },
     },
     layout: "padded",

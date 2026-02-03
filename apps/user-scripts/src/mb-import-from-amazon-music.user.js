@@ -45,7 +45,20 @@ function MbImportFromAmazonMusic() {
     // biome-ignore lint/performance/useTopLevelRegex: FIX me later
     const dateMatches = details.match(/origine : (?<day>\d{1,2}) (?<month>\S+) (?<year>\d{4})/u);
     if (dateMatches?.groups?.year) {
-      const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+      const months = [
+        "janvier",
+        "février",
+        "mars",
+        "avril",
+        "mai",
+        "juin",
+        "juillet",
+        "août",
+        "septembre",
+        "octobre",
+        "novembre",
+        "décembre",
+      ];
       data.date.year = dateMatches.groups.year;
       data.date.month = String(months.indexOf(dateMatches.groups.month) + 1);
       data.date.day = dateMatches.groups.day;

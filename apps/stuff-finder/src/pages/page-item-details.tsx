@@ -13,7 +13,15 @@ export function PageItemDetails() {
   logger.debug("PageItemDetails", { item });
   const stepsBack = context === "single" ? 2 : 1; // oxlint-disable-line @typescript-eslint/no-magic-numbers
   return (
-    <AppPageCard cardTitle="Details" icon={ManageSearchIcon} nextLabel="Edit" nextUrl={`/item/edit/${item.$id}`} pageCode="item-details" pageTitle={`${item.name} - Details`} stepsBack={stepsBack}>
+    <AppPageCard
+      cardTitle="Details"
+      icon={ManageSearchIcon}
+      nextLabel="Edit"
+      nextUrl={`/item/edit/${item.$id}`}
+      pageCode="item-details"
+      pageTitle={`${item.name} - Details`}
+      stepsBack={stepsBack}
+    >
       <AppItemDetails item={item} />
     </AppPageCard>
   );

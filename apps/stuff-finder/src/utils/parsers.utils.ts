@@ -1,5 +1,18 @@
 // oxlint-disable no-null, no-magic-numbers
-import { array, boolean, fallback, maxLength, minValue, nonEmpty, nullish, number, object, picklist, pipe, string } from "valibot";
+import {
+  array,
+  boolean,
+  fallback,
+  maxLength,
+  minValue,
+  nonEmpty,
+  nullish,
+  number,
+  object,
+  picklist,
+  pipe,
+  string,
+} from "valibot";
 import { itemBoxes, itemStatus, uuidMaxLength } from "../constants";
 
 const itemRequiredStringSchema = pipe(string(), nonEmpty());

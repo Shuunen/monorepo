@@ -22,7 +22,13 @@ export function AutoFormNavigation({ leftButton, centerButton, rightButton }: Au
   return (
     <div className="flex justify-between gap-2 pt-6">
       {leftButton ? (
-        <Button disabled={leftButton.disabled} name="step-back" onClick={leftButton.onClick} type="button" variant="outline">
+        <Button
+          disabled={leftButton.disabled}
+          name="step-back"
+          onClick={leftButton.onClick}
+          type="button"
+          variant="outline"
+        >
           Back
         </Button>
       ) : (
@@ -30,12 +36,23 @@ export function AutoFormNavigation({ leftButton, centerButton, rightButton }: Au
       )}
       <div className="flex gap-2">
         {centerButton && (
-          <Button disabled={centerButton.disabled} name="step-cancel" onClick={centerButton.onClick} type="button" variant="outline">
+          <Button
+            disabled={centerButton.disabled}
+            name="step-cancel"
+            onClick={centerButton.onClick}
+            type="button"
+            variant="outline"
+          >
             Cancel
           </Button>
         )}
         {rightButton && (
-          <Button disabled={rightButton.disabled} name={rightButton.name} onClick={rightButton.onClick} type={rightButton.type || "button"}>
+          <Button
+            disabled={rightButton.disabled}
+            name={rightButton.name}
+            onClick={rightButton.onClick}
+            type={rightButton.type || "button"}
+          >
             {rightButton.label}
           </Button>
         )}

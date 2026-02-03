@@ -13,15 +13,24 @@ type Properties = Readonly<{
 
 export function AppFormFieldText({ field, form, id, suggestions, updateField }: Properties) {
   const onChange = useCallback(
-    (event: React.SyntheticEvent, _value: string | null) => {
+    (event: React.SyntheticEvent<Element, Event>) => {
       updateField(id, event.target);
     },
     [id, updateField],
   );
 
   const renderInput = useCallback(
-    // @ts-expect-error typing issue
-    (parameters: AutocompleteRenderInputParams) => <TextField {...parameters} error={Boolean(form.isTouched) && !field.isValid} label={field.label} onChange={onChange} required={field.isRequired} value={field.value} variant="standard" />,
+    (parameters: AutocompleteRenderInputParams) => (
+      <TextField
+        {...parameters}
+        error={Boolean(form.isTouched) && !field.isValid}
+        label={field.label}
+        onChange={onChange}
+        required={field.isRequired}
+        value={field.value}
+        variant="standard"
+      />
+    ),
     [form.isTouched, field.isValid, field.isRequired, field.label, onChange, field.value],
   );
 
@@ -29,5 +38,14 @@ export function AppFormFieldText({ field, form, id, suggestions, updateField }: 
 
   const options = suggestions?.[id] ?? emptySuggestions;
 
-  return <Autocomplete freeSolo id={id} onChange={onChange} options={options} renderInput={renderInput} value={field.value} />;
+  return (
+    <Autocomplete
+      freeSolo
+      id={id}
+      onChange={onChange}
+      options={options}
+      renderInput={renderInput}
+      value={field.value}
+    />
+  );
 }

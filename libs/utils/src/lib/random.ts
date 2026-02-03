@@ -53,7 +53,18 @@ export function randomNumber(min = 0, max = 100) {
  */
 export function randomPerson() {
   const first = pickOne(["Michael", "Dwight", "Jim", "Pam", "Ryan", "Andy", "Kevin", "Angela", "Oscar", "Toby"]);
-  const last = pickOne(["Scott", "Schrute", "Halpert", "Beesly", "Howard", "Bernard", "Malone", "Martin", "Martinez", "Flenderson"]);
+  const last = pickOne([
+    "Scott",
+    "Schrute",
+    "Halpert",
+    "Beesly",
+    "Howard",
+    "Bernard",
+    "Malone",
+    "Martin",
+    "Martinez",
+    "Flenderson",
+  ]);
   return {
     // oxlint-disable-next-line no-magic-numbers
     age: randomNumber(18, 65),

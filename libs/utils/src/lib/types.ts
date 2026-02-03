@@ -39,7 +39,11 @@ export type NavigatorExtract = {
 };
 
 export type RecursivePartial<Type> = {
-  [Key in keyof Type]?: Type[Key] extends (infer Under)[] ? RecursivePartial<Under>[] : Type[Key] extends Record<string, unknown> ? RecursivePartial<Type[Key]> : Type[Key];
+  [Key in keyof Type]?: Type[Key] extends (infer Under)[]
+    ? RecursivePartial<Under>[]
+    : Type[Key] extends Record<string, unknown>
+      ? RecursivePartial<Type[Key]>
+      : Type[Key];
 };
 
 export type PackageJson = {

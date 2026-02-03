@@ -9,7 +9,10 @@ import { flatten } from "./object-flatten.js";
  * @returns The filled string, e.g. "Hello world !"
  */
 
-export function fillTemplate(template: Readonly<Record<string, unknown>> | string, data?: Readonly<Record<string, unknown>>) {
+export function fillTemplate(
+  template: Readonly<Record<string, unknown>> | string,
+  data?: Readonly<Record<string, unknown>>,
+) {
   // oxlint-enable require-param-description
   let string = typeof template === "object" ? JSON.stringify(template, undefined, nbSpacesIndent) : template;
   if (data === undefined) {

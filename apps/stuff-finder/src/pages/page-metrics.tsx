@@ -34,7 +34,9 @@ const MetricCard = memo(function MetricCard(props: MetricCardProps) {
   const isHidden = items?.length === 0;
 
   return (
-    <div className={`relative flex gap-6 rounded-lg border border-gray-200 bg-white p-6 whitespace-nowrap shadow-sm ${color} ${isHidden ? "hidden" : ""}`}>
+    <div
+      className={`relative flex gap-6 rounded-lg border border-gray-200 bg-white p-6 whitespace-nowrap shadow-sm ${color} ${isHidden ? "hidden" : ""}`}
+    >
       {amount && Icon && (
         <div className="flex items-center">
           <Icon className="opacity-30" sx={{ fontSize: "3rem" }} />
@@ -45,7 +47,15 @@ const MetricCard = memo(function MetricCard(props: MetricCardProps) {
         <h2 className="text-xl font-semibold text-current">{title}</h2>
         {(children || items) && (
           <div className="max-h-96 space-y-3 overflow-y-auto">
-            {items && <AppItemList display="list" items={items} loadingItemIds={loadingItemIds} onSelection={onSelection} showPrice={showPrice ?? false} />}
+            {items && (
+              <AppItemList
+                display="list"
+                items={items}
+                loadingItemIds={loadingItemIds}
+                onSelection={onSelection}
+                showPrice={showPrice ?? false}
+              />
+            )}
             {!items && children}
           </div>
         )}
@@ -72,7 +82,14 @@ function removeItemsFromList(items: Item[], itemIds: string[]) {
   return items.filter(item => !itemIdsSet.has(item.$id));
 }
 
-async function updateItemsConcurrently(itemsToUpdate: Item[], price: number, options: { removeItemFromLists: (itemIds: string[]) => void; setLoadingItemIds: (itemId: Item["$id"][] | undefined) => void }) {
+async function updateItemsConcurrently(
+  itemsToUpdate: Item[],
+  price: number,
+  options: {
+    removeItemFromLists: (itemIds: string[]) => void;
+    setLoadingItemIds: (itemId: Item["$id"][] | undefined) => void;
+  },
+) {
   if (itemsToUpdate.length === 0) return;
   const ids = itemsToUpdate.map(item => item.$id);
   options.setLoadingItemIds(ids);
@@ -91,7 +108,9 @@ async function updateItemsConcurrently(itemsToUpdate: Item[], price: number, opt
   if (successfulUpdates.length > 0) {
     const successfulItemIds = successfulUpdates.map(result => result.item.$id);
     options.removeItemFromLists(successfulItemIds);
-    logger.showSuccess(`Updated ${successfulUpdates.length} item${successfulUpdates.length > 1 ? "s" : ""} with price ${price}€`);
+    logger.showSuccess(
+      `Updated ${successfulUpdates.length} item${successfulUpdates.length > 1 ? "s" : ""} with price ${price}€`,
+    );
   }
 
   options.setLoadingItemIds(undefined);
@@ -109,7 +128,8 @@ const MetricCardMissingPriceList = memo(function MetricCardMissingPriceList({ me
 
   useEffect(() => {
     if (itemsToDisplay.length === metrics.itemsWithoutPrice.length) return;
-    const updateSelection = (currentSelection: Item[]) => filterSelectionByDisplayItems(currentSelection, itemsToDisplay);
+    const updateSelection = (currentSelection: Item[]) =>
+      filterSelectionByDisplayItems(currentSelection, itemsToDisplay);
     setSelection(updateSelection);
   }, [itemsToDisplay, metrics.itemsWithoutPrice.length]);
 
@@ -136,7 +156,13 @@ const MetricCardMissingPriceList = memo(function MetricCardMissingPriceList({ me
   );
 
   return (
-    <MetricCard color={tw("text-red-600")} items={itemsToDisplay} loadingItemIds={loadingItemIds} onSelection={onSelection} title={`Items without price : ${itemsToDisplay.length}`}>
+    <MetricCard
+      color={tw("text-red-600")}
+      items={itemsToDisplay}
+      loadingItemIds={loadingItemIds}
+      onSelection={onSelection}
+      title={`Items without price : ${itemsToDisplay.length}`}
+    >
       {selection.length > 0 && (
         <>
           <p>Set price for the {selection.length > 1 ? `${selection.length} selected items` : "selected item"} :</p>
@@ -153,6 +179,7 @@ const MetricCardMissingPriceList = memo(function MetricCardMissingPriceList({ me
   );
 });
 
+// oxlint-disable-next-line max-lines-per-function
 export function PageMetrics({ ...properties }: Readonly<Record<string, unknown>>) {
   logger.debug("PageMetrics", { properties });
   const metrics = useMemo(() => calculateMetrics(state.items), []);
@@ -161,25 +188,67 @@ export function PageMetrics({ ...properties }: Readonly<Record<string, unknown>>
       <div className="flex flex-col">
         {/* Amounts */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <MetricCard amount={metrics.totalItems} color={tw("text-purple-700")} icon={SpeedIcon} title="items registered" />
-          <MetricCard amount={metrics.itemsToGive.length} color={tw("text-green-600")} icon={OutboxIcon} title="items to give" />
-          <MetricCard amount={formatCurrency(metrics.totalValue)} color={tw("text-blue-600")} icon={ShoppingCartIcon} title="total value" />
+          <MetricCard
+            amount={metrics.totalItems}
+            color={tw("text-purple-700")}
+            icon={SpeedIcon}
+            title="items registered"
+          />
+          <MetricCard
+            amount={metrics.itemsToGive.length}
+            color={tw("text-green-600")}
+            icon={OutboxIcon}
+            title="items to give"
+          />
+          <MetricCard
+            amount={formatCurrency(metrics.totalValue)}
+            color={tw("text-blue-600")}
+            icon={ShoppingCartIcon}
+            title="total value"
+          />
         </div>
         {/* Lists */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <MetricCard color={tw("text-red-600")} items={metrics.itemsNotPrinted} title={`Items not printed : ${metrics.itemsNotPrinted.length}`} />
-          <MetricCard color={tw("text-red-600")} items={metrics.itemsWithoutLocation} showPrice={true} title={`Items without location : ${metrics.itemsWithoutLocation.length}`} />
-          <MetricCard color={tw("text-red-600")} items={metrics.itemsWithoutPhoto} title={`Items without photo : ${metrics.itemsWithoutPhoto.length}`} />
+          <MetricCard
+            color={tw("text-red-600")}
+            items={metrics.itemsNotPrinted}
+            title={`Items not printed : ${metrics.itemsNotPrinted.length}`}
+          />
+          <MetricCard
+            color={tw("text-red-600")}
+            items={metrics.itemsWithoutLocation}
+            showPrice={true}
+            title={`Items without location : ${metrics.itemsWithoutLocation.length}`}
+          />
+          <MetricCard
+            color={tw("text-red-600")}
+            items={metrics.itemsWithoutPhoto}
+            title={`Items without photo : ${metrics.itemsWithoutPhoto.length}`}
+          />
           <MetricCardMissingPriceList metrics={metrics} />
           <MetricCard color={tw("text-blue-700")} title="Storage locations">
             {Object.entries(metrics.boxAnalysis)
               .toSorted((entryA, entryB) => entryA[0].localeCompare(entryB[0]))
               .map(([box, data]) => (
-                <MetricCardEntry key={box} subtitle={`${data.count} items`} title={box || "No box specified"} value={formatCurrency(data.totalValue)} />
+                <MetricCardEntry
+                  key={box}
+                  subtitle={`${data.count} items`}
+                  title={box || "No box specified"}
+                  value={formatCurrency(data.totalValue)}
+                />
               ))}
           </MetricCard>
-          <MetricCard color={tw("text-green-700")} items={metrics.topValueItems} showPrice={true} title={`Top ${topValueItems} most valuable`} />
-          <MetricCard color={tw("text-yellow-700")} items={metrics.itemsToGive} title={`Items to give : ${metrics.itemsToGive.length}`} />
+          <MetricCard
+            color={tw("text-green-700")}
+            items={metrics.topValueItems}
+            showPrice={true}
+            title={`Top ${topValueItems} most valuable`}
+          />
+          <MetricCard
+            color={tw("text-yellow-700")}
+            items={metrics.itemsToGive}
+            title={`Items to give : ${metrics.itemsToGive.length}`}
+          />
         </div>
       </div>
     </AppPageCard>

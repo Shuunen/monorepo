@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { emptyFile, formatFileSize, imageExtensions, imageSchemaOptional, imageSchemaRequired } from "./form-field-upload.const";
+import {
+  emptyFile,
+  formatFileSize,
+  imageExtensions,
+  imageSchemaOptional,
+  imageSchemaRequired,
+} from "./form-field-upload.const";
 
 describe(formatFileSize, () => {
   describe("without unit parameter", () => {
@@ -137,6 +143,8 @@ describe("zod schema imageSchemaRequired", () => {
     const file = new File([""], "test-file.exe", { type: "application/x-msdownload" });
     const result = imageSchemaRequired.safeParse(file);
     expect(result.success).toBe(false);
-    expect(result.error?.issues[0].message).toMatchInlineSnapshot(`"File extension not allowed, accepted : jpg, jpeg, png, pdf"`);
+    expect(result.error?.issues[0].message).toMatchInlineSnapshot(
+      `"File extension not allowed, accepted : jpg, jpeg, png, pdf"`,
+    );
   });
 });

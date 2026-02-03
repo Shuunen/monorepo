@@ -1,6 +1,22 @@
 import * as fs from "node:fs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { checkFile, checkFiles, cleanFileName, count, currentFolder, deleteFile, fileExists, getFiles, logger, options, renameFile, resetCount, shouldDelete, showReport, start } from "./clean-ytdl.cli";
+import {
+  checkFile,
+  checkFiles,
+  cleanFileName,
+  count,
+  currentFolder,
+  deleteFile,
+  fileExists,
+  getFiles,
+  logger,
+  options,
+  renameFile,
+  resetCount,
+  shouldDelete,
+  showReport,
+  start,
+} from "./clean-ytdl.cli";
 
 // Mock node:fs functions
 vi.mock("node:fs", () => ({
@@ -185,7 +201,9 @@ describe("clean-ytdl", () => {
     count.renamed = 3;
     count.skipped = 2;
     showReport();
-    expect(logger.inMemoryLogs.join(",").trim()).toMatchInlineSnapshot(`"info 5 files deleted, info 3 files renamed, info 2 files skipped (no changes needed)"`);
+    expect(logger.inMemoryLogs.join(",").trim()).toMatchInlineSnapshot(
+      `"info 5 files deleted, info 3 files renamed, info 2 files skipped (no changes needed)"`,
+    );
   });
 
   it("showReport B should show count with dry mode messaging", () => {
@@ -194,7 +212,9 @@ describe("clean-ytdl", () => {
     count.renamed = 3;
     count.skipped = 2;
     showReport();
-    expect(logger.inMemoryLogs.join(",").trim()).toMatchInlineSnapshot(`"info 5 files should be deleted, info 3 files should be renamed, info 2 files skipped (no changes needed)"`);
+    expect(logger.inMemoryLogs.join(",").trim()).toMatchInlineSnapshot(
+      `"info 5 files should be deleted, info 3 files should be renamed, info 2 files skipped (no changes needed)"`,
+    );
   });
 
   it("resetCount A should reset all count values to zero", () => {

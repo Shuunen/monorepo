@@ -1,4 +1,11 @@
-import { browserContext, browserReport, getBrowser, getOperatingSystem, getVersion, isMobile } from "./browser-scout.js";
+import {
+  browserContext,
+  browserReport,
+  getBrowser,
+  getOperatingSystem,
+  getVersion,
+  isMobile,
+} from "./browser-scout.js";
 
 const context = browserContext();
 
@@ -36,7 +43,8 @@ it("browser-scout B report", () => {
 });
 
 // Chrome 112 desktop Windows 10 x64
-const userAgentA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36";
+const userAgentA =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36";
 it("getBrowser A", () => {
   expect(getBrowser(userAgentA)).toMatchInlineSnapshot('"Chrome"');
 });
@@ -65,7 +73,8 @@ it("isMobile B", () => {
 });
 
 // Samsung Galaxy S22 Android 12
-const userAgentC = "Mozilla/5.0 (Linux; Android 12; SM-S906N Build/QP1A.190711.020; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.119 Mobile Safari/537.36";
+const userAgentC =
+  "Mozilla/5.0 (Linux; Android 12; SM-S906N Build/QP1A.190711.020; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.119 Mobile Safari/537.36";
 it("getBrowser C", () => {
   expect(getBrowser(userAgentC)).toMatchInlineSnapshot('"Chrome"');
 });
@@ -80,7 +89,8 @@ it("isMobile C", () => {
 });
 
 // iPhone 13 Pro Max iOS 15
-const userAgentD = "Mozilla/5.0 (iPhone14,3; U; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/19A346 Safari/602.1";
+const userAgentD =
+  "Mozilla/5.0 (iPhone14,3; U; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/19A346 Safari/602.1";
 it("getBrowser D", () => {
   expect(getBrowser(userAgentD)).toMatchInlineSnapshot('"Safari"');
 });
@@ -95,7 +105,8 @@ it("isMobile D", () => {
 });
 
 // Windows 10-based PC using Edge browser
-const userAgentE = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246";
+const userAgentE =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246";
 it("getBrowser E", () => {
   expect(getBrowser(userAgentE)).toMatchInlineSnapshot('"Edge"');
 });
@@ -110,7 +121,8 @@ it("isMobile E", () => {
 });
 
 // Chrome OS-based laptop using Chrome browser (Chromebook)
-const userAgentF = "Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36";
+const userAgentF =
+  "Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36";
 it("getBrowser F", () => {
   expect(getBrowser(userAgentF)).toMatchInlineSnapshot('"Chrome"');
 });
@@ -125,7 +137,8 @@ it("isMobile F", () => {
 });
 
 // Mac OS X-based computer using a Safari browser
-const userAgentG = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9";
+const userAgentG =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9";
 it("getBrowser G", () => {
   expect(getBrowser(userAgentG)).toMatchInlineSnapshot('"Safari"');
 });

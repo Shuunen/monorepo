@@ -7,7 +7,9 @@ function Index() {
     <div className="container mx-auto px-4 py-16">
       <div className="mb-12 flex flex-col items-center justify-center">
         <h1 className="text-center text-4xl font-bold text-primary">Medical Interface for Lovable Furballs</h1>
-        <p className="mt-4 max-w-2xl text-center text-xl text-gray-600">Providing the best care for your furry friends with our dedicated veterinary services</p>
+        <p className="mt-4 max-w-2xl text-center text-xl text-gray-600">
+          Providing the best care for your furry friends with our dedicated veterinary services
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">

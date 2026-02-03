@@ -38,7 +38,6 @@ export function replaceAndCheckById(string, id, replacement) {
  * @param folderPath the folder path
  * @returns The file content
  */
-// oxlint-disable-next-line no-undef
 export function safeRead(relativeFilepath, folderPath = process.cwd()) {
   const filepath = path.join(folderPath, relativeFilepath);
   const stats = statSync(filepath, { throwIfNoEntry: false });
@@ -65,7 +64,7 @@ const regex = {
  * @param folderPath the folder to extract data from
  * @returns {Object} the extracted data with color, description, name, and scope
  */
-// oxlint-disable-next-line no-undef, complexity
+// oxlint-disable-next-line complexity
 export function extractData(folderPath = process.cwd()) {
   const defaults = { color: "#024eb8", description: "A placeholder description", name: "unknown", scope: "JohnDoe" };
   const infos = [safeRead(".vscode/settings.json", folderPath), safeRead("package.json", folderPath)].join("\n");
@@ -75,7 +74,8 @@ export function extractData(folderPath = process.cwd()) {
   const scope = scopeAndName?.scope ?? defaults.scope;
   if (name === defaults.name) logger.error("Could not find a name for the project, using the default one :", name);
   const description = regex.description.exec(infos)?.groups?.description ?? defaults.description;
-  if (description === defaults.description) logger.error("Could not find a description for the project, using the default one :", description);
+  if (description === defaults.description)
+    logger.error("Could not find a description for the project, using the default one :", description);
   const color = regex.color.exec(infos)?.[0] ?? defaults.color;
   if (color === defaults.color) logger.warn("Could not find a color for the project, using the default one :", color);
   return { color, description, name, scope };

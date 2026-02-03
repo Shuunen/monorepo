@@ -28,8 +28,10 @@ function Autofill() {
     phone: atob("NjU4NDc2Nzg4"),
   };
   const selectors = {
-    login: 'input[id*="mail"], input[name*="mail"], input[name*="ogin"], input[type*="mail"], input[name*="user"], input[name*="ident"]',
-    phone: 'input[type*="phone"], input[name*="phone"], input[name*="mobile"], input[name*="tel"], input[inputmode="tel"]',
+    login:
+      'input[id*="mail"], input[name*="mail"], input[name*="ogin"], input[type*="mail"], input[name*="user"], input[name*="ident"]',
+    phone:
+      'input[type*="phone"], input[name*="phone"], input[name*="mobile"], input[name*="tel"], input[inputmode="tel"]',
     phoneCountry: '[id="areaCode-+33"]',
   };
   /**

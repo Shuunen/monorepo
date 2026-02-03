@@ -5,7 +5,10 @@ it("sortListsEntries A", () => {
 });
 
 it("sortListsEntries B", () => {
-  expect(sortListsEntries({ key: ["c", "a", "b"], key2: ["c", "a", "b"] })).toEqual({ key: ["", "a", "b", "c"], key2: ["", "a", "b", "c"] });
+  expect(sortListsEntries({ key: ["c", "a", "b"], key2: ["c", "a", "b"] })).toEqual({
+    key: ["", "a", "b", "c"],
+    key2: ["", "a", "b", "c"],
+  });
 });
 
 it("sortListsEntries C", () => {

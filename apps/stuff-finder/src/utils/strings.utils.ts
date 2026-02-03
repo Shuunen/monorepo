@@ -5,7 +5,19 @@ import { pickOne } from "@monorepo/utils";
  * @returns a random cool ascii face
  */
 export function coolAscii() {
-  return pickOne(["( ＾◡＾)", "♥‿♥", "八(＾□＾*)", "(◡ ‿ ◡ ✿)", "(=^ェ^=)", "ʕ •ᴥ•ʔ", "(*°∀°)", String.raw`\(-ㅂ-)/`, "ლ(╹◡╹ლ)", "ლ(o◡oლ)", "＼(＾O＾)／"]);
+  return pickOne([
+    "( ＾◡＾)",
+    "♥‿♥",
+    "八(＾□＾*)",
+    "(◡ ‿ ◡ ✿)",
+    "(=^ェ^=)",
+    "ʕ •ᴥ•ʔ",
+    "(*°∀°)",
+    String.raw`\(-ㅂ-)/`,
+    "ლ(╹◡╹ლ)",
+    "ლ(o◡oლ)",
+    "＼(＾O＾)／",
+  ]);
 }
 
 /**

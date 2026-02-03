@@ -14,6 +14,9 @@
 // @version      1.1.3
 // ==/UserScript==
 
+const pkgManagerRegex = /\b(?<provider>npm i|npm install|npx|yarn add).* (?<name>[^-][\w./@-]+)/iu;
+const onlineLibRegex = /(?<provider>unpkg\.com)\/(?<name>@?[\w./-]+)/iu;
+
 function BundlephobiaEverywhere() {
   const utils = new Shuutils("bdl-evr");
   /**
@@ -56,8 +59,7 @@ function BundlephobiaEverywhere() {
     }
     const copyBlock = utils.findOne(".lh-copy span");
     if (copyBlock) text = `${copyBlock.textContent}\n${text}`;
-    // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-    const name = (text.match(/\b(?<provider>npm i|npm install|npx|yarn add).* (?<name>[^-][\w./@-]+)/iu) || text.match(/(?<provider>unpkg\.com)\/(?<name>@?[\w./-]+)/iu))?.groups?.name;
+    const name = (text.match(pkgManagerRegex) || text.match(onlineLibRegex))?.groups?.name;
     if (name === undefined) {
       utils.warn("failed to find a npm package name in this page");
       return;

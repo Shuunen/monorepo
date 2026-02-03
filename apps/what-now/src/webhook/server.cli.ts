@@ -51,7 +51,23 @@ export function getHueColorBody(percent: number) {
   return JSON.stringify({ bri: 255, hue: getHueColor(percent), on: !isEverythingDone, sat: 255 });
 }
 
-export function jsonResponse({ ok, message, progress, response, data, remaining, nextTask }: { ok: boolean; message: string; progress: number; response: unknown; data: unknown; remaining: unknown; nextTask: unknown }) {
+export function jsonResponse({
+  ok,
+  message,
+  progress,
+  response,
+  data,
+  remaining,
+  nextTask,
+}: {
+  ok: boolean;
+  message: string;
+  progress: number;
+  response: unknown;
+  data: unknown;
+  remaining: unknown;
+  nextTask: unknown;
+}) {
   return JSON.stringify({ data, datetime: datetime(), message, nextTask, ok, progress, remaining, response });
 }
 
@@ -61,13 +77,28 @@ export function sendCorsHeaders(res: ServerResponse) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
 
-export function makeRequest({ url, method, payload }: { url: string; method: string; payload: string }): Promise<{ result: unknown; error: string | undefined }> {
+export function makeRequest({
+  url,
+  method,
+  payload,
+}: {
+  url: string;
+  method: string;
+  payload: string;
+}): Promise<{ result: unknown; error: string | undefined }> {
   return new Promise(resolve => {
     if (url.includes("fake-endpoint.local")) {
-      void resolve({ error: undefined, result: { message: "This is a fake endpoint response for testing.", success: true } });
+      void resolve({
+        error: undefined,
+        result: { message: "This is a fake endpoint response for testing.", success: true },
+      });
       return;
     }
-    const req = request(url, { headers: { "Content-Length": Buffer.byteLength(payload), "Content-Type": "application/json" }, method, rejectUnauthorized: false });
+    const req = request(url, {
+      headers: { "Content-Length": Buffer.byteLength(payload), "Content-Type": "application/json" },
+      method,
+      rejectUnauthorized: false,
+    });
     const data = "";
     req.on(
       "response",
@@ -79,7 +110,10 @@ export function makeRequest({ url, method, payload }: { url: string; method: str
   });
 }
 
-export function flattenResponse(resolve: (value: { result: unknown; error: string | undefined }) => void, getData: () => string) {
+export function flattenResponse(
+  resolve: (value: { result: unknown; error: string | undefined }) => void,
+  getData: () => string,
+) {
   return (res: IncomingMessage | PassThrough) => {
     let data = getData();
     res.on("data", (chunk: Buffer) => {
@@ -132,7 +166,13 @@ export function handlePostSetProgress(req: IncomingMessage, res: ServerResponse)
     })
     .catch(error => {
       log("error", context, `Error collecting request body: ${error?.message ?? error}`);
-      respondBadRequest({ message: "Failed to read request body", nextTask: undefined, progress: 0, remaining: undefined, res });
+      respondBadRequest({
+        message: "Failed to read request body",
+        nextTask: undefined,
+        progress: 0,
+        remaining: undefined,
+        res,
+      });
     });
 }
 
@@ -169,10 +209,32 @@ export function collectRequestBody(req: IncomingMessage | PassThrough): Promise<
 export function respondNotFound(res: ServerResponse) {
   log("warn", "respondNotFound", "Responding with 404 Not Found");
   res.writeHead(options.codes.notFound, { "Content-Type": "application/json" });
-  res.end(jsonResponse({ data: undefined, message: "Not Found", nextTask: undefined, ok: false, progress: 0, remaining: undefined, response: undefined }));
+  res.end(
+    jsonResponse({
+      data: undefined,
+      message: "Not Found",
+      nextTask: undefined,
+      ok: false,
+      progress: 0,
+      remaining: undefined,
+      response: undefined,
+    }),
+  );
 }
 
-export function respondBadRequest({ res, message, progress, nextTask, remaining }: { res: ServerResponse; message: string; progress: number; nextTask: unknown; remaining: unknown }) {
+export function respondBadRequest({
+  res,
+  message,
+  progress,
+  nextTask,
+  remaining,
+}: {
+  res: ServerResponse;
+  message: string;
+  progress: number;
+  nextTask: unknown;
+  remaining: unknown;
+}) {
   log("warn", "respondBadRequest", `Bad request, message : ${message}`);
   res.writeHead(options.codes.badRequest, { "Content-Type": "application/json" });
   res.end(jsonResponse({ data: undefined, message, nextTask, ok: false, progress, remaining, response: undefined }));
@@ -183,11 +245,17 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
   const context = "handleSetProgressRequest";
   log("info", context, "Handling set-progress request");
   const { progress, nextTask, remaining, error } = parseProgressBody(body);
-  log("info", context, `Parsed progress body: progress=${progress}, nextTask=${nextTask}, remaining=${remaining}, error=${error}`);
+  log(
+    "info",
+    context,
+    `Parsed progress body: progress=${progress}, nextTask=${nextTask}, remaining=${remaining}, error=${error}`,
+  );
   if (error) {
     log("warn", context, `Progress body error: ${error}`);
     res.writeHead(options.codes.badRequest, { "Content-Type": "application/json" });
-    res.end(jsonResponse({ data: undefined, message: error, nextTask, ok: false, progress, remaining, response: undefined }));
+    res.end(
+      jsonResponse({ data: undefined, message: error, nextTask, ok: false, progress, remaining, response: undefined }),
+    );
     return;
   }
   const hueEndpoint = process.env.HUE_ENDPOINT ?? "";
@@ -198,7 +266,13 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
   const trmnlEndpoint = process.env.TRMNL_ENDPOINT ?? "";
   if (!trmnlEndpoint) {
     log("error", context, "TRMNL_ENDPOINT not set in env variables");
-    return respondBadRequest({ message: "TRMNL_ENDPOINT not set in env variables", nextTask, progress, remaining, res });
+    return respondBadRequest({
+      message: "TRMNL_ENDPOINT not set in env variables",
+      nextTask,
+      progress,
+      remaining,
+      res,
+    });
   }
   const hueBody = getHueColorBody(progress);
   log("info", context, `Prepared hue body: ${hueBody}`);
@@ -211,7 +285,10 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
     },
   });
   log("info", context, `Prepared trmnl payload: ${trmnlPayload}`);
-  const [hueResult, trmnlResult] = await Promise.all([makeRequest({ method: "PUT", payload: hueBody, url: hueEndpoint }), makeRequest({ method: "POST", payload: trmnlPayload, url: trmnlEndpoint })]);
+  const [hueResult, trmnlResult] = await Promise.all([
+    makeRequest({ method: "PUT", payload: hueBody, url: hueEndpoint }),
+    makeRequest({ method: "POST", payload: trmnlPayload, url: trmnlEndpoint }),
+  ]);
   log("info", context, `Hue result: error=${hueResult.error}, result=${JSON.stringify(hueResult.result)}`);
   log("info", context, `Trmnl result: error=${trmnlResult.error}, result=${JSON.stringify(trmnlResult.result)}`);
   const ok = !hueResult.error && !trmnlResult.error;
@@ -220,7 +297,9 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
   res.end(
     jsonResponse({
       data: JSON.parse(hueBody),
-      message: ok ? "Emitted hue and trmnl color successfully" : `Error: ${hueResult.error ?? ""} ${trmnlResult.error ?? ""}`,
+      message: ok
+        ? "Emitted hue and trmnl color successfully"
+        : `Error: ${hueResult.error ?? ""} ${trmnlResult.error ?? ""}`,
       nextTask,
       ok,
       progress,
@@ -243,7 +322,12 @@ export function parseProgressBody(body: string) {
   try {
     log("info", context, `Parsing progress body : ${body}`);
     const parsedBody = parseFormUrlEncoded(body);
-    if (typeof parsedBody !== "object" || parsedBody === null || Array.isArray(parsedBody) || (parsedBody as Record<string, unknown>).progress === undefined) {
+    if (
+      typeof parsedBody !== "object" ||
+      parsedBody === null ||
+      Array.isArray(parsedBody) ||
+      (parsedBody as Record<string, unknown>).progress === undefined
+    ) {
       parseError = `Invalid body : must be an object with a progress property, got "${body}"`;
       return { error: parseError, nextTask, progress, remaining };
     }

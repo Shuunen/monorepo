@@ -68,19 +68,25 @@ export const Basic: Story = {
     const applicantInput = canvas.getByTestId("input-text-applicants-0");
     await userEvent.type(applicantInput, "Alice");
     await userEvent.click(submitButton);
-    await expect(canvas.getByTestId("debug-data-submitted-data")).toContainHTML(stringify({ applicants: ["Alice"] }, true));
+    await expect(canvas.getByTestId("debug-data-submitted-data")).toContainHTML(
+      stringify({ applicants: ["Alice"] }, true),
+    );
 
     const addButton = canvas.getByTestId("button-add-applicants");
     await userEvent.click(addButton);
     const applicantInput2 = canvas.getByTestId("input-text-applicants-1");
     await userEvent.type(applicantInput2, "Bob");
     await userEvent.click(submitButton);
-    await expect(canvas.getByTestId("debug-data-submitted-data")).toContainHTML(stringify({ applicants: ["Alice", "Bob"] }, true));
+    await expect(canvas.getByTestId("debug-data-submitted-data")).toContainHTML(
+      stringify({ applicants: ["Alice", "Bob"] }, true),
+    );
 
     const deleteButton = canvas.getByTestId("button-delete-applicants-1");
     await userEvent.click(deleteButton);
     await userEvent.click(submitButton);
-    await expect(canvas.getByTestId("debug-data-submitted-data")).toContainHTML(stringify({ applicants: ["Alice"] }, true));
+    await expect(canvas.getByTestId("debug-data-submitted-data")).toContainHTML(
+      stringify({ applicants: ["Alice"] }, true),
+    );
   },
 };
 

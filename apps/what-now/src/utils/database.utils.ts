@@ -78,7 +78,9 @@ export function addTask(data: Readonly<AppWriteTask>) {
  */
 export function updateTask(task: Readonly<Task>) {
   const data = localToRemoteTask(task);
-  return Result.trySafe(database.updateDocument<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, task.id, data));
+  return Result.trySafe(
+    database.updateDocument<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, task.id, data),
+  );
 }
 
 /**
@@ -86,7 +88,9 @@ export function updateTask(task: Readonly<Task>) {
  * @returns the result of the operation
  */
 export async function getTasks() {
-  const result = await Result.trySafe(database.listDocuments<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, [Query.limit(nbPercentMax)]));
+  const result = await Result.trySafe(
+    database.listDocuments<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, [Query.limit(nbPercentMax)]),
+  );
   if (!result.ok) return result;
   const tasks = result.value.documents.map<Task>(task => modelToLocalTask(task));
   logger.info(`found ${tasks.length} tasks on db`, tasks);
@@ -100,7 +104,9 @@ export async function getTasks() {
 /* v8 ignore next -- @preserve */
 // oxlint-disable-next-line max-statements
 export async function downloadData() {
-  const result = await Result.trySafe(database.listDocuments<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, [Query.limit(nbPercentMax)]));
+  const result = await Result.trySafe(
+    database.listDocuments<AppWriteTaskModel>(state.apiDatabase, state.apiCollection, [Query.limit(nbPercentMax)]),
+  );
   if (!result.ok) {
     toastError("Failed to download data");
     logger.error("failed to download data", result.error);

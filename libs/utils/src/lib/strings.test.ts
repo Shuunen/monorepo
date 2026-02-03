@@ -1,4 +1,14 @@
-import { capitalize, crc32, createCrc32Table, ellipsis, ellipsisWords, isString, sanitize, slugify, stringSum } from "./strings.js";
+import {
+  capitalize,
+  crc32,
+  createCrc32Table,
+  ellipsis,
+  ellipsisWords,
+  isString,
+  sanitize,
+  slugify,
+  stringSum,
+} from "./strings.js";
 
 it("sanitize A basic word", () => {
   expect(sanitize("Superbe")).toBe("superbe");
@@ -7,7 +17,9 @@ it("sanitize B basic sentence", () => {
   expect(sanitize("Superbe météo aujourd'hui")).toBe("superbe meteo aujourd hui");
 });
 it("sanitize C complex sentence", () => {
-  expect(sanitize(" d'emblée€|| la@ PLUIE,,:& pùïs un cOup dê tonnerre_ !! Et puis 2 !? Mais qu'est-ce qui se trame...")).toBe("d emblee la pluie puis un coup de tonnerre et puis 2 mais qu est ce qui se trame");
+  expect(
+    sanitize(" d'emblée€|| la@ PLUIE,,:& pùïs un cOup dê tonnerre_ !! Et puis 2 !? Mais qu'est-ce qui se trame..."),
+  ).toBe("d emblee la pluie puis un coup de tonnerre et puis 2 mais qu est ce qui se trame");
 });
 it("sanitize D text with tags", () => {
   expect(sanitize("<div>Superbe météo aujourd'hui</div>", false)).toBe("Superbe meteo aujourd hui");

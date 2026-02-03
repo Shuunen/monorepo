@@ -129,7 +129,11 @@ function reviver(_key: string, value?: any) {
  * @returns the serialized object as a string
  */
 export function objectSerialize(object: Readonly<Record<string, unknown>>, willSortKeys = false, willIndent = false) {
-  return JSON.stringify(willSortKeys ? objectSort(object) : object, createCircularReplacer(), willIndent ? nbSpacesIndent : undefined);
+  return JSON.stringify(
+    willSortKeys ? objectSort(object) : object,
+    createCircularReplacer(),
+    willIndent ? nbSpacesIndent : undefined,
+  );
 }
 
 /**
