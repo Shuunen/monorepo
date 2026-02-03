@@ -108,6 +108,7 @@ When writing tests, follow these guidelines :
 - Use only one global `describe` per test file.
 - Use `beforeEach` and `afterEach` hooks to set up and clean up any necessary state before and after each test case. This is useful for resetting any global state or mocking dependencies.
 - Use `vi.mock` to mock any dependencies that are not directly related to the code being tested. This allows you to isolate the code being tested and avoid any side effects from external dependencies.
+- **Use `invariant` for type narrowing**: When testing functions that return Result types or discriminated unions, use `invariant` from `es-toolkit` instead of `if` statements for type narrowing. For example, instead of `if (!result.ok) { return; }`, use `invariant(result.ok, "expected result to be ok")`. This ensures proper TypeScript type narrowing and makes the test intent clearer. Import it with `import { invariant } from "es-toolkit"`.
 
 ## Ignoring branches from coverage
 
