@@ -65,6 +65,7 @@ watchState("isLoading", value => {
 - Mock external dependencies with `vi.mock()`
 - Test file naming: `*.test.ts` alongside source files
 - Organize tests with descriptive names: `it('functionName A should do something', () => {})`
+- **Use `invariant` for type narrowing**: When testing functions that return Result types or discriminated unions, use `invariant` from `es-toolkit` instead of `if` statements for type narrowing. For example, instead of `if (!result.ok) { return; }`, use `invariant(result.ok, "expected result to be ok")`. This ensures proper TypeScript type narrowing and makes the test intent clearer
 
 **For detailed unit testing guidelines, see [unit-testing.instructions.md](./instructions/unit-testing.instructions.md)**
 
