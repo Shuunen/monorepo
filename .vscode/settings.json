@@ -23,6 +23,9 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  },
   "cSpell.language": "en-GB",
   "cSpell.words": [
     "analyzer",
