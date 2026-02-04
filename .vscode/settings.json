@@ -84,15 +84,6 @@
   "cucumberautocomplete.steps": ["**/tests/steps/*/*.ts"],
   "cucumberautocomplete.strictGherkinCompletion": true,
   "cucumberautocomplete.syncfeatures": "**/tests/features/**/*feature",
-  "editor.codeActionsOnSave": {
-    "source.addMissingImports.ts": "explicit",
-    "source.fixAll.biome": "explicit",
-    "source.fixAll.oxc": "explicit",
-    "source.fixAll.ts": "explicit",
-    "source.organizeImports": "explicit",
-    "source.removeUnusedImports": "explicit",
-    "source.sortImports": "explicit"
-  },
   "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.formatOnSave": true,
   "editor.quickSuggestions": {
