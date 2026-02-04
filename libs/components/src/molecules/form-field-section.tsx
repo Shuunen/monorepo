@@ -21,7 +21,7 @@ export function FormFieldSection({ title, subtitle, description, code, line }: F
       {subtitle && <Title level={2}>{subtitle}</Title>}
       {description && <Paragraph className="mb-4 text-muted-foreground">{description}</Paragraph>}
       {code && <DebugData data={code} />}
-      {line && <div className="my-4 border-t border-muted" />}
+      {line && <div className="mt-2 mb-4 border-t border-muted" />}
     </div>
   );
 }
