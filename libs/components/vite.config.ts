@@ -25,7 +25,7 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      exclude: [...coverageConfigDefaults.exclude, "src/**/*.tsx"],
+      exclude: [...coverageConfigDefaults.exclude, "src/**/*.tsx", "src/**/*.types.ts"],
       include: ["src/molecules/**/*.ts", "src/atoms/**/*.ts"],
       provider: "v8" as const,
       reporter: [["text", { maxCols: 120 }], "lcov"],
