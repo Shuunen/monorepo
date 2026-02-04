@@ -1,4 +1,3 @@
-/* c8 ignore start */
 import type { Logger } from "@monorepo/utils";
 import type { ComponentType } from "react";
 import type { z } from "zod";

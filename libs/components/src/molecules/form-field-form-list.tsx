@@ -19,7 +19,7 @@ import {
   normalizeData,
 } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
-import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.utils";
+import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.types";
 import { useRef } from "react";
 
 function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean }) {

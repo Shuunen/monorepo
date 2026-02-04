@@ -1,5 +1,15 @@
 // oxlint-disable max-lines
-import { getNested, isString, Logger, nbPercentMax, Result, setNested, sleep, stringify } from "@monorepo/utils";
+import {
+  getNested,
+  isString,
+  Logger,
+  nbPercentMax,
+  nbThird,
+  Result,
+  setNested,
+  sleep,
+  stringify,
+} from "@monorepo/utils";
 import { isEmptyObject } from "es-toolkit";
 import type { ReactNode } from "react";
 import { z } from "zod";
@@ -13,6 +23,7 @@ import type {
   AutoFormStepMetadata,
   AutoFormSubmissionStepProps,
   AutoFormSummarySection,
+  DependsOnCondition,
   SelectOption,
 } from "./auto-form.types";
 
@@ -169,15 +180,31 @@ export function isZodString(fieldSchema: z.ZodType): fieldSchema is z.ZodString 
   return isZodType(fieldSchema, "string");
 }
 
+export type DependsOnOperator = "=" | "!=";
+
+export type ParsedDependsOn = {
+  fieldName: string;
+  expectedValue?: string;
+  operator?: DependsOnOperator;
+};
+
 /**
  * Parses a dependsOn string to extract field name and optional expected value.
  * Supports formats like:
  * - 'fieldName' - checks if fieldName is truthy
- * - 'fieldName=value' - checks if fieldName equals value
+ * - 'fieldName!=value' - checks if fieldName is different from value
  * @param dependsOn the dependsOn string to parse
- * @returns an object with fieldName and optional expectedValue
+ * @returns an object with fieldName, optional expectedValue, and optional operator
  */
-export function parseDependsOnSingleValue(dependsOn: string): { fieldName: string; expectedValue?: string } {
+export function parseDependsOnSingleValue(dependsOn: string): ParsedDependsOn {
+  const notEqualsIndex = dependsOn.indexOf("!=");
+  if (notEqualsIndex !== -1) {
+    return {
+      expectedValue: dependsOn.slice(notEqualsIndex + nbThird),
+      fieldName: dependsOn.slice(0, notEqualsIndex),
+      operator: "!=",
+    };
+  }
   const equalsIndex = dependsOn.indexOf("=");
   if (equalsIndex === -1) {
     return { fieldName: dependsOn };
@@ -185,6 +212,7 @@ export function parseDependsOnSingleValue(dependsOn: string): { fieldName: strin
   return {
     expectedValue: dependsOn.slice(equalsIndex + 1),
     fieldName: dependsOn.slice(0, equalsIndex),
+    operator: "=",
   };
 }
 
@@ -193,15 +221,48 @@ export function parseDependsOnSingleValue(dependsOn: string): { fieldName: strin
  * Supports formats like:
  * - 'fieldName' - checks if fieldName is truthy
  * - 'fieldName=value' - checks if fieldName equals value
- * - ['fieldName', 'fieldName2] - checks if fieldName and fieldName2 are truthy
- * - ['fieldName=value', fieldName2=value] - checks if fieldName and fieldName2 equal value
- * @param dependsOn the dependsOn string or array of string to parse
- * @returns an array of object with fieldName and optional expectedValue
+ * - 'fieldName!=value' - checks if fieldName is different from value
+ * - ['fieldName', 'fieldName2'] - checks if fieldName AND fieldName2 are truthy
+ * - [['fieldName', 'fieldName2']] - checks if fieldName OR fieldName2 is truthy
+ * - [['fieldName', 'fieldName2'], 'fieldName3'] - checks if (fieldName OR fieldName2) AND fieldName3
+ * @param dependsOn the dependsOn string or array of conditions to parse
+ * @returns an array of OR groups (outer = AND, inner = OR)
  */
-export function parseDependsOn(dependsOn: string | string[]): { fieldName: string; expectedValue?: string }[] {
-  return isString(dependsOn)
-    ? [parseDependsOnSingleValue(dependsOn)]
-    : dependsOn.map(value => parseDependsOnSingleValue(value));
+export function parseDependsOn(dependsOn: string | DependsOnCondition[]): ParsedDependsOn[][] {
+  // Single string: wrap in double array (AND of single OR group with single condition)
+  if (isString(dependsOn)) {
+    return [[parseDependsOnSingleValue(dependsOn)]];
+  }
+  // Array of conditions
+  return dependsOn.map(conditions => {
+    // If condition is a string, it's a single condition (wrap in array for OR group)
+    if (isString(conditions)) {
+      return [parseDependsOnSingleValue(conditions)];
+    }
+    // If condition is an array, it's an OR group
+    // oxlint-disable-next-line max-nested-callbacks
+    return conditions.map(condition => parseDependsOnSingleValue(condition));
+  });
+}
+
+/**
+ * Evaluates a single parsed condition against form data.
+ * @param parsedDependsOn the parsed dependsOn condition to evaluate
+ * @param parsedDependsOn.fieldName the field name to evaluate
+ * @param parsedDependsOn.expectedValue the expected value to evaluate
+ * @param parsedDependsOn.operator the operator to evaluate
+ * @param formData the current form data
+ * @returns true if the condition is satisfied
+ */
+function evaluateCondition({ fieldName, expectedValue, operator }: ParsedDependsOn, formData: AutoFormData): boolean {
+  const fieldValue = formData[fieldName];
+  // If expectedValue is specified, check based on operator
+  if (expectedValue !== undefined) {
+    const isEqual = stringify(fieldValue) === expectedValue;
+    return operator === "!=" ? !isEqual : isEqual;
+  }
+  // Otherwise, check for truthiness
+  return Boolean(fieldValue);
 }
 
 /**
@@ -221,15 +282,11 @@ export function isFieldVisible(fieldSchema: z.ZodType, formData: AutoFormData) {
   if (!("dependsOn" in metadata) || !metadata.dependsOn) {
     return true;
   }
-  return parseDependsOn(metadata.dependsOn).every(({ fieldName, expectedValue }) => {
-    const fieldValue = formData[fieldName];
-    // If expectedValue is specified, check for equality
-    if (expectedValue !== undefined) {
-      return stringify(fieldValue) === expectedValue;
-    }
-    // Otherwise, check for truthiness
-    return Boolean(fieldValue);
-  });
+  // Outer array = AND (every group must pass), Inner array = OR (at least one condition in group must pass)
+  return parseDependsOn(metadata.dependsOn).every(orGroup =>
+    // oxlint-disable-next-line max-nested-callbacks
+    orGroup.some(condition => evaluateCondition(condition, formData)),
+  );
 }
 
 /**

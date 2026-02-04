@@ -1,0 +1,143 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`auto-form.utils > parseDependsOn B should parse field=value syntax 1`] = `
+[
+  [
+    {
+      "expectedValue": "dog",
+      "fieldName": "breed",
+      "operator": "=",
+    },
+  ],
+]
+`;
+
+exports[`auto-form.utils > parseDependsOn C should handle field names with special characters 1`] = `
+[
+  [
+    {
+      "expectedValue": "test@example.com",
+      "fieldName": "userEmail",
+      "operator": "=",
+    },
+  ],
+]
+`;
+
+exports[`auto-form.utils > parseDependsOn D should parse multiple field names (AND) 1`] = `
+[
+  [
+    {
+      "fieldName": "fieldName",
+    },
+  ],
+  [
+    {
+      "fieldName": "fieldName2",
+    },
+  ],
+]
+`;
+
+exports[`auto-form.utils > parseDependsOn E should parse field!=value syntax 1`] = `
+[
+  [
+    {
+      "expectedValue": "dog",
+      "fieldName": "breed",
+      "operator": "!=",
+    },
+  ],
+]
+`;
+
+exports[`auto-form.utils > parseDependsOn F should handle field names with special characters using != 1`] = `
+[
+  [
+    {
+      "expectedValue": "test@example.com",
+      "fieldName": "userEmail",
+      "operator": "!=",
+    },
+  ],
+]
+`;
+
+exports[`auto-form.utils > parseDependsOn G should parse mixed operators in array (AND) 1`] = `
+[
+  [
+    {
+      "expectedValue": "premium",
+      "fieldName": "type",
+      "operator": "=",
+    },
+  ],
+  [
+    {
+      "expectedValue": "inactive",
+      "fieldName": "status",
+      "operator": "!=",
+    },
+  ],
+]
+`;
+
+exports[`auto-form.utils > parseDependsOn H should parse OR group (nested array) 1`] = `
+[
+  [
+    {
+      "fieldName": "fieldName",
+    },
+    {
+      "fieldName": "fieldName2",
+    },
+  ],
+]
+`;
+
+exports[`auto-form.utils > parseDependsOn I should parse (A OR B) AND C 1`] = `
+[
+  [
+    {
+      "fieldName": "field1",
+    },
+    {
+      "fieldName": "field2",
+    },
+  ],
+  [
+    {
+      "fieldName": "field3",
+    },
+  ],
+]
+`;
+
+exports[`auto-form.utils > parseDependsOn J should parse (A OR B) AND (C OR D) 1`] = `
+[
+  [
+    {
+      "expectedValue": "a",
+      "fieldName": "field1",
+      "operator": "=",
+    },
+    {
+      "expectedValue": "b",
+      "fieldName": "field2",
+      "operator": "=",
+    },
+  ],
+  [
+    {
+      "expectedValue": "c",
+      "fieldName": "field3",
+      "operator": "=",
+    },
+    {
+      "expectedValue": "d",
+      "fieldName": "field4",
+      "operator": "=",
+    },
+  ],
+]
+`;
