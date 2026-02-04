@@ -1,4 +1,4 @@
-import { cn } from "@monorepo/utils";
+import { cn, Result, useStableKeys } from "@monorepo/utils";
 import { useWatch } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../atoms/button";
@@ -7,8 +7,10 @@ import { IconMinus } from "../icons/icon-minus";
 import { IconReject } from "../icons/icon-reject";
 import { type AutoFormFieldProps, componentRegistry } from "./auto-form-field.utils";
 import type { AutoFormFieldsMetadata } from "./auto-form.types";
-import { getFieldMetadata, getFormFieldRender } from "./auto-form.utils";
+import { getElementSchema, getFieldMetadata, getFormFieldRender } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
+import { invariant } from "es-toolkit";
+import { useRef } from "react";
 
 function AutoFormField({
   fieldName,
@@ -17,6 +19,13 @@ function AutoFormField({
   logger,
   readonly,
 }: AutoFormFieldProps & { readonly: boolean }) {
+  if (fieldSchema === undefined) {
+    return (
+      <Paragraph>
+        Cannot render field <strong>{fieldName}</strong> with an undefined fieldSchema
+      </Paragraph>
+    );
+  }
   const isOptional = fieldSchema instanceof z.ZodOptional;
   const metadata = getFieldMetadata(fieldSchema) ?? {};
   const fieldState = "state" in metadata ? metadata.state : undefined;
@@ -44,15 +53,17 @@ export function FormFieldFieldList({
   const metadata = fieldSchema.meta() as AutoFormFieldsMetadata;
   const { maxItems, label, placeholder } = metadata;
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
-
-  const itemSchema = (fieldSchema as z.ZodArray<z.ZodObject>).element;
+  const { value: elementSchema } = Result.unwrap(getElementSchema(fieldSchema));
+  invariant(elementSchema !== undefined, "elementSchema should be defined");
   const fieldValue = useWatch({ name: fieldName });
   const items = (fieldValue as unknown[]) || [undefined];
+  const { addKey, keys, removeKey } = useStableKeys(useRef, items.length);
   /**
    * Function called when user wants to add a new form to the list
    * @param onChange callback to update the whole FormFieldFormList value
    */
   function addItem(onChange: (value: unknown) => void) {
+    addKey();
     onChange([...(items || []), undefined]);
   }
   /**
@@ -61,6 +72,7 @@ export function FormFieldFieldList({
    * @param indexToDelete index of the item to delete
    */
   function onDeleteItem(onChange: (value: unknown) => void, indexToDelete: number) {
+    removeKey(indexToDelete);
     // oxlint-disable-next-line id-length
     const newItems = items.filter((_, index) => index !== indexToDelete);
     onChange(newItems);
@@ -73,12 +85,11 @@ export function FormFieldFieldList({
           {label && <Title>{label}</Title>}
           {placeholder && <Paragraph>{placeholder}</Paragraph>}
           {items.map((_item, index) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: we need the index to be the key
-            <div className="flex gap-2" key={index}>
+            <div className="flex gap-2" key={keys[index]}>
               <div className="flex-1">
                 <AutoFormField
                   fieldName={`${fieldName}.${index}`}
-                  fieldSchema={itemSchema}
+                  fieldSchema={elementSchema}
                   logger={logger}
                   readonly={readonly}
                 />

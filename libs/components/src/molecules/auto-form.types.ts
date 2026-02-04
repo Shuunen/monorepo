@@ -51,6 +51,8 @@ export type AutoFormProps = {
   };
   /** A fixed width for the stepper if needed */
   stepperWidth?: number;
+  /** Callback function invoked when the form is go to subform. Only to use internally */
+  onSubformMode?: (showBackButton: boolean) => void;
 };
 
 export type AutoFormStepState = "readonly" | "editable" | "upcoming";
@@ -77,12 +79,12 @@ export type AutoFormFieldsMetadata = Simplify<
   }
 >;
 
-export type AutoFormFieldFormsMetadata = Simplify<
+export type AutoFormFormsMetadata = Simplify<
   AutoFormFieldBaseMetadata & {
     /** Icon to display alongside the form list title */
-    icon?: JSX.Element;
+    icon?: JSX.Element | ((params: Record<string, unknown>) => JSX.Element);
     /** Function to generate the label for each item in the list, based on its data, for example data => `${data.name} (${data.age} years)` */
-    identifier?: (data: Record<string, unknown>) => string;
+    identifier?: (data?: Record<string, unknown>) => string;
     /** Custom labels for the form list */
     labels?: {
       /** Label for the button to add a new form to the list, default is "Add" */
@@ -95,6 +97,18 @@ export type AutoFormFieldFormsMetadata = Simplify<
     /** Maximum number of items allowed in the form list */
     maxItems?: number;
     render: "form-list";
+  }
+>;
+
+export type AutoFormAcceptFieldMetadata = Simplify<
+  AutoFormFieldBaseMetadata & {
+    labels?: {
+      /** Label for the accept button, default is "Accept" */
+      accept?: string;
+      /** Label for the reject button, default is "Reject" */
+      reject?: string;
+    };
+    render: "accept";
   }
 >;
 
@@ -165,7 +179,8 @@ export type AutoFormFieldMetadata =
   | AutoFormFieldBaseMetadata
   | AutoFormFieldSectionMetadata
   | AutoFormFieldsMetadata
-  | AutoFormFieldFormsMetadata;
+  | AutoFormFormsMetadata
+  | AutoFormAcceptFieldMetadata;
 
 /** Option for select/enum fields in the auto-generated form. */
 export type SelectOption = {

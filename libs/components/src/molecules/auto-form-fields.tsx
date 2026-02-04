@@ -1,7 +1,7 @@
 import type { Logger } from "@monorepo/utils";
 import type { z } from "zod";
-import type { AutoFormStepMetadata, AutoFormSubformOptions } from "./auto-form.types";
 import { AutoFormField } from "./auto-form-field";
+import type { AutoFormStepMetadata, AutoFormSubformOptions } from "./auto-form.types";
 
 type AutoFormFieldsProps = {
   schema: z.ZodObject;
@@ -14,18 +14,24 @@ type AutoFormFieldsProps = {
 };
 
 export function AutoFormFields({ schema, state: stepState, logger, showForm }: AutoFormFieldsProps) {
+  const shape = schema.shape;
+  const fields = Object.keys(shape);
+  logger?.info("AutoFormFields displaying", { fields, shape });
   return (
     <>
-      {Object.keys(schema.shape).map(fieldName => (
-        <AutoFormField
-          fieldName={fieldName}
-          fieldSchema={schema.shape[fieldName] as z.ZodType}
-          key={fieldName}
-          logger={logger}
-          showForm={showForm}
-          stepState={stepState}
-        />
-      ))}
+      {fields.map(fieldName => {
+        const fieldSchema = shape[fieldName];
+        return (
+          <AutoFormField
+            fieldName={fieldName}
+            fieldSchema={fieldSchema}
+            key={fieldName}
+            logger={logger}
+            showForm={showForm}
+            stepState={stepState}
+          />
+        );
+      })}
     </>
   );
 }
