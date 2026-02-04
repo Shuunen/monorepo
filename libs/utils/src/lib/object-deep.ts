@@ -17,7 +17,6 @@ export function getNested(
   for (const key of pathArray) {
     result = result && typeof result === "object" ? (result as Record<string, unknown>)[key] : undefined;
   }
-
   return result === undefined ? defaultValue : result;
 }
 
