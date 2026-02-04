@@ -34,7 +34,8 @@ export default defineConfig({
     environment: "happy-dom",
     globals: true,
     include: ["src/**/*.test.{ts,tsx}"],
-    reporters: ["default"],
+    reporters: ["dot"],
+    silent: true,
     watch: false,
   },
   // Uncomment this if you are using workers.
