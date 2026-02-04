@@ -78,7 +78,7 @@ export const Destructive: Story = {
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const badge = canvas.getByText("Badge");
-    expect(badge).toHaveClass("bg-destructive");
+    expect(badge).toHaveClass("bg-destructive/10");
   },
 };
 
