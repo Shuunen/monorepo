@@ -19,6 +19,8 @@ import {
   IconSearchX,
   IconTrash,
   IconUpload,
+  IconUser,
+  IconUsers,
 } from "@monorepo/components";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { JSX } from "react";
@@ -78,6 +80,8 @@ const icons = [
   IconUpload,
   IconWarning,
   IconMinus,
+  IconUser,
+  IconUsers,
 ];
 
 type Props = { component: ({ className }: { className?: string | undefined }) => JSX.Element };
