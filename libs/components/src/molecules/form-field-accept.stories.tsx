@@ -126,3 +126,27 @@ export const Disabled: Story = {
     ],
   },
 };
+
+export const CustomLabels: Story = {
+  args: {
+    schemas: [
+      z.object({
+        agreedToTerms: field(z.boolean(), {
+          label: "I agree to the Terms and Conditions",
+          labels: { accept: "Agree", reject: "Disagree" },
+          placeholder: "Please accept the terms",
+          render: "accept",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("check option labels", () => {
+      const acceptOption = canvas.getByLabelText("Agree");
+      const rejectOption = canvas.getByLabelText("Disagree");
+      expect(acceptOption).toBeInTheDocument();
+      expect(rejectOption).toBeInTheDocument();
+    });
+  },
+};

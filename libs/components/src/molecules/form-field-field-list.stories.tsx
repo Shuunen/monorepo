@@ -4,7 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
-import { field, fields } from "./auto-form.utils";
+import { field, fields, step } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -32,7 +32,6 @@ const meta = {
   title: "Commons/Molecules/FormFieldFieldList",
 } satisfies Meta<typeof AutoForm>;
 
-// oxlint-disable-next-line no-default-export
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -41,19 +40,16 @@ const applicantSchema = field(z.string(), {
   placeholder: "Enter the name of the applicant",
 });
 
-const applicantSchemaOptional = field(z.string().optional(), {
-  label: "Applicant's Name",
-  placeholder: "Enter the name of the applicant",
-});
-
-const applicantListSchema = z.object({
-  applicants: fields(applicantSchema, {
-    label: "Fill in the applicants",
-    maxItems: 5,
-    minItems: 1,
-    placeholder: "Please add at least one applicant, you can add up to 5.",
+const applicantListSchema = step(
+  z.object({
+    applicants: fields(applicantSchema, {
+      label: "Fill in the applicants",
+      maxItems: 5,
+      minItems: 1,
+      placeholder: "Please add at least one applicant, you can add up to 5.",
+    }),
   }),
-});
+);
 
 /**
  * Basic list
@@ -102,6 +98,11 @@ export const ListWithData: Story = {
   },
 };
 
+const applicantSchemaOptional = field(z.string().optional(), {
+  label: "Applicant's Name",
+  placeholder: "Enter the name of the applicant",
+});
+
 /**
  * List with optional items
  */
@@ -123,7 +124,7 @@ export const ListWithOptionalItems: Story = {
 const ListOfDateSchema = z.object({
   dates: fields(
     field(z.date().optional(), {
-      label: "Date",
+      label: "Date (optional)",
       placeholder: "Select the date",
     }),
     {

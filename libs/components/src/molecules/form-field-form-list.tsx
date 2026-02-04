@@ -1,7 +1,6 @@
-import { cn, isEmpty } from "@monorepo/utils";
-import { useEffect } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
-import type { z } from "zod";
+import { cn, isEmpty, nbThird, Result, useStableKeys } from "@monorepo/utils";
+import { invariant } from "es-toolkit";
+import { useWatch } from "react-hook-form";
 import { Badge } from "../atoms/badge";
 import { Button } from "../atoms/button";
 import { Paragraph, Title } from "../atoms/typography";
@@ -11,10 +10,17 @@ import { IconCircleClose } from "../icons/icon-circle-close";
 import { IconReject } from "../icons/icon-reject";
 import { IconTrash } from "../icons/icon-trash";
 import { IconUpcoming } from "../icons/icon-upcoming";
-import type { AutoFormFieldFormsMetadata } from "./auto-form.types";
-import { field, mapExternalDataToFormFields, normalizeData } from "./auto-form.utils";
+import type { AutoFormFormsMetadata } from "./auto-form.types";
+import {
+  getElementSchema,
+  isSubformFilled,
+  isZodObject,
+  mapExternalDataToFormFields,
+  normalizeData,
+} from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
-import type { ItemProps } from "./form-field-form-list.utils";
+import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.utils";
+import { useRef } from "react";
 
 function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean }) {
   let icon = <IconCircleClose />;
@@ -26,7 +32,7 @@ function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean 
     variant = "outline";
   } else if (!isEmpty) {
     icon = <IconAccept />;
-    label = "Completed";
+    label = "Validated";
     variant = "success";
   }
   return (
@@ -49,15 +55,17 @@ function Item({
   onDeleteItem,
   onCompleteItem,
   field,
+  showDelete,
 }: ItemProps) {
+  const dataTestId = `${field.name}-${index}`;
   return (
     <div
       className={cn(
         "flex min-w-md items-center gap-4 rounded-xl border border-gray-300 p-4 shadow transition-colors hover:bg-gray-50",
       )}
-      data-testid={`${field.name}-${index}`}
+      data-testid={dataTestId}
     >
-      {icon && <div className="rounded-xl bg-gray-100 p-2">{icon}</div>}
+      {icon && <div className="rounded-xl bg-gray-100 p-2">{typeof icon === "function" ? icon({}) : icon}</div>}
       <div className="flex flex-col gap-1">
         <ItemBadge hasError={hasError} isEmpty={isEmpty} />
         <Title className="whitespace-nowrap" level={3}>
@@ -65,7 +73,7 @@ function Item({
         </Title>
       </div>
       <Button
-        className={cn("ml-auto", { hidden: readonly })}
+        className={cn("ml-auto", { hidden: !showDelete })}
         name="delete"
         onClick={() => onDeleteItem(field.onChange, index)}
         type="button"
@@ -74,9 +82,9 @@ function Item({
         <IconTrash />
       </Button>
       <Button
-        className={cn({ hidden: readonly })}
+        className={cn({ hidden: readonly, "ml-auto": !showDelete })}
         name="complete"
-        onClick={() => onCompleteItem(field.onChange, index, item)}
+        onClick={() => onCompleteItem({ dataTestId, indexToComplete: index, itemData: item, onChange: field.onChange })}
         type="button"
         variant="outline"
       >
@@ -97,28 +105,21 @@ export function FormFieldFormList({
   readonly = false,
   showForm,
 }: FormFieldBaseProps) {
-  const metadata = fieldSchema.meta() as AutoFormFieldFormsMetadata;
+  const metadata = fieldSchema.meta() as AutoFormFormsMetadata;
   const { label, maxItems, icon, identifier, labels } = metadata;
   const fieldState = "state" in metadata ? metadata.state : undefined;
   const state = fieldState ?? stepState ?? "editable";
   const props = { fieldName, fieldSchema, isOptional, logger, readonly: state === "readonly" || readonly };
-  const { setValue, getValues } = useFormContext();
   const fieldValue = useWatch({ name: fieldName });
   const items = (fieldValue as Array<Record<string, unknown>>) || [];
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to run this once on mount
-  useEffect(() => {
-    const currentValue = getValues(fieldName);
-    if (currentValue !== undefined) {
-      return;
-    }
-    logger?.debug("initializing form list field value to empty array");
-    setValue(fieldName, []);
-  }, []);
+  const showAddButton = !(readonly || maxItems === 1);
+  const { addKey, keys, removeKey } = useStableKeys(useRef, items.length);
   /**
    * Function called when user wants to add a new form to the list
    * @param onChange callback to update the whole FormFieldFormList value
    */
   function addItem(onChange: (value: unknown) => void) {
+    addKey();
     onChange([...(items || []), {}]);
   }
   /**
@@ -127,33 +128,34 @@ export function FormFieldFormList({
    * @param indexToDelete index of the item to delete
    */
   function onDeleteItem(onChange: (value: unknown) => void, indexToDelete: number) {
+    removeKey(indexToDelete);
     // oxlint-disable-next-line id-length
     const newItems = items.filter((_, index) => index !== indexToDelete);
     onChange(newItems);
   }
   /**
    * Function called when user wants to complete a form from the list
-   * @param onChange callback to update the whole FormFieldFormList value
-   * @param itemData data of the item to complete
-   * @param indexToComplete index of the item to complete
+   * @param params object params for onCompleteItem
+   * @param params.onChange callback to update the whole FormFieldFormList value
+   * @param params.itemData data of the item to complete
+   * @param params.indexToComplete index of the item to complete
+   * @param params.dataTestId the target dataTestId
    */
-  function onCompleteItem(
-    onChange: (value: unknown) => void,
-    indexToComplete: number,
-    itemData: Record<string, unknown>,
-  ) {
-    const schema = (fieldSchema as z.ZodArray<z.ZodObject>).element;
+  function onCompleteItem({ onChange, indexToComplete, itemData, dataTestId }: OnCompleteItemParams) {
+    const { value: elementSchema } = Result.unwrap(getElementSchema(fieldSchema));
+    invariant(elementSchema !== undefined, "elementSchema should be defined");
+    invariant(isZodObject(elementSchema), "elementSchema should be a zod object");
     const onSubmit = (data: Record<string, unknown>) => {
-      const mappedData = mapExternalDataToFormFields(schema, data);
+      const mappedData = mapExternalDataToFormFields(elementSchema, data);
       logger?.info("data from subform", { data, mappedData });
       const newItems = items.map((item, index) => (index === indexToComplete ? mappedData : item));
       onChange(newItems);
     };
     showForm?.({
-      initialData: normalizeData([schema], itemData),
+      initialData: normalizeData([elementSchema], itemData),
       onSubmit,
-      querySelectorForScroll: `[data-testid='${field.name}-${indexToComplete}']`,
-      schema,
+      querySelectorForScroll: `[data-testid='${dataTestId}']`,
+      schema: elementSchema,
     });
   }
 
@@ -166,9 +168,12 @@ export function FormFieldFormList({
             {label && <Title>{label}</Title>}
             {metadata.placeholder && <Paragraph>{metadata.placeholder}</Paragraph>}
             {items.map((item, index) => {
-              const isEmptyItem = isEmpty(item);
-              const itemIdentifier = identifier && !isEmptyItem ? identifier(item) : `Form ${index + 1}`;
-              logger?.info({ fieldState, hasError });
+              const data = isEmpty(item) ? undefined : item;
+              const readableIndex = String(index + 1).padStart(nbThird, "0");
+              const itemIdentifier = identifier
+                ? identifier({ ...data, index: readableIndex })
+                : `Form ${readableIndex}`;
+              logger?.info(`SubForm "${itemIdentifier}" field name "${field.name}"`, { fieldState, hasError });
               return (
                 <Item
                   field={field}
@@ -176,19 +181,20 @@ export function FormFieldFormList({
                   icon={icon}
                   identifier={itemIdentifier}
                   index={index}
-                  isEmpty={isEmptyItem}
+                  isEmpty={!isSubformFilled(item)}
                   item={item}
-                  key={itemIdentifier}
+                  key={keys[index]}
                   labels={labels}
                   onCompleteItem={onCompleteItem}
                   onDeleteItem={onDeleteItem}
                   readonly={readonly}
+                  showDelete={showAddButton}
                 />
               );
             })}
             <div className="flex flex-col items-start gap-4">
               <Button
-                className={cn({ hidden: readonly })}
+                className={cn({ hidden: !showAddButton })}
                 disabled={maxItems !== undefined && items.length >= maxItems}
                 name="add"
                 onClick={() => addItem(field.onChange)}

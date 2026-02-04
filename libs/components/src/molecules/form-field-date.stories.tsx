@@ -203,16 +203,31 @@ export const StringDateWithRender: Story = {
   },
 };
 
+// expect a Date instance input and output a date string
+const isoDateStringToDateInstance = z.codec(z.iso.date(), z.date(), {
+  decode: isoDateString => new Date(isoDateString),
+  encode: date => date.toISOString().split("T")[0],
+});
+
 /**
  * String date field using render metadata (E2E: fill, submit, verify ISO string output)
  */
 export const StringDateWithoutRender: Story = {
   args: {
+    initialData: {
+      stringDate: "2026-01-07",
+      stringDateCodec: "2026-01-14", // we need to provide a string even if we use z.date() because of the codec
+      // stringDateCodec: new Date("2026-01-05"), // does not work because the codec validate input
+    },
     schemas: [
       z.object({
         stringDate: field(z.iso.date(), {
           label: "String Date Field (no render)",
           placeholder: "Select a date (string)",
+        }),
+        stringDateCodec: field(z.date(), {
+          codec: isoDateStringToDateInstance,
+          label: "Select a date (date with codec)",
         }),
       }),
     ],
@@ -222,5 +237,10 @@ export const StringDateWithoutRender: Story = {
     const dateInput = canvas.getByTestId("input-date-string-date");
     expect(dateInput).toBeInTheDocument();
     expect(dateInput).toHaveAttribute("type", "date");
+    expect(dateInput).toHaveValue("2026-01-07");
+    const dateCodecInput = canvas.getByTestId("input-date-string-date-codec");
+    expect(dateCodecInput).toBeInTheDocument();
+    expect(dateCodecInput).toHaveAttribute("type", "date");
+    expect(dateCodecInput).toHaveValue("2026-01-14");
   },
 };

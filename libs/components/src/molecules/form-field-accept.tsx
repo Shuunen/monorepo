@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/max-lines-per-function */
-
 import { cn } from "@monorepo/utils";
 import { useCallback, useId } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
@@ -8,11 +6,12 @@ import { Label } from "../atoms/label";
 import { RadioGroup, RadioGroupItem } from "../atoms/radio-group";
 import { IconAccept } from "../icons/icon-accept";
 import { IconReject } from "../icons/icon-reject";
+import type { AutoFormAcceptFieldMetadata } from "./auto-form.types";
 import { checkZodBoolean, getFieldMetadataOrThrow } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 
 export function FormFieldAccept({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
-  const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
+  const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema) as AutoFormAcceptFieldMetadata;
   const { state = "editable" } = metadata;
   const { isBoolean, isBooleanLiteral } = checkZodBoolean(
     fieldSchema as z.ZodBoolean | z.ZodLiteral | z.ZodOptional<z.ZodBoolean>,
@@ -54,7 +53,7 @@ export function FormFieldAccept({ fieldName, fieldSchema, isOptional, logger, re
               <div className={cn("text-green-600", iconClasses)}>
                 <IconAccept />
               </div>
-              Accept
+              {metadata.labels?.accept ?? "Accept"}
             </Label>
           </div>
           <div className={buttonClasses}>
@@ -63,7 +62,7 @@ export function FormFieldAccept({ fieldName, fieldSchema, isOptional, logger, re
               <div className={cn("text-red-600", iconClasses)}>
                 <IconReject />
               </div>
-              Reject
+              {metadata.labels?.reject ?? "Reject"}
             </Label>
           </div>
         </RadioGroup>

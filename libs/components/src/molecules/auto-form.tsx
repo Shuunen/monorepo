@@ -6,6 +6,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../atoms/button";
 import { Form } from "../atoms/form";
+import { IconArrowLeft } from "../icons/icon-arrow-left";
 import { IconHome } from "../icons/icon-home";
 import { AutoFormFields } from "./auto-form-fields";
 import { AutoFormNavigation } from "./auto-form-navigation";
@@ -48,6 +49,7 @@ import {
  * @param props.size the size of the form, can be 'auto', 'small', 'medium' or 'large', default is 'medium', 'auto' adapts to parent content
  * @param props.labels custom labels for form buttons and actions
  * @param props.stepperWidth custom stepper width if needed
+ * @param props.onSubformMode internal method to show back button on subform or not
  * @returns the AutoForm component
  */
 // oxlint-disable-next-line max-lines-per-function, max-statements
@@ -67,12 +69,14 @@ export function AutoForm({
   size,
   labels,
   stepperWidth,
+  onSubformMode,
 }: AutoFormProps) {
   const [currentStep, setCurrentStep] = useState(getInitialStep(schemas, showFirstEditableStep, showLastStep));
   const [showSummary, setShowSummary] = useState(false);
   const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined);
   const defaultValues = useMemo(() => getDefaultValues(schemas, initialData), [schemas, initialData]);
   const [formData, setFormData] = useState<Record<string, unknown>>(defaultValues);
+  const [showBackButtonInSubform, setShowBackButtonInSubform] = useState<boolean>(true);
   const currentSchema = schemas[currentStep];
   const lastAccessibleStepIndex = useMemo(() => getLastAccessibleStepIndex(schemas), [schemas]);
   const isLastStep = currentStep === lastAccessibleStepIndex;
@@ -89,6 +93,7 @@ export function AutoForm({
     const updatedData = { ...formData, ...form.getValues() };
     logger?.info("updateFormData", updatedData);
     setFormData(updatedData);
+    return updatedData;
   }
   /**
    * Handle submission for the current step of a multi-step form
@@ -96,8 +101,8 @@ export function AutoForm({
    * @returns void
    */
   function handleStepSubmit() {
-    updateFormData();
-    logger?.info("Step form submitted", { formData });
+    const updatedData = updateFormData();
+    logger?.info("Step form submitted", { updatedData });
     if (isLastStep && useSummaryStep) {
       setShowSummary(true);
     } else if (isLastStep) {
@@ -150,11 +155,12 @@ export function AutoForm({
 
   const backToInitialMode = useCallback(async () => {
     setMode("initial");
+    onSubformMode?.(true);
     await sleep(nbPercentMax);
     if (subformOptions?.querySelectorForScroll) {
       scrollToElement(subformOptions.querySelectorForScroll);
     }
-  }, [subformOptions]);
+  }, [subformOptions, onSubformMode]);
 
   /**
    * Shows a form
@@ -167,6 +173,8 @@ export function AutoForm({
    */
   const showForm = useCallback(
     ({ schema, initialData, onSubmit, querySelectorForScroll }: AutoFormSubformOptions) => {
+      globalThis.window.scrollTo({ top: 0 });
+      onSubformMode?.(false);
       setMode("subform");
       setSubformOptions({
         initialData,
@@ -178,7 +186,7 @@ export function AutoForm({
         schema,
       });
     },
-    [backToInitialMode],
+    [backToInitialMode, onSubformMode],
   );
   const steps = useMemo(
     () =>
@@ -261,13 +269,17 @@ export function AutoForm({
     logger?.info("Rendering subform", subformOptions);
     return (
       <>
-        <Button name="subform-back" onClick={backToInitialMode}>
-          Back
-        </Button>
+        {showBackButtonInSubform && (
+          <Button name="subform-back" onClick={backToInitialMode} variant="outline">
+            <IconArrowLeft />
+            Back
+          </Button>
+        )}
         <AutoForm
           initialData={subformOptions.initialData}
           onSubmit={subformOptions.onSubmit}
           schemas={[subformOptions.schema]}
+          onSubformMode={value => setShowBackButtonInSubform(value)}
         />
       </>
     );
