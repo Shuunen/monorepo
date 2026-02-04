@@ -1,18 +1,22 @@
 // oxlint-disable max-lines
 import { getNested, isString, Logger, nbPercentMax, Result, setNested, sleep, stringify } from "@monorepo/utils";
+import { isEmptyObject } from "es-toolkit";
 import type { ReactNode } from "react";
 import { z } from "zod";
 import type {
+  AutoFormAcceptFieldMetadata,
   AutoFormData,
-  AutoFormFieldFormsMetadata,
   AutoFormFieldMetadata,
   AutoFormFieldSectionMetadata,
   AutoFormFieldsMetadata,
+  AutoFormFormsMetadata,
   AutoFormStepMetadata,
   AutoFormSubmissionStepProps,
   AutoFormSummarySection,
   SelectOption,
 } from "./auto-form.types";
+
+const logger = new Logger();
 
 /**
  * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
@@ -33,6 +37,11 @@ export function getZodEnumOptions(fieldSchema: z.ZodType) {
     fieldSchema.type === "optional" &&
     (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.type === "enum"
   ) {
+    const childSchema = (fieldSchema as z.ZodOptional<z.ZodEnum>).unwrap();
+    const childMetadata = childSchema.meta();
+    if (childMetadata?.options) {
+      return Result.ok(childMetadata.options as SelectOption[]);
+    }
     rawOptions = (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.options as string[];
   } else {
     return Result.error("failed to get enum options from schema");
@@ -54,7 +63,8 @@ function isZodType(fieldSchema: z.ZodType, type: z.ZodType["type"]) {
   const isType = fieldSchema.type === type;
   const isTypeLiteral =
     fieldSchema.type === "optional" && (fieldSchema as z.ZodOptional<z.ZodType>).def.innerType.type === type;
-  return isType || isTypeLiteral;
+  const isTypeUnwrapped = getUnwrappedSchema(fieldSchema).type === type;
+  return isType || isTypeLiteral || isTypeUnwrapped;
 }
 
 /**
@@ -62,7 +72,7 @@ function isZodType(fieldSchema: z.ZodType, type: z.ZodType["type"]) {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodEnum; otherwise, false.
  */
-export function isZodEnum(fieldSchema: z.ZodType) {
+export function isZodEnum(fieldSchema: z.ZodType): fieldSchema is z.ZodEnum {
   return isZodType(fieldSchema, "enum");
 }
 
@@ -99,7 +109,7 @@ export function checkZodBoolean(fieldSchema: z.ZodType) {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodBoolean; otherwise, false.
  */
-export function isZodBoolean(fieldSchema: z.ZodType) {
+export function isZodBoolean(fieldSchema: z.ZodType): fieldSchema is z.ZodBoolean {
   return checkZodBoolean(fieldSchema).isBoolean;
 }
 
@@ -108,7 +118,7 @@ export function isZodBoolean(fieldSchema: z.ZodType) {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodNumber; otherwise, false.
  */
-export function isZodNumber(fieldSchema: z.ZodType) {
+export function isZodNumber(fieldSchema: z.ZodType): fieldSchema is z.ZodNumber {
   return isZodType(fieldSchema, "number");
 }
 
@@ -117,7 +127,7 @@ export function isZodNumber(fieldSchema: z.ZodType) {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodFile; otherwise, false.
  */
-export function isZodFile(fieldSchema: z.ZodType) {
+export function isZodFile(fieldSchema: z.ZodType): fieldSchema is z.ZodFile {
   return isZodType(fieldSchema, "file");
 }
 
@@ -126,7 +136,7 @@ export function isZodFile(fieldSchema: z.ZodType) {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodDate; otherwise, false.
  */
-export function isZodDate(fieldSchema: z.ZodType) {
+export function isZodDate(fieldSchema: z.ZodType): fieldSchema is z.ZodDate {
   const isDate = isZodType(fieldSchema, "date");
   const isDateString = fieldSchema.type === "string" && (fieldSchema as z.ZodString).format === "date";
   return isDate || isDateString;
@@ -137,8 +147,17 @@ export function isZodDate(fieldSchema: z.ZodType) {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodArray; otherwise, false.
  */
-export function isZodArray(fieldSchema: z.ZodType) {
+export function isZodArray(fieldSchema: z.ZodType): fieldSchema is z.ZodArray {
   return isZodType(fieldSchema, "array");
+}
+
+/**
+ * Checks if the provided Zod schema is a ZodObject or contains a ZodObject as its inner type (e.g., optional object).
+ * @param fieldSchema the Zod schema to check
+ * @returns true if the schema is (or contains) a ZodObject; otherwise, false.
+ */
+export function isZodObject(fieldSchema: z.ZodType): fieldSchema is z.ZodObject {
+  return isZodType(fieldSchema, "object");
 }
 
 /**
@@ -146,7 +165,7 @@ export function isZodArray(fieldSchema: z.ZodType) {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodString; otherwise, false.
  */
-export function isZodString(fieldSchema: z.ZodType) {
+export function isZodString(fieldSchema: z.ZodType): fieldSchema is z.ZodString {
   return isZodType(fieldSchema, "string");
 }
 
@@ -219,7 +238,7 @@ export function isFieldVisible(fieldSchema: z.ZodType, formData: AutoFormData) {
  * @param formData the current form data to evaluate visibility
  * @returns a new Zod schema with only visible fields
  */
-export function filterSchema(schema: z.ZodObject, formData: AutoFormData): z.ZodObject {
+export function filterSchema(schema: z.ZodObject, formData: AutoFormData = {}): z.ZodObject {
   const shape = schema.shape;
   const visibleShape: Record<string, z.ZodType> = {};
   for (const key of Object.keys(shape)) {
@@ -228,10 +247,18 @@ export function filterSchema(schema: z.ZodObject, formData: AutoFormData): z.Zod
       continue;
     }
     const metadata = getFieldMetadata(fieldSchema);
-    // Exclude section fields from validation schema
     if (metadata?.render === "section") {
       continue;
     }
+    if (isZodArray(fieldSchema)) {
+      const result = getElementSchema(fieldSchema);
+      if (result.ok && isZodObject(result.value)) {
+        logger.info(`filterSchema "${key}" creating a new forms with recursive call`);
+        visibleShape[key] = forms(filterSchema(result.value, formData), fieldSchema.meta() as AutoFormFormsMetadata);
+        continue;
+      }
+    }
+    logger.info(`filterSchema "${key}" of type "${fieldSchema.type}" isVisible`);
     visibleShape[key] = fieldSchema;
   }
   return z.object(visibleShape);
@@ -311,12 +338,21 @@ function shouldIncludeField(fieldSchema: z.ZodType, metadata: AutoFormFieldMetad
   return true;
 }
 
-export function getChildSchemaWithoutOptional(fieldSchema: z.ZodArray<z.ZodType>) {
-  const childSchema = fieldSchema.unwrap();
-  if (childSchema.type === "optional") {
-    return (childSchema as z.ZodOptional<z.ZodType>).unwrap();
+export function getUnwrappedSchema(schema: z.ZodType) {
+  if ("unwrap" in schema && ["default", "optional", "prefault"].includes(schema.type)) {
+    return getUnwrappedSchema((schema as z.ZodOptional<z.ZodType>).unwrap());
   }
-  return childSchema;
+  return schema;
+}
+
+export function getElementSchema(fieldSchema: z.ZodType) {
+  const schema = getUnwrappedSchema(fieldSchema);
+  if (!isZodArray(schema)) {
+    logger?.error("cant get element of a non-array schema");
+    return Result.error("cant get element of a non-array schema");
+  }
+  // we need to type as ZodType because as of today 2026-01-27 zod is typing an element as a weird internal z.core.$ZodType
+  return Result.ok(schema.element as z.ZodType);
 }
 
 type GetValueWithCodecProps = {
@@ -330,7 +366,12 @@ function getValueWithCodec({ fieldSchema, value, method, parentSchema }: GetValu
   const metadata = getFieldMetadata(fieldSchema) || getFieldMetadata(parentSchema);
   const codec = metadata && "codec" in metadata && metadata.codec;
   if (codec) {
-    return codec[method](value);
+    const result = Result.trySafe(() => codec[method](value));
+    if (!result.ok) {
+      logger.error("Failed to apply codec", { metadata, method, value });
+      return undefined;
+    }
+    return result.value;
   }
   return value;
 }
@@ -359,9 +400,10 @@ function getValueFromCodec({ fieldSchema, value, method, parentSchema }: GetValu
   const valueAsArray: unknown[] = Array.isArray(value) ? value : [value];
   /* v8 ignore stop */
   return valueAsArray.map(item => {
-    const childSchema = getChildSchemaWithoutOptional(fieldSchema as z.ZodArray<z.ZodType>);
+    const unwrappedSchema = getUnwrappedSchema(fieldSchema);
     return getValueFromCodec({
-      fieldSchema: childSchema,
+      /* v8 ignore next */
+      fieldSchema: "element" in unwrappedSchema ? (unwrappedSchema.element as z.ZodType) : unwrappedSchema,
       method,
       parentSchema: (fieldSchema as z.ZodArray<z.ZodType>).unwrap(),
       value: item,
@@ -410,6 +452,9 @@ export function normalizeDataForSchema(schema: z.ZodObject, data: AutoFormData) 
 export function normalizeData(schemas: z.ZodObject[], data: AutoFormData) {
   let cleanedData = data;
   for (const schema of schemas) {
+    if (schema === undefined) {
+      logger.info("normalizeData detected undefined schema", { data, schemas });
+    }
     cleanedData = normalizeDataForSchema(schema, cleanedData);
   }
   return cleanedData;
@@ -575,8 +620,21 @@ export function getFieldMetadataOrThrow(fieldName: string, fieldSchema?: z.ZodTy
  * @returns field schema with valid metadata
  * @example field(z.string(), { label: "First-name" })
  */
-export function field<Schema extends z.ZodType>(fieldSchema: Schema, fieldMetadata: AutoFormFieldMetadata) {
+export function field<Schema extends z.ZodType>(fieldSchema: Schema, fieldMetadata?: AutoFormFieldMetadata) {
+  if (fieldMetadata === undefined) {
+    return fieldSchema;
+  }
   return fieldSchema.meta(fieldMetadata);
+}
+
+/**
+ * Helper to write AutoForm Accept field
+ * @param fieldMetadata related metadata
+ * @returns field schema with valid metadata
+ * @example acceptField({ label: "First-name", labels: { accept: "Confirmation", reject: "Non-confirmation" } })
+ */
+export function acceptField(fieldMetadata: Omit<AutoFormAcceptFieldMetadata, "render">) {
+  return z.boolean().meta({ ...fieldMetadata, render: "accept" });
 }
 
 /**
@@ -609,7 +667,7 @@ export function getStepMetadata(stepSchema: z.ZodObject): AutoFormStepMetadata |
  * @returns step schema with valid metadata
  * @example step(z.object({ firstName: field(...) }), { title: "User infos" })
  */
-export function step(stepSchema: z.ZodObject, stepMetadata?: AutoFormStepMetadata) {
+export function step<Schema extends z.ZodObject>(stepSchema: Schema, stepMetadata?: AutoFormStepMetadata) {
   if (!stepMetadata) {
     return stepSchema;
   }
@@ -623,35 +681,45 @@ export function step(stepSchema: z.ZodObject, stepMetadata?: AutoFormStepMetadat
  * @param maxItems - Optional maximum number of items.
  * @returns A Zod array schema with the specified constraints.
  */
-function toZodArray(schema: z.ZodType, minItems?: number, maxItems?: number) {
+function toZodArray<Schema extends z.ZodType>(schema: Schema, minItems?: number, maxItems?: number) {
   return z
     .array(schema)
     .min(minItems ?? 0, `At least ${minItems === 1 ? "one item is" : `${minItems} items are`} required.`) // NOSONAR
-    .max(maxItems ?? Infinity, `At most ${maxItems === 1 ? "one item is" : `${maxItems} items are`} allowed.`); // NOSONAR
+    .max(maxItems ?? Infinity, `At most ${maxItems === 1 ? "one item is" : `${maxItems} items are`} allowed.`) // NOSONAR
+    .prefault([]);
 }
 
 /**
  * Helper to write AutoForm repeatable fields
- * @param formSchema zod schema
- * @param formMetadata related metadata
+ * @param fieldSchema zod schema
+ * @param fieldsMetadata related metadata
  * @returns fields schema with valid metadata
  * @example fields(z.object({ firstName: field(...) }), { identifier: data => `${data.firstName}` })
  */
-export function fields(formSchema: z.ZodType, formMetadata: Omit<AutoFormFieldsMetadata, "render">) {
-  const { minItems, maxItems } = formMetadata;
-  return toZodArray(formSchema, minItems, maxItems).meta({ ...formMetadata, render: "field-list" });
+export function fields<Schema extends z.ZodType>(
+  fieldSchema: Schema,
+  fieldsMetadata?: Omit<AutoFormFieldsMetadata, "render">,
+) {
+  if (fieldsMetadata === undefined) {
+    return toZodArray(fieldSchema).meta({ render: "field-list" });
+  }
+  const { minItems, maxItems } = fieldsMetadata;
+  return toZodArray(fieldSchema, minItems, maxItems).meta({ ...fieldsMetadata, render: "field-list" });
 }
 
 /**
  * Helper to write AutoForm repeatable form
  * @param formSchema zod schema
- * @param formMetadata related metadata
+ * @param formsMetadata related metadata
  * @returns form schema with valid metadata
  * @example forms(z.object({ firstName: field(...) }), { identifier: data => `${data.firstName}` })
  */
-export function forms(formSchema: z.ZodObject, formMetadata: Omit<AutoFormFieldFormsMetadata, "render">) {
-  const { minItems, maxItems } = formMetadata;
-  return toZodArray(formSchema, minItems, maxItems).meta({ ...formMetadata, render: "form-list" });
+export function forms(formSchema: z.ZodObject, formsMetadata?: Omit<AutoFormFormsMetadata, "render">) {
+  if (formsMetadata === undefined) {
+    return toZodArray(formSchema).meta({ render: "form-list" });
+  }
+  const { minItems, maxItems } = formsMetadata;
+  return toZodArray(formSchema, minItems, maxItems).meta({ ...formsMetadata, render: "form-list" });
 }
 
 /**
@@ -661,26 +729,28 @@ export function forms(formSchema: z.ZodObject, formMetadata: Omit<AutoFormFieldF
  * @returns the component name to render like 'text', 'number', 'date', etc... Undefined if no suitable component found.
  */
 export function getFormFieldRender(fieldSchema: z.ZodType): AutoFormFieldMetadata["render"] {
-  const { render } = getFieldMetadata(fieldSchema) || {};
+  const metadata = getFieldMetadata(fieldSchema) || {};
+  const schema = getUnwrappedSchema(fieldSchema);
+  const { render } = metadata;
   if (render) {
     return render;
   }
-  if (isZodFile(fieldSchema)) {
+  if (isZodFile(schema)) {
     return "upload";
   }
-  if (isZodDate(fieldSchema)) {
+  if (isZodDate(schema)) {
     return "date";
   }
-  if (isZodEnum(fieldSchema)) {
+  if (isZodEnum(schema)) {
     return "select";
   }
-  if (isZodNumber(fieldSchema)) {
+  if (isZodNumber(schema)) {
     return "number";
   }
-  if (isZodBoolean(fieldSchema)) {
+  if (isZodBoolean(schema)) {
     return "boolean";
   }
-  if (isZodString(fieldSchema)) {
+  if (isZodString(schema)) {
     return "text";
   }
   return undefined;
@@ -723,6 +793,9 @@ export function getInitialStep(schemas: z.ZodObject[], showFirstEditableStep?: b
 export function getDefaultValues(schemas: z.ZodObject[], initialData: AutoFormData) {
   const allMappedData: AutoFormData = {};
   for (const schema of schemas) {
+    if (schema === undefined) {
+      logger.info("getDefaultValues detected undefined schema", schemas);
+    }
     const schemaMappedData = mapExternalDataToFormFields(schema, initialData);
     Object.assign(allMappedData, schemaMappedData);
   }
@@ -801,5 +874,24 @@ export function buildStepperSteps({
       suffix,
       title,
     };
+  });
+}
+
+/**
+ * Check if a form data seems filled
+ * @param data the data to check
+ * @returns true if it seems filled
+ */
+export function isSubformFilled(data: Record<string, unknown>): boolean {
+  return Object.values(data).some(value => {
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+    if (isEmptyObject(value)) {
+      return false;
+    }
+    // @ts-expect-error type issue
+    // oxlint-disable-next-line unicorn/no-null
+    return ![undefined, null, "", false].includes(value);
   });
 }

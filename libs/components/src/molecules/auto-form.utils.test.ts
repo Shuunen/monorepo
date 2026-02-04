@@ -1,7 +1,9 @@
+import { invariant } from "es-toolkit";
 import { createElement } from "react";
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import {
+  acceptField,
   buildStepperSteps,
   checkZodBoolean,
   field,
@@ -10,6 +12,7 @@ import {
   filterSchema,
   forms,
   getDefaultValues,
+  getElementSchema,
   getFieldMetadata,
   getFieldMetadataOrThrow,
   getFormFieldRender,
@@ -17,15 +20,18 @@ import {
   getKeyMapping,
   getLastAccessibleStepIndex,
   getStepMetadata,
+  getUnwrappedSchema,
   getZodEnumOptions,
   isFieldVisible,
   isStepClickable,
+  isSubformFilled,
   isZodArray,
   isZodBoolean,
   isZodDate,
   isZodEnum,
   isZodFile,
   isZodNumber,
+  isZodObject,
   isZodString,
   mapExternalDataToFormFields,
   mockSubmit,
@@ -103,7 +109,7 @@ describe("auto-form.utils", () => {
       { label: "🇫🇷 France", value: "fr" },
     ]);
   });
-  it("getZodEnumOptions E should handle optional enum with custom options", () => {
+  it("getZodEnumOptions E should handle optional enum with custom options A", () => {
     const schema = z
       .enum(["xs", "sm", "md"])
       .optional()
@@ -114,6 +120,27 @@ describe("auto-form.utils", () => {
           { label: "Medium", value: "md" },
         ],
       });
+    const result = getZodEnumOptions(schema);
+    if (!result.ok) {
+      throw new Error("Expected success but got error");
+    }
+    expect(result.value).toEqual([
+      { label: "Extra Small", value: "xs" },
+      { label: "Small", value: "sm" },
+      { label: "Medium", value: "md" },
+    ]);
+  });
+  it("getZodEnumOptions E should handle optional enum with custom options B", () => {
+    const schema = z
+      .enum(["xs", "sm", "md"])
+      .meta({
+        options: [
+          { label: "Extra Small", value: "xs" },
+          { label: "Small", value: "sm" },
+          { label: "Medium", value: "md" },
+        ],
+      })
+      .optional();
     const result = getZodEnumOptions(schema);
     if (!result.ok) {
       throw new Error("Expected success but got error");
@@ -249,7 +276,7 @@ describe("auto-form.utils", () => {
     const schema = z.string().meta({ dependsOn: "age=5", label: "A" });
     expect(isFieldVisible(schema, { age: 5 })).toBe(true);
   });
-  it("isFieldVisible J should handle metatada visible returning false", () => {
+  it("isFieldVisible J should handle metadata visible returning false", () => {
     const schema = z.string().meta({ isVisible: () => false, label: "A" });
     expect(isFieldVisible(schema, {})).toBe(false);
   });
@@ -324,6 +351,43 @@ describe("auto-form.utils", () => {
     const filtered = filterSchema(schema, { a: "something" });
     expect(filtered.shape).toHaveProperty("a");
     expect(filtered.shape).not.toHaveProperty("b");
+  });
+  it("filterSchema C should handle subforms without meta", () => {
+    const schema = step(
+      z.object({
+        firstName: field(z.string()),
+        applicants: forms(
+          z.object({
+            list: fields(z.number(), { minItems: 5 }),
+          }),
+        ),
+      }),
+    );
+    const filtered = filterSchema(schema);
+    expect(filtered.shape).toHaveProperty("firstName");
+    expect(filtered.shape).toHaveProperty("applicants");
+    const result = filtered.safeParse({ firstName: "Jojito" });
+    expect(result.success).toBe(true);
+  });
+  it("filterSchema D should handle subforms with meta", () => {
+    const schema = step(
+      z.object({
+        firstName: field(z.string()),
+        applicants: forms(
+          z.object({
+            list: fields(z.number(), { minItems: 5 }),
+          }),
+          {
+            minItems: 1,
+          },
+        ),
+      }),
+    );
+    const filtered = filterSchema(schema);
+    expect(filtered.shape).toHaveProperty("firstName");
+    expect(filtered.shape).toHaveProperty("applicants");
+    const result = filtered.safeParse({ firstName: "Luna" });
+    expect(result.success).toBe(false);
   });
 
   // normalizeDataForSchema
@@ -473,25 +537,19 @@ describe("auto-form.utils", () => {
     `);
   });
   it("normalizeDataForSchema K should handle array with codec", () => {
-    const schema = z.object({
-      userDates: z.array(
-        z
-          .object({
-            date: field(z.string(), { label: "Date", codec: isoDateStringToDateInstance }),
-            userDate: field(z.string(), {
-              keyOut: "user.date",
-              label: "Date",
-              codec: isoDateStringToDateInstance,
-            }),
-          })
-          .optional(),
-      ),
-    });
+    const schema = step(
+      z.object({
+        userDates: forms(
+          z.object({
+            date: field(z.string(), { codec: isoDateStringToDateInstance }),
+          }),
+        ),
+      }),
+    );
     const data = {
       userDates: [
         {
           date: new Date("2026-01-14"),
-          userDate: new Date("2026-01-14"),
         },
       ],
     };
@@ -501,9 +559,27 @@ describe("auto-form.utils", () => {
         "userDates": [
           {
             "date": "2026-01-14",
-            "userDate": "2026-01-14",
           },
         ],
+      }
+    `);
+  });
+  it("normalizeDataForSchema L should handle codec throwing error", () => {
+    const schema = z.object({
+      foobar: field(z.number(), {
+        codec: z.codec(z.number(), z.number(), {
+          decode: data => data,
+          encode: _ => {
+            throw new Error("should handle");
+          },
+        }),
+      }),
+    });
+    const data = { foobar: 10 };
+    const result = normalizeDataForSchema(schema, data);
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "foobar": undefined,
       }
     `);
   });
@@ -700,7 +776,7 @@ describe("auto-form.utils", () => {
       }
     `);
   });
-  it("mapExternalDataToFormFields L should handle array using codec", () => {
+  it("mapExternalDataToFormFields K should handle array using codec", () => {
     const schema = z.object({
       users: z.array(
         z.object({
@@ -745,15 +821,31 @@ describe("auto-form.utils", () => {
       }
     `);
   });
+  it("mapExternalDataToFormFields M should handle array with non-array as input value", () => {
+    const schema = z.object({
+      users: z.array(field(z.string(), { label: "Date" })),
+    });
+    const externalData = {
+      users: "John",
+    };
+    const result = mapExternalDataToFormFields(schema, externalData);
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "users": [
+          "John",
+        ],
+      }
+    `);
+  });
 
   // fields
   it("fields A should create a ZodArray", () => {
     const schema = fields(z.object({ name: z.string() }), {});
-    expect(schema.type).toBe("array");
+    expect(schema.type).toBe("prefault");
+    expect(schema.unwrap().type).toBe("array");
   });
   it("fields B should create a ZodArray with minItems", () => {
     const schema = fields(z.object({ name: z.string() }), { minItems: 1 });
-    expect(schema.type).toBe("array");
     const parsed = schema.safeParse([{ name: "John" }, { name: "Jane" }, { name: "Jim" }]);
     expect(parsed.success).toBe(true);
     const parsed2 = schema.safeParse([]);
@@ -761,11 +853,17 @@ describe("auto-form.utils", () => {
   });
   it("fields C should create a ZodArray with maxItems", () => {
     const schema = fields(z.object({ name: z.string() }), { maxItems: 1 });
-    expect(schema.type).toBe("array");
     const parsed = schema.safeParse([{ name: "John" }]);
     expect(parsed.success).toBe(true);
     const parsed2 = schema.safeParse([{ name: "John" }, { name: "Jane" }]);
     expect(parsed2.success).toBe(false);
+  });
+  it("fields D can be called without meta", () => {
+    const schema = fields(z.object({ name: z.string() }));
+    expect(schema.type).toBe("prefault");
+    expect(schema.unwrap().type).toBe("array");
+    // @ts-expect-error missing type
+    expect(schema.meta().render).toBe("field-list");
   });
 
   // isZodDate
@@ -811,6 +909,33 @@ describe("auto-form.utils", () => {
     const data = { a: "foo" };
     const cleaned = normalizeData([], data);
     expect(cleaned).toEqual(data);
+  });
+  it("normalizeData C should log when undefined schema", () => {
+    const data = { a: "foo" };
+    // @ts-expect-error type issue on purpose
+    expect(() => normalizeData([undefined], data)).toThrowErrorMatchingInlineSnapshot(
+      `[TypeError: Cannot read properties of undefined (reading 'shape')]`,
+    );
+  });
+  it("normalizeData D testo", () => {
+    const schema = step(
+      z.object({
+        listA: fields(z.string()),
+        listB: z.string().array(),
+      }),
+    );
+    const data = { listA: ["Alice"], listB: ["Romain"] };
+    const cleaned = normalizeData([schema], data);
+    expect(cleaned).toMatchInlineSnapshot(`
+      {
+        "listA": [
+          "Alice",
+        ],
+        "listB": [
+          "Romain",
+        ],
+      }
+    `);
   });
 
   // filterDataForSummary
@@ -942,7 +1067,8 @@ describe("auto-form.utils", () => {
     expect(metadata).toBeUndefined();
   });
   it("getFieldMetadata D should return undefined when meta is not a function", () => {
-    const schema = { type: "string" } as z.ZodType;
+    const schema = { type: "string" };
+    // @ts-expect-error bad type on purpose
     const metadata = getFieldMetadata(schema);
     expect(metadata).toBeUndefined();
   });
@@ -975,6 +1101,13 @@ describe("auto-form.utils", () => {
     expect(isZodNumber(schema)).toBe(true);
   });
 
+  // accept field
+  it("accept field A should add metadata to schema", () => {
+    const schema = acceptField({ labels: { accept: "Confirmation", reject: "Non-confirmation" } });
+    const metadata = getFieldMetadata(schema);
+    expect(metadata).toEqual({ labels: { accept: "Confirmation", reject: "Non-confirmation" }, render: "accept" });
+  });
+
   // section
   it("section A should create section schema with metadata", () => {
     const schema = section({ title: "Test Section" });
@@ -1000,7 +1133,8 @@ describe("auto-form.utils", () => {
     expect(metadata).toBeUndefined();
   });
   it("getStepMetadata C should return undefined when meta is not a function", () => {
-    const schema = { shape: {} } as z.ZodObject;
+    const schema = { shape: {} };
+    // @ts-expect-error bad type on purpose
     const metadata = getStepMetadata(schema);
     expect(metadata).toBeUndefined();
   });
@@ -1021,7 +1155,8 @@ describe("auto-form.utils", () => {
   // forms
   it("forms A should create a ZodArray with metadata", () => {
     const schema = forms(z.object({ name: z.string() }), { icon: createElement("div"), maxItems: 3, minItems: 1 });
-    expect(schema.type).toBe("array");
+    expect(schema.type).toBe("prefault");
+    expect(schema.unwrap().type).toBe("array");
     const metadata = getFieldMetadata(schema);
     expect(metadata).toBeDefined();
     if (metadata) {
@@ -1038,6 +1173,13 @@ describe("auto-form.utils", () => {
     expect(parsed2.success).toBe(false);
     const parsed3 = schema.safeParse([{ name: "John" }, { name: "Jane" }, { name: "Jim" }]);
     expect(parsed3.success).toBe(false);
+  });
+  it("forms C can be called without meta", () => {
+    const schema = forms(z.object({ name: z.string() }));
+    expect(schema.type).toBe("prefault");
+    expect(schema.unwrap().type).toBe("array");
+    // @ts-expect-error missing type
+    expect(schema.meta().render).toBe("form-list");
   });
 
   // getFormFieldRender
@@ -1075,6 +1217,14 @@ describe("auto-form.utils", () => {
   });
   it("getFormFieldRender I should handle optional schemas", () => {
     const schema = z.string().optional();
+    expect(getFormFieldRender(schema)).toBe("text");
+  });
+  it("getFormFieldRender J should handle default schemas", () => {
+    const schema = z.string().default("zboub");
+    expect(getFormFieldRender(schema)).toBe("text");
+  });
+  it("getFormFieldRender K should handle prefault schemas", () => {
+    const schema = z.string().prefault("zboubi");
     expect(getFormFieldRender(schema)).toBe("text");
   });
 
@@ -1155,6 +1305,24 @@ describe("auto-form.utils", () => {
     const schema = z.string().optional();
     expect(isZodArray(schema)).toBe(false);
   });
+  it("isZodArray E should return true for prefault schema", () => {
+    const schema = forms(z.object(), {});
+    expect(isZodArray(schema)).toBe(true);
+  });
+
+  // isZodObject
+  it("isZodObject A should return true for ZodObject", () => {
+    const schema = z.object();
+    expect(isZodObject(schema)).toBe(true);
+  });
+  it("isZodObject B should return true for optional ZodObject", () => {
+    const schema = z.object().optional();
+    expect(isZodObject(schema)).toBe(true);
+  });
+  it("isZodObject C should return false for non-array schema", () => {
+    const schema = z.string();
+    expect(isZodObject(schema)).toBe(false);
+  });
 
   // getDefaultValues
   it("getDefaultValues A should compute default values from schemas", () => {
@@ -1174,6 +1342,11 @@ describe("auto-form.utils", () => {
     const schema = z.object({ name: z.string().meta({ label: "Name" }) });
     const result = getDefaultValues([schema], {});
     expect(result).toEqual({});
+  });
+
+  it("getDefaultValues D undefined handling", () => {
+    // @ts-expect-error type issue on purpose
+    expect(() => getDefaultValues([undefined], {})).toThrowError();
   });
 
   // getLastAccessibleStepIndex
@@ -1299,5 +1472,78 @@ describe("auto-form.utils", () => {
     expect(result[0].section).toBe("Section A");
     expect(result[1].section).toBeUndefined();
     expect(result[2].section).toBe("Section B");
+  });
+
+  // getChildSchemaWithoutOptional
+  it("getChildSchemaWithoutOptional A intended use case", () => {
+    const schema = z.number().optional();
+    const result = getUnwrappedSchema(schema);
+    expect(result.type).toBe("number");
+  });
+  it("getChildSchemaWithoutOptional B cant unwrap", () => {
+    const schema = z.number();
+    const result = getUnwrappedSchema(schema);
+    expect(result.type).toBe("number");
+  });
+  it("getChildSchemaWithoutOptional B double unwrap", () => {
+    const schema = z.number().optional().default(12);
+    const result = getUnwrappedSchema(schema);
+    expect(result.type).toBe("number");
+  });
+
+  // getElementSchema
+  it("getElementSchema A intended use case", () => {
+    const schema = z.number().array().default([11]);
+    const result = getElementSchema(schema);
+    invariant(result.ok, "result should be ok");
+    expect(result.value.type).toBe("number");
+  });
+  it("getElementSchema B fail to get element schema", () => {
+    const schema = z.object();
+    const result = getElementSchema(schema);
+    invariant(!result.ok, "result should not be ok");
+    expect(result.error).toMatchInlineSnapshot(`"cant get element of a non-array schema"`);
+  });
+
+  // isSubformFilled
+  it("isSubformFilled A string", () => {
+    const data = { name: "John doe" };
+    expect(isSubformFilled(data)).toBe(true);
+  });
+  it("isSubformFilled B date", () => {
+    const data = { dateFrom: new Date() };
+    expect(isSubformFilled(data)).toBe(true);
+  });
+  it("isSubformFilled C array", () => {
+    const data = { dates: [new Date()] };
+    expect(isSubformFilled(data)).toBe(true);
+  });
+  it("isSubformFilled D object", () => {
+    const data = { infos: { name: "John doe" } };
+    expect(isSubformFilled(data)).toBe(true);
+  });
+  it("isSubformFilled E empty string", () => {
+    const data = { name: "" };
+    expect(isSubformFilled(data)).toBe(false);
+  });
+  it("isSubformFilled F default boolean", () => {
+    const data = { isOk: false };
+    expect(isSubformFilled(data)).toBe(false);
+  });
+  it("isSubformFilled G empty array", () => {
+    const data = { dates: [] };
+    expect(isSubformFilled(data)).toBe(false);
+  });
+  it("isSubformFilled H empty object", () => {
+    const data = { infos: {} };
+    expect(isSubformFilled(data)).toBe(false);
+  });
+  it("isSubformFilled I undefined", () => {
+    const data = { infos: undefined };
+    expect(isSubformFilled(data)).toBe(false);
+  });
+  it("isSubformFilled J null", () => {
+    const data = { infos: null };
+    expect(isSubformFilled(data)).toBe(false);
   });
 });

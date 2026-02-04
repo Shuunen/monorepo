@@ -59,7 +59,7 @@ export const Basic: Story = {
         z.object({
           persons: forms(applicantSchema, {
             icon: <IconHome />,
-            identifier: data => `${data.name} (${data.age} years)`,
+            identifier: data => (data ? `${data.name} (${data.age} years)` : "New person"),
             label: "Add persons",
             labels: {
               addButton: "Add person",
@@ -83,7 +83,7 @@ export const Empty: Story = {
         z.object({
           persons: forms(applicantSchema, {
             icon: <IconHome />,
-            identifier: data => `${data.name} (${data.age} years)`,
+            identifier: data => (data ? `${data.name} (${data.age} years)` : "New person"),
             label: "Add persons",
             placeholder: "You can add multiple persons, no minimum or maximum.",
           }),
@@ -99,7 +99,7 @@ export const Empty: Story = {
       expect(submittedData).toContainHTML(`{}`);
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
-      expect(submittedData).toContainHTML(`"persons": []`);
+      expect(submittedData).toContainHTML(`{}`);
     });
 
     await step("add first item", async () => {
@@ -113,16 +113,16 @@ export const Empty: Story = {
       const ageInput = canvas.getByTestId("input-number-age");
       await userEvent.type(nameInput, "Alice");
       await userEvent.type(ageInput, "7");
-      expect(submittedData).toContainHTML(`"persons": []`);
+      expect(submittedData).toContainHTML(`{}`);
       const subFormSubmitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(subFormSubmitButton);
       await sleep(100); // wait for state update
       const expectedData = { persons: [{ name: "Alice", age: 7 }] };
-      expect(submittedData).toContainHTML(`"persons": []`);
+      expect(submittedData).toContainHTML(`{}`);
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
       const badgeSuccess = canvas.getByTestId("badge-status");
-      expect(badgeSuccess).toHaveTextContent("Completed");
+      expect(badgeSuccess).toHaveTextContent("Validated");
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
 
@@ -146,6 +146,27 @@ export const Empty: Story = {
   },
 };
 
+/**
+ * Required form list
+ */
+export const Required: Story = {
+  args: {
+    schemas: [
+      step(
+        z.object({
+          persons: forms(applicantSchema, {
+            icon: <IconHome />,
+            identifier: data => (data ? `${data.name} (${data.age} years)` : "New person"),
+            label: "Add persons",
+            minItems: 1,
+            placeholder: "You can add multiple persons, minimum is one.",
+          }),
+        }),
+      ),
+    ],
+  },
+};
+
 const initialData = {
   applicants: [
     { name: "Alice", age: 7 },
@@ -164,7 +185,7 @@ export const ExistingData: Story = {
         z.object({
           applicants: forms(applicantSchema, {
             icon: <IconCheck />,
-            identifier: data => `${data.name} (${data.age} years)`,
+            identifier: data => (data ? `${data.name} (${data.age} years)` : "New person"),
             label: "Fill in the applicants",
             maxItems: 5,
             minItems: 1,
@@ -182,8 +203,8 @@ export const ExistingData: Story = {
       expect(submittedData).toContainHTML(`{}`);
       const badgesSuccess = canvas.getAllByTestId("badge-status");
       expect(badgesSuccess.length).toBe(2);
-      expect(badgesSuccess[0]).toHaveTextContent("Completed");
-      expect(badgesSuccess[1]).toHaveTextContent("Completed");
+      expect(badgesSuccess[0]).toHaveTextContent("Validated");
+      expect(badgesSuccess[1]).toHaveTextContent("Validated");
     });
 
     await step("add a third item", async () => {
@@ -246,7 +267,7 @@ export const MultiStep: Story = {
         z.object({
           applicants: forms(applicantSchema, {
             icon: <IconDownload className="text-blue-500" />,
-            identifier: data => `${data.name} (${data.age} years)`,
+            identifier: data => (data ? `${data.name} (${data.age} years)` : "New person"),
             label: "Fill in the applicants",
             placeholder: "You can add multiple applicants, no minimum or maximum.",
           }),
