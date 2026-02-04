@@ -1212,8 +1212,5 @@ export const Codec: Story = {
 /*
 TODO, ordered by priority :
 - Display a red error step if issue
-- Display a green success step if valid
 - Write a story where we feed the AutoForm a whole new schema after a variant change (for dynamic schemas)
-- Allow overriding the mapping of auto-form-field.tsx
-- Design with title and navigation on the top right with arrow icons
 */
