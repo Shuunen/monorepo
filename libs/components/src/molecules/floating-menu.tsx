@@ -12,7 +12,6 @@ export type FloatingMenuAction = {
   name: string;
 };
 
-// oxlint-disable-next-line max-lines-per-function
 export function FloatingMenu({
   actions = [],
   isLoading = false,
@@ -21,7 +20,6 @@ export function FloatingMenu({
   const [isOpen, setOpen] = useState(false);
   const iconOpen = isOpen ? <PackageOpenIcon /> : <PackageIcon />;
   const icon = useMemo(() => (isLoading ? <LoaderCircleIcon /> : iconOpen), [iconOpen, isLoading]);
-  // oxlint-disable-next-line max-nested-callbacks
   const availableActions = useMemo(
     () => (isSettingsRequired ? actions.filter(action => ["Home", "Settings"].includes(action.name)) : actions),
     [actions, isSettingsRequired],
