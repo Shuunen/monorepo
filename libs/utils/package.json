@@ -4,8 +4,8 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "dset": "^3.1.4",
-    "react": "^19.2.4"
+    "@types/react": "^19.2.10",
+    "dset": "^3.1.4"
   },
   "exports": {
     ".": "./src/index.ts",
