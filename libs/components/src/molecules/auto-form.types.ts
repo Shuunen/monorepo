@@ -119,17 +119,23 @@ export type AutoFormAcceptFieldMetadata = Simplify<
 export type AutoFormFieldSectionMetadata = { render: "section" } & FormFieldSectionProps &
   AutoFormFieldConditionalMetadata;
 
+/** A single condition or an OR group of conditions (inner array = OR) */
+export type DependsOnCondition = string | string[];
+
 /**
  * Metadata describing the configuration of a conditional rendering in auto-generated form fields.
- * example: `field(z.string(), { dependsOn: "field1=xxx" })`
- * example: `field(z.string(), { isVisible: (formData) => isLegalBaseWip(formData)" })`
+ * example: `field(z.string(), { dependsOn: "field1=xxx" })` - single condition
+ * example: `field(z.string(), { dependsOn: ["field1", "field2"] })` - AND (all must be true)
+ * example: `field(z.string(), { dependsOn: [["field1", "field2"]] })` - OR (at least one must be true)
+ * example: `field(z.string(), { dependsOn: [["field1", "field2"], "field3"] })` - (field1 OR field2) AND field3
  */
+
+/** We should test what API we keep because dependsOn and isVisible covers the same use cases and add complexity to the codebase */
 export type AutoFormFieldConditionalMetadata = {
-  /** The name of another field that this field depends on. Supports field=value syntax for specific value checks. This should be use in favor of `isVisible` when possible for performance reasons. */
-  dependsOn?: string | string[];
-  /** More generic way to express condition on whether or not a field is visible. When provided, this function has precedence over `dependsOn`. ⚠️ This should be used as last resort, because the field will be redraw every time*/
-  // oxlint-disable-next-line no-explicit-any
-  isVisible?: (formData: Record<string, any>) => boolean;
+  /** The name of another field that this field depends on. Supports field=value and field!=value syntax for specific value checks. Use nested arrays for OR logic: [['a', 'b']] means a OR b. */
+  dependsOn?: string | DependsOnCondition[];
+  /** More generic way to express condition on whether or not a field is visible. When provided, this function has precedence over `dependsOn`. */
+  isVisible?: (formData: Record<string, unknown>) => boolean;
 };
 
 /**
