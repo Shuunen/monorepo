@@ -70,6 +70,8 @@ export * from "./icons/icon-tooltip";
 export * from "./icons/icon-trash";
 export * from "./icons/icon-upcoming";
 export * from "./icons/icon-upload";
+export * from "./icons/icon-user";
+export * from "./icons/icon-users";
 export * from "./icons/icon-warning";
 export * from "./icons/icon-x";
 export * from "./molecules/auto-form";
