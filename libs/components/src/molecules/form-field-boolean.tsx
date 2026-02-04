@@ -29,8 +29,11 @@ export function FormFieldBoolean({ fieldName, fieldSchema, isOptional, logger, r
     if (currentValue !== undefined || isOptional) {
       return;
     }
-    logger?.debug("initializing boolean field value to false, it was undefined");
-    setValue(fieldName, false);
+    const targetValue = ["default", "prefault"].includes(fieldSchema.type)
+      ? (fieldSchema as z.ZodDefault).def.defaultValue
+      : false;
+    logger?.debug(`initializing boolean field "${fieldName}" value to "${targetValue}", it was undefined`);
+    setValue(fieldName, targetValue);
   }, []);
   return (
     <FormFieldBase {...props} showLabel={false}>

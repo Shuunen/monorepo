@@ -114,6 +114,74 @@ export const WithInitialValueFalse: Story = {
 };
 
 /**
+ * Boolean field with default true value (E2E: verify default state and toggle)
+ */
+export const WithDefaultValueTrue: Story = {
+  args: {
+    schemas: [
+      z.object({
+        subscribeToNewsletter: field(z.boolean().default(true), {
+          label: "Subscribe to Newsletter",
+          placeholder: "Receive email updates",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const toggleSwitch = canvas.getByRole("switch");
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+
+    await step("verify initial value is true", () => {
+      expect(toggleSwitch).toHaveAttribute("aria-checked", "true");
+    });
+
+    await step("submit form with initial value", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+
+    await step("verify submitted data matches initial value", () => {
+      expect(submittedData).toContainHTML(stringify({ subscribeToNewsletter: true }, true));
+    });
+  },
+};
+
+/**
+ * Boolean field with default false value (E2E: verify default state and toggle)
+ */
+export const WithDefaultValueFalse: Story = {
+  args: {
+    schemas: [
+      z.object({
+        subscribeToNewsletter: field(z.boolean().default(false), {
+          label: "Subscribe to Newsletter",
+          placeholder: "Receive email updates",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const toggleSwitch = canvas.getByRole("switch");
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+
+    await step("verify initial value is false", () => {
+      expect(toggleSwitch).toHaveAttribute("aria-checked", "false");
+    });
+
+    await step("submit form with initial value", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+
+    await step("verify submitted data matches initial value", () => {
+      expect(submittedData).toContainHTML(stringify({ subscribeToNewsletter: false }, true));
+    });
+  },
+};
+
+/**
  * Optional boolean field
  */
 export const Optional: Story = {
