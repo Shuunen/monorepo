@@ -40,7 +40,7 @@ export const ContestHeader = memo(function ContestHeader({
         )}
       >
         {title.length > 0 && (
-          <Title className={cn({ "absolute top-12 shadow-xl bg-accent/80 px-5 py-3 rounded-md": !isContestMode })}>
+          <Title className={cn({ "absolute top-12 rounded-md bg-accent/80 px-5 py-3 shadow-xl": !isContestMode })}>
             {title}
           </Title>
         )}

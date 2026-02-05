@@ -13,6 +13,8 @@ export function mockFile(data: Partial<Models.File> = {}) {
     bucketId: "bucketA",
     chunksTotal: 1,
     chunksUploaded: 1,
+    compression: "",
+    encryption: false,
     mimeType: "image/jpeg",
     name: "fileName-a.jpg",
     signature: "signature-a",

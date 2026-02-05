@@ -2,9 +2,9 @@
   "dependencies": {
     "@monorepo/utils": "workspace:*",
     "7zip-min": "^2.1.0",
-    "clipboardy": "^5.1.0",
+    "clipboardy": "^5.2.1",
     "cors": "^2.8.6",
-    "exiftool-vendored": "^35.6.0",
+    "exiftool-vendored": "^35.7.0",
     "express": "^5.2.1",
     "sharp": "^0.34.5"
   },

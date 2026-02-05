@@ -81,7 +81,7 @@ export function ImageViewer({
         animate={{ opacity: isDraggingOver ? 1 : 0 }}
         className={cn(
           "pointer-events-none absolute inset-1 z-50 flex items-center justify-center rounded-2xl border-5 border-dashed",
-          { "bg-chart-3/40 border-chart-3": nbDraggedFiles >= 3, "bg-primary/40 border-primary": nbDraggedFiles < 3 },
+          { "border-chart-3 bg-chart-3/40": nbDraggedFiles >= 3, "border-primary bg-primary/40": nbDraggedFiles < 3 },
         )}
         initial={{ opacity: 0 }}
         style={{ display: isDraggingOver ? "flex" : "none" }}

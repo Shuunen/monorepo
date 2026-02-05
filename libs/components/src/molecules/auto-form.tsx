@@ -304,7 +304,7 @@ export function AutoForm({
         "min-w-3xl": size === "medium",
         "min-w-5xl": size === "large",
         "min-w-xl": size === "small",
-        "p-6 bg-white rounded-lg shadow-md": showCard,
+        "rounded-lg bg-white p-6 shadow-md": showCard,
       })}
     >
       {shouldShowStepper && (
