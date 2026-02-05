@@ -16,9 +16,10 @@ function AutoFormField({
   fieldName,
   fieldSchema,
   stepState,
+  state,
   logger,
   readonly,
-}: AutoFormFieldProps & { readonly: boolean }) {
+}: AutoFormFieldProps & { readonly: boolean; state?: AutoFormFieldsMetadata["state"] }) {
   if (fieldSchema === undefined) {
     return (
       <Paragraph>
@@ -29,8 +30,8 @@ function AutoFormField({
   const isOptional = fieldSchema instanceof z.ZodOptional;
   const metadata = getFieldMetadata(fieldSchema) ?? {};
   const fieldState = "state" in metadata ? metadata.state : undefined;
-  const state = fieldState ?? stepState ?? "editable";
-  const props = { fieldName, fieldSchema, isOptional, logger, readonly: state === "readonly" || readonly };
+  const finalState = fieldState ?? state ?? stepState ?? "editable";
+  const props = { fieldName, fieldSchema, isOptional, logger, readonly: finalState === "readonly" || readonly };
   const render = getFormFieldRender(fieldSchema);
 
   if (!render || render === "section" || render === "field-list") {
@@ -51,8 +52,9 @@ export function FormFieldFieldList({
   readonly = false,
 }: FormFieldBaseProps) {
   const metadata = fieldSchema.meta() as AutoFormFieldsMetadata;
-  const { maxItems, label, placeholder, nbItems } = metadata;
+  const { maxItems, label, placeholder, nbItems, state } = metadata;
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
+  const isDisabled = state === "disabled" || readonly;
   const { value: elementSchema } = Result.unwrap(getElementSchema(fieldSchema));
   invariant(elementSchema !== undefined, "elementSchema should be defined");
   const fieldValue = useWatch({ name: fieldName });
@@ -101,12 +103,13 @@ export function FormFieldFieldList({
                   fieldName={`${fieldName}.${keys[index]}`}
                   fieldSchema={elementSchema}
                   logger={logger}
-                  readonly={readonly}
+                  readonly={isDisabled}
+                  state={state}
                 />
               </div>
               {index === 0 && nbItems === undefined && (
                 <Button
-                  className={cn("mt-7.5", { hidden: readonly })}
+                  className={cn("mt-7.5", { hidden: isDisabled })}
                   disabled={items.length >= (maxItems ?? Infinity)}
                   name={`add-${fieldName}`}
                   onClick={() => addItem(field.onChange)}
@@ -118,7 +121,7 @@ export function FormFieldFieldList({
               )}
               {index !== 0 && nbItems === undefined && (
                 <Button
-                  className={cn("mt-7.5", { hidden: readonly })}
+                  className={cn("mt-7.5", { hidden: isDisabled })}
                   name={`delete-${fieldName}-${index}`}
                   onClick={() => onDeleteItem(field.onChange, index)}
                   type="button"
