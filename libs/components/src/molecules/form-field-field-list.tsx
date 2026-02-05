@@ -1,5 +1,5 @@
-import { cn, Result, useStableKeys } from "@monorepo/utils";
-import { useWatch } from "react-hook-form";
+import { cn, Result, useStableKeys, arrayAlign } from "@monorepo/utils";
+import { useFormContext, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../atoms/button";
 import { Paragraph, Title } from "../atoms/typography";
@@ -7,10 +7,10 @@ import { IconMinus } from "../icons/icon-minus";
 import { IconReject } from "../icons/icon-reject";
 import { type AutoFormFieldProps, componentRegistry } from "./auto-form-field.utils";
 import type { AutoFormFieldsMetadata } from "./auto-form.types";
-import { getElementSchema, getFieldMetadata, getFormFieldRender } from "./auto-form.utils";
+import { getElementSchema, getFieldMetadata, getFormFieldRender, typeLikeResolver } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import { invariant } from "es-toolkit";
-import { useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 function AutoFormField({
   fieldName,
@@ -51,12 +51,22 @@ export function FormFieldFieldList({
   readonly = false,
 }: FormFieldBaseProps) {
   const metadata = fieldSchema.meta() as AutoFormFieldsMetadata;
-  const { maxItems, label, placeholder } = metadata;
+  const { maxItems, label, placeholder, nbItems } = metadata;
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
   const { value: elementSchema } = Result.unwrap(getElementSchema(fieldSchema));
   invariant(elementSchema !== undefined, "elementSchema should be defined");
   const fieldValue = useWatch({ name: fieldName });
-  const items = (fieldValue as unknown[]) || [undefined];
+  const formValues = useWatch({ disabled: nbItems === undefined });
+  const length = typeLikeResolver(nbItems, formValues);
+  const { setValue } = useFormContext();
+  const items = useMemo(() => arrayAlign(fieldValue, length), [fieldValue, length]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we don't want to re-run this effect when the items change already bind in the useMemo
+  useEffect(() => {
+    if (length !== undefined && fieldValue?.length !== length) {
+      setValue(fieldName, items, { shouldValidate: false });
+    }
+  }, [length, fieldName, setValue]);
   const { addKey, keys, removeKey } = useStableKeys(useRef, items.length);
   /**
    * Function called when user wants to add a new form to the list
@@ -88,13 +98,13 @@ export function FormFieldFieldList({
             <div className="flex gap-2" key={keys[index]}>
               <div className="flex-1">
                 <AutoFormField
-                  fieldName={`${fieldName}.${index}`}
+                  fieldName={`${fieldName}.${keys[index]}`}
                   fieldSchema={elementSchema}
                   logger={logger}
                   readonly={readonly}
                 />
               </div>
-              {index === 0 && (
+              {index === 0 && nbItems === undefined && (
                 <Button
                   className={cn("mt-7.5", { hidden: readonly })}
                   disabled={items.length >= (maxItems ?? Infinity)}
@@ -106,7 +116,7 @@ export function FormFieldFieldList({
                   <IconReject className="size-4 rotate-45" />
                 </Button>
               )}
-              {index !== 0 && (
+              {index !== 0 && nbItems === undefined && (
                 <Button
                   className={cn("mt-7.5", { hidden: readonly })}
                   name={`delete-${fieldName}-${index}`}
