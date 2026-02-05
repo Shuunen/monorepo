@@ -16,9 +16,9 @@ export function DebugData({ className, data, isFloating = false, isScrollable = 
     "relative max-w-full shrink-0 rounded-lg border border-stone-300 bg-stone-100 p-6 shadow-lg dark:bg-stone-800",
     className,
     {
-      "fixed right-5 top-28": isFloating,
-      "opacity-30 hover:opacity-100 transition-opacity": isGhost,
-      "overflow-y-auto max-h-96": isScrollable,
+      "fixed top-28 right-5": isFloating,
+      "max-h-96 overflow-y-auto": isScrollable,
+      "opacity-30 transition-opacity hover:opacity-100": isGhost,
     },
   );
   return (

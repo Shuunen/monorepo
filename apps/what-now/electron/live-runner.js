@@ -1,6 +1,7 @@
 // oxlint-disable prefer-top-level-await
-// oxlint-disable no-process-exit, max-lines-per-function, max-nested-callbacks, no-null, no-require-imports, no-undef, no-commonjs
+// oxlint-disable no-process-exit, max-nested-callbacks, no-null, no-require-imports, no-undef, no-commonjs
 /** biome-ignore-all lint/correctness/noNodejsModules: we can use node here */
+// oxlint-disable-next-line import/no-nodejs-modules
 const cp = require('node:child_process')
 const chokidar = require('chokidar')
 const electron = require('electron')

@@ -1,4 +1,4 @@
-// oxlint-disable no-dynamic-delete, max-nested-callbacks, no-array-for-each, max-lines-per-function, no-explicit-any, no-undef, no-commonjs, no-require-imports
+// oxlint-disable import/no-nodejs-modules, no-dynamic-delete, max-nested-callbacks, no-array-for-each, max-lines-per-function, no-explicit-any, no-undef, no-commonjs, no-require-imports
 /** biome-ignore-all lint/suspicious/noExplicitAny: it's ok here */
 /** biome-ignore-all lint/correctness/noNodejsModules: it's ok here */
 import { randomBytes } from 'node:crypto'
