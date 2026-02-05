@@ -1,4 +1,5 @@
 export * from "./lib/analytics.js";
+export * from "./lib/array-align.js";
 export * from "./lib/array-insert-after.js";
 export * from "./lib/array-pick-one.js";
 export * from "./lib/array-remove-value.js";
