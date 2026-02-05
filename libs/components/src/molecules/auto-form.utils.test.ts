@@ -41,6 +41,7 @@ import {
   section,
   sectionsFromEditableSteps,
   step,
+  typeLikeResolver,
 } from "./auto-form.utils"; // oxlint-disable-line max-dependencies
 import { imageSchemaOptional, imageSchemaRequired } from "./form-field-upload.const";
 
@@ -1621,4 +1622,16 @@ describe("auto-form.utils", () => {
     const data = { infos: null };
     expect(isSubformFilled(data)).toBe(false);
   });
+});
+
+// typeLikeResolver
+it("typeLikeResolver A should resolve a function", () => {
+  const data = { name: "John doe" };
+  const result = typeLikeResolver(data => data?.name, data);
+  expect(result).toBe("John doe");
+});
+it("typeLikeResolver B should resolve a value", () => {
+  const data = { name: "John doe" };
+  const result = typeLikeResolver("John doe", data);
+  expect(result).toBe("John doe");
 });
