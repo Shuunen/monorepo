@@ -6,6 +6,12 @@ import type { AutoFormStepperStep } from "./auto-form-stepper";
 import type { FormFieldSectionProps } from "./form-field-section";
 import type { FormSummaryData } from "./form-summary";
 
+export type TypeLike<Type> = Type | ((data?: Record<string, unknown>) => Type);
+
+export type NumberLike = TypeLike<number>;
+
+export type StringLike = TypeLike<string>;
+
 /** Props for the AutoForm component, which generates a form based on provided Zod schemas. */
 export type AutoFormProps = {
   /** Logger instance for logging form events, for debugging purposes. */
@@ -75,6 +81,8 @@ export type AutoFormFieldsMetadata = Simplify<
     minItems?: number;
     /** Maximum number of items allowed in the form list */
     maxItems?: number;
+    /** Number of fields by default, can be dynamic, ex : field A has 3 entries and we want this field to be initialized accordingly with 3 fields too */
+    nbItems?: NumberLike;
     render: "field-list";
   }
 >;
