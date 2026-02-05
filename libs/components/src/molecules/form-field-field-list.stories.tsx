@@ -191,3 +191,165 @@ export const ListOfSelectWithData: Story = {
     schemas: [listOfSelectSchema],
   },
 };
+
+const applicantReferenceSchema = field(z.string(), {
+  label: "Applicant's reference",
+  placeholder: "Enter the reference of the applicant",
+});
+
+/**
+ * List initialized with 3 items fixed
+ */
+export const ListInitializedFixed: Story = {
+  args: {
+    schemas: [
+      step(
+        z.object({
+          applicantReferences: fields(applicantReferenceSchema, {
+            label: "Fill in the applicant references",
+            nbItems: 3,
+            placeholder: "Please fill the applicant references",
+          }),
+        }),
+      ),
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+
+    const applicantInput = await canvas.findAllByRole("textbox");
+    expect(applicantInput).toHaveLength(3);
+
+    const firstInput = canvas.getByTestId("input-text-applicant-references-0");
+    await userEvent.type(firstInput, "ref-1");
+    const secondInput = canvas.getByTestId("input-text-applicant-references-1");
+    await userEvent.type(secondInput, "ref-2");
+
+    const submitButton = canvas.getByRole("button", { name: "Submit" });
+    await userEvent.click(submitButton);
+
+    const errors = canvas.getAllByRole("alert");
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toHaveTextContent("Invalid input: expected string, received undefined");
+
+    const thirdInput = canvas.getByTestId("input-text-applicant-references-2");
+    await userEvent.type(thirdInput, "ref-3");
+    await userEvent.click(submitButton);
+
+    await expect(submittedData).toContainHTML(stringify({ applicantReferences: ["ref-1", "ref-2", "ref-3"] }, true));
+  },
+};
+
+/**
+ * List initialized with 3 items dynamic
+ */
+export const ListInitializedDynamic: Story = {
+  args: {
+    initialData: {
+      applicants: ["John Doe", "Jane Smith", "Alice Johnson"],
+    },
+    schemas: [
+      step(
+        z.object({
+          applicants: fields(
+            field(z.string(), {
+              label: "Fill in the applicants",
+              placeholder: "Please add at least one applicant.",
+            }),
+          ),
+        }),
+      ),
+      step(
+        z.object({
+          applicantReferences: fields(applicantReferenceSchema, {
+            label: "Fill in the applicant references",
+            nbItems: (formValues?: Record<string, unknown>) =>
+              Array.isArray(formValues?.applicants) ? formValues.applicants.length : 0,
+            placeholder: "Please fill the applicant references",
+          }),
+        }),
+      ),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+
+    await step("check step 1", async () => {
+      const applicantInput = await canvas.findAllByRole("textbox");
+      expect(applicantInput).toHaveLength(3);
+
+      const firstInput = canvas.getByTestId("input-text-applicants-0");
+      expect(firstInput).toHaveValue("John Doe");
+      const secondInput = canvas.getByTestId("input-text-applicants-1");
+      expect(secondInput).toHaveValue("Jane Smith");
+      const thirdInput = canvas.getByTestId("input-text-applicants-2");
+      expect(thirdInput).toHaveValue("Alice Johnson");
+
+      const nextButton = canvas.getByRole("button", { name: "Next" });
+      await userEvent.click(nextButton);
+    });
+
+    await step("check step 2", async () => {
+      const referenceInputs = await canvas.findAllByRole("textbox");
+      expect(referenceInputs).toHaveLength(3);
+
+      const firstInput = canvas.getByTestId("input-text-applicant-references-0");
+      await userEvent.type(firstInput, "ref-1");
+      const secondInput = canvas.getByTestId("input-text-applicant-references-1");
+      await userEvent.type(secondInput, "ref-2");
+
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+
+      const errors = canvas.getAllByRole("alert");
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toHaveTextContent("Invalid input: expected string, received undefined");
+
+      const thirdInput = canvas.getByTestId("input-text-applicant-references-2");
+      await userEvent.type(thirdInput, "ref-3");
+      await userEvent.click(submitButton);
+      expect(submittedData).toContainHTML(
+        stringify(
+          {
+            applicants: ["John Doe", "Jane Smith", "Alice Johnson"],
+            applicantReferences: ["ref-1", "ref-2", "ref-3"],
+          },
+          true,
+        ),
+      );
+    });
+
+    await step("change step 1 data and check step 2 updates", async () => {
+      const backButton = canvas.getByRole("button", { name: "Back" });
+      await userEvent.click(backButton);
+
+      const deleteButton = canvas.getByTestId("button-delete-applicants-1");
+      await userEvent.click(deleteButton);
+
+      const nextButton = canvas.getByRole("button", { name: "Next" });
+      await userEvent.click(nextButton);
+
+      const referenceInputs = await canvas.findAllByRole("textbox");
+      expect(referenceInputs).toHaveLength(2);
+
+      const firstInput = canvas.getByTestId("input-text-applicant-references-0");
+      expect(firstInput).toHaveValue("ref-1");
+      const secondInput = canvas.getByTestId("input-text-applicant-references-1");
+      expect(secondInput).toHaveValue("ref-2");
+
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      expect(submittedData).toContainHTML(
+        stringify(
+          {
+            applicants: ["John Doe", "Alice Johnson"],
+            applicantReferences: ["ref-1", "ref-2"],
+          },
+          true,
+        ),
+      );
+    });
+  },
+};
