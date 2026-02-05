@@ -43,12 +43,12 @@ function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps
     "h-10 w-full border border-transparent",
     { "h-16 rounded-xl": subtitle },
     { "ml-1": indent },
-    { "bg-white text-black border border-gray-500 hover:bg-gray-100": active },
+    { "border border-gray-500 bg-white text-black hover:bg-gray-100": active },
   );
   return (
     <div className="grid gap-2">
       {section && <Title level={4}>{section}</Title>}
-      <div className={cn("flex items-center gap-0.5", { "opacity-60 pointer-events-none": state === "upcoming" })}>
+      <div className={cn("flex items-center gap-0.5", { "pointer-events-none opacity-60": state === "upcoming" })}>
         {indent && <div className={cn("h-10 w-1 shrink-0 bg-gray-200", { "h-16": subtitle })} />}
         <Button
           className={btnClasses}

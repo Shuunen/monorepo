@@ -3,7 +3,6 @@
 import { exec } from "node:child_process";
 import { readdir, readFile, renameSync, stat, writeFileSync } from "node:fs";
 import path from "node:path";
-import { inspect } from "node:util";
 import { blue, Logger, parseJson, red, slugify } from "@monorepo/utils";
 import type { FfProbeOutput, FfProbeOutputStream } from "./take-screenshot.types";
 
@@ -170,10 +169,6 @@ const utils = {
         else resolve(filenames);
       });
     }),
-  /**
-   * Display a pretty-printed JSON object
-   */
-  prettyPrint: (object: Record<string, unknown>) => inspect(object, { colors: true, depth: 2 }),
   /**
    * Read the contents of a file
    * @param filepath
