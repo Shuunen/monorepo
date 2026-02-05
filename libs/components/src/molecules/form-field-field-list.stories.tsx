@@ -198,9 +198,9 @@ const applicantReferenceSchema = field(z.string(), {
 });
 
 /**
- * List initialized with 3 items fixed
+ * List initialized with 3 items fixed and empty
  */
-export const ListInitializedFixed: Story = {
+export const ListInitializedFixedEmpty: Story = {
   args: {
     schemas: [
       step(
@@ -238,6 +238,40 @@ export const ListInitializedFixed: Story = {
     await userEvent.click(submitButton);
 
     await expect(submittedData).toContainHTML(stringify({ applicantReferences: ["ref-1", "ref-2", "ref-3"] }, true));
+  },
+};
+
+/**
+ * List initialized with 3 items fixed, data and disabled
+ */
+export const ListInitializedFixedWithDataFieldsDisabled: Story = {
+  args: {
+    initialData: {
+      applicantReferences: ["ref-1", "ref-2", "ref-3"],
+    },
+    schemas: [
+      step(
+        z.object({
+          applicantReferences: fields(applicantReferenceSchema, {
+            label: "Fill in the applicant references",
+            nbItems: 3,
+            placeholder: "Please fill the applicant references",
+            state: "disabled",
+          }),
+        }),
+      ),
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const inputs = await canvas.findAllByRole("textbox");
+    expect(inputs).toHaveLength(3);
+    expect(inputs[0]).toHaveValue("ref-1");
+    expect(inputs[0]).toBeDisabled();
+    expect(inputs[1]).toHaveValue("ref-2");
+    expect(inputs[1]).toBeDisabled();
+    expect(inputs[2]).toHaveValue("ref-3");
+    expect(inputs[2]).toBeDisabled();
   },
 };
 
