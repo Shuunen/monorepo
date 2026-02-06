@@ -1,4 +1,4 @@
-/* v8 ignore start -- @preserve */
+/* c8 ignore start */
 // oxlint-disable no-console
 
 /**

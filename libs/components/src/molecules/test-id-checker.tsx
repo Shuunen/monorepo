@@ -1,4 +1,4 @@
-/* v8 ignore start -- @preserve */
+/* c8 ignore start */
 // oxlint-disable-next-line no-restricted-imports
 import { XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -177,7 +177,7 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
   return (
     <Card
       aria-label="data-testid checker"
-      className="fixed right-6 bottom-6 z-100 max-h-11/12 w-auto min-w-[260px] gap-0 overflow-hidden py-0 text-sm shadow-lg"
+      className="fixed right-6 bottom-6 z-100 max-h-11/12 w-auto min-w-65 gap-0 overflow-hidden py-0 text-sm shadow-lg"
     >
       <CardHeader
         className={cn(
