@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "outDir": "dist",
+    "outDir": "out-tsc/tsc",
     "rootDir": "src",
-    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
+    "tsBuildInfoFile": "out-tsc/tsc/tsconfig.app.tsbuildinfo",
     "types": ["node", "@nx/react/typings/cssmodule.d.ts", "@nx/react/typings/image.d.ts", "vite/client"]
   },
   "exclude": ["android", "electron", "out-tsc", "dist", "src/**/*.test.ts", "src/**/*.test.tsx", "vite.config.ts"],
