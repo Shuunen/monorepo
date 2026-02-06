@@ -6,6 +6,7 @@ onlyBuiltDependencies:
   - "@swc/core"
   - "@tailwindcss/oxide"
   - bun
+  - core-js-pure
   - electron
   - esbuild
   - lzma-native

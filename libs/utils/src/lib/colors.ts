@@ -6,11 +6,12 @@
  * @returns boolean if the browser is Firefox
  */
 export function isFirefox() {
-  /* v8 ignore next 3 -- @preserve */
+  /* c8 ignore start */
   if (globalThis.navigator === undefined) {
     return false;
   }
   return globalThis.navigator.userAgent.includes("Firefox");
+  /* c8 ignore stop */
 }
 
 /**
@@ -21,8 +22,9 @@ export function isFirefox() {
  * @returns the string with the color code
  */
 export function addColorCode(from: number, to: number, string: string) {
-  /* v8 ignore next -- @preserve */
+  /* c8 ignore start */
   return isFirefox() ? string : `\u001B[${from}m${string}\u001B[${to}m`;
+  /* c8 ignore stop */
 }
 
 /**

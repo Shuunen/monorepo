@@ -31,8 +31,9 @@ export async function copyToClipboard(
     await navigator.clipboard.writeText(text);
     return Result.ok(`copied to clipboard : ${ellipsis(text)}`);
   } catch {
-    /* v8 ignore next -- @preserve */
+    /* c8 ignore start */
     return Result.error("clipboard not available");
+    /* c8 ignore stop */
   }
 }
 
@@ -44,10 +45,11 @@ export async function copyToClipboard(
  */
 // oxlint-disable-next-line no-undef
 export async function readClipboard(willLog = false, clipboard = navigator.clipboard) {
-  /* v8 ignore next -- @preserve */
+  /* c8 ignore start */
   if (!clipboard) {
     return Result.error("clipboard not available");
   }
+  /* c8 ignore stop */
   if (willLog) {
     consoleLog("reading clipboard...");
   }

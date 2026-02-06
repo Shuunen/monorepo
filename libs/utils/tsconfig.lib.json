@@ -5,11 +5,11 @@
     "lib": ["ESNext", "DOM"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "outDir": "dist",
-    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "outDir": "out-tsc/tsc",
+    "tsBuildInfoFile": "out-tsc/tsc/tsconfig.lib.tsbuildinfo",
     "types": ["node"]
   },
-  "exclude": ["vite.config.ts", "src/**/*.test.ts"],
+  "exclude": ["out-tsc", "dist", "vite.config.ts", "src/**/*.test.ts"],
   "extends": "../../tsconfig.base.json",
   "include": ["src/**/*.ts"],
   "references": []

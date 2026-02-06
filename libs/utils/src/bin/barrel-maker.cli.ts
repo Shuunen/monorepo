@@ -5,8 +5,7 @@ import { nbThird } from "../lib/constants.js";
 import { Logger } from "../lib/logger.js";
 import { Result } from "../lib/result.js";
 
-/* v8 ignore next -- @preserve */
-const logger = new Logger({ minimumLevel: import.meta.main ? "3-info" : "7-error" });
+const logger = new Logger({ minimumLevel: /* c8 ignore next */ import.meta.main ? "3-info" : "7-error" });
 const extensionRegex = /\.[^/.]+$/;
 
 /**
@@ -97,7 +96,7 @@ export async function main(argv: string[]) {
   return await make(options);
 }
 
-/* v8 ignore next 2 -- @preserve */
+/* c8 ignore start */
 if (import.meta.main) {
   // oxlint-disable-next-line prefer-top-level-await
   void main(process.argv);

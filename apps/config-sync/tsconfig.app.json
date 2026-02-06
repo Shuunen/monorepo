@@ -3,9 +3,9 @@
     "allowJs": true,
     "checkJs": true,
     "lib": ["dom", "ESNext"],
-    "outDir": "dist",
+    "outDir": "out-tsc/tsc",
     "rootDir": "src",
-    "tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo",
+    "tsBuildInfoFile": "out-tsc/tsc/tsconfig.app.tsbuildinfo",
     "types": ["node", "vite/client"]
   },
   "exclude": ["out-tsc", "dist", "src/**/*.test.ts", "vite.config.ts"],

@@ -2,9 +2,9 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["esnext", "dom"],
-    "outDir": "dist",
+    "outDir": "out-tsc/tsc",
     "rootDir": "src",
-    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "tsBuildInfoFile": "out-tsc/tsc/tsconfig.lib.tsbuildinfo",
     "types": ["node", "@nx/react/typings/cssmodule.d.ts", "@nx/react/typings/image.d.ts", "vite/client"]
   },
   "exclude": ["out-tsc", "dist", "src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.stories.tsx", "vite.config.ts"],

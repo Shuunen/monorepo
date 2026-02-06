@@ -101,7 +101,7 @@
         "command": "tsgo --build --emitDeclarationOnly",
         "cwd": "{projectRoot}"
       },
-      "outputs": ["{projectRoot}/dist"]
+      "outputs": ["{projectRoot}/out-tsc/tsc"]
     }
   },
   "tui": {
