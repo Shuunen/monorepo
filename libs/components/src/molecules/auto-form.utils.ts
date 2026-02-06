@@ -100,7 +100,7 @@ export function checkZodBoolean(fieldSchema: z.ZodType) {
   let isBoolean = false;
   let isBooleanLiteral = false;
   let booleanLiteralValue = false;
-  /* v8 ignore else -- @preserve */
+  /* c8 ignore else */
   if (fieldSchema.type === "boolean") {
     isBoolean = true;
   } else if (fieldSchema.type === "literal") {
@@ -454,14 +454,12 @@ function getValueFromCodec({ fieldSchema, value, method, parentSchema }: GetValu
     return getValueWithCodec({ fieldSchema, method, parentSchema, value });
   }
 
-  /* v8 ignore start */
-  const valueAsArray: unknown[] = Array.isArray(value) ? value : [value];
-  /* v8 ignore stop */
+  const valueAsArray: unknown[] = /* c8 ignore next */ Array.isArray(value) ? value : [value];
   return valueAsArray.map(item => {
     const unwrappedSchema = getUnwrappedSchema(fieldSchema);
     return getValueFromCodec({
-      /* v8 ignore next */
-      fieldSchema: "element" in unwrappedSchema ? (unwrappedSchema.element as z.ZodType) : unwrappedSchema,
+      fieldSchema:
+        /* c8 ignore next */ "element" in unwrappedSchema ? (unwrappedSchema.element as z.ZodType) : unwrappedSchema,
       method,
       parentSchema: (fieldSchema as z.ZodArray<z.ZodType>).unwrap(),
       value: item,
