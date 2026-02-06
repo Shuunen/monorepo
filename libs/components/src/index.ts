@@ -57,6 +57,7 @@ export * from "./icons/icon-file-clock";
 export * from "./icons/icon-home";
 export * from "./icons/icon-hourglass";
 export * from "./icons/icon-list-add";
+export * from "./icons/icon-list-remove";
 export * from "./icons/icon-loading";
 export * from "./icons/icon-minus";
 export * from "./icons/icon-owl";
