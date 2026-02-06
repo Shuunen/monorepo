@@ -1,36 +1,3 @@
-import { nbMsInMinute } from "./constants.js";
-
-/**
- * Convert a date into iso string
- *
- * Example with timezone
- * in  : dateToIsoString(new Date())
- * out : "2018-09-03T15:24:00.366Z"
- *
- * Example without timezone
- * in  : dateToIsoString(new Date(), true)
- * out : "2018-09-03T15:24:00.366"
- * @param date input date
- * @param shouldRemoveTimezone remove the last z ?
- * @returns string like : "2018-09-03T15:24:00.366Z"
- */
-export function dateToIsoString(date: Readonly<Date>, shouldRemoveTimezone = false) {
-  let dateString = new Date(date.getTime() - date.getTimezoneOffset() * nbMsInMinute).toISOString();
-  if (shouldRemoveTimezone && dateString.toLowerCase().endsWith("z")) {
-    dateString = dateString.slice(0, Math.max(0, dateString.length - 1));
-  }
-  return dateString;
-}
-
-/**
- * Format a date to ISO without time
- * @param date input date
- * @returns string like : "2019-12-31"
- */
-export function dateIso10(date: Readonly<Date> = new Date()) {
-  return String(date.toISOString().split("T")[0]);
-}
-
 /**
  * Format a date to a specific format
  * @param date input date
@@ -38,7 +5,6 @@ export function dateIso10(date: Readonly<Date> = new Date()) {
  * @param locale the locale to use, default is en-US
  * @returns a string like : "2018-09-03"
  */
-// oxlint-disable-next-line max-lines-per-function
 export function formatDate(date: Readonly<Date>, format: string, locale = "en-US") {
   // oxlint-disable max-statements
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: cant be simplified ^^

@@ -1,5 +1,5 @@
 import { nbMsInDay, nbMsInHour, nbMsInMinute, nbMsInMonth, nbMsInSecond, nbMsInWeek, nbMsInYear } from "./constants.js";
-import { dateIso10 } from "./dates.js";
+import { dateIso10 } from "./date-iso.js";
 
 const timeAgoTuples = [
   [nbMsInMinute, nbMsInSecond, "second"],
