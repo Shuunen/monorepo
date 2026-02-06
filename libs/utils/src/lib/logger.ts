@@ -4,7 +4,7 @@ import { toastError, toastInfo, toastSuccess } from "./browser-toast.js";
 import { bgGreen, bgRed, blue, cyan, gray, green, red, yellow } from "./colors.js";
 import { nbFourth, nbSpacesIndent } from "./constants.js";
 import { readableTime } from "./date-readable-time.js";
-import { formatDate } from "./dates.js";
+import { formatDate } from "./date-format.js";
 import { isBrowserEnvironment } from "./environment.js";
 import { isVerbose } from "./flags.js";
 import type { ResultType } from "./result.js";
