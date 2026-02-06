@@ -3,6 +3,7 @@
 - [FAQ](#faq)
   - [Cannot find module](#cannot-find-module)
     - [Vitest](#vitest)
+  - [Formatter](#formatter)
   - [Shadcn](#shadcn)
     - [How to add a new component from the Shadcn library to the project ?](#how-to-add-a-new-component-from-the-shadcn-library-to-the-project-)
   - [Storybook](#storybook)
@@ -34,6 +35,25 @@ Here for example we will clean components node_modules and re-run the same comma
 ```bash
 pnpm clean
 nx run components:test
+```
+
+## Formatter
+
+You can customize the actions done on save concerning the formatting,
+Just go to the `User settings (JSON)` .
+
+```json
+
+"editor.codeActionsOnSave": {
+    "source.addMissingImports.ts": "explicit",
+    "source.fixAll.biome": "explicit",
+    "source.fixAll.oxc": "explicit",
+    "source.fixAll.ts": "explicit",
+    "source.organizeImports": "explicit",
+    "source.removeUnusedImports": "explicit",
+    "source.sortImports": "explicit"
+  },
+
 ```
 
 ## Shadcn
