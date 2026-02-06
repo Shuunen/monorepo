@@ -1,4 +1,3 @@
-import { uniqueMark } from "@monorepo/vite-plugins";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
@@ -13,7 +12,7 @@ export default defineConfig({
     reportCompressedSize: true,
   },
   cacheDir: "../../node_modules/.vite/libs/components",
-  plugins: [react(), tailwindcss(), uniqueMark()],
+  plugins: [react(), tailwindcss()],
   preview: {
     host: "localhost",
     port: 4300,
