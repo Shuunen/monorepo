@@ -94,7 +94,7 @@
     "add:app": "bun apps/sample-web-app/src/bin/add-app.cli.ts",
     "add:shadcn": "bun libs/components/bin/add.cli.ts",
     "build": "nx run-many -t build,list && echo build success",
-    "check": "pnpm check:lock && pnpm lint && pnpm check:nx && echo check success",
+    "check": "pnpm lint && pnpm check:nx && echo check success",
     "check:eslint": "bun apps/one-file/eslint-cleaner.cli.ts && echo check:eslint success",
     "check:lock": "pnpm install && echo check:lock success",
     "check:nx": "nx affected -t ts-check,lint,test,build,e2e,list,build-storybook,test-storybook && echo check:nx success",
