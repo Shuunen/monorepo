@@ -44,10 +44,11 @@ import {
   typeLikeResolver,
 } from "./auto-form.utils"; // oxlint-disable-line max-dependencies
 import { imageSchemaOptional, imageSchemaRequired } from "./form-field-upload.const";
+import { dateIso10 } from "@monorepo/utils";
 
 const isoDateStringToDateInstance = z.codec(z.iso.date(), z.date(), {
   decode: isoDateString => new Date(isoDateString),
-  encode: date => date.toISOString().split("T")[0],
+  encode: date => dateIso10(date),
 });
 
 describe("auto-form.utils", () => {
