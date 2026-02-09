@@ -2,6 +2,9 @@ import { FormControl } from "../atoms/form";
 import { Input } from "../atoms/input";
 import { getFieldMetadataOrThrow, isZodString } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
+import { getInitialValue } from "./form-field-date.utils";
+import { useFormContext } from "react-hook-form";
+import { useEffect } from "react";
 
 export function FormFieldDate({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
@@ -9,6 +12,17 @@ export function FormFieldDate({ fieldName, fieldSchema, isOptional, logger, read
   const isDisabled = state === "disabled" || readonly;
   const outputString = isZodString(fieldSchema);
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
+  const { setValue, getValues } = useFormContext();
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to run this once on mount
+  useEffect(() => {
+    const currentValue = getValues(fieldName);
+    if (currentValue !== undefined || isOptional) {
+      return;
+    }
+    const initialValue = getInitialValue(fieldSchema);
+    logger?.info(`initializing date field "${fieldName}" value to "${initialValue}", it was undefined`);
+    setValue(fieldName, initialValue);
+  }, []);
   return (
     <FormFieldBase {...props}>
       {({ field }) => (
