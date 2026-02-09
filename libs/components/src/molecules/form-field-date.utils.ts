@@ -93,5 +93,5 @@ export function getInitialValue(fieldSchema: z.ZodType) {
   if (typeof date === "string") {
     return getRelativeDate(date as DateRelative);
   }
-  return "";
+  return undefined;
 }

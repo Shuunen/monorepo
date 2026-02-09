@@ -5,6 +5,7 @@ import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import { getInitialValue } from "./form-field-date.utils";
 import { useFormContext } from "react-hook-form";
 import { useEffect } from "react";
+import { dateIso10 } from "@monorepo/utils";
 
 export function FormFieldDate({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
@@ -20,6 +21,9 @@ export function FormFieldDate({ fieldName, fieldSchema, isOptional, logger, read
       return;
     }
     const initialValue = getInitialValue(fieldSchema);
+    if (initialValue === undefined) {
+      return;
+    }
     logger?.info(`initializing date field "${fieldName}" value to "${initialValue}", it was undefined`);
     setValue(fieldName, initialValue);
   }, []);
@@ -42,7 +46,7 @@ export function FormFieldDate({ fieldName, fieldSchema, isOptional, logger, read
             placeholder={placeholder}
             readOnly={readonly}
             type="date"
-            value={field.value instanceof Date ? field.value.toISOString().split("T")[0] : field.value || ""}
+            value={field.value instanceof Date ? dateIso10(field.value) : field.value || ""}
           />
         </FormControl>
       )}

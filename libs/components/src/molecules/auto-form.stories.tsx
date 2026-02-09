@@ -1,4 +1,4 @@
-import { isBrowserEnvironment, Logger, nbPercentMax, sleep, stringify } from "@monorepo/utils";
+import { dateIso10, isBrowserEnvironment, Logger, nbPercentMax, sleep, stringify } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type ReactNode, useState } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
@@ -1182,7 +1182,7 @@ export const Codec: Story = {
         date: field(z.date(), {
           codec: z.codec(z.iso.date(), z.date(), {
             decode: isoDateString => new Date(isoDateString),
-            encode: date => date.toISOString().split("T")[0],
+            encode: date => dateIso10(date),
           }),
           label: "Date",
         }),

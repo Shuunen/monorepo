@@ -207,7 +207,7 @@ export const StringDateWithRender: Story = {
 // expect a Date instance input and output a date string
 const isoDateStringToDateInstance = z.codec(z.iso.date(), z.date(), {
   decode: isoDateString => new Date(isoDateString),
-  encode: date => date.toISOString().split("T")[0],
+  encode: date => dateIso10(date),
 });
 
 /**
@@ -368,7 +368,7 @@ export const DateNowOrFutureWithInitialDataToday: Story = {
     expect(dateInput).toBeInTheDocument();
     expect(dateInput).toHaveAttribute("type", "date");
     await step("verify initial value is today's date", () => {
-      const todayString = new Date().toISOString().split("T")[0];
+      const todayString = dateIso10();
       expect(dateInput).toHaveValue(todayString);
     });
     await step("submit form with default today's date", async () => {
@@ -404,7 +404,7 @@ export const DateNowOrFutureWithDefaultValueToday: Story = {
     expect(dateInput).toBeInTheDocument();
     expect(dateInput).toHaveAttribute("type", "date");
     await step("verify initial value is today's date from defaultValue", () => {
-      const todayString = new Date().toISOString().split("T")[0];
+      const todayString = dateIso10();
       expect(dateInput).toHaveValue(todayString);
     });
     await step("submit form with default today's date", async () => {
@@ -440,8 +440,7 @@ export const DateTomorrowToFixed: Story = {
     expect(dateInput).toBeInTheDocument();
     expect(dateInput).toHaveAttribute("type", "date");
     await step("fill date input with today's date", async () => {
-      const today = new Date();
-      const todayString = today.toISOString().split("T")[0];
+      const todayString = dateIso10();
       await userEvent.clear(dateInput);
       await userEvent.type(dateInput, todayString);
       expect(dateInput).toHaveValue(todayString);
@@ -457,7 +456,7 @@ export const DateTomorrowToFixed: Story = {
     await step("fill date input with tomorrow's date", async () => {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      const tomorrowString = tomorrow.toISOString().split("T")[0];
+      const tomorrowString = dateIso10(tomorrow);
       await userEvent.clear(dateInput);
       await userEvent.type(dateInput, tomorrowString);
       expect(dateInput).toHaveValue(tomorrowString);
