@@ -63,7 +63,7 @@ describe("form-field-date", () => {
 
   it("getInitialValue C no default value", () => {
     const schema = fieldDate({});
-    expect(getInitialValue(schema)).toEqual("");
+    expect(getInitialValue(schema)).toBeUndefined();
   });
 
   it("getInitialValue D default relative date", () => {
