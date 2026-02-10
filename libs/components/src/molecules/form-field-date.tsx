@@ -24,7 +24,7 @@ export function FormFieldDate({ fieldName, fieldSchema, isOptional, logger, read
     if (initialValue === undefined) {
       return;
     }
-    logger?.info(`initializing date field "${fieldName}" value to "${initialValue}", it was undefined`);
+    logger?.debug(`initializing date field "${fieldName}" value to "${initialValue}", it was undefined`);
     setValue(fieldName, initialValue);
   }, []);
   return (

@@ -147,7 +147,7 @@ export function FormFieldFormList({
     invariant(isZodObject(elementSchema), "elementSchema should be a zod object");
     const onSubmit = (data: Record<string, unknown>) => {
       const mappedData = mapExternalDataToFormFields(elementSchema, data);
-      logger?.info("data from subform", { data, mappedData });
+      logger?.info("Data from subform", { data, mappedData });
       const newItems = items.map((item, index) => (index === indexToComplete ? mappedData : item));
       onChange(newItems);
     };

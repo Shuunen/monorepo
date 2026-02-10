@@ -91,7 +91,6 @@ export function AutoForm({
 
   function updateFormData() {
     const updatedData = { ...formData, ...form.getValues() };
-    logger?.info("updateFormData", updatedData);
     setFormData(updatedData);
     return updatedData;
   }
@@ -120,7 +119,7 @@ export function AutoForm({
       return;
     }
     const cleanedData = normalizeData(schemas, { ...formData, ...form.getValues() });
-    logger?.info("Final form submitted", cleanedData);
+    logger?.info("Final form submitted", { cleanedData });
     const result = await onSubmit(cleanedData);
     if (useSubmissionStep) {
       setSubmissionProps(result.submission);
@@ -266,7 +265,7 @@ export function AutoForm({
     if (!subformOptions) {
       return;
     }
-    logger?.info("Rendering subform", subformOptions);
+    logger?.info("Rendering subform", { subformOptions });
     return (
       <>
         {showBackButtonInSubform && (
