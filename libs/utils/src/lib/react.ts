@@ -23,11 +23,11 @@ export function getNodeText(node: ReactNode): string {
         // @ts-expect-error type issue
         return getNodeText(node.props.children);
       }
-      return "un-handled object";
+      return "unhandled object";
     }
 
     default: {
-      return "un-handled type";
+      return "unhandled type";
     }
   }
 }
