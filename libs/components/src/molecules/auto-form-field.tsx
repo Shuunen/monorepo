@@ -52,7 +52,7 @@ export const AutoFormField = memo(({ fieldName, fieldSchema, stepState, logger, 
     return;
   }
 
-  logger?.info("Rendering field", fieldName);
+  logger?.info("Rendering", { fieldName });
   const isOptional = fieldSchema instanceof z.ZodOptional;
   const fieldState = "state" in metadata ? metadata.state : undefined;
   const state = fieldState ?? stepState ?? "editable";
