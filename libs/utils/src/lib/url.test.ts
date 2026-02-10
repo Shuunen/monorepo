@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { decodeFromUrl, encodeForUrl, fromBase64, toBase64 } from "./url.js";
+import { base64CharToPercentEncoded, decodeFromUrl, encodeForUrl, fromBase64, toBase64 } from "./url.js";
 
 describe("url", () => {
   it("toBase64 A should encode a string to base64", () => {
@@ -16,6 +16,20 @@ describe("url", () => {
 
   it("fromBase64 B should decode an empty string", () => {
     expect(fromBase64("")).toMatchInlineSnapshot(`""`);
+  });
+
+  it("fromBase64 C should handle malformed base64 safely", () => {
+    expect(fromBase64("!!!invalid!!!")).toMatchInlineSnapshot(`""`);
+  });
+
+  it("toBase64 C should handle special unicode characters", () => {
+    const result = toBase64("Hello 🌍 World ñ");
+    expect(fromBase64(result)).toMatchInlineSnapshot(`"Hello 🌍 World ñ"`);
+  });
+
+  it("fromBase64 D should handle base64 with special characters", () => {
+    const encoded = toBase64("Test\u0000\u0001\u0002");
+    expect(fromBase64(encoded)).toMatchInlineSnapshot(`"Test\u0000\u0001\u0002"`);
   });
 
   it("encodeForUrl A should encode object data for URL", () => {
@@ -44,5 +58,9 @@ describe("url", () => {
 
   it("decodeUrl D should return empty string for invalid data", () => {
     expect(decodeFromUrl("invalid")).toBe("");
+  });
+
+  it("base64CharToPercentEncoded A should handle empty string", () => {
+    expect(base64CharToPercentEncoded("")).toMatchInlineSnapshot(`"%00"`);
   });
 });

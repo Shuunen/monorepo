@@ -7,7 +7,9 @@ const elements = ["damn", "this", "test", "is", "crazy"];
 const elementsShuffled = shuffleArray(elements);
 
 it("shuffle an array does not affect the original one", () => {
-  expect(elementsShuffled).not.toStrictEqual(elements);
+  // we can't check the order of the shuffled array, but we can check that all elements are present
+  expect(elementsShuffled).toHaveLength(elements.length);
+  expect(elementsShuffled).toEqual(expect.arrayContaining(elements));
 });
 
 it("array unique A", () => {

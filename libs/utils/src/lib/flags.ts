@@ -1,16 +1,13 @@
 /**
  * Check if the given option is present in the command line arguments
  * @param name the name of the option to check
+ * @param process the process object to check for the option, defaults to globalThis.process
  * @returns true if the option is present, false otherwise
  */
-export function hasOption(name: string) {
-  /* v8 ignore next 4 -- @preserve */
-  // could be nice to check for environment variables too
-  if (typeof process === "undefined") {
-    return false;
-  }
-  // oxlint-disable-next-line no-undef
-  return (process.argv ?? []).includes(`--${name}`) || (process.env?.[name] ?? "").toString() === "true";
+export function hasOption(name: string, process: NodeJS.Process | undefined = globalThis.process): boolean {
+  const argv = process?.argv ?? [];
+  const env = process?.env?.[name] ?? "";
+  return argv.includes(`--${name}`) || env.toString() === "true";
 }
 
 /**

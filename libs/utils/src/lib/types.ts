@@ -1,4 +1,3 @@
-/* v8 ignore start -- @preserve */
 type NavigatorUserAgentBrandVersion = {
   readonly brand: string;
   readonly version: string;
