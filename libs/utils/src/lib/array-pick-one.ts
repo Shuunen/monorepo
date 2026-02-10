@@ -7,5 +7,5 @@ export function pickOne<Type>(items: readonly Type[]) {
   if (items.length === 0) {
     throw new Error("Array is empty");
   }
-  return items[Math.floor(Math.random() * items.length)] as Type;
+  return items[Math.floor(Math.random() * items.length)]; // NOSONAR
 }

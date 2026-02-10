@@ -18,7 +18,7 @@ export function randomString() {
  */
 export function randomBoolean() {
   // oxlint-disable-next-line no-magic-numbers
-  return Math.random() > 0.5;
+  return Math.random() > 0.5; // NOSONAR
 }
 
 /**
@@ -43,7 +43,7 @@ export function randomEmail(first: string, last: string, isShort = randomBoolean
  */
 export function randomNumber(min = 0, max = 100) {
   // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min);
+  return Math.floor(Math.random() * (max - min + 1) + min); // NOSONAR
 }
 
 /**

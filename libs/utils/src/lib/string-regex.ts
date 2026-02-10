@@ -1,8 +1,8 @@
-export const htmlTagRegex = /<[^>]+>/u;
+export const htmlTagRegex = /<[^>]+>/u; // NOSONAR
 
 export const base64Regex = /^(?:data:)?[\w/]+;base64,[\w+/=]+$/u;
 
-export const base64TypeRegex = /[^:]\w+\/[\w+.-]+(?=;|,)/u;
+export const base64TypeRegex = /[^:]\w+\/[\w+.-]+(?=;|,)/u; // NOSONAR
 
 /**
  * Check if the string contains HTML
