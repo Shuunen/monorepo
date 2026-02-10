@@ -27,7 +27,7 @@ function getRelativeDate(date: DateRelative): Date {
   } else if (date === "tomorrow") {
     return new Date(dateIso10(daysAgo(-1)));
   }
-  throw new Error(`Un-handled relative date : ${date}`);
+  throw new Error(`Unhandled relative date : ${date}`);
 }
 
 /**

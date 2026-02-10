@@ -30,9 +30,9 @@ describe("form-field-date", () => {
     expect(schema.safeParse(daysAgo(-2)).success).toBe(false);
   });
 
-  it("fieldDate D un-handled relative date", () => {
-    // @ts-expect-error testing un-handled relative date
-    expect(() => fieldDate({ minDate: "invalid-date" })).toThrowError("Un-handled relative date : invalid-date");
+  it("fieldDate D unhandled relative date", () => {
+    // @ts-expect-error testing unhandled relative date
+    expect(() => fieldDate({ minDate: "invalid-date" })).toThrowError("Unhandled relative date : invalid-date");
   });
 
   it("fieldDate E real date", () => {

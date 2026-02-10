@@ -1,4 +1,3 @@
-// oxlint-disable max-lines
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { alignForSnap, clone, nbMsInMinute, Result, sleep } from "@monorepo/utils";
 import { databaseMock } from "./database.mock";
@@ -234,7 +233,7 @@ describe("item.utils", () => {
   it("statusStringToStatus D for-sell", () => {
     expect(statusStringToStatus("for-sell")).toMatchInlineSnapshot(`"for-sell"`);
   });
-  it("statusStringToStatus E un-handled status", () => {
+  it("statusStringToStatus E unhandled status", () => {
     expect(statusStringToStatus("hehe")).toMatchInlineSnapshot(`"bought"`);
   });
 
