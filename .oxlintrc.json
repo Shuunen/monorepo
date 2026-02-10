@@ -231,7 +231,7 @@
       }
     },
     {
-      "files": ["**/*.{cli,node}.{js,ts}", "**/.storybook/main.{js,ts}", "*.config.ts"],
+      "files": ["**/*.{cli,node}.{js,ts}", "**/.storybook/main.{js,ts}", "*.config.ts", "apps/*-e2e/**"],
       "rules": {
         "import/no-nodejs-modules": "off",
         "unicorn/no-process-exit": "off"
