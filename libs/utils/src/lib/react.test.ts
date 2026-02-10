@@ -53,12 +53,12 @@ describe("react", () => {
     expect(getNodeText(element)).toBe("Hello from React");
   });
 
-  it("getNodeText H un-handled object", () => {
+  it("getNodeText H unhandled object", () => {
     const obj = { foo: "bar" } as unknown as ReactNode;
-    expect(getNodeText(obj)).toBe("un-handled object");
+    expect(getNodeText(obj)).toBe("unhandled object");
   });
 
-  it("getNodeText I un-handled type (function)", () => {
-    expect(getNodeText(functionReturningVoid as unknown as ReactNode)).toBe("un-handled type");
+  it("getNodeText I unhandled type (function)", () => {
+    expect(getNodeText(functionReturningVoid as unknown as ReactNode)).toBe("unhandled type");
   });
 });
