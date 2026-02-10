@@ -1,4 +1,6 @@
-import { cn, Result, useStableKeys, arrayAlign } from "@monorepo/utils";
+import { arrayAlign, cn, Result, useStableKeys } from "@monorepo/utils";
+import { invariant } from "es-toolkit";
+import { useEffect, useMemo, useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../atoms/button";
@@ -9,8 +11,6 @@ import { type AutoFormFieldProps, componentRegistry } from "./auto-form-field.ut
 import type { AutoFormFieldsMetadata } from "./auto-form.types";
 import { getElementSchema, getFieldMetadata, getFormFieldRender, typeLikeResolver } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
-import { invariant } from "es-toolkit";
-import { useEffect, useMemo, useRef } from "react";
 
 function AutoFormField({
   fieldName,
@@ -93,7 +93,7 @@ export function FormFieldFieldList({
   return (
     <FormFieldBase {...props} showLabel={false}>
       {({ field }) => (
-        <div className="flex flex-col gap-4">
+        <div className="flex w-full flex-col gap-4">
           {label && <Title>{label}</Title>}
           {placeholder && <Paragraph>{placeholder}</Paragraph>}
           {items.map((_item, index) => (

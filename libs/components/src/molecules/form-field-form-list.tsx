@@ -1,5 +1,6 @@
 import { cn, isEmpty, nbThird, Result, useStableKeys } from "@monorepo/utils";
 import { invariant } from "es-toolkit";
+import { useRef } from "react";
 import { useWatch } from "react-hook-form";
 import { Badge } from "../atoms/badge";
 import { Button } from "../atoms/button";
@@ -20,7 +21,6 @@ import {
 } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.types";
-import { useRef } from "react";
 
 function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean }) {
   let icon = <IconCircleClose />;
@@ -164,7 +164,7 @@ export function FormFieldFormList({
       {({ field, fieldState, formState }) => {
         const hasError = Boolean(fieldState.error && formState.isSubmitted);
         return (
-          <div className="flex flex-col gap-4">
+          <div className="flex w-full flex-col gap-4">
             {label && <Title>{label}</Title>}
             {metadata.placeholder && <Paragraph>{metadata.placeholder}</Paragraph>}
             {items.map((item, index) => {

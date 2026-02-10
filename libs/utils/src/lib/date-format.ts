@@ -1,3 +1,25 @@
+const formatRegex = /y{4}|yy|M{4}|MM|dd|d|e{4}|e{3}|HH|mm|ss|\s/gu;
+
+const formatTokens: Record<string, Intl.DateTimeFormatOptions> = {
+  // biome-ignore lint/style/useNamingConvention: we need to match commonly used tokens
+  MM: { month: "2-digit" },
+  // biome-ignore lint/style/useNamingConvention: we need to match commonly used tokens
+  MMMM: { month: "long" },
+  d: { day: "numeric" }, // oxlint-disable-line id-length
+  dd: { day: "2-digit" },
+  eee: { weekday: "short" },
+  eeee: { weekday: "long" },
+  yy: { year: "2-digit" },
+  yyyy: { year: "numeric" },
+};
+
+const timeTokens: Record<string, (date: Date) => number> = {
+  // biome-ignore lint/style/useNamingConvention: we need to match commonly used tokens
+  HH: date => date.getHours(),
+  mm: date => date.getMinutes(),
+  ss: date => date.getSeconds(),
+};
+
 /**
  * Format a date to a specific format
  * @param date input date
@@ -6,41 +28,14 @@
  * @returns a string like : "2018-09-03"
  */
 export function formatDate(date: Readonly<Date>, format: string, locale = "en-US") {
-  // oxlint-disable max-statements
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: cant be simplified ^^
-  return format.replaceAll(/y{4}|yy|M{4}|MM|dd|d|e{4}|e{3}|HH|mm|ss|\s/gu, match => {
-    if (match === "yyyy") {
-      return date.toLocaleDateString(locale, { year: "numeric" });
+  return format.replaceAll(formatRegex, match => {
+    const dateOption = formatTokens[match];
+    if (dateOption) {
+      return date.toLocaleDateString(locale, dateOption);
     }
-    if (match === "yy") {
-      return date.toLocaleDateString(locale, { year: "2-digit" });
-    }
-    if (match === "MMMM") {
-      return date.toLocaleDateString(locale, { month: "long" });
-    }
-    if (match === "MM") {
-      return date.toLocaleDateString(locale, { month: "2-digit" });
-    }
-    if (match === "dd") {
-      return date.toLocaleDateString(locale, { day: "2-digit" });
-    }
-    if (match === "d") {
-      return date.toLocaleDateString(locale, { day: "numeric" });
-    }
-    if (match === "eeee") {
-      return date.toLocaleDateString(locale, { weekday: "long" });
-    }
-    if (match === "eee") {
-      return date.toLocaleDateString(locale, { weekday: "short" });
-    }
-    if (match === "HH") {
-      return date.getHours().toString().padStart(match.length, "0");
-    }
-    if (match === "mm") {
-      return date.getMinutes().toString().padStart(match.length, "0");
-    }
-    if (match === "ss") {
-      return date.getSeconds().toString().padStart(match.length, "0");
+    const timeGetter = timeTokens[match];
+    if (timeGetter) {
+      return timeGetter(date).toString().padStart(match.length, "0");
     }
     return match;
   });
