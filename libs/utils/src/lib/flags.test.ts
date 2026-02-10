@@ -1,4 +1,4 @@
-import { hasOption } from "./flags.js";
+import { hasOption, isVerbose } from "./flags.js";
 
 // oxlint-disable-next-line prefer-structured-clone
 const initialProcess = JSON.parse(JSON.stringify(process));
@@ -32,5 +32,38 @@ describe("flags", () => {
     process.argv = [];
     process.env = { verbose: "true" };
     expect(hasOption("verbose")).toMatchInlineSnapshot(`true`);
+  });
+
+  it("hasOption E when process is undefined", () => {
+    expect(hasOption("verbose", undefined)).toMatchInlineSnapshot(`false`);
+  });
+
+  it("hasOption F with env var as non-true string", () => {
+    process.argv = [];
+    process.env = { verbose: "false" };
+    expect(hasOption("verbose")).toMatchInlineSnapshot(`false`);
+  });
+
+  it("hasOption G checks env var toString", () => {
+    process.argv = [];
+    // @ts-expect-error testing number value
+    process.env = { verbose: 1 };
+    expect(hasOption("verbose")).toMatchInlineSnapshot(`false`);
+  });
+
+  it("isVerbose A returns false by default", () => {
+    process.argv = [];
+    process.env = {};
+    expect(isVerbose()).toMatchInlineSnapshot(`false`);
+  });
+
+  it("isVerbose B returns true with verbose flag", () => {
+    process.argv = ["--verbose"];
+    expect(isVerbose()).toMatchInlineSnapshot(`true`);
+  });
+
+  it("isVerbose C returns true with v flag", () => {
+    process.argv = ["--v"];
+    expect(isVerbose()).toMatchInlineSnapshot(`true`);
   });
 });

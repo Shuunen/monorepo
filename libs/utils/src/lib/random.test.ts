@@ -8,14 +8,19 @@ it("randomBoolean A", () => {
   expect(typeof randomBoolean()).toBe("boolean");
 });
 
-it("randomEmail A", () => {
-  const email = randomEmail("Mickael", "Scott");
+it("randomEmail A random size", () => {
+  const email = randomEmail("Michael", "Scott");
   expect(email.includes(".scott")).toBe(true);
 });
 
-it("randomEmail B", () => {
-  const email = randomEmail("Mickael", "Scott");
-  expect(email.includes(".s")).toBe(true);
+it("randomEmail B short", () => {
+  const email = randomEmail("Michael", "Scott", true);
+  expect(email.startsWith("m.")).toBe(true);
+});
+
+it("randomEmail C short no firstname", () => {
+  const email = randomEmail("", "Scott", true);
+  expect(email.startsWith("scott@")).toBe(true);
 });
 
 it("randomPerson A", () => {

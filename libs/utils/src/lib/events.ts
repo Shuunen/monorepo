@@ -13,12 +13,13 @@ export type Listener = {
  * @param media the media to emit the event from, like window or a dom element
  */
 export function emit<Data>(name: string, data?: Readonly<Data>, media: ListenerMedia = globalThis) {
-  /* v8 ignore next -- @preserve */
+  /* c8 ignore start */
   if (data === undefined) {
     media.dispatchEvent(new CustomEvent(name));
   } else {
     media.dispatchEvent(new CustomEvent(name, { detail: data }));
   }
+  /* c8 ignore stop */
 }
 
 /**
@@ -39,8 +40,7 @@ export function on<Data>(
    * @returns the result of the callback
    */
   function onCallback(event: unknown) {
-    /* v8 ignore next -- @preserve */
-    return callback(event instanceof CustomEvent ? event.detail : event, event as Event);
+    return callback(/* c8 ignore next */ event instanceof CustomEvent ? event.detail : event, event as Event);
   }
   media.addEventListener(name, onCallback, { passive: true });
   return { callback: onCallback, media, name };

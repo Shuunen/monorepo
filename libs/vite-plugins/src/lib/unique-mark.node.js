@@ -60,7 +60,7 @@ export function generateMark({ commit = "", date = new Date(), version = "" }) {
   })
     .format(date)
     .replace(",", "");
-  /* v8 ignore next -- @preserve */
+  /* c8 ignore start */
   if (commit === "") {
     try {
       finalCommit = execSync("git rev-parse --short HEAD", { cwd: process.cwd() }).toString().trim(); // NOSONAR
@@ -68,7 +68,7 @@ export function generateMark({ commit = "", date = new Date(), version = "" }) {
       finalCommit = "no-git-commit";
     }
   }
-  /* v8 ignore end */
+  /* c8 ignore stop */
   return `${version} - ${finalCommit} - ${readableDate}`;
 }
 
@@ -122,7 +122,7 @@ export function injectMarkInAssets(assets, placeholder, version) {
  * @param {string} projectRoot - The root directory of the project.
  * @returns {string} The version specified in package.json, or an empty string if not found or on error.
  */
-/* v8 ignore start */
+/* c8 ignore start */
 export function getProjectVersion(projectRoot) {
   try {
     const pkg = JSON.parse(readFileSync(join(projectRoot, "package.json"), "utf8"));
@@ -134,7 +134,7 @@ export function getProjectVersion(projectRoot) {
     return "";
   }
 }
-/* v8 ignore stop */
+/* c8 ignore stop */
 
 /**
  * Vite plugin to inject a unique mark (such as a version string) into build assets.

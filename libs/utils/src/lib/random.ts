@@ -25,14 +25,13 @@ export function randomBoolean() {
  * Give an email from first and last name
  * @param first the first name
  * @param last the last name
+ * @param isShort if true, the first name will be shortened to the first letter
  * @returns email like `mickael.scott@gmail.com`
  */
-export function randomEmail(first: string, last: string) {
-  const providers = pickOne(["gmail.com", "yahoo.de", "hotmail.fr", "outlook.com", "proton.com"]);
-  const isShort = randomBoolean();
-  // this ignore next is needed because of the randomBoolean above
-  /* v8 ignore next -- @preserve */
-  const email = `${isShort ? first[0]?.toLocaleLowerCase() : first.toLocaleLowerCase()}.${last.toLocaleLowerCase()}@${providers}`;
+export function randomEmail(first: string, last: string, isShort = randomBoolean()) {
+  const provider = pickOne(["gmail.com", "yahoo.de", "hotmail.fr", "outlook.com", "proton.com"]);
+  const start = isShort && first[0] ? first[0].toLocaleLowerCase() : first.toLocaleLowerCase();
+  const email = `${[start, last.toLocaleLowerCase()].filter(Boolean).join(".")}@${provider}`;
   return email;
 }
 

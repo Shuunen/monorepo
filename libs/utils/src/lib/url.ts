@@ -18,14 +18,10 @@ export function toBase64(str: string) {
  * @param char Single character from base64-decoded string
  * @returns Percent-encoded string
  */
-function base64CharToPercentEncoded(char: string) {
+export function base64CharToPercentEncoded(char: string) {
   const hexRadix = 16;
   const padLength = 2;
-  const code = char.codePointAt(0);
-  /* v8 ignore next -- @preserve */
-  if (code === undefined) {
-    return "";
-  }
+  const code = char.codePointAt(0) ?? 0;
   return `%${code.toString(hexRadix).padStart(padLength, "0")}`;
 }
 

@@ -26,7 +26,6 @@ export function byProperty<Type extends Record<string, unknown>>(property: strin
     if (!valueA && valueB) {
       return sortOrder;
     }
-    /* v8 ignore next -- @preserve */
     if (valueA && !valueB) {
       return -sortOrder;
     }
