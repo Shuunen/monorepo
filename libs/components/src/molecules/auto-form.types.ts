@@ -180,6 +180,7 @@ export type AutoFormFieldBaseMetadata = {
     | "upload"
     | "accept"
     | "password"
+    | "radio"
     | "field-list"
     | "form-list";
 } & AutoFormFieldConditionalMetadata;

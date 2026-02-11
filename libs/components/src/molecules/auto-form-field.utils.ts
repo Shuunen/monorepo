@@ -9,6 +9,7 @@ import { FormFieldDate } from "./form-field-date";
 import { FormFieldFormList } from "./form-field-form-list";
 import { FormFieldNumber } from "./form-field-number";
 import { FormFieldPassword } from "./form-field-password";
+import { FormFieldRadio } from "./form-field-radio";
 import { FormFieldSelect } from "./form-field-select";
 import { FormFieldText } from "./form-field-text";
 import { FormFieldTextarea } from "./form-field-textarea";
@@ -45,6 +46,7 @@ export const componentRegistry: ComponentRegistry = {
   "form-list": FormFieldFormList,
   number: FormFieldNumber,
   password: FormFieldPassword,
+  radio: FormFieldRadio,
   select: FormFieldSelect,
   text: FormFieldText,
   textarea: FormFieldTextarea,

@@ -99,6 +99,7 @@ export * from "./molecules/form-field-field-list";
 export * from "./molecules/form-field-form-list";
 export * from "./molecules/form-field-number";
 export * from "./molecules/form-field-password";
+export * from "./molecules/form-field-radio";
 export * from "./molecules/form-field-section";
 export * from "./molecules/form-field-select";
 export * from "./molecules/form-field-text";
