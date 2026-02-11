@@ -25,4 +25,12 @@ describe("array-align", () => {
     const result = arrayAlign([1, 2, 3], 3);
     expect(result).toEqual([1, 2, 3]);
   });
+  it("arrayAlign G values defined, targetLength defined, initialValue defined", () => {
+    const result = arrayAlign([1, 2, 3], 6, 4);
+    expect(result).toEqual([1, 2, 3, 4, 4, 4]);
+  });
+  it("arrayAlign H values and targetLength undefined, initialValue defined", () => {
+    const result = arrayAlign(undefined, undefined, 4);
+    expect(result).toEqual([4]);
+  });
 });
