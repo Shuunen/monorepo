@@ -1,3 +1,4 @@
+import { expectTypeOf } from "vitest";
 import { objectDeserialize, objectSerialize } from "./object-serializer.js";
 
 const person = {
@@ -279,13 +280,13 @@ it("objectDeserialize H person", () => {
   expect(object.nameValidator("Jo")).toBe(false);
   // @ts-expect-error type is unknown
   expect(object.nameValidator("John")).toBe(true);
-  expect(typeof object.age).toBe("number");
-  expect(typeof object.nameValidator).toBe("function");
-  expect(typeof object.details).toBe("object");
+  expectTypeOf(object.age).toExtend<number | unknown>();
+  expectTypeOf(object.nameValidator).toExtend<number | unknown>();
+  expectTypeOf(object.details).toExtend<number | unknown>();
   // @ts-expect-error type is unknown
-  expect(typeof object.details.dateOfBirth).toBe("object");
-  expect(typeof object.pets).toBe("object");
-  expect(typeof object.petsDetails).toBe("object");
+  expectTypeOf(object.details.dateOfBirth).toExtend<number | unknown>();
+  expectTypeOf(object.pets).toExtend<number | unknown>();
+  expectTypeOf(object.petsDetails).toExtend<number | unknown>();
   expect(Array.isArray(object.pets)).toBe(true);
   expect(Array.isArray(object.petsDetails)).toBe(true);
   // @ts-expect-error type is unknown

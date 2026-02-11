@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/nursery/noFloatingPromises: it's a test file */
+import { expectTypeOf } from "vitest";
 import { debounce } from "./debounce.js";
 import { expectEqualTypes } from "./expect-type.js";
 import { sleep } from "./sleep.js";
@@ -56,7 +57,7 @@ it("debounce A : sync function", async () => {
 // });
 
 it("debounce C : return type", () => {
-  expect(typeof myFunctionDebounced).toBe("function");
+  expectTypeOf(myFunctionDebounced).toBeFunction();
 });
 
 it("debounce D : return type sync", () => {

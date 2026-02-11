@@ -1,4 +1,5 @@
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
+import { expectTypeOf } from "vitest";
 import {
   backdrop,
   css,
@@ -172,10 +173,10 @@ it("scroll to height", async () => {
 });
 
 it("tw returns a string A", () => {
-  expect(typeof tw("")).toBe("string");
+  expectTypeOf(tw("")).toBeString();
 });
 it("tw returns a string B", () => {
-  expect(typeof tw("text-red-500")).toBe("string");
+  expectTypeOf(tw("text-red-500")).toBeString();
 });
 it("tw returns a string C", () => {
   expect(tw("text-blue-500 text-red-500")).toBe("text-blue-500 text-red-500");
@@ -184,10 +185,10 @@ it("tw returns a string D", () => {
   expect(tw("")).toBe("");
 });
 it("tw returns a string E", () => {
-  expect(typeof tw``).toBe("string");
+  expectTypeOf(tw``).toBeString();
 });
 it("tw returns a string F", () => {
-  expect(typeof tw`text-red-500`).toBe("string");
+  expectTypeOf(tw`text-red-500`).toBeString();
 });
 it("tw returns a string G", () => {
   expect(tw``).toBe("");

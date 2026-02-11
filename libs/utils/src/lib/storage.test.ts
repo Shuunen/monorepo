@@ -1,3 +1,4 @@
+import { expectTypeOf } from "vitest";
 import { hasOwn } from "./functions.js";
 import { storage } from "./storage.js";
 
@@ -14,7 +15,7 @@ it("storage returnTestA", () => {
   expect(returnTestA).toBe(undefined);
 });
 it("storage typeof returnTestA", () => {
-  expect(typeof returnTestA).toBe("undefined");
+  expectTypeOf(returnTestA).toBeUnknown();
 });
 
 const returnTestB = storage.get(key, "default");
@@ -122,45 +123,45 @@ it("storage clear value for key with prefix", () => {
 
 const returnA = storage.get(key);
 it("storage typeof returnA is undefined and TS inferred type should be unknown", () => {
-  expect(typeof returnA).toBe("undefined");
+  expectTypeOf(returnA).toBeUnknown();
 });
 
 const returnB = storage.get(key, "default");
 it("storage typeof returnB is string and TS inferred type should be string", () => {
-  expect(typeof returnB).toBe("string");
+  expectTypeOf(returnB).toBeString();
 });
 
 const returnC = storage.get<User>(key);
 it("storage typeof returnC is undefined and TS inferred type should be User | undefined", () => {
-  expect(typeof returnC).toBe("undefined");
+  expectTypeOf(returnC).toExtend<User | undefined>();
 });
 
 const returnD = storage.get<User>(key, { age: 0, name: "default" });
 it("storage typeof returnD is object and TS inferred type should be User", () => {
-  expect(typeof returnD).toBe("object");
+  expectTypeOf(returnD).toBeObject();
 });
 
 const returnE = storage.get(key, true);
 it("storage typeof returnE is boolean and TS inferred type should be boolean", () => {
-  expect(typeof returnE).toBe("boolean");
+  expectTypeOf(returnE).toBeBoolean();
 });
 
 const returnF = storage.get<number>(key);
 it("storage typeof returnF is undefined and TS inferred type should be number | undefined", () => {
-  expect(typeof returnF).toBe("undefined");
+  expectTypeOf(returnF).toExtend<number | undefined>();
 });
 
 const returnG = storage.get(key, 12);
 it("storage typeof returnG is number and TS inferred type should be number", () => {
-  expect(typeof returnG).toBe("number");
+  expectTypeOf(returnG).toBeNumber();
 });
 
 const returnH = storage.get(key, [1, 2, 3]);
 it("storage typeof returnH is object and TS inferred type should be number[]", () => {
-  expect(typeof returnH).toBe("object");
+  expectTypeOf(returnH).toBeObject();
 });
 
 const returnI = storage.get<number>(key, 24);
 it("storage typeof returnI is number and TS inferred type should be number", () => {
-  expect(typeof returnI).toBe("number");
+  expectTypeOf(returnI).toBeNumber();
 });

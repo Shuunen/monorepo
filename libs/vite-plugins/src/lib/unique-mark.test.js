@@ -1,3 +1,4 @@
+import { expectTypeOf } from "vitest";
 import {
   addColorCode,
   generateMark,
@@ -138,7 +139,7 @@ describe("vite-plugin-unique-mark", () => {
 
   it("getProjectVersion A returns version from package.json (integration)", () => {
     const version = getProjectVersion(process.cwd());
-    expect(typeof version).toBe("string");
+    expectTypeOf(version).toBeString();
   });
 
   it("getProjectVersion B returns empty string and logs warning on error", () => {
@@ -158,8 +159,8 @@ describe("vite-plugin-unique-mark", () => {
     expect(plugin.apply).toBe("build");
     expect(plugin.enforce).toBe("post");
     // Verify the plugin has the expected methods
-    expect(typeof plugin.configResolved).toBe("function");
-    expect(typeof plugin.generateBundle).toBe("function");
+    expectTypeOf(plugin.configResolved).toBeFunction();
+    expectTypeOf(plugin.generateBundle).toBeFunction();
     // Test that configResolved is callable (without actually calling it)
     expect(plugin.configResolved).toBeInstanceOf(Function);
     expect(plugin.generateBundle).toBeInstanceOf(Function);
@@ -168,8 +169,8 @@ describe("vite-plugin-unique-mark", () => {
   it("uniqueMark C plugin hooks execute successfully for coverage", () => {
     const plugin = uniqueMark({ placeholder: "test-mark" });
     // Verify plugin methods exist and are callable
-    expect(typeof plugin.configResolved).toBe("function");
-    expect(typeof plugin.generateBundle).toBe("function");
+    expectTypeOf(plugin.configResolved).toBeFunction();
+    expectTypeOf(plugin.generateBundle).toBeFunction();
     // Execute plugin hooks to achieve full coverage
     const mockConfig = { root: process.cwd() };
     const mockBundle = { "test.js": { code: "__test-mark__", source: "" } };
