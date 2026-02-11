@@ -1,3 +1,4 @@
+import { expectTypeOf } from "vitest";
 import { randomBoolean, randomEmail, randomNumber, randomPerson, randomString } from "./random.js";
 
 it("randomString A", () => {
@@ -5,7 +6,7 @@ it("randomString A", () => {
 });
 
 it("randomBoolean A", () => {
-  expect(typeof randomBoolean()).toBe("boolean");
+  expectTypeOf(randomBoolean()).toBeBoolean();
 });
 
 it("randomEmail A random size", () => {

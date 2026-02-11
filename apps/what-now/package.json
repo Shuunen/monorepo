@@ -14,7 +14,7 @@
   "devDependencies": {
     "@capacitor/cli": "latest",
     "@types/canvas-confetti": "1.9.0",
-    "@types/serviceworker": "~0.0.183"
+    "@types/serviceworker": "~0.0.186"
   },
   "keywords": [
     "minimalist",

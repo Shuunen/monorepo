@@ -1,3 +1,4 @@
+import { expectTypeOf } from "vitest";
 import { getNested, setNested } from "./object-deep.js";
 
 const person = {
@@ -17,13 +18,13 @@ describe("object-deep", () => {
     expect(getNested(person, "details.favoriteFood")).toBe("sushi");
   });
   it("getNested B nested non-existing property getNested", () => {
-    expect(typeof getNested(person, "details.favoriteDrink")).toBe("undefined");
+    expectTypeOf(getNested(person, "details.favoriteDrink")).toBeUnknown();
   });
   it("getNested C non-nested property", () => {
     expect(getNested({ name: "John Cena" }, "name")).toBe("John Cena");
   });
   it("getNested D non-existing non-nested property", () => {
-    expect(typeof getNested({ name: "John Cena" }, "age")).toBe("undefined");
+    expectTypeOf(getNested({ name: "John Cena" }, "age")).toBeUnknown();
   });
   it("getNested E non-nested property after an undefined property", () => {
     expect(getNested({ age: undefined, name: "John Cena" }, "name")).toBe("John Cena");

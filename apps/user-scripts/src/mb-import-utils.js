@@ -63,7 +63,6 @@ function createMbForm(app, callback = () => ({})) {
     form.addEventListener("submit", event => {
       event.preventDefault();
       const formData = new FormData(form);
-      // @ts-expect-error it's ok
       const values = Object.fromEntries(formData.entries());
       callback(values);
     });
@@ -77,7 +76,7 @@ function createMbForm(app, callback = () => ({})) {
  * @param {string} value the field value
  * @param {boolean} isHidden if the field should be hidden
  */
-// oxlint-disable-next-line max-lines-per-function, max-params
+// oxlint-disable-next-line max-params
 function addMbField(form, name, value, isHidden = false) {
   const colors = ["darkblue", "green", "darkred", "darkorange", "teal", "brown", "indigo"];
   const nbExistingFields = form.querySelectorAll(".mb-field").length;

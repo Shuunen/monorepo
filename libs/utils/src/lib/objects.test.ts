@@ -1,3 +1,4 @@
+import { expectTypeOf } from "vitest";
 import { clone } from "./object-clone.js";
 import { objectEqual } from "./object-equal.js";
 import { flatten } from "./object-flatten.js";
@@ -43,10 +44,10 @@ describe("objects", () => {
   });
   it("clone H cloned values keep their type", () => {
     const cloned = clone(person);
-    expect(typeof cloned.nameValidator).toBe("function");
-    expect(typeof cloned.nameRegex).toBe("object");
+    expectTypeOf(cloned.nameValidator).toBeFunction();
+    expectTypeOf(cloned.nameRegex).toBeObject();
     expect(cloned.nameRegex instanceof RegExp).toBe(true);
-    expect(typeof cloned.details.dateOfBirth).toBe("object");
+    expectTypeOf(cloned.details.dateOfBirth).toBeObject();
     expect(cloned.details.dateOfBirth instanceof Date).toBe(true);
   });
   it("clone I debug", () => {
