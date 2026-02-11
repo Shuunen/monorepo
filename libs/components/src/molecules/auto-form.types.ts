@@ -104,6 +104,8 @@ export type AutoFormFormsMetadata = Simplify<
     minItems?: number;
     /** Maximum number of items allowed in the form list */
     maxItems?: number;
+    /** Number of fields by default, can be dynamic, ex : field A has 3 entries and we want this field to be initialized accordingly with 3 fields too */
+    nbItems?: NumberLike;
     render: "form-list";
   }
 >;

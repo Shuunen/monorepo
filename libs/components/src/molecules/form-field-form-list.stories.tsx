@@ -276,3 +276,30 @@ export const MultiStep: Story = {
     ],
   },
 };
+
+export const FormListInitializedFixedEmpty: Story = {
+  args: {
+    schemas: [
+      step(
+        z.object({
+          applicantReferences: forms(applicantSchema, {
+            icon: <IconCheck />,
+            identifier: data => (data ? `${data.name} (${data.age} years)` : "New person"),
+            label: "Fill in the applicants",
+            nbItems: 3,
+          }),
+        }),
+      ),
+    ],
+  },
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    const firstApplicant = canvas.getByTestId("applicantReferences-0");
+    const secondApplicant = canvas.getByTestId("applicantReferences-1");
+    const thirdApplicant = canvas.getByTestId("applicantReferences-2");
+    expect(firstApplicant).toBeInTheDocument();
+    expect(secondApplicant).toBeInTheDocument();
+    expect(thirdApplicant).toBeInTheDocument();
+  },
+};

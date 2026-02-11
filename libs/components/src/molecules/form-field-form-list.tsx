@@ -1,7 +1,6 @@
-import { cn, isEmpty, nbThird, Result, useStableKeys } from "@monorepo/utils";
+import { arrayAlign, cn, isEmpty, nbThird, Result, useStableKeys } from "@monorepo/utils";
 import { invariant } from "es-toolkit";
-import { useRef } from "react";
-import { useWatch } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { Badge } from "../atoms/badge";
 import { Button } from "../atoms/button";
 import { Paragraph, Title } from "../atoms/typography";
@@ -18,9 +17,12 @@ import {
   isZodObject,
   mapExternalDataToFormFields,
   normalizeData,
+  typeLikeResolver,
 } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.types";
+// oxlint-disable-next-line import/max-dependencies
+import { useEffect, useMemo, useRef } from "react";
 
 function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean }) {
   let icon = <IconCircleClose />;
@@ -106,13 +108,29 @@ export function FormFieldFormList({
   showForm,
 }: FormFieldBaseProps) {
   const metadata = fieldSchema.meta() as AutoFormFormsMetadata;
-  const { label, maxItems, icon, identifier, labels } = metadata;
+  const { label, maxItems, icon, identifier, nbItems, labels } = metadata;
   const fieldState = "state" in metadata ? metadata.state : undefined;
   const state = fieldState ?? stepState ?? "editable";
   const props = { fieldName, fieldSchema, isOptional, logger, readonly: state === "readonly" || readonly };
   const fieldValue = useWatch({ name: fieldName });
-  const items = (fieldValue as Array<Record<string, unknown>>) || [];
+  const formValues = useWatch({ disabled: nbItems === undefined });
   const showAddButton = !(readonly || maxItems === 1);
+  const length = typeLikeResolver(nbItems, formValues);
+  const { setValue } = useFormContext();
+  const items = useMemo(
+    () =>
+      length === undefined && fieldValue === undefined
+        ? []
+        : arrayAlign<Record<string, unknown>>(fieldValue, length, {}),
+    [fieldValue, length],
+  );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we don't want to re-run this effect when the items change already bind in the useMemo
+  useEffect(() => {
+    if (length !== undefined && fieldValue?.length !== length) {
+      setValue(fieldName, items, { shouldValidate: false });
+    }
+  }, [length, fieldName, setValue]);
   const { addKey, keys, removeKey } = useStableKeys(useRef, items.length);
   /**
    * Function called when user wants to add a new form to the list
