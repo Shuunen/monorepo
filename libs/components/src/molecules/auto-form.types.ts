@@ -167,7 +167,7 @@ export type AutoFormFieldBaseMetadata = {
   keyIn?: string;
   /** Key to map submitted data output. Used when submitting data to external sources. */
   keyOut?: string;
-  /** Zod codec to transform input and ouput data. */
+  /** Zod codec to transform input and output data. */
   codec?: z.ZodCodec;
   /** Custom options for select/enum fields with label/value pairs. */
   options?: SelectOption[];
