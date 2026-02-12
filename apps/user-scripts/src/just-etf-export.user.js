@@ -19,6 +19,42 @@
 - Check column headers to be sure we are on the right page with the right table structure
 */
 
+/*
+
+
+Frais p.a.
+ISIN
+Réplication
+Distribution
+Monnaie fonds
+Développement durable
+Positions
+1A en %
+3A en %
+5A en %
+Rend./Risque 1A
+Rend./Risque 3A
+Rend./Risque 5A
+Ticker
+*/
+
+const expectedHeaders = [
+  "Nom du fonds",
+  "Monnaie fonds",
+  "Frais p.a.",
+  "1A en %",
+  "3A en %",
+  "5A en %",
+  "Rend./Risque 1A",
+  "Rend./Risque 3A",
+  "Rend./Risque 5A",
+  "Distribution",
+  "Positions",
+  "Replication",
+  "ISIN",
+  "Ticker",
+];
+
 /**
  * @typedef {import('./just-etf-export.types').JustEtfExportData} JustEtfExportData
  */
@@ -26,8 +62,11 @@
 function JustEtfExport() {
   /* globals Shuutils, RoughNotation */
   const utils = new Shuutils("just-etf-export", true);
+  const marker = `${utils.id}-marker`;
   const selectors = {
     cells: "td",
+    columnSelector: ".buttons-collection.buttons-colvis",
+    columnToggle: ".buttons-columnVisibility",
     currency: "td:nth-child(3)",
     distribution: "td:nth-child(11)",
     fees: "td:nth-child(4)",
@@ -45,10 +84,21 @@ function JustEtfExport() {
     table: "table#etfsTable",
     ticker: "td:nth-child(15)",
   };
-  const extractors = {
-    percent: (/** @type {Element} */ cell) => cell.textContent.trim(),
-    text: (/** @type {Element} */ cell) => cell.innerHTML.replaceAll("<br>", " ").trim(),
-  };
+  /**
+   * Extract table cell data
+   * @param {string} name - cell name or identifier
+   * @param {Element} cell - table cell element
+   * @returns {string} extracted text content
+   */
+  function extractCellData(name, cell) {
+    if (!cell) {
+      utils.error("Cell not found", { cell, name });
+      return "";
+    }
+    const text = cell.innerHTML.replaceAll("<br>", " ").trim();
+    utils.log("extracted cell data", { cell, name, text });
+    return text;
+  }
   /**
    * Extract table row data
    * @param {Element} row - table row element
@@ -60,21 +110,21 @@ function JustEtfExport() {
     if (!fundNameLink) return;
     const cells = row.querySelectorAll(selectors.cells);
     return {
-      currency: extractors.text(cells[2]),
-      distribution: extractors.text(cells[10]),
-      fees: extractors.text(cells[3]),
+      currency: extractCellData("currency", cells[2]),
+      distribution: extractCellData("distribution", cells[10]),
+      fees: extractCellData("fees", cells[3]),
       fundName: fundNameLink.textContent.trim(),
       fundUrl: fundNameLink.href,
-      isin: extractors.text(cells[13]),
-      perf1y: extractors.percent(cells[4]),
-      perf3y: extractors.percent(cells[5]),
-      perf5y: extractors.percent(cells[6]),
-      perfRisk1y: extractors.percent(cells[7]),
-      perfRisk3y: extractors.percent(cells[8]),
-      perfRisk5y: extractors.percent(cells[9]),
-      positions: extractors.text(cells[11]),
-      replication: extractors.text(cells[12]),
-      ticker: extractors.text(cells[14]),
+      isin: extractCellData("isin", cells[13]),
+      perf1y: extractCellData("perf1y", cells[4]),
+      perf3y: extractCellData("perf3y", cells[5]),
+      perf5y: extractCellData("perf5y", cells[6]),
+      perfRisk1y: extractCellData("perfRisk1y", cells[7]),
+      perfRisk3y: extractCellData("perfRisk3y", cells[8]),
+      perfRisk5y: extractCellData("perfRisk5y", cells[9]),
+      positions: extractCellData("positions", cells[11]),
+      replication: extractCellData("replication", cells[12]),
+      ticker: extractCellData("ticker", cells[14]),
     };
   }
   /**
@@ -92,10 +142,56 @@ function JustEtfExport() {
     return data;
   }
   /**
+   * Check table headers to ensure correct page structure
+   */
+  function checkTableHeaders() {
+    const headerCells = document.querySelectorAll(`${selectors.table} thead tr th`);
+    const actualHeaders = Array.from(headerCells).map(cell => cell.textContent.trim());
+    const headersMatch = expectedHeaders.every((header, index) => header === actualHeaders[index]);
+    if (!headersMatch) {
+      utils.error("Table headers do not match expected structure", { actualHeaders, expectedHeaders });
+      utils.showError("Table structure has changed or you did not selected the correct columns");
+    }
+  }
+
+  /**
+   * Check table columns visibility to ensure correct data extraction
+   */
+  function checkTableColumns() {
+    const columnSelector = utils.findOne(selectors.columnSelector);
+    if (!columnSelector) {
+      utils.showError("Column selector not found, the page structure might have changed");
+      return;
+    }
+    columnSelector.click();
+    const toggles = utils.findAll(selectors.columnToggle);
+    if (toggles.length === 0) {
+      utils.showError("Column toggles not found, the page structure might have changed");
+      return;
+    }
+    for (const toggle of toggles) {
+      const columnName = toggle.textContent.trim();
+      if (columnName === "Rend./Risque 1A" && !toggle.classList.contains("active")) {
+        utils.log("Activating column", { columnName });
+        toggle.click();
+      }
+    }
+  }
+
+  /**
    * Process the page
    */
   function start() {
     utils.log("starting processing");
+    const table = utils.findOne(selectors.table);
+    if (!table) {
+      utils.log("Table not found, skipping processing");
+      return;
+    }
+    if (table.classList.contains(marker)) return;
+    table.classList.add(marker);
+    checkTableColumns();
+    checkTableHeaders();
     const tableData = extractTableData();
     utils.log("extracted table data", { count: tableData.length, data: tableData });
   }
