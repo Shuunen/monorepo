@@ -9,7 +9,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=justetf.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
-// @version      1.1.0
+// @version      1.2.0
 // ==/UserScript==
 
 // oxlint-disable no-magic-numbers
@@ -40,6 +40,79 @@ const expectedHeaders = [
   "Ticker",
 ];
 
+// Provider	ISIN	Ticker	Ticker alt	ETF / Stock	Acc	Shares	plan	PEA	Fees	1Y Perf	3Y Perf	5Y Perf	10Y Perf	R/Risk 1Y	R/Risk 3Y	R/Risk 5Y	Quantalys	Score	Perf. ann.	Volatilité	Sharpe	Date
+const csvHeaders = [
+  "Provider", // extracted from the fund name, like Amundi, Lyxor, iShares, etc.
+  "ISIN", // International Securities Identification Number
+  "Ticker", // ticker from JustETF
+  "Ticker alt", // empty for now, ticker from Shares
+  "ETF / Stock", // name of the ETF or stock, extracted from the fund name
+  "Acc", // true if the fund is accumulating, false if distributing
+  "Shares", // false for now, indicate if the share is available on Shares or not
+  "plan", // empty for now, can be in the free Shares recurring investment plan
+  "PEA", // empty for now, eligibility for the French PEA tax advantaged account
+  "Fees", // annual fees / TER / Ongoing Charges in percentage
+  "1Y Perf",
+  "3Y Perf",
+  "5Y Perf",
+  "10Y Perf", // empty for now, as JustETF does not provide it
+  "R/Risk 1Y",
+  "R/Risk 3Y",
+  "R/Risk 5Y",
+  "Quantalys", // empty for now, as JustETF does not provide it
+  "Score", // empty for now, as JustETF does not provide it
+  "Perf. ann.", // empty for now, as JustETF does not provide it
+  "Volatilité", // empty for now, as JustETF does not provide it
+  "Sharpe", // empty for now, as JustETF does not provide it
+];
+
+/**
+ * Map CSV header to data property
+ * @param {string} header - CSV header name
+ * @param {JustEtfExportData} row - data row
+ * @returns {string} mapped value or empty string
+ */
+function mapHeaderToProperty(header, row) {
+  const isAccumulating = row.distribution.toLowerCase().includes("capitalisation");
+  const mapping = {
+    "10Y Perf": "",
+    "1Y Perf": row.perf1y,
+    "3Y Perf": row.perf3y,
+    "5Y Perf": row.perf5y,
+    // biome-ignore lint/style/useNamingConvention: it's ok
+    Acc: isAccumulating ? "TRUE" : "FALSE",
+    "ETF / Stock": row.name,
+    // biome-ignore lint/style/useNamingConvention: it's ok
+    Fees: row.fees,
+    // biome-ignore lint/style/useNamingConvention: it's ok
+    ISIN: row.isin,
+    // biome-ignore lint/style/useNamingConvention: it's ok
+    PEA: "",
+    "Perf. ann.": "",
+    // biome-ignore lint/style/useNamingConvention: it's ok
+    Provider: row.provider,
+    // biome-ignore lint/style/useNamingConvention: it's ok
+    Quantalys: "",
+    "R/Risk 1Y": row.perfRisk1y,
+    "R/Risk 3Y": row.perfRisk3y,
+    "R/Risk 5Y": row.perfRisk5y,
+    // biome-ignore lint/style/useNamingConvention: it's ok
+    Score: "",
+    // biome-ignore lint/style/useNamingConvention: it's ok
+    Shares: "",
+    // biome-ignore lint/style/useNamingConvention: it's ok
+    Sharpe: "",
+    // biome-ignore lint/style/useNamingConvention: it's ok
+    Ticker: row.ticker,
+    "Ticker alt": "",
+    // biome-ignore lint/style/useNamingConvention: it's ok
+    Volatilité: "",
+    plan: "",
+  };
+  // @ts-expect-error - header is guaranteed to be a valid key from csvHeaders
+  return mapping[header] || "";
+}
+
 const selectors = {
   cells: "td",
   columnSelector: ".buttons-collection.buttons-colvis",
@@ -63,6 +136,24 @@ const selectors = {
 };
 
 /**
+ * Inject export button into the page
+ * @returns {HTMLButtonElement} injected button element
+ */
+function injectButton() {
+  const button = document.createElement("button");
+  button.textContent = "Copy table data";
+  button.style.position = "fixed";
+  button.style.top = "20px";
+  button.style.right = button.style.top;
+  button.style.zIndex = "2000";
+  button.style.borderRadius = "10px";
+  button.style.fontWeight = "bold";
+  button.classList.add("btn", "btn-primary");
+  document.body.append(button);
+  return button;
+}
+
+/**
  * @typedef {import('./just-etf-export.types').JustEtfExportData} JustEtfExportData
  */
 
@@ -83,7 +174,10 @@ function JustEtfExport() {
       return "";
     }
     const text = cell.innerHTML.replaceAll("<br>", " ").trim();
-    utils.log("extracted cell data", { cell, name, text });
+    if (text === "") {
+      utils.error("cell is empty", { cell, name, text });
+      utils.showError(`Data extraction failed for cell "${name}"`);
+    }
     return text;
   }
 
@@ -97,13 +191,17 @@ function JustEtfExport() {
     const fundNameLink = row.querySelector(selectors.fundName);
     if (!fundNameLink) return;
     const cells = row.querySelectorAll(selectors.cells);
+    const fundName = fundNameLink.textContent.trim();
+    const provider = fundName.split(" ")[0]; // crude way to extract provider from fund name, can be improved
+    const name = fundName.replace(provider, "").trim();
     return {
       currency: extractCellData("currency", cells[2]),
       distribution: extractCellData("distribution", cells[10]),
       fees: extractCellData("fees", cells[3]),
-      fundName: fundNameLink.textContent.trim(),
+      fundName,
       fundUrl: fundNameLink.href,
       isin: extractCellData("isin", cells[13]),
+      name,
       perf1y: extractCellData("perf1y", cells[4]),
       perf3y: extractCellData("perf3y", cells[5]),
       perf5y: extractCellData("perf5y", cells[6]),
@@ -111,6 +209,7 @@ function JustEtfExport() {
       perfRisk3y: extractCellData("perfRisk3y", cells[8]),
       perfRisk5y: extractCellData("perfRisk5y", cells[9]),
       positions: extractCellData("positions", cells[11]),
+      provider,
       replication: extractCellData("replication", cells[12]),
       ticker: extractCellData("ticker", cells[14]),
     };
@@ -118,7 +217,7 @@ function JustEtfExport() {
 
   /**
    * Extract table data
-   * @returns {Array<object>} extracted data
+   * @returns {Array<JustEtfExportData>} extracted data
    */
   function extractTableData() {
     const rows = document.querySelectorAll(selectors.rows);
@@ -142,7 +241,7 @@ function JustEtfExport() {
       .filter(text => text !== "");
     const headersMatch = expectedHeaders.every((header, index) => header === actualHeaders[index]);
     if (headersMatch) {
-      utils.showSuccess("Table headers match expected structure");
+      utils.log("Table headers match expected structure");
       return true;
     }
     utils.error("Table headers do not match expected structure", { actualHeaders, expectedHeaders });
@@ -204,18 +303,44 @@ function JustEtfExport() {
   }
 
   /**
+   * Copy extracted table data to clipboard in CSV format
+   * @param {Array<JustEtfExportData>} tableData - data to be copied
+   * @returns {Promise<void>} promise that resolves when data is copied
+   */
+  async function copyTableData(tableData) {
+    if (tableData.length === 0) {
+      utils.showError("No data to copy");
+      return;
+    }
+    const csvContent = tableData
+      // oxlint-disable-next-line max-nested-callbacks
+      .map(row => csvHeaders.map(header => mapHeaderToProperty(header, row)).join("\t"))
+      .join("\n");
+    try {
+      await utils.copyToClipboard(csvContent);
+      utils.showSuccess("CSV data copied to clipboard");
+    } catch (error) {
+      utils.error("Failed to copy table data to clipboard", { error });
+      utils.showError("Failed to copy data to clipboard");
+    }
+  }
+
+  /**
    * Process the page
    */
   async function start() {
-    utils.log("starting processing");
     if (!shouldProcess()) return;
+    utils.log("starting processing", { csvHeaders });
     const headersOk = checkTableHeaders();
     if (!headersOk) {
       await checkTableColumns();
       checkTableHeaders();
     }
     const tableData = extractTableData();
-    utils.log("extracted table data", { count: tableData.length, data: tableData });
+    const button = injectButton();
+    button.addEventListener("click", () => copyTableData(tableData));
+    utils.showSuccess(`${tableData.length} rows available for csv export`);
+    utils.log("stop processing");
   }
 
   /**
