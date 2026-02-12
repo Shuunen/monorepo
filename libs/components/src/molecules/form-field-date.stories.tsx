@@ -6,7 +6,7 @@ import { z } from "zod";
 import { AutoForm } from "./auto-form";
 import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
-import { fieldDate } from "./form-field-date.utils";
+import { dateTodayOrFutureSchema, today, tomorrow } from "./form-field-date.utils";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
 
@@ -117,6 +117,31 @@ export const Optional: Story = {
         }),
       }),
     ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const dateInput = canvas.getByTestId("input-date-reminder-date");
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+    await step("verify date input is present and optional", () => {
+      expect(dateInput).toBeInTheDocument();
+      expect(dateInput).toHaveAttribute("type", "date");
+    });
+    await step("submit form without filling date", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify submitted data contains undefined for optional date", () => {
+      expect(submittedData).toContainHTML(stringify({ reminderDate: undefined }, true));
+    });
+    await step("fill date input and submit form", async () => {
+      await userEvent.clear(dateInput);
+      await userEvent.type(dateInput, "2024-11-01");
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify submitted data contains the filled date", () => {
+      expect(submittedData).toContainHTML(stringify({ reminderDate: new Date("2024-11-01") }, true));
+    });
   },
 };
 
@@ -253,10 +278,9 @@ export const DateNowOrFuture: Story = {
   args: {
     schemas: [
       z.object({
-        appointmentDate: fieldDate({
+        appointmentDate: field(dateTodayOrFutureSchema, {
           label: "Appointment Date",
           placeholder: "Select an appointment date",
-          minDate: "today",
         }),
       }),
     ],
@@ -277,7 +301,7 @@ export const DateNowOrFuture: Story = {
       await userEvent.click(submitButton);
     });
     await step("verify validation error is shown", () => {
-      const errorMessage = canvas.getByText("Date must be on or after today");
+      const errorMessage = canvas.getByText("Date cannot be in the past");
       expect(errorMessage).toBeInTheDocument();
     });
     await step("fill date input with future date", async () => {
@@ -296,16 +320,15 @@ export const DateNowOrFuture: Story = {
 };
 
 /**
- * Date now or future with codec
+ * Date today or future with codec
  */
-export const DateNowOrFutureWithCodec: Story = {
+export const DateTodayOrFutureWithCodec: Story = {
   args: {
     schemas: [
       z.object({
-        appointmentDateCodec: fieldDate({
+        appointmentDateCodec: field(dateTodayOrFutureSchema, {
           codec: isoDateStringToDateInstance,
           label: "Appointment Date with Codec",
-          minDate: "today",
           placeholder: "Select an appointment date",
         }),
       }),
@@ -327,7 +350,7 @@ export const DateNowOrFutureWithCodec: Story = {
       await userEvent.click(submitButton);
     });
     await step("verify validation error is shown", () => {
-      const errorMessage = canvas.getByText("Date must be on or after today");
+      const errorMessage = canvas.getByText("Date cannot be in the past");
       expect(errorMessage).toBeInTheDocument();
     });
     await step("fill date input with future date", async () => {
@@ -353,10 +376,9 @@ export const DateNowOrFutureWithInitialDataToday: Story = {
     initialData: { appointmentDate: new Date(dateIso10()) },
     schemas: [
       z.object({
-        appointmentDate: fieldDate({
+        appointmentDate: field(dateTodayOrFutureSchema, {
           label: "Appointment Date Initial Data Today",
           placeholder: "Select an appointment date",
-          minDate: "today",
         }),
       }),
     ],
@@ -388,11 +410,9 @@ export const DateNowOrFutureWithDefaultValueToday: Story = {
   args: {
     schemas: [
       z.object({
-        appointmentDate: fieldDate({
+        appointmentDate: field(dateTodayOrFutureSchema.prefault(today), {
           label: "Appointment Date Default Value Today",
           placeholder: "Select an appointment date",
-          minDate: "today",
-          initialValue: "today",
         }),
       }),
     ],
@@ -424,12 +444,16 @@ export const DateTomorrowToFixed: Story = {
   args: {
     schemas: [
       z.object({
-        eventDate: fieldDate({
-          label: "Event Date",
-          placeholder: "Select an event date",
-          minDate: "tomorrow",
-          maxDate: new Date("2100-12-31"),
-        }),
+        eventDate: field(
+          z
+            .date()
+            .min(tomorrow, "Date must be on or after tomorrow")
+            .max(new Date("2100-12-31"), "Date must be on or before 2100-12-31"),
+          {
+            label: "Event Date",
+            placeholder: "Select an event date",
+          },
+        ),
       }),
     ],
   },

@@ -19,25 +19,6 @@
 - Check column headers to be sure we are on the right page with the right table structure
 */
 
-/*
-
-
-Frais p.a.
-ISIN
-Réplication
-Distribution
-Monnaie fonds
-Développement durable
-Positions
-1A en %
-3A en %
-5A en %
-Rend./Risque 1A
-Rend./Risque 3A
-Rend./Risque 5A
-Ticker
-*/
-
 const expectedHeaders = [
   "Nom du fonds",
   "Monnaie fonds",
