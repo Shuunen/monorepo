@@ -1,54 +1,41 @@
-import { memo, useMemo } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import { type Dispatch, type SetStateAction, memo, useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { Alert } from "../atoms/alert";
 import { type AutoFormFieldProps, componentRegistry } from "./auto-form-field.utils";
 import type { AutoFormData } from "./auto-form.types";
-import { getFieldMetadata, getFormFieldRender, isFieldVisible, parseDependsOn } from "./auto-form.utils";
+import { getFieldMetadata, getFormFieldRender, isFieldVisible } from "./auto-form.utils";
 import { FormFieldFieldList } from "./form-field-field-list";
 import { FormFieldSection } from "./form-field-section";
 
+function createVisibilitySubscriber(fieldSchema: z.ZodTypeAny, setVisible: Dispatch<SetStateAction<boolean>>) {
+  return (formValues: AutoFormData) => {
+    const newVisible = isFieldVisible(fieldSchema, formValues);
+    setVisible(prev => (prev === newVisible ? prev : newVisible));
+  };
+}
+
 // oxlint-disable-next-line max-lines-per-function max-statements
 export const AutoFormField = memo(({ fieldName, fieldSchema, stepState, logger, showForm }: AutoFormFieldProps) => {
-  const { getValues } = useFormContext();
+  const { getValues, watch } = useFormContext();
   const metadata = getFieldMetadata(fieldSchema) ?? {};
 
+  logger?.info("compute visibility for field", { fieldName });
   const hasIsVisible = metadata && "isVisible" in metadata && metadata.isVisible;
-  const dependenciesFieldName = useMemo(() => {
-    if (!(metadata && "dependsOn" in metadata && metadata.dependsOn)) {
-      return undefined;
-    }
-    const fieldNames = parseDependsOn(metadata.dependsOn).flatMap(dependency =>
-      // oxlint-disable-next-line max-nested-callbacks
-      dependency.map(condition => condition.fieldName),
-    );
-    const seenFieldNames = new Set<string>();
-    for (const fieldNameDependency of fieldNames) {
-      if (!seenFieldNames.has(fieldNameDependency)) {
-        seenFieldNames.add(fieldNameDependency);
-      }
-    }
-    return [...seenFieldNames];
-  }, [metadata]);
+  const hasDependsOn = metadata && "dependsOn" in metadata && metadata.dependsOn;
+  const needsWatch = hasIsVisible || hasDependsOn;
 
-  const watchedDependencies = useWatch({ disabled: !dependenciesFieldName, name: dependenciesFieldName as string[] });
-  const watchedAll = useWatch({ disabled: !hasIsVisible });
+  const [visible, setVisible] = useState(() => isFieldVisible(fieldSchema, getValues()));
 
-  const formValues: AutoFormData = useMemo(() => {
-    if (dependenciesFieldName) {
-      const updatedDependencies: Record<string, unknown> = {};
-      for (const [index, dependencyFieldName] of dependenciesFieldName.entries()) {
-        updatedDependencies[dependencyFieldName] = watchedDependencies[index];
-      }
-      return { ...getValues(), ...updatedDependencies };
+  useEffect(() => {
+    if (!needsWatch) {
+      return;
     }
-    if (hasIsVisible) {
-      return typeof watchedAll === "object" && watchedAll !== null ? watchedAll : getValues();
-    }
-    return getValues();
-  }, [dependenciesFieldName, hasIsVisible, watchedDependencies, watchedAll, getValues]);
+    const subscription = watch(createVisibilitySubscriber(fieldSchema, setVisible));
+    return () => subscription.unsubscribe();
+  }, [fieldSchema, watch, needsWatch]);
 
-  if (!isFieldVisible(fieldSchema, formValues)) {
+  if (!visible) {
     return;
   }
 
