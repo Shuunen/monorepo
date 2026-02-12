@@ -14,6 +14,11 @@
 
 // oxlint-disable no-magic-numbers
 
+/* TODO :
+- Add export button to export data as CSV to clipboard
+- Check column headers to be sure we are on the right page with the right table structure
+*/
+
 /**
  * @typedef {import('./just-etf-export.types').JustEtfExportData} JustEtfExportData
  */
