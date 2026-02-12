@@ -6,6 +6,7 @@ import {
   acceptField,
   buildStepperSteps,
   checkZodBoolean,
+  expandRefineRules,
   field,
   fields,
   filterDataForSummary,
@@ -19,6 +20,7 @@ import {
   getInitialStep,
   getKeyMapping,
   getLastAccessibleStepIndex,
+  getRefineFieldPaths,
   getStepMetadata,
   getUnwrappedSchema,
   getZodEnumOptions,
@@ -38,6 +40,7 @@ import {
   normalizeData,
   normalizeDataForSchema,
   parseDependsOn,
+  refine,
   section,
   sectionsFromEditableSteps,
   step,
@@ -1622,6 +1625,128 @@ describe("auto-form.utils", () => {
   it("isSubformFilled J null", () => {
     const data = { infos: null };
     expect(isSubformFilled(data)).toBe(false);
+  });
+
+  // expandRefineRules
+  it("expandRefineRules A should expand a single rule with multiple paths into multiple entries", () => {
+    // oxlint-disable-next-line unicorn/consistent-function-scoping
+    const check = (data: Record<string, unknown>) => data.a !== data.b;
+    const result = expandRefineRules([{ check, message: "Must differ", paths: ["a", "b"] }]);
+    expect(result).toHaveLength(2);
+    expect(result[0].validation).toEqual({ error: "Must differ", path: ["a"] });
+    expect(result[1].validation).toEqual({ error: "Must differ", path: ["b"] });
+    expect(result[0].check).toBe(check);
+    expect(result[1].check).toBe(check);
+  });
+  it("expandRefineRules B should handle a single path", () => {
+    const result = expandRefineRules([{ check: () => true, message: "Error", paths: ["x"] }]);
+    expect(result).toHaveLength(1);
+    expect(result[0].validation).toEqual({ error: "Error", path: ["x"] });
+  });
+  it("expandRefineRules C should handle multiple rules", () => {
+    const result = expandRefineRules([
+      { check: () => true, message: "Rule 1", paths: ["a"] },
+      { check: () => false, message: "Rule 2", paths: ["b", "c"] },
+    ]);
+    expect(result).toHaveLength(3);
+    expect(result[0].validation.error).toBe("Rule 1");
+    expect(result[1].validation.error).toBe("Rule 2");
+    expect(result[2].validation.error).toBe("Rule 2");
+  });
+  it("expandRefineRules D should return empty array for empty rules", () => {
+    expect(expandRefineRules([])).toEqual([]);
+  });
+
+  // refine
+  it("refine A should set refine metadata on schema", () => {
+    const schema = refine(z.object({ a: z.string(), b: z.string() }), [
+      { check: (data: Record<string, unknown>) => data.a !== data.b, message: "Must differ", paths: ["a", "b"] },
+    ]);
+    const meta = schema.meta() as { refine: unknown[] };
+    expect(meta.refine).toHaveLength(2);
+  });
+  it("refine B should accept optional step metadata", () => {
+    const schema = refine(z.object({ a: z.string() }), [{ check: () => true, message: "Error", paths: ["a"] }], {
+      title: "My Step",
+      state: "editable",
+    });
+    const meta = schema.meta() as { refine: unknown[]; title: string; state: string };
+    expect(meta.refine).toHaveLength(1);
+    expect(meta.title).toBe("My Step");
+    expect(meta.state).toBe("editable");
+  });
+  it("refine C should work without step metadata", () => {
+    const schema = refine(z.object({ x: z.number() }), [{ check: () => true, message: "Ok", paths: ["x"] }]);
+    const meta = schema.meta() as { refine: unknown[]; title?: string };
+    expect(meta.refine).toHaveLength(1);
+    expect(meta.title).toBeUndefined();
+  });
+
+  // step merges existing metadata
+  it("step C should merge with existing metadata (preserves refine from refine())", () => {
+    const refined = refine(z.object({ a: z.string() }), [{ check: () => true, message: "Error", paths: ["a"] }]);
+    const stepped = step(refined, { title: "Step Title" });
+    const meta = stepped.meta() as { refine: unknown[]; title: string };
+    expect(meta.title).toBe("Step Title");
+    expect(meta.refine).toHaveLength(1);
+  });
+
+  // getRefineFieldPaths
+  it("getRefineFieldPaths A should return empty array for schema without refine metadata", () => {
+    const schema = z.object({ a: z.string() });
+    expect(getRefineFieldPaths(schema)).toEqual([]);
+  });
+  it("getRefineFieldPaths B should return empty array for schema with empty metadata", () => {
+    const schema = step(z.object({ a: z.string() }), { title: "Step" });
+    expect(getRefineFieldPaths(schema)).toEqual([]);
+  });
+  it("getRefineFieldPaths C should extract unique paths from refine metadata", () => {
+    const schema = refine(z.object({ a: z.string(), b: z.string(), c: z.string() }), [
+      { check: () => true, message: "Error 1", paths: ["a", "b"] },
+      { check: () => true, message: "Error 2", paths: ["b", "c"] },
+    ]);
+    const paths = getRefineFieldPaths(schema);
+    expect(paths).toHaveLength(3);
+    expect(paths).toContain("a");
+    expect(paths).toContain("b");
+    expect(paths).toContain("c");
+  });
+  it("getRefineFieldPaths D should work with refine + step combo", () => {
+    const schema = step(
+      refine(z.object({ x: z.string(), y: z.string() }), [{ check: () => true, message: "Err", paths: ["x", "y"] }]),
+      { title: "Step" },
+    );
+    expect(getRefineFieldPaths(schema)).toEqual(["x", "y"]);
+  });
+
+  // filterSchema with refine
+  it("filterSchema E should re-apply refine validations to the filtered schema", () => {
+    const schema = refine(
+      z.object({
+        color: field(z.enum(["red", "green", "blue"]), { label: "Color" }),
+        size: field(z.enum(["small", "medium", "large"]), { label: "Size" }),
+      }),
+      [
+        {
+          check: (data: Record<string, unknown>) => !(data.color === "red" && data.size === "large"),
+          message: "Cant choose large size if color is red",
+          paths: ["size", "color"],
+        },
+      ],
+    );
+    const filtered = filterSchema(schema, { color: "red", size: "large" });
+    const result = filtered.safeParse({ color: "red", size: "large" });
+    expect(result.success).toBe(false);
+    const validResult = filtered.safeParse({ color: "blue", size: "large" });
+    expect(validResult.success).toBe(true);
+  });
+  it("filterSchema F should not break when no refine metadata", () => {
+    const schema = z.object({
+      a: z.string().meta({ label: "A" }),
+    });
+    const filtered = filterSchema(schema, { a: "test" });
+    const result = filtered.safeParse({ a: "hello" });
+    expect(result.success).toBe(true);
   });
 });
 

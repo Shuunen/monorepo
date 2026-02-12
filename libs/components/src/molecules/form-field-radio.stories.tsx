@@ -4,7 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
-import { field } from "./auto-form.utils";
+import { field, refine } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -233,28 +233,27 @@ export const Readonly: Story = {
   },
 };
 
+const check = (data: Record<string, unknown> | undefined) => !(data?.color === "red" && data?.size === "large");
+
 /**
  * Multiple radio groups in the same form
  */
 export const MultipleFields: Story = {
   args: {
     schemas: [
-      z.object({
-        color: field(z.enum(["red", "green", "blue"]), {
-          label: "Favourite Color",
-          render: "radio",
+      refine(
+        z.object({
+          color: field(z.enum(["red", "green", "blue"]), {
+            label: "Favourite Color",
+            render: "radio",
+          }),
+          size: field(z.enum(["small", "medium", "large"]), {
+            label: "Size",
+            render: "radio",
+          }),
         }),
-        size: field(z.enum(["small", "medium", "large"]), {
-          label: "Size",
-          render: "radio",
-          // isInvalid: (data: Record<string, unknown>) => {
-          //   if (data.color === "red" && data.size === "large") {
-          //     return "Cant choose large size if color is red";
-          //   }
-          //   return undefined;
-          // },
-        }),
-      }),
+        [{ check, message: "Cant choose large size if color is red", paths: ["size", "color"] }],
+      ),
     ],
   },
   play: async ({ canvasElement, step }) => {
@@ -280,6 +279,18 @@ export const MultipleFields: Story = {
 
     await step("verify submitted data", () => {
       expect(submittedData).toContainHTML(stringify({ color: "blue", size: "large" }, true));
+    });
+
+    await step("select red color and large size to trigger error", async () => {
+      const redLabel = canvas.getByText("Red");
+      await userEvent.click(redLabel);
+      const largeLabel = canvas.getByText("Large");
+      await userEvent.click(largeLabel);
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      const errorMessage = canvas.getAllByText("Cant choose large size if color is red");
+      expect(errorMessage).toHaveLength(2);
+      expect(submittedData).not.toContainHTML(stringify({ color: "red", size: "large" }, true));
     });
   },
 };

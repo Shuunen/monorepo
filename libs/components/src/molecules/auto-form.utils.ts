@@ -20,6 +20,8 @@ import type {
   AutoFormFieldSectionMetadata,
   AutoFormFieldsMetadata,
   AutoFormFormsMetadata,
+  AutoFormRefineEntry,
+  AutoFormRefineRule,
   AutoFormStepMetadata,
   AutoFormSubmissionStepProps,
   AutoFormSummarySection,
@@ -296,9 +298,11 @@ export function isFieldVisible(fieldSchema: z.ZodType, formData: AutoFormData) {
  * @param formData the current form data to evaluate visibility
  * @returns a new Zod schema with only visible fields
  */
+// oxlint-disable-next-line max-statements
 export function filterSchema(schema: z.ZodObject, formData: AutoFormData = {}): z.ZodObject {
   const shape = schema.shape;
   const visibleShape: Record<string, z.ZodType> = {};
+  const meta = (schema.meta() ?? {}) as { refine?: AutoFormRefineEntry[] };
   for (const key of Object.keys(shape)) {
     const fieldSchema = shape[key] as z.ZodType;
     if (!isFieldVisible(fieldSchema, formData)) {
@@ -318,6 +322,13 @@ export function filterSchema(schema: z.ZodObject, formData: AutoFormData = {}): 
     }
     logger.debug(`filterSchema "${key}" of type "${fieldSchema.type}" isVisible`);
     visibleShape[key] = fieldSchema;
+  }
+  if (meta.refine) {
+    let finalSchema = z.object(visibleShape);
+    for (const entry of meta.refine) {
+      finalSchema = finalSchema.refine(entry.check as (arg: Record<string, unknown>) => unknown, entry.validation);
+    }
+    return finalSchema;
   }
   return z.object(visibleShape);
 }
@@ -727,7 +738,43 @@ export function step<Schema extends z.ZodObject>(stepSchema: Schema, stepMetadat
   if (!stepMetadata) {
     return stepSchema;
   }
-  return stepSchema.meta(stepMetadata);
+  const existingMeta = (stepSchema.meta() as Record<string, unknown>) ?? {};
+  return stepSchema.meta({ ...existingMeta, ...stepMetadata });
+}
+
+/**
+ * Expands user-facing refine rules into internal refine entries.
+ * Each rule with N paths produces N entries (one `.refine()` call per field path).
+ * @param rules - Array of refine rules with paths (plural)
+ * @returns Array of internal refine entries for schema metadata
+ */
+export function expandRefineRules(rules: AutoFormRefineRule[]): AutoFormRefineEntry[] {
+  const entries: AutoFormRefineEntry[] = [];
+  for (const { check, message, paths } of rules) {
+    for (const path of paths) {
+      entries.push({ check, validation: { error: message, path: [path] } });
+    }
+  }
+  return entries;
+}
+
+/**
+ * Helper to add cross-field validation refinements to an AutoForm schema.
+ * Optionally accepts step metadata to combine both in one call.
+ * @param schema - The Zod object schema to refine
+ * @param rules - Array of refine rules, each with a check function, error message, and target field paths
+ * @param stepMetadata - Optional step metadata (title, subtitle, state, etc.)
+ * @returns The schema with refine entries and optional step metadata set via `.meta()`
+ * @example refine(z.object({ a: field(...), b: field(...) }), [{ check: d => d.a !== d.b, message: "Must differ", paths: ["a", "b"] }])
+ * @example refine(schema, rules, { title: "My Step" })
+ */
+export function refine<Schema extends z.ZodObject>(
+  schema: Schema,
+  rules: AutoFormRefineRule[],
+  stepMetadata?: AutoFormStepMetadata,
+) {
+  const refineEntries = expandRefineRules(rules);
+  return schema.meta({ ...stepMetadata, refine: refineEntries });
 }
 
 /**
@@ -965,4 +1012,24 @@ export function typeLikeResolver<Type>(value: TypeLike<Type>, data?: AutoFormDat
     return value(data);
   }
   return value;
+}
+
+/**
+ * Extracts all field paths involved in refinements from a schema's metadata.
+ * Used to re-trigger validation on sibling refine paths when one changes.
+ * @param schema - The Zod object schema to extract refine paths from
+ * @returns Array of field path strings involved in refinements
+ */
+export function getRefineFieldPaths(schema: z.ZodObject): string[] {
+  const meta = schema.meta() as { refine?: AutoFormRefineEntry[] } | undefined;
+  if (!meta?.refine) {
+    return [];
+  }
+  const paths = new Set<string>();
+  for (const entry of meta.refine) {
+    for (const pathSegment of entry.validation.path) {
+      paths.add(pathSegment);
+    }
+  }
+  return [...paths];
 }

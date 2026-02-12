@@ -219,6 +219,36 @@ export type AutoFormSubmissionStepProps = {
   tooltipDetailsList?: string[];
 };
 
+/**
+ * Internal format for a single refine entry stored in schema metadata.
+ * Each entry maps to one `.refine()` call on the schema, targeting a single field path.
+ */
+export type AutoFormRefineEntry = {
+  /** Validation function: return truthy if valid, falsy if invalid */
+  check: (data: Record<string, unknown>) => unknown;
+  /** Validation options passed to `.refine()` */
+  validation: {
+    /** Error message displayed when validation fails */
+    error: string;
+    /** Field path(s) to attach the error to (typically a single-element array like ["fieldName"]) */
+    path: string[];
+  };
+};
+
+/**
+ * User-facing refine rule for cross-field validation.
+ * Automatically expanded into one `AutoFormRefineEntry` per path.
+ * @example refine(schema, [{ check: d => d.a !== d.b, message: "A and B must differ", paths: ["a", "b"] }])
+ */
+export type AutoFormRefineRule = {
+  /** Validation function: return truthy if valid, falsy if invalid */
+  check: (data: Record<string, unknown>) => unknown;
+  /** Error message displayed on each targeted field when validation fails */
+  message: string;
+  /** Field paths to show the error on and to re-validate when any of them changes */
+  paths: string[];
+};
+
 /** The data output from auto form, sadly not typed :'( */
 export type AutoFormData = Record<string, unknown>;
 

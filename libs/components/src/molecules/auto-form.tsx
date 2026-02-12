@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn, nbPercentMax, scrollToElement, sleep } from "@monorepo/utils";
 import { Link } from "@tanstack/react-router";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../atoms/button";
 import { Form } from "../atoms/form";
@@ -21,6 +21,7 @@ import {
   getDefaultValues,
   getInitialStep,
   getLastAccessibleStepIndex,
+  getRefineFieldPaths,
   getStepMetadata,
   isStepClickable,
   normalizeData,
@@ -88,6 +89,20 @@ export function AutoForm({
     mode: "onBlur",
     resolver: (values, context, options) => zodResolver(filterSchema(currentSchema, values))(values, context, options),
   });
+
+  // Re-validate all refinement-related fields when any one of them changes (after first submit)
+  const refineFieldPaths = useMemo(() => getRefineFieldPaths(currentSchema), [currentSchema]);
+  useEffect(() => {
+    if (refineFieldPaths.length === 0) {
+      return;
+    }
+    const subscription = form.watch((_value, { name }) => {
+      if (name && refineFieldPaths.includes(name) && form.formState.isSubmitted) {
+        void form.trigger(refineFieldPaths);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form, refineFieldPaths]);
 
   function updateFormData() {
     const updatedData = { ...formData, ...form.getValues() };
