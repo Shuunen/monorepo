@@ -10,7 +10,7 @@ import { field, mockSubmit, section, step } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 // allow dev to see logs in the browser console when running storybook dev but not in headless tests
-const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
+const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn", willLogDelay: false });
 
 type ExtendedAutoFormProps = AutoFormProps & {
   mockSubmitMessage?: ReactNode;
@@ -1205,6 +1205,77 @@ export const Codec: Story = {
     await step("verify submitted data was transformed correctly", () => {
       const expectedData = { date: "2026-01-06" };
       expect(submittedData).toContainHTML(stringify(expectedData, true));
+    });
+  },
+};
+
+export const Performance: Story = {
+  args: {
+    initialData: {},
+    schemas: [
+      z.object({
+        field1: field(z.string(), {
+          label: "Field 1",
+        }),
+        field2: field(z.string(), {
+          label: "Field 2 depends on field 1",
+          dependsOn: "field1",
+        }),
+        field3: field(z.string(), {
+          label: "Field 3 depends on field 1 and field 2",
+          dependsOn: ["field1", "field2"],
+        }),
+        field4: field(z.string(), {
+          label: "Field 4 is visible when field 1 is 1 and field2 is 2",
+          isVisible: data => data.field1 === "1" && data.field2 === "2",
+        }),
+        field5: field(z.string(), {
+          label: "Field 5 depends on field 1, field 2 and field 4",
+          dependsOn: ["field4", "field1", "field2"],
+        }),
+        field6: field(z.string(), {
+          label: "Field 6 depends on field 1, field 2 and field 3",
+          dependsOn: ["field3", "field1", "field2"],
+        }),
+        field7: field(z.string(), {
+          label: "Field 7",
+        }),
+        field8: field(z.string(), {
+          label: "Field 8",
+        }),
+        field9: field(z.string(), {
+          label: "Field 9",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("fill field 1 form fields", async () => {
+      const input1 = canvas.getByTestId("input-text-field1");
+      await userEvent.type(input1, "25");
+    });
+    await step("fill field 2 and 3 form fields", async () => {
+      const input2 = canvas.getByTestId("input-text-field2");
+      await userEvent.type(input2, "25");
+      const input3 = canvas.getByTestId("input-text-field3");
+      await userEvent.type(input3, "25");
+    });
+    await step("change field 1 and 2 form fields", async () => {
+      const input1 = canvas.getByTestId("input-text-field1");
+      await userEvent.clear(input1);
+      await userEvent.type(input1, "1");
+      const input2 = canvas.getByTestId("input-text-field2");
+      await userEvent.clear(input2);
+      await userEvent.type(input2, "2");
+    });
+    await step("fill field 4 form fields", async () => {
+      const input4 = canvas.getByTestId("input-text-field4");
+      await userEvent.type(input4, "1");
+    });
+    await step("fill field 5 form fields", async () => {
+      const input5 = canvas.getByTestId("input-text-field5");
+      await userEvent.type(input5, "1");
     });
   },
 };

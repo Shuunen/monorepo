@@ -311,12 +311,12 @@ export function filterSchema(schema: z.ZodObject, formData: AutoFormData = {}): 
     if (isZodArray(fieldSchema)) {
       const result = getElementSchema(fieldSchema);
       if (result.ok && isZodObject(result.value)) {
-        logger.info(`filterSchema "${key}" creating a new forms with recursive call`);
+        logger.debug(`filterSchema "${key}" creating a new forms with recursive call`);
         visibleShape[key] = forms(filterSchema(result.value, formData), fieldSchema.meta() as AutoFormFormsMetadata);
         continue;
       }
     }
-    logger.info(`filterSchema "${key}" of type "${fieldSchema.type}" isVisible`);
+    logger.debug(`filterSchema "${key}" of type "${fieldSchema.type}" isVisible`);
     visibleShape[key] = fieldSchema;
   }
   return z.object(visibleShape);
