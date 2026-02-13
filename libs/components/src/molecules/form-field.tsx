@@ -60,7 +60,7 @@ export function FormFieldBase(props: FormFieldBaseProps) {
     <FormField
       key={fieldName}
       name={fieldName}
-      render={({ field, fieldState, formState: innerFormState }) => (
+      render={({ field, fieldState, formState }) => (
         <FormItem
           className={cn("items-start py-2", {
             "indented border-l-2 pl-5": indented,
@@ -68,7 +68,7 @@ export function FormFieldBase(props: FormFieldBaseProps) {
           })}
         >
           {props.showLabel !== false && <FormFieldLabel isOptional={isOptional} label={metadata.label} />}
-          {children?.({ field, fieldState, formState: innerFormState })}
+          {children?.({ field, fieldState, formState })}
           <FormMessage name={fieldName}>{customErrorMessage}</FormMessage>
         </FormItem>
       )}
