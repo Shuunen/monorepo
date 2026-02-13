@@ -75,7 +75,7 @@ export function AutoForm({
   const [showSummary, setShowSummary] = useState(false);
   const [submissionProps, setSubmissionProps] = useState<AutoFormSubmissionStepProps | undefined>(undefined);
   const defaultValues = useMemo(() => getDefaultValues(schemas, initialData), [schemas, initialData]);
-  const [formData, setFormData] = useState<Record<string, unknown>>(defaultValues);
+  const [formData, setFormData] = useState<AutoFormData>(defaultValues);
   const [showBackButtonInSubform, setShowBackButtonInSubform] = useState<boolean>(true);
   const currentSchema = schemas[currentStep];
   const lastAccessibleStepIndex = useMemo(() => getLastAccessibleStepIndex(schemas), [schemas]);

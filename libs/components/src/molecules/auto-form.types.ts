@@ -6,7 +6,10 @@ import type { AutoFormStepperStep } from "./auto-form-stepper";
 import type { FormFieldSectionProps } from "./form-field-section";
 import type { FormSummaryData } from "./form-summary";
 
-export type TypeLike<Type> = Type | ((data?: Record<string, unknown>) => Type);
+/** The data output from auto form, sadly not typed :'( */
+export type AutoFormData = Record<string, unknown>;
+
+export type TypeLike<Type> = Type | ((data?: AutoFormData) => Type);
 
 export type NumberLike = TypeLike<number>;
 
@@ -21,7 +24,7 @@ export type AutoFormProps = {
   /** Optional callback function invoked when the cancel button is clicked. */
   onCancel?: () => void;
   /** Initial data to pre-fill the form fields. */
-  initialData?: Record<string, unknown>;
+  initialData?: AutoFormData;
   /** Whether to include a summary step before submission */
   useSummaryStep?: boolean;
   /** Whether to include a submission step after form submission */
@@ -92,7 +95,7 @@ export type AutoFormFormsMetadata = Simplify<
     /** Icon to display alongside the form list title */
     icon?: JSX.Element | ((params: Record<string, unknown>) => JSX.Element);
     /** Function to generate the label for each item in the list, based on its data, for example data => `${data.name} (${data.age} years)` */
-    identifier?: (data?: Record<string, unknown>) => string;
+    identifier?: (data?: AutoFormData) => string;
     /** Custom labels for the form list */
     labels?: {
       /** Label for the button to add a new form to the list, default is "Add" */
@@ -145,7 +148,7 @@ export type AutoFormFieldConditionalMetadata = {
   /** The name of another field that this field depends on. Supports field=value and field!=value syntax for specific value checks. Use nested arrays for OR logic: [['a', 'b']] means a OR b. */
   dependsOn?: string | DependsOnCondition[];
   /** More generic way to express condition on whether or not a field is visible. When provided, this function has precedence over `dependsOn`. */
-  isVisible?: (formData: Record<string, unknown>) => boolean;
+  isVisible?: (formData: AutoFormData) => boolean;
 };
 
 /**
@@ -219,9 +222,6 @@ export type AutoFormSubmissionStepProps = {
   tooltipDetailsList?: string[];
 };
 
-/** The data output from auto form, sadly not typed :'( */
-export type AutoFormData = Record<string, unknown>;
-
 /** A section of data in the auto form summary */
 export type AutoFormSummarySection = {
   /** The data entries in the section, with label and value */
@@ -235,9 +235,9 @@ export type AutoFormSubformOptions = {
   /** The step/zod schema for the subform */
   schema: z.ZodObject;
   /** Initial data to pre-fill the subform fields. */
-  initialData: Record<string, unknown>;
+  initialData: AutoFormData;
   /** The query selector to the element to scroll after submit */
   querySelectorForScroll: string;
   /** Callback function invoked when the subform is submitted, returning the submission data. */
-  onSubmit: (data: Record<string, unknown>) => void;
+  onSubmit: (data: AutoFormData) => void;
 };
