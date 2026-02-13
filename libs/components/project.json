@@ -4,6 +4,7 @@
     "list": {
       "cache": true,
       "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/src/**/*.{ts,tsx}", "!{projectRoot}/src/**/*.test.{ts,tsx}"],
       "options": {
         "command": "bun ../../utils/src/bin/barrel-maker.cli.ts --target=\"./{atoms,icons,molecules}/*.{ts,tsx}\" --ext=",
         "cwd": "{projectRoot}/src"
@@ -21,8 +22,9 @@
       "cache": true,
       "executor": "nx:run-commands",
       "inputs": [
-        "{projectRoot}/src/**/*.{ts,tsx,js,jsx}",
-        "{projectRoot}/src/**/*.stories.{ts,tsx,js,jsx}",
+        "{projectRoot}/src/**/*.{ts,tsx}",
+        "!{projectRoot}/src/**/*.test.{ts,tsx}",
+        "{projectRoot}/src/**/*.stories.{ts,tsx}",
         "{projectRoot}/.storybook/**/*",
         "{projectRoot}/vitest.storybook.config.ts",
         "{projectRoot}/vite.config.ts",
