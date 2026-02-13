@@ -34,7 +34,6 @@
 
 // @ts-nocheck FIX ME later, I don't use Laptop Helper for now
 // oxlint-disable no-magic-numbers
-// oxlint-disable max-lines
 // oxlint-disable no-immediate-mutation
 /** biome-ignore-all lint/suspicious/noAssignInExpressions: for a2b & b2a functions */
 
