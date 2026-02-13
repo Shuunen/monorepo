@@ -18,9 +18,13 @@ export function FormFieldPassword({
     <FormFieldBase {...props}>
       {({ field }) => (
         <FormControl>
+          {/* value={field.value || ""} We ensure that the value is always a string to prevent uncontrolled to controlled input warnings in React. */}
           <Input
             {...field}
             disabled={isDisabled}
+            onBlur={() => {
+              field.onChange(field.value || undefined);
+            }}
             placeholder={placeholder}
             readOnly={readonly}
             type="password"
