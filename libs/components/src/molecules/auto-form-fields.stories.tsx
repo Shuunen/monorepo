@@ -6,7 +6,7 @@ import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
 import type { AutoFormData } from "./auto-form.types";
-import { field, section } from "./auto-form.utils";
+import { field, fields, forms, section } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -41,7 +41,7 @@ const allFieldsSchema = z.object({
   booleanCode: section({
     description:
       "The default render of a ZodBoolean : a toggle switch. For more details, check the FormFieldBoolean story.",
-    title: "Boolean",
+    title: "Boolean switch",
   }),
   booleanField: field(z.boolean().optional(), {
     placeholder: "Turn on or off",
@@ -168,11 +168,70 @@ const allFieldsSchema = z.object({
     code: 'z.string().meta({ render: "password" })',
     line: true,
   }),
+  // Radio
+  radioCode: section({
+    description:
+      "A custom render of a ZodEnum. This field displays radio buttons instead of a dropdown select. For more details, check the FormFieldRadio story.",
+    title: "Radio",
+  }),
+  radioField: field(z.enum(["option1", "option2", "option3"]).optional(), {
+    placeholder: "Pick one option",
+    render: "radio",
+  }),
+  radioFieldCode: section({
+    code: 'z.enum(["option1", ...]).meta({ render: "radio" })',
+    line: true,
+  }),
+  // Field List
+  fieldListCode: section({
+    description:
+      "A repeatable list of simple fields. Users can add and remove items dynamically. For more details, check the FormFieldFieldList story.",
+    title: "Field list",
+  }),
+  fieldListField: fields(
+    field(z.string().optional(), {
+      label: "Item",
+      placeholder: "Enter an item",
+    }),
+    {
+      label: "Items",
+      maxItems: 3,
+      placeholder: "Add up to 3 items.",
+    },
+  ),
+  fieldListFieldCode: section({
+    code: 'fields(field(z.string(), { label: "Item" }), { maxItems: 3 })',
+    line: true,
+  }),
+  // Form List
+  formListCode: section({
+    description:
+      "A repeatable list of sub-forms. Each item opens a form for detailed data entry. For more details, check the FormFieldFormList story.",
+    title: "Form list",
+  }),
+  formListField: forms(
+    z.object({
+      name: field(z.string().optional(), {
+        label: "Name",
+        placeholder: "Enter a name",
+      }),
+    }),
+    {
+      identifier: data => (data?.name ? String(data.name) : "New item"),
+      label: "Entries",
+      maxItems: 3,
+      placeholder: "Add up to 3 entries.",
+    },
+  ),
+  formListFieldCode: section({
+    code: "forms(z.object({ name: field(...) }), { identifier: ..., maxItems: 3 })",
+    line: true,
+  }),
 });
 
 /**
  * Showcase of all available form-field types in editable state
- * Displays one instance of each field type: text, textarea, email, number, date, boolean, enum, accept, and password
+ * Displays one instance of each field type: text, textarea, email, number, date, boolean, enum, accept, password, radio, field list, and form list
  */
 export const AllFields: Story = {
   args: {
@@ -200,6 +259,7 @@ export const AllFieldsFilled: Story = {
       textField: "Sample text",
       textareaField: "Sample textarea",
       passwordField: "Sample password",
+      radioField: "option2",
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -217,6 +277,8 @@ export const AllFieldsFilled: Story = {
       textField: "Sample text",
       textareaField: "Sample textarea",
       passwordField: "Sample password",
+      radioField: "option2",
+      fieldListField: [null],
     };
     await step("initial state", async () => {
       await sleep(50);

@@ -173,25 +173,40 @@ type AutoFormFieldMetadata = {
   line?: boolean; // Show divider line (for section render)
 
   // Field rendering
-  render?: "text" | "textarea" | "date" | "number" | "boolean" | "select" | "upload" | "accept" | "section"; // Component to render
+  render?:
+    | "text"
+    | "textarea"
+    | "date"
+    | "number"
+    | "boolean"
+    | "select"
+    | "radio"
+    | "upload"
+    | "accept"
+    | "password"
+    | "field-list"
+    | "form-list"
+    | "section";
 
   // Field state
   state?: "editable" | "readonly" | "disabled"; // User can interact?
 
   // Conditional logic
-  dependsOn?: string; // Show only if this field has a value
+  dependsOn?: string | DependsOnCondition[]; // Show only if condition(s) met (see Advanced Features)
+  isVisible?: (formData) => boolean; // Programmatic visibility (takes precedence over dependsOn)
   excluded?: boolean; // Don't include in submitted data
-
-  // Multi-step forms
-  step?: string; // Step name/title in stepper
 
   // Data transformation
   key?: string; // Maps both input & output keys
   keyIn?: string; // Map initial data from different key name
   keyOut?: string; // Map submitted data to different key name
+  codec?: z.ZodCodec; // Zod codec to transform input and output data
 
   // Select/enum options
   options?: SelectOption[]; // Custom label/value pairs
+
+  // Custom validation
+  errors?: (data) => string | undefined; // Cross-field error validation
 };
 ```
 
@@ -216,7 +231,7 @@ userId: z.string().meta({
   state: 'readonly',
 }),
 
-// Disabled field (grayed out, can't interact)
+// Disabled field (greyed out, can't interact)
 status: z.string().meta({
   label: 'Status',
   state: 'disabled',
@@ -276,10 +291,13 @@ AutoForm automatically determines which component to render based on the Zod sch
 - Number (`z.number()`)
 - Boolean/Checkbox (`z.boolean()`)
 - Select/Dropdown (`z.enum()`)
+- Radio Group (`z.enum().meta({ render: 'radio' })`)
 - Date picker (`z.date()` or `z.string().meta({ render: 'date' })`)
 - File upload (`z.instanceof(File)`)
 - Accept/Reject buttons (`z.boolean().meta({ render: 'accept' })`)
 - Informational sections (`z.string().meta({ render: 'section' })`)
+- Field List (`fields()` helper for repeatable simple fields)
+- Form List (`forms()` helper for repeatable sub-forms)
 
 ![auto-form-fields](./auto-form-fields.png)
 
@@ -591,7 +609,272 @@ z.object({
 
 ---
 
-### 10. Section Fields
+### 10. Radio Fields
+
+**Zod Type:** `z.enum()` with `render: 'radio'`
+**Renders:** Radio button group for selecting one option
+
+```typescript
+import { field } from "@monorepo/components";
+
+z.object({
+  // Basic radio group
+  color: field(z.enum(["red", "green", "blue"]), {
+    label: "Favourite Color",
+    render: "radio",
+  }),
+
+  // Radio group with custom labels
+  priority: field(z.enum(["low", "medium", "high"]), {
+    label: "Priority Level",
+    placeholder: "Select the priority level based on your requirements",
+    options: [
+      { label: "Low Priority", value: "low" },
+      { label: "Medium Priority", value: "medium" },
+      { label: "High Priority", value: "high" },
+    ],
+    render: "radio",
+  }),
+
+  // Optional radio group
+  theme: field(z.enum(["light", "dark", "system"]).optional(), {
+    label: "Theme Preference",
+    render: "radio",
+  }),
+});
+```
+
+**Features:**
+
+- Radio button selection interface (only one option can be selected)
+- Auto-capitalization of enum values as labels
+- Custom label/value pairs via `options`
+- Placeholder text displayed above radio buttons
+- Readonly and disabled states
+- Cross-field custom validation via `errors`
+
+**When to use Radio vs Select:**
+
+- Use **Radio** when there are few options (2-5) and all should be visible at once
+- Use **Select** (dropdown) for many options or when space is limited
+
+---
+
+### 11. Field List (Repeatable Fields)
+
+**Helper:** `fields()` from `@monorepo/components`
+**Renders:** A dynamic list of simple fields that users can add/remove
+
+```typescript
+import { field, fields, step } from "@monorepo/components";
+
+// Basic field list with add/remove
+const schema = step(
+  z.object({
+    applicants: fields(
+      field(z.string(), {
+        label: "Applicant's Name",
+        placeholder: "Enter the name of the applicant",
+      }),
+      {
+        label: "Fill in the applicants",
+        maxItems: 5,
+        minItems: 1,
+        placeholder: "Please add at least one applicant, you can add up to 5.",
+      },
+    ),
+  }),
+);
+
+// Field list of dates
+const dateListSchema = z.object({
+  dates: fields(
+    field(z.date().optional(), {
+      label: "Date (optional)",
+      placeholder: "Select the date",
+    }),
+    {
+      label: "Fill in the dates",
+    },
+  ),
+});
+
+// Field list of selects
+const selectListSchema = z.object({
+  fruits: fields(
+    field(z.enum(["apple", "banana", "cherry"]), {
+      label: "Fruit",
+      options: [
+        { label: "Apple", value: "apple" },
+        { label: "Banana", value: "banana" },
+        { label: "Cherry", value: "cherry" },
+      ],
+      placeholder: "Select the fruit",
+    }),
+    {
+      label: "Fill in the fruits",
+    },
+  ),
+});
+
+// Dynamic number of fields based on another field
+const dynamicSchema = [
+  step(
+    z.object({
+      applicants: fields(
+        field(z.string(), {
+          label: "Applicant name",
+        }),
+      ),
+    }),
+  ),
+  step(
+    z.object({
+      references: fields(
+        field(z.string(), {
+          label: "Reference",
+        }),
+        {
+          label: "Applicant references",
+          nbItems: formValues => (Array.isArray(formValues?.applicants) ? formValues.applicants.length : 0),
+        },
+      ),
+    }),
+  ),
+];
+```
+
+**Features:**
+
+- Add and remove items dynamically
+- Supports any field type as inner schema (text, date, select, etc.)
+- Min/max items constraints with validation messages
+- Fixed number of items via `nbItems` (static number or dynamic function)
+- Dynamic item count based on other form values across steps
+- Disabled and readonly states
+- Submits as an array of values
+
+**Metadata:**
+
+```typescript
+type AutoFormFieldsMetadata = {
+  label?: string; // Title above the list
+  placeholder?: string; // Description text
+  minItems?: number; // Minimum required items
+  maxItems?: number; // Maximum allowed items
+  nbItems?: number | ((formValues?: Record<string, unknown>) => number);
+  // Fixed item count (static or dynamic)
+  state?: "editable" | "readonly" | "disabled";
+};
+```
+
+---
+
+### 12. Form List (Repeatable Sub-Forms)
+
+**Helper:** `forms()` from `@monorepo/components`
+**Renders:** A list of complex sub-forms that users can add, complete, and manage
+
+```typescript
+import { field, forms, step } from '@monorepo/components'
+import { IconHome } from '@monorepo/components'
+
+// Define sub-form schema
+const childSchema = z.object({
+  name: field(z.string().min(2), {
+    label: "Child's Name",
+    placeholder: "Enter the name of the child",
+    errors: (data) => {
+      if (data?.name === "Bob") {
+        return "Bob is not allowed, please choose something nice.";
+      }
+      return undefined;
+    },
+  }),
+  age: field(z.number().min(0).max(120), {
+    label: "Child's Age",
+    placeholder: "Enter the age of the child",
+  }),
+})
+
+// Basic form list
+const schema = step(
+  z.object({
+    persons: forms(childSchema, {
+      icon: <IconHome />,
+      identifier: data =>
+        data?.name
+          ? `${data.name} (${data.age} years)`
+          : `New person - ${data?.index}`,
+      label: "Add persons",
+      labels: {
+        addButton: "Add person",
+        completeButton: "Edit person details",
+      },
+      placeholder: "You can add multiple persons.",
+    }),
+  }),
+)
+
+// Form list with constraints
+const constrainedSchema = step(
+  z.object({
+    applicants: forms(childSchema, {
+      icon: <IconCheck />,
+      identifier: data =>
+        data?.name
+          ? `${data.name} (${data.age} years)`
+          : `New person - ${data?.index}`,
+      label: "Fill in the applicants",
+      maxItems: 5,
+      minItems: 1,
+      placeholder: "Please add at least one applicant, up to 5.",
+    }),
+  }),
+)
+```
+
+**Features:**
+
+- Each item opens a sub-form for detailed data entry
+- Items displayed as cards with status badges (To complete / Incomplete / Validated)
+- Custom icon per item
+- Custom identifier function to generate item labels from data
+- Min/max items constraints with validation
+- Fixed item count via `nbItems`
+- Add/delete/complete buttons
+- Custom button labels
+- Cross-field validation within sub-forms via `errors`
+- Multi-step form support (form list can be one step)
+
+**Item Status Badges:**
+
+- **To complete** (outline) - Item exists but has no data yet
+- **Incomplete** (destructive) - Item has validation errors
+- **Validated** (success) - Item data is complete and valid
+
+**Metadata:**
+
+```typescript
+type AutoFormFormsMetadata = {
+  icon?: JSX.Element | ((params) => JSX.Element); // Icon displayed on each card
+  identifier?: (data) => string; // Function to label each item
+  labels?: {
+    addButton?: string; // "Add item" (default)
+    completeButton?: string; // "Complete" (default)
+  };
+  label?: string; // Title above the list
+  placeholder?: string; // Description text
+  minItems?: number; // Minimum required items
+  maxItems?: number; // Maximum allowed items
+  nbItems?: number | ((formValues?) => number); // Fixed item count
+  state?: "editable" | "readonly" | "disabled";
+};
+```
+
+---
+
+### 13. Section Fields
 
 **Zod Type:** `z.string()` with `render: 'section'`
 **Renders:** Informational content (non-interactive)
@@ -960,9 +1243,107 @@ const schema = z.object({
 - `'readonly'` - Value visible but cannot be changed
 - `'disabled'` - Grayed out, fully locked
 
+### 7. Custom errors
+
+Approach A : in metadata
+
+```ts
+z.object({
+  // single error short syntax
+  firstname: field(z.string().min(2), {
+    errors: data =>
+      data.firstname === "Bob" ? "Bob is not allowed as child name, please choose something nice." : undefined,
+    ),
+    label: "Child's Name",
+    placeholder: "Enter the name of the child",
+  }),
+  // multiple errors first error syntax
+  lastname: field(z.string().min(2), {
+    errors: data => {
+      if (data.lastname === "Smith") {
+        return "Smith is not allowed as child name, please choose something nice.";
+      }
+      if (data.firstname === data.lastname) {
+        return "Firstname and lastname cannot be the same.";
+      }
+      return undefined;
+    },
+    label: "Child's Last Name",
+    placeholder: "Enter the last name of the child",
+  }),
+});
+```
+
 ---
 
 ## Utilities & Helpers
+
+### Schema Builder Helpers
+
+#### step()
+
+Helper to define a form step with optional metadata:
+
+```typescript
+import { step } from "@monorepo/components";
+
+// Step without metadata
+const schema = step(z.object({ name: field(z.string(), { label: "Name" }) }));
+
+// Step with metadata
+const schema = step(z.object({ name: field(z.string(), { label: "Name" }) }), {
+  title: "Personal Information",
+  subtitle: "Basic details",
+  suffix: "1/3",
+});
+```
+
+#### fields()
+
+Helper to create repeatable field lists:
+
+```typescript
+import { field, fields } from "@monorepo/components";
+
+// Simple field list
+const schema = z.object({
+  names: fields(field(z.string(), { label: "Name" }), { label: "Names", minItems: 1, maxItems: 5 }),
+});
+
+// Dynamic item count based on other form values
+const schema = z.object({
+  refs: fields(field(z.string(), { label: "Reference" }), {
+    label: "References",
+    nbItems: formValues => (Array.isArray(formValues?.names) ? formValues.names.length : 0),
+  }),
+});
+```
+
+#### forms()
+
+Helper to create repeatable sub-form lists:
+
+```typescript
+import { field, forms } from '@monorepo/components'
+
+const childSchema = z.object({
+  name: field(z.string(), { label: 'Name' }),
+  age: field(z.number(), { label: 'Age' }),
+})
+
+const schema = z.object({
+  children: forms(childSchema, {
+    icon: <IconHome />,
+    identifier: data => data?.name ?? 'New child',
+    label: 'Children',
+    minItems: 1,
+    maxItems: 5,
+    labels: { addButton: 'Add child', completeButton: 'Edit' },
+  }),
+})
+```
+
+---
 
 ### File Upload Helpers
 
@@ -1030,13 +1411,14 @@ isZodNumber(fieldSchema); // true if z.number()
 isZodDate(fieldSchema); // true if z.date() or z.optional(z.date())
 isZodString(fieldSchema); // true if z.string()
 isZodFile(fieldSchema); // true if z.instanceof(File)
+isZodObject(fieldSchema); // true if z.object()
 ```
 
 #### Form Field Analysis Utilities
 
 ```typescript
 // Get the render type for a field (auto-detection + explicit)
-getFormFieldRender(fieldSchema); // Returns: 'text' | 'textarea' | 'date' | 'number' | 'boolean' | 'select' | 'upload' | undefined
+getFormFieldRender(fieldSchema); // Returns: 'text' | 'textarea' | 'date' | 'number' | 'boolean' | 'select' | 'radio' | 'upload' | 'accept' | 'password' | 'field-list' | 'form-list' | 'section' | undefined
 
 // Get metadata from field schema
 getFieldMetadata(fieldSchema); // Returns: AutoFormFieldMetadata | undefined
@@ -1112,21 +1494,31 @@ const result = await mockSubmit('success', <p>Saved!</p>)
 molecules/
 ├── auto-form.tsx                      # Main component
 ├── auto-form.types.ts                 # Type definitions
-├── auto-form.utils.tsx                # Schema utilities
+├── auto-form.utils.ts                 # Schema utilities & helpers (field, fields, forms, step, section)
 ├── auto-form.md                       # This documentation
 │
 ├── auto-form-field.tsx                # Field router (picks component)
+├── auto-form-field.utils.ts           # Component registry & field props
+├── auto-form.const.tsx                # Constants (icons, labels, etc.)
 ├── form-field.tsx                     # Base field wrapper
+├── form-field.utils.tsx               # Field utility components
+├── form-field.css                     # Field styles
 ├── form-field-text.tsx                # Text input
 ├── form-field-textarea.tsx            # Textarea input
 ├── form-field-number.tsx              # Number input
 ├── form-field-boolean.tsx             # Checkbox/Toggle
 ├── form-field-select.tsx              # Dropdown select
+├── form-field-radio.tsx               # Radio button group
 ├── form-field-date.tsx                # Date picker
+├── form-field-date.utils.ts           # Date utility functions
 ├── form-field-accept.tsx              # Accept/Reject buttons
+├── form-field-password.tsx            # Password input
 ├── form-field-section.tsx             # Informational sections
 ├── form-field-upload.tsx              # File upload
 ├── form-field-upload.const.ts         # Upload constants
+├── form-field-field-list.tsx           # Repeatable simple fields
+├── form-field-form-list.tsx            # Repeatable sub-forms
+├── form-field-form-list.types.ts       # Form list type definitions
 │
 ├── auto-form-stepper.tsx              # Step navigation
 ├── auto-form-fields.tsx               # Fields for current step
@@ -1134,11 +1526,23 @@ molecules/
 ├── auto-form-summary-step.tsx         # Review page
 ├── auto-form-submission-step.tsx      # Status display
 ├── form-summary.tsx                   # Summary table
+├── form-summary-field-value.tsx       # Summary field value display
+│
+├── confirm-dialog.tsx                 # Confirmation dialog
+├── debug-data.tsx                     # Debug data display helper
 │
 ├── auto-form.stories.tsx              # Comprehensive examples
 ├── auto-form-fields.stories.tsx       # All field types showcase
+├── auto-form-stepper.stories.tsx      # Stepper stories
+├── auto-form-summary-step.stories.tsx # Summary step stories
+├── auto-form-submission-step.stories.tsx # Submission step stories
 ├── form-field-*.stories.tsx           # Individual field stories
+├── form-field-field-list.stories.tsx   # Field list stories
+├── form-field-form-list.stories.tsx    # Form list stories
+├── form-field-radio.stories.tsx        # Radio group stories
 ├── auto-form.utils.test.ts            # Utility tests
+├── auto-form-field.test.ts            # Field router tests
+├── form-field-date.test.ts            # Date field tests
 ├── form-field-upload.test.ts          # Upload tests
 └── form-summary.test.tsx              # Summary tests
 ```
@@ -1194,18 +1598,25 @@ z.boolean()             → render: 'boolean'
 z.date()                → render: 'date'
 z.enum(['a', 'b'])      → render: 'select'
 z.instanceof(File)      → render: 'upload'
+z.array(...)            → render: 'field-list' or 'form-list' (via helpers)
 
 // Override with explicit render in metadata
 z.string().meta({ render: 'textarea' })      // Multi-line instead of single
 z.string().meta({ render: 'date' })          // Date picker (stores ISO string)
+z.string().meta({ render: 'password' })      // Password masked input
+z.enum([...]).meta({ render: 'radio' })      // Radio buttons instead of dropdown
 ```
 
 **When to use explicit `render`:**
 
 - `render: 'textarea'` - For long text descriptions
+- `render: 'password'` - For secret/sensitive text inputs
 - `render: 'date'` - For z.string() fields that represent dates (APIs expecting ISO strings)
+- `render: 'radio'` - For enum fields when all options should be visible (2-5 options)
 - `render: 'accept'` - For boolean fields with accept/reject semantics
 - `render: 'section'` - For informational content (headers, descriptions, code examples)
+- `render: 'field-list'` - Automatically set by the `fields()` helper
+- `render: 'form-list'` - Automatically set by the `forms()` helper
 
 ---
 
