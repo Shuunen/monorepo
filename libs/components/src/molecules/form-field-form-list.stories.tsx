@@ -59,7 +59,7 @@ export const Basic: Story = {
         z.object({
           persons: forms(applicantSchema, {
             icon: <IconHome />,
-            identifier: data => (data ? `${data.name} (${data.age} years)` : "New person"),
+            identifier: data => (data?.name ? `${data.name} (${data.age} years)` : `New person - ${data?.index}`),
             label: "Add persons",
             labels: {
               addButton: "Add person",
@@ -83,7 +83,7 @@ export const Empty: Story = {
         z.object({
           persons: forms(applicantSchema, {
             icon: <IconHome />,
-            identifier: data => (data ? `${data.name} (${data.age} years)` : "New person"),
+            identifier: data => (data?.name ? `${data.name} (${data.age} years)` : `New person - ${data?.index}`),
             label: "Add persons",
             placeholder: "You can add multiple persons, no minimum or maximum.",
           }),
@@ -156,7 +156,7 @@ export const Required: Story = {
         z.object({
           persons: forms(applicantSchema, {
             icon: <IconHome />,
-            identifier: data => (data ? `${data.name} (${data.age} years)` : "New person"),
+            identifier: data => (data?.name ? `${data.name} (${data.age} years)` : `New person - ${data?.index}`),
             label: "Add persons",
             minItems: 1,
             placeholder: "You can add multiple persons, minimum is one.",
@@ -185,7 +185,7 @@ export const ExistingData: Story = {
         z.object({
           applicants: forms(applicantSchema, {
             icon: <IconCheck />,
-            identifier: data => (data ? `${data.name} (${data.age} years)` : "New person"),
+            identifier: data => (data?.name ? `${data.name} (${data.age} years)` : `New person - ${data?.index}`),
             label: "Fill in the applicants",
             maxItems: 5,
             minItems: 1,
@@ -267,7 +267,7 @@ export const MultiStep: Story = {
         z.object({
           applicants: forms(applicantSchema, {
             icon: <IconDownload className="text-blue-500" />,
-            identifier: data => (data ? `${data.name} (${data.age} years)` : "New person"),
+            identifier: data => (data?.name ? `${data.name} (${data.age} years)` : `New person - ${data?.index}`),
             label: "Fill in the applicants",
             placeholder: "You can add multiple applicants, no minimum or maximum.",
           }),
@@ -284,7 +284,7 @@ export const FormListInitializedFixedEmpty: Story = {
         z.object({
           applicantReferences: forms(applicantSchema, {
             icon: <IconCheck />,
-            identifier: data => (data ? `${data.name} (${data.age} years)` : "New person"),
+            identifier: data => (data?.name ? `${data.name} (${data.age} years)` : `New person - ${data?.index}`),
             label: "Fill in the applicants",
             nbItems: 3,
           }),
