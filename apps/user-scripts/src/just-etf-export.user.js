@@ -354,3 +354,4 @@ function JustEtfExport() {
 }
 
 if (globalThis.window) JustEtfExport();
+else module.exports = { injectButton, mapHeaderToProperty };
