@@ -938,7 +938,7 @@ export function buildStepperSteps({
  * @param data the data to check
  * @returns true if it seems filled
  */
-export function isSubformFilled(data: Record<string, unknown>): boolean {
+export function isSubformFilled(data: AutoFormData): boolean {
   return Object.values(data).some(value => {
     if (Array.isArray(value)) {
       return value.length > 0;

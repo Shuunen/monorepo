@@ -6,6 +6,7 @@ import { z } from "zod";
 import { AutoForm } from "./auto-form";
 import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
+import type { AutoFormData } from "./auto-form.types";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
 
@@ -15,9 +16,8 @@ const meta = {
     layout: "centered",
   },
   render: args => {
-    type FormData = Record<string, unknown> | undefined;
-    const [submittedData, setSubmittedData] = useState<FormData>({});
-    function onSubmit(data: FormData) {
+    const [submittedData, setSubmittedData] = useState<AutoFormData>({});
+    function onSubmit(data: AutoFormData) {
       setSubmittedData(data);
       logger.showSuccess("Form submitted successfully");
     }

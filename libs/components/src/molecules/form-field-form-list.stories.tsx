@@ -7,6 +7,7 @@ import { IconCheck } from "../icons/icon-check";
 import { IconDownload } from "../icons/icon-download";
 import { IconHome } from "../icons/icon-home";
 import { AutoForm } from "./auto-form";
+import type { AutoFormData } from "./auto-form.types";
 import { field, forms, step } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
@@ -18,9 +19,8 @@ const meta = {
     layout: "centered",
   },
   render: args => {
-    type FormData = Record<string, unknown> | undefined;
-    const [submittedData, setSubmittedData] = useState<FormData>({});
-    function onSubmit(data: FormData) {
+    const [submittedData, setSubmittedData] = useState<AutoFormData>({});
+    function onSubmit(data: AutoFormData) {
       setSubmittedData(data);
       logger.showSuccess("Form submitted successfully");
     }
