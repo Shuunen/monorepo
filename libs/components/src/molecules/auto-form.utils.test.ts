@@ -1662,7 +1662,7 @@ describe("auto-form.utils", () => {
         render: "radio",
         errors: (data?: Record<string, unknown>) => {
           if (data?.color === "red" && data?.size === "large") {
-            return "Cant choose large size if color is red";
+            return "Can't choose large size if color is red";
           }
           return undefined;
         },
@@ -1678,7 +1678,7 @@ describe("auto-form.utils", () => {
         render: "radio",
         errors: (data?: Record<string, unknown>) => {
           if (data?.color === "red" && data?.size === "large") {
-            return "Cant choose large size if color is red";
+            return "Can't choose large size if color is red";
           }
           return undefined;
         },

@@ -1248,7 +1248,7 @@ export const Performance: Story = {
           errors: data => {
             logger.info("Validating field 9 with data", data);
             if (data.field1 === data.field2) {
-              return "Field 9 cannot be define when field 1 and field 2 are the same";
+              return "Field 9 cannot be defined when field 1 and field 2 are the same";
             }
             return undefined;
           },
@@ -1331,7 +1331,7 @@ export const Performance: Story = {
       await userEvent.type(input1, "2");
       const errors = canvas.getAllByRole("alert").map(errorElement => errorElement.textContent);
       expect(errors).toHaveLength(1);
-      expect(errors).toContain("Field 9 cannot be define when field 1 and field 2 are the same");
+      expect(errors).toContain("Field 9 cannot be defined when field 1 and field 2 are the same");
     });
     await step("validate that submit is blocked when there are custom errors", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -1352,7 +1352,7 @@ export const Performance: Story = {
       expect(submittedData).toContainHTML(stringify(expectedData, true));
       const errors = canvas.getAllByRole("alert").map(errorElement => errorElement.textContent);
       expect(errors).toHaveLength(1);
-      expect(errors).toContain("Field 9 cannot be define when field 1 and field 2 are the same");
+      expect(errors).toContain("Field 9 cannot be defined when field 1 and field 2 are the same");
     });
   },
 };

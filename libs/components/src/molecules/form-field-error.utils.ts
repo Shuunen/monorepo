@@ -13,15 +13,12 @@ export type CustomErrorAction = { message: string; type: "set-error" } | { type:
  * @param watchedValues - The current watched form values
  * @returns The error message string or undefined
  */
-export function computeCustomErrorMessage(
-  customErrorFn: CustomErrorFn | undefined,
-  watchedValues: unknown,
-): string | undefined {
+export function computeCustomErrorMessage(customErrorFn: CustomErrorFn | undefined, watchedValues: AutoFormData) {
   if (!customErrorFn) {
     return undefined;
   }
   const shouldRun = isPlainObject(watchedValues) && !isEmpty(watchedValues);
-  return shouldRun ? customErrorFn(watchedValues as AutoFormData) : undefined;
+  return shouldRun ? customErrorFn(watchedValues) : undefined;
 }
 
 /**
