@@ -4,6 +4,7 @@
     "list": {
       "cache": true,
       "executor": "nx:run-commands",
+      "inputs": ["{projectRoot}/src/**/*.{ts,tsx}", "!{projectRoot}/src/**/*.test.{ts,tsx}"],
       "options": {
         "command": "bun bin/barrel-maker.cli.ts --target=\"./lib/*.ts\" --ext=\".js\"",
         "cwd": "{projectRoot}/src"
