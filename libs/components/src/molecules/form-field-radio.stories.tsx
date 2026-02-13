@@ -247,12 +247,12 @@ export const MultipleFields: Story = {
         size: field(z.enum(["small", "medium", "large"]), {
           label: "Size",
           render: "radio",
-          // isInvalid: (data: Record<string, unknown>) => {
-          //   if (data.color === "red" && data.size === "large") {
-          //     return "Cant choose large size if color is red";
-          //   }
-          //   return undefined;
-          // },
+          errors: (data: AutoFormData) => {
+            if (data.color === "red" && data.size === "large") {
+              return "Cant choose large size if color is red";
+            }
+            return undefined;
+          },
         }),
       }),
     ],
@@ -280,6 +280,18 @@ export const MultipleFields: Story = {
 
     await step("verify submitted data", () => {
       expect(submittedData).toContainHTML(stringify({ color: "blue", size: "large" }, true));
+    });
+
+    await step("select red color and large size to trigger error", async () => {
+      const redLabel = canvas.getByText("Red");
+      await userEvent.click(redLabel);
+      const largeLabel = canvas.getByText("Large");
+      await userEvent.click(largeLabel);
+      const errorMessage = canvas.getByText("Cant choose large size if color is red");
+      expect(errorMessage).toBeInTheDocument();
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      expect(submittedData).not.toContainHTML(stringify({ color: "red", size: "large" }, true));
     });
   },
 };

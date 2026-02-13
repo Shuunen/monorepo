@@ -174,6 +174,8 @@ export type AutoFormFieldBaseMetadata = {
   codec?: z.ZodCodec;
   /** Custom options for select/enum fields with label/value pairs. */
   options?: SelectOption[];
+  /** Custom error validation function that receives the current form data and returns an error message string or undefined. Useful for cross-field validation. */
+  errors?: (data: AutoFormData) => string | undefined;
   /** Force the field to be rendered with a specific component, else use automatic field-schema detection */
   render?:
     | "text"

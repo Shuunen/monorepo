@@ -1,3 +1,4 @@
+import { dateIso10 } from "@monorepo/utils";
 import { invariant } from "es-toolkit";
 import { createElement } from "react";
 import { describe, expect, it } from "vitest";
@@ -22,6 +23,7 @@ import {
   getStepMetadata,
   getUnwrappedSchema,
   getZodEnumOptions,
+  hasCustomErrors,
   isFieldVisible,
   isStepClickable,
   isSubformFilled,
@@ -44,7 +46,6 @@ import {
   typeLikeResolver,
 } from "./auto-form.utils"; // oxlint-disable-line max-dependencies
 import { imageSchemaOptional, imageSchemaRequired } from "./form-field-upload.const";
-import { dateIso10 } from "@monorepo/utils";
 
 const isoDateStringToDateInstance = z.codec(z.iso.date(), z.date(), {
   decode: isoDateString => new Date(isoDateString),
@@ -1623,16 +1624,66 @@ describe("auto-form.utils", () => {
     const data = { infos: null };
     expect(isSubformFilled(data)).toBe(false);
   });
-});
 
-// typeLikeResolver
-it("typeLikeResolver A should resolve a function", () => {
-  const data = { name: "John doe" };
-  const result = typeLikeResolver(data => data?.name, data);
-  expect(result).toBe("John doe");
-});
-it("typeLikeResolver B should resolve a value", () => {
-  const data = { name: "John doe" };
-  const result = typeLikeResolver("John doe", data);
-  expect(result).toBe("John doe");
+  // typeLikeResolver
+  it("typeLikeResolver A should resolve a function", () => {
+    const data = { name: "John doe" };
+    const result = typeLikeResolver(data => data?.name, data);
+    expect(result).toBe("John doe");
+  });
+  it("typeLikeResolver B should resolve a value", () => {
+    const data = { name: "John doe" };
+    const result = typeLikeResolver("John doe", data);
+    expect(result).toBe("John doe");
+  });
+
+  // hasCustomErrors
+  it("hasCustomErrors A should return false when no field has errors metadata", () => {
+    const schema = z.object({
+      name: field(z.string(), { label: "Name" }),
+    });
+    expect(hasCustomErrors(schema, { name: "John" })).toBe(false);
+  });
+  it("hasCustomErrors B should return false when errors function returns undefined", () => {
+    const schema = z.object({
+      size: field(z.enum(["small", "large"]), {
+        label: "Size",
+        render: "radio",
+        errors: () => undefined,
+      }),
+    });
+    expect(hasCustomErrors(schema, { size: "small" })).toBe(false);
+  });
+  it("hasCustomErrors C should return true when errors function returns a message", () => {
+    const schema = z.object({
+      color: field(z.enum(["red", "blue"]), { label: "Color", render: "radio" }),
+      size: field(z.enum(["small", "large"]), {
+        label: "Size",
+        render: "radio",
+        errors: (data?: Record<string, unknown>) => {
+          if (data?.color === "red" && data?.size === "large") {
+            return "Cant choose large size if color is red";
+          }
+          return undefined;
+        },
+      }),
+    });
+    expect(hasCustomErrors(schema, { color: "red", size: "large" })).toBe(true);
+  });
+  it("hasCustomErrors D should return false when condition is not met", () => {
+    const schema = z.object({
+      color: field(z.enum(["red", "blue"]), { label: "Color", render: "radio" }),
+      size: field(z.enum(["small", "large"]), {
+        label: "Size",
+        render: "radio",
+        errors: (data?: Record<string, unknown>) => {
+          if (data?.color === "red" && data?.size === "large") {
+            return "Cant choose large size if color is red";
+          }
+          return undefined;
+        },
+      }),
+    });
+    expect(hasCustomErrors(schema, { color: "blue", size: "large" })).toBe(false);
+  });
 });

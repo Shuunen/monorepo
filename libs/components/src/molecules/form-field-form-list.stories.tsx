@@ -42,6 +42,12 @@ const applicantSchema = z.object({
   name: field(z.string().min(2), {
     label: "Child's Name",
     placeholder: "Enter the name of the child",
+    errors: (data?: AutoFormData) => {
+      if (data?.name === "Bob") {
+        return "Bob is not allowed as child name, please choose something nice.";
+      }
+      return undefined;
+    },
   }),
   age: field(z.number().min(0).max(120), {
     label: "Child's Age",
