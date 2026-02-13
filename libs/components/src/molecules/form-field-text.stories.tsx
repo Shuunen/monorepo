@@ -229,3 +229,35 @@ export const MultipleFields: Story = {
     });
   },
 };
+
+export const DontAllowEmptyValue: Story = {
+  args: {
+    schemas: [
+      z.object({
+        username: field(z.string(), {
+          label: "Username",
+          placeholder: "Enter your username",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const usernameInput = canvas.getByTestId("input-text-username") as HTMLInputElement;
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+
+    await step("fill username with spaces and submit", async () => {
+      await userEvent.type(usernameInput, "     ");
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      expect(submittedData).toContainHTML(stringify({}, true));
+    });
+
+    await step("fill username with username", async () => {
+      await userEvent.type(usernameInput, "john_doe");
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      expect(submittedData).toContainHTML(stringify({ username: "john_doe" }, true));
+    });
+  },
+};
