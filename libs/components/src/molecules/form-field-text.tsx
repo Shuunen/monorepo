@@ -12,6 +12,7 @@ export function FormFieldText({ fieldName, fieldSchema, isOptional, logger, read
     <FormFieldBase {...props}>
       {({ field }) => (
         <FormControl>
+          {/* We ensure that the value is always a string to prevent uncontrolled to controlled input warnings in React. */}
           <Input
             {...field}
             disabled={isDisabled}
