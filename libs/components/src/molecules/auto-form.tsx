@@ -14,7 +14,12 @@ import { AutoFormStepper } from "./auto-form-stepper";
 import { AutoFormSubmissionStep } from "./auto-form-submission-step";
 import { AutoFormSummaryStep } from "./auto-form-summary-step";
 import { defaultIcons, defaultLabels } from "./auto-form.const";
-import type { AutoFormProps, AutoFormSubformOptions, AutoFormSubmissionStepProps } from "./auto-form.types";
+import type {
+  AutoFormData,
+  AutoFormProps,
+  AutoFormSubformOptions,
+  AutoFormSubmissionStepProps,
+} from "./auto-form.types";
 import {
   buildStepperSteps,
   filterSchema,
@@ -22,6 +27,7 @@ import {
   getInitialStep,
   getLastAccessibleStepIndex,
   getStepMetadata,
+  hasCustomErrors,
   isStepClickable,
   normalizeData,
 } from "./auto-form.utils";
@@ -96,11 +102,14 @@ export function AutoForm({
   }
   /**
    * Handle submission for the current step of a multi-step form
-   * @param data partial form values for the current step as a Record<string, unknown>
    * @returns void
    */
   function handleStepSubmit() {
     const updatedData = updateFormData();
+    if (currentSchema && hasCustomErrors(currentSchema, updatedData)) {
+      logger?.warn("Step submission blocked by custom field errors");
+      return;
+    }
     logger?.info("Step form submitted", { updatedData });
     if (isLastStep && useSummaryStep) {
       setShowSummary(true);

@@ -1245,6 +1245,13 @@ export const Performance: Story = {
         }),
         field9: field(z.string(), {
           label: "Field 9",
+          errors: data => {
+            logger.info("Validating field 9 with data", data);
+            if (data.field1 === data.field2) {
+              return "Field 9 cannot be define when field 1 and field 2 are the same";
+            }
+            return undefined;
+          },
         }),
       }),
     ],
@@ -1276,6 +1283,179 @@ export const Performance: Story = {
     await step("fill field 5 form fields", async () => {
       const input5 = canvas.getByTestId("input-text-field5");
       await userEvent.type(input5, "1");
+    });
+    await step("submit the form and verify displayed errors", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      const errors = canvas.getAllByRole("alert").map(errorElement => errorElement.textContent);
+      expect(errors).toHaveLength(4);
+      expect(errors).toStrictEqual([
+        "Invalid input: expected string, received undefined",
+        "Invalid input: expected string, received undefined",
+        "Invalid input: expected string, received undefined",
+        "Invalid input: expected string, received undefined",
+      ]);
+    });
+    await step("fill mandatory fields to clear errors", async () => {
+      const input6 = canvas.getByTestId("input-text-field6");
+      await userEvent.type(input6, "66");
+      const input7 = canvas.getByTestId("input-text-field7");
+      await userEvent.type(input7, "77");
+      const input8 = canvas.getByTestId("input-text-field8");
+      await userEvent.type(input8, "88");
+      const input9 = canvas.getByTestId("input-text-field9");
+      await userEvent.type(input9, "99");
+      const errors = await canvas.queryAllByRole("alert");
+      expect(errors).toHaveLength(0);
+    });
+    await step("submit valid form", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      const expectedData = {
+        field1: "1",
+        field7: "77",
+        field8: "88",
+        field9: "99",
+        field2: "2",
+        field3: "25",
+        field6: "66",
+        field4: "1",
+        field5: "1",
+      };
+      expect(submittedData).toContainHTML(stringify(expectedData, true));
+    });
+    await step("trigger field 9 custom error", async () => {
+      const input1 = canvas.getByTestId("input-text-field1");
+      await userEvent.clear(input1);
+      await userEvent.type(input1, "2");
+      const errors = canvas.getAllByRole("alert").map(errorElement => errorElement.textContent);
+      expect(errors).toHaveLength(1);
+      expect(errors).toContain("Field 9 cannot be define when field 1 and field 2 are the same");
+    });
+    await step("validate that submit is blocked when there are custom errors", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      // same as before since submit should be blocked due to custom error on field 9
+      const expectedData = {
+        field1: "1",
+        field7: "77",
+        field8: "88",
+        field9: "99",
+        field2: "2",
+        field3: "25",
+        field6: "66",
+        field4: "1",
+        field5: "1",
+      };
+      expect(submittedData).toContainHTML(stringify(expectedData, true));
+      const errors = canvas.getAllByRole("alert").map(errorElement => errorElement.textContent);
+      expect(errors).toHaveLength(1);
+      expect(errors).toContain("Field 9 cannot be define when field 1 and field 2 are the same");
+    });
+  },
+};
+
+export const CustomErrors: Story = {
+  args: {
+    schemas: [
+      step(
+        z.object({
+          firstName: field(z.string().min(2, "First name is required"), {
+            label: "First Name",
+            placeholder: "Enter your first name",
+          }),
+        }),
+      ),
+      step(
+        z.object({
+          lastName: field(z.string().min(2, "Last name is required"), {
+            errors: data => {
+              logger.info("Validating last name with data", data);
+              if (typeof data.firstName === "string" && data.firstName.length > 0 && data.firstName === data.lastName) {
+                logger.info("Returning custom error for last name since it's the same as first name");
+                return "First name and last name cannot be the same";
+              }
+              logger.info("No custom error for last name, returning undefined");
+              return undefined;
+            },
+            label: "Last Name",
+            placeholder: "Enter your last name",
+          }),
+        }),
+      ),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("fill first step and submit", async () => {
+      const firstNameInput = canvas.getByTestId("input-text-first-name");
+      await userEvent.type(firstNameInput, "John");
+      const submitButton = canvas.getByRole("button", { name: "Next" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify no custom error are displayed on last name field", () => {
+      const errors = canvas.queryAllByRole("alert");
+      expect(errors).toHaveLength(0);
+    });
+    await step("verify can submit last name without errors", async () => {
+      const lastNameInput = canvas.getByTestId("input-text-last-name");
+      await userEvent.type(lastNameInput, "Doe");
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      const errors = canvas.queryAllByRole("alert");
+      expect(errors).toHaveLength(0);
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      const expectedData = {
+        firstName: "John",
+        lastName: "Doe",
+      };
+      expect(submittedData).toContainHTML(stringify(expectedData, true));
+    });
+    await step("verify that custom error is displayed when first name and last name are the same", async () => {
+      const lastNameInput = canvas.getByTestId("input-text-last-name");
+      await userEvent.clear(lastNameInput);
+      await userEvent.type(lastNameInput, "John");
+      await userEvent.tab();
+      const errorsBeforeSubmit = canvas.getAllByRole("alert").map(errorElement => errorElement.textContent);
+      expect(errorsBeforeSubmit).toHaveLength(1);
+      expect(errorsBeforeSubmit).toContain("First name and last name cannot be the same");
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      const errorsAfterSubmit = canvas.getAllByRole("alert").map(errorElement => errorElement.textContent);
+      expect(errorsAfterSubmit).toHaveLength(1);
+      expect(errorsAfterSubmit).toContain("First name and last name cannot be the same");
+      // same as before since submit should be blocked due to custom error on last name field
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      const expectedData = {
+        firstName: "John",
+        lastName: "Doe",
+      };
+      expect(submittedData).toContainHTML(stringify(expectedData, true));
+    });
+    await step("go back to first step, change first name and verify custom error on last name is cleared", async () => {
+      const step1Button = canvas.getByTestId("button-step-step-1");
+      await userEvent.click(step1Button);
+      const firstNameInput = canvas.getByTestId("input-text-first-name");
+      await userEvent.clear(firstNameInput);
+      await userEvent.type(firstNameInput, "Jane");
+      const nextButton = canvas.getByRole("button", { name: "Next" });
+      await userEvent.click(nextButton);
+      const errors = canvas.queryAllByRole("alert");
+      expect(errors).toHaveLength(0);
+    });
+    await step("verify can submit form with new first name without errors", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      const errors = canvas.queryAllByRole("alert");
+      expect(errors).toHaveLength(0);
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      const expectedData = {
+        firstName: "Jane",
+        lastName: "John",
+      };
+      expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
   },
 };

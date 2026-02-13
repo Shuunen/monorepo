@@ -670,6 +670,23 @@ export function getFieldMetadataOrThrow(fieldName: string, fieldSchema?: z.ZodTy
 }
 
 /**
+ * Checks all fields in a schema for custom error functions and returns true if any produce an error for the given data.
+ * @param schema the Zod object schema to check
+ * @param data the current form data
+ * @returns true if any field has a custom error
+ */
+export function hasCustomErrors(schema: z.ZodObject, data: AutoFormData) {
+  const shape = schema.shape;
+  for (const fieldSchema of Object.values(shape)) {
+    const metadata = getFieldMetadata(fieldSchema as z.ZodType);
+    if (metadata && "errors" in metadata && metadata.errors?.(data)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
  * Helper to write AutoForm fields
  * @param fieldSchema zod schema
  * @param fieldMetadata related metadata
