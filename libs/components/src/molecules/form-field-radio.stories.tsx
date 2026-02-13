@@ -4,9 +4,9 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
+import type { AutoFormData } from "./auto-form.types";
 import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
-import type { AutoFormData } from "./auto-form.types";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
 
@@ -249,7 +249,7 @@ export const MultipleFields: Story = {
           render: "radio",
           errors: (data: AutoFormData) => {
             if (data.color === "red" && data.size === "large") {
-              return "Cant choose large size if color is red";
+              return "Can't choose large size if color is red";
             }
             return undefined;
           },
@@ -287,7 +287,7 @@ export const MultipleFields: Story = {
       await userEvent.click(redLabel);
       const largeLabel = canvas.getByText("Large");
       await userEvent.click(largeLabel);
-      const errorMessage = canvas.getByText("Cant choose large size if color is red");
+      const errorMessage = canvas.getByText("Can't choose large size if color is red");
       expect(errorMessage).toBeInTheDocument();
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);

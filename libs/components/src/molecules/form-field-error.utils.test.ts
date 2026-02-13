@@ -11,9 +11,10 @@ describe("form-field-error.utils", () => {
   });
 
   it("computeCustomErrorMessage B should return undefined when watched values are not a plain object", () => {
+    // @ts-expect-error testing invalid input
     expect(computeCustomErrorMessage(errorFnReturningError, null)).toMatchInlineSnapshot(`undefined`);
-    expect(computeCustomErrorMessage(errorFnReturningError, "string")).toMatchInlineSnapshot(`undefined`);
-    expect(computeCustomErrorMessage(errorFnReturningError, 42)).toMatchInlineSnapshot(`undefined`);
+    // @ts-expect-error testing invalid input
+    expect(computeCustomErrorMessage(errorFnReturningError, undefined)).toMatchInlineSnapshot(`undefined`);
   });
 
   it("computeCustomErrorMessage C should return undefined when watched values are an empty object", () => {

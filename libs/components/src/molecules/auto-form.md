@@ -1253,7 +1253,6 @@ z.object({
   firstname: field(z.string().min(2), {
     errors: data =>
       data.firstname === "Bob" ? "Bob is not allowed as child name, please choose something nice." : undefined,
-    ),
     label: "Child's Name",
     placeholder: "Enter the name of the child",
   }),
