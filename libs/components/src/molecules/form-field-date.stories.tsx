@@ -10,6 +10,12 @@ import { dateTodayOrFutureSchema, today, tomorrow } from "./form-field-date.util
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
 
+// expect a Date instance input and output a date string
+const isoDateStringToDateInstance = z.codec(z.iso.date(), z.date(), {
+  decode: isoDateString => new Date(isoDateString),
+  encode: date => dateIso10(date),
+});
+
 const meta = {
   component: AutoForm,
   parameters: {
@@ -146,6 +152,90 @@ export const Optional: Story = {
 };
 
 /**
+ * Optional date field with Zod iso data string
+ */
+export const OptionalIsoString: Story = {
+  args: {
+    schemas: [
+      z.object({
+        reminderDate: field(z.iso.date().optional(), {
+          label: "Reminder Date (ISO String)",
+          placeholder: "Set a reminder date",
+          render: "date",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const dateInput = canvas.getByTestId("input-date-reminder-date");
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+    await step("verify date input is present and optional", () => {
+      expect(dateInput).toBeInTheDocument();
+      expect(dateInput).toHaveAttribute("type", "date");
+    });
+    await step("submit form without filling date", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify submitted data contains undefined for optional date", () => {
+      expect(submittedData).toContainHTML(stringify({}, true));
+    });
+    await step("fill date input and submit form", async () => {
+      await userEvent.clear(dateInput);
+      await userEvent.type(dateInput, "2024-11-01");
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify submitted data contains the filled date as ISO string", () => {
+      expect(submittedData).toContainHTML(stringify({ reminderDate: "2024-11-01" }, true));
+    });
+  },
+};
+
+/**
+ * Optional date field with codec
+ */
+export const OptionalWithCodec: Story = {
+  args: {
+    schemas: [
+      z.object({
+        reminderDateCodec: field(z.date().optional(), {
+          label: "Reminder Date with Codec",
+          placeholder: "Set a reminder date",
+          codec: isoDateStringToDateInstance,
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const dateInput = canvas.getByTestId("input-date-reminder-date-codec");
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+    await step("verify date input is present and optional", () => {
+      expect(dateInput).toBeInTheDocument();
+      expect(dateInput).toHaveAttribute("type", "date");
+    });
+    await step("submit form without filling date", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify submitted data contains undefined for optional date", () => {
+      expect(submittedData).toContainHTML(stringify({}, true));
+    });
+    await step("fill date input and submit form", async () => {
+      await userEvent.clear(dateInput);
+      await userEvent.type(dateInput, "2024-11-01");
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify submitted data contains the filled date as ISO string from codec", () => {
+      expect(submittedData).toContainHTML(stringify({ reminderDateCodec: "2024-11-01" }, true));
+    });
+  },
+};
+
+/**
  * Disabled date field
  */
 export const Disabled: Story = {
@@ -228,12 +318,6 @@ export const StringDateWithRender: Story = {
     });
   },
 };
-
-// expect a Date instance input and output a date string
-const isoDateStringToDateInstance = z.codec(z.iso.date(), z.date(), {
-  decode: isoDateString => new Date(isoDateString),
-  encode: date => dateIso10(date),
-});
 
 /**
  * String date field using render metadata (E2E: fill, submit, verify ISO string output)
