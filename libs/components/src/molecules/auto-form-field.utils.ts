@@ -43,6 +43,7 @@ export const componentRegistry: ComponentRegistry = {
   accept: FormFieldAccept,
   boolean: FormFieldBoolean,
   date: FormFieldDate,
+  "date-time": FormFieldDate,
   "form-list": FormFieldFormList,
   number: FormFieldNumber,
   password: FormFieldPassword,
@@ -50,5 +51,6 @@ export const componentRegistry: ComponentRegistry = {
   select: FormFieldSelect,
   text: FormFieldText,
   textarea: FormFieldTextarea,
+  time: FormFieldDate,
   upload: FormFieldUpload,
 } as const;

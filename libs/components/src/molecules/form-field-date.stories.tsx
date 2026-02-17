@@ -10,6 +10,18 @@ import { dateTodayOrFutureSchema, today, tomorrow } from "./form-field-date.util
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
 
+/** Converts ISO date "YYYY-MM-DD" to display format "DD/MM/YYYY" */
+function isoToDisplay(isoDate: string): string {
+  const [yyyy, mm, dd] = isoDate.split("-");
+  return `${dd}/${mm}/${yyyy}`;
+}
+
+/** Converts ISO date "YYYY-MM-DD" to input format "DDMMYYYY" for masked input */
+function isoToInput(isoDate: string): string {
+  const [yyyy, mm, dd] = isoDate.split("-");
+  return `${dd}${mm}${yyyy}`;
+}
+
 // expect a Date instance input and output a date string
 const isoDateStringToDateInstance = z.codec(z.iso.date(), z.date(), {
   decode: isoDateString => new Date(isoDateString),
@@ -60,11 +72,10 @@ export const Basic: Story = {
     const canvas = within(canvasElement);
     const dateInput = canvas.getByTestId("input-date-birth-date");
     expect(dateInput).toBeInTheDocument();
-    expect(dateInput).toHaveAttribute("type", "date");
     await step("fill date input", async () => {
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, "1990-05-15");
-      expect(dateInput).toHaveValue("1990-05-15");
+      await userEvent.type(dateInput, "15051990");
+      expect(dateInput).toHaveValue("15/05/1990");
     });
     await step("submit form", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -73,6 +84,42 @@ export const Basic: Story = {
     await step("verify submitted data contains Date object", () => {
       const submittedData = canvas.getByTestId("debug-data-submitted-data");
       const expectedDate = new Date("1990-05-15");
+      expect(submittedData).toContainHTML(stringify({ birthDate: expectedDate }, true));
+    });
+  },
+};
+
+/**
+ * Basic date field with defaultToNoon option (E2E: fill, submit, verify Date object has noon UTC time)
+ */
+export const BasicDefaultToNoon: Story = {
+  args: {
+    schemas: [
+      z.object({
+        birthDate: field(z.date(), {
+          defaultToNoon: true,
+          label: "Birth Date (noon UTC)",
+          placeholder: "Select your birth date",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const dateInput = canvas.getByTestId("input-date-birth-date");
+    expect(dateInput).toBeInTheDocument();
+    await step("fill date input", async () => {
+      await userEvent.clear(dateInput);
+      await userEvent.type(dateInput, "15051990");
+      expect(dateInput).toHaveValue("15/05/1990");
+    });
+    await step("submit form", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify submitted data contains Date object with noon UTC", () => {
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      const expectedDate = new Date("1990-05-15T12:00:00.000Z");
       expect(submittedData).toContainHTML(stringify({ birthDate: expectedDate }, true));
     });
   },
@@ -98,7 +145,7 @@ export const WithInitialValue: Story = {
     const dateInput = canvas.getByTestId("input-date-event-date");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("verify initial value is displayed", () => {
-      expect(dateInput).toHaveValue("2025-12-25");
+      expect(dateInput).toHaveValue("25/12/2025");
     });
     await step("submit form with initial value", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -130,7 +177,6 @@ export const Optional: Story = {
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("verify date input is present and optional", () => {
       expect(dateInput).toBeInTheDocument();
-      expect(dateInput).toHaveAttribute("type", "date");
     });
     await step("submit form without filling date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -141,7 +187,7 @@ export const Optional: Story = {
     });
     await step("fill date input and submit form", async () => {
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, "2024-11-01");
+      await userEvent.type(dateInput, "01112024");
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
     });
@@ -172,7 +218,6 @@ export const OptionalIsoString: Story = {
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("verify date input is present and optional", () => {
       expect(dateInput).toBeInTheDocument();
-      expect(dateInput).toHaveAttribute("type", "date");
     });
     await step("submit form without filling date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -183,7 +228,7 @@ export const OptionalIsoString: Story = {
     });
     await step("fill date input and submit form", async () => {
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, "2024-11-01");
+      await userEvent.type(dateInput, "01112024");
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
     });
@@ -214,7 +259,6 @@ export const OptionalWithCodec: Story = {
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("verify date input is present and optional", () => {
       expect(dateInput).toBeInTheDocument();
-      expect(dateInput).toHaveAttribute("type", "date");
     });
     await step("submit form without filling date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -225,7 +269,7 @@ export const OptionalWithCodec: Story = {
     });
     await step("fill date input and submit form", async () => {
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, "2024-11-01");
+      await userEvent.type(dateInput, "01112024");
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
     });
@@ -255,7 +299,7 @@ export const Disabled: Story = {
     const canvas = within(canvasElement);
     const dateInput = canvas.getByTestId("input-date-lock-date");
     expect(dateInput).toBeDisabled();
-    expect(dateInput).toHaveValue("2025-01-01");
+    expect(dateInput).toHaveValue("01/01/2025");
   },
 };
 
@@ -278,8 +322,8 @@ export const Readonly: Story = {
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const dateInput = canvas.getByTestId("input-date-created-date");
-    expect(dateInput).toHaveAttribute("readonly");
-    expect(dateInput).toHaveValue("2024-01-15");
+    expect(dateInput).toBeDisabled();
+    expect(dateInput).toHaveValue("15/01/2024");
   },
 };
 
@@ -303,11 +347,10 @@ export const StringDateWithRender: Story = {
     const dateInput = canvas.getByTestId("input-date-string-date");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     expect(dateInput).toBeInTheDocument();
-    expect(dateInput).toHaveAttribute("type", "date");
     await step("fill date input", async () => {
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, "2023-03-20");
-      expect(dateInput).toHaveValue("2023-03-20");
+      await userEvent.type(dateInput, "20032023");
+      expect(dateInput).toHaveValue("20/03/2023");
     });
     await step("submit form", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -346,12 +389,10 @@ export const StringDateWithoutRender: Story = {
     const canvas = within(canvasElement);
     const dateInput = canvas.getByTestId("input-date-string-date");
     expect(dateInput).toBeInTheDocument();
-    expect(dateInput).toHaveAttribute("type", "date");
-    expect(dateInput).toHaveValue("2026-01-07");
+    expect(dateInput).toHaveValue("07/01/2026");
     const dateCodecInput = canvas.getByTestId("input-date-string-date-codec");
     expect(dateCodecInput).toBeInTheDocument();
-    expect(dateCodecInput).toHaveAttribute("type", "date");
-    expect(dateCodecInput).toHaveValue("2026-01-14");
+    expect(dateCodecInput).toHaveValue("14/01/2026");
   },
 };
 
@@ -374,11 +415,10 @@ export const DateNowOrFuture: Story = {
     const dateInput = canvas.getByTestId("input-date-appointment-date");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     expect(dateInput).toBeInTheDocument();
-    expect(dateInput).toHaveAttribute("type", "date");
     await step("fill date input with past date", async () => {
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, "2000-01-01");
-      expect(dateInput).toHaveValue("2000-01-01");
+      await userEvent.type(dateInput, "01012000");
+      expect(dateInput).toHaveValue("01/01/2000");
     });
     await step("submit form with past date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -390,8 +430,8 @@ export const DateNowOrFuture: Story = {
     });
     await step("fill date input with future date", async () => {
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, "2100-01-01");
-      expect(dateInput).toHaveValue("2100-01-01");
+      await userEvent.type(dateInput, "01012100");
+      expect(dateInput).toHaveValue("01/01/2100");
     });
     await step("submit form with future date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -423,11 +463,10 @@ export const DateTodayOrFutureWithCodec: Story = {
     const dateInput = canvas.getByTestId("input-date-appointment-date-codec");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     expect(dateInput).toBeInTheDocument();
-    expect(dateInput).toHaveAttribute("type", "date");
     await step("fill date input with past date", async () => {
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, "2000-01-01");
-      expect(dateInput).toHaveValue("2000-01-01");
+      await userEvent.type(dateInput, "01012000");
+      expect(dateInput).toHaveValue("01/01/2000");
     });
     await step("submit form with past date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -439,8 +478,8 @@ export const DateTodayOrFutureWithCodec: Story = {
     });
     await step("fill date input with future date", async () => {
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, "2100-01-01");
-      expect(dateInput).toHaveValue("2100-01-01");
+      await userEvent.type(dateInput, "01012100");
+      expect(dateInput).toHaveValue("01/01/2100");
     });
     await step("submit form with future date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -472,10 +511,9 @@ export const DateNowOrFutureWithInitialDataToday: Story = {
     const dateInput = canvas.getByTestId("input-date-appointment-date");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     expect(dateInput).toBeInTheDocument();
-    expect(dateInput).toHaveAttribute("type", "date");
     await step("verify initial value is today's date", () => {
       const todayString = dateIso10();
-      expect(dateInput).toHaveValue(todayString);
+      expect(dateInput).toHaveValue(isoToDisplay(todayString));
     });
     await step("submit form with default today's date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -506,10 +544,9 @@ export const DateNowOrFutureWithDefaultValueToday: Story = {
     const dateInput = canvas.getByTestId("input-date-appointment-date");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     expect(dateInput).toBeInTheDocument();
-    expect(dateInput).toHaveAttribute("type", "date");
     await step("verify initial value is today's date from defaultValue", () => {
       const todayString = dateIso10();
-      expect(dateInput).toHaveValue(todayString);
+      expect(dateInput).toHaveValue(isoToDisplay(todayString));
     });
     await step("submit form with default today's date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -546,12 +583,11 @@ export const DateTomorrowToFixed: Story = {
     const dateInput = canvas.getByTestId("input-date-event-date");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     expect(dateInput).toBeInTheDocument();
-    expect(dateInput).toHaveAttribute("type", "date");
     await step("fill date input with today's date", async () => {
       const todayString = dateIso10();
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, todayString);
-      expect(dateInput).toHaveValue(todayString);
+      await userEvent.type(dateInput, isoToInput(todayString));
+      expect(dateInput).toHaveValue(isoToDisplay(todayString));
     });
     await step("submit form with today's date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -566,8 +602,8 @@ export const DateTomorrowToFixed: Story = {
       tomorrow.setDate(tomorrow.getDate() + 1);
       const tomorrowString = dateIso10(tomorrow);
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, tomorrowString);
-      expect(dateInput).toHaveValue(tomorrowString);
+      await userEvent.type(dateInput, isoToInput(tomorrowString));
+      expect(dateInput).toHaveValue(isoToDisplay(tomorrowString));
     });
     await step("submit form with tomorrow's date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -580,8 +616,8 @@ export const DateTomorrowToFixed: Story = {
     });
     await step("fill date input with a date after maxDate", async () => {
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, "2101-01-01");
-      expect(dateInput).toHaveValue("2101-01-01");
+      await userEvent.type(dateInput, "01012101");
+      expect(dateInput).toHaveValue("01/01/2101");
     });
     await step("submit form with a date after maxDate", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -590,6 +626,81 @@ export const DateTomorrowToFixed: Story = {
     await step("verify validation error is shown for date after maxDate", () => {
       const errorMessage = canvas.getByText("Date must be on or before 2100-12-31");
       expect(errorMessage).toBeInTheDocument();
+    });
+  },
+};
+
+/**
+ * Date-time field with render: "date-time" (E2E: fill date and time, submit, verify Date object with time)
+ */
+export const DateTime: Story = {
+  args: {
+    schemas: [
+      z.object({
+        appointmentDateTime: field(z.date(), {
+          label: "Appointment Date & Time",
+          placeholder: "Select date and time",
+          render: "date-time",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const dateInput = canvas.getByPlaceholderText("DD/MM/YYYY");
+    const timeInput = canvas.getByPlaceholderText("--:--");
+    expect(dateInput).toBeInTheDocument();
+    expect(timeInput).toBeInTheDocument();
+    await step("fill date and time inputs", async () => {
+      await userEvent.type(dateInput, "15032026");
+      await userEvent.type(timeInput, "0930");
+      expect(dateInput).toHaveValue("15/03/2026");
+      expect(timeInput).toHaveValue("09:30");
+    });
+    await step("submit form", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify submitted data contains Date with time", () => {
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      expect(submittedData).toHaveTextContent("appointmentDateTime");
+      expect(submittedData).toHaveTextContent("2026");
+    });
+  },
+};
+
+/**
+ * Time-only field with render: "time" (E2E: fill time, submit, verify Date object with time)
+ */
+export const TimeOnly: Story = {
+  args: {
+    schemas: [
+      z.object({
+        wakeUpTime: field(z.string(), {
+          label: "Wake Up Time",
+          placeholder: "Select wake up time",
+          render: "time",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const dateInput = canvas.queryByPlaceholderText("DD/MM/YYYY");
+    const timeInput = canvas.getByPlaceholderText("--:--");
+    expect(dateInput).not.toBeInTheDocument();
+    expect(timeInput).toBeInTheDocument();
+    await step("fill time input", async () => {
+      await userEvent.type(timeInput, "0700");
+      expect(timeInput).toHaveValue("07:00");
+    });
+    await step("submit form", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify submitted data contains Date with time", () => {
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      expect(submittedData).toHaveTextContent("wakeUpTime");
     });
   },
 };

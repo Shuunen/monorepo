@@ -1194,7 +1194,7 @@ export const Codec: Story = {
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("verify initial data was transformed correctly", () => {
       const dateInput = canvas.getByTestId("input-date-date");
-      expect(dateInput).toHaveValue("2026-01-06");
+      expect(dateInput).toHaveValue("06/01/2026");
       expect(submittedData).toContainHTML("{}");
     });
     await step("submit the form", async () => {
