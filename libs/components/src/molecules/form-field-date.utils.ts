@@ -18,11 +18,14 @@ export const dateTodayOrFutureSchema = z.date().min(startOfDay(today), { message
  * @returns A Date object if the value is a valid date, otherwise undefined.
  */
 export function normalizeToDate(value: unknown): Date | undefined {
+  if (value === undefined || value === null || value === "") {
+    return undefined;
+  }
   if (value instanceof Date) {
     return value;
   }
-  if (value) {
-    return new Date(value as string);
+  if (typeof value === "string" || typeof value === "number") {
+    return new Date(value);
   }
   return undefined;
 }

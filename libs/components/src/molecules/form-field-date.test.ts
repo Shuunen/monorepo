@@ -45,4 +45,8 @@ describe("form-field-date", () => {
   it("normalizeToDate E should return undefined for empty string", () => {
     expect(normalizeToDate("")).toBeUndefined();
   });
+
+  it("normalizeToDate F should return undefined for weird types", () => {
+    expect(normalizeToDate({})).toBeUndefined();
+  });
 });
