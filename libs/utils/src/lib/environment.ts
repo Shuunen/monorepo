@@ -1,10 +1,22 @@
 /**
  * Check if the environment is a dev environment
+ * @param isEnvDev env var
  * @returns true if the environment is a dev environment
  */
-export function isDevEnvironment() {
-  // @ts-expect-error meta.env is Vite specific
-  return import.meta.env.DEV === true;
+export function isDevEnvironment(isEnvDev = import.meta.env.DEV) {
+  return isEnvDev === true;
+}
+
+/**
+ * check if app is deployed in dev namespace
+ * @param isEnvDev env var
+ * @param envSubDev env var for dev subdomain
+ * @returns true if App is deployed in Dev namespace
+ */
+export function isDeployedInDevNamespace(isEnvDev = import.meta.env.DEV, envSubDev = import.meta.env.DEV_SUBDOMAIN) {
+  const { host } = globalThis.window.location;
+  const [subdomain] = host.split(".");
+  return isDevEnvironment(isEnvDev) || subdomain === envSubDev;
 }
 
 /**
