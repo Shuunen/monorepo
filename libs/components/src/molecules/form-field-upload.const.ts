@@ -29,45 +29,39 @@ export function formatFileSize(bytes: number, addUnit = true): string {
   return formatValue(bytes / bytesInMb, "MB");
 }
 
-// oxlint-disable-next-line max-lines-per-function
 export function fileSchema(extensions: readonly string[], isRequired: boolean) {
-  return (
-    z
-      .file()
-      // oxlint-disable-next-line max-lines-per-function
-      .check(ctx => {
-        if (!isRequired && ctx.value.name === "") {
-          return;
-        }
-        if (isRequired && ctx.value.name === "") {
-          ctx.issues.push({
-            code: "custom",
-            continue: false,
-            input: ctx.value,
-            message: "File is required",
-          });
-          return;
-        }
-        const ext = fileExtensionRegex.exec(ctx.value.name)?.[1]?.toLowerCase() ?? "";
-        if (ext === "") {
-          ctx.issues.push({
-            code: "custom",
-            continue: false,
-            input: ctx.value,
-            message: "File has no extension",
-          });
-          return;
-        }
-        if (!extensions.includes(ext.toLowerCase())) {
-          ctx.issues.push({
-            code: "custom",
-            continue: false,
-            input: ctx.value,
-            message: `File extension not allowed, accepted : ${extensions.join(", ")}`,
-          });
-        }
-      })
-  );
+  return z.file().check(ctx => {
+    if (!isRequired && ctx.value.name === "") {
+      return;
+    }
+    if (isRequired && ctx.value.name === "") {
+      ctx.issues.push({
+        code: "custom",
+        continue: false,
+        input: ctx.value,
+        message: "File is required",
+      });
+      return;
+    }
+    const ext = fileExtensionRegex.exec(ctx.value.name)?.[1]?.toLowerCase() ?? "";
+    if (ext === "") {
+      ctx.issues.push({
+        code: "custom",
+        continue: false,
+        input: ctx.value,
+        message: "File has no extension",
+      });
+      return;
+    }
+    if (!extensions.includes(ext.toLowerCase())) {
+      ctx.issues.push({
+        code: "custom",
+        continue: false,
+        input: ctx.value,
+        message: `File extension not allowed, accepted : ${extensions.join(", ")}`,
+      });
+    }
+  });
 }
 
 export const imageExtensions = ["jpg", "jpeg", "png", "pdf"] as const;

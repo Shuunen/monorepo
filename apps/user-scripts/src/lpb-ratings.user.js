@@ -14,7 +14,6 @@
 // ==/UserScript==
 
 // oxlint-disable no-magic-numbers
-// oxlint-disable max-lines
 
 const ratingsCsv = `domaine des bergeonnieres saint nicolas de bourgueil vielles vignes,3.6
 fabrice petit brut recoltant manipulant montier en l isle,4.0
@@ -444,7 +443,6 @@ function createReview(name, rating) {
   return review;
 }
 
-// oxlint-disable-next-line max-lines-per-function, max-lines-per-function
 function LpbRatings() {
   if (globalThis.matchMedia === undefined) return;
   const fuseSettings = {

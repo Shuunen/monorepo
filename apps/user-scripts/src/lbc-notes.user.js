@@ -15,8 +15,6 @@
 // @version      1.2.0
 // ==/UserScript==
 
-// oxlint-disable max-lines
-
 const config = {
   averageNote: {
     class: "bg-yellow-200",

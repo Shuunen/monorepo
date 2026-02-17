@@ -12,8 +12,6 @@
 // @version      1.0.7
 // ==/UserScript==
 
-// oxlint-disable max-lines
-
 /**
  * @typedef {import('./lbc.types').LbcCustomInfo} LbcCustomInfo
  * @typedef {import('./lbc.types').LbcAdType} LbcAdType

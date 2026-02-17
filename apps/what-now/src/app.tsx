@@ -1,4 +1,3 @@
-// oxlint-disable no-unassigned-import
 import { debounce, nbHueMax, on, storage, toastError } from "@monorepo/utils";
 import { checkUrlCredentials } from "./utils/credentials.utils";
 import "./utils/database.utils";

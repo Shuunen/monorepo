@@ -89,13 +89,11 @@ export async function uploadImage(fileName: string, url: string) {
 
 export function downloadBlob(blob: Blob, fileName: string) {
   const link = document.createElement("a");
-  // oxlint-disable-next-line no-undef
   link.href = URL.createObjectURL(blob);
   link.download = fileName;
   document.body.append(link);
   link.click();
   link.remove();
-  // oxlint-disable-next-line no-undef
   URL.revokeObjectURL(link.href);
   toastSuccess("Download started");
 }
@@ -147,7 +145,6 @@ export async function downloadImages(bucketId = state.credentials.bucketId) {
   return Result.ok("images downloaded successfully");
 }
 
-// oxlint-disable-next-line max-lines-per-function
 export async function getItemsRemotely() {
   const items: ItemModel[] = [];
   let offset = 0;
@@ -248,7 +245,6 @@ export async function deleteItemRemotely(item: Item, currentState = state) {
   /* v8 ignore if -- @preserve */
   if (result.ok)
     for (const photo of item.photos) {
-      // oxlint-disable-next-line max-depth
       if (isUrl(photo)) continue;
       // oxlint-disable-next-line no-await-in-loop
       await deleteImageRemotely(photo);

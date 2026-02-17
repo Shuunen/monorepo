@@ -1,4 +1,3 @@
-// oxlint-disable max-lines
 // ==UserScript==
 // @name         Amazon Gaming - All in one
 // @author       Romain Racamier-Lafon

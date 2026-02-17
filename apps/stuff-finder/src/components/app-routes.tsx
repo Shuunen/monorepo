@@ -3,7 +3,6 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { setNavigate } from "../utils/navigation.utils";
 import { AppLoader } from "./app-loader";
 
-// oxlint-disable max-nested-callbacks
 const AsyncPageHome = lazy(() => import("../pages/page-home").then(({ PageHome }) => ({ default: PageHome })));
 const AsyncPageError = lazy(() => import("../pages/page-error").then(({ PageError }) => ({ default: PageError })));
 const AsyncPageScan = lazy(() => import("../pages/page-scan").then(({ PageScan }) => ({ default: PageScan })));
@@ -26,7 +25,6 @@ const AsyncPageMetrics = lazy(() =>
 const AsyncPageKitchenSink = lazy(() =>
   import("../pages/page-kitchen-sink").then(({ PageKitchenSink }) => ({ default: PageKitchenSink })),
 );
-// oxlint-enable max-nested-callbacks
 
 export function AppRoutes() {
   const navigate = useNavigate();

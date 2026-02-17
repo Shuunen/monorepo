@@ -112,7 +112,6 @@ async function TextGuard() {
    * @param {string} word - The word to search for.
    * @returns {Array<HTMLElement>} - An array of elements that contain the specified word.
    */
-  // oxlint-disable max-lines-per-function
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   function findElementsByQueryAll(word) {
     const needle = sanitize(word);

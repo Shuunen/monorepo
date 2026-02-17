@@ -13,7 +13,6 @@
 // ==/UserScript==
 
 // oxlint-disable no-magic-numbers
-// oxlint-disable max-lines-per-function
 
 /**
  * Return the position of a value in an interval

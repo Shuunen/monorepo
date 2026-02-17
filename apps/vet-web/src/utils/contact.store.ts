@@ -23,7 +23,6 @@ export const useFormStore = create<FormState>()(
         });
       },
       setFormData: data => {
-        // eslint-disable-next-line max-nested-callbacks
         set(state => ({
           ...state,
           ...data,

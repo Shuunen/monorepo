@@ -50,7 +50,6 @@ export function AppSpeedDial({
     sx: { backgroundColor: "white", color: "purple", opacity: 0.7 },
   } as const;
   const icon = useMemo(() => (isLoading ? <HourglassTop /> : <SpeedDialIcon />), [isLoading]);
-  // oxlint-disable-next-line max-nested-callbacks
   const availableActions = useMemo(
     () => (isSettingsRequired ? actions.filter(action => ["Home", "Settings"].includes(action.name)) : actions),
     [isSettingsRequired],

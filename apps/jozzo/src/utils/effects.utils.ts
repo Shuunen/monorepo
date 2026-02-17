@@ -5,7 +5,6 @@ const pouringSoundTotalSegments = 8; // 0-1, 1-2, ..., 7-8
 /**
  * Play a random 1s segment of the tea-pouring sound with a fadeout effect.
  */
-// oxlint-disable-next-line max-lines-per-function
 export function playPouringSound() {
   const segment = Math.floor(Math.random() * pouringSoundTotalSegments);
   // declaring the sound outside mess up with the sound playback

@@ -8,7 +8,6 @@ import osmosis from "osmosis";
 const url = "https://www.facebook.com/some-page/";
 const info = "div._4-u8 > div._2pi9._2pi2 > div._ikh > div._4bl9";
 const everySeconds = 20;
-// oxlint-disable-next-line require-hook
 let lastNb = 0;
 const logger = new Logger();
 

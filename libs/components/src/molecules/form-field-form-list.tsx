@@ -21,7 +21,6 @@ import {
 } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.types";
-// oxlint-disable-next-line import/max-dependencies
 import { useEffect, useMemo, useRef } from "react";
 
 function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean }) {

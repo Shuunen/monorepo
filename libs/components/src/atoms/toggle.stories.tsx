@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-// oxlint-disable-next-line no-restricted-imports
 import { Bold, Italic } from "lucide-react";
 import { expect, userEvent, within } from "storybook/test";
 import { Toggle } from "./toggle";

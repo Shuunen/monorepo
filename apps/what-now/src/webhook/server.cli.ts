@@ -1,4 +1,4 @@
-// oxlint-disable max-lines, max-nested-callbacks
+// oxlint-disable max-lines
 import { readFileSync } from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { request } from "node:https";
@@ -131,7 +131,6 @@ export function flattenResponse(
   };
 }
 
-// oxlint-disable-next-line max-lines-per-function, max-statements
 export const server = createServer((req: IncomingMessage, res: ServerResponse) => {
   const context = "createServer";
   sendCorsHeaders(res);
@@ -312,7 +311,6 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
   );
 }
 
-// oxlint-disable-next-line max-lines-per-function, max-statements
 export function parseProgressBody(body: string) {
   let progress = 0;
   let remaining: unknown = undefined;

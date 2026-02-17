@@ -1,4 +1,3 @@
-// oxlint-disable max-lines
 import { nbPercentMax, Result } from "@monorepo/utils";
 import { databaseMock, mockFile } from "./database.mock";
 import {

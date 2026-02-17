@@ -47,7 +47,7 @@ export function hexToRgb(hex: string) {
  * @param hex "#000000"
  * @returns hsl object
  */
-// oxlint-disable-next-line max-lines-per-function, max-statements
+// oxlint-disable-next-line max-statements
 export function hexToHsl(hex: string) {
   const result = hexToRgb(hex); // Convert hex to RGB first
   if (!result.ok) {
