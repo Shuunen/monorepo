@@ -1,5 +1,5 @@
 // oxlint-disable no-magic-numbers, max-lines-per-function, complexity
-import { dateIsoToReadableDatetime, isValidDate } from "@monorepo/utils";
+import { dateIsoToReadableDatetime } from "@monorepo/utils";
 import { addDays } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { IMaskInput } from "react-imask";
@@ -14,34 +14,17 @@ import { Separator } from "../atoms/separator";
 import { IconCalendar } from "../icons/icon-calendar";
 import { IconX } from "../icons/icon-x";
 import { cn } from "../shadcn/utils";
-
-const DATE_INPUT_REGEX = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-const TIME_INPUT_REGEX = /^(\d{2}):(\d{2})$/;
-const DIGIT_REGEX = /[0-9]/;
-
-function parseInput(value: string): Date | undefined {
-  const match = DATE_INPUT_REGEX.exec(value);
-  if (!match) {
-    return undefined;
-  }
-  const [, dd, mm, yyyy] = match;
-  const date = new Date(`${yyyy}-${mm}-${dd}`);
-  return isValidDate(date) ? date : undefined;
-}
-
-function parseTimeInput(value: string): { hours: number; minutes: number } | undefined {
-  const match = TIME_INPUT_REGEX.exec(value);
-  if (!match) {
-    return undefined;
-  }
-  const [, hh, mm] = match;
-  const hours = Number.parseInt(hh, 10);
-  const minutes = Number.parseInt(mm, 10);
-  if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-    return undefined;
-  }
-  return { hours, minutes };
-}
+import {
+  calendarDateToUtc,
+  computeDateChangeValue,
+  computeTimeChangeValue,
+  formatTime,
+  isDateInputAtEnd,
+  isDigitKey,
+  parseInput,
+  parseTimeInput,
+  shouldShowClearButton,
+} from "./datetime-picker.utils";
 
 type DatetimePickerProps = {
   mode?: "date" | "date-time" | "time";
@@ -72,11 +55,7 @@ export function DatetimePicker({
   const [date, setDate] = useState<Date | undefined>(defaultValue);
   const [month, setMonth] = useState<Date | undefined>(defaultValue ?? date);
   const [dateValue, setDateValue] = useState(dateIsoToReadableDatetime(defaultValue, false));
-  const [timeValue, setTimeValue] = useState(
-    defaultValue
-      ? `${String(defaultValue.getHours()).padStart(2, "0")}:${String(defaultValue.getMinutes()).padStart(2, "0")}`
-      : "",
-  );
+  const [timeValue, setTimeValue] = useState(defaultValue ? formatTime(defaultValue) : "");
   const dateInputRef = useRef<HTMLInputElement>(null);
   const timeInputRef = useRef<HTMLInputElement>(null);
   // Sync internal state when defaultValue appears after initial mount (e.g., from prefault schema defaults)
@@ -94,48 +73,15 @@ export function DatetimePicker({
     const parsedDate = parseInput(maskedValue);
     setDate(parsedDate ? new Date(parsedDate) : undefined);
     setMonth(parsedDate ? new Date(parsedDate) : undefined);
-
-    if (time) {
-      const parsedTime = parseTimeInput(timeValue);
-      if (parsedDate && parsedTime) {
-        const newDate = new Date(parsedDate);
-        newDate.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
-        onChange?.(newDate);
-      } else {
-        onChange?.(undefined);
-      }
-    } else if (parsedDate) {
-      const newDate = new Date(parsedDate);
-      newDate.setUTCHours(noonHour, 0, 0, 0);
-      onChange?.(newDate);
-    } else {
-      onChange?.(undefined);
-    }
+    onChange?.(computeDateChangeValue({ noonHour, parsedDate, time, timeValue }));
   };
 
   const handleMaskedTimeChange = (maskedValue: string) => {
     setTimeValue(maskedValue);
-    const parsedTime = parseTimeInput(maskedValue);
     if (!time) {
       return;
     }
-    if (!showDate) {
-      if (parsedTime) {
-        const newDate = new Date();
-        newDate.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
-        onChange?.(newDate);
-      } else {
-        onChange?.(undefined);
-      }
-      return;
-    }
-    if (date && parsedTime) {
-      const newDate = new Date(date);
-      newDate.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
-      onChange?.(newDate);
-    } else {
-      onChange?.(undefined);
-    }
+    onChange?.(computeTimeChangeValue(maskedValue, date, showDate));
   };
 
   function handleClear() {
@@ -159,7 +105,7 @@ export function DatetimePicker({
       setDate(now);
       setDateValue(dateIsoToReadableDatetime(now, false));
       setMonth(now);
-      setTimeValue(`${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`);
+      setTimeValue(formatTime(now));
       onChange?.(now);
     } else {
       if (time) {
@@ -203,9 +149,7 @@ export function DatetimePicker({
             }
             if (time) {
               const target = event.target as HTMLInputElement;
-              const isAtEnd = target.selectionStart === target.value.length;
-              const isDigit = event.key.length === 1 && DIGIT_REGEX.test(event.key);
-              if (isDigit && isAtEnd && target.value.length === 10) {
+              if (isDigitKey(event.key) && isDateInputAtEnd(target.selectionStart, target.value.length)) {
                 event.preventDefault();
                 timeInputRef.current?.focus();
               }
@@ -243,7 +187,7 @@ export function DatetimePicker({
         />
       )}
       <InputGroupAddon align="inline-end">
-        {clearable && (dateValue !== "" || (timeValue !== "" && timeValue !== "--:--")) && (
+        {clearable && shouldShowClearButton(dateValue, timeValue) && (
           <InputGroupButton
             name={`input-date-clear-${props.name}`}
             variant="ghost"
@@ -291,26 +235,7 @@ export function DatetimePicker({
                     onMonthChange={setMonth}
                     onSelect={calendarDate => {
                       // Fix: always store/date as UTC so display matches local pick
-                      const newDate = calendarDate
-                        ? new Date(
-                            Date.UTC(
-                              calendarDate.getFullYear(),
-                              calendarDate.getMonth(),
-                              calendarDate.getDate(),
-                              noonHour,
-                              0,
-                              0,
-                              0,
-                            ),
-                          )
-                        : undefined;
-                      if (time && newDate) {
-                        const timeData = parseTimeInput(timeValue);
-                        if (timeData) {
-                          newDate.setUTCHours(timeData.hours);
-                          newDate.setUTCMinutes(timeData.minutes);
-                        }
-                      }
+                      const newDate = calendarDateToUtc({ calendarDate, time, timeValue });
                       setDate(newDate);
                       setDateValue(dateIsoToReadableDatetime(newDate, false));
                       setMonth(newDate);
