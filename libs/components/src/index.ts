@@ -91,6 +91,7 @@ export * from "./molecules/auto-form.const";
 export * from "./molecules/auto-form.utils";
 export * from "./molecules/confirm-dialog";
 export * from "./molecules/datetime-picker";
+export * from "./molecules/datetime-picker.utils";
 export * from "./molecules/debug-data";
 export * from "./molecules/floating-menu";
 export * from "./molecules/form-field";

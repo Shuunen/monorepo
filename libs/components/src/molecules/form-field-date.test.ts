@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { field } from "./auto-form.utils";
-import { formatTime, getInitialValue, normalizeToDate, today } from "./form-field-date.utils";
+import { getInitialValue, normalizeToDate, today } from "./form-field-date.utils";
 
 describe("form-field-date", () => {
   it("getInitialValue A date default value", () => {
@@ -44,20 +44,5 @@ describe("form-field-date", () => {
 
   it("normalizeToDate E should return undefined for empty string", () => {
     expect(normalizeToDate("")).toBeUndefined();
-  });
-
-  it("formatTime A should format morning time with padding", () => {
-    const date = new Date("2024-06-01T09:05:00");
-    expect(formatTime(date)).toMatchInlineSnapshot(`"09:05"`);
-  });
-
-  it("formatTime B should format afternoon time", () => {
-    const date = new Date("2024-06-01T14:30:00");
-    expect(formatTime(date)).toMatchInlineSnapshot(`"14:30"`);
-  });
-
-  it("formatTime C should format midnight", () => {
-    const date = new Date("2024-06-01T00:00:00");
-    expect(formatTime(date)).toMatchInlineSnapshot(`"00:00"`);
   });
 });

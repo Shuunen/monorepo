@@ -28,18 +28,6 @@ export function normalizeToDate(value: unknown): Date | undefined {
 }
 
 /**
- * Formats a Date object into a time string in HH:MM format.
- * @param date - The Date object to format
- * @returns A string representing the time in HH:MM format (e.g., "14:30")
- */
-export function formatTime(date: Date) {
-  const timeLength = 2;
-  const hours = String(date.getHours()).padStart(timeLength, "0");
-  const minutes = String(date.getMinutes()).padStart(timeLength, "0");
-  return `${hours}:${minutes}`;
-}
-
-/**
  * Utility function to determine the initial value for a date field based on its Zod schema.
  * It checks if the schema has a default value defined, and if so, returns it. The default value can be either a Date object or a relative date string ("today", "yesterday", "tomorrow").
  * If the default value is a relative date string, it converts it to an actual Date object using the `getRelativeDate` function.

@@ -4,8 +4,9 @@ import { useFormContext } from "react-hook-form";
 import { FormControl } from "../atoms/form";
 import { getFieldMetadataOrThrow, isZodString } from "./auto-form.utils";
 import { DatetimePicker } from "./datetime-picker";
+import { formatTime } from "./datetime-picker.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
-import { formatTime, getInitialValue, normalizeToDate } from "./form-field-date.utils";
+import { getInitialValue, normalizeToDate } from "./form-field-date.utils";
 
 export function FormFieldDate({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
