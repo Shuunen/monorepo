@@ -6,7 +6,7 @@ import { DatetimePicker } from "./datetime-picker";
 const meta = {
   component: DatetimePicker,
   tags: ["autodocs"],
-  title: "Commons/Atoms/DatetimePicker",
+  title: "Commons/Molecules/DatetimePicker",
   decorators: [
     Story => (
       <div className="w-62.5">
@@ -77,7 +77,7 @@ export const WithSubmit: Story = {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>();
     const [submittedDate, setSubmittedDate] = useState<string>("");
 
-    function handleSubmit(event: React.FormEvent) {
+    function handleSubmit(event: React.ChangeEvent) {
       event.preventDefault();
       if (selectedDate) {
         setSubmittedDate(selectedDate.toISOString());
