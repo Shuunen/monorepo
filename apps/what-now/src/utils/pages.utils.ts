@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 export function useActions() {
   const navigate = useNavigate();
   const currentPath = globalThis.location.pathname;
-  // oxlint-disable-next-line require-param
   function getAction(icon: FloatingMenuAction["icon"], name: FloatingMenuAction["name"], path: string) {
     return {
       disabled: path === currentPath,

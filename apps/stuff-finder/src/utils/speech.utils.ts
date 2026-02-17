@@ -6,7 +6,6 @@ import { state } from "./state.utils";
  * Listen user speech
  * @param onSuccess the function to call when the speech is recognized
  */
-// oxlint-disable-next-line max-lines-per-function
 export function listenUserSpeech(onSuccess: (transcript: string, confidence: number) => void) {
   let isSuccess = false;
   const recognition = new (globalThis.webkitSpeechRecognition || globalThis.SpeechRecognition)();

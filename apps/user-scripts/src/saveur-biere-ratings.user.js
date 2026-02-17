@@ -67,7 +67,6 @@ function SaveurBiereRatings() {
     element.classList.add(utils.id);
     element.parentElement.style.height = "auto";
   }
-  // oxlint-disable max-lines-per-function, consistent-return, complexity
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   async function fetchRating(item) {
     const titleElement = utils.findOne(selectors.title, item);
@@ -98,7 +97,6 @@ function SaveurBiereRatings() {
     if (titleElement.tagName !== "A")
       titleElement.outerHTML = `<a href="https://www.saveur-biere.com/fr/search-result/${name}" target="_blank">${name}</a>`;
   }
-  // oxlint-enable max-lines-per-function, consistent-return, complexity
   function injectRatings() {
     const items = utils.findAll(selectors.items);
     utils.log("found items", items);

@@ -20,7 +20,6 @@ export function getLangFromPath(path: string) {
   return detected === "fr" ? "fr" : defaultLang;
 }
 
-// oxlint-disable require-param-description
 /**
  * Handle pluralization
  * @param translated the translated string, like "1 item | {count} items"
@@ -28,7 +27,6 @@ export function getLangFromPath(path: string) {
  * @returns the translated string, like "3 items"
  */
 export function handlePlural(translated: string, data?: Readonly<Record<string, unknown>>) {
-  // oxlint-enable require-param-description
   if (!translated.includes("|")) {
     return fillTemplate(translated, data);
   }
@@ -43,7 +41,6 @@ export function handlePlural(translated: string, data?: Readonly<Record<string, 
   return fillTemplate(partA, data);
 }
 
-// oxlint-disable require-param-description
 /**
  * Translate a message
  * @param lang the language to translate to, like "en" or "fr"
@@ -56,7 +53,6 @@ export function translate(
   message: Readonly<Record<string, string>> | string,
   data?: Readonly<Record<string, unknown>>,
 ) {
-  // oxlint-enable require-param-description
   const translated = typeof message === "string" ? message : message[lang];
   if (translated === undefined) {
     return `missing translation for message "${JSON.stringify(message)}" and lang "${lang}"`;

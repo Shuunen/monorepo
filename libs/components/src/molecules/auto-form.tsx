@@ -1,4 +1,4 @@
-// oxlint-disable import/max-dependencies, max-lines
+// oxlint-disable max-lines
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn, nbPercentMax, scrollToElement, sleep } from "@monorepo/utils";
 import { Link } from "@tanstack/react-router";

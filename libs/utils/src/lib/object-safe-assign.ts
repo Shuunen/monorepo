@@ -13,10 +13,8 @@ export function safeAssign(target: Record<string, unknown>, ...sources: Readonly
   }
   const source = sources.shift();
   if (isRecord(target) && isRecord(source)) {
-    // oxlint-disable-next-line max-depth
     for (const key in source) {
       if (isRecord(source[key])) {
-        // oxlint-disable-next-line max-depth
         if (!target[key]) {
           Object.assign(target, { [key]: {} });
         }

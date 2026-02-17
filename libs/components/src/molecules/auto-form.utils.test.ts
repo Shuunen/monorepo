@@ -44,7 +44,7 @@ import {
   sectionsFromEditableSteps,
   step,
   typeLikeResolver,
-} from "./auto-form.utils"; // oxlint-disable-line max-dependencies
+} from "./auto-form.utils";
 import { imageSchemaOptional, imageSchemaRequired } from "./form-field-upload.const";
 
 const isoDateStringToDateInstance = z.codec(z.iso.date(), z.date(), {

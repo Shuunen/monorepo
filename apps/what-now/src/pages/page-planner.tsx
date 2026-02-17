@@ -1,4 +1,4 @@
-// oxlint-disable max-dependencies, max-lines
+// oxlint-disable max-lines
 import { Button, FloatingMenu } from "@monorepo/components";
 import { dateIso10, formatDate } from "@monorepo/utils";
 // oxlint-disable-next-line no-restricted-imports

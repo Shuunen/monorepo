@@ -113,7 +113,7 @@
     "lint:biome": "biome check --error-on-warnings --write --unsafe && echo lint:biome success",
     "lint:ci": "oxfmt --check && oxlint --deny-warnings && biome check --error-on-warnings && echo lint:ci success",
     "lint:oxfmt": "oxfmt --write && echo lint:oxfmt success",
-    "lint:oxlint": "oxlint --deny-warnings --fix --fix-suggestions --fix-dangerously && echo lint:oxlint success",
+    "lint:oxlint": "oxlint --deny-warnings --fix --fix-suggestions --fix-dangerously --report-unused-disable-directives && echo lint:oxlint success",
     "list": "nx run-many -t list && echo list success",
     "postversion": "git push && git push --tags",
     "preversion": "pnpm check",

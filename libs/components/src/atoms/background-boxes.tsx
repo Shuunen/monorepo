@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: fix me later */
-// oxlint-disable id-length, no-magic-numbers, max-lines-per-function
+// oxlint-disable id-length, no-magic-numbers
 import { cn } from "@monorepo/utils";
 import { motion } from "motion/react";
 import React from "react";
@@ -39,7 +39,7 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
             >
               {j % 2 === 0 && i % 2 === 0 ? (
                 <svg
-                  className="pointer-events-none absolute -top-[14px] -left-[22px] h-6 w-10 stroke-[1px] text-slate-700"
+                  className="pointer-events-none absolute -top-3.5 -left-5.5 h-6 w-10 stroke-[1px] text-slate-700"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.5"

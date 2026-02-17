@@ -5,11 +5,9 @@ import { Link } from "@tanstack/react-router";
 import { HeadsetIcon, PawPrint } from "lucide-react";
 
 const routes = [
-  /* eslint-disable sort-keys */
   { label: "Home", path: "/" },
   { label: "Contact us", path: "/contact" },
   { label: "About", path: "/about" },
-  /* eslint-enable sort-keys */
 ];
 
 export function Header() {

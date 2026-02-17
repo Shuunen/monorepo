@@ -40,7 +40,6 @@ export function createState<State extends object>(
     },
   };
   const state = new Proxy<State>(data, handler);
-  // oxlint-disable-next-line require-param
   function watchState(key: "*" | StateKey | StateKey[], callback: StateCallback) {
     const all = Object.keys(state) as StateKey[];
     const some = Array.isArray(key) ? key : [key as StateKey];

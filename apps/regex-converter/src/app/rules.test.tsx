@@ -79,7 +79,6 @@ describe(Rules, () => {
     render(<Rules rules={rules} setRules={setRules} />);
     // Simulate updateRule with non-existent id by mapping with no match
     const prevRules = [...rules];
-    // oxlint-disable-next-line no-map-spread
     setRules(prevRules.map(rule => (rule.id === "not-found" ? { ...rule, pattern: "x" } : rule)));
     expect(rules).toEqual([sampleRule]);
   });

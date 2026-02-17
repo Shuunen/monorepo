@@ -1,7 +1,6 @@
 import { toastError, toastInfo } from "@monorepo/utils";
 import { createRoot } from "react-dom/client";
 import { App } from "./app";
-// oxlint-disable-next-line no-unassigned-import
 import "./assets/styles.css";
 import { getItems } from "./utils/item.utils";
 import { logger } from "./utils/logger.utils";

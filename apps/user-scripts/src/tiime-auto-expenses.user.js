@@ -11,7 +11,6 @@
 // @version      1.2.0
 // ==/UserScript==
 
-// oxlint-disable max-lines-per-function
 // cSpell:disable
 
 /**

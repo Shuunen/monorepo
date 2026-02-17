@@ -1,4 +1,4 @@
-// oxlint-disable no-console, no-empty-function, no-undef, no-require-imports, no-commonjs
+// oxlint-disable no-console, no-undef, no-require-imports, no-commonjs
 /** biome-ignore-all lint/suspicious/noConsole: it's ok */
 const electronPublish = require('electron-publish')
 

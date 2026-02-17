@@ -66,7 +66,6 @@ function TradeRepublicAio() {
   /**
    * Show the invested amount and times
    */
-  // oxlint-disable max-lines-per-function, complexity, max-lines-per-function
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   function showInvested() {
     let injected = 0;
@@ -140,7 +139,6 @@ function TradeRepublicAio() {
       entry.style.borderLeftColor = isInjected ? "green" : "orange";
     }
   }
-  // oxlint-enable max-lines-per-function, complexity, max-lines-per-function
   /**
    * Initializes the script.
    */

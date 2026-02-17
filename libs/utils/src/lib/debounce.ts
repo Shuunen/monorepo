@@ -14,7 +14,6 @@ export const debounce = <Method extends (...parameters: Parameters<Method>) => R
   return async (...parameters: Parameters<Method>) =>
     new Promise<ReturnType<Method>>(resolve => {
       clearTimeout(timeout);
-      // oxlint-disable-next-line max-nested-callbacks
       timeout = setTimeout(() => {
         resolve(callback(...parameters));
       }, waitFor);

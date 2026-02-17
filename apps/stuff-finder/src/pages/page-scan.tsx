@@ -38,7 +38,6 @@ async function onDecode(result: null | Result, error?: Exception) {
   onDecodeSuccess(result);
 }
 
-// oxlint-disable-next-line max-lines-per-function
 export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
   logger.debug("PageScan", { properties });
   const videoReference = useRef<HTMLVideoElement>(null);

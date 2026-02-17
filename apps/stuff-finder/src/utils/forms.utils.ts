@@ -63,7 +63,7 @@ export function updateForm<FormType extends Form>(form: FormType, updatedFields:
  */
 export function validateForm<FormType extends Form>(form: FormType) {
   let errorMessage = "";
-  // oxlint-disable-next-line no-accumulating-spread, no-array-reduce
+  // oxlint-disable-next-line no-array-reduce
   const updatedFields = Object.entries(form.fields).reduce(
     (accumulator, [field, { isRequired, label, regex, value }]) => {
       const isBoolean = typeof value === "boolean";

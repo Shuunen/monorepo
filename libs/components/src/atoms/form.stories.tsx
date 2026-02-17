@@ -38,7 +38,6 @@ const meta = {
     layout: "centered",
   },
   render: () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const form = useForm<ContactForm>({
       defaultValues: {
         user: {
