@@ -113,7 +113,7 @@ export type AutoFormFormsMetadata = Simplify<
   }
 >;
 
-export type AutoFormAcceptFieldMetadata = Simplify<
+export type AutoFormFieldAcceptMetadata = Simplify<
   AutoFormFieldBaseMetadata & {
     labels?: {
       /** Label for the accept button, default is "Accept" */
@@ -122,6 +122,13 @@ export type AutoFormAcceptFieldMetadata = Simplify<
       reject?: string;
     };
     render: "accept";
+  }
+>;
+
+export type AutoFormFieldDateMetadata = Simplify<
+  AutoFormFieldBaseMetadata & {
+    defaultToNoon?: boolean;
+    render: "date" | "date-time" | "time";
   }
 >;
 
@@ -178,18 +185,20 @@ export type AutoFormFieldBaseMetadata = {
   errors?: (data: AutoFormData) => string | undefined;
   /** Force the field to be rendered with a specific component, else use automatic field-schema detection */
   render?:
-    | "text"
-    | "textarea"
-    | "number"
-    | "date"
-    | "select"
-    | "boolean"
-    | "upload"
     | "accept"
+    | "boolean"
+    | "date"
+    | "date-time"
+    | "field-list"
+    | "form-list"
+    | "number"
     | "password"
     | "radio"
-    | "field-list"
-    | "form-list";
+    | "select"
+    | "text"
+    | "textarea"
+    | "time"
+    | "upload";
 } & AutoFormFieldConditionalMetadata;
 
 /**
@@ -198,11 +207,12 @@ export type AutoFormFieldBaseMetadata = {
  * example: `section({ title: 'First Name'})`
  */
 export type AutoFormFieldMetadata =
+  | AutoFormFieldAcceptMetadata
   | AutoFormFieldBaseMetadata
+  | AutoFormFieldDateMetadata
   | AutoFormFieldSectionMetadata
   | AutoFormFieldsMetadata
-  | AutoFormFormsMetadata
-  | AutoFormAcceptFieldMetadata;
+  | AutoFormFormsMetadata;
 
 /** Option for select/enum fields in the auto-generated form. */
 export type SelectOption = {

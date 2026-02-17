@@ -14,8 +14,8 @@ import { isEmptyObject, isFunction } from "es-toolkit";
 import type { ReactNode } from "react";
 import { z } from "zod";
 import type {
-  AutoFormAcceptFieldMetadata,
   AutoFormData,
+  AutoFormFieldAcceptMetadata,
   AutoFormFieldMetadata,
   AutoFormFieldSectionMetadata,
   AutoFormFieldsMetadata,
@@ -706,7 +706,7 @@ export function field<Schema extends z.ZodType>(fieldSchema: Schema, fieldMetada
  * @returns field schema with valid metadata
  * @example acceptField({ label: "First-name", labels: { accept: "Confirmation", reject: "Non-confirmation" } })
  */
-export function acceptField(fieldMetadata: Omit<AutoFormAcceptFieldMetadata, "render">) {
+export function acceptField(fieldMetadata: Omit<AutoFormFieldAcceptMetadata, "render">) {
   return z.boolean().meta({ ...fieldMetadata, render: "accept" });
 }
 
