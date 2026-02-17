@@ -77,28 +77,39 @@ export function DatetimePicker({
   const handleMaskedDateChange = (maskedValue: string) => {
     setDateValue(maskedValue);
     const parsedDate = parseInput(maskedValue);
-    const newDate = parsedDate ? new Date(parsedDate) : undefined;
+    setDate(parsedDate ? new Date(parsedDate) : undefined);
+    setMonth(parsedDate ? new Date(parsedDate) : undefined);
 
-    setDate(newDate);
-    setMonth(newDate);
-    onChange?.(newDate);
+    if (time) {
+      const parsedTime = parseTimeInput(timeValue);
+      if (parsedDate && parsedTime) {
+        const newDate = new Date(parsedDate);
+        newDate.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
+        onChange?.(newDate);
+      } else {
+        onChange?.(undefined);
+      }
+    } else if (parsedDate) {
+      const newDate = new Date(parsedDate);
+      newDate.setUTCHours(12, 0, 0, 0);
+      onChange?.(newDate);
+    } else {
+      onChange?.(undefined);
+    }
   };
 
   const handleMaskedTimeChange = (maskedValue: string) => {
     setTimeValue(maskedValue);
-    const time = parseTimeInput(maskedValue);
-    if (date && time) {
-      // update date with new time
+    const parsedTime = parseTimeInput(maskedValue);
+    if (!time) {
+      return;
+    }
+    if (date && parsedTime) {
       const newDate = new Date(date);
-      newDate.setHours(time.hours);
-      newDate.setMinutes(time.minutes);
+      newDate.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
       onChange?.(newDate);
-    } else if (!date && time) {
-      // update new date only with time, set today's date
-      const now = new Date();
-      now.setHours(time.hours);
-      now.setMinutes(time.minutes);
-      onChange?.(now);
+    } else {
+      onChange?.(undefined);
     }
   };
 
@@ -142,8 +153,9 @@ export function DatetimePicker({
   }
 
   return (
-    <InputGroup className={className} data-testid={testIdFromProps("datetime-picker", props)}>
+    <InputGroup className={cn(className, !time && "min-w-48")} data-testid={testIdFromProps("datetime-picker", props)}>
       <IMaskInput
+        data-testid={testIdFromProps("date-picker", props)}
         className={cn(
           "min-w-0 flex-2 px-3 py-1 text-base outline-0",
           (dateValue === "" || readonly) && "text-muted-foreground",
@@ -176,6 +188,7 @@ export function DatetimePicker({
         <>
           <Separator orientation="vertical" className="h-1/2!" />
           <IMaskInput
+            data-testid={testIdFromProps("time-picker", props)}
             inputRef={timeInputRef}
             onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
               if (event.key === "Backspace" && (timeValue === "--:--" || timeValue === "")) {
