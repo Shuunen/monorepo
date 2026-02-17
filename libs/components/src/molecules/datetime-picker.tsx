@@ -1,19 +1,19 @@
 // oxlint-disable no-magic-numbers, max-lines-per-function
+import { dateIsoToReadableDatetime, isValidDate } from "@monorepo/utils";
 import { addDays } from "date-fns";
 import { useRef, useState } from "react";
 import { IMaskInput } from "react-imask";
+import { Button } from "../atoms/button";
+import { Calendar } from "../atoms/calendar";
+import { Card, CardContent } from "../atoms/card";
+import { type NameProp, testIdFromProps } from "../atoms/form.utils";
+import { InputGroup, InputGroupAddon, InputGroupButton } from "../atoms/input-group";
+import { Popover, PopoverContent, PopoverTrigger } from "../atoms/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../atoms/select";
+import { Separator } from "../atoms/separator";
 import { IconCalendar } from "../icons/icon-calendar";
 import { IconX } from "../icons/icon-x";
-import { Calendar } from "../shadcn/calendar";
-import { InputGroup, InputGroupAddon, InputGroupButton } from "../shadcn/input-group";
-import { Popover, PopoverContent, PopoverTrigger } from "../shadcn/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../shadcn/select";
-import { Separator } from "../shadcn/separator";
-import { Button } from "./button";
-import { Card, CardContent } from "./card";
-import { type NameProp, testIdFromProps } from "./form.utils";
 import { cn } from "../shadcn/utils";
-import { dateIsoToReadableDatetime, isValidDate } from "@monorepo/utils";
 
 const DATE_INPUT_REGEX = /^(\d{2})\/(\d{2})\/(\d{4})$/;
 const TIME_INPUT_REGEX = /^(\d{2}):(\d{2})$/;
@@ -153,7 +153,7 @@ export function DatetimePicker({
   }
 
   return (
-    <InputGroup className={cn(className, !time && "min-w-48")} data-testid={testIdFromProps("datetime-picker", props)}>
+    <InputGroup className={cn(className, !time && "min-w-48")} name="datetime-picker">
       <IMaskInput
         data-testid={testIdFromProps("date-picker", props)}
         className={cn(
@@ -218,7 +218,7 @@ export function DatetimePicker({
       <InputGroupAddon align="inline-end">
         {clearable && (dateValue !== "" || (timeValue !== "" && timeValue !== "--:--")) && (
           <InputGroupButton
-            id={`date-clear-${props.name}`}
+            name={`date-clear-${props.name}`}
             variant="ghost"
             size="icon-xs"
             aria-label="Clear date"
@@ -232,7 +232,7 @@ export function DatetimePicker({
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <InputGroupButton
-              id={`date-picker-${props.name}`}
+              name={`date-picker-${props.name}`}
               variant="ghost"
               size="icon-xs"
               aria-label="Select date"
@@ -249,6 +249,7 @@ export function DatetimePicker({
             >
               <CardContent className="mb-2 px-4">
                 <Calendar
+                  name="datetime-picker"
                   required={false}
                   mode="single"
                   selected={date}
@@ -289,6 +290,7 @@ export function DatetimePicker({
                 <div className="relative flex gap-2 border-t border-input px-4 py-4">
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-card px-2 text-sm">Time selection</span>
                   <Select
+                    name="time-hour"
                     value={timeValue.split(":")[0] || ""}
                     onValueChange={value => {
                       const currentMinutes = timeValue.split(":")[1] || "00";
@@ -296,7 +298,7 @@ export function DatetimePicker({
                       handleMaskedTimeChange(newTimeValue);
                     }}
                   >
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full" name="time-hour">
                       <SelectValue placeholder="HH" />
                     </SelectTrigger>
                     <SelectContent>
@@ -311,6 +313,7 @@ export function DatetimePicker({
                     </SelectContent>
                   </Select>
                   <Select
+                    name="time-minute"
                     value={timeValue.split(":")[1] || ""}
                     onValueChange={value => {
                       const currentHours = timeValue.split(":")[0] || "00";
@@ -318,7 +321,7 @@ export function DatetimePicker({
                       handleMaskedTimeChange(newTimeValue);
                     }}
                   >
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full" name="time-minute">
                       <SelectValue placeholder="MM" />
                     </SelectTrigger>
                     <SelectContent>
