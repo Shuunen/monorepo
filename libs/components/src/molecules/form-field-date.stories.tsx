@@ -701,6 +701,7 @@ export const TimeOnly: Story = {
     await step("verify submitted data contains Date with time", () => {
       const submittedData = canvas.getByTestId("debug-data-submitted-data");
       expect(submittedData).toHaveTextContent("wakeUpTime");
+      expect(submittedData).toHaveTextContent("07:00");
     });
   },
 };
