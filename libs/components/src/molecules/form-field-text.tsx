@@ -16,10 +16,6 @@ export function FormFieldText({ fieldName, fieldSchema, isOptional, logger, read
           <Input
             {...field}
             disabled={isDisabled}
-            onBlur={() => {
-              const trimmed = typeof field.value === "string" ? field.value.trim() : field.value;
-              field.onChange(trimmed || undefined);
-            }}
             placeholder={placeholder}
             readOnly={readonly}
             value={field.value || ""}
