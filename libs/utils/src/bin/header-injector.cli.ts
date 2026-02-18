@@ -30,29 +30,6 @@ const metrics = {
 type Metrics = typeof metrics;
 
 /**
- * Entry point for the header-injector CLI
- * @param argv the command-line arguments to parse (for testing purposes)
- * @returns metrics or error
- */
-export async function main(argv: string[]) {
-  const stats = structuredClone(metrics);
-  const args = parseArgs(argv);
-  logger.info("header-injector.cli.ts started with args", yellow(JSON.stringify(args)));
-  const isRemoveMode = args.remove !== undefined;
-  if (!isRemoveMode && !args.header) {
-    return Result.error("missing header argument");
-  }
-  const allFiles = await glob("**/*.ts", { filesOnly: true });
-  const files = allFiles.filter(file => !file.endsWith(".d.ts") && !file.endsWith(".gen.ts"));
-  const header = isRemoveMode ? "" : `// ${args.header}`;
-  logger.info(`${isRemoveMode ? "Removing" : "Scanning"} headers of ${files.length} files...`);
-  for (const file of files) {
-    processFile({ file, header, isRemoveMode, stats });
-  }
-  return Result.ok(stats);
-}
-
-/**
  * Parse command-line arguments into a key-value object
  * @param argv the command-line arguments
  * @returns parsed arguments as key-value pairs
@@ -146,19 +123,42 @@ function processFile(options: ProcessFileOptions) {
 
 /**
  * Generate a report string from the metrics
- * @param metrics the metrics object
+ * @param data the metrics object
  * @returns formatted report string
  */
-export function report(metrics: Metrics): string {
+export function report(data: Metrics): string {
   return `Header Injector report :
-  - Files without header : ${metrics.noHeader === 0 ? gray("0") : yellow(metrics.noHeader.toString())}
-  - Files with header : ${metrics.hasHeader === 0 ? gray("0") : green(metrics.hasHeader.toString())}
-  - Files with header misplaced: ${metrics.moveHeader === 0 ? gray("0") : green(metrics.moveHeader.toString())}
-  - Files with header added : ${metrics.addedHeader === 0 ? gray("0") : green(metrics.addedHeader.toString())}
-  - Files with header removed : ${metrics.removedHeader === 0 ? gray("0") : green(metrics.removedHeader.toString())}
-  - Files read errors : ${metrics.readError === 0 ? gray("0") : red(metrics.readError.toString())}
-  - Files write errors : ${metrics.writeError === 0 ? gray("0") : red(metrics.writeError.toString())}
+  - Files without header : ${data.noHeader === 0 ? gray("0") : yellow(data.noHeader.toString())}
+  - Files with header : ${data.hasHeader === 0 ? gray("0") : green(data.hasHeader.toString())}
+  - Files with header misplaced: ${data.moveHeader === 0 ? gray("0") : green(data.moveHeader.toString())}
+  - Files with header added : ${data.addedHeader === 0 ? gray("0") : green(data.addedHeader.toString())}
+  - Files with header removed : ${data.removedHeader === 0 ? gray("0") : green(data.removedHeader.toString())}
+  - Files read errors : ${data.readError === 0 ? gray("0") : red(data.readError.toString())}
+  - Files write errors : ${data.writeError === 0 ? gray("0") : red(data.writeError.toString())}
   `.trim();
+}
+
+/**
+ * Entry point for the header-injector CLI
+ * @param argv the command-line arguments to parse (for testing purposes)
+ * @returns metrics or error
+ */
+export async function main(argv: string[]) {
+  const stats = structuredClone(metrics);
+  const args = parseArgs(argv);
+  logger.info("header-injector.cli.ts started with args", yellow(JSON.stringify(args)));
+  const isRemoveMode = args.remove !== undefined;
+  if (!isRemoveMode && !args.header) {
+    return Result.error("missing header argument");
+  }
+  const allFiles = await glob("**/*.ts", { filesOnly: true });
+  const files = allFiles.filter(file => !file.endsWith(".d.ts") && !file.endsWith(".gen.ts"));
+  const header = isRemoveMode ? "" : `// ${args.header}`;
+  logger.info(`${isRemoveMode ? "Removing" : "Scanning"} headers of ${files.length} files...`);
+  for (const file of files) {
+    processFile({ file, header, isRemoveMode, stats });
+  }
+  return Result.ok(stats);
 }
 
 /* c8 ignore start */

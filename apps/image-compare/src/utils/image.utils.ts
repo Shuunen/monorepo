@@ -47,14 +47,6 @@ export function readImageFile(
   reader.readAsDataURL(file);
 }
 
-export async function fetchImageMetadata(url: string): Promise<ImageMetadata> {
-  const response = await fetch(url);
-  const blob = await response.blob();
-  const filename = url.split("/").pop() || "unknown";
-  const dimensions = await getImageDimensions(url);
-  return { filename, height: dimensions.height, size: blob.size, width: dimensions.width };
-}
-
 function getImageDimensions(src: string): Promise<{ height: number; width: number }> {
   return new Promise((resolve, reject) => {
     const img = globalThis.document.createElement("img");
@@ -64,6 +56,14 @@ function getImageDimensions(src: string): Promise<{ height: number; width: numbe
     /* v8 ignore stop */
     img.src = src;
   });
+}
+
+export async function fetchImageMetadata(url: string): Promise<ImageMetadata> {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const filename = url.split("/").pop() || "unknown";
+  const dimensions = await getImageDimensions(url);
+  return { filename, height: dimensions.height, size: blob.size, width: dimensions.width };
 }
 
 export function handleSingleFileUpload(file: File | undefined, callbacks: ImageUpdateCallbacks): void {

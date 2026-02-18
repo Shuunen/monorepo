@@ -1627,13 +1627,13 @@ describe("auto-form.utils", () => {
 
   // typeLikeResolver
   it("typeLikeResolver A should resolve a function", () => {
-    const data = { name: "John doe" };
-    const result = typeLikeResolver(data => data?.name, data);
+    const userProfile = { name: "John doe" };
+    const result = typeLikeResolver(data => data?.name, userProfile);
     expect(result).toBe("John doe");
   });
   it("typeLikeResolver B should resolve a value", () => {
-    const data = { name: "John doe" };
-    const result = typeLikeResolver("John doe", data);
+    const userProfile = { name: "John doe" };
+    const result = typeLikeResolver("John doe", userProfile);
     expect(result).toBe("John doe");
   });
 

@@ -55,9 +55,12 @@ export function FormFieldUpload({
   const testId = camelToKebabCase(fieldName);
   const [selectedFile, setSelectedFile] = useState<File | undefined>();
   const [uploadProgress, setUploadProgress] = useState(0);
+  // oxlint-disable-next-line typescript/no-use-before-define
   const retryUpload = () => selectedFile && startUpload(selectedFile);
   const buttons = {
+    // oxlint-disable-next-line typescript/no-use-before-define
     cancel: { action: removeFile, icon: CircleXIcon, label: "Cancel" },
+    // oxlint-disable-next-line typescript/no-use-before-define
     remove: { action: removeFile, icon: TrashIcon, label: "Remove" },
     retry: { action: retryUpload, icon: RotateCcwIcon, label: "Retry" },
   };

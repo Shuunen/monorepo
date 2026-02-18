@@ -27,12 +27,12 @@ const config: StorybookConfig = {
     },
   },
   stories: ["../src/**/*.@(mdx|stories.tsx)", "../../../apps/*/src/**/*.stories.@(js|jsx|ts|tsx|mdx)"],
-  viteFinal: config => {
-    config.esbuild = {
-      ...config.esbuild,
+  viteFinal: viteConfig => {
+    viteConfig.esbuild = {
+      ...viteConfig.esbuild,
       jsx: "automatic",
     };
-    return config;
+    return viteConfig;
   },
 };
 

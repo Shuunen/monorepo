@@ -82,11 +82,11 @@
         "noNodejsModules": "error",
         "noUndeclaredDependencies": "off",
         "noUndeclaredVariables": "error",
+        "noUnresolvedImports": "off",
         "useImportExtensions": "off"
       },
       "nursery": {
-        "noFloatingPromises": "error",
-        "noUnresolvedImports": "off"
+        "noFloatingPromises": "error"
       },
       "performance": {
         "useTopLevelRegex": "error"

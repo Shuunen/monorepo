@@ -1,4 +1,4 @@
-import { isEmpty } from "@monorepo/utils";
+import { isObjectEmpty } from "@monorepo/utils";
 import { isPlainObject } from "es-toolkit";
 import type { AutoFormData } from "./auto-form.types";
 
@@ -17,7 +17,7 @@ export function computeCustomErrorMessage(customErrorFn: CustomErrorFn | undefin
   if (!customErrorFn) {
     return undefined;
   }
-  const shouldRun = isPlainObject(watchedValues) && !isEmpty(watchedValues);
+  const shouldRun = isPlainObject(watchedValues) && !isObjectEmpty(watchedValues);
   return shouldRun ? customErrorFn(watchedValues) : undefined;
 }
 

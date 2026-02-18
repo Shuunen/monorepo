@@ -23,6 +23,7 @@ export function arraySort<ArrayType extends unknown[]>(subject: ArrayType, compa
       if (Array.isArray(value)) {
         sortedValue = arraySort(value, comparator);
       } else if (typeof value === "object") {
+        // oxlint-disable-next-line typescript/no-use-before-define
         sortedValue = objectSort(value as IndexedObject, comparator);
       }
     }

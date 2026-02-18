@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-use-before-define
 import { parseJson } from "./json.js";
 
 function get(key: string, defaultValue: string): string;

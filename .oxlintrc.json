@@ -204,6 +204,7 @@
         "no-magic-numbers": "off",
         "no-null": "off",
         "no-restricted-imports": "off",
+        "no-shadow": "off",
         "require-param": "off",
         "require-returns": "off",
         "sort-keys": "off",

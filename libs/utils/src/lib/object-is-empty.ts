@@ -3,6 +3,6 @@
  * @param obj the object to check
  * @returns true if the object is empty
  */
-export function isEmpty(obj: Record<string, unknown>) {
+export function isObjectEmpty(obj: Record<string, unknown>) {
   return Object.keys(obj).length === 0;
 }

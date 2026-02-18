@@ -16,20 +16,20 @@ export function createState<State extends object>(
   onlyStoreKeys: Array<keyof State> = [],
 ) {
   type StateKey = keyof State;
-  const useStorage = (key: string | symbol) =>
+  const store = (key: string | symbol) =>
     stateStorage !== undefined && (onlyStoreKeys.length === 0 || onlyStoreKeys.includes(key as StateKey));
   const listeners: Partial<Record<StateKey, StateCallback[]>> = {};
   const handler: ProxyHandler<State> = {
     get(target: State, key: string | symbol) {
       const localValue: State[StateKey] = Reflect.get(target, key);
-      if (useStorage(key)) {
+      if (store(key)) {
         return stateStorage?.get(key.toString(), localValue);
       }
       return localValue;
     },
     set(target: State, key: string | symbol, value: unknown) {
       Reflect.set(target, key, value);
-      if (useStorage(key)) {
+      if (store(key)) {
         stateStorage?.set(key.toString(), value);
       }
       const callbacks = listeners[key as StateKey] ?? [];

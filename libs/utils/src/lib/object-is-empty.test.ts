@@ -1,9 +1,9 @@
-import { isEmpty } from "./object-is-empty.js";
+import { isObjectEmpty } from "./object-is-empty.js";
 
-it("isEmpty A on empty object", () => {
-  expect(isEmpty({})).toBe(true);
+it("isObjectEmpty A on empty object", () => {
+  expect(isObjectEmpty({})).toBe(true);
 });
 
-it("isEmpty B on non-empty object", () => {
-  expect(isEmpty({ name: "John" })).toBe(false);
+it("isObjectEmpty B on non-empty object", () => {
+  expect(isObjectEmpty({ name: "John" })).toBe(false);
 });

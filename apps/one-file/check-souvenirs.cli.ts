@@ -184,6 +184,22 @@ export function setFileDateViaMkvTool(file: string, date: string) {
   }
 }
 
+export function isPhoto(filePath: string) {
+  const extension = path.extname(filePath).toLowerCase();
+  const photoExtensions = [".jpg", ".jpeg", ".png", ".gif", ".avif", ".webp"];
+  return photoExtensions.includes(extension);
+}
+
+export function isMatroskaVideo(filePath: string) {
+  const extension = path.extname(filePath).toLowerCase();
+  const nonMatroskaExtensions = [".wmv", ".mp4", ".avi", ".mov", ".flv", ".3gp", ".webm"];
+  return !nonMatroskaExtensions.includes(extension);
+}
+
+export function isFileSupportedForDateSetting(filePath: string) {
+  return isPhoto(filePath) || isMatroskaVideo(filePath);
+}
+
 export function setFileDate(file: string, date: ExifDateTime) {
   const isoString = date?.toString()?.split("T")[0];
   if (isoString === undefined) {
@@ -438,22 +454,6 @@ export async function checkFilePathExtensionMp(filePath: string): Promise<string
   }
   await rename(filePath, newFilePath);
   return newFilePath;
-}
-
-export function isPhoto(filePath: string) {
-  const extension = path.extname(filePath).toLowerCase();
-  const photoExtensions = [".jpg", ".jpeg", ".png", ".gif", ".avif", ".webp"];
-  return photoExtensions.includes(extension);
-}
-
-export function isMatroskaVideo(filePath: string) {
-  const extension = path.extname(filePath).toLowerCase();
-  const nonMatroskaExtensions = [".wmv", ".mp4", ".avi", ".mov", ".flv", ".3gp", ".webm"];
-  return !nonMatroskaExtensions.includes(extension);
-}
-
-export function isFileSupportedForDateSetting(filePath: string) {
-  return isPhoto(filePath) || isMatroskaVideo(filePath);
 }
 
 /**

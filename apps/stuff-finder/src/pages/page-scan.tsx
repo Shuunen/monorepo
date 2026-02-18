@@ -60,8 +60,8 @@ export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
             setStatus("ready");
           });
         // oxlint-disable-next-line max-nested-callbacks
-        onDecode(result, error).catch(error => {
-          logger.showError("error decoding video stream :", error);
+        onDecode(result, error).catch(decodeError => {
+          logger.showError("error decoding video stream :", decodeError);
         });
       })
       .catch((error: unknown) => {

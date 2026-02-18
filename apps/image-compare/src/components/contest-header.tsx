@@ -20,11 +20,8 @@ function getTitle(isContestComplete: boolean, isContestMode: boolean, contestSta
   return "";
 }
 
-export const ContestHeader = memo(function ContestHeader({
-  contestState,
-  leftImageMetadata,
-  rightImageMetadata,
-}: ContestHeaderProps) {
+export const ContestHeader = memo(function HeaderComponent(props: ContestHeaderProps) {
+  const { contestState, leftImageMetadata, rightImageMetadata } = props;
   const isContestMode = contestState !== undefined && !contestState.isComplete;
   const isContestComplete = contestState?.isComplete ?? false;
   const title = getTitle(isContestComplete, isContestMode, contestState);

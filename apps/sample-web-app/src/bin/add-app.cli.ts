@@ -25,9 +25,9 @@ const filesToUse = [
 ];
 const appName = process.argv.slice()[nbThird];
 
-function copyFile(sourceFile: string, targetFile: string, appName: string): void {
+function copyFile(sourceFile: string, targetFile: string, name: string): void {
   const content = readFileSync(sourceFile, "utf8");
-  const updatedContent = content.replaceAll("sample-web-app", appName);
+  const updatedContent = content.replaceAll("sample-web-app", name);
   const dir = dirname(targetFile);
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
 
@@ -35,18 +35,18 @@ function copyFile(sourceFile: string, targetFile: string, appName: string): void
   logger.debug(`Copied: ${targetFile}`);
 }
 
-function copyFiles(appName: string): void {
+function copyFiles(name: string): void {
   const sourceDir = join(process.cwd(), "apps", "sample-web-app");
-  const targetDir = join(process.cwd(), "apps", appName);
+  const targetDir = join(process.cwd(), "apps", name);
   logger.info(`Creating app...`);
-  for (const file of filesToUse) copyFile(join(sourceDir, file), join(targetDir, file), appName);
+  for (const file of filesToUse) copyFile(join(sourceDir, file), join(targetDir, file), name);
 }
 
-function updateTsConfig(appName: string): void {
+function updateTsConfig(name: string): void {
   logger.info("Updating tsconfig.json...");
   const tsConfigPath = join(process.cwd(), "tsconfig.json");
   const tsConfig = JSON.parse(readFileSync(tsConfigPath, "utf8"));
-  tsConfig.references.push({ path: `./apps/${appName}` });
+  tsConfig.references.push({ path: `./apps/${name}` });
   // sort the references array for nicer git diffs
   tsConfig.references.sort((referenceA: { path: string }, referenceB: { path: string }) =>
     referenceA.path.localeCompare(referenceB.path),
@@ -61,13 +61,13 @@ function installDependencies(): void {
   logger.debug("Dependencies installed successfully");
 }
 
-function addApp(appName: string): void {
-  copyFiles(appName);
-  updateTsConfig(appName);
+function addApp(name: string): void {
+  copyFiles(name);
+  updateTsConfig(name);
   installDependencies();
-  logger.success(`Created a new app in ${green(`apps/${appName}`)} 👌`);
+  logger.success(`Created a new app in ${green(`apps/${name}`)} 👌`);
   logger.info(
-    `You can now run your app with ${green(`nx dev ${appName}`)} or do any other usual command you like : build, test, etc.`,
+    `You can now run your app with ${green(`nx dev ${name}`)} or do any other usual command you like : build, test, etc.`,
   );
 }
 

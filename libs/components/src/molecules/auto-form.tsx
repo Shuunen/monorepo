@@ -101,6 +101,21 @@ export function AutoForm({
     return updatedData;
   }
   /**
+   * Handle final submission after all steps are complete
+   * @param data the complete form data
+   */
+  async function handleFinalSubmit() {
+    if (!onSubmit) {
+      return;
+    }
+    const cleanedData = normalizeData(schemas, { ...formData, ...form.getValues() });
+    logger?.info("Final form submitted", { cleanedData });
+    const result = await onSubmit(cleanedData);
+    if (useSubmissionStep) {
+      setSubmissionProps(result.submission);
+    }
+  }
+  /**
    * Handle submission for the current step of a multi-step form
    * @returns void
    */
@@ -117,21 +132,6 @@ export function AutoForm({
       void handleFinalSubmit();
     } else {
       setCurrentStep(prev => prev + 1);
-    }
-  }
-  /**
-   * Handle final submission after all steps are complete
-   * @param data the complete form data
-   */
-  async function handleFinalSubmit() {
-    if (!onSubmit) {
-      return;
-    }
-    const cleanedData = normalizeData(schemas, { ...formData, ...form.getValues() });
-    logger?.info("Final form submitted", { cleanedData });
-    const result = await onSubmit(cleanedData);
-    if (useSubmissionStep) {
-      setSubmissionProps(result.submission);
     }
   }
   // Handle back button
@@ -180,21 +180,21 @@ export function AutoForm({
    * @returns boolean indicating if the form should be shown
    */
   const showForm = useCallback(
-    ({ schema, initialData, onSubmit, querySelectorForScroll }: AutoFormSubformOptions) => {
+    (options: AutoFormSubformOptions) => {
       globalThis.window.scrollTo({ top: 0 });
       onSubformMode?.(false);
       setMode("subform");
       setSubformOptions({
         initialData,
         onSubmit: data => {
-          onSubmit(data);
+          options.onSubmit(data);
           void backToInitialMode();
         },
-        querySelectorForScroll,
-        schema,
+        querySelectorForScroll: options.querySelectorForScroll,
+        schema: options.schema,
       });
     },
-    [backToInitialMode, onSubformMode],
+    [backToInitialMode, onSubformMode, initialData],
   );
   const steps = useMemo(
     () =>

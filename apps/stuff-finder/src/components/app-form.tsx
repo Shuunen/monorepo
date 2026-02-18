@@ -78,9 +78,9 @@ export function AppForm<FormType extends Form>({
     const { error, value } = Result.unwrap(parseJson(clip));
     if (error || typeof value !== "object" || value === null)
       return Result.error(`error parsing clipboard data : ${objectSerialize({ clip, error, rawClip, value })}`);
-    const { hasChanged, updatedForm } = updateForm(form, value);
-    if (!hasChanged) return Result.ok("no changes made");
-    setForm(updatedForm);
+    const { hasChanged: hasChangedLocal, updatedForm: updatedFormLocal } = updateForm(form, value);
+    if (!hasChangedLocal) return Result.ok("no changes made");
+    setForm(updatedFormLocal);
     void copyToClipboard({});
     return Result.ok("form updated from clipboard");
   }, [form]);

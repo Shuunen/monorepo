@@ -1,5 +1,6 @@
-import { arrayAlign, cn, isEmpty, nbThird, Result, useStableKeys } from "@monorepo/utils";
+import { arrayAlign, cn, isObjectEmpty, nbThird, Result, useStableKeys } from "@monorepo/utils";
 import { invariant } from "es-toolkit";
+import { useEffect, useMemo, useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { Badge } from "../atoms/badge";
 import { Button } from "../atoms/button";
@@ -21,7 +22,6 @@ import {
 } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.types";
-import { useEffect, useMemo, useRef } from "react";
 
 function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean }) {
   let icon = <IconCircleClose />;
@@ -178,6 +178,7 @@ export function FormFieldFormList({
 
   return (
     <FormFieldBase {...props} showLabel={false}>
+      {/* oxlint-disable-next-line no-shadow */}
       {({ field, fieldState, formState }) => {
         const hasError = Boolean(fieldState.error && formState.isSubmitted);
         return (
@@ -185,7 +186,7 @@ export function FormFieldFormList({
             {label && <Title>{label}</Title>}
             {metadata.placeholder && <Paragraph>{metadata.placeholder}</Paragraph>}
             {items.map((item, index) => {
-              const data = isEmpty(item) ? undefined : item;
+              const data = isObjectEmpty(item) ? undefined : item;
               const readableIndex = String(index + 1).padStart(nbThird, "0");
               const itemIdentifier = identifier
                 ? identifier({ ...data, index: readableIndex })

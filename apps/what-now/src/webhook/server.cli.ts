@@ -30,16 +30,16 @@ export const options = {
   severityPadding: 7,
 } as const;
 
+export function datetime() {
+  return new Date().toISOString().replace("T", " ").slice(0, options.dateTimeSlice);
+}
+
 export function log(severity: "info" | "warn" | "error", context: string, ...args: unknown[]) {
   // if in unit test, do not log
   if (process.env.VITEST) return;
   const paddedSeverity = `[${severity}]`.padStart(options.severityPadding);
   // biome-ignore lint/suspicious/noConsole: allowed in this context
   console.log(`${datetime()} ${paddedSeverity} [${context}]`, ...args); // oxlint-disable-line no-console
-}
-
-export function datetime() {
-  return new Date().toISOString().replace("T", " ").slice(0, options.dateTimeSlice);
 }
 
 export function getHueColor(percent: number): number {
@@ -77,6 +77,27 @@ export function sendCorsHeaders(res: ServerResponse) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
 
+export function flattenResponse(
+  resolve: (value: { result: unknown; error: string | undefined }) => void,
+  getData: () => string,
+) {
+  return (res: IncomingMessage | PassThrough) => {
+    let data = getData();
+    res.on("data", (chunk: Buffer) => {
+      data += chunk.toString();
+    });
+    res.once("end", () => {
+      let result: unknown = "";
+      try {
+        result = JSON.parse(data);
+      } catch {
+        result = data;
+      }
+      resolve({ error: undefined, result });
+    });
+  };
+}
+
 export function makeRequest({
   url,
   method,
@@ -107,101 +128,6 @@ export function makeRequest({
     req.on("error", err => resolve({ error: err.message, result: undefined }));
     req.write(payload);
     req.end();
-  });
-}
-
-export function flattenResponse(
-  resolve: (value: { result: unknown; error: string | undefined }) => void,
-  getData: () => string,
-) {
-  return (res: IncomingMessage | PassThrough) => {
-    let data = getData();
-    res.on("data", (chunk: Buffer) => {
-      data += chunk.toString();
-    });
-    res.once("end", () => {
-      let result: unknown = "";
-      try {
-        result = JSON.parse(data);
-      } catch {
-        result = data;
-      }
-      resolve({ error: undefined, result });
-    });
-  };
-}
-
-export const server = createServer((req: IncomingMessage, res: ServerResponse) => {
-  const context = "createServer";
-  sendCorsHeaders(res);
-  if (req.method === "OPTIONS") {
-    log("info", context, "OPTIONS request received, sending CORS headers");
-    res.writeHead(options.codes.ok);
-    res.end();
-    return;
-  }
-  if (req.method === "POST" && req.url === "/set-progress") {
-    log("info", context, "POST /set-progress request received");
-    handlePostSetProgress(req, res);
-    return;
-  }
-  if (req.method === "GET" && req.url === "/hello") {
-    log("info", context, "GET /hello request received");
-    res.writeHead(options.codes.ok, { "Content-Type": "text/plain" });
-    res.end(`HelloOoOOoo ! It is ${datetime()} :D`);
-    return;
-  }
-  log("warn", context, `Unknown route method "${req.method}" with url "${req.url}"`);
-  respondNotFound(res);
-});
-
-export function handlePostSetProgress(req: IncomingMessage, res: ServerResponse) {
-  const context = "handlePostSetProgress";
-  log("info", context, `Received POST request for ${req.url}`);
-  collectRequestBody(req)
-    .then(body => {
-      log("info", context, "Request body collected for /set-progress");
-      return handleSetProgressRequest({ body, res });
-    })
-    .catch(error => {
-      log("error", context, `Error collecting request body: ${error?.message ?? error}`);
-      respondBadRequest({
-        message: "Failed to read request body",
-        nextTask: undefined,
-        progress: 0,
-        remaining: undefined,
-        res,
-      });
-    });
-}
-
-// Parse application/x-www-form-urlencoded string to object
-export function parseFormUrlEncoded(body: string): Record<string, string> {
-  const result: Record<string, string> = {};
-  const pairs = body.split("&");
-  for (const pair of pairs) {
-    const [key, value] = pair.split("=");
-    if (key) result[decodeURIComponent(key)] = decodeURIComponent(value ?? "");
-  }
-  return result;
-}
-
-export function collectRequestBody(req: IncomingMessage | PassThrough): Promise<string> {
-  const context = "collectRequestBody";
-  return new Promise((resolve, reject) => {
-    let body = "";
-    req.on("data", (chunk: Buffer) => {
-      body += chunk.toString();
-      log("info", context, `Received data chunk for request body: ${chunk.length} bytes`);
-    });
-    req.once("end", () => {
-      log("info", context, `Request body fully received: ${body.length} bytes`);
-      resolve(body);
-    });
-    req.on("error", error => {
-      log("error", context, `Error receiving request body: ${error?.message ?? error}`);
-      reject(error);
-    });
   });
 }
 
@@ -237,6 +163,68 @@ export function respondBadRequest({
   log("warn", "respondBadRequest", `Bad request, message : ${message}`);
   res.writeHead(options.codes.badRequest, { "Content-Type": "application/json" });
   res.end(jsonResponse({ data: undefined, message, nextTask, ok: false, progress, remaining, response: undefined }));
+}
+
+export function collectRequestBody(req: IncomingMessage | PassThrough): Promise<string> {
+  const context = "collectRequestBody";
+  return new Promise((resolve, reject) => {
+    let body = "";
+    req.on("data", (chunk: Buffer) => {
+      body += chunk.toString();
+      log("info", context, `Received data chunk for request body: ${chunk.length} bytes`);
+    });
+    req.once("end", () => {
+      log("info", context, `Request body fully received: ${body.length} bytes`);
+      resolve(body);
+    });
+    req.on("error", error => {
+      log("error", context, `Error receiving request body: ${error?.message ?? error}`);
+      reject(error);
+    });
+  });
+}
+
+// Parse application/x-www-form-urlencoded string to object
+export function parseFormUrlEncoded(body: string): Record<string, string> {
+  const result: Record<string, string> = {};
+  const pairs = body.split("&");
+  for (const pair of pairs) {
+    const [key, value] = pair.split("=");
+    if (key) result[decodeURIComponent(key)] = decodeURIComponent(value ?? "");
+  }
+  return result;
+}
+
+export function parseProgressBody(body: string) {
+  let progress = 0;
+  let remaining: unknown = undefined;
+  let nextTask: unknown = undefined;
+  let parseError: string | undefined = undefined;
+  const context = "parseProgressBody";
+  try {
+    log("info", context, `Parsing progress body : ${body}`);
+    const parsedBody = parseFormUrlEncoded(body);
+    if (
+      typeof parsedBody !== "object" ||
+      parsedBody === null ||
+      Array.isArray(parsedBody) ||
+      (parsedBody as Record<string, unknown>).progress === undefined
+    ) {
+      parseError = `Invalid body : must be an object with a progress property, got "${body}"`;
+      return { error: parseError, nextTask, progress, remaining };
+    }
+    progress = Number.parseInt(parsedBody.progress ?? "0", 10);
+    remaining = parsedBody.remaining ?? undefined;
+    nextTask = parsedBody.nextTask ?? undefined;
+    if (!Number.isInteger(progress) || progress < 0 || progress > options.maxProgress) {
+      parseError = "Invalid progress value. It must be an integer between 0 and 100.";
+      log("warn", context, `Progress value invalid: ${progress}`);
+    }
+  } catch (error) {
+    parseError = `Error parsing progress body : ${error instanceof Error ? error.message : error}`;
+    log("error", context, parseError);
+  }
+  return { error: parseError, nextTask, progress, remaining };
 }
 
 // oxlint-disable-next-line max-lines-per-function, max-statements
@@ -311,37 +299,49 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
   );
 }
 
-export function parseProgressBody(body: string) {
-  let progress = 0;
-  let remaining: unknown = undefined;
-  let nextTask: unknown = undefined;
-  let parseError: string | undefined = undefined;
-  const context = "parseProgressBody";
-  try {
-    log("info", context, `Parsing progress body : ${body}`);
-    const parsedBody = parseFormUrlEncoded(body);
-    if (
-      typeof parsedBody !== "object" ||
-      parsedBody === null ||
-      Array.isArray(parsedBody) ||
-      (parsedBody as Record<string, unknown>).progress === undefined
-    ) {
-      parseError = `Invalid body : must be an object with a progress property, got "${body}"`;
-      return { error: parseError, nextTask, progress, remaining };
-    }
-    progress = Number.parseInt(parsedBody.progress ?? "0", 10);
-    remaining = parsedBody.remaining ?? undefined;
-    nextTask = parsedBody.nextTask ?? undefined;
-    if (!Number.isInteger(progress) || progress < 0 || progress > options.maxProgress) {
-      parseError = "Invalid progress value. It must be an integer between 0 and 100.";
-      log("warn", context, `Progress value invalid: ${progress}`);
-    }
-  } catch (error) {
-    parseError = `Error parsing progress body : ${error instanceof Error ? error.message : error}`;
-    log("error", context, parseError);
-  }
-  return { error: parseError, nextTask, progress, remaining };
+export function handlePostSetProgress(req: IncomingMessage, res: ServerResponse) {
+  const context = "handlePostSetProgress";
+  log("info", context, `Received POST request for ${req.url}`);
+  collectRequestBody(req)
+    .then(body => {
+      log("info", context, "Request body collected for /set-progress");
+      return handleSetProgressRequest({ body, res });
+    })
+    .catch(error => {
+      log("error", context, `Error collecting request body: ${error?.message ?? error}`);
+      respondBadRequest({
+        message: "Failed to read request body",
+        nextTask: undefined,
+        progress: 0,
+        remaining: undefined,
+        res,
+      });
+    });
 }
+
+export const server = createServer((req: IncomingMessage, res: ServerResponse) => {
+  const context = "createServer";
+  sendCorsHeaders(res);
+  if (req.method === "OPTIONS") {
+    log("info", context, "OPTIONS request received, sending CORS headers");
+    res.writeHead(options.codes.ok);
+    res.end();
+    return;
+  }
+  if (req.method === "POST" && req.url === "/set-progress") {
+    log("info", context, "POST /set-progress request received");
+    handlePostSetProgress(req, res);
+    return;
+  }
+  if (req.method === "GET" && req.url === "/hello") {
+    log("info", context, "GET /hello request received");
+    res.writeHead(options.codes.ok, { "Content-Type": "text/plain" });
+    res.end(`HelloOoOOoo ! It is ${datetime()} :D`);
+    return;
+  }
+  log("warn", context, `Unknown route method "${req.method}" with url "${req.url}"`);
+  respondNotFound(res);
+});
 
 if (globalThis.window === undefined)
   server.listen(options.port, () => {

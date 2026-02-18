@@ -31,6 +31,7 @@ vi.mock("cors", () => ({
 }));
 
 // Mock fetch globally
+// @ts-expect-error non important typing issue
 globalThis.fetch = vi.fn();
 
 describe("http-proxy", () => {
@@ -38,16 +39,16 @@ describe("http-proxy", () => {
   let mockRequest: Partial<Request> = {};
 
   function createMockFetchResponse(contentType: string, responseData: unknown) {
-    const mockResponse = {
+    const mock = {
       headers: {
         get: vi.fn().mockReturnValue(contentType),
       },
       status: 200,
       statusText: "OK",
     } as Record<string, unknown>;
-    if (contentType.includes("application/json")) mockResponse.json = vi.fn().mockResolvedValue(responseData);
-    else if (contentType.includes("text/plain")) mockResponse.text = vi.fn().mockResolvedValue(responseData);
-    return mockResponse;
+    if (contentType.includes("application/json")) mock.json = vi.fn().mockResolvedValue(responseData);
+    else if (contentType.includes("text/plain")) mock.text = vi.fn().mockResolvedValue(responseData);
+    return mock;
   }
 
   function createErrorMockFetchResponse() {

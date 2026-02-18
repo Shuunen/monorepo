@@ -29,7 +29,7 @@ type MetricCardProps = {
   title: string;
 };
 
-const MetricCard = memo(function MetricCard(props: MetricCardProps) {
+const MetricCard = memo(function MetricCardComponent(props: MetricCardProps) {
   const { title, color, amount, icon: Icon, items, onSelection, showPrice, children, loadingItemIds } = props;
   const isHidden = items?.length === 0;
 
@@ -121,7 +121,7 @@ function filterSelectionByDisplayItems(selection: Item[], itemsToDisplay: Item[]
   return selection.filter(selectedItem => displayItemIds.has(selectedItem.$id));
 }
 
-const MetricCardMissingPriceList = memo(function MetricCardMissingPriceList({ metrics }: { metrics: MetricsData }) {
+const MetricCardMissingPriceList = memo(function MetricCardMissing({ metrics }: { metrics: MetricsData }) {
   const [selection, setSelection] = useState<Item[]>([]);
   const [itemsToDisplay, setItemsToDisplay] = useState<Item[]>(() => [...metrics.itemsWithoutPrice]);
   const [loadingItemIds, setLoadingItemIds] = useState<Item["$id"][] | undefined>();

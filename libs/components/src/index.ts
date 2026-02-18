@@ -1,5 +1,4 @@
 export * from "./atoms/alert";
-export * from "./atoms/background-boxes";
 export * from "./atoms/background-gradient";
 export * from "./atoms/badge";
 export * from "./atoms/breadcrumb";

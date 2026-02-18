@@ -2,7 +2,7 @@ import { copyFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { Logger } from "@monorepo/utils";
 
-const regex = {
+const regexes = {
   carriageReturn: /\r\n/gu,
   clearSpaces: /\s*/gu,
   filename: /[/\\](?<name>[\w.-]+)$/u,
@@ -17,7 +17,7 @@ export const logger = new Logger();
  * @example filename('C:\\Users\\me\\file.txt') // 'file.txt'
  */
 export function filename(filepath = "") {
-  return regex.filename.exec(filepath)?.groups?.name ?? "";
+  return regexes.filename.exec(filepath)?.groups?.name ?? "";
 }
 
 /**
@@ -52,7 +52,7 @@ export function removeLinesAfter(content, regex) {
  * @returns the processed content with unix line endings
  */
 export function useUnixCarriageReturn(content) {
-  return content.replace(regex.carriageReturn, "\n");
+  return content.replace(regexes.carriageReturn, "\n");
 }
 
 /**
@@ -72,7 +72,7 @@ export function clean(content, linesAfter, linesMatching, shouldClearSpaces = tr
   /* v8 ignore if -- @preserve */
   if (linesMatching) output = removeLinesMatching(output, linesMatching);
   /* v8 ignore if -- @preserve */
-  if (shouldClearSpaces) output = output.replace(regex.clearSpaces, "");
+  if (shouldClearSpaces) output = output.replace(regexes.clearSpaces, "");
   return output;
 }
 
