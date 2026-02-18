@@ -160,7 +160,7 @@ export function DatetimePicker({
       {time && showDate && <Separator orientation="vertical" className="h-1/2!" />}
       {time && (
         <IMaskInput
-          data-testid={testIdFromProps("input-date-time-picker", props)}
+          data-testid={testIdFromProps("input-time", props)}
           inputRef={timeInputRef}
           onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
             if (showDate && event.key === "Backspace" && (timeValue === "--:--" || timeValue === "")) {
