@@ -52,9 +52,10 @@ export const Basic: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const canvasBody = within(canvasElement.ownerDocument.body);
-    const colorTrigger = canvas.getByTestId("select-trigger-color");
+    const colorTrigger = canvas.getByTestId("button-color");
     await userEvent.click(colorTrigger);
-    const colorOptions = canvasBody.getAllByRole("option");
+    const colorListbox = canvasBody.getByTestId("select-options-color");
+    const colorOptions = within(colorListbox).getAllByRole("option");
     expect(colorOptions[0]).toHaveTextContent("Red");
     expect(colorOptions[1]).toHaveTextContent("Green");
     expect(colorOptions[2]).toHaveTextContent("Blue");
@@ -90,39 +91,39 @@ export const LabelGeneration: Story = {
     const canvasBody = within(canvasElement.ownerDocument.body);
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("select color option", async () => {
-      const colorTrigger = canvas.getByTestId("select-trigger-color");
+      const colorTrigger = canvas.getByTestId("button-color");
       await userEvent.click(colorTrigger);
-      const colorOptions = canvasBody.getAllByRole("option");
+      const colorListbox = canvasBody.getByTestId("select-options-color");
+      const colorOptions = within(colorListbox).getAllByRole("option");
       expect(colorOptions[0]).toHaveTextContent("Red");
       expect(colorOptions[1]).toHaveTextContent("Green");
       expect(colorOptions[2]).toHaveTextContent("Blue");
       await userEvent.click(colorOptions[1]);
-      const colorNativeSelect = colorTrigger.nextElementSibling;
-      expect(colorNativeSelect).toHaveValue("green");
+      expect(colorTrigger).toHaveTextContent("Green");
     });
     await step("select size option", async () => {
-      const sizeTrigger = canvas.getByTestId("select-trigger-size");
+      const sizeTrigger = canvas.getByTestId("button-size");
       await userEvent.click(sizeTrigger);
-      const sizeOptions = canvasBody.getAllByRole("option");
+      const sizeListbox = canvasBody.getByTestId("select-options-size");
+      const sizeOptions = within(sizeListbox).getAllByRole("option");
       expect(sizeOptions[0]).toHaveTextContent("Small");
       expect(sizeOptions[1]).toHaveTextContent("Medium");
       expect(sizeOptions[2]).toHaveTextContent("Large");
       expect(sizeOptions[3]).toHaveTextContent("Extra-large");
       await userEvent.click(sizeOptions[2]);
-      const sizeNativeSelect = sizeTrigger.nextElementSibling;
-      expect(sizeNativeSelect).toHaveValue("large");
+      expect(sizeTrigger).toHaveTextContent("Large");
     });
     await step("select priority option", async () => {
-      const priorityTrigger = canvas.getByTestId("select-trigger-priority");
+      const priorityTrigger = canvas.getByTestId("button-priority");
       await userEvent.click(priorityTrigger);
-      const priorityOptions = canvasBody.getAllByRole("option");
+      const priorityListbox = canvasBody.getByTestId("select-options-priority");
+      const priorityOptions = within(priorityListbox).getAllByRole("option");
       expect(priorityOptions[0]).toHaveTextContent("Low");
       expect(priorityOptions[1]).toHaveTextContent("Medium");
       expect(priorityOptions[2]).toHaveTextContent("High");
       expect(priorityOptions[3]).toHaveTextContent("Critical");
       await userEvent.click(priorityOptions[3]);
-      const priorityNativeSelect = priorityTrigger.nextElementSibling;
-      expect(priorityNativeSelect).toHaveValue("critical");
+      expect(priorityTrigger).toHaveTextContent("Critical");
     });
     await step("submit form", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -178,10 +179,9 @@ export const Disabled: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const colorTrigger = canvas.getByTestId("select-trigger-color");
+    const colorTrigger = canvas.getByTestId("button-color");
     expect(colorTrigger).toBeDisabled();
-    const colorNativeSelect = colorTrigger.nextElementSibling;
-    expect(colorNativeSelect).toHaveValue("green");
+    expect(colorTrigger).toHaveTextContent("Green");
   },
 };
 
@@ -203,9 +203,8 @@ export const Readonly: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const colorTrigger = canvas.getByTestId("select-trigger-color");
-    const colorNativeSelect = colorTrigger.nextElementSibling;
-    expect(colorNativeSelect).toHaveValue("blue");
+    const colorTrigger = canvas.getByTestId("button-color");
+    expect(colorTrigger).toHaveTextContent("Blue");
   },
 };
 
@@ -246,26 +245,26 @@ export const CustomLabels: Story = {
     const canvasBody = within(canvasElement.ownerDocument.body);
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("select country option", async () => {
-      const countryTrigger = canvas.getByTestId("select-trigger-country");
+      const countryTrigger = canvas.getByTestId("button-country");
       await userEvent.click(countryTrigger);
-      const countryOptions = canvasBody.getAllByRole("option");
+      const countryListbox = canvasBody.getByTestId("select-options-country");
+      const countryOptions = within(countryListbox).getAllByRole("option");
       expect(countryOptions[0]).toHaveTextContent("🇺🇸 United States");
       expect(countryOptions[1]).toHaveTextContent("🇬🇧 United Kingdom");
       expect(countryOptions[2]).toHaveTextContent("🇫🇷 France");
       await userEvent.click(countryOptions[2]);
-      const countryNativeSelect = countryTrigger.nextElementSibling;
-      expect(countryNativeSelect).toHaveValue("fr");
+      expect(countryTrigger).toHaveTextContent("🇫🇷 France");
     });
     await step("select size option", async () => {
-      const sizeTrigger = canvas.getByTestId("select-trigger-size");
+      const sizeTrigger = canvas.getByTestId("button-size");
       await userEvent.click(sizeTrigger);
-      const sizeOptions = canvasBody.getAllByRole("option");
+      const sizeListbox = canvasBody.getByTestId("select-options-size");
+      const sizeOptions = within(sizeListbox).getAllByRole("option");
       expect(sizeOptions[0]).toHaveTextContent("Extra Small (XS)");
       expect(sizeOptions[2]).toHaveTextContent("Medium (M)");
       expect(sizeOptions[4]).toHaveTextContent("Extra Large (XL)");
       await userEvent.click(sizeOptions[3]);
-      const sizeNativeSelect = sizeTrigger.nextElementSibling;
-      expect(sizeNativeSelect).toHaveValue("lg");
+      expect(sizeTrigger).toHaveTextContent("Large (L)");
     });
     await step("submit form", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -278,5 +277,21 @@ export const CustomLabels: Story = {
       };
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
+  },
+};
+
+/**
+ * Performance test for select field
+ */
+export const Perf: Story = {
+  args: {
+    schemas: [
+      z.object({
+        numbers: field(z.enum(Array.from({ length: 1000 }, (_, i) => i.toString())), {
+          label: "Numbers",
+          placeholder: "Choose a number",
+        }),
+      }),
+    ],
   },
 };
