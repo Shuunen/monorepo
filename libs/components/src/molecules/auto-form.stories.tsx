@@ -1460,6 +1460,55 @@ export const CustomErrors: Story = {
   },
 };
 
+/** summary with enum fields */
+export const SummaryWithEnumFields: Story = {
+  args: {
+    schemas: [
+      z.object({
+        name: field(z.string(), {
+          label: "Name",
+          placeholder: "Enter your name",
+          key: "user.name",
+        }),
+        ageSelect: field(z.enum(["18+", "25+", "35+", "45+", "55+", "65+"]), {
+          label: "Age",
+          placeholder: "Select your age",
+          key: "user.age",
+          options: [
+            { label: "18-24", value: "18+" },
+            { label: "25-34", value: "25+" },
+            { label: "35-44", value: "35+" },
+            { label: "45-54", value: "45+" },
+            { label: "55-64", value: "55+" },
+            { label: "65+", value: "65+" },
+          ],
+        }),
+      }),
+    ],
+    useSummaryStep: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const canvasBody = within(canvasElement.ownerDocument.body);
+    await step("fill name field and submit", async () => {
+      const nameInput = canvas.getByTestId("input-text-name");
+      await userEvent.type(nameInput, "John Doe");
+      const ageSelect = canvas.getByTestId("select-trigger-age-select");
+      await userEvent.click(ageSelect);
+      const ageSelectOptions = await canvasBody.getAllByRole("option");
+      await userEvent.click(ageSelectOptions[1]);
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify summary step displays", () => {
+      const summaryStep = canvas.getByTestId("auto-form-summary-step");
+      expect(summaryStep).toBeInTheDocument();
+      expect(summaryStep).toContainHTML("John Doe");
+      expect(summaryStep).toContainHTML("25-34");
+    });
+  },
+};
+
 /*
 TODO, ordered by priority :
 - Display a red error step if issue
