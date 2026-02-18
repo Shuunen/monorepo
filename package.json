@@ -10,6 +10,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "~4.1.18",
     "@tanstack/react-router": "^1.161.1",
+    "@tanstack/react-virtual": "^3.13.18",
     "appwrite": "^22.3.1",
     "class-variance-authority": "^0.7.1",
     "cli-progress": "^3.12.0",

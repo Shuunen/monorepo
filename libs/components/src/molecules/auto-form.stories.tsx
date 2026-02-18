@@ -397,7 +397,7 @@ export const OptionalSection: Story = {
     });
     await step("filling favouriteColor to see if hacker question appears", async () => {
       expect(canvas.queryByTestId("switch-is-hacker")).not.toBeInTheDocument();
-      const favouriteColorTrigger = canvas.getByTestId("select-trigger-favourite-color");
+      const favouriteColorTrigger = canvas.getByTestId("button-favourite-color");
       await userEvent.click(favouriteColorTrigger);
       const favouriteColorOptions = await canvasBody.findAllByRole("option");
       await userEvent.click(favouriteColorOptions[1]); // select "green"
@@ -1493,7 +1493,7 @@ export const SummaryWithEnumFields: Story = {
     await step("fill name field and submit", async () => {
       const nameInput = canvas.getByTestId("input-text-name");
       await userEvent.type(nameInput, "John Doe");
-      const ageSelect = canvas.getByTestId("select-trigger-age-select");
+      const ageSelect = canvas.getByTestId("button-age-select");
       await userEvent.click(ageSelect);
       const ageSelectOptions = await canvasBody.getAllByRole("option");
       await userEvent.click(ageSelectOptions[1]);
