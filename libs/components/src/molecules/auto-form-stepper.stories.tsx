@@ -1,8 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useId, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { Skeleton } from "../atoms/skeleton";
 import { defaultIcons } from "./auto-form.const";
 import { AutoFormStepper } from "./auto-form-stepper";
+import { today, yesterday } from "./form-field-date.utils";
+import { dateIso10 } from "@monorepo/utils";
+import type { AutoFormData } from "./auto-form.types";
+import { expect, within } from "storybook/test";
 
 const meta: Meta<typeof AutoFormStepper> = {
   component: AutoFormStepper,
@@ -290,12 +295,14 @@ export const WithSections: Story = {
  * - Disabled mode toggle
  * - Various step counts (2, 3, 6 steps)
  * - Custom suffix formats (percentages, step numbers)
+ * - Function resolver
  */
 export const Everything: Story = {
   render: () => {
     const [activeStep, setActiveStep] = useState(2);
     const [isDisabled, setIsDisabled] = useState(false);
     const toggleId = useId();
+    const form = useForm({ defaultValues: { signedAt: new Date("2025-01-01") } });
 
     const steps = [
       {
@@ -322,7 +329,7 @@ export const Everything: Story = {
         section: "To complete",
         state: editableState,
         subtitle: "Street, city, zip code",
-        suffix: "- Part 1/2",
+        suffix: (data?: AutoFormData) => `- Part 1/2 (${dateIso10((data?.signedAt as Date) ?? yesterday)})`,
         title: "Address",
       },
       {
@@ -332,7 +339,7 @@ export const Everything: Story = {
         indent: true,
         state: editableState,
         subtitle: "State, country",
-        suffix: "- Part 2/2",
+        suffix: (data?: AutoFormData) => `- Part 2/2 (${dateIso10((data?.signedAt as Date) ?? today)})`,
         title: "Address",
       },
       {
@@ -348,48 +355,62 @@ export const Everything: Story = {
     ];
 
     return (
-      <div className="space-y-6">
-        <div className="flex gap-8">
-          <AutoFormStepper disabled={isDisabled} onStepClick={setActiveStep} steps={steps} />
-          <FormSkeleton />
-        </div>
+      <FormProvider {...form}>
+        <div className="space-y-6">
+          <div className="flex gap-8">
+            <AutoFormStepper disabled={isDisabled} onStepClick={setActiveStep} steps={steps} />
+            <FormSkeleton />
+          </div>
 
-        <div className="flex items-center gap-2">
-          <label className="flex cursor-pointer gap-2" htmlFor={toggleId}>
-            <input checked={isDisabled} id={toggleId} onChange={e => setIsDisabled(e.target.checked)} type="checkbox" />
-            Disable stepper (e.g., during submission)
-          </label>
-        </div>
+          <div className="flex items-center gap-2">
+            <label className="flex cursor-pointer gap-2" htmlFor={toggleId}>
+              <input
+                checked={isDisabled}
+                id={toggleId}
+                onChange={e => setIsDisabled(e.target.checked)}
+                type="checkbox"
+              />
+              Disable stepper (e.g., during submission)
+            </label>
+          </div>
 
-        <div className="space-y-2 text-muted-foreground">
-          <p>
-            <strong>Features demonstrated:</strong>
-          </p>
-          <ul className="ml-2 list-inside list-disc space-y-1">
-            <li>
-              <strong>Readonly state:</strong> Step 1-2 (completed, view only, readable not editable)
-            </li>
-            <li>
-              <strong>Editable state:</strong> Step 3-4 (in progress, can edit)
-            </li>
-            <li>
-              <strong>Indent state:</strong> Step 4 (indented to indicate link with previous step)
-            </li>
-            <li>
-              <strong>Upcoming state:</strong> Step 5 (not started, upcoming with faded style)
-            </li>
-            <li>
-              <strong>Subtitles:</strong> Additional context below each title (like "Name, email, phone")
-            </li>
-            <li>
-              <strong>Suffixes:</strong> Additional context on the right (like "Part 1/2", "FINAL")
-            </li>
-            <li>
-              <strong>Disabled mode:</strong> Toggle above to disable all steps
-            </li>
-          </ul>
+          <div className="space-y-2 text-muted-foreground">
+            <p>
+              <strong>Features demonstrated:</strong>
+            </p>
+            <ul className="ml-2 list-inside list-disc space-y-1">
+              <li>
+                <strong>Readonly state:</strong> Step 1-2 (completed, view only, readable not editable)
+              </li>
+              <li>
+                <strong>Editable state:</strong> Step 3-4 (in progress, can edit)
+              </li>
+              <li>
+                <strong>Indent state:</strong> Step 4 (indented to indicate link with previous step)
+              </li>
+              <li>
+                <strong>Upcoming state:</strong> Step 5 (not started, upcoming with faded style)
+              </li>
+              <li>
+                <strong>Subtitles:</strong> Additional context below each title (like "Name, email, phone")
+              </li>
+              <li>
+                <strong>Suffixes:</strong> Additional context on the right (like "Part 1/2", "FINAL")
+              </li>
+              <li>
+                <strong>Disabled mode:</strong> Toggle above to disable all steps
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
+      </FormProvider>
     );
+  },
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const buttonStepAddress = canvas.getAllByTestId("button-step-address");
+    expect(buttonStepAddress).toHaveLength(2);
+    expect(buttonStepAddress[0]).toHaveTextContent("Part 1/2 (2025-01-01)");
+    expect(buttonStepAddress[1]).toHaveTextContent("Part 2/2 (2025-01-01)");
   },
 };
