@@ -6,6 +6,7 @@ export type OnCompleteItemParams = {
   indexToComplete: number;
   itemData: Record<string, unknown>;
   dataTestId: string;
+  isReadonly: boolean;
 };
 
 export type ItemProps = {
