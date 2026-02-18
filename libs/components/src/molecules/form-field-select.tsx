@@ -19,7 +19,7 @@ export function FormFieldSelect({ fieldName, fieldSchema, isOptional, logger, re
       {({ field }) => (
         <FormControl>
           <Select {...field} disabled={isDisabled || readonly} onValueChange={field.onChange}>
-            <SelectTrigger className={cn("max-w-full", { "opacity-100!": readonly })} name={field.name}>
+            <SelectTrigger className={cn("w-full", { "opacity-100!": readonly })} name={field.name}>
               <SelectValue placeholder={placeholder ?? `Select ${label}`} />
             </SelectTrigger>
             <SelectContent>
