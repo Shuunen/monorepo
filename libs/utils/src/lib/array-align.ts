@@ -11,7 +11,7 @@ export function arrayAlign<Type = unknown>(values?: Type[], targetLength?: numbe
     return Array.from<Type>({ length: targetLength }).fill(fillValue as Type);
   }
   if (values !== undefined && targetLength !== undefined && values.length !== targetLength) {
-    return Array.from<Type>({ length: targetLength }).map((_value, index) => values[index] || (fillValue as Type));
+    return Array.from<Type>({ length: targetLength }).map((_value, index) => values[index] ?? (fillValue as Type));
   }
   if (values) {
     return values;
