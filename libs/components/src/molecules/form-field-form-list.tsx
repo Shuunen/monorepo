@@ -113,7 +113,7 @@ export function FormFieldFormList({
   const props = { fieldName, fieldSchema, isOptional, logger, readonly: state === "readonly" || readonly };
   const fieldValue = useWatch({ name: fieldName });
   const formValues = useWatch({ disabled: nbItems === undefined });
-  const showAddButton = !(readonly || maxItems === 1);
+  const showAddButton = !(readonly || maxItems === 1 || nbItems);
   const length = typeLikeResolver(nbItems, formValues);
   const { setValue } = useFormContext();
   const items = useMemo(
