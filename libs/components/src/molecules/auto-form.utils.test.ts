@@ -1128,6 +1128,22 @@ describe("auto-form.utils", () => {
     expect(sections[0].title).toBeUndefined();
     expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
   });
+  it("sectionsFromEditableSteps E should handle enum fields", () => {
+    const schema = z.object({
+      b: z.enum(["foo", "bar"]).meta({
+        label: "B",
+        options: [
+          { label: "Foo", value: "foo" },
+          { label: "Bar", value: "bar" },
+        ],
+      }),
+    });
+    const data = { b: "bar" };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0].title).toBeUndefined();
+    expect(sections[0].data).toEqual({ b: { label: "B", value: "Bar" } });
+  });
 
   // getFieldMetadata
   it("getFieldMetadata A should return metadata when present", () => {

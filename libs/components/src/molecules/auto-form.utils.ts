@@ -638,8 +638,9 @@ function sectionsFromEditableStep(schema: z.ZodObject, data: AutoFormData) {
       currentSectionData = {};
       continue;
     }
+    const options = getZodEnumOptions(fieldSchema);
     // Add field to current section if it should be included
-    const value = data[key];
+    const value = options.ok ? options.value?.find(option => option.value === data[key])?.label : data[key];
     if (shouldIncludeField(fieldSchema, metadata, data)) {
       currentSectionData[key] = {
         /* c8 ignore start */
