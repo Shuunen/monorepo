@@ -777,7 +777,7 @@ export function step<Schema extends z.ZodObject>(stepSchema: Schema, stepMetadat
   if (!stepMetadata) {
     return stepSchema;
   }
-  return stepSchema.meta(stepMetadata);
+  return stepSchema.meta(stepMetadata as Record<string, unknown>);
 }
 
 /**
