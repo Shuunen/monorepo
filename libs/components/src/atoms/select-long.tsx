@@ -21,6 +21,7 @@ export type SelectLongProps<Option, Value = string> = ComponentProps<typeof Shad
   className?: string;
   clearable?: boolean;
   disabled?: boolean;
+  fullWidth?: boolean;
 };
 
 const minValuesForFilter = 10;
@@ -89,10 +90,14 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
       onValueChange={handleSelectChange}
       onOpenChange={handleOpenChange}
     >
-      <div className="relative">
+      <div className={cn("relative", cn(props.fullWidth && "w-full"))}>
         <SelectTrigger
           name={props.name}
-          className={cn(props.className, props.clearable && Boolean(selectedStringValue) && "gap-9")}
+          className={cn(
+            props.className,
+            props.clearable && Boolean(selectedStringValue) && "gap-9",
+            props.fullWidth && "w-full",
+          )}
         >
           <SelectValue placeholder={props.placeholder || "Select an option"} />
         </SelectTrigger>
