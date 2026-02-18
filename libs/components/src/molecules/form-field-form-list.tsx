@@ -83,13 +83,21 @@ function Item({
         <IconTrash />
       </Button>
       <Button
-        className={cn({ hidden: readonly, "ml-auto": !showDelete })}
+        className={cn({ "ml-auto": !showDelete })}
         name="complete"
-        onClick={() => onCompleteItem({ dataTestId, indexToComplete: index, itemData: item, onChange: field.onChange })}
+        onClick={() =>
+          onCompleteItem({
+            dataTestId,
+            indexToComplete: index,
+            isReadonly: readonly,
+            itemData: item,
+            onChange: field.onChange,
+          })
+        }
         type="button"
         variant="outline"
       >
-        {labels?.completeButton ?? "Complete"}
+        {readonly ? "View" : (labels?.completeButton ?? "Complete")}
         <IconChevronRight className="size-5" />
       </Button>
     </div>
@@ -157,8 +165,9 @@ export function FormFieldFormList({
    * @param params.itemData data of the item to complete
    * @param params.indexToComplete index of the item to complete
    * @param params.dataTestId the target dataTestId
+   * @param params.isReadonly whether the form is readonly
    */
-  function onCompleteItem({ onChange, indexToComplete, itemData, dataTestId }: OnCompleteItemParams) {
+  function onCompleteItem({ onChange, indexToComplete, itemData, dataTestId, isReadonly }: OnCompleteItemParams) {
     const { value: elementSchema } = Result.unwrap(getElementSchema(fieldSchema));
     invariant(elementSchema !== undefined, "elementSchema should be defined");
     invariant(isZodObject(elementSchema), "elementSchema should be a zod object");
@@ -172,7 +181,7 @@ export function FormFieldFormList({
       initialData: normalizeData([elementSchema], itemData),
       onSubmit,
       querySelectorForScroll: `[data-testid='${dataTestId}']`,
-      schema: elementSchema,
+      schema: elementSchema.meta({ state: isReadonly ? "readonly" : "editable" }),
     });
   }
 

@@ -250,7 +250,7 @@ export const ExistingData: Story = {
 };
 
 /**
- * Basic boolean field with switch
+ * Multi-step form list
  */
 export const MultiStep: Story = {
   args: {
@@ -280,6 +280,53 @@ export const MultiStep: Story = {
         }),
       ),
     ],
+  },
+};
+
+/**
+ * Readonly form list
+ */
+export const ReadonlyFormList: Story = {
+  args: {
+    initialData: {
+      applicants: [
+        { age: 7, name: "Alice" },
+        { age: 9, name: "Fred" },
+      ],
+    },
+    schemas: [
+      step(
+        z.object({
+          applicants: forms(applicantSchema, {
+            icon: <IconDownload className="text-blue-500" />,
+            identifier: data => (data?.name ? `${data.name} (${data.age} years)` : `New person - ${data?.index}`),
+            label: "Fill in the applicants",
+            placeholder: "You can add multiple applicants, no minimum or maximum.",
+          }),
+        }),
+        { state: "readonly" },
+      ),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("should go to first applicant with readonly info", async () => {
+      const completeButton = canvas.getAllByTestId("button-complete");
+      expect(completeButton.length).toBe(2);
+      expect(completeButton[0]).toHaveTextContent("View");
+      await userEvent.click(completeButton[0]);
+    });
+    await step("should see first applicant with readonly info", () => {
+      const nameInput = canvas.getByTestId("input-text-name");
+      expect(nameInput).toBeInTheDocument();
+      expect(nameInput).toBeDisabled();
+      expect(nameInput).toHaveValue("Alice");
+      const ageInput = canvas.getByTestId("input-number-age");
+      expect(ageInput).toBeInTheDocument();
+      expect(ageInput).toBeDisabled();
+      expect(ageInput).toHaveValue(7);
+    });
   },
 };
 

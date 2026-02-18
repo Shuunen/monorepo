@@ -185,7 +185,7 @@ export function AutoForm({
       onSubformMode?.(false);
       setMode("subform");
       setSubformOptions({
-        initialData,
+        initialData: options.initialData,
         onSubmit: data => {
           options.onSubmit(data);
           void backToInitialMode();
@@ -194,7 +194,7 @@ export function AutoForm({
         schema: options.schema,
       });
     },
-    [backToInitialMode, onSubformMode, initialData],
+    [backToInitialMode, onSubformMode],
   );
   const steps = useMemo(
     () =>
