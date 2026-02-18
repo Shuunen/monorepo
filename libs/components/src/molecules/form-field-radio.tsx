@@ -19,10 +19,14 @@ export function FormFieldRadio({ fieldName, fieldSchema, isOptional, logger, rea
     <FormFieldBase {...props}>
       {({ field }) => (
         <FormControl>
+          {/* Prevent onBlur triggering validation here because you could only select a valid option
+          this prevent validation issue when the field is undefined the first time
+          */}
           <RadioGroup
             {...field}
             disabled={isDisabled}
             name={field.name}
+            onBlur={event => event.preventDefault()}
             onValueChange={field.onChange}
             value={field.value || ""}
           >

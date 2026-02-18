@@ -22,10 +22,6 @@ export function FormFieldTextarea({
             {...field}
             disabled={isDisabled}
             placeholder={placeholder}
-            onBlur={() => {
-              const trimmed = typeof field.value === "string" ? field.value.trim() : field.value;
-              field.onChange(trimmed || undefined);
-            }}
             readOnly={readonly}
             value={field.value || ""}
           />

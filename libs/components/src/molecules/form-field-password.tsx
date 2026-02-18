@@ -22,9 +22,6 @@ export function FormFieldPassword({
           <Input
             {...field}
             disabled={isDisabled}
-            onBlur={() => {
-              field.onChange(field.value || undefined);
-            }}
             placeholder={placeholder}
             readOnly={readonly}
             type="password"
