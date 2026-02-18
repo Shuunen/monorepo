@@ -1,6 +1,6 @@
 interface ImportMetaEnv {
   readonly DEV?: boolean;
-  readonly DEV_SUBDOMAIN?: string;
+  readonly VITE_DEV_SUBDOMAIN?: string;
 }
 
 interface ImportMeta {
