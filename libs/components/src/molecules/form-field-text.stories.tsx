@@ -234,7 +234,7 @@ export const DontAllowEmptyValue: Story = {
   args: {
     schemas: [
       z.object({
-        username: field(z.string(), {
+        username: field(z.string().trim().min(1), {
           label: "Username",
           placeholder: "Enter your username",
         }),
@@ -254,6 +254,7 @@ export const DontAllowEmptyValue: Story = {
     });
 
     await step("fill username with username", async () => {
+      await userEvent.clear(usernameInput);
       await userEvent.type(usernameInput, "john_doe");
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
