@@ -1,5 +1,5 @@
 import { Button, Card, Input, Switch } from "@monorepo/components";
-import { clsx } from "clsx";
+import { cn } from "@monorepo/utils";
 // oxlint-disable-next-line no-restricted-imports
 import { DeleteIcon, PlusCircleIcon } from "lucide-react";
 import type { Rule } from "./types";
@@ -13,7 +13,7 @@ export function RuleLine({
   onChange: (key: keyof Rule, value: string | boolean) => void;
   onRemove: () => void;
 }) {
-  const inputClasses = clsx("grow", rule.enabled ? "border-primary/50" : "bg-muted/50 opacity-75");
+  const inputClasses = cn("grow", rule.enabled ? "border-primary/50" : "bg-muted/50 opacity-75");
   return (
     <div className="flex items-center gap-4">
       <Switch
@@ -36,7 +36,7 @@ export function RuleLine({
         value={rule.replacement}
       />
       <Button
-        className={clsx("-ml-2 hover:text-red-500", rule.enabled ? "text-primary" : "text-muted-foreground/50")}
+        className={cn("-ml-2 hover:text-red-500", rule.enabled ? "text-primary" : "text-muted-foreground/50")}
         name="delete"
         onClick={onRemove}
         size="icon"
