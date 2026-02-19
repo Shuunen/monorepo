@@ -8,9 +8,21 @@ export const yesterday = new Date(dateIso10(daysAgo(1)));
 
 export const tomorrow = new Date(dateIso10(daysAgo(-1)));
 
-export const dateTodayOrPastSchema = z.date().max(endOfDay(today), { message: "Date cannot be in the future" });
+export const dateTodayOrPastSchema = z
+  .date("Mandatory field is missing.")
+  .max(endOfDay(today), { message: "Date cannot be in the future." });
 
-export const dateTodayOrFutureSchema = z.date().min(startOfDay(today), { message: "Date cannot be in the past" });
+export const dateTodayOrFutureSchema = z
+  .date("Mandatory field is missing.")
+  .min(startOfDay(today), { message: "Date cannot be in the past." });
+
+export const datePastSchema = z
+  .date("Mandatory field is missing.")
+  .max(endOfDay(yesterday), { message: "Date cannot be in the future." });
+
+export const dateFutureSchema = z
+  .date("Mandatory field is missing.")
+  .min(startOfDay(tomorrow), { message: "Date cannot be in the past." });
 
 /**
  * Normalizes a value to a Date object.
