@@ -4,7 +4,7 @@
     "@monorepo/vite-plugins": "workspace:*",
     "@mui/material": "~7.3.8",
     "@preact/preset-vite": "~2.10.3",
-    "preact": "~10.28.3",
+    "preact": "~10.28.4",
     "react-confetti-boom": "~2.0.1"
   },
   "name": "jozzo",
