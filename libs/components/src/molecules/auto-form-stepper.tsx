@@ -1,9 +1,9 @@
 import { cn, slugify } from "@monorepo/utils";
 import { Button } from "../atoms/button";
 import { Title } from "../atoms/typography";
-import type { StringLike } from "./auto-form.types";
+import type { AutoFormData, StringLike } from "./auto-form.types";
 import { typeLikeResolver } from "./auto-form.utils";
-import { useFormContext } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 
 export type AutoFormStepperStep = {
   /** Optional section identifier for this step. */
@@ -38,15 +38,16 @@ type AutoFormStepProps = {
   step: AutoFormStepperStep;
   disabled?: boolean;
   onStepClick: (idx: number) => void;
+  values: AutoFormData;
 };
 
-function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps) {
+function AutoFormStep({ step, disabled = false, onStepClick, values }: AutoFormStepProps) {
   const { title, subtitle, suffix, icon, active, idx, state, indent, section } = step;
-  const context = useFormContext();
-  const values = context?.getValues();
+  const resolvedSubtitle = typeLikeResolver(subtitle, values);
+  const resolvedSuffix = typeLikeResolver(suffix, values);
   const btnClasses = cn(
     "h-10 w-full border border-transparent",
-    { "h-16 rounded-xl": subtitle },
+    { "h-16 rounded-xl": resolvedSubtitle },
     { "ml-1": indent },
     { "border border-gray-500 bg-white text-black hover:bg-gray-100": active },
   );
@@ -54,7 +55,7 @@ function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps
     <div className="grid gap-2">
       {section && <Title level={4}>{typeLikeResolver(section, values)}</Title>}
       <div className={cn("flex items-center gap-0.5", { "pointer-events-none opacity-60": state === "upcoming" })}>
-        {indent && <div className={cn("h-10 w-1 shrink-0 bg-gray-200", { "h-16": subtitle })} />}
+        {indent && <div className={cn("h-10 w-1 shrink-0 bg-gray-200", { "h-16": resolvedSubtitle })} />}
         <Button
           className={btnClasses}
           data-active={active}
@@ -68,9 +69,9 @@ function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps
           <div className="ml-2 flex grow flex-col text-start">
             <div className="flex items-center gap-1">
               <span>{typeLikeResolver(title, values)}</span>
-              {suffix && <span className="text-xs text-muted-foreground">{typeLikeResolver(suffix, values)}</span>}
+              {resolvedSuffix && <span className="text-xs text-muted-foreground">{resolvedSuffix}</span>}
             </div>
-            {subtitle && <span className="text-xs text-muted-foreground">{typeLikeResolver(subtitle, values)}</span>}
+            {resolvedSubtitle && <span className="text-xs text-muted-foreground">{resolvedSubtitle}</span>}
           </div>
         </Button>
       </div>
@@ -79,8 +80,7 @@ function AutoFormStep({ step, disabled = false, onStepClick }: AutoFormStepProps
 }
 
 export function AutoFormStepper({ steps, onStepClick, disabled = false, width }: AutoFormStepperProps) {
-  const context = useFormContext();
-  const values = context?.getValues();
+  const values = useWatch();
   return (
     <div className={cn("mr-10 flex flex-col gap-4", { [`w-[${width}px]`]: width })}>
       {steps.map(step => (
@@ -89,6 +89,7 @@ export function AutoFormStepper({ steps, onStepClick, disabled = false, width }:
           key={typeLikeResolver(step.title, values)}
           onStepClick={onStepClick}
           step={step}
+          values={values}
         />
       ))}
     </div>
