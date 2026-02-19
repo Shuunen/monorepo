@@ -982,7 +982,7 @@ export function isSubformFilled(data: AutoFormData): boolean {
  */
 export function typeLikeResolver<Type>(value: TypeLike<Type>, data?: AutoFormData): Type {
   if (isFunction(value)) {
-    logger.info("Resolving TypeLike value using provided data", { data, value });
+    logger.debug("Resolving TypeLike value using provided data", { data, value });
     return value(data);
   }
   return value;
