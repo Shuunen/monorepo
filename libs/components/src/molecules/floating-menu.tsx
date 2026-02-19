@@ -38,7 +38,7 @@ export function FloatingMenu({
       <Popover onOpenChange={setOpen}>
         <PopoverTrigger
           className={cn(
-            "fixed right-5 bottom-5 cursor-pointer rounded-full bg-primary p-4 transition-all",
+            "fixed right-5 bottom-5 cursor-pointer rounded-full bg-primary p-4 text-primary-foreground transition-all",
             isSettingsRequired ? "animate-pulse" : "opacity-50 hover:opacity-100",
           )}
         >
