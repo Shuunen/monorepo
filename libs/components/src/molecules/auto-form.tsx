@@ -255,18 +255,16 @@ export function AutoForm({
       ? { label: finalLabels.lastStepButton, name: "last-step-submit", type: "submit" as const }
       : { label: finalLabels.nextStep, name: "step-next", type: "submit" as const };
     return (
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleStepSubmit)}>
-          <AutoFormFields logger={logger} schema={currentSchema} showForm={showForm} state={stepMetadata?.state} />
-          {showButtons && (
-            <AutoFormNavigation
-              centerButton={cancelButton}
-              leftButton={currentStep > 0 ? { onClick: handleBack } : undefined}
-              rightButton={rightButton}
-            />
-          )}
-        </form>
-      </Form>
+      <form onSubmit={form.handleSubmit(handleStepSubmit)}>
+        <AutoFormFields logger={logger} schema={currentSchema} showForm={showForm} state={stepMetadata?.state} />
+        {showButtons && (
+          <AutoFormNavigation
+            centerButton={cancelButton}
+            leftButton={currentStep > 0 ? { onClick: handleBack } : undefined}
+            rightButton={rightButton}
+          />
+        )}
+      </form>
     );
   }
 
@@ -315,15 +313,17 @@ export function AutoForm({
         "rounded-lg bg-white p-6 shadow-md": showCard,
       })}
     >
-      {shouldShowStepper && (
-        <AutoFormStepper
-          disabled={isStepperDisabled}
-          onStepClick={handleStepClick}
-          steps={steps}
-          width={stepperWidth}
-        />
-      )}
-      <div className="flex-1 overflow-hidden">{renderContent()}</div>
+      <Form {...form}>
+        {shouldShowStepper && (
+          <AutoFormStepper
+            disabled={isStepperDisabled}
+            onStepClick={handleStepClick}
+            steps={steps}
+            width={stepperWidth}
+          />
+        )}
+        <div className="flex-1 overflow-hidden">{renderContent()}</div>
+      </Form>
     </div>
   );
 }
