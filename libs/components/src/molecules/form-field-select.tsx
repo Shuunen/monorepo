@@ -98,7 +98,7 @@ export function FormFieldSelect({ fieldName, fieldSchema, isOptional, logger, re
                   <IconChevronDown className="size-4 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent align="start" className="w-(--radix-popover-trigger-width) p-0">
+              <PopoverContent align="start" className="max-w-md p-0">
                 <VirtualizedOptions
                   fieldName={fieldName}
                   fieldValue={field.value}
