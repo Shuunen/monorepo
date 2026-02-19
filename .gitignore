@@ -27,6 +27,7 @@
 connect.lock
 coverage
 dist
+libs/components/html
 node_modules
 out-tsc
 sample.*
