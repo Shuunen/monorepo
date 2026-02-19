@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
+    "@fontsource-variable/inter": "^5.2.8",
     "@monorepo/utils": "workspace:*",
     "@monorepo/vite-plugins": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.12",
