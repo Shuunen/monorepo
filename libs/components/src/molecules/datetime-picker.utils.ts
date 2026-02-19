@@ -133,7 +133,7 @@ export function calendarDateToUtc(options: { calendarDate: Date | undefined; tim
   return newDate;
 }
 
-const digitRegex = /[0-9]/;
+const digitRegex = /\d/;
 
 /**
  * Check whether a keyboard event key is a single digit character (0-9)
