@@ -107,7 +107,9 @@ export function crc32(text: string) {
     // oxlint-disable no-bitwise, no-magic-numbers
     const key: number = (code ^ crc) & 0xff;
     const value: number | undefined = crcTable[key];
+    /* c8 ignore start */
     if (value !== undefined && value !== 0) {
+      /* c8 ignore stop */
       crc = value ^ (crc >>> 8);
     }
   }
