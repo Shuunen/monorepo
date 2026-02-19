@@ -425,7 +425,7 @@ export const DateNowOrFuture: Story = {
       await userEvent.click(submitButton);
     });
     await step("verify validation error is shown", () => {
-      const errorMessage = canvas.getByText("Date cannot be in the past");
+      const errorMessage = canvas.getByText("Date cannot be in the past.");
       expect(errorMessage).toBeInTheDocument();
     });
     await step("fill date input with future date", async () => {
@@ -473,7 +473,7 @@ export const DateTodayOrFutureWithCodec: Story = {
       await userEvent.click(submitButton);
     });
     await step("verify validation error is shown", () => {
-      const errorMessage = canvas.getByText("Date cannot be in the past");
+      const errorMessage = canvas.getByText("Date cannot be in the past.");
       expect(errorMessage).toBeInTheDocument();
     });
     await step("fill date input with future date", async () => {
