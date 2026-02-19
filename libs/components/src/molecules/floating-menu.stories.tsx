@@ -12,30 +12,39 @@ export default meta;
 
 type Story = StoryObj<typeof FloatingMenu>;
 
+const actions = [
+  {
+    handleClick: () => toastInfo("Casting to tv..."),
+    icon: TvIcon,
+    name: "Cast to TV",
+  },
+  {
+    handleClick: () => toastInfo("Blocking user..."),
+    icon: BanIcon,
+    name: "Block User",
+  },
+  {
+    handleClick: () => toastInfo("Opening settings..."),
+    icon: CogIcon,
+    name: "Open Settings",
+  },
+];
+
 export const Basic: Story = {
   args: {
-    actions: [
-      {
-        handleClick: () => toastInfo("Casting to tv..."),
-        icon: TvIcon,
-        name: "Cast to TV",
-      },
-      {
-        handleClick: () => toastInfo("Blocking user..."),
-        icon: BanIcon,
-        name: "Block User",
-      },
-      {
-        handleClick: () => toastInfo("Opening settings..."),
-        icon: CogIcon,
-        name: "Open Settings",
-      },
-    ],
+    actions,
   },
 };
 
 export const NoActions: Story = {
   args: {
     actions: [],
+  },
+};
+
+export const SettingsRequired: Story = {
+  args: {
+    actions,
+    isSettingsRequired: true,
   },
 };
