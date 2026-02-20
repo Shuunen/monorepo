@@ -24,9 +24,11 @@ export const dateFutureSchema = z
   .date("Mandatory field is missing.")
   .min(startOfDay(tomorrow), { message: "Date cannot be in the past." });
 
+const timeOnlyRegex = /^\d{2}:\d{2}$/;
+
 /**
  * Normalizes a value to a Date object.
- * @param value - The value to normalize. Can be a Date instance, a string, or any other value.
+ * @param value - The value to normalize. Can be a Date instance, a string (ISO date or HH:MM time), or any other value.
  * @returns A Date object if the value is a valid date, otherwise undefined.
  */
 export function normalizeToDate(value: unknown): Date | undefined {
@@ -36,7 +38,16 @@ export function normalizeToDate(value: unknown): Date | undefined {
   if (value instanceof Date) {
     return value;
   }
-  if (typeof value === "string" || typeof value === "number") {
+  if (typeof value === "string") {
+    if (timeOnlyRegex.test(value)) {
+      const [hours, minutes] = value.split(":").map(Number);
+      const date = new Date();
+      date.setHours(hours, minutes, 0, 0);
+      return date;
+    }
+    return new Date(value);
+  }
+  if (typeof value === "number") {
     return new Date(value);
   }
   return undefined;

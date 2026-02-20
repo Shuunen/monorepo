@@ -49,4 +49,14 @@ describe("form-field-date", () => {
   it("normalizeToDate F should return undefined for weird types", () => {
     expect(normalizeToDate({})).toBeUndefined();
   });
+  it("normalizeToDate G should parse a time string HH:MM into a Date with that time", () => {
+    const result = normalizeToDate("14:30");
+    expect(result).toBeInstanceOf(Date);
+    expect(result?.getHours()).toBe(14);
+    expect(result?.getMinutes()).toBe(30);
+  });
+  it("normalizeToDate H should parse a number into a Date", () => {
+    const timestamp = new Date("2024-06-01").getTime();
+    expect(normalizeToDate(timestamp)).toEqual(new Date("2024-06-01"));
+  });
 });

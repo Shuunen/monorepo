@@ -10,24 +10,6 @@ import { dateTodayOrFutureSchema, today, tomorrow } from "./form-field-date.util
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
 
-/** Converts ISO date "YYYY-MM-DD" to display format "DD/MM/YYYY" */
-function isoToDisplay(isoDate: string): string {
-  const [yyyy, mm, dd] = isoDate.split("-");
-  return `${dd}/${mm}/${yyyy}`;
-}
-
-/** Converts ISO date "YYYY-MM-DD" to input format "DDMMYYYY" for masked input */
-function isoToInput(isoDate: string): string {
-  const [yyyy, mm, dd] = isoDate.split("-");
-  return `${dd}${mm}${yyyy}`;
-}
-
-// expect a Date instance input and output a date string
-const isoDateStringToDateInstance = z.codec(z.iso.date(), z.date(), {
-  decode: isoDateString => new Date(isoDateString),
-  encode: date => dateIso10(date),
-});
-
 const meta = {
   component: AutoForm,
   parameters: {
@@ -237,6 +219,12 @@ export const OptionalIsoString: Story = {
     });
   },
 };
+
+// expect a Date instance input and output a date string
+const isoDateStringToDateInstance = z.codec(z.iso.date(), z.date(), {
+  decode: isoDateString => new Date(isoDateString),
+  encode: date => dateIso10(date),
+});
 
 /**
  * Optional date field with codec
@@ -491,6 +479,8 @@ export const DateTodayOrFutureWithCodec: Story = {
   },
 };
 
+const todayDisplay = dateIso10().split("-").toReversed().join("/");
+
 /**
  * Date now or future validation with initial data value of today
  */
@@ -512,8 +502,7 @@ export const DateNowOrFutureWithInitialDataToday: Story = {
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     expect(dateInput).toBeInTheDocument();
     await step("verify initial value is today's date", () => {
-      const todayString = dateIso10();
-      expect(dateInput).toHaveValue(isoToDisplay(todayString));
+      expect(dateInput).toHaveValue(todayDisplay);
     });
     await step("submit form with default today's date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -545,8 +534,7 @@ export const DateNowOrFutureWithDefaultValueToday: Story = {
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     expect(dateInput).toBeInTheDocument();
     await step("verify initial value is today's date from defaultValue", () => {
-      const todayString = dateIso10();
-      expect(dateInput).toHaveValue(isoToDisplay(todayString));
+      expect(dateInput).toHaveValue(todayDisplay);
     });
     await step("submit form with default today's date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -557,6 +545,8 @@ export const DateNowOrFutureWithDefaultValueToday: Story = {
     });
   },
 };
+
+const todayInput = dateIso10().split("-").toReversed().join("");
 
 /**
  * Date from tomorrow to fixed date range validation
@@ -584,10 +574,9 @@ export const DateTomorrowToFixed: Story = {
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     expect(dateInput).toBeInTheDocument();
     await step("fill date input with today's date", async () => {
-      const todayString = dateIso10();
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, isoToInput(todayString));
-      expect(dateInput).toHaveValue(isoToDisplay(todayString));
+      await userEvent.type(dateInput, todayInput);
+      expect(dateInput).toHaveValue(todayDisplay);
     });
     await step("submit form with today's date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -598,12 +587,14 @@ export const DateTomorrowToFixed: Story = {
       expect(errorMessage).toBeInTheDocument();
     });
     await step("fill date input with tomorrow's date", async () => {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const tomorrowString = dateIso10(tomorrow);
+      const tomorrowDate = new Date();
+      tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+      const tomorrowString = dateIso10(tomorrowDate);
+      const tomorrowDisplay = tomorrowString.split("-").toReversed().join("/");
+      const tomorrowInput = tomorrowString.split("-").toReversed().join("");
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, isoToInput(tomorrowString));
-      expect(dateInput).toHaveValue(isoToDisplay(tomorrowString));
+      await userEvent.type(dateInput, tomorrowInput);
+      expect(dateInput).toHaveValue(tomorrowDisplay);
     });
     await step("submit form with tomorrow's date", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -702,6 +693,42 @@ export const TimeOnly: Story = {
       const submittedData = canvas.getByTestId("debug-data-submitted-data");
       expect(submittedData).toHaveTextContent("wakeUpTime");
       expect(submittedData).toHaveTextContent("07:00");
+    });
+  },
+};
+
+const currentTime = new Date().toTimeString().slice(0, 5); // like "16:47"
+
+/**
+ * Time-only field with prefault value of current time and render: "time"
+ */
+export const TimeOnlyWithPrefaultCurrentTime: Story = {
+  args: {
+    schemas: [
+      z.object({
+        currentTime: field(z.string().prefault(currentTime), {
+          label: "Current Time",
+          placeholder: "Current time prefault",
+          render: "time",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const timeInput = canvas.getByTestId("input-time-current-time");
+    expect(timeInput).toBeInTheDocument();
+    await step("verify prefault value is current time", () => {
+      expect(timeInput).toHaveValue(currentTime);
+    });
+    await step("submit form with prefault current time", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify submitted data contains the current time", () => {
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      expect(submittedData).toHaveTextContent("currentTime");
+      expect(submittedData).toHaveTextContent(currentTime);
     });
   },
 };

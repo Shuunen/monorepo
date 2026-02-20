@@ -141,6 +141,40 @@ export const LabelGeneration: Story = {
 };
 
 /**
+ * Select with prefault value (E2E: verify default value initialization and submit)
+ */
+export const WithPrefault: Story = {
+  args: {
+    schemas: [
+      z.object({
+        color: field(z.enum(["red", "green", "blue"]).prefault("blue"), {
+          label: "Favorite Color",
+          placeholder: "Choose a color",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+    const colorTrigger = canvas.getByTestId("button-color");
+
+    await step("verify prefault value is displayed", () => {
+      expect(colorTrigger).toHaveTextContent("Blue");
+    });
+
+    await step("submit form with prefault value", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+
+    await step("verify submitted data matches prefault value", () => {
+      expect(submittedData).toContainHTML(stringify({ color: "blue" }, true));
+    });
+  },
+};
+
+/**
  * Optional select field
  */
 export const Optional: Story = {
