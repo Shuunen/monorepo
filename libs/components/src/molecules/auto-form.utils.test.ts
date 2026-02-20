@@ -20,6 +20,7 @@ import {
   getInitialStep,
   getKeyMapping,
   getLastAccessibleStepIndex,
+  getSchemaDefaultValue,
   getStepMetadata,
   getUnwrappedSchema,
   getZodEnumOptions,
@@ -1701,5 +1702,44 @@ describe("auto-form.utils", () => {
       }),
     });
     expect(hasCustomErrors(schema, { color: "blue", size: "large" })).toBe(false);
+  });
+
+  // getSchemaDefaultValue
+  it("getSchemaDefaultValue A should return default value from a default-wrapped schema", () => {
+    const schema = z.string().default("hello");
+    expect(getSchemaDefaultValue(schema)).toBe("hello");
+  });
+  it("getSchemaDefaultValue B should return default value from a prefault-wrapped schema", () => {
+    const schema = z.string().prefault("world");
+    expect(getSchemaDefaultValue(schema)).toBe("world");
+  });
+  it("getSchemaDefaultValue C should return false for boolean schema without default", () => {
+    const schema = z.boolean();
+    expect(getSchemaDefaultValue(schema)).toBe(false);
+  });
+  it("getSchemaDefaultValue D should return the default value for boolean with default", () => {
+    const schema = z.boolean().default(true);
+    expect(getSchemaDefaultValue(schema)).toBe(true);
+  });
+  it("getSchemaDefaultValue E should return Date for date schema with prefault", () => {
+    const date = new Date("2024-06-01");
+    const schema = z.date().prefault(date);
+    expect(getSchemaDefaultValue(schema)).toEqual(date);
+  });
+  it("getSchemaDefaultValue F should return undefined for string schema without default", () => {
+    const schema = z.string();
+    expect(getSchemaDefaultValue(schema)).toBeUndefined();
+  });
+  it("getSchemaDefaultValue G should return undefined for number schema without default", () => {
+    const schema = z.number();
+    expect(getSchemaDefaultValue(schema)).toBeUndefined();
+  });
+  it("getSchemaDefaultValue H should return undefined for date schema without default", () => {
+    const schema = z.date();
+    expect(getSchemaDefaultValue(schema)).toBeUndefined();
+  });
+  it("getSchemaDefaultValue I should return undefined for array schema with prefault", () => {
+    const schema = z.array(z.string()).prefault([]);
+    expect(getSchemaDefaultValue(schema)).toBeUndefined();
   });
 });

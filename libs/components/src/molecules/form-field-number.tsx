@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
 import { FormControl } from "../atoms/form";
 import { Input } from "../atoms/input";
 import { getFieldMetadataOrThrow, isZodNumber } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
+
+function toLocalValue(value: unknown) {
+  return value === undefined || value === null ? "" : String(value);
+}
 
 function NumberInput({
   field,
@@ -14,9 +18,10 @@ function NumberInput({
   disabled: boolean;
   placeholder?: string;
 }) {
-  const [localValue, setLocalValue] = useState(() =>
-    field.value === undefined || field.value === null ? "" : String(field.value),
-  );
+  const [localValue, setLocalValue] = useState(() => toLocalValue(field.value));
+  useEffect(() => {
+    setLocalValue(toLocalValue(field.value));
+  }, [field.value]);
 
   return (
     <FormControl>

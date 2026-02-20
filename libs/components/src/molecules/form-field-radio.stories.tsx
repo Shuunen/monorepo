@@ -121,6 +121,40 @@ export const CustomLabels: Story = {
 };
 
 /**
+ * Radio group with prefault value (E2E: verify default value initialization and submit)
+ */
+export const WithPrefault: Story = {
+  args: {
+    schemas: [
+      z.object({
+        color: field(z.enum(["red", "green", "blue"]).prefault("green"), {
+          label: "Favourite Color",
+          render: "radio",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+
+    await step("verify prefault value is selected", () => {
+      const greenRadio = canvas.getByRole("radio", { name: /green/i });
+      expect(greenRadio).toHaveAttribute("data-state", "checked");
+    });
+
+    await step("submit form with prefault value", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+
+    await step("verify submitted data matches prefault value", () => {
+      expect(submittedData).toContainHTML(stringify({ color: "green" }, true));
+    });
+  },
+};
+
+/**
  * Radio group with initial value (E2E: verify initial state and submit)
  */
 export const WithInitialValue: Story = {

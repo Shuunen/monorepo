@@ -76,6 +76,41 @@ export const Basic: Story = {
 };
 
 /**
+ * Password field with prefault value (E2E: verify default value initialization and submit)
+ */
+export const WithPrefault: Story = {
+  args: {
+    schemas: [
+      z.object({
+        password: field(z.string().min(8, "Password must be at least 8 characters").prefault("DefaultPass123"), {
+          label: "Password",
+          placeholder: "Enter your password",
+          render: "password",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const passwordInput = canvas.getByTestId("input-password-password") as HTMLInputElement;
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+
+    await step("verify prefault value is displayed", () => {
+      expect(passwordInput).toHaveValue("DefaultPass123");
+    });
+
+    await step("submit form with prefault value", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+
+    await step("verify submitted data matches prefault value", () => {
+      expect(submittedData).toContainHTML(stringify({ password: "DefaultPass123" }, true));
+    });
+  },
+};
+
+/**
  * Password field with initial value (E2E: verify initial display and submit)
  */
 export const WithInitialValue: Story = {

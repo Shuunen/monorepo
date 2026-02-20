@@ -42,6 +42,13 @@ export function getFieldMetadata(fieldSchema?: z.ZodType): AutoFormFieldMetadata
   return fieldSchema.meta() as AutoFormFieldMetadata;
 }
 
+export function getUnwrappedSchema(schema: z.ZodType) {
+  if ("unwrap" in schema && ["default", "optional", "prefault"].includes(schema.type)) {
+    return getUnwrappedSchema((schema as z.ZodOptional<z.ZodType>).unwrap());
+  }
+  return schema;
+}
+
 /**
  * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
  * Returns an array of {label, value} objects. If custom options are provided in metadata, they are used.
@@ -54,19 +61,14 @@ export function getZodEnumOptions(fieldSchema: z.ZodType) {
   if (metadata && "options" in metadata && metadata.options) {
     return Result.ok(metadata.options);
   }
+  const unwrapped = getUnwrappedSchema(fieldSchema);
   let rawOptions: string[] = [];
-  if (fieldSchema.type === "enum") {
-    rawOptions = (fieldSchema as z.ZodEnum).options as string[];
-  } else if (
-    fieldSchema.type === "optional" &&
-    (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.type === "enum"
-  ) {
-    const childSchema = (fieldSchema as z.ZodOptional<z.ZodEnum>).unwrap();
-    const childMetadata = childSchema.meta();
-    if (childMetadata?.options) {
-      return Result.ok(childMetadata.options as SelectOption[]);
+  if (unwrapped.type === "enum") {
+    const unwrappedMetadata = getFieldMetadata(unwrapped);
+    if (unwrappedMetadata && "options" in unwrappedMetadata && unwrappedMetadata.options) {
+      return Result.ok(unwrappedMetadata.options);
     }
-    rawOptions = (fieldSchema as z.ZodOptional<z.ZodEnum>).def.innerType.options as string[];
+    rawOptions = (unwrapped as z.ZodEnum).options as string[];
   } else {
     return Result.error("failed to get enum options from schema");
   }
@@ -75,13 +77,6 @@ export function getZodEnumOptions(fieldSchema: z.ZodType) {
     value: option,
   }));
   return Result.ok(options);
-}
-
-export function getUnwrappedSchema(schema: z.ZodType) {
-  if ("unwrap" in schema && ["default", "optional", "prefault"].includes(schema.type)) {
-    return getUnwrappedSchema((schema as z.ZodOptional<z.ZodType>).unwrap());
-  }
-  return schema;
 }
 
 /**
@@ -696,6 +691,27 @@ export async function mockSubmit(
     logger.showError("Form submission failed.");
   }
   return { submission };
+}
+
+/**
+ * Extracts the default value from a Zod schema for form field initialization.
+ * Handles "default" and "prefault" wrapped schemas via `.def.defaultValue`.
+ * For boolean schemas without an explicit default, returns `false` (booleans always have a value).
+ * @param fieldSchema - The Zod schema to extract the default value from
+ * @returns The default value to initialize the field with, or `undefined` if no initialization is needed
+ */
+export function getSchemaDefaultValue(fieldSchema: z.ZodType): unknown {
+  if (["default", "prefault"].includes(fieldSchema.type)) {
+    const innerSchema = (fieldSchema as z.ZodDefault).unwrap() as z.ZodType;
+    if (isZodArray(innerSchema)) {
+      return undefined;
+    }
+    return (fieldSchema as z.ZodDefault).def.defaultValue;
+  }
+  if (isZodBoolean(fieldSchema)) {
+    return false;
+  }
+  return undefined;
 }
 
 /**

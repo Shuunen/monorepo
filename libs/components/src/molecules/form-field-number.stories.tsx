@@ -1,7 +1,7 @@
 import { isBrowserEnvironment, Logger, stringify } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { expect, userEvent, within } from "storybook/test";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
 import { field } from "./auto-form.utils";
@@ -70,6 +70,40 @@ export const Basic: Story = {
 
     await step("verify submitted data contains number", () => {
       expect(submittedData).toContainHTML(stringify({ age: 25 }, true));
+    });
+  },
+};
+
+/**
+ * Number field with prefault value (E2E: verify default value initialization and submit)
+ */
+export const WithPrefault: Story = {
+  args: {
+    schemas: [
+      z.object({
+        quantity: field(z.number().prefault(42), {
+          label: "Quantity",
+          placeholder: "Enter quantity",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const numberInput = canvas.getByTestId("input-number-quantity") as HTMLInputElement;
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+
+    await step("verify prefault value is displayed", async () => {
+      await waitFor(() => expect(numberInput).toHaveValue(42));
+    });
+
+    await step("submit form with prefault value", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+
+    await step("verify submitted data matches prefault value", () => {
+      expect(submittedData).toContainHTML(stringify({ quantity: 42 }, true));
     });
   },
 };

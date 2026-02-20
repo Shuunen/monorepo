@@ -179,8 +179,6 @@ export type AutoFormFieldBaseMetadata = {
   keyOut?: string;
   /** Zod codec to transform input and output data. */
   codec?: z.ZodCodec;
-  /** Custom options for select/enum fields with label/value pairs. */
-  options?: SelectOption[];
   /** Custom error validation function that receives the current form data and returns an error message string or undefined. Useful for cross-field validation. */
   errors?: (data: AutoFormData) => string | undefined;
   /** Force the field to be rendered with a specific component, else use automatic field-schema detection */
@@ -210,9 +208,19 @@ export type AutoFormFieldMetadata =
   | AutoFormFieldAcceptMetadata
   | AutoFormFieldBaseMetadata
   | AutoFormFieldDateMetadata
+  | AutoFormFieldRadioMetadata
   | AutoFormFieldSectionMetadata
+  | AutoFormFieldSelectMetadata
   | AutoFormFieldsMetadata
   | AutoFormFormsMetadata;
+
+export type AutoFormFieldSelectMetadata = Simplify<
+  AutoFormFieldBaseMetadata & {
+    /** The options for the select field, with label and value */
+    options: SelectOption[];
+    render: "select";
+  }
+>;
 
 /** Option for select/enum fields in the auto-generated form. */
 export type SelectOption = {
@@ -220,6 +228,41 @@ export type SelectOption = {
   label: string;
   /** The actual value for the option, like "US" */
   value: string;
+};
+
+export type AutoFormFieldRadioMetadata = Simplify<
+  AutoFormFieldBaseMetadata & {
+    /** The options for the radio field, with label and value */
+    options: RadioOption[];
+    /** Optional, show the list of options in vertical or horizontal layout, default to true (vertical) */
+    isVertical?: boolean;
+    /** Optional, display the radio options in specific style */
+    variant?: "card" | "default";
+    /** Optional, allow the radio options to grow and fill the available space */
+    fullWidth?: boolean;
+    render: "radio";
+  }
+>;
+
+/** Option for radio fields in the auto-generated form. */
+export type RadioOption = {
+  /** The display label for the option, like "United States" */
+  label: string;
+  /** An optional description for the option, like "Population: 331 million" */
+  description?: string;
+  /** The actual value for the option, like "US" */
+  value: string;
+  /** Optional icon for the radio option, can be a JSX element or a function that returns a JSX element based on the option data */
+  icon?: JSX.Element | ((params: Record<string, unknown>) => JSX.Element);
+  /** Optional color for the icon */
+  iconColor?:
+    | "text-black"
+    | "text-primary"
+    | "text-secondary"
+    | "text-success"
+    | "text-danger"
+    | "text-warning"
+    | "text-info";
 };
 
 /** Props for the AutoFormSubmissionStep component, which displays the submission status of the form. */

@@ -65,6 +65,9 @@ export function DatetimePicker({
       setDate(defaultValue);
       setDateValue(dateIsoToReadableDatetime(defaultValue, false));
       setMonth(defaultValue);
+      if (time) {
+        setTimeValue(formatTime(defaultValue));
+      }
     }
   }, [defaultValue?.getTime()]);
 

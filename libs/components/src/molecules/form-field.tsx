@@ -12,7 +12,7 @@ import type { z } from "zod";
 import { FormField, FormItem, FormMessage } from "../atoms/form";
 import { cn } from "../shadcn/utils";
 import type { AutoFormStepState, AutoFormSubformOptions } from "./auto-form.types";
-import { getFieldMetadataOrThrow } from "./auto-form.utils";
+import { getFieldMetadataOrThrow, getSchemaDefaultValue } from "./auto-form.utils";
 import { computeCustomErrorMessage, getCustomErrorAction } from "./form-field-error.utils";
 import "./form-field.css";
 import { FormFieldLabel } from "./form-field.utils";
@@ -40,12 +40,25 @@ export function FormFieldBase(props: FormFieldBaseProps) {
   const indented = metadata.dependsOn !== undefined || metadata.isVisible !== undefined;
   const customErrorFn = "errors" in metadata ? metadata.errors : undefined;
   const watchedValues = useWatch({ disabled: !customErrorFn });
-  const { setError, clearErrors } = useFormContext();
+  const { setError, clearErrors, setValue, getValues } = useFormContext();
   const lastCustomErrorRef = useRef<string | undefined>(undefined);
   const customErrorMessage = useMemo(
     () => computeCustomErrorMessage(customErrorFn, watchedValues),
     [watchedValues, customErrorFn],
   );
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to run this once on mount
+  useEffect(() => {
+    const currentValue = getValues(fieldName);
+    if (currentValue !== undefined || isOptional) {
+      return;
+    }
+    const defaultValue = getSchemaDefaultValue(fieldSchema);
+    if (defaultValue === undefined) {
+      return;
+    }
+    props.logger?.info(`initializing field "${fieldName}" value to "${defaultValue}", it was undefined`);
+    setValue(fieldName, defaultValue);
+  }, []);
   useEffect(() => {
     const action = getCustomErrorAction(Boolean(customErrorFn), customErrorMessage, lastCustomErrorRef.current);
     if (action.type === "set-error") {
