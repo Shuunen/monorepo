@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useFormContext } from "react-hook-form";
 import type { z } from "zod";
 import { FormControl, FormDescription } from "../atoms/form";
 import { Switch } from "../atoms/switch";
@@ -21,20 +19,7 @@ export function FormFieldBoolean({ fieldName, fieldSchema, isOptional, logger, r
   if (!isBoolean) {
     throw new Error(`Field "${fieldName}" is not a boolean`);
   }
-  const props = { fieldName, fieldSchema: schema, isOptional, logger, readonly };
-  const { setValue, getValues } = useFormContext();
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to run this once on mount
-  useEffect(() => {
-    const currentValue = getValues(fieldName);
-    if (currentValue !== undefined || isOptional) {
-      return;
-    }
-    const targetValue = ["default", "prefault"].includes(fieldSchema.type)
-      ? (fieldSchema as z.ZodDefault).def.defaultValue
-      : false;
-    logger?.debug(`initializing boolean field "${fieldName}" value to "${targetValue}", it was undefined`);
-    setValue(fieldName, targetValue);
-  }, []);
+  const props = { fieldName, fieldSchema, isOptional, logger, readonly };
   return (
     <FormFieldBase {...props} showLabel={false}>
       {({ field }) => (

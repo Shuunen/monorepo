@@ -75,6 +75,41 @@ export const Basic: Story = {
 };
 
 /**
+ * Textarea field with prefault value (E2E: verify default value initialization and submit)
+ */
+export const WithPrefault: Story = {
+  args: {
+    schemas: [
+      z.object({
+        description: field(z.string().prefault("Default description text"), {
+          label: "Description",
+          placeholder: "Enter your description",
+          render: "textarea",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const textarea = canvas.getByTestId("textarea-description") as HTMLTextAreaElement;
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+
+    await step("verify prefault value is displayed", () => {
+      expect(textarea).toHaveValue("Default description text");
+    });
+
+    await step("submit form with prefault value", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+
+    await step("verify submitted data matches prefault value", () => {
+      expect(submittedData).toContainHTML(stringify({ description: "Default description text" }, true));
+    });
+  },
+};
+
+/**
  * Textarea field with initial value (E2E: verify initial display and submit)
  */
 export const WithInitialValue: Story = {

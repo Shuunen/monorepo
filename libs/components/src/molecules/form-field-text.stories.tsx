@@ -74,6 +74,40 @@ export const Basic: Story = {
 };
 
 /**
+ * Text field with prefault value (E2E: verify default value initialization and submit)
+ */
+export const WithPrefault: Story = {
+  args: {
+    schemas: [
+      z.object({
+        username: field(z.string().prefault("default_user"), {
+          label: "Username",
+          placeholder: "Enter your username",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const textInput = canvas.getByTestId("input-text-username") as HTMLInputElement;
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+
+    await step("verify prefault value is displayed", () => {
+      expect(textInput).toHaveValue("default_user");
+    });
+
+    await step("submit form with prefault value", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+
+    await step("verify submitted data matches prefault value", () => {
+      expect(submittedData).toContainHTML(stringify({ username: "default_user" }, true));
+    });
+  },
+};
+
+/**
  * Text field with initial value (E2E: verify initial display and submit)
  */
 export const WithInitialValue: Story = {
