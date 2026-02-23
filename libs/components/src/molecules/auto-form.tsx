@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn, nbPercentMax, scrollToElement, sleep } from "@monorepo/utils";
 import { Link } from "@tanstack/react-router";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../atoms/button";
 import { Form } from "../atoms/form";
@@ -89,11 +89,19 @@ export function AutoForm({
   const finalLabels = { ...defaultLabels, ...labels };
   const [mode, setMode] = useState<"initial" | "subform">("initial");
   const [subformOptions, setSubformOptions] = useState<AutoFormSubformOptions | undefined>(undefined);
+  const [pendingValidation, setPendingValidation] = useState(false);
   const form = useForm({
     defaultValues,
     mode: "onBlur",
     resolver: (values, context, options) => zodResolver(filterSchema(currentSchema, values))(values, context, options),
   });
+
+  useEffect(() => {
+    if (pendingValidation) {
+      void form.trigger();
+      setPendingValidation(false);
+    }
+  }, [pendingValidation, form]);
 
   function updateFormData() {
     const updatedData = { ...formData, ...form.getValues() };
@@ -108,7 +116,25 @@ export function AutoForm({
     if (!onSubmit) {
       return;
     }
-    const cleanedData = normalizeData(schemas, { ...formData, ...form.getValues() });
+    const data = { ...formData, ...form.getValues() };
+
+    for (const [index, schema] of schemas.entries()) {
+      const stepState = getStepMetadata(schema)?.state;
+      if (stepState === "upcoming" || stepState === "readonly") {
+        continue;
+      }
+      const filtered = filterSchema(schema, data);
+      const validation = filtered.safeParse(data);
+      if (!validation.success) {
+        logger?.error("Validation failed at step", { errors: validation.error.issues, step: index });
+        setShowSummary(false);
+        setCurrentStep(index);
+        setPendingValidation(true);
+        return;
+      }
+    }
+
+    const cleanedData = normalizeData(schemas, data);
     logger?.info("Final form submitted", { cleanedData });
     const result = await onSubmit(cleanedData);
     if (useSubmissionStep) {

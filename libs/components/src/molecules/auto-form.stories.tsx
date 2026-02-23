@@ -214,6 +214,22 @@ export const MultiStep: Story = {
       expect(submitButton).toBeInTheDocument();
       expect(submitButton).toBeEnabled();
     });
+    await step("step 3 - fill fields and submit (should fail because other step are not filled)", async () => {
+      const addressInput = canvas.getByTestId("input-text-address");
+      await userEvent.type(addressInput, "123 Main St");
+      const cityInput = canvas.getByTestId("input-text-city");
+      await userEvent.type(cityInput, "Metropolis");
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      expect(submitButton).toBeEnabled();
+      await userEvent.click(submitButton);
+      expect(submittedData).toContainHTML(stringify({}));
+      const step1 = canvas.getByTestId("button-step-step-1");
+      // first step with validation issues
+      expect(step1).toHaveAttribute("data-active", "true");
+      const errorsElements = await canvas.findAllByRole("alert");
+      const errors = Array.from(errorsElements).map(el => el.textContent);
+      expect(errors).toStrictEqual(["Invalid email address", "Invalid input: expected string, received undefined"]);
+    });
     await step("go back to step 1 and fill fields", async () => {
       const step1Button = canvas.getByRole("button", { name: "Step 1" });
       await userEvent.click(step1Button);
@@ -238,20 +254,10 @@ export const MultiStep: Story = {
       const nextButton = canvas.getByRole("button", { name: "Next" });
       await userEvent.click(nextButton);
     });
-    step("submit button still disabled - step 3 not filled", () => {
-      const submitButton = canvas.getByRole("button", { name: "Submit" });
-      expect(submitButton).toBeEnabled();
-    });
-    await step("step 3 - fill fields and submit", async () => {
-      const addressInput = canvas.getByTestId("input-text-address");
-      await userEvent.type(addressInput, "123 Main St");
-      const cityInput = canvas.getByTestId("input-text-city");
-      await userEvent.type(cityInput, "Metropolis");
+    await step("submit and verify submitted data", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       expect(submitButton).toBeEnabled();
       await userEvent.click(submitButton);
-    });
-    step("verify submitted data", () => {
       const expectedData = {
         email: "john.doe@example.com",
         name: "John Doe",
