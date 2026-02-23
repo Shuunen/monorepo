@@ -1,10 +1,13 @@
+import { Logger } from "@monorepo/utils";
 import fs from "node:fs";
 import path from "node:path";
-import { Logger } from "@monorepo/utils";
+import { fileURLToPath } from "node:url";
 
 // This script lints user scripts in the src directory according to guidelines for user scripts inside `.github/copilot-instructions.md`
 // Run this script with `nx lint user-scripts` to check for compliance with the guidelines.
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const srcDir = path.resolve(__dirname, "../src");
 const filePattern = /\.user\.js$/;
 const logger = new Logger();

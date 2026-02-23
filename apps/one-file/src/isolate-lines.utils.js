@@ -25,5 +25,8 @@ export function isolateLines(list) {
  * @returns {string} the list as a string with line breaks
  */
 export function linesToList(lines) {
-  return lines.join("\n\n").trim();
+  return lines
+    .map(line => line.trim())
+    .join("\n\n")
+    .trim();
 }

@@ -1,5 +1,4 @@
 import { fireEvent, render } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
 import { RuleLine, Rules } from "./rules";
 import type { Rule } from "./types";
 

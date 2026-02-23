@@ -1,10 +1,9 @@
-import { Result, toastError, toastSuccess } from "@monorepo/utils";
-import { describe, expect, it, vi } from "vitest";
+import { functionReturningVoid, Result, toastError, toastSuccess } from "@monorepo/utils";
 import { type AppWriteTaskModel, addTask, getTasks, updateTask } from "./database.utils";
 import { logger } from "./logger.utils";
 import { handleTasksUpload, readJsonFile, selectJsonFile, uploadTasksToDatabase } from "./upload.utils";
 
-vi.mock("@monorepo/utils", async () => {
+vi.mock(import("@monorepo/utils"), async () => {
   const actual = await vi.importActual("@monorepo/utils");
   return {
     ...actual,
@@ -13,19 +12,12 @@ vi.mock("@monorepo/utils", async () => {
   };
 });
 
-vi.mock("./database.utils", () => ({
+vi.mock(import("./database.utils"), () => ({
   addTask: vi.fn(),
   getTasks: vi.fn(),
   modelToLocalTask: vi.fn(task => ({ ...task, id: task.$id })),
   modelToRemoteTask: vi.fn(task => task),
   updateTask: vi.fn(),
-}));
-
-vi.mock("./logger.utils", () => ({
-  logger: {
-    error: vi.fn(),
-    info: vi.fn(),
-  },
 }));
 
 // Helper function to create a mock file input element
@@ -186,11 +178,12 @@ describe("upload.utils", () => {
     const mockTasks = [createMockTask()];
     const mockFile = new File([JSON.stringify(mockTasks)], "test.json");
     const createElementSpy = mockDocumentCreateElement([mockFile]);
+    const loggerSpy = vi.spyOn(logger, "error").mockImplementationOnce(functionReturningVoid);
     vi.mocked(getTasks).mockResolvedValue(Result.ok([]));
     vi.mocked(addTask).mockResolvedValue(Result.error("Create failed"));
     await handleTasksUpload();
     expect(toastError).toHaveBeenCalledWith("Upload completed with 1 errors. Check console for details.");
-    expect(logger.error).toHaveBeenCalled();
+    expect(loggerSpy).toHaveBeenCalled();
     createElementSpy.mockRestore();
   });
 

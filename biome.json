@@ -173,9 +173,9 @@
       }
     },
     {
-      "includes": ["**/*.test.ts", "**/*.test.js"],
+      "includes": ["**/*.test.ts", "**/*.test.js", "**/*.test.tsx", "**/vitest.*.ts", "**/*.mock.ts"],
       "javascript": {
-        "globals": ["describe", "mock", "it", "beforeEach", "afterEach", "navigator", "expect", "vi"]
+        "globals": ["describe", "mock", "it", "beforeEach", "afterEach", "navigator", "expect", "expectTypeOf", "vi"]
       },
       "linter": {
         "rules": {

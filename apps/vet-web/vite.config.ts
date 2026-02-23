@@ -15,7 +15,6 @@ export default defineConfig({
   },
   cacheDir: "../../node_modules/.vite/apps/vet-web",
   plugins: [
-    // @ts-expect-error type issue
     tanstackRouter({
       autoCodeSplitting: true,
       target: "react",
@@ -28,7 +27,6 @@ export default defineConfig({
     host: "localhost",
     port: 4300,
   },
-  root: __dirname,
   server: {
     allowedHosts: process.env.ALLOWED_HOSTS?.split(","),
     host: "localhost",

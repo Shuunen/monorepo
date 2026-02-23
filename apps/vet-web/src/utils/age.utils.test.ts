@@ -1,5 +1,4 @@
 /** biome-ignore-all lint/style/useNamingConvention: it'ok here */
-import { describe, expect, it } from "vitest";
 import { ageSchema, ages } from "./age.utils";
 
 describe("Ages Schema Tests", () => {

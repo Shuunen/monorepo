@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { applyRules } from "./utils";
 
 describe("utils", () => {

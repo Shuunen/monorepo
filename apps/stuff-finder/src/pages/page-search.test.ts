@@ -1,15 +1,15 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockItem } from "../utils/mock.utils";
 import { navigate } from "../utils/navigation.utils";
 import { state } from "../utils/state.utils";
 import { search } from "./page-search.const";
 
 // Mock navigation utils
-vi.mock("../utils/navigation.utils", () => ({
+vi.mock(import("../utils/navigation.utils"), () => ({
   navigate: vi.fn(),
 }));
 
 // Mock fuse.js/basic
+// oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("fuse.js/basic", () => {
   class MockFuse {
     items: unknown[];

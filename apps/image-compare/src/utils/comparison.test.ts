@@ -1,10 +1,9 @@
 /** biome-ignore-all lint/style/useNamingConvention: it'ok */
-import { describe, expect, it } from "vitest";
 import {
-  type ContestState,
   calculateNewPan,
   calculateNewZoom,
   calculateSliderPosition,
+  type ContestState,
   createContestState,
   type DragStartPosition,
   getCursorType,

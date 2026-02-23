@@ -1,4 +1,3 @@
-import { expectTypeOf } from "vitest";
 import { hasOwn } from "./functions.js";
 import { storage } from "./storage.js";
 

@@ -13,7 +13,7 @@ export default defineConfig({
     },
     // environment: 'happy-dom',
     globals: true,
-    include: ["./*.test.ts"],
+    include: ["src/**/*.test.ts"],
     pool: "threads",
     reporters: ["default"],
     watch: false,

@@ -1,5 +1,3 @@
-import { vi } from "vitest";
-
 // Mock fetch to prevent network calls during tests
 globalThis.fetch = vi.fn(() =>
   Promise.resolve({

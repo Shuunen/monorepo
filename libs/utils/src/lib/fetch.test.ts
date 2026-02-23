@@ -1,4 +1,3 @@
-import { expect, it, vi } from "vitest";
 import { fetchJson } from "./fetch.js";
 
 // Mock fetch globally

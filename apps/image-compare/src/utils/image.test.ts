@@ -1,6 +1,5 @@
 /** biome-ignore-all lint/style/useNamingConvention: it'ok */
-import { objectSerialize, sleep } from "@monorepo/utils";
-import { describe, expect, it, vi } from "vitest";
+import { functionReturningVoid, objectSerialize, sleep } from "@monorepo/utils";
 import {
   fetchImageMetadata,
   getContainedSize,
@@ -9,13 +8,6 @@ import {
   isDragLeavingContainer,
 } from "./image.utils";
 import { logger } from "./logger.utils";
-
-vi.mock("./logger.utils", () => ({
-  logger: {
-    info: vi.fn(),
-    showError: vi.fn(),
-  },
-}));
 
 describe("image.utils", () => {
   describe("readImageFile", () => {
@@ -59,8 +51,9 @@ describe("image.utils", () => {
     it("handleMultipleFilesUpload A should show error for single file", () => {
       const file = new File(["content"], "test.jpg", { type: "image/jpeg" });
       const fileList = { 0: file, item: () => file, length: 1 } as unknown as FileList;
+      const spy = vi.spyOn(logger, "showError").mockImplementation(functionReturningVoid);
       handleMultipleFilesUpload(fileList, { onContestStart: vi.fn() });
-      expect(logger.showError).toHaveBeenCalledWith("Please drop 2 or more images to compare.");
+      expect(spy).toHaveBeenCalledWith("Please drop 2 or more images to compare.");
     });
 
     it("handleMultipleFilesUpload B should handle two files for comparison", async () => {
@@ -76,6 +69,7 @@ describe("image.utils", () => {
       const onRightImageUpdate = vi.fn();
       const onLeftMetadataUpdate = vi.fn();
       const onRightMetadataUpdate = vi.fn();
+      const spy = vi.spyOn(logger, "info").mockImplementation(functionReturningVoid);
       handleMultipleFilesUpload(fileList, {
         onLeftImageUpdate,
         onLeftMetadataUpdate,
@@ -85,8 +79,8 @@ describe("image.utils", () => {
       await sleep(20); // Wait for async FileReader operations
       expect(onLeftImageUpdate).toHaveBeenCalled();
       expect(onRightImageUpdate).toHaveBeenCalled();
-      expect(logger.info).toHaveBeenCalledWith("Left image updated via drag and drop.");
-      expect(logger.info).toHaveBeenCalledWith("Right image updated via drag and drop.");
+      expect(spy).toHaveBeenCalledWith("Left image updated via drag and drop.");
+      expect(spy).toHaveBeenCalledWith("Right image updated via drag and drop.");
     });
 
     it("handleMultipleFilesUpload C should handle more than two files for contest", async () => {

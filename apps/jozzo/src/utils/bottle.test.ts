@@ -1,4 +1,3 @@
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { asciiBottle, getBottles, pour } from "./bottle.utils";
 import type { Bottle } from "./colors.utils";
 import { logger } from "./logger.utils";

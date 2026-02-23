@@ -18,7 +18,6 @@ export default defineConfig({
     host: "localhost",
     port: 4300,
   },
-  root: __dirname,
   server: {
     host: "localhost",
     port: 4200,
@@ -34,7 +33,7 @@ export default defineConfig({
     globals: true,
     include: ["src/**/*.test.{ts,tsx}"],
     reporters: ["dot"],
-    setupFiles: ["./src/vitest.setup.ts"],
+    setupFiles: ["./vitest.setup.ts"],
     silent: true,
     watch: false,
   },

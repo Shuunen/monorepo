@@ -1,5 +1,4 @@
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
-import { expectTypeOf } from "vitest";
 import {
   backdrop,
   css,

@@ -1,4 +1,3 @@
-import { expect, it } from "vitest";
 import { stuffToMessage } from "./logger.utils";
 
 it("stuffToMessage A", () => {

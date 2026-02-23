@@ -1,4 +1,5 @@
 import { setProjectAnnotations } from "@storybook/react-vite";
+// oxlint-disable-next-line vitest/no-importing-vitest-globals
 import { beforeAll } from "vitest";
 // oxlint-disable-next-line no-namespace
 import * as projectAnnotations from "./preview";

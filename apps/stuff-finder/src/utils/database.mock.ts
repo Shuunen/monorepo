@@ -1,6 +1,5 @@
 import { functionReturningVoid, nbDaysInWeek, sleep } from "@monorepo/utils";
 import type { Models } from "appwrite";
-import { vi } from "vitest";
 import type { ItemModel } from "../types/item.types";
 import { mockItemModel } from "./mock.utils";
 

@@ -2,6 +2,7 @@ import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { alignForSnap, clone, nbMsInMinute, Result, sleep } from "@monorepo/utils";
 import { databaseMock } from "./database.mock";
 import { removeAppWriteFields } from "./database.utils";
+import { mockFetch } from "./fetch.mock";
 import {
   addItem,
   areItemsEquivalent,
@@ -19,10 +20,11 @@ import {
   updateItem,
 } from "./item.utils";
 import { logger } from "./logger.utils";
-import { mockFetch, mockItem, mockState } from "./mock.utils";
+import { mockItem, mockState } from "./mock.utils";
 
 if (!GlobalRegistrator.isRegistered) GlobalRegistrator.register();
 
+// oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("appwrite", () => databaseMock.appwrite);
 
 globalThis.fetch = mockFetch;

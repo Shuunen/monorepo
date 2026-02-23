@@ -1,4 +1,3 @@
-import { expect, it } from "vitest";
 import { cleanTrackers } from "./clean-trackers.utils";
 
 it("clean trackers A", () => {

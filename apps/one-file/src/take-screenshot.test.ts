@@ -1,4 +1,3 @@
-import { expect, it } from "vitest";
 import type { FfProbeOutput } from "./take-screenshot.types";
 import {
   emptyMetadata,

@@ -1,13 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
 import { Comparison } from "./comparison.tab";
-
-// Mock framer-motion to avoid animation issues in tests
-vi.mock("framer-motion", () => ({
-  motion: {
-    div: ({ children, ...props }: { children: React.ReactNode }) => <div {...props}>{children}</div>,
-  },
-}));
 
 describe("comparison", () => {
   it("Comparison A should render successfully", () => {

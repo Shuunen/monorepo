@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { injectMark } from "./string-inject-mark.js";
 
 describe("string-inject-mark", () => {

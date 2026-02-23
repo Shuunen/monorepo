@@ -41,6 +41,7 @@ if (electronIsDev)
   // Wait for electron app to be ready.
   await app.whenReady()
   // Remove default menu
+  // oxlint-disable-next-line unicorn/prefer-module
   const { Menu } = require('electron')
   Menu.setApplicationMenu(null)
   // Security - Set Content-Security-Policy based on whether or not we are in dev mode.
@@ -48,6 +49,7 @@ if (electronIsDev)
   // Initialize our app, build windows, and load content.
   await myCapacitorApp.init()
   // Register global shortcut for toggling DevTools (Ctrl+Shift+I)
+  // oxlint-disable-next-line unicorn/prefer-module
   const { globalShortcut } = require('electron')
   const mainWindow = myCapacitorApp.getMainWindow()
   // oxlint-disable-next-line max-nested-callbacks

@@ -1,5 +1,4 @@
 import * as fs from "node:fs";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   checkFile,
   checkFiles,
@@ -19,7 +18,7 @@ import {
 } from "./clean-ytdl.cli";
 
 // Mock node:fs functions
-vi.mock("node:fs", () => ({
+vi.mock(import("node:fs"), () => ({
   readdirSync: vi.fn(),
   renameSync: vi.fn(),
   statSync: vi.fn(),

@@ -1,25 +1,24 @@
 // oxlint-disable typescript/parameter-properties
 import { alignForSnap, stringify } from "@monorepo/utils";
 import path from "node:path";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockUnlink = vi.fn().mockResolvedValue(undefined);
 const mockRename = vi.fn().mockResolvedValue(undefined);
 
-vi.mock("node:fs/promises", () => ({
+vi.mock(import("node:fs/promises"), () => ({
   rename: mockRename,
   unlink: mockUnlink,
 }));
 
 const mockSpawnSync = vi.fn().mockReturnValue({ error: null, status: 0, stdout: "" });
 
-vi.mock("node:child_process", () => ({
+vi.mock(import("node:child_process"), () => ({
   spawnSync: mockSpawnSync,
 }));
 
 const mockGlob = vi.fn().mockResolvedValue([]);
 
-vi.mock("tiny-glob", () => ({
+vi.mock(import("tiny-glob"), () => ({
   default: mockGlob,
 }));
 
@@ -27,7 +26,7 @@ const mockSharpToFile = vi.fn().mockResolvedValue(undefined);
 const mockSharpJpeg = vi.fn().mockReturnValue({ toFile: mockSharpToFile });
 const mockSharp = vi.fn().mockReturnValue({ jpeg: mockSharpJpeg });
 
-vi.mock("sharp", () => ({
+vi.mock(import("sharp"), () => ({
   default: mockSharp,
 }));
 
@@ -36,7 +35,7 @@ const mockWrite = vi.fn().mockResolvedValue(undefined);
 const mockRewriteAllTags = vi.fn().mockResolvedValue(undefined);
 const mockEnd = vi.fn();
 
-vi.mock("exiftool-vendored", () => ({
+vi.mock(import("exiftool-vendored"), () => ({
   // biome-ignore lint/style/useNamingConvention: its ok
   ExifDateTime: class ExifDateTime {
     constructor(

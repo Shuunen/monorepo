@@ -1,15 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { functionReturningVoid } from "@monorepo/utils";
+import * as loggerUtils from "./logger.utils";
 import { setDarkTheme } from "./theme.utils";
 
-vi.mock("./logger.utils", () => ({
-  logger: {
-    info: vi.fn(),
-  },
-}));
+vi.spyOn(loggerUtils.logger, "info").mockImplementation(functionReturningVoid);
 
 describe("theme.utils", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     document.documentElement.classList.remove("dark");
   });
 

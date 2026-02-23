@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { getSize } from "./hdd-cleaner.user.js";
 
 describe("hdd-cleaner", () => {

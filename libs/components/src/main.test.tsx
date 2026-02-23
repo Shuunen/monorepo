@@ -1,9 +1,9 @@
-import { vi } from "vitest";
+import type { Mock } from "vitest";
 
-const mockRender = vi.fn();
-const mockCreateRoot = vi.fn(() => ({ render: mockRender }));
+const mockRender: Mock = vi.fn();
+const mockCreateRoot: Mock = vi.fn(() => ({ render: mockRender, unmount: vi.fn() }));
 
-vi.mock("react-dom/client", () => ({
+vi.mock(import("react-dom/client"), () => ({
   createRoot: mockCreateRoot,
 }));
 

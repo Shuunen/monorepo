@@ -1,8 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { invariant } from "es-toolkit";
 
-vi.mock("tiny-glob");
-vi.mock("node:fs", () => ({
+vi.mock(import("tiny-glob"));
+vi.mock(import("node:fs"), () => ({
   readFileSync: vi.fn(),
   writeFileSync: vi.fn(),
 }));
