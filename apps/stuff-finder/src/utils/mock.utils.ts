@@ -1,5 +1,3 @@
-import { nbDaysInWeek, sleep } from "@monorepo/utils";
-import { vi } from "vitest";
 import type { Item, ItemModel } from "../types/item.types";
 import { defaultSound } from "../types/sounds.types";
 import { defaultStatus } from "../types/status.types";
@@ -52,13 +50,3 @@ export function mockState(data: Partial<State> = {}) {
     ...data,
   } satisfies State;
 }
-
-export const mockFetch = vi.fn(async (input: RequestInfo | URL, options?: RequestInit) => {
-  await sleep(nbDaysInWeek);
-  return {
-    blob: async () => {
-      await sleep(nbDaysInWeek);
-      return { input, options };
-    },
-  } as unknown as Promise<Response>;
-});

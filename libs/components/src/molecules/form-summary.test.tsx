@@ -1,6 +1,5 @@
 import { alignForSnap } from "@monorepo/utils";
 import { render } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
 import { FormSummary, type FormSummaryData } from "./form-summary";
 
 describe("form-summary", () => {

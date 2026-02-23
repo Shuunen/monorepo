@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { isOlderThan } from "./date.utils.js";
 
 describe("Date utils", () => {

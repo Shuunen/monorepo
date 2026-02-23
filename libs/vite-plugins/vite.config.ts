@@ -3,7 +3,6 @@ import { coverageConfigDefaults, defineConfig } from "vitest/config";
 export default defineConfig({
   cacheDir: "../../node_modules/.vite/libs/vite-plugins",
   plugins: [],
-  root: __dirname,
   test: {
     coverage: {
       exclude: [...coverageConfigDefaults.exclude, "src/index.js", "*.config.ts", "src/**/*.d.ts"],

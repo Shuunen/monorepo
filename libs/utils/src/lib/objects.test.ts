@@ -1,4 +1,3 @@
-import { expectTypeOf } from "vitest";
 import { clone } from "./object-clone.js";
 import { objectEqual } from "./object-equal.js";
 import { flatten } from "./object-flatten.js";

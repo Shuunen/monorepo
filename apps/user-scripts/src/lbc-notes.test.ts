@@ -1,4 +1,3 @@
-import { expect, it } from "vitest";
 import { getListingId } from "./lbc-notes.user.js";
 
 it("getListingId A", () => {

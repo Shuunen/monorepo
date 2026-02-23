@@ -1,6 +1,5 @@
 // oxlint-disable class-methods-use-this
 import { daysAgoIso10, daysFromNow, functionReturningVoid, sleep } from "@monorepo/utils";
-import { expect, it, vi } from "vitest";
 import { addTask, localToRemoteTask } from "./database.utils";
 import { state } from "./state.utils";
 import {
@@ -23,6 +22,7 @@ import {
 const today = daysAgoIso10(0);
 const yesterday = daysAgoIso10(1);
 
+// oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("appwrite", () => {
   class Databases {
     constructor(client?: Client) {

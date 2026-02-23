@@ -1,4 +1,3 @@
-import { expect, it } from "vitest";
 import { checkUrlCredentials, parseClipboard, validateCredentials } from "./credentials.utils";
 import { state } from "./state.utils";
 

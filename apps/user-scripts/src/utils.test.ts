@@ -1,4 +1,3 @@
-import { expect, it } from "vitest";
 import { Shuutils } from "./utils.js";
 
 const utils = new Shuutils();

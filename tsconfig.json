@@ -51,6 +51,9 @@
     },
     {
       "path": "./apps/what-now"
+    },
+    {
+      "path": "./apps/one-file"
     }
   ],
   "ts-node": {

@@ -1,6 +1,5 @@
 import { Result } from "@monorepo/utils";
 import type { Models } from "appwrite";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AppWriteTask, Task } from "../types";
 import * as databaseUtils from "./database.utils";
 import {
@@ -19,8 +18,8 @@ import {
 } from "./planner.utils";
 import * as tasksUtils from "./tasks.utils";
 
-vi.mock("./database.utils");
-vi.mock("./tasks.utils");
+vi.mock(import("./database.utils"));
+vi.mock(import("./tasks.utils"));
 
 type AppWriteTaskModel = AppWriteTask & Models.Document;
 

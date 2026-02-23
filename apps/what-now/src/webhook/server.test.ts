@@ -1,8 +1,7 @@
+import { alignForSnap, Result } from "@monorepo/utils";
 import { type ChildProcess, spawn } from "node:child_process";
 import type http from "node:http";
 import { PassThrough } from "node:stream";
-import { alignForSnap, Result } from "@monorepo/utils";
-import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import * as serverModule from "./server.cli";
 
 // Suppress unhandled errors to prevent Vitest from reporting them globally
@@ -13,6 +12,7 @@ process.on("unhandledRejection", err => {
   if (err) void err;
 });
 
+// oxlint-disable-next-line unicorn/prefer-module
 const serverPath = require.resolve("./server.cli.ts");
 
 function startServer() {

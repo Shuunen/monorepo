@@ -22,10 +22,12 @@ import {
   uploadImage,
   uploadPhotosIfNeeded,
 } from "./database.utils";
+import { mockFetch } from "./fetch.mock";
 import { logger } from "./logger.utils";
-import { mockFetch, mockItem, mockItemModel } from "./mock.utils";
+import { mockItem, mockItemModel } from "./mock.utils";
 import { state } from "./state.utils";
 
+// oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("appwrite", () => databaseMock.appwrite);
 
 globalThis.fetch = mockFetch;

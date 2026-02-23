@@ -1,5 +1,4 @@
 import type { UseFormReturn } from "react-hook-form";
-import { describe, expectTypeOf, it } from "vitest";
 import type { FieldBaseProps, Option } from "./form.types.ts";
 
 describe("form.types", () => {

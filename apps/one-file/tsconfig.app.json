@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "outDir": "out-tsc/tsc",
+    "rootDir": "src",
+    "tsBuildInfoFile": "out-tsc/tsc/tsconfig.app.tsbuildinfo",
+    "types": ["node", "@nx/react/typings/cssmodule.d.ts", "@nx/react/typings/image.d.ts", "vite/client"]
+  },
+  "exclude": ["out-tsc", "dist", "src/**/*.test.ts"],
+  "extends": "../../tsconfig.base.json",
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../../libs/utils/tsconfig.lib.json"
+    }
+  ]
+}

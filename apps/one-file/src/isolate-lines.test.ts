@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { isolateLines, linesToList } from "./isolate-lines.utils";
 
 describe("isolate-lines", () => {
@@ -84,9 +83,9 @@ line3"`);
 
   it("linesToList D should handle lines with spaces", () => {
     expect(linesToList(["  spaced  ", "  content  "])).toMatchInlineSnapshot(`
-      "spaced  
+      "spaced
 
-        content"
+      content"
     `);
   });
 });

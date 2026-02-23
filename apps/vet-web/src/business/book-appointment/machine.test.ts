@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { createActor } from "xstate";
 import { machine } from "./machine";
 import { step1AnimalDetails, step2bTheDiet, step2CatDetails, step2DogDetails, step3Allergies } from "./schemas";

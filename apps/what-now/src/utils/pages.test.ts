@@ -1,10 +1,9 @@
 import { CalendarIcon, CircleQuestionMarkIcon, HomeIcon, SettingsIcon } from "lucide-react";
-import { expect, it, vi } from "vitest";
 import { useActions } from "./pages.utils";
 
 // Mock react-router-dom
 const mockNavigate = vi.fn();
-vi.mock("react-router-dom", () => ({
+vi.mock(import("react-router-dom"), () => ({
   useNavigate: () => mockNavigate,
 }));
 

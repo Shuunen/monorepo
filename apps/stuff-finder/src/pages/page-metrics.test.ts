@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import type { Item } from "../types/item.types";
 import { mockItem } from "../utils/mock.utils";
 import {

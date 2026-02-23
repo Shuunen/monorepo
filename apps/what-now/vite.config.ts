@@ -22,7 +22,6 @@ export default defineConfig({
     host: "localhost",
     port: 4300,
   },
-  root: __dirname,
   server: {
     host: "localhost",
     port: 4200,

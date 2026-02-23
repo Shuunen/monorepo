@@ -1,4 +1,3 @@
-import { expect, it } from "vitest";
 import { maxScore, calcScore as score, score20Styled } from "./amazon-aio.user.js";
 
 /**

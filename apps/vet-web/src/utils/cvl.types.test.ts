@@ -1,5 +1,4 @@
 /** biome-ignore-all lint/style/useNamingConvention: it'ok here */
-import { describe, expectTypeOf, it } from "vitest";
 import type { CodeVersion, CodeVersionLabel } from "./cvl.types.ts";
 
 describe("cvl.types", () => {

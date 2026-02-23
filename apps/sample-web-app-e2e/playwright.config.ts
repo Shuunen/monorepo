@@ -16,6 +16,7 @@ const baseUrl = process.env.BASE_URL || "http://localhost:4300";
  */
 
 export default defineConfig({
+  // oxlint-disable-next-line unicorn/prefer-module
   ...nxE2EPreset(__filename, { testDir: "./src" }),
   projects: [
     {

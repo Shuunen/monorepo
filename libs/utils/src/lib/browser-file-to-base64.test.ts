@@ -1,5 +1,4 @@
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
-import { describe, expect, it } from "vitest";
 import { fileToBase64 } from "./browser-file-to-base64.js";
 import { Result } from "./result.js";
 

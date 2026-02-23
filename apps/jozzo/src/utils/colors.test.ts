@@ -1,4 +1,3 @@
-import { expect, it } from "vitest";
 import { getNextColor } from "./colors.utils";
 
 it("getNextColor A default, no transparent", () => {

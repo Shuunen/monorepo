@@ -1,4 +1,3 @@
-import { expectTypeOf } from "vitest";
 import { randomBoolean, randomEmail, randomNumber, randomPerson, randomString } from "./random.js";
 
 it("randomString A", () => {

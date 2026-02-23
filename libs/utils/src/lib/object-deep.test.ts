@@ -1,4 +1,3 @@
-import { expectTypeOf } from "vitest";
 import { getNested, setNested } from "./object-deep.js";
 
 const person = {

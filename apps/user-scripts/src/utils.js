@@ -359,6 +359,7 @@ class Shuutils {
         const module = await import(url);
         URL.revokeObjectURL(url);
         // Attach all exports to this instance
+        // oxlint-disable-next-line unicorn/prefer-module
         Object.assign(this, module);
         this.log(`Loaded : ${file}`);
       } catch (error) {
@@ -616,7 +617,7 @@ class Shuutils {
 }
 
 if (globalThis.window === undefined)
-  // oxlint-disable-next-line no-commonjs, no-undef
+  // oxlint-disable-next-line no-commonjs, no-undef, prefer-module
   module.exports = {
     // biome-ignore lint/style/useNamingConvention: nope
     Shuutils,

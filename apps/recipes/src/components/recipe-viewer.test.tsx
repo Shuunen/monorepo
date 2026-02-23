@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { describe, expect, it } from "vitest";
 import { RecipeViewer } from "./recipe-viewer";
 
 function renderRecipeViewer(initialEntries = ["/recipes/plat/pizza"]) {

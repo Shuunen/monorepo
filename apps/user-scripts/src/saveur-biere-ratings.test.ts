@@ -1,4 +1,3 @@
-import { expect, it } from "vitest";
 import { cleanTitle } from "./saveur-biere-ratings.user";
 
 it("sb clean title A", () => {

@@ -1,5 +1,4 @@
 import type { NavigateFunction } from "react-router-dom";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { navigate, setNavigate } from "./navigation.utils";
 
 describe("navigation.utils", () => {
