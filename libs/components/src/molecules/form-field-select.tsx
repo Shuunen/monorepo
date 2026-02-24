@@ -1,6 +1,6 @@
 import { cn } from "@monorepo/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormControl } from "../atoms/form";
 import { Popover, PopoverContent, PopoverTrigger } from "../atoms/popover";
 import { IconCheck } from "../icons/icon-check";
@@ -13,6 +13,7 @@ import { Button } from "../atoms/button";
 const itemHeight = 32;
 const maxHeight = 256;
 
+// oxlint-disable-next-line max-lines-per-function
 function VirtualizedOptions({
   fieldName,
   fieldValue,
@@ -25,6 +26,23 @@ function VirtualizedOptions({
   options: SelectOption[];
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) {
+      return;
+    }
+    function stopScrollPropagation(event: Event) {
+      event.stopPropagation();
+    }
+    el.addEventListener("wheel", stopScrollPropagation, { passive: true });
+    el.addEventListener("touchmove", stopScrollPropagation, { passive: true });
+    return () => {
+      el.removeEventListener("wheel", stopScrollPropagation);
+      el.removeEventListener("touchmove", stopScrollPropagation);
+    };
+  }, []);
+
   const virtualizer = useVirtualizer({
     count: options.length,
     estimateSize: () => itemHeight,
