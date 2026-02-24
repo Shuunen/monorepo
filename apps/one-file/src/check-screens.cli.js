@@ -3,14 +3,14 @@ import { readdirSync, renameSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { blue, ellipsis, green, isTestEnvironment, Logger, red, slugify, yellow } from "@monorepo/utils";
 
-// Use me like : node ~/Projects/github/monorepo/apps/one-file/check-screens.cli.js "/u/Screens/"
+// Use me like : node ~/Projects/github/monorepo/apps/one-file/src/check-screens.cli.js "/u/Screens/"
 
 const parameters = process.argv;
 const expectedNbParameters = 2;
 const logger = new Logger();
 if (parameters.length <= expectedNbParameters)
   logger.info(
-    'Targeting current folder, you can also specify a specific path, ex : node one-file/check-screens.cli.js "U:\\Screens\\" \n',
+    'Targeting current folder, you can also specify a specific path, ex : node one-file/src/check-screens.cli.js "U:\\Screens\\" \n',
   );
 const screensPath = path.normalize(parameters[expectedNbParameters] ?? process.cwd());
 const shouldShowFirst = parameters.includes("--first");

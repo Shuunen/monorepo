@@ -4,7 +4,7 @@ import path from "node:path";
 import { blue, green, Logger, nbPercentMax, nbThird, red, yellow } from "@monorepo/utils";
 import sevenZip from "7zip-min";
 
-// Use me like : node ~/Projects/github/monorepo/apps/one-file/check-apps.cli.js "/d/Apps/"
+// Use me like : node ~/Projects/github/monorepo/apps/one-file/src/check-apps.cli.js "/d/Apps/"
 
 /**
  * @typedef {Record<string, string[]>} Groups
@@ -16,7 +16,7 @@ const expectedNbParameters = 2;
 const logger = new Logger({ willOutputToMemory: true });
 if (parameters.length <= expectedNbParameters)
   logger.info(
-    String.raw`Targeting current folder, you can also specify a specific path, ex : node one-file/check-screens.cli.js "U:\Screens\"`,
+    String.raw`Targeting current folder, you can also specify a specific path, ex : node one-file/src/check-screens.cli.js "U:\Screens\"`,
   );
 const appsPath = path.normalize(parameters[expectedNbParameters] ?? process.cwd());
 const colors = [red, green, blue, yellow];

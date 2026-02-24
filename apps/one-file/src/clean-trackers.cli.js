@@ -7,7 +7,7 @@ import { cleanTrackers } from "./clean-trackers.utils.js";
 
 // use me like :
 // 1) copy a list of trackers in clipboard
-// 2) bun ~/Projects/github/monorepo/apps/one-file/clean-trackers.cli.js
+// 2) bun ~/Projects/github/monorepo/apps/one-file/src/clean-trackers.cli.js
 // 3) the cleaned list is now in clipboard
 
 // you can also use --watch to keep the script running and clean the clipboard each time it changes

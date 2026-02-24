@@ -7,8 +7,8 @@ import { blue, Logger, parseJson, red, slugify } from "@monorepo/utils";
 import type { FfProbeOutput, FfProbeOutputStream } from "./take-screenshot.types";
 
 // use me like :
-//  bun ~/Projects/github/monorepo/apps/one-file/check-videos.ts "/u/A Voir/" --set-title
-//  bun ~/Projects/github/monorepo/apps/one-file/check-videos.ts "/m/A Voir/Movies"
+//  bun ~/Projects/github/monorepo/apps/one-file/src/check-videos.ts "/u/A Voir/" --set-title
+//  bun ~/Projects/github/monorepo/apps/one-file/src/check-videos.ts "/m/A Voir/Movies"
 
 const { argv } = process;
 const expectedNbParameters = 2;
@@ -363,7 +363,6 @@ class CheckVideos {
     for (const type of types) {
       logger.info("\u001B[100m%s\u001B[0m", `\n${type} :`);
       const videos = this.detected[type] ?? [];
-      // @ts-expect-error to sorted
       for (const [index, file] of videos.toSorted((videoA, videoB) => byValueAsc(videoA, videoB)).entries()) {
         const isEven = !(index % 2);
         const line = ` - ${file}`;

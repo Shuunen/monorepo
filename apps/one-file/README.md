@@ -9,7 +9,7 @@
 In a terminal, cd to the root of your repo and run:
 
 ```bash
-node path/to/one-file/repo-banner.cli.js
+node path/to/one-file/src/repo-banner.cli.js
 ```
 
 Here is the output of the cli running on this repository :

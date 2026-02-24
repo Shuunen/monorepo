@@ -48,7 +48,7 @@ PS: nothing to do with steam app, steam guard will be overwrite with the new ins
 - [ ] list other apps that need manual installation
 - [ ] check games in `C:\Games` and if needed, backup saved games in `C:\Users\User\Documents\...`
 - [ ] if using a custom windows, update `Projects\github\ntlite-configs\readme.md` with feedbacks
-- [ ] `node ~/Projects/github/monorepo/apps/one-file/check-apps.cli.js "/d/Apps/"`
+- [ ] `node ~/Projects/github/monorepo/apps/one-file/src/check-apps.cli.js "/d/Apps/"`
 
 ## Linux only
 

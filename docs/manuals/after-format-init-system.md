@@ -144,7 +144,7 @@ Avoid :
 Open Rapidee & add these to the user path :
 
 - `%USERPROFILE%\.npm-global`
-- `%USERPROFILE%\Projects\github\monorepo\apps\one-file`
+- `%USERPROFILE%\Projects\github\monorepo\apps\one-file\src`
 - `C:\ProgramData\chocolatey\bin`
 - `D:\Apps\_Globals`
 - `D:\Apps\Espanso_221_2024-08`

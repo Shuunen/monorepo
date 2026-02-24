@@ -2,7 +2,7 @@ import { readdirSync, renameSync, statSync, unlinkSync } from "node:fs";
 import path from "node:path";
 import { blue, green, Logger, red, yellow } from "@monorepo/utils";
 
-// cd into the folder and use me like : bun ~/Projects/github/monorepo/apps/one-file/clean-ytdl.cli.ts
+// cd into the folder and use me like : bun ~/Projects/github/monorepo/apps/one-file/src/clean-ytdl.cli.ts
 
 export const logger = new Logger({ willOutputToMemory: true });
 export const currentFolder = process.cwd();

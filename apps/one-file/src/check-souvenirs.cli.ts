@@ -9,9 +9,9 @@ import sharp from "sharp";
 import glob from "tiny-glob";
 
 // use me like :
-//  cd /d/Souvenirs && bun ~/Projects/github/monorepo/apps/one-file/check-souvenirs.cli.ts
-//  bun ~/Projects/github/monorepo/apps/one-file/check-souvenirs.cli.ts "/d/Souvenirs"
-//  bun ~/Projects/github/monorepo/apps/one-file/check-souvenirs.cli.ts "/d/Souvenirs" --process-one
+//  cd /d/Souvenirs && bun ~/Projects/github/monorepo/apps/one-file/src/check-souvenirs.cli.ts
+//  bun ~/Projects/github/monorepo/apps/one-file/src/check-souvenirs.cli.ts "/d/Souvenirs"
+//  bun ~/Projects/github/monorepo/apps/one-file/src/check-souvenirs.cli.ts "/d/Souvenirs" --process-one
 
 await using exif = new ExifTool();
 const { argv } = process;
