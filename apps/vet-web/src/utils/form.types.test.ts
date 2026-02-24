@@ -22,7 +22,6 @@ describe("form.types", () => {
 
     expectTypeOf<FieldBaseProps<TestFieldValues>>().toMatchTypeOf<{
       label?: string;
-      // biome-ignore lint/suspicious/noExplicitAny: we need that
       form: UseFormReturn<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
       name: keyof TestFieldValues;
       isRequired: boolean;
@@ -32,7 +31,6 @@ describe("form.types", () => {
   });
 
   it("should allow creating valid FieldBaseProps objects", () => {
-    // biome-ignore lint/suspicious/noExplicitAny: we need that
     const mockForm = {} as UseFormReturn<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const fieldProps: FieldBaseProps<{ name: string }> = {
