@@ -34,8 +34,7 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const selectedStringValue =
-    props.value === null || props.value === undefined ? undefined : valueToString(props.value);
+  const selectedStringValue = props.value === null || props.value === undefined ? "" : valueToString(props.value);
 
   const filterable = props.options.length > minValuesForFilter;
 
