@@ -88,5 +88,8 @@ ffmpeg -hide_banner -y \
 # look at the logs in the bash and then copy/paste the detected crop values into ffmpeg parameters, here for example :
 # -vf crop=1920:816:0:132 \
 
+# to crop without re-encoding the video :
+# mkvpropedit "input.mkv" --edit track:v1 --set pixel-crop-left=310 --set pixel-crop-right=200 --set pixel-crop-top=0 --set pixel-crop-bottom=0
+
 # to just extract the audio use this ffmpeg command :
 # ffmpeg -hide_banner -y -i "video.mkv" -map 0:a -c:a copy "audio.mka"
