@@ -4,7 +4,7 @@ import path from "node:path";
 import { extractData, logger, replaceAndCheck, replaceAndCheckById } from "./repo-banner.utils.js";
 
 // this script will generate a `<project-name>-banner.svg` file that you can use in your README.md file for example
-// usage : bun apps/one-file/repo-banner.cli.js
+// usage : bun apps/one-file/src/repo-banner.cli.js
 
 // TODO :
 // - compress repo-banner output with svgo

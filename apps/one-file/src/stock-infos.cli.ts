@@ -1,7 +1,7 @@
 import { blue, Logger, nbThird } from "@monorepo/utils";
 
 // cd into the folder and use me like :
-// bun ~/Projects/github/monorepo/apps/one-file/stock-infos.cli.ts GOOG
+// bun ~/Projects/github/monorepo/apps/one-file/src/stock-infos.cli.ts GOOG
 
 export const logger = new Logger({ willOutputToMemory: true });
 

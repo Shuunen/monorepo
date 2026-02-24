@@ -10,7 +10,7 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
-export PATH=~/.npm-global/bin:~/Apps:~/Projects/github/monorepo/apps/one-file:$PATH
+export PATH=~/.npm-global/bin:~/Apps:~/Projects/github/monorepo/apps/one-file/src:$PATH
 
 # if running bash
 if [ -n "$BASH_VERSION" ]; then

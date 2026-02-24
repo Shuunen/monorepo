@@ -4,7 +4,7 @@ import path from "node:path";
 import { Logger } from "@monorepo/utils";
 
 // Go into the Downloads\Azerty.S01.1080p.WEBRip.x265-RARBG folder
-// then use me like : node ~/Projects/github/monorepo/apps/one-file/rename-subs.cli.js
+// then use me like : node ~/Projects/github/monorepo/apps/one-file/src/rename-subs.cli.js
 
 const currentFolder = process.cwd();
 const kb = 1024;

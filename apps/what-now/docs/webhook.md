@@ -42,7 +42,7 @@ This POST will have this payload:
 
 Some server side implementation samples :
 
-- [PHP](https://github.com/Shuunen/monorepo/blob/master/apps/one-file/olivo-hue-status.php)
+- [PHP](https://github.com/Shuunen/monorepo/blob/master/apps/one-file/src/olivo-hue-status.php)
 
 ## Why
 

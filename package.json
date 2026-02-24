@@ -91,7 +91,7 @@
     "add:shadcn": "bun libs/components/bin/add.cli.ts",
     "build": "nx run-many -t build,list && echo build success",
     "check": "pnpm lint && pnpm check:nx && echo check success",
-    "check:eslint": "bun apps/one-file/eslint-cleaner.cli.ts && echo check:eslint success",
+    "check:eslint": "bun apps/one-file/src/eslint-cleaner.cli.ts && echo check:eslint success",
     "check:lock": "pnpm install && echo check:lock success",
     "check:nx": "nx affected -t ts-check,lint,test,build,e2e,list,build-storybook,test-storybook && echo check:nx success",
     "check:nx:all": "nx run-many -t ts-check,lint,test,build,e2e,list,build-storybook,test-storybook && echo check:nx:all success",

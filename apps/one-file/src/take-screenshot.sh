@@ -7,7 +7,7 @@ fi
 
 time=$(zenity --entry --title="Take screenshot" --text="Please type the time in mmss or ss :" --entry-text="")
 
-bun ~/Projects/github/monorepo/apps/one-file/take-screenshot.cli.js "$1" "$time"
+bun ~/Projects/github/monorepo/apps/one-file/src/take-screenshot.cli.js "$1" "$time"
 
 if command -v notify-send >/dev/null 2>&1; then
   notify-send "Screenshot taken" "Screenshot saved to your image folder"
