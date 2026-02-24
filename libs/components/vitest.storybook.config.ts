@@ -1,11 +1,12 @@
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
-import { playwright } from "@vitest/browser-playwright";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { defineConfig } from "vitest/config";
+import { coverageConfigDefaults, defineConfig } from "vitest/config";
+import { playwright } from "@vitest/browser-playwright";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const reportsRoot = path.join(__dirname, "storybook-html-reports");
 
 export default defineConfig({
   optimizeDeps: {
@@ -27,7 +28,25 @@ export default defineConfig({
       ],
       provider: playwright(),
     },
+    coverage: {
+      enabled: true,
+      exclude: [
+        ...coverageConfigDefaults.exclude,
+        "src/**/*.stories.{ts,tsx}",
+        "src/**/*.test.{ts,tsx}",
+        "node_modules/**",
+        "dist/**",
+      ],
+      include: ["src/**/*.{ts,tsx}"],
+      provider: "v8",
+      reportOnFailure: true,
+      reporter: ["text", "lcov", "html"],
+      reportsDirectory: path.join(reportsRoot, "storybook"),
+    },
     name: "storybook",
+    outputFile: {
+      html: path.join(reportsRoot, "index.html"),
+    },
     reporters: ["dot", "html"],
     setupFiles: [".storybook/vitest.setup.ts"],
     silent: true,
