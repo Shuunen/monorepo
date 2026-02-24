@@ -26,9 +26,6 @@ importers:
       '@tanstack/react-router':
         specifier: ^1.162.4
         version: 1.162.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@tanstack/react-virtual':
-        specifier: ^3.13.18
-        version: 3.13.18(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       appwrite:
         specifier: ^22.4.1
         version: 22.4.1
