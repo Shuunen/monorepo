@@ -3,7 +3,7 @@ import type { FieldPath, FieldValues, UseFormReturn } from "react-hook-form";
 export type FieldBaseProps<TypeFieldValues extends FieldValues = FieldValues> = {
   /** the label above the field */
   label?: string;
-  // biome-ignore lint/suspicious/noExplicitAny: we need that
+  /** the react-hook-form form object */
   form: UseFormReturn<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
   /** the name of the field */
   name: FieldPath<TypeFieldValues>;

@@ -100,6 +100,7 @@
       "suspicious": {
         "noConsole": "error",
         "noEmptyBlockStatements": "error",
+        "noExplicitAny": "off",
         "noUnknownAtRules": "off"
       }
     }
@@ -299,7 +300,6 @@
             "noArrayIndexKey": "off",
             "noDocumentCookie": "off",
             "noEmptyBlockStatements": "off",
-            "noExplicitAny": "off",
             "noExportsInTest": "off",
             "noShadowRestrictedNames": "off"
           }
