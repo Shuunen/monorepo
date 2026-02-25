@@ -44,6 +44,11 @@ export const Basic: Story = {
       z.object({
         color: field(z.enum(["red", "green", "blue"]), {
           label: "Favorite Color",
+          options: [
+            { label: "Red", value: "red" },
+            { label: "Green", value: "green" },
+            { label: "Blue", value: "blue" },
+          ],
           placeholder: "Choose a color",
         }),
       }),
@@ -73,14 +78,31 @@ export const LabelGeneration: Story = {
       z.object({
         color: field(z.enum(["red", "green", "blue"]), {
           label: "Favorite Color",
+          options: [
+            { label: "Red", value: "red" },
+            { label: "Green", value: "green" },
+            { label: "Blue", value: "blue" },
+          ],
           placeholder: "Choose a color",
         }),
         priority: field(z.enum(["low", "medium", "high", "critical"]), {
           label: "Priority Level",
+          options: [
+            { label: "Low", value: "low" },
+            { label: "Medium", value: "medium" },
+            { label: "High", value: "high" },
+            { label: "Critical", value: "critical" },
+          ],
           placeholder: "Select priority",
         }),
         size: field(z.enum(["small", "medium", "large", "extra-large"]), {
           label: "T-shirt Size",
+          options: [
+            { label: "Small", value: "small" },
+            { label: "Medium", value: "medium" },
+            { label: "Large", value: "large" },
+            { label: "Extra-large", value: "extra-large" },
+          ],
           placeholder: "Select your size",
         }),
       }),
@@ -149,6 +171,11 @@ export const WithPrefault: Story = {
       z.object({
         color: field(z.enum(["red", "green", "blue"]).prefault("blue"), {
           label: "Favorite Color",
+          options: [
+            { label: "Red", value: "red" },
+            { label: "Green", value: "green" },
+            { label: "Blue", value: "blue" },
+          ],
           placeholder: "Choose a color",
         }),
       }),
@@ -183,6 +210,11 @@ export const Optional: Story = {
       z.object({
         color: field(z.enum(["red", "green", "blue"]).optional(), {
           label: "Optional Color",
+          options: [
+            { label: "Red", value: "red" },
+            { label: "Green", value: "green" },
+            { label: "Blue", value: "blue" },
+          ],
           placeholder: "Choose a color",
         }),
       }),
@@ -205,6 +237,11 @@ export const Disabled: Story = {
       z.object({
         color: field(z.enum(["red", "green", "blue"]), {
           label: "Disabled Color",
+          options: [
+            { label: "Red", value: "red" },
+            { label: "Green", value: "green" },
+            { label: "Blue", value: "blue" },
+          ],
           placeholder: "Choose a color",
           state: "disabled",
         }),
@@ -229,6 +266,11 @@ export const Readonly: Story = {
       z.object({
         color: field(z.enum(["red", "green", "blue"]), {
           label: "Readonly Color",
+          options: [
+            { label: "Red", value: "red" },
+            { label: "Green", value: "green" },
+            { label: "Blue", value: "blue" },
+          ],
           placeholder: "Choose a color",
           state: "readonly",
         }),
@@ -323,6 +365,7 @@ export const Perf: Story = {
       z.object({
         numbers: field(z.enum(Array.from({ length: 1000 }, (_, i) => i.toString())), {
           label: "Numbers",
+          options: Array.from({ length: 1000 }, (_, i) => ({ label: i.toString(), value: i.toString() })),
           placeholder: "Choose a number",
         }),
       }),
