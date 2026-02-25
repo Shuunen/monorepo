@@ -333,6 +333,9 @@ export function filterSchema(schema: z.ZodObject, formData: AutoFormData = {}): 
     if (metadata?.render === "section") {
       continue;
     }
+    if (metadata && "state" in metadata && metadata.state === "readonly") {
+      continue;
+    }
     if (isZodArray(fieldSchema)) {
       const result = getElementSchema(fieldSchema);
       if (result.ok && isZodObject(result.value)) {
