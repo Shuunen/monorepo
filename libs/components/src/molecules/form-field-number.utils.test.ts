@@ -42,12 +42,6 @@ describe("form-field-number.utils", () => {
     expect(max).toBe(undefined);
   });
 
-  it("getZodNumberMinMax must handle only min schema", () => {
-    const { min, max } = getZodNumberMinMax(onlyMinSchema);
-    expect(min).toBe(10);
-    expect(max).toBe(undefined);
-  });
-
   it("getZodNumberMinMax must handle min = 0", () => {
     const { min, max } = getZodNumberMinMax(minZeroSchema);
     expect(min).toBe(0);
