@@ -1,8 +1,8 @@
 /* v8 ignore start -- @preserve */
+import { list } from "7zip-min";
+import { blue, green, Logger, nbPercentMax, nbThird, red, yellow } from "@monorepo/utils";
 import { readdirSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { blue, green, Logger, nbPercentMax, nbThird, red, yellow } from "@monorepo/utils";
-import sevenZip from "7zip-min";
 
 // Use me like : node ~/Projects/github/monorepo/apps/one-file/src/check-apps.cli.js "/d/Apps/"
 
@@ -174,7 +174,7 @@ function checkArchive(archive) {
   if (!readableExtensions.has(extension)) return;
   const expectedFolder = archive.replace(`.${extension}`, "");
   return new Promise(resolve => {
-    sevenZip.list(pathToArchive, (error, content) => {
+    list(pathToArchive, (error, content) => {
       if (error) logger.error(`Error while listing ${color(archive)}`, error);
       // oxlint-disable-next-line max-nested-callbacks
       const firstFolder = content?.find(item => ["D", "DA"].includes(item.attr));
