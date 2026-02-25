@@ -22,9 +22,9 @@ import {
   getSchemaDefaultValue,
   getStepMetadata,
   getUnwrappedSchema,
-  getZodEnumOptions,
   hasCustomErrors,
   isFieldVisible,
+  isRadioOrSelectMetadata,
   isStepClickable,
   isZodArray,
   isZodBoolean,
@@ -64,94 +64,6 @@ describe("auto-form.utils", () => {
   it("isZodEnum C should return false for non-enum", () => {
     const schema = z.string();
     expect(isZodEnum(schema)).toBe(false);
-  });
-  // getZodEnumOptions
-  it("getZodEnumOptions A should detect ZodEnum and return options", () => {
-    const schema = z.enum(["foo", "bar"]);
-    const result = getZodEnumOptions(schema);
-    if (!result.ok) {
-      throw new Error("Expected success but got error");
-    }
-    expect(result.value).toEqual([
-      { label: "Foo", value: "foo" },
-      { label: "Bar", value: "bar" },
-    ]);
-  });
-  it("getZodEnumOptions B should also works with optional ZodEnum", () => {
-    const schema = z.enum(["foo", "bar"]).optional();
-    const result = getZodEnumOptions(schema);
-    if (!result.ok) {
-      throw new Error("Expected success but got error");
-    }
-    expect(result.value).toEqual([
-      { label: "Foo", value: "foo" },
-      { label: "Bar", value: "bar" },
-    ]);
-  });
-  it("getZodEnumOptions C should return error for non-enum", () => {
-    const schema = z.string();
-    const result = getZodEnumOptions(schema);
-    expect(result.ok).toBe(false);
-  });
-  it("getZodEnumOptions D should use custom options from metadata", () => {
-    const schema = z.enum(["us", "uk", "fr"]).meta({
-      options: [
-        { label: "🇺🇸 United States", value: "us" },
-        { label: "🇬🇧 United Kingdom", value: "uk" },
-        { label: "🇫🇷 France", value: "fr" },
-      ],
-    });
-    const result = getZodEnumOptions(schema);
-    if (!result.ok) {
-      throw new Error("Expected success but got error");
-    }
-    expect(result.value).toEqual([
-      { label: "🇺🇸 United States", value: "us" },
-      { label: "🇬🇧 United Kingdom", value: "uk" },
-      { label: "🇫🇷 France", value: "fr" },
-    ]);
-  });
-  it("getZodEnumOptions E should handle optional enum with custom options A", () => {
-    const schema = z
-      .enum(["xs", "sm", "md"])
-      .optional()
-      .meta({
-        options: [
-          { label: "Extra Small", value: "xs" },
-          { label: "Small", value: "sm" },
-          { label: "Medium", value: "md" },
-        ],
-      });
-    const result = getZodEnumOptions(schema);
-    if (!result.ok) {
-      throw new Error("Expected success but got error");
-    }
-    expect(result.value).toEqual([
-      { label: "Extra Small", value: "xs" },
-      { label: "Small", value: "sm" },
-      { label: "Medium", value: "md" },
-    ]);
-  });
-  it("getZodEnumOptions E should handle optional enum with custom options B", () => {
-    const schema = z
-      .enum(["xs", "sm", "md"])
-      .meta({
-        options: [
-          { label: "Extra Small", value: "xs" },
-          { label: "Small", value: "sm" },
-          { label: "Medium", value: "md" },
-        ],
-      })
-      .optional();
-    const result = getZodEnumOptions(schema);
-    if (!result.ok) {
-      throw new Error("Expected success but got error");
-    }
-    expect(result.value).toEqual([
-      { label: "Extra Small", value: "xs" },
-      { label: "Small", value: "sm" },
-      { label: "Medium", value: "md" },
-    ]);
   });
   // isZodBoolean
   it("isZodBoolean A should detect ZodBoolean", () => {
@@ -1053,6 +965,15 @@ describe("auto-form.utils", () => {
     expect(filtered).toEqual({ a: "foo" });
   });
 
+  // isRadioOrSelectMetadata
+  it("isRadioOrSelectMetadata A should state that metadata are of radio or select type", () => {
+    expect(isRadioOrSelectMetadata({ label: "Foo", options: [] })).toBe(true);
+  });
+  it("isRadioOrSelectMetadata B should state that metadata are not of radio or select type", () => {
+    expect(isRadioOrSelectMetadata({ label: "Foo" })).toBe(false);
+    expect(isRadioOrSelectMetadata()).toBe(false);
+  });
+
   // sectionsFromEditableSteps
   it("sectionsFromEditableSteps A should skip readonly and upcoming steps", () => {
     const schema1 = z
@@ -1602,6 +1523,10 @@ describe("auto-form.utils", () => {
     const schema = z.object({
       size: field(z.enum(["small", "large"]), {
         label: "Size",
+        options: [
+          { label: "Small", value: "small" },
+          { label: "Large", value: "large" },
+        ],
         render: "radio",
         errors: () => undefined,
       }),
@@ -1610,9 +1535,20 @@ describe("auto-form.utils", () => {
   });
   it("hasCustomErrors C should return true when errors function returns a message", () => {
     const schema = z.object({
-      color: field(z.enum(["red", "blue"]), { label: "Color", render: "radio" }),
+      color: field(z.enum(["red", "blue"]), {
+        label: "Color",
+        options: [
+          { label: "Red", value: "red" },
+          { label: "Blue", value: "blue" },
+        ],
+        render: "radio",
+      }),
       size: field(z.enum(["small", "large"]), {
         label: "Size",
+        options: [
+          { label: "Small", value: "small" },
+          { label: "Large", value: "large" },
+        ],
         render: "radio",
         errors: (data?: Record<string, unknown>) => {
           if (data?.color === "red" && data?.size === "large") {
@@ -1626,9 +1562,20 @@ describe("auto-form.utils", () => {
   });
   it("hasCustomErrors D should return false when condition is not met", () => {
     const schema = z.object({
-      color: field(z.enum(["red", "blue"]), { label: "Color", render: "radio" }),
+      color: field(z.enum(["red", "blue"]), {
+        label: "Color",
+        options: [
+          { label: "Red", value: "red" },
+          { label: "Blue", value: "blue" },
+        ],
+        render: "radio",
+      }),
       size: field(z.enum(["small", "large"]), {
         label: "Size",
+        options: [
+          { label: "Small", value: "small" },
+          { label: "Large", value: "large" },
+        ],
         render: "radio",
         errors: (data?: Record<string, unknown>) => {
           if (data?.color === "red" && data?.size === "large") {

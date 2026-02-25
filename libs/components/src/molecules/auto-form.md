@@ -1382,23 +1382,6 @@ formatFileSize(1024 ** 3); // "1 GB"
 
 ### Schema Analysis Utilities
 
-#### getZodEnumOptions()
-
-Extract options from Zod enum schema:
-
-```typescript
-const schema = z.enum(["pending", "approved", "rejected"]);
-const result = getZodEnumOptions(schema);
-
-if (result.ok) {
-  // result.value = [
-  //   { label: 'Pending', value: 'pending' },
-  //   { label: 'Approved', value: 'approved' },
-  //   { label: 'Rejected', value: 'rejected' }
-  // ]
-}
-```
-
 #### Type Checking Functions
 
 ```typescript
