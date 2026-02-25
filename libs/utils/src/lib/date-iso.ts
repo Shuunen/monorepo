@@ -106,10 +106,10 @@ const DATE_REGEX = /^(\d{4})-(\d{2})-(\d{2})$/;
  * Recognizes the following partial date formats:
  * - "YYYY-00-00": returns "YYYY"
  * - "YYYY-MM-00": returns "MM/YYYY"
- * For any other format (including full dates or invalid formats), returns "-".
+ * For any other format (including full dates or invalid formats), returns "N/A".
  *
  * @param dateString - The ISO date string in the format "YYYY-MM-DD".
- * @returns A human-readable string for partial dates, or "-" if the format is not recognized.
+ * @returns A human-readable string for partial dates, or "N/A" if the format is not recognized.
  */
 function partialDateDisplay(dateString: string): string {
   const match = DATE_REGEX.exec(dateString);
