@@ -55,12 +55,5 @@
     {
       "path": "./apps/one-file"
     }
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "customConditions": null,
-      "module": "commonjs",
-      "moduleResolution": "node10"
-    }
-  }
+  ]
 }
