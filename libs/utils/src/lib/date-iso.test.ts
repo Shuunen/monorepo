@@ -44,26 +44,26 @@ describe("date-iso", () => {
     expect(dateIsoToReadableDatetime("2025-06-26T01:02:03.456Z")).toBe("26/06/2025 01:02");
   });
   it("dateIsoToReadableDatetime B basic w/o time", () => {
-    expect(dateIsoToReadableDatetime("2025-06-26T01:02:03.456Z", false)).toBe("26/06/2025");
+    expect(dateIsoToReadableDatetime("2025-06-26T01:02:03.456Z", { withTime: false })).toBe("26/06/2025");
   });
   it("dateIsoToReadableDatetime C with null", () => {
-    expect(dateIsoToReadableDatetime(null, false)).toBe("-");
+    expect(dateIsoToReadableDatetime(null, { withTime: false })).toBe("-");
   });
   it("dateIsoToReadableDatetime D with undefined", () => {
-    expect(dateIsoToReadableDatetime(undefined, false)).toBe("-");
+    expect(dateIsoToReadableDatetime(undefined, { withTime: false })).toBe("-");
   });
   it("dateIsoToReadableDatetime E with Date object", () => {
     expect(dateIsoToReadableDatetime(new Date("2025-06-26T01:02:03.456Z"))).toBe("26/06/2025 01:02");
   });
   it("dateIsoToReadableDatetime F with invalid date string", () => {
-    expect(dateIsoToReadableDatetime("invalid-date")).toBe("-");
+    expect(dateIsoToReadableDatetime("invalid-date")).toBe("N/A");
   });
   it("dateIsoToReadableDatetime G with invalid Date object", () => {
-    expect(dateIsoToReadableDatetime(new Date("invalid"))).toBe("-");
+    expect(dateIsoToReadableDatetime(new Date("invalid"))).toBe("N/A");
   });
   it("dateIsoToReadableDatetime H handles leap year date", () => {
     expect(dateIsoToReadableDatetime("2024-02-29T12:30:00Z")).toBe("29/02/2024 12:30");
-    expect(dateIsoToReadableDatetime("2024-02-29T12:30:00Z", false)).toBe("29/02/2024");
+    expect(dateIsoToReadableDatetime("2024-02-29T12:30:00Z", { withTime: false })).toBe("29/02/2024");
   });
 
   // buildIsoFromLocal
@@ -104,5 +104,13 @@ describe("date-iso", () => {
   });
   it("isValidDate E with leap year", () => {
     expect(isValidDate(new Date("2024-02-29T00:00:00Z"))).toBe(true);
+  });
+  it("partial date should be shown correctly", () => {
+    expect(dateIsoToReadableDatetime("1985-00-00", { acceptPartialDate: true })).toBe("1985");
+    expect(dateIsoToReadableDatetime("0000-00-00", { acceptPartialDate: true })).toBe("N/A");
+    expect(dateIsoToReadableDatetime("1985-00-05", { acceptPartialDate: true })).toBe("1985");
+    expect(dateIsoToReadableDatetime("1985-06-00", { acceptPartialDate: true })).toBe("06/1985");
+    expect(dateIsoToReadableDatetime("1985-06-50", { acceptPartialDate: true })).toBe("N/A");
+    expect(dateIsoToReadableDatetime("19856-06-50", { acceptPartialDate: true })).toBe("N/A");
   });
 });

@@ -54,7 +54,7 @@ export function DatetimePicker({
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(defaultValue);
   const [month, setMonth] = useState<Date | undefined>(defaultValue ?? date);
-  const [dateValue, setDateValue] = useState(dateIsoToReadableDatetime(defaultValue, false));
+  const [dateValue, setDateValue] = useState(dateIsoToReadableDatetime(defaultValue, { withTime: false }));
   const [timeValue, setTimeValue] = useState(defaultValue ? formatTime(defaultValue) : "");
   const dateInputRef = useRef<HTMLInputElement>(null);
   const timeInputRef = useRef<HTMLInputElement>(null);
@@ -63,7 +63,7 @@ export function DatetimePicker({
   useEffect(() => {
     if (defaultValue && !date) {
       setDate(defaultValue);
-      setDateValue(dateIsoToReadableDatetime(defaultValue, false));
+      setDateValue(dateIsoToReadableDatetime(defaultValue, { withTime: false }));
       setMonth(defaultValue);
       if (time) {
         setTimeValue(formatTime(defaultValue));
@@ -106,7 +106,7 @@ export function DatetimePicker({
     if (time && presetValue === 0) {
       const now = new Date();
       setDate(now);
-      setDateValue(dateIsoToReadableDatetime(now, false));
+      setDateValue(dateIsoToReadableDatetime(now, { withTime: false }));
       setMonth(now);
       setTimeValue(formatTime(now));
       onChange?.(now);
@@ -119,7 +119,7 @@ export function DatetimePicker({
         }
       }
       setDate(newDate);
-      setDateValue(dateIsoToReadableDatetime(newDate, false));
+      setDateValue(dateIsoToReadableDatetime(newDate, { withTime: false }));
       setMonth(newDate);
       onChange?.(newDate);
     }
@@ -240,7 +240,7 @@ export function DatetimePicker({
                       // Fix: always store/date as UTC so display matches local pick
                       const newDate = calendarDateToUtc({ calendarDate, time, timeValue });
                       setDate(newDate);
-                      setDateValue(dateIsoToReadableDatetime(newDate, false));
+                      setDateValue(dateIsoToReadableDatetime(newDate, { withTime: false }));
                       setMonth(newDate);
                       onChange?.(newDate);
                       setOpen(false);
@@ -268,7 +268,7 @@ export function DatetimePicker({
                         {Array.from({ length: 24 }, (_elem, index) => {
                           const hour = String(index).padStart(2, "0");
                           return (
-                            <SelectItem key={hour} value={hour}>
+                            <SelectItem prefixDataTestId="input-date-time-hour" key={hour} value={hour}>
                               {hour}
                             </SelectItem>
                           );
@@ -291,7 +291,7 @@ export function DatetimePicker({
                         {Array.from({ length: 60 }, (_elem, index) => {
                           const minute = String(index).padStart(2, "0");
                           return (
-                            <SelectItem key={minute} value={minute}>
+                            <SelectItem prefixDataTestId="input-date-time-hour" key={minute} value={minute}>
                               {minute}
                             </SelectItem>
                           );
