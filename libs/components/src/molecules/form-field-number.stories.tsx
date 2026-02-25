@@ -209,6 +209,29 @@ export const Readonly: Story = {
 };
 
 /**
+ * Min and max number
+ */
+export const MinMax: Story = {
+  args: {
+    initialData: { price: 99.99 },
+    schemas: [
+      z.object({
+        price: field(z.number().min(50).max(100), {
+          label: "Price",
+          placeholder: "Product price",
+        }),
+      }),
+    ],
+  },
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const priceInput = canvas.getByTestId("input-number-price") as HTMLInputElement;
+    expect(priceInput).toHaveAttribute("min", "50");
+    expect(priceInput).toHaveAttribute("max", "100");
+  },
+};
+
+/**
  * Multiple number fields
  */
 export const MultipleFields: Story = {
