@@ -10,6 +10,7 @@ import { AutoForm } from "./auto-form";
 import type { AutoFormData } from "./auto-form.types";
 import { field, forms, step } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
+import { nbFilledItems } from "./form-field-form-list.utils";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
 
@@ -164,7 +165,8 @@ export const Required: Story = {
             icon: <IconHome />,
             identifier: data => (data?.name ? `${data.name} (${data.age} years)` : `New person - ${data?.index}`),
             label: "Add persons",
-            minItems: 1,
+            errors: (data?: AutoFormData) =>
+              nbFilledItems(data?.persons) === 0 ? "At least one item is required" : undefined,
             placeholder: "You can add multiple persons, minimum is one.",
           }),
         }),
@@ -194,7 +196,8 @@ export const ExistingData: Story = {
             identifier: data => (data?.name ? `${data.name} (${data.age} years)` : `New person - ${data?.index}`),
             label: "Fill in the applicants",
             maxItems: 5,
-            minItems: 1,
+            errors: (data?: AutoFormData) =>
+              nbFilledItems(data?.applicants) === 0 ? "At least one item is required" : undefined,
             placeholder: "Please add at least one applicant, you can add up to 5.",
           }),
         }),

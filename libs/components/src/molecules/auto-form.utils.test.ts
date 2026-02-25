@@ -26,7 +26,6 @@ import {
   hasCustomErrors,
   isFieldVisible,
   isStepClickable,
-  isSubformFilled,
   isZodArray,
   isZodBoolean,
   isZodDate,
@@ -430,7 +429,7 @@ describe("auto-form.utils", () => {
     expect(filtered.shape).toHaveProperty("a");
     expect(filtered.shape).not.toHaveProperty("b");
   });
-  it("filterSchema C should handle subforms without meta", () => {
+  it("filterSchema C should remove subforms", () => {
     const schema = step(
       z.object({
         firstName: field(z.string()),
@@ -439,33 +438,15 @@ describe("auto-form.utils", () => {
             list: fields(z.number(), { minItems: 5 }),
           }),
         ),
+        surname: fields(z.string()),
       }),
     );
     const filtered = filterSchema(schema);
     expect(filtered.shape).toHaveProperty("firstName");
-    expect(filtered.shape).toHaveProperty("applicants");
-    const result = filtered.safeParse({ firstName: "Jojito" });
+    expect(filtered.shape).not.toHaveProperty("applicants");
+    expect(filtered.shape).toHaveProperty("surname");
+    const result = filtered.safeParse({ firstName: "Jojito", surname: ["jojo l'asticot"] });
     expect(result.success).toBe(true);
-  });
-  it("filterSchema D should handle subforms with meta", () => {
-    const schema = step(
-      z.object({
-        firstName: field(z.string()),
-        applicants: forms(
-          z.object({
-            list: fields(z.number(), { minItems: 5 }),
-          }),
-          {
-            minItems: 1,
-          },
-        ),
-      }),
-    );
-    const filtered = filterSchema(schema);
-    expect(filtered.shape).toHaveProperty("firstName");
-    expect(filtered.shape).toHaveProperty("applicants");
-    const result = filtered.safeParse({ firstName: "Luna" });
-    expect(result.success).toBe(false);
   });
 
   // normalizeDataForSchema
@@ -1248,23 +1229,22 @@ describe("auto-form.utils", () => {
 
   // forms
   it("forms A should create a ZodArray with metadata", () => {
-    const schema = forms(z.object({ name: z.string() }), { icon: createElement("div"), maxItems: 3, minItems: 1 });
+    const schema = forms(z.object({ name: z.string() }), { icon: createElement("div"), maxItems: 3 });
     expect(schema.type).toBe("prefault");
     expect(schema.unwrap().type).toBe("array");
     const metadata = getFieldMetadata(schema);
     expect(metadata).toBeDefined();
     if (metadata) {
       expect(metadata.render).toBe("form-list");
-      expect("minItems" in metadata && metadata.minItems).toBe(1);
       expect("maxItems" in metadata && metadata.maxItems).toBe(3);
     }
   });
   it("forms B should validate array constraints", () => {
-    const schema = forms(z.object({ name: z.string() }), { icon: createElement("div"), maxItems: 2, minItems: 1 });
+    const schema = forms(z.object({ name: z.string() }), { icon: createElement("div"), maxItems: 2 });
     const parsed = schema.safeParse([{ name: "John" }]);
     expect(parsed.success).toBe(true);
     const parsed2 = schema.safeParse([]);
-    expect(parsed2.success).toBe(false);
+    expect(parsed2.success).toBe(true);
     const parsed3 = schema.safeParse([{ name: "John" }, { name: "Jane" }, { name: "Jim" }]);
     expect(parsed3.success).toBe(false);
   });
@@ -1597,48 +1577,6 @@ describe("auto-form.utils", () => {
     const result = getElementSchema(schema);
     invariant(!result.ok, "result should not be ok");
     expect(result.error).toMatchInlineSnapshot(`"cant get element of a non-array schema"`);
-  });
-
-  // isSubformFilled
-  it("isSubformFilled A string", () => {
-    const data = { name: "John doe" };
-    expect(isSubformFilled(data)).toBe(true);
-  });
-  it("isSubformFilled B date", () => {
-    const data = { dateFrom: new Date() };
-    expect(isSubformFilled(data)).toBe(true);
-  });
-  it("isSubformFilled C array", () => {
-    const data = { dates: [new Date()] };
-    expect(isSubformFilled(data)).toBe(true);
-  });
-  it("isSubformFilled D object", () => {
-    const data = { infos: { name: "John doe" } };
-    expect(isSubformFilled(data)).toBe(true);
-  });
-  it("isSubformFilled E empty string", () => {
-    const data = { name: "" };
-    expect(isSubformFilled(data)).toBe(false);
-  });
-  it("isSubformFilled F default boolean", () => {
-    const data = { isOk: false };
-    expect(isSubformFilled(data)).toBe(false);
-  });
-  it("isSubformFilled G empty array", () => {
-    const data = { dates: [] };
-    expect(isSubformFilled(data)).toBe(false);
-  });
-  it("isSubformFilled H empty object", () => {
-    const data = { infos: {} };
-    expect(isSubformFilled(data)).toBe(false);
-  });
-  it("isSubformFilled I undefined", () => {
-    const data = { infos: undefined };
-    expect(isSubformFilled(data)).toBe(false);
-  });
-  it("isSubformFilled J null", () => {
-    const data = { infos: null };
-    expect(isSubformFilled(data)).toBe(false);
   });
 
   // typeLikeResolver

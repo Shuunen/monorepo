@@ -10,7 +10,7 @@ import {
   sleep,
   stringify,
 } from "@monorepo/utils";
-import { isEmptyObject, isFunction } from "es-toolkit";
+import { isFunction } from "es-toolkit";
 import type { ReactNode } from "react";
 import { z } from "zod";
 import type {
@@ -18,8 +18,8 @@ import type {
   AutoFormFieldAcceptMetadata,
   AutoFormFieldMetadata,
   AutoFormFieldSectionMetadata,
-  AutoFormFieldsMetadata,
-  AutoFormFormsMetadata,
+  AutoFormFieldFieldsMetadata,
+  AutoFormFieldFormsMetadata,
   AutoFormStepMetadata,
   AutoFormSubmissionStepProps,
   AutoFormSummarySection,
@@ -336,12 +336,12 @@ function toZodArray<Schema extends z.ZodType>(schema: Schema, minItems?: number,
  * @returns form schema with valid metadata
  * @example forms(z.object({ firstName: field(...) }), { identifier: data => `${data.firstName}` })
  */
-export function forms(formSchema: z.ZodObject, formsMetadata?: Omit<AutoFormFormsMetadata, "render">) {
+export function forms(formSchema: z.ZodObject, formsMetadata?: Omit<AutoFormFieldFormsMetadata, "render">) {
   if (formsMetadata === undefined) {
     return toZodArray(formSchema).meta({ render: "form-list" });
   }
-  const { minItems, maxItems } = formsMetadata;
-  return toZodArray(formSchema, minItems, maxItems).meta({ ...formsMetadata, render: "form-list" });
+  const { maxItems } = formsMetadata;
+  return toZodArray(formSchema, undefined, maxItems).meta({ ...formsMetadata, render: "form-list" });
 }
 
 /**
@@ -365,8 +365,6 @@ export function filterSchema(schema: z.ZodObject, formData: AutoFormData = {}): 
     if (isZodArray(fieldSchema)) {
       const result = getElementSchema(fieldSchema);
       if (result.ok && isZodObject(result.value)) {
-        logger.debug(`filterSchema "${key}" creating a new forms with recursive call`);
-        visibleShape[key] = forms(filterSchema(result.value, formData), fieldSchema.meta() as AutoFormFormsMetadata);
         continue;
       }
     }
@@ -806,7 +804,7 @@ export function step<Schema extends z.ZodObject>(stepSchema: Schema, stepMetadat
  */
 export function fields<Schema extends z.ZodType>(
   fieldSchema: Schema,
-  fieldsMetadata?: Omit<AutoFormFieldsMetadata, "render">,
+  fieldsMetadata?: Omit<AutoFormFieldFieldsMetadata, "render">,
 ) {
   if (fieldsMetadata === undefined) {
     return toZodArray(fieldSchema).meta({ render: "field-list" });
@@ -967,25 +965,6 @@ export function buildStepperSteps({
       suffix,
       title,
     };
-  });
-}
-
-/**
- * Check if a form data seems filled
- * @param data the data to check
- * @returns true if it seems filled
- */
-export function isSubformFilled(data: AutoFormData): boolean {
-  return Object.values(data).some(value => {
-    if (Array.isArray(value)) {
-      return value.length > 0;
-    }
-    if (isEmptyObject(value)) {
-      return false;
-    }
-    // @ts-expect-error type issue
-    // oxlint-disable-next-line unicorn/no-null
-    return ![undefined, null, "", false].includes(value);
   });
 }
 
