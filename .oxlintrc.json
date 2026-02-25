@@ -320,6 +320,7 @@
     ],
     "no-ternary": "off",
     "no-unassigned-import": "off",
+    "no-use-before-define": ["error", { "functions": false }],
     "no-void": "off",
     "no-warning-comments": "off",
     "number-literal-case": "off",
