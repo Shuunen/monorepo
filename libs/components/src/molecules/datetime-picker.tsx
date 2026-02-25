@@ -291,7 +291,7 @@ export function DatetimePicker({
                         {Array.from({ length: 60 }, (_elem, index) => {
                           const minute = String(index).padStart(2, "0");
                           return (
-                            <SelectItem prefixDataTestId="input-date-time-hour" key={minute} value={minute}>
+                            <SelectItem prefixDataTestId="input-date-time-minute" key={minute} value={minute}>
                               {minute}
                             </SelectItem>
                           );
