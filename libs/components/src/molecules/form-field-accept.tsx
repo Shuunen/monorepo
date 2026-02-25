@@ -1,9 +1,7 @@
-import { cn } from "@monorepo/utils";
-import { useCallback, useId } from "react";
+import { useCallback } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
 import type { z } from "zod";
-import { Label } from "../atoms/label";
-import { RadioGroup, RadioGroupItem } from "../atoms/radio-group";
+import { RadioGroup, RadioGroupChoiceCard } from "../atoms/radio-group";
 import { IconAccept } from "../icons/icon-accept";
 import { IconReject } from "../icons/icon-reject";
 import type { AutoFormFieldAcceptMetadata } from "./auto-form.types";
@@ -21,13 +19,6 @@ export function FormFieldAccept({ fieldName, fieldSchema, isOptional, logger, re
     throw new Error(`Field "${fieldName}" is not a boolean`);
   }
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
-  const idAccept = useId();
-  const idReject = useId();
-  const buttonClasses = cn("flex items-center space-x-2 rounded-md border px-4 py-3", {
-    "cursor-pointer hover:bg-gray-50": state === "editable",
-  });
-  const iconClasses = cn("table rounded bg-current/10 p-2", { "bg-current/0": isDisabled });
-  const labelClasses = cn({ "cursor-pointer": state === "editable" });
   const initialValue = useCallback((field: ControllerRenderProps) => {
     if (field.value === true) {
       return "accepted";
@@ -47,24 +38,22 @@ export function FormFieldAccept({ fieldName, fieldSchema, isOptional, logger, re
           onValueChange={value => field.onChange(value === "accepted")}
           value={initialValue(field)}
         >
-          <div className={buttonClasses}>
-            <RadioGroupItem id={idAccept} name={field.name} value="accepted" />
-            <Label className={labelClasses} htmlFor={idAccept}>
-              <div className={cn("text-green-600", iconClasses)}>
-                <IconAccept />
-              </div>
-              {metadata.labels?.accept ?? "Accept"}
-            </Label>
-          </div>
-          <div className={buttonClasses}>
-            <RadioGroupItem id={idReject} name={field.name} value="rejected" />
-            <Label className={labelClasses} htmlFor={idReject}>
-              <div className={cn("text-red-600", iconClasses)}>
-                <IconReject />
-              </div>
-              {metadata.labels?.reject ?? "Reject"}
-            </Label>
-          </div>
+          <RadioGroupChoiceCard
+            disabled={isDisabled}
+            icon={IconAccept}
+            iconColor="text-success"
+            label={metadata.labels?.accept ?? "Accept"}
+            name={field.name}
+            value="accepted"
+          />
+          <RadioGroupChoiceCard
+            disabled={isDisabled}
+            icon={IconReject}
+            iconColor="text-destructive"
+            label={metadata.labels?.reject ?? "Reject"}
+            name={field.name}
+            value="rejected"
+          />
         </RadioGroup>
       )}
     </FormFieldBase>
