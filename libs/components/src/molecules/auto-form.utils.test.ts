@@ -360,6 +360,16 @@ describe("auto-form.utils", () => {
     const result = filtered.safeParse({ firstName: "Jojito", surname: ["jojo l'asticot"] });
     expect(result.success).toBe(true);
   });
+  it("filterSchema D should filter out readonly fields", () => {
+    const shape = {
+      a: z.string().meta({ label: "A" }),
+      b: z.string().meta({ label: "B", state: "readonly" }),
+    };
+    const schema = z.object(shape);
+    const filtered = filterSchema(schema, {});
+    expect(filtered.shape).toHaveProperty("a");
+    expect(filtered.shape).not.toHaveProperty("b");
+  });
 
   // normalizeDataForSchema
   it("normalizeDataForSchema A should remove excluded fields and invisible fields", () => {
