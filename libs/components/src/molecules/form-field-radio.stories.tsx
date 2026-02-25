@@ -7,6 +7,9 @@ import { AutoForm } from "./auto-form";
 import type { AutoFormData } from "./auto-form.types";
 import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
+import { IconAccept } from "../icons/icon-accept";
+import { IconWarning } from "../icons/icon-warning";
+import { IconReject } from "../icons/icon-reject";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
 
@@ -44,6 +47,11 @@ export const Basic: Story = {
       z.object({
         color: field(z.enum(["red", "green", "blue"]), {
           label: "Favourite Color",
+          options: [
+            { label: "Red", value: "red" },
+            { label: "Green", value: "green" },
+            { label: "Blue", value: "blue" },
+          ],
           render: "radio",
         }),
       }),
@@ -129,6 +137,11 @@ export const WithPrefault: Story = {
       z.object({
         color: field(z.enum(["red", "green", "blue"]).prefault("green"), {
           label: "Favourite Color",
+          options: [
+            { label: "Red", value: "red" },
+            { label: "Green", value: "green" },
+            { label: "Blue", value: "blue" },
+          ],
           render: "radio",
         }),
       }),
@@ -164,6 +177,11 @@ export const WithInitialValue: Story = {
       z.object({
         size: field(z.enum(["small", "medium", "large"]), {
           label: "T-shirt Size",
+          options: [
+            { label: "Small", value: "small" },
+            { label: "Medium", value: "medium" },
+            { label: "Large", value: "large" },
+          ],
           render: "radio",
         }),
       }),
@@ -198,6 +216,11 @@ export const Optional: Story = {
       z.object({
         theme: field(z.enum(["light", "dark", "system"]).optional(), {
           label: "Theme Preference",
+          options: [
+            { label: "Light", value: "light" },
+            { label: "Dark", value: "dark" },
+            { label: "System", value: "system" },
+          ],
           render: "radio",
         }),
       }),
@@ -222,6 +245,11 @@ export const Disabled: Story = {
       z.object({
         status: field(z.enum(["active", "inactive", "pending"]), {
           label: "Account Status",
+          options: [
+            { label: "Active", value: "active" },
+            { label: "Inactive", value: "inactive" },
+            { label: "Pending", value: "pending" },
+          ],
           render: "radio",
           state: "disabled",
         }),
@@ -234,7 +262,7 @@ export const Disabled: Story = {
     for (const radio of radios) {
       expect(radio).toBeDisabled();
     }
-    const activeRadioButton = canvas.getByTestId("radio-item-status-active-active");
+    const activeRadioButton = canvas.getByTestId("radio-item-status-active");
     const activeRadio = activeRadioButton.nextElementSibling;
     expect(activeRadio).toBeChecked();
   },
@@ -250,6 +278,11 @@ export const Readonly: Story = {
       z.object({
         plan: field(z.enum(["free", "pro", "enterprise"]), {
           label: "Subscription Plan",
+          options: [
+            { label: "Free", value: "free" },
+            { label: "Pro", value: "pro" },
+            { label: "Enterprise", value: "enterprise" },
+          ],
           render: "radio",
           state: "readonly",
         }),
@@ -276,10 +309,20 @@ export const MultipleFields: Story = {
       z.object({
         color: field(z.enum(["red", "green", "blue"]), {
           label: "Favourite Color",
+          options: [
+            { label: "Red", value: "red" },
+            { label: "Green", value: "green" },
+            { label: "Blue", value: "blue" },
+          ],
           render: "radio",
         }),
         size: field(z.enum(["small", "medium", "large"]), {
           label: "Size",
+          options: [
+            { label: "Small", value: "small" },
+            { label: "Medium", value: "medium" },
+            { label: "Large", value: "large" },
+          ],
           render: "radio",
           errors: (data: AutoFormData) => {
             if (data.color === "red" && data.size === "large") {
@@ -326,6 +369,70 @@ export const MultipleFields: Story = {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
       expect(submittedData).not.toContainHTML(stringify({ color: "red", size: "large" }, true));
+    });
+  },
+};
+
+/**
+ * Horizontal card radio group
+ */
+export const HorizontalCard: Story = {
+  args: {
+    schemas: [
+      z.object({
+        agreedToTerms: field(z.enum(["yes", "idk", "nope"]), {
+          fullWidth: true,
+          isVertical: false,
+          label: "Response",
+          options: [
+            {
+              icon: IconAccept,
+              iconColor: "text-success",
+              label: "Yes",
+              value: "yes",
+              description: "I'm sure.",
+            },
+            {
+              icon: IconWarning,
+              iconColor: "text-warning",
+              label: "IDK",
+              value: "idk",
+              description: "I'm not sure...",
+            },
+            {
+              icon: IconReject,
+              iconColor: "text-destructive",
+              label: "Nope",
+              value: "nope",
+              description: "I'm sure.",
+            },
+          ],
+          placeholder: "Select a response",
+          render: "radio",
+          variant: "card",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+    const radios = canvas.getAllByRole("radio");
+    expect(radios).toHaveLength(3);
+
+    await step("select yes option", async () => {
+      const yesRadio = canvas.getByTestId("radio-item-agreed-to-terms-yes");
+      await userEvent.click(yesRadio);
+      expect(yesRadio).toHaveAttribute("data-state", "checked");
+    });
+
+    await step("submit form", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+
+    await step("verify submitted data", () => {
+      expect(submittedData).toContainHTML(stringify({ agreedToTerms: "yes" }, true));
     });
   },
 };

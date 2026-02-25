@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
 import { Label } from "./label";
-import { RadioGroup, RadioGroupItem } from "./radio-group";
+import { IconAccept } from "../icons/icon-accept";
+import { IconWarning } from "../icons/icon-warning";
+import { IconReject } from "../icons/icon-reject";
+import { RadioGroup, RadioGroupChoiceCard, RadioGroupItem } from "./radio-group";
 
 const meta = {
   component: RadioGroup,
@@ -65,6 +68,69 @@ export const Default: Story = {
         <RadioGroupItem id="r3" name="radio-item-3" value="compact" />
         <Label htmlFor="r3">Compact</Label>
       </div>
+    </RadioGroup>
+  ),
+};
+
+export const Card: Story = {
+  args: {
+    name: "radio-group",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // All three radios are present
+    const radios = canvas.getAllByRole("radio");
+    expect(radios).toHaveLength(3);
+
+    const yesRadio = canvas.getByTestId("radio-item-subscribe-yes");
+    const idkRadio = canvas.getByTestId("radio-item-subscribe-idk");
+    const noRadio = canvas.getByTestId("radio-item-subscribe-nope");
+
+    expect(yesRadio).toBeInTheDocument();
+    expect(idkRadio).toBeInTheDocument();
+    expect(noRadio).toBeInTheDocument();
+
+    // By default, "idk" should be selected
+    expect(idkRadio).toHaveAttribute("data-state", "checked");
+    expect(yesRadio).toHaveAttribute("data-state", "unchecked");
+    expect(noRadio).toHaveAttribute("data-state", "unchecked");
+
+    await userEvent.click(yesRadio);
+
+    expect(yesRadio).toHaveAttribute("data-state", "checked");
+    expect(idkRadio).toHaveAttribute("data-state", "unchecked");
+    expect(noRadio).toHaveAttribute("data-state", "unchecked");
+  },
+
+  render: () => (
+    <RadioGroup defaultValue="idk" name="subscribe">
+      {/** biome-ignore-start lint/correctness/useUniqueElementIds: it's ok here */}
+      <RadioGroupChoiceCard
+        description="I'm sure."
+        icon={IconAccept}
+        iconColor="text-success"
+        label="Yes"
+        name="subscribe"
+        value="yes"
+      />
+      <RadioGroupChoiceCard
+        description="I'm not sure."
+        icon={IconWarning}
+        iconColor="text-warning"
+        label="IDK"
+        name="subscribe"
+        value="idk"
+      />
+      <RadioGroupChoiceCard
+        description="I'm sure."
+        icon={IconReject}
+        iconColor="text-destructive"
+        label="Nope"
+        name="subscribe"
+        value="nope"
+      />
+      {/** biome-ignore-end lint/correctness/useUniqueElementIds: it's ok here */}
     </RadioGroup>
   ),
 };

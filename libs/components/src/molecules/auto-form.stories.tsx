@@ -337,6 +337,11 @@ const optionalSectionStep1Schema = step(
     }),
     favouriteColor: field(z.enum(["red", "green", "blue"]).optional(), {
       label: "Favourite Color",
+      options: [
+        { label: "Red", value: "red" },
+        { label: "Green", value: "green" },
+        { label: "Blue", value: "blue" },
+      ],
       placeholder: "Select your favourite color",
     }),
     isHacker: field(z.boolean(), {

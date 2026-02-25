@@ -17,14 +17,15 @@ import type {
   AutoFormData,
   AutoFormFieldAcceptMetadata,
   AutoFormFieldMetadata,
+  AutoFormFieldRadioMetadata,
   AutoFormFieldSectionMetadata,
+  AutoFormFieldSelectMetadata,
   AutoFormFieldFieldsMetadata,
   AutoFormFieldFormsMetadata,
   AutoFormStepMetadata,
   AutoFormSubmissionStepProps,
   AutoFormSummarySection,
   DependsOnCondition,
-  SelectOption,
   TypeLike,
 } from "./auto-form.types";
 
@@ -47,36 +48,6 @@ export function getUnwrappedSchema(schema: z.ZodType) {
     return getUnwrappedSchema((schema as z.ZodOptional<z.ZodType>).unwrap());
   }
   return schema;
-}
-
-/**
- * Gets the enum options from a Zod schema if it is a ZodEnum or an optional ZodEnum.
- * Returns an array of {label, value} objects. If custom options are provided in metadata, they are used.
- * Otherwise, enum values are converted to label/value pairs with capitalized labels.
- * @param fieldSchema the Zod schema to check
- * @returns the array of enum options as {label, value} objects
- */
-export function getZodEnumOptions(fieldSchema: z.ZodType) {
-  const metadata = getFieldMetadata(fieldSchema);
-  if (metadata && "options" in metadata && metadata.options) {
-    return Result.ok(metadata.options);
-  }
-  const unwrapped = getUnwrappedSchema(fieldSchema);
-  let rawOptions: string[] = [];
-  if (unwrapped.type === "enum") {
-    const unwrappedMetadata = getFieldMetadata(unwrapped);
-    if (unwrappedMetadata && "options" in unwrappedMetadata && unwrappedMetadata.options) {
-      return Result.ok(unwrappedMetadata.options);
-    }
-    rawOptions = (unwrapped as z.ZodEnum).options as string[];
-  } else {
-    return Result.error("failed to get enum options from schema");
-  }
-  const options: SelectOption[] = rawOptions.map(option => ({
-    label: option.charAt(0).toUpperCase() + option.slice(1),
-    value: option,
-  }));
-  return Result.ok(options);
 }
 
 /**
@@ -598,6 +569,17 @@ export function filterDataForSummary(schemas: z.ZodObject[], data: AutoFormData)
   return result;
 }
 
+/**
+ * Check whether field metadata has options.
+ * @param metadata field metadata
+ * @returns whether or not field metadata has options
+ */
+export function isRadioOrSelectMetadata(
+  metadata?: AutoFormFieldMetadata,
+): metadata is AutoFormFieldRadioMetadata | AutoFormFieldSelectMetadata {
+  return metadata ? "options" in metadata : false;
+}
+
 // oxlint-disable-next-line max-statements, max-lines-per-function
 function sectionsFromEditableStep(schema: z.ZodObject, data: AutoFormData) {
   const stepMeta = getStepMetadata(schema);
@@ -631,9 +613,10 @@ function sectionsFromEditableStep(schema: z.ZodObject, data: AutoFormData) {
       currentSectionData = {};
       continue;
     }
-    const options = getZodEnumOptions(fieldSchema);
     // Add field to current section if it should be included
-    const value = options.ok ? options.value?.find(option => option.value === data[key])?.label : data[key];
+    const value = isRadioOrSelectMetadata(metadata)
+      ? metadata.options.find(option => option.value === data[key])?.label
+      : data[key];
     if (shouldIncludeField(fieldSchema, metadata, data)) {
       currentSectionData[key] = {
         /* c8 ignore start */
@@ -819,12 +802,11 @@ export function fields<Schema extends z.ZodType>(
  * @param fieldSchema the Zod schema for the field
  * @returns the component name to render like 'text', 'number', 'date', etc... Undefined if no suitable component found.
  */
-export function getFormFieldRender(fieldSchema: z.ZodType): AutoFormFieldMetadata["render"] {
-  const metadata = getFieldMetadata(fieldSchema) || {};
+export function getFormFieldRender(fieldSchema: z.ZodType): AutoFormFieldMetadata["render"] | undefined {
+  const metadata = getFieldMetadata(fieldSchema);
   const schema = getUnwrappedSchema(fieldSchema);
-  const { render } = metadata;
-  if (render) {
-    return render;
+  if (metadata?.render) {
+    return metadata.render;
   }
   if (isZodFile(schema)) {
     return "upload";

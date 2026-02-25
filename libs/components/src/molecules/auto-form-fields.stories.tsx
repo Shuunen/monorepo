@@ -109,6 +109,11 @@ const allFieldsSchema = z.object({
     title: "Select",
   }),
   selectField: field(z.enum(["option1", "option2", "option3"]).optional(), {
+    options: [
+      { label: "Option 1", value: "option1" },
+      { label: "Option 2", value: "option2" },
+      { label: "Option 3", value: "option3" },
+    ],
     placeholder: "Choose an option",
   }),
   selectFieldCode: section({
@@ -175,6 +180,11 @@ const allFieldsSchema = z.object({
     title: "Radio",
   }),
   radioField: field(z.enum(["option1", "option2", "option3"]).optional(), {
+    options: [
+      { label: "Option 1", value: "option1" },
+      { label: "Option 2", value: "option2" },
+      { label: "Option 3", value: "option3" },
+    ],
     placeholder: "Pick one option",
     render: "radio",
   }),

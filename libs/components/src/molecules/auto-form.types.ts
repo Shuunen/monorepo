@@ -2,6 +2,7 @@
 import type { Logger, Simplify } from "@monorepo/utils";
 import type { JSX, ReactNode } from "react";
 import type { z } from "zod";
+import type { RadioOption } from "../atoms/radio-group";
 import type { AutoFormStepperStep } from "./auto-form-stepper";
 import type { FormFieldSectionProps } from "./form-field-section";
 import type { FormSummaryData } from "./form-summary";
@@ -103,7 +104,6 @@ export type AutoFormFieldFormsMetadata = Simplify<
       /** Label for the button to complete a form in the list, default is "Complete" */
       completeButton?: string;
     };
-
     /** Maximum number of items allowed in the form list */
     maxItems?: number;
     /** Number of fields by default, can be dynamic, ex : field A has 3 entries and we want this field to be initialized accordingly with 3 fields too */
@@ -127,7 +127,7 @@ export type AutoFormFieldAcceptMetadata = Simplify<
 export type AutoFormFieldDateMetadata = Simplify<
   AutoFormFieldBaseMetadata & {
     defaultToNoon?: boolean;
-    render: "date" | "date-time" | "time";
+    render?: "date" | "date-time" | "time";
   }
 >;
 
@@ -180,23 +180,31 @@ export type AutoFormFieldBaseMetadata = {
   codec?: z.ZodCodec;
   /** Custom error validation function that receives the current form data and returns an error message string or undefined. Useful for cross-field validation. */
   errors?: (data: AutoFormData) => string | undefined;
-  /** Force the field to be rendered with a specific component, else use automatic field-schema detection */
-  render?:
-    | "accept"
-    | "boolean"
-    | "date"
-    | "date-time"
-    | "field-list"
-    | "form-list"
-    | "number"
-    | "password"
-    | "radio"
-    | "select"
-    | "text"
-    | "textarea"
-    | "time"
-    | "upload";
 } & AutoFormFieldConditionalMetadata;
+
+export type AutoFormFieldBooleanMetadata = Simplify<
+  AutoFormFieldBaseMetadata & {
+    render?: "boolean";
+  }
+>;
+
+export type AutoFormFieldNumberMetadata = Simplify<
+  AutoFormFieldBaseMetadata & {
+    render?: "number";
+  }
+>;
+
+export type AutoFormFieldTextMetadata = Simplify<
+  AutoFormFieldBaseMetadata & {
+    render?: "password" | "text" | "textarea";
+  }
+>;
+
+export type AutoFormFieldUploadMetadata = Simplify<
+  AutoFormFieldBaseMetadata & {
+    render?: "upload";
+  }
+>;
 
 /**
  * Metadata describing the configuration and behavior of a field in an auto-generated form.
@@ -205,11 +213,14 @@ export type AutoFormFieldBaseMetadata = {
  */
 export type AutoFormFieldMetadata =
   | AutoFormFieldAcceptMetadata
-  | AutoFormFieldBaseMetadata
+  | AutoFormFieldBooleanMetadata
   | AutoFormFieldDateMetadata
+  | AutoFormFieldNumberMetadata
   | AutoFormFieldRadioMetadata
   | AutoFormFieldSectionMetadata
   | AutoFormFieldSelectMetadata
+  | AutoFormFieldTextMetadata
+  | AutoFormFieldUploadMetadata
   | AutoFormFieldFieldsMetadata
   | AutoFormFieldFormsMetadata;
 
@@ -217,7 +228,7 @@ export type AutoFormFieldSelectMetadata = Simplify<
   AutoFormFieldBaseMetadata & {
     /** The options for the select field, with label and value */
     options: SelectOption[];
-    render: "select";
+    render?: "select";
   }
 >;
 
@@ -242,27 +253,6 @@ export type AutoFormFieldRadioMetadata = Simplify<
     render: "radio";
   }
 >;
-
-/** Option for radio fields in the auto-generated form. */
-export type RadioOption = {
-  /** The display label for the option, like "United States" */
-  label: string;
-  /** An optional description for the option, like "Population: 331 million" */
-  description?: string;
-  /** The actual value for the option, like "US" */
-  value: string;
-  /** Optional icon for the radio option, can be a JSX element or a function that returns a JSX element based on the option data */
-  icon?: JSX.Element | ((params: Record<string, unknown>) => JSX.Element);
-  /** Optional color for the icon */
-  iconColor?:
-    | "text-black"
-    | "text-primary"
-    | "text-secondary"
-    | "text-success"
-    | "text-danger"
-    | "text-warning"
-    | "text-info";
-};
 
 /** Props for the AutoFormSubmissionStep component, which displays the submission status of the form. */
 export type AutoFormSubmissionStepProps = {
