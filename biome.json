@@ -176,7 +176,7 @@
     {
       "includes": ["**/*.test.ts", "**/*.test.js", "**/*.test.tsx", "**/vitest.*.ts", "**/*.mock.ts"],
       "javascript": {
-        "globals": ["describe", "mock", "it", "beforeEach", "afterEach", "navigator", "expect", "expectTypeOf", "vi"]
+        "globals": ["describe", "assert", "mock", "it", "beforeEach", "afterEach", "navigator", "expect", "expectTypeOf", "vi"]
       },
       "linter": {
         "rules": {
