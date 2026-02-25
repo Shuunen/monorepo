@@ -101,6 +101,7 @@ export * from "./molecules/form-field-date.utils";
 export * from "./molecules/form-field-error.utils";
 export * from "./molecules/form-field-field-list";
 export * from "./molecules/form-field-form-list";
+export * from "./molecules/form-field-form-list.utils";
 export * from "./molecules/form-field-number";
 export * from "./molecules/form-field-password";
 export * from "./molecules/form-field-radio";

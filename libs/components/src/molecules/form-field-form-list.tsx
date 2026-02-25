@@ -11,10 +11,9 @@ import { IconCircleClose } from "../icons/icon-circle-close";
 import { IconReject } from "../icons/icon-reject";
 import { IconTrash } from "../icons/icon-trash";
 import { IconUpcoming } from "../icons/icon-upcoming";
-import type { AutoFormFormsMetadata } from "./auto-form.types";
+import type { AutoFormFieldFormsMetadata } from "./auto-form.types";
 import {
   getElementSchema,
-  isSubformFilled,
   isZodObject,
   mapExternalDataToFormFields,
   normalizeData,
@@ -22,6 +21,7 @@ import {
 } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.types";
+import { isSubformFilled, nbFilledItems } from "./form-field-form-list.utils";
 
 function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean }) {
   let icon = <IconCircleClose />;
@@ -114,7 +114,7 @@ export function FormFieldFormList({
   readonly = false,
   showForm,
 }: FormFieldBaseProps) {
-  const metadata = fieldSchema.meta() as AutoFormFormsMetadata;
+  const metadata = fieldSchema.meta() as AutoFormFieldFormsMetadata;
   const { label, maxItems, icon, identifier, nbItems, labels } = metadata;
   const fieldState = "state" in metadata ? metadata.state : undefined;
   const state = fieldState ?? stepState ?? "editable";
@@ -189,7 +189,7 @@ export function FormFieldFormList({
     <FormFieldBase {...props} showLabel={false}>
       {/* oxlint-disable-next-line no-shadow */}
       {({ field, fieldState, formState }) => {
-        const hasError = Boolean(fieldState.error && formState.isSubmitted);
+        const hasError = Boolean(formState.isSubmitted) && nbFilledItems(items) !== items.length;
         return (
           <div className="flex w-full flex-col gap-4">
             {label && <Title>{label}</Title>}
@@ -231,8 +231,7 @@ export function FormFieldFormList({
                 {labels?.addButton ?? "Add item"}
                 <IconReject className="size-5 rotate-45" />
               </Button>
-              {/* we check isArray(fieldState.error) to know if the error is specifically about missing forms */}
-              {hasError && Array.isArray(fieldState.error) && (
+              {hasError && (
                 <span className="text-sm text-destructive">Please complete all forms before submitting.</span>
               )}
             </div>

@@ -78,7 +78,7 @@ export type AutoFormStepMetadata = Simplify<
   }
 >;
 
-export type AutoFormFieldsMetadata = Simplify<
+export type AutoFormFieldFieldsMetadata = Simplify<
   AutoFormFieldBaseMetadata & {
     /** Minimum number of items allowed in the form list */
     minItems?: number;
@@ -90,7 +90,7 @@ export type AutoFormFieldsMetadata = Simplify<
   }
 >;
 
-export type AutoFormFormsMetadata = Simplify<
+export type AutoFormFieldFormsMetadata = Simplify<
   AutoFormFieldBaseMetadata & {
     /** Icon to display alongside the form list title */
     icon?: JSX.Element | ((params: Record<string, unknown>) => JSX.Element);
@@ -103,8 +103,7 @@ export type AutoFormFormsMetadata = Simplify<
       /** Label for the button to complete a form in the list, default is "Complete" */
       completeButton?: string;
     };
-    /** Minimum number of items allowed in the form list */
-    minItems?: number;
+
     /** Maximum number of items allowed in the form list */
     maxItems?: number;
     /** Number of fields by default, can be dynamic, ex : field A has 3 entries and we want this field to be initialized accordingly with 3 fields too */
@@ -211,8 +210,8 @@ export type AutoFormFieldMetadata =
   | AutoFormFieldRadioMetadata
   | AutoFormFieldSectionMetadata
   | AutoFormFieldSelectMetadata
-  | AutoFormFieldsMetadata
-  | AutoFormFormsMetadata;
+  | AutoFormFieldFieldsMetadata
+  | AutoFormFieldFormsMetadata;
 
 export type AutoFormFieldSelectMetadata = Simplify<
   AutoFormFieldBaseMetadata & {

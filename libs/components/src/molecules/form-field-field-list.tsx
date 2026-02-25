@@ -8,7 +8,7 @@ import { Paragraph, Title } from "../atoms/typography";
 import { IconMinus } from "../icons/icon-minus";
 import { IconReject } from "../icons/icon-reject";
 import { type AutoFormFieldProps, componentRegistry } from "./auto-form-field.utils";
-import type { AutoFormFieldsMetadata } from "./auto-form.types";
+import type { AutoFormFieldFieldsMetadata } from "./auto-form.types";
 import { getElementSchema, getFieldMetadata, getFormFieldRender, typeLikeResolver } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 
@@ -19,7 +19,7 @@ function AutoFormField({
   state,
   logger,
   readonly,
-}: AutoFormFieldProps & { readonly: boolean; state?: AutoFormFieldsMetadata["state"] }) {
+}: AutoFormFieldProps & { readonly: boolean; state?: AutoFormFieldFieldsMetadata["state"] }) {
   if (fieldSchema === undefined) {
     return (
       <Paragraph>
@@ -51,7 +51,7 @@ export function FormFieldFieldList({
   logger,
   readonly = false,
 }: FormFieldBaseProps) {
-  const metadata = fieldSchema.meta() as AutoFormFieldsMetadata;
+  const metadata = fieldSchema.meta() as AutoFormFieldFieldsMetadata;
   const { maxItems, label, placeholder, nbItems, state } = metadata;
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
   const isDisabled = state === "disabled" || readonly;
