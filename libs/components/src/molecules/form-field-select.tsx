@@ -5,8 +5,8 @@ import { FormControl } from "../atoms/form";
 import { Popover, PopoverContent, PopoverTrigger } from "../atoms/popover";
 import { IconCheck } from "../icons/icon-check";
 import { IconChevronDown } from "../icons/icon-chevron-down";
-import type { SelectOption } from "./auto-form.types";
-import { getFieldMetadataOrThrow, getZodEnumOptions } from "./auto-form.utils";
+import type { AutoFormFieldSelectMetadata, SelectOption } from "./auto-form.types";
+import { getFieldMetadataOrThrow } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import { Button } from "../atoms/button";
 
@@ -47,6 +47,7 @@ function VirtualizedOptions({
     count: options.length,
     estimateSize: () => itemHeight,
     getScrollElement: () => scrollRef.current,
+    measureElement: element => element.getBoundingClientRect().height,
     overscan: 5,
   });
   return (
@@ -72,7 +73,9 @@ function VirtualizedOptions({
               onClick={() => onSelect(option.value)}
               onKeyDown={event => event.key === "Enter" && onSelect(option.value)}
               role="option"
-              style={{ height: virtualItem.size, transform: `translateY(${virtualItem.start}px)` }}
+              ref={virtualizer.measureElement}
+              data-index={virtualItem.index}
+              style={{ minHeight: virtualItem.size, transform: `translateY(${virtualItem.start}px)` }}
               tabIndex={0}
             >
               {option.label}
@@ -91,20 +94,19 @@ function VirtualizedOptions({
 
 export function FormFieldSelect({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const [open, setOpen] = useState(false);
-  const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
-  const { label = "", placeholder, state = "editable" } = metadata;
-  const isDisabled = state === "disabled" || readonly;
-  const options = getZodEnumOptions(fieldSchema);
-  if (!options.ok) {
-    throw new Error(`Field "${fieldName}" is not an enum`);
+  const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema) as AutoFormFieldSelectMetadata;
+  const { label = "", options, placeholder, state = "editable" } = metadata;
+  if (!Array.isArray(options)) {
+    throw new TypeError(`Field "${fieldName}" requires "options" in metadata`);
   }
+  const isDisabled = state === "disabled" || readonly;
   const placeholderText = placeholder ?? `Select ${label}`;
 
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
   return (
     <FormFieldBase {...props}>
       {({ field }) => {
-        const selectedOption = options.value?.find(opt => opt.value === field.value);
+        const selectedOption = options.find(opt => opt.value === field.value);
         return (
           <FormControl>
             <Popover open={open} onOpenChange={setOpen}>
@@ -124,7 +126,7 @@ export function FormFieldSelect({ fieldName, fieldSchema, isOptional, logger, re
                     field.onChange(value);
                     setOpen(false);
                   }}
-                  options={options.value ?? []}
+                  options={options}
                 />
               </PopoverContent>
             </Popover>
