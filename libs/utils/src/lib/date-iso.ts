@@ -46,22 +46,42 @@ export function dateIsoStripSecondsZone(date: string) {
   return new Date(date).toISOString().slice(0, 16);
 }
 
+const INVALID_DATE = "N/A";
+const EMPTY_DATE = "-";
+
 /**
  * Strip the seconds, milliseconds and timezone from an ISO date string
  * @param date  the ISO date as a string or a Date object
- * @param withTime  boolean that decide if it return the time or not
- * @returns ex: `24/12/2025`
+ * @param options - {
+ *   withTime?: boolean; // Whether to include the time (hours:minutes) in the output. Defaults to `true`.
+ *   acceptPartialDate?: boolean; // Whether to accept partial dates like "2025" or "2025-12". Defaults to `false`. If true and the date is partial, the output is handled by `partialDateDisplay`.
+ * }
+ * @returns A formatted date string (example: "24/12/2025" or "24/12/2025 17:00"), or a special INVALID_DATE constant if the input is invalid and partials are not accepted. If partials are accepted, returns a formatted partial date string.
  */
-export function dateIsoToReadableDatetime(date: string | Date | null | undefined, withTime = true): string {
+export function dateIsoToReadableDatetime(
+  date: string | Date | null | undefined,
+  options: {
+    withTime?: boolean;
+    acceptPartialDate?: boolean;
+  } = {},
+): string {
+  const withTime = options.withTime ?? true;
+  const acceptPartialDate = options.acceptPartialDate ?? false;
   if (!date) {
-    return "-";
+    return EMPTY_DATE;
   }
 
   const dateObject: Date = date instanceof Date ? date : new Date(date);
   const padLength = 2;
 
-  if (Number.isNaN(dateObject.getTime())) {
-    return "-";
+  const invalidDate = Number.isNaN(dateObject.getTime());
+
+  if (invalidDate && !acceptPartialDate) {
+    return INVALID_DATE;
+  }
+
+  if (invalidDate && acceptPartialDate) {
+    return partialDateDisplay(date as string);
   }
 
   const day = String(dateObject.getUTCDate()).padStart(padLength, "0");
@@ -76,6 +96,43 @@ export function dateIsoToReadableDatetime(date: string | Date | null | undefined
   }
 
   return result;
+}
+
+const DATE_REGEX = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+/**
+ * Converts a partial ISO date string to a human-readable format.
+ *
+ * Recognizes the following partial date formats:
+ * - "YYYY-00-00": returns "YYYY"
+ * - "YYYY-MM-00": returns "MM/YYYY"
+ * For any other format (including full dates or invalid formats), returns "-".
+ *
+ * @param dateString - The ISO date string in the format "YYYY-MM-DD".
+ * @returns A human-readable string for partial dates, or "-" if the format is not recognized.
+ */
+function partialDateDisplay(dateString: string): string {
+  const match = DATE_REGEX.exec(dateString);
+  if (!match) {
+    return INVALID_DATE;
+  }
+  const year = match[1];
+  // oxlint-disable-next-line no-magic-numbers
+  const month = match[2];
+  // oxlint-disable-next-line no-magic-numbers
+  const day = match[3];
+
+  if (year === "0000") {
+    return INVALID_DATE;
+  }
+
+  if (month === "00") {
+    return `${year}`;
+  }
+  if (month !== "00" && day === "00") {
+    return `${month}/${year}`;
+  }
+  return INVALID_DATE;
 }
 
 const millisecondsPattern = /\.\d{3}Z$/;
