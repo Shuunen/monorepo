@@ -176,6 +176,7 @@
       "globals": {
         "afterAll": "readonly",
         "afterEach": "readonly",
+        "assert": "readonly",
         "beforeAll": "readonly",
         "beforeEach": "readonly",
         "describe": "readonly",
