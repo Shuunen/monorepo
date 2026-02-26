@@ -123,7 +123,7 @@ export function FormFieldFormList({
   const formValues = useWatch({ disabled: nbItems === undefined });
   const showAddButton = !(readonly || maxItems === 1 || nbItems);
   const length = typeLikeResolver(nbItems, formValues);
-  const { setValue } = useFormContext();
+  const { setValue, unregister } = useFormContext();
   const items = useMemo(
     () =>
       length === undefined && fieldValue === undefined
@@ -156,6 +156,9 @@ export function FormFieldFormList({
     removeKey(indexToDelete);
     // oxlint-disable-next-line id-length
     const newItems = items.filter((_, index) => index !== indexToDelete);
+    for (let index = indexToDelete; index < items.length; index += 1) {
+      unregister(`${fieldName}.${index}`);
+    }
     onChange(newItems);
   }
   /**
