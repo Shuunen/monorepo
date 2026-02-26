@@ -5,7 +5,6 @@ import { z } from "zod";
 import {
   acceptField,
   buildStepperSteps,
-  checkZodBoolean,
   field,
   fields,
   filterDataForSummary,
@@ -78,45 +77,15 @@ describe("auto-form.utils", () => {
     const schema = z.string();
     expect(isZodBoolean(schema)).toBe(false);
   });
-  it("isZodBoolean D should handle ZodLiteral true", () => {
-    const schema = z.literal(true);
+  it("isZodBoolean D should handle optional prefault boolean", () => {
+    const schema = z.boolean().optional().prefault(true);
     expect(isZodBoolean(schema)).toBe(true);
   });
-  it("isZodBoolean E should handle ZodLiteral false", () => {
-    const schema = z.literal(false);
+  it("isZodBoolean E should handle optional prefault boolean", () => {
+    const schema = z.boolean().optional().default(true);
     expect(isZodBoolean(schema)).toBe(true);
   });
-  it("isZodBoolean D should handle ZodLiteral non-boolean", () => {
-    const schema = z.literal("foo");
-    expect(isZodBoolean(schema)).toBe(false);
-  });
-  // checkZodBoolean
-  it("checkZodBoolean A should detect ZodBoolean", () => {
-    const schema = z.boolean();
-    const { isBoolean, booleanLiteralValue, isBooleanLiteral } = checkZodBoolean(schema);
-    expect(isBoolean).toBe(true);
-    expect(booleanLiteralValue).toBe(false);
-    expect(isBooleanLiteral).toBe(false);
-  });
-  it("checkZodBoolean B should detect ZodLiteral true", () => {
-    const schema = z.literal(true);
-    const { isBoolean, booleanLiteralValue, isBooleanLiteral } = checkZodBoolean(schema);
-    expect(isBoolean).toBe(true);
-    expect(booleanLiteralValue).toBe(true);
-    expect(isBooleanLiteral).toBe(true);
-  });
-  it("checkZodBoolean C should detect ZodLiteral false", () => {
-    const schema = z.literal(false);
-    const { isBoolean, booleanLiteralValue, isBooleanLiteral } = checkZodBoolean(schema);
-    expect(isBoolean).toBe(true);
-    expect(booleanLiteralValue).toBe(false);
-    expect(isBooleanLiteral).toBe(true);
-  });
-  it("checkZodBoolean D should detect optional ZodBoolean", () => {
-    const schema = z.boolean().optional();
-    const { isBoolean } = checkZodBoolean(schema);
-    expect(isBoolean).toBe(true);
-  });
+
   // checkZodNumber
   it("checkZodNumber A should detect ZodNumber", () => {
     const schema = z.number();

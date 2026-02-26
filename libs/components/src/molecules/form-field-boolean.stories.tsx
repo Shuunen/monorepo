@@ -297,25 +297,3 @@ export const MultipleFields: Story = {
     });
   },
 };
-
-/**
- * Boolean literal field (always true, cannot be changed)
- */
-export const BooleanLiteral: Story = {
-  args: {
-    schemas: [
-      z.object({
-        isPublished: field(z.literal(true), {
-          label: "Published",
-          placeholder: "This item is published",
-        }),
-      }),
-    ],
-  },
-  play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const toggleSwitch = canvas.getByRole("switch");
-    expect(toggleSwitch).toBeDisabled();
-    expect(toggleSwitch).toHaveAttribute("aria-checked", "true");
-  },
-};
