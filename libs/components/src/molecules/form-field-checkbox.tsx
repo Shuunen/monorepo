@@ -1,11 +1,17 @@
+import { Checkbox } from "../atoms/checkbox";
 import { FormControl, FormDescription } from "../atoms/form";
-import { Switch } from "../atoms/switch";
 import { cn } from "../shadcn/utils";
 import { getFieldMetadataOrThrow, isZodBoolean } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import { FormFieldLabel } from "./form-field.utils";
 
-export function FormFieldBoolean({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
+export function FormFieldCheckbox({
+  fieldName,
+  fieldSchema,
+  isOptional,
+  logger,
+  readonly = false,
+}: FormFieldBaseProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { placeholder, state = "editable", label } = metadata;
   const isDisabled = state === "disabled" || readonly;
@@ -17,12 +23,12 @@ export function FormFieldBoolean({ fieldName, fieldSchema, isOptional, logger, r
     <FormFieldBase {...props} showLabel={false}>
       {({ field }) => (
         <div className="mt-2 grid gap-2">
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <FormControl>
-              <Switch
-                {...field}
+              <Checkbox
                 checked={Boolean(field.value)}
                 disabled={isDisabled}
+                name={fieldName}
                 onCheckedChange={field.onChange}
               />
             </FormControl>
