@@ -16,12 +16,12 @@ import { z } from "zod";
 import type {
   AutoFormData,
   AutoFormFieldAcceptMetadata,
+  AutoFormFieldFieldsMetadata,
+  AutoFormFieldFormsMetadata,
   AutoFormFieldMetadata,
   AutoFormFieldRadioMetadata,
   AutoFormFieldSectionMetadata,
   AutoFormFieldSelectMetadata,
-  AutoFormFieldFieldsMetadata,
-  AutoFormFieldFormsMetadata,
   AutoFormStepMetadata,
   AutoFormSubmissionStepProps,
   AutoFormSummarySection,
@@ -74,40 +74,12 @@ export function isZodEnum(fieldSchema: z.ZodType): fieldSchema is z.ZodEnum {
 }
 
 /**
- * Checks if a given Zod schema represents a boolean type, including boolean literals and optional booleans.
- * @param fieldSchema - The Zod schema to check.
- * @returns An object containing:
- *   - `isBoolean`: `true` if the schema is a boolean or boolean literal (including optional booleans), otherwise `false`.
- *   - `isBooleanLiteral`: `true` if the schema is a boolean literal (`true` or `false`), otherwise `false`.
- *   - `booleanLiteralValue`: The value of the boolean literal if applicable, otherwise `false`.
- */
-export function checkZodBoolean(fieldSchema: z.ZodType) {
-  let isBoolean = false;
-  let isBooleanLiteral = false;
-  let booleanLiteralValue = false;
-  /* c8 ignore else */
-  if (fieldSchema.type === "boolean") {
-    isBoolean = true;
-  } else if (fieldSchema.type === "literal") {
-    isBooleanLiteral = (fieldSchema as z.ZodLiteral).value === true || (fieldSchema as z.ZodLiteral).value === false;
-    isBoolean = isBooleanLiteral;
-    booleanLiteralValue = Boolean((fieldSchema as z.ZodLiteral).value);
-  } else if (
-    fieldSchema.type === "optional" &&
-    (fieldSchema as z.ZodOptional<z.ZodBoolean>).def.innerType.type === "boolean"
-  ) {
-    isBoolean = true;
-  }
-  return { booleanLiteralValue, isBoolean, isBooleanLiteral };
-}
-
-/**
  * Checks if the provided Zod schema is a ZodBoolean or contains a ZodBoolean as its inner type (e.g., optional boolean).
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodBoolean; otherwise, false.
  */
 export function isZodBoolean(fieldSchema: z.ZodType): fieldSchema is z.ZodBoolean {
-  return checkZodBoolean(fieldSchema).isBoolean;
+  return isZodType(fieldSchema, "boolean");
 }
 
 /**

@@ -1,21 +1,17 @@
 import { useCallback } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
-import type { z } from "zod";
 import { RadioGroup, RadioGroupChoiceCard } from "../atoms/radio-group";
 import { IconAccept } from "../icons/icon-accept";
 import { IconReject } from "../icons/icon-reject";
 import type { AutoFormFieldAcceptMetadata } from "./auto-form.types";
-import { checkZodBoolean, getFieldMetadataOrThrow } from "./auto-form.utils";
+import { isZodBoolean, getFieldMetadataOrThrow } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 
 export function FormFieldAccept({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema) as AutoFormFieldAcceptMetadata;
   const { state = "editable" } = metadata;
-  const { isBoolean, isBooleanLiteral } = checkZodBoolean(
-    fieldSchema as z.ZodBoolean | z.ZodLiteral | z.ZodOptional<z.ZodBoolean>,
-  );
-  const isDisabled = state === "disabled" || readonly || isBooleanLiteral;
-  if (!isBoolean) {
+  const isDisabled = state === "disabled" || readonly;
+  if (!isZodBoolean(fieldSchema)) {
     throw new Error(`Field "${fieldName}" is not a boolean`);
   }
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
