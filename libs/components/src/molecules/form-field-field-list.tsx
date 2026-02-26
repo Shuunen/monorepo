@@ -60,7 +60,7 @@ export function FormFieldFieldList({
   const fieldValue = useWatch({ name: fieldName });
   const formValues = useWatch({ disabled: nbItems === undefined });
   const length = typeLikeResolver(nbItems, formValues);
-  const { setValue } = useFormContext();
+  const { setValue, unregister } = useFormContext();
   const items = useMemo(() => arrayAlign(fieldValue, length), [fieldValue, length]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: we don't want to re-run this effect when the items change already bind in the useMemo
@@ -87,6 +87,9 @@ export function FormFieldFieldList({
     removeKey(indexToDelete);
     // oxlint-disable-next-line id-length
     const newItems = items.filter((_, index) => index !== indexToDelete);
+    for (let index = indexToDelete; index < items.length; index += 1) {
+      unregister(`${fieldName}.${index}`);
+    }
     onChange(newItems);
   }
 
@@ -100,7 +103,7 @@ export function FormFieldFieldList({
             <div className="flex gap-2" key={keys[index]}>
               <div className="flex-1">
                 <AutoFormField
-                  fieldName={`${fieldName}.${keys[index]}`}
+                  fieldName={`${fieldName}.${index}`}
                   fieldSchema={elementSchema}
                   logger={logger}
                   readonly={isDisabled}

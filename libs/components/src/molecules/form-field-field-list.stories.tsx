@@ -385,5 +385,37 @@ export const ListInitializedDynamic: Story = {
         ),
       );
     });
+
+    await step("check for field duplications", async () => {
+      const backButton = canvas.getByRole("button", { name: "Back" });
+      await userEvent.click(backButton);
+
+      const addButton = canvas.getByTestId("button-add-applicants");
+      await userEvent.click(addButton);
+
+      const deleteButton = canvas.getByTestId("button-delete-applicants-1");
+      await userEvent.click(deleteButton);
+
+      const secondApplicantInput = canvas.getByTestId("input-text-applicants-1");
+      await userEvent.type(secondApplicantInput, "a");
+      await userEvent.type(secondApplicantInput, "b");
+
+      const referenceInputs = await canvas.findAllByRole("textbox");
+      expect(referenceInputs).toHaveLength(2);
+
+      const nextButton = canvas.getByRole("button", { name: "Next" });
+      await userEvent.click(nextButton);
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      expect(submittedData).toContainHTML(
+        stringify(
+          {
+            applicants: ["John Doe", "ab"],
+            applicantReferences: ["ref-1", "ref-2"],
+          },
+          true,
+        ),
+      );
+    });
   },
 };
