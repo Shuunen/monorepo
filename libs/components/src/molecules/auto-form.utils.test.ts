@@ -24,6 +24,7 @@ import {
   hasCustomErrors,
   isFieldVisible,
   isRadioOrSelectMetadata,
+  isRequiredBoolean,
   isStepClickable,
   isZodArray,
   isZodBoolean,
@@ -84,6 +85,22 @@ describe("auto-form.utils", () => {
   it("isZodBoolean E should handle optional prefault boolean", () => {
     const schema = z.boolean().optional().default(true);
     expect(isZodBoolean(schema)).toBe(true);
+  });
+  // isRequiredBoolean
+  it("isRequiredBoolean A should return true for z.boolean()", () => {
+    expect(isRequiredBoolean(z.boolean())).toBe(true);
+  });
+  it("isRequiredBoolean B should return false for z.boolean().optional()", () => {
+    expect(isRequiredBoolean(z.boolean().optional())).toBe(false);
+  });
+  it("isRequiredBoolean C should return false for z.boolean().default(true)", () => {
+    expect(isRequiredBoolean(z.boolean().default(true))).toBe(false);
+  });
+  it("isRequiredBoolean D should return false for z.string()", () => {
+    expect(isRequiredBoolean(z.string())).toBe(false);
+  });
+  it("isRequiredBoolean E should return false for z.boolean().prefault(true)", () => {
+    expect(isRequiredBoolean(z.boolean().prefault(true))).toBe(false);
   });
 
   // checkZodNumber
@@ -338,6 +355,24 @@ describe("auto-form.utils", () => {
     const filtered = filterSchema(schema, {});
     expect(filtered.shape).toHaveProperty("a");
     expect(filtered.shape).not.toHaveProperty("b");
+  });
+  it("filterSchema E should enforce required boolean fields to be true", () => {
+    const schema = z.object({
+      agreed: z.boolean().meta({ label: "Agreed" }),
+      name: z.string().meta({ label: "Name" }),
+    });
+    const filtered = filterSchema(schema);
+    expect(filtered.safeParse({ agreed: false, name: "John" }).success).toBe(false);
+    expect(filtered.safeParse({ agreed: true, name: "John" }).success).toBe(true);
+  });
+  it("filterSchema F should not enforce optional boolean fields to be true", () => {
+    const schema = z.object({
+      agreed: z.boolean().optional().meta({ label: "Agreed" }),
+    });
+    const filtered = filterSchema(schema);
+    expect(filtered.safeParse({ agreed: false }).success).toBe(true);
+    expect(filtered.safeParse({ agreed: true }).success).toBe(true);
+    expect(filtered.safeParse({}).success).toBe(true);
   });
 
   // normalizeDataForSchema
@@ -1177,9 +1212,9 @@ describe("auto-form.utils", () => {
     const schema = z.number();
     expect(getFormFieldRender(schema)).toBe("number");
   });
-  it("getFormFieldRender F should return boolean for boolean schema", () => {
+  it("getFormFieldRender F should return switch for boolean schema", () => {
     const schema = z.boolean();
-    expect(getFormFieldRender(schema)).toBe("boolean");
+    expect(getFormFieldRender(schema)).toBe("switch");
   });
   it("getFormFieldRender G should return text for string schema", () => {
     const schema = z.string();

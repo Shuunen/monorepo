@@ -51,10 +51,15 @@ export const Basic: Story = {
     const canvas = within(canvasElement);
     const radioGroup = canvas.getByTestId("radio-agreed-to-terms");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
-    await step("verify radio group is rendered", () => {
+    const submitButton = canvas.getByRole("button", { name: "Submit" });
+    await step("verify initial state", () => {
       expect(radioGroup).toBeInTheDocument();
+      expect(submittedData).toContainHTML(`{}`);
     });
-    await step("check radio group initial state", () => {
+    await step("check user can't submit without selecting an option", async () => {
+      await userEvent.click(submitButton);
+      const issues = canvas.queryAllByRole("alert");
+      expect(issues.map(el => el.textContent).join(",")).toBe("Invalid input: expected boolean, received undefined");
       expect(submittedData).toContainHTML(`{}`);
     });
     await step("check first option", async () => {
@@ -66,8 +71,6 @@ export const Basic: Story = {
       await sleep(1);
       expect(acceptOption).toBeChecked();
       expect(rejectOption).not.toBeChecked();
-    });
-    await step("verify form data", () => {
       expect(submittedData).toContainHTML(`{}`);
     });
     await step("check second option", async () => {
@@ -77,8 +80,6 @@ export const Basic: Story = {
       await sleep(1);
       expect(acceptOption).not.toBeChecked();
       expect(rejectOption).toBeChecked();
-    });
-    await step("verify updated form data", () => {
       expect(submittedData).toContainHTML(`{}`);
     });
     await step("submit form", async () => {

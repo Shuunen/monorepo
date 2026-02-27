@@ -1,3 +1,4 @@
+import { Checkbox } from "../atoms/checkbox";
 import { FormControl, FormDescription } from "../atoms/form";
 import { Switch } from "../atoms/switch";
 import { cn } from "../shadcn/utils";
@@ -9,6 +10,7 @@ export function FormFieldBoolean({ fieldName, fieldSchema, isOptional, logger, r
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { placeholder, state = "editable", label } = metadata;
   const isDisabled = state === "disabled" || readonly;
+  const isCheckbox = "render" in metadata && metadata.render === "checkbox";
   if (!isZodBoolean(fieldSchema)) {
     throw new Error(`Field "${fieldName}" is not a boolean`);
   }
@@ -17,14 +19,23 @@ export function FormFieldBoolean({ fieldName, fieldSchema, isOptional, logger, r
     <FormFieldBase {...props} showLabel={false}>
       {({ field }) => (
         <div className="mt-2 grid gap-2">
-          <div className="flex gap-2">
+          <div className={cn("flex gap-2", { "items-center": isCheckbox })}>
             <FormControl>
-              <Switch
-                {...field}
-                checked={Boolean(field.value)}
-                disabled={isDisabled}
-                onCheckedChange={field.onChange}
-              />
+              {isCheckbox ? (
+                <Checkbox
+                  checked={Boolean(field.value)}
+                  disabled={isDisabled}
+                  name={fieldName}
+                  onCheckedChange={field.onChange}
+                />
+              ) : (
+                <Switch
+                  {...field}
+                  checked={Boolean(field.value)}
+                  disabled={isDisabled}
+                  onCheckedChange={field.onChange}
+                />
+              )}
             </FormControl>
             {/* we set optional to true all the times to hide the red star, does not make sense on a field that always have a value */}
             <FormFieldLabel className={cn({ "cursor-pointer": !isDisabled })} isOptional={true} label={label} />

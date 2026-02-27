@@ -96,7 +96,6 @@ export * from "./molecules/floating-menu";
 export * from "./molecules/form-field";
 export * from "./molecules/form-field-accept";
 export * from "./molecules/form-field-boolean";
-export * from "./molecules/form-field-checkbox";
 export * from "./molecules/form-field-date";
 export * from "./molecules/form-field-date.utils";
 export * from "./molecules/form-field-error.utils";
