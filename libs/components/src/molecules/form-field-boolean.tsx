@@ -17,32 +17,24 @@ export function FormFieldBoolean({ fieldName, fieldSchema, isOptional, logger, r
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
   return (
     <FormFieldBase {...props} showLabel={false}>
-      {({ field }) => (
-        <div className="mt-2 grid gap-2">
-          <div className={cn("flex gap-2", { "items-center": isCheckbox })}>
-            <FormControl>
-              {isCheckbox ? (
-                <Checkbox
-                  checked={Boolean(field.value)}
-                  disabled={isDisabled}
-                  name={fieldName}
-                  onCheckedChange={field.onChange}
-                />
-              ) : (
-                <Switch
-                  {...field}
-                  checked={Boolean(field.value)}
-                  disabled={isDisabled}
-                  onCheckedChange={field.onChange}
-                />
-              )}
-            </FormControl>
-            {/* we set optional to true all the times to hide the red star, does not make sense on a field that always have a value */}
-            <FormFieldLabel className={cn({ "cursor-pointer": !isDisabled })} isOptional={true} label={label} />
+      {({ field }) => {
+        const commonProps = {
+          ...field,
+          checked: Boolean(field.value),
+          disabled: isDisabled,
+          onCheckedChange: field.onChange,
+        };
+        return (
+          <div className="mt-2 grid gap-2">
+            <div className={cn("flex gap-2", { "items-center": isCheckbox })}>
+              <FormControl>{isCheckbox ? <Checkbox {...commonProps} /> : <Switch {...commonProps} />}</FormControl>
+              {/* we set optional to true all the times to hide the red star, does not make sense on a field that always have a value */}
+              <FormFieldLabel className={cn({ "cursor-pointer": !isDisabled })} isOptional={true} label={label} />
+            </div>
+            {placeholder && <FormDescription name={fieldName}>{placeholder}</FormDescription>}
           </div>
-          {placeholder && <FormDescription name={fieldName}>{placeholder}</FormDescription>}
-        </div>
-      )}
+        );
+      }}
     </FormFieldBase>
   );
 }

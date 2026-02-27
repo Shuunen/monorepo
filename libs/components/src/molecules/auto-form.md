@@ -1387,7 +1387,7 @@ formatFileSize(1024 ** 3); // "1 GB"
 ```typescript
 // Check if schema is a specific type (handles optional wrapper)
 isZodEnum(fieldSchema); // true if z.enum() or z.optional(z.enum())
-isZodBoolean(fieldSchema); // true if z.boolean()
+isZodBoolean(fieldSchema); // true if z.boolean() or wrapped versions (optional, default, prefault)
 isZodNumber(fieldSchema); // true if z.number()
 isZodDate(fieldSchema); // true if z.date() or z.optional(z.date())
 isZodString(fieldSchema); // true if z.string()
