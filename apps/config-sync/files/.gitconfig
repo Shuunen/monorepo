@@ -8,7 +8,7 @@ ignorecase = false
 
 [user]
 email = romain.racamier@gmail.com
-name = Romain
+name = Romain Racamier-Lafon
 
 [pull]
 rebase = true

@@ -77,5 +77,9 @@ if ! command -v nx >/dev/null 2>&1; then
   echo "nx installed globally :)"
 fi
 
+if ! [[ "$PATH" =~ .pyenv/bin ]] && [ -d "$HOME/.pyenv/pyenv-win" ]; then
+  export PYENV="$HOME/.pyenv/pyenv-win"
+  export PATH="$PYENV/bin:$PYENV/shims:$PATH"
+fi
 
 echo ' Bash aliases v1 loaded 🧭'

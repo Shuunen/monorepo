@@ -2,6 +2,9 @@
   "[astro]": {
     "editor.defaultFormatter": "astro-build.astro-vscode"
   },
+  "[css]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
   },
@@ -226,6 +229,7 @@
     "Interop",
     "inversify",
     "Invision",
+    "isin",
     "jdownloader",
     "Jira",
     "Juliane",
@@ -271,6 +275,7 @@
     "minmax",
     "mixins",
     "mkdir",
+    "mkvpropedit",
     "mkvtoolnix",
     "mockserver",
     "multiline",
@@ -396,6 +401,7 @@
     "taglist",
     "taiko",
     "tailwindcss",
+    "Takeout",
     "taze",
     "Temu",
     "tensorflow",
@@ -485,15 +491,25 @@
   "github.copilot.enable": {
     "*": true,
     "csv": false,
+    "markdown": true,
     "plaintext": false,
     "scminput": false
   },
   "github.copilot.nextEditSuggestions.enabled": true,
   "javascript.updateImportsOnFileMove.enabled": "always",
   "json.format.enable": true,
+  "json.schemaDownload.trustedDomains": {
+    "https://biomejs.dev": true,
+    "https://json-schema.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://raw.githubusercontent.com/": true,
+    "https://schemastore.azurewebsites.net/": true,
+    "https://www.schemastore.org/": true
+  },
   "markdown.extension.toc.levels": "1..3",
   "npm.autoDetect": "off",
   "oxc.configPath": ".oxlintrc.json",
+  "oxc.fixKind": "all",
   "security.restrictUNCAccess": false,
   "security.workspace.trust.untrustedFiles": "open",
   "tailwindCSS.experimental.classRegex": [
@@ -527,7 +543,9 @@
   "terminal.integrated.fontSize": 16,
   "totalTypeScript.hideAllTips": true,
   "totalTypeScript.hideBasicTips": true,
+  "typescript.experimental.useTsgo": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "window.commandCenter": false,
-  "workbench.colorTheme": "Default Dark+"
+  "workbench.colorTheme": "Default Dark+",
+  "xstate.nestTypegenFiles": false
 }
