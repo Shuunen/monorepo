@@ -102,6 +102,7 @@ const basicWithDefaultsSchema = z.object({
   subscribe: field(z.boolean(), {
     label: "Subscribe to newsletter (unchecked by default)",
     placeholder: "Check to subscribe",
+    render: "checkbox",
   }),
 });
 
@@ -118,27 +119,41 @@ export const BasicWithDefaults: Story = {
       subscribe: false,
     },
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     const emailInput = canvas.getByTestId("input-text-email");
-    expect(emailInput).toHaveValue("JohnRom@yopmail.eu");
     const nameInput = canvas.getByTestId("input-text-name");
-    expect(nameInput).toHaveValue("John Rom");
-    const acceptTermsCheckbox = canvas.getByTestId("switch-accept-terms");
-    expect(acceptTermsCheckbox).toBeChecked();
-    expect(acceptTermsCheckbox.getAttribute("value")).toBe("true");
-    const subscribeCheckbox = canvas.getByTestId("switch-subscribe");
-    expect(subscribeCheckbox).not.toBeChecked();
-    expect(subscribeCheckbox.getAttribute("value")).toBe("false");
-    const issues = canvas.queryAllByRole("alert");
-    expect(issues.map(el => el.textContent).join(",")).toBe("");
+    const acceptTermsSwitch = canvas.getByTestId("switch-accept-terms");
+    const subscribeCheckbox = canvas.getByTestId("checkbox-subscribe");
     const submitButton = canvas.getByRole("button", { name: "Submit" });
-    expect(submitButton).toBeEnabled();
-    await userEvent.click(submitButton);
-    expect(submittedData).toContainHTML(
-      stringify({ email: "JohnRom@yopmail.eu", name: "John Rom", acceptTerms: true, subscribe: false }, true),
-    );
+
+    await step("verify default values are set correctly", () => {
+      expect(emailInput).toHaveValue("JohnRom@yopmail.eu");
+      expect(nameInput).toHaveValue("John Rom");
+      expect(acceptTermsSwitch).toBeChecked();
+      expect(acceptTermsSwitch.getAttribute("value")).toBe("true");
+      expect(subscribeCheckbox).not.toBeChecked();
+      const issues = canvas.queryAllByRole("alert");
+      expect(issues.map(el => el.textContent).join(",")).toBe("");
+    });
+
+    await step("check that form cannot be submitted if required subscribe field is not checked", async () => {
+      expect(submitButton).toBeEnabled();
+      await userEvent.click(submitButton);
+      const issues = await canvas.findAllByRole("alert");
+      expect(issues.map(el => el.textContent).join(",")).toBe("This field is required");
+    });
+
+    await step("check that form can be submitted when subscribe is checked", async () => {
+      await userEvent.click(subscribeCheckbox);
+      await userEvent.click(submitButton);
+      const issues = canvas.queryAllByRole("alert");
+      expect(issues.map(el => el.textContent).join(",")).toBe("");
+      expect(submittedData).toContainHTML(
+        stringify({ email: "JohnRom@yopmail.eu", name: "John Rom", acceptTerms: true, subscribe: true }, true),
+      );
+    });
   },
 };
 

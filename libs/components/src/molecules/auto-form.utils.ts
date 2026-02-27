@@ -83,6 +83,16 @@ export function isZodBoolean(fieldSchema: z.ZodType): fieldSchema is z.ZodBoolea
 }
 
 /**
+ * Checks if the provided Zod schema is a required boolean (not optional, not with a default).
+ * A required boolean must be set to true by the user (e.g. "I agree to terms").
+ * @param fieldSchema the Zod schema to check
+ * @returns true if the schema is a required ZodBoolean
+ */
+export function isRequiredBoolean(fieldSchema: z.ZodType) {
+  return fieldSchema.type === "boolean";
+}
+
+/**
  * Checks if the provided Zod schema is a ZodNumber or contains a ZodNumber as its inner type (e.g., optional number).
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodNumber; otherwise, false.
@@ -288,7 +298,34 @@ export function forms(formSchema: z.ZodObject, formsMetadata?: Omit<AutoFormFiel
 }
 
 /**
- * Returns a filtered schema with only visible fields
+ * Checks if a field should be excluded from the filtered validation schema.
+ * @param fieldSchema the Zod schema of the field
+ * @param formData the current form data
+ * @param metadata the field metadata
+ * @returns true if the field should be excluded from validation
+ */
+function isFilteredOut(fieldSchema: z.ZodType, formData: AutoFormData, metadata?: AutoFormFieldMetadata) {
+  if (!isFieldVisible(fieldSchema, formData)) {
+    return true;
+  }
+  if (metadata?.render === "section") {
+    return true;
+  }
+  if (metadata && "state" in metadata && metadata.state === "readonly") {
+    return true;
+  }
+  if (isZodArray(fieldSchema)) {
+    const result = getElementSchema(fieldSchema);
+    if (result.ok && isZodObject(result.value)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Returns a filtered schema with only visible fields.
+ * Required boolean fields are enforced to be true (e.g. "I agree to terms").
  * @param schema the original Zod schema
  * @param formData the current form data to evaluate visibility
  * @returns a new Zod schema with only visible fields
@@ -298,24 +335,13 @@ export function filterSchema(schema: z.ZodObject, formData: AutoFormData = {}): 
   const visibleShape: Record<string, z.ZodType> = {};
   for (const key of Object.keys(shape)) {
     const fieldSchema = shape[key] as z.ZodType;
-    if (!isFieldVisible(fieldSchema, formData)) {
-      continue;
-    }
     const metadata = getFieldMetadata(fieldSchema);
-    if (metadata?.render === "section") {
+    if (isFilteredOut(fieldSchema, formData, metadata)) {
       continue;
-    }
-    if (metadata && "state" in metadata && metadata.state === "readonly") {
-      continue;
-    }
-    if (isZodArray(fieldSchema)) {
-      const result = getElementSchema(fieldSchema);
-      if (result.ok && isZodObject(result.value)) {
-        continue;
-      }
     }
     logger.debug(`filterSchema "${key}" of type "${fieldSchema.type}" isVisible`);
-    visibleShape[key] = fieldSchema;
+    const useLiteral = isRequiredBoolean(fieldSchema) && metadata?.render !== "accept";
+    visibleShape[key] = useLiteral ? z.literal(true, { error: "This field is required" }) : fieldSchema;
   }
   return z.object(visibleShape);
 }
@@ -664,7 +690,8 @@ export function getSchemaDefaultValue(fieldSchema: z.ZodType): unknown {
     }
     return (fieldSchema as z.ZodDefault).def.defaultValue;
   }
-  if (isZodBoolean(fieldSchema)) {
+  const metadata = getFieldMetadata(fieldSchema);
+  if (isZodBoolean(fieldSchema) && metadata?.render !== "accept") {
     return false;
   }
   return undefined;
@@ -796,7 +823,7 @@ export function getFormFieldRender(fieldSchema: z.ZodType): AutoFormFieldMetadat
     return "number";
   }
   if (isZodBoolean(schema)) {
-    return "boolean";
+    return "switch"; // we decided to render booleans as switch by default, but it can be easily changed to checkbox if needed
   }
   if (isZodString(schema)) {
     return "text";

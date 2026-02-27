@@ -184,7 +184,7 @@ export type AutoFormFieldBaseMetadata = {
 
 export type AutoFormFieldBooleanMetadata = Simplify<
   AutoFormFieldBaseMetadata & {
-    render?: "boolean" | "checkbox";
+    render?: "switch" | "checkbox";
   }
 >;
 

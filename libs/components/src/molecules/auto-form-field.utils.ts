@@ -5,7 +5,6 @@ import type { AutoFormStepMetadata, AutoFormSubformOptions } from "./auto-form.t
 import type { getFormFieldRender } from "./auto-form.utils";
 import { FormFieldAccept } from "./form-field-accept";
 import { FormFieldBoolean } from "./form-field-boolean";
-import { FormFieldCheckbox } from "./form-field-checkbox";
 import { FormFieldDate } from "./form-field-date";
 import { FormFieldFormList } from "./form-field-form-list";
 import { FormFieldNumber } from "./form-field-number";
@@ -42,8 +41,7 @@ type ComponentRegistry = {
 
 export const componentRegistry: ComponentRegistry = {
   accept: FormFieldAccept,
-  boolean: FormFieldBoolean,
-  checkbox: FormFieldCheckbox,
+  checkbox: FormFieldBoolean,
   date: FormFieldDate,
   "date-time": FormFieldDate,
   "form-list": FormFieldFormList,
@@ -51,6 +49,7 @@ export const componentRegistry: ComponentRegistry = {
   password: FormFieldPassword,
   radio: FormFieldRadio,
   select: FormFieldSelect,
+  switch: FormFieldBoolean,
   text: FormFieldText,
   textarea: FormFieldTextarea,
   time: FormFieldDate,
