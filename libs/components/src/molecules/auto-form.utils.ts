@@ -89,6 +89,9 @@ export function isZodBoolean(fieldSchema: z.ZodType): fieldSchema is z.ZodBoolea
  * @returns true if the schema is a required ZodBoolean
  */
 export function isRequiredBoolean(fieldSchema: z.ZodType) {
+  if (["default", "prefault"].includes(fieldSchema.type)) {
+    return (fieldSchema as z.ZodDefault<z.ZodType>).unwrap().type === "boolean";
+  }
   return fieldSchema.type === "boolean";
 }
 

@@ -187,8 +187,10 @@ export const WithDefaultValueFalse: Story = {
       await userEvent.click(submitButton);
     });
 
-    await step("verify submitted data matches initial value", () => {
-      expect(submittedData).toContainHTML(stringify({ subscribeToNewsletter: false }, true));
+    await step("verify that we have errors on submit", () => {
+      const issues = canvas.queryAllByRole("alert");
+      expect(issues.map(el => el.textContent).join(",")).toBe("This field is required");
+      expect(submittedData).toContainHTML("{}");
     });
   },
 };

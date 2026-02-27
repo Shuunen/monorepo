@@ -93,14 +93,14 @@ describe("auto-form.utils", () => {
   it("isRequiredBoolean B should return false for z.boolean().optional()", () => {
     expect(isRequiredBoolean(z.boolean().optional())).toBe(false);
   });
-  it("isRequiredBoolean C should return false for z.boolean().default(true)", () => {
-    expect(isRequiredBoolean(z.boolean().default(true))).toBe(false);
+  it("isRequiredBoolean C should return true for z.boolean().default(true)", () => {
+    expect(isRequiredBoolean(z.boolean().default(true))).toBe(true);
   });
   it("isRequiredBoolean D should return false for z.string()", () => {
     expect(isRequiredBoolean(z.string())).toBe(false);
   });
-  it("isRequiredBoolean E should return false for z.boolean().prefault(true)", () => {
-    expect(isRequiredBoolean(z.boolean().prefault(true))).toBe(false);
+  it("isRequiredBoolean E should return true for z.boolean().prefault(true)", () => {
+    expect(isRequiredBoolean(z.boolean().prefault(true))).toBe(true);
   });
 
   // checkZodNumber
