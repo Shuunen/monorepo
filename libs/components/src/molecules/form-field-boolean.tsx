@@ -28,8 +28,7 @@ export function FormFieldBoolean({ fieldName, fieldSchema, isOptional, logger, r
           <div className="mt-2 grid gap-2">
             <div className={cn("flex gap-2", { "items-center": isCheckbox })}>
               <FormControl>{isCheckbox ? <Checkbox {...commonProps} /> : <Switch {...commonProps} />}</FormControl>
-              {/* we set optional to true all the times to hide the red star, does not make sense on a field that always have a value */}
-              <FormFieldLabel className={cn({ "cursor-pointer": !isDisabled })} isOptional={true} label={label} />
+              <FormFieldLabel className={cn({ "cursor-pointer": !isDisabled })} isOptional={isOptional} label={label} />
             </div>
             {placeholder && <FormDescription name={fieldName}>{placeholder}</FormDescription>}
           </div>
