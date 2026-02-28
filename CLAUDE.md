@@ -393,11 +393,10 @@ This CLAUDE.md consolidates high-level guidance. For detailed specifications, re
 - **What's the tech stack?** → "Technology Stack" section above
 - there is no need to unstage files to edit them
 
-<!-- markdownlint-disable MD025 -->
 <!-- nx configuration start-->
 <!-- Leave the start & end comments to automatically receive updates. -->
 
-# General Guidelines for working with Nx
+## General Guidelines for working with Nx
 
 - For navigating/exploring the workspace, invoke the `nx-workspace` skill first - it has patterns for querying projects, targets, and dependencies
 - When running tasks (for example build, lint, test, e2e, etc.), always prefer running the task through `nx` (i.e. `nx run`, `nx run-many`, `nx affected`) instead of using the underlying tooling directly
@@ -417,4 +416,3 @@ This CLAUDE.md consolidates high-level guidance. For detailed specifications, re
 - The `nx-generate` skill handles generator discovery internally - don't call nx_docs just to look up generator syntax
 
 <!-- nx configuration end-->
-<!-- markdownlint-enable MD025 -->
