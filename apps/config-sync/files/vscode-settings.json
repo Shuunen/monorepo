@@ -44,6 +44,7 @@
   "chat.agent.enabled": true,
   "chat.agent.maxRequests": 50,
   "chat.editing.confirmEditRequestRemoval": false,
+  "chat.mcp.gallery.enabled": true,
   "chat.tools.terminal.autoApprove": {
     "break": true,
     "bun": true,
