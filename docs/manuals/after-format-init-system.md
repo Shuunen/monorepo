@@ -255,9 +255,9 @@ Install these deb :
 
 ```bash
 sudo apt install -y neofetch btop tldr git aria2 nano curl -y
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
 bash # reload shell to be able to invoke nvm
-nvm install 20
+nvm install --lts
 # vvv below is for desktop only vvv
 sudo apt install gparted meld mediainfo mkvtoolnix mkvtoolnix-gui mpv xsel shotwell synaptic vlc ffmpeg -y
 sudo apt update
@@ -302,7 +302,6 @@ git clone git@github.com:Shuunen/folio.git
 git clone git@github.com:Shuunen/ging.git
 git clone git@github.com:Shuunen/goals.git
 git clone git@github.com:Shuunen/monorepo.git
-git clone git@github.com:Shuunen/vue-image-compare.git
 find . -maxdepth 1 -type d \( ! -name . \) -exec bash -c "cd '{}' && git checkout master && git pull && pnpm i" \;
 cd ~/Projects/github/monorepo
 bun cs --setup
@@ -310,7 +309,7 @@ bun cs --setup
 
 - [ ] install my recommended extensions
 - [ ] set display screen refresh rate to max
-- [ ] Do Geekbench && `geekbench6 --gpu`, `geekbench5 --compute`, Cinebench, UserBenchmark
+- [ ] Do Geekbench && `geekbench6 --gpu`, `geekbench6 --gpu Vulkan`, `geekbench5 --compute`, Cinebench, UserBenchmark
 - [ ] [pimp with a 2k wallpaper](https://www.google.com/search?q=wallpaper+2k)
 - [ ] encrypt drive
 
