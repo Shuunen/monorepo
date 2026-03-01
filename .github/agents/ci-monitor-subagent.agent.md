@@ -84,15 +84,15 @@ When `expectedCommitSha` or `previousCipeUrl` is provided, you must detect wheth
 
 ```yaml
 WAIT_FIELDS:
-  'cipeUrl,commitSha,cipeStatus'
+  "cipeUrl,commitSha,cipeStatus"
   # Minimal fields for detecting new CI Attempt
 
 LIGHT_FIELDS:
-  'cipeStatus,cipeUrl,branch,commitSha,selfHealingStatus,verificationStatus,userAction,failedTaskIds,verifiedTaskIds,selfHealingEnabled,failureClassification,couldAutoApplyTasks,shortLink,confidence,confidenceReasoning,hints,selfHealingSkippedReason,selfHealingSkipMessage'
+  "cipeStatus,cipeUrl,branch,commitSha,selfHealingStatus,verificationStatus,userAction,failedTaskIds,verifiedTaskIds,selfHealingEnabled,failureClassification,couldAutoApplyTasks,shortLink,confidence,confidenceReasoning,hints,selfHealingSkippedReason,selfHealingSkipMessage"
   # Status fields for determining actionable state (includes hints for contextual guidance)
 
 HEAVY_FIELDS:
-  'taskOutputSummary,suggestedFix,suggestedFixReasoning,suggestedFixDescription'
+  "taskOutputSummary,suggestedFix,suggestedFixReasoning,suggestedFixDescription"
   # Large content fields - fetch only when returning to main agent
 ```
 
