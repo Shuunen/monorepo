@@ -60,6 +60,7 @@
   @apply gap-6;
 }
 
-.shu-toast {
-  @apply print:hidden;
+.shu-toast, /* not sure what is this weird div :D */
+body > script + div[id][style] {
+  @apply print:hidden!;
 }
