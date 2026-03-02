@@ -1192,6 +1192,11 @@ describe("auto-form.utils", () => {
     expect(sections).toHaveLength(1);
     expect(sections[0].data).toEqual({ c: { label: "C", value: "baz" } });
   });
+  it("sectionsFromSchema D should skip sections with showInSummary set to false", () => {
+    const schema = z.object({ section: section({ title: "Section", showInSummary: false }) });
+    const sections = sectionsFromSchema(schema, {});
+    expect(sections).toHaveLength(0);
+  });
 
   // getFieldMetadata
   it("getFieldMetadata A should return metadata when present", () => {

@@ -754,6 +754,9 @@ export const NestedKeyMapping: Story = {
 
 const step1SummarySchema = step(
   z.object({
+    section: section({
+      title: "Enter your personal information",
+    }),
     email: field(z.email("Invalid email address"), {
       label: "Email Address",
       placeholder: "We'll never share your email",
@@ -771,6 +774,10 @@ const step1SummarySchema = step(
 
 const step2SummarySchema = step(
   z.object({
+    section: section({
+      title: "Enter your additional information",
+      showInSummary: false,
+    }),
     age: field(z.number().min(0).max(120).optional(), {
       label: "Age",
       placeholder: "Enter your age",
@@ -845,6 +852,8 @@ export const SummaryOnly: Story = {
       expect(summaryStep).toBeInTheDocument();
       const summaryStepTitle = canvas.getByTestId("title-summary");
       expect(summaryStepTitle).toHaveTextContent("Summary");
+      expect(within(summaryStep).getByText("Enter your personal information")).toBeInTheDocument();
+      expect(within(summaryStep).queryByText("Enter your additional information")).toBeNull();
       expect(canvas.getByText("Email Address")).toBeInTheDocument();
       expect(canvas.getByText("jane.doe@example.com")).toBeInTheDocument();
       expect(canvas.getByText("Full Name")).toBeInTheDocument();
