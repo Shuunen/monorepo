@@ -10,13 +10,13 @@ function getAbsolutePath(value: string) {
 }
 
 const config: StorybookConfig = {
-  addons: [
-    getAbsolutePath("@chromatic-com/storybook"),
-    getAbsolutePath("@storybook/addon-vitest"),
-    getAbsolutePath("@storybook/addon-coverage"),
-  ],
+  addons: [getAbsolutePath("@storybook/addon-vitest"), getAbsolutePath("@storybook/addon-coverage")],
   core: {
     disableTelemetry: true,
+    disableWhatsNewNotifications: true,
+  },
+  features: {
+    sidebarOnboardingChecklist: false,
   },
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
