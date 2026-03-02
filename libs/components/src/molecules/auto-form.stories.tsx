@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Paragraph } from "../atoms/typography";
 import { AutoForm } from "./auto-form";
 import type { AutoFormData, AutoFormProps, AutoFormSubmissionStepProps } from "./auto-form.types";
-import { field, mockSubmit, section, step } from "./auto-form.utils";
+import { field, forms, mockSubmit, section, step } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 // allow dev to see logs in the browser console when running storybook dev but not in headless tests
@@ -867,6 +867,51 @@ export const SummaryOnly: Story = {
     await step("verify submitted data", async () => {
       await sleep(nbPercentMax);
       expect(submittedData).toContainHTML(stringify(expectedData, true));
+    });
+  },
+};
+
+export const summaryWithArrayOfObjects: Story = {
+  args: {
+    initialData: {
+      email: "jane.doe@example.com",
+      name: "Jane Doe",
+      age: 28,
+      subscribe: true,
+      pets: [
+        { name: "Buddy", breed: "Labrador" },
+        { name: "Max", breed: "Poodle" },
+      ],
+    },
+    schemas: [
+      step(
+        z.object({
+          email: field(z.email("Invalid email address"), { label: "Email Address" }),
+          name: field(z.string().min(2, "Name is required"), { label: "Full Name" }),
+          age: field(z.number().min(0).max(120).optional(), { label: "Age" }),
+          subscribe: field(z.boolean(), { label: "Subscribe to newsletter" }),
+          pets: forms(z.object({ name: z.string(), breed: z.string() })),
+        }),
+        { title: "Pets" },
+      ),
+    ],
+    useSummaryStep: true,
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("submit to reach summary step", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+    await step("verify summary step displays", () => {
+      const summaryStep = canvas.getByTestId("auto-form-summary-step");
+      expect(summaryStep).toBeInTheDocument();
+      const pet1 = canvas.getByTestId("form-summary-pets-1");
+      expect(pet1).toHaveTextContent("Buddy");
+      expect(pet1).toHaveTextContent("Labrador");
+      const pet2 = canvas.getByTestId("form-summary-pets-2");
+      expect(pet2).toHaveTextContent("Max");
+      expect(pet2).toHaveTextContent("Poodle");
     });
   },
 };
