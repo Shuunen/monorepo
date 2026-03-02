@@ -19,18 +19,15 @@ export function AutoFormSummaryStep(props: Props) {
   const sections = sectionsFromEditableSteps(props.schemas, props.formData);
   const hasData = sections.some(section => Object.keys(section.data).length > 0);
   return (
-    <div className="grid gap-3" data-testid="auto-form-summary-step">
+    <div className="grid gap-8" data-testid="auto-form-summary-step">
       <Title level={1}>Summary</Title>
       {hasData ? (
-        <>
-          <Paragraph>This step provides a summary of your form submission.</Paragraph>
-          {sections.map((section, index) => (
-            <div className="grid gap-3" key={section.title ?? `section-${index}`}>
-              {section.title && <Title level={2}>{section.title}</Title>}
-              <FormSummary data={section.data} name={section.title ?? "no-title"} />
-            </div>
-          ))}
-        </>
+        sections.map((section, index) => (
+          <div className="grid gap-3" key={section.title ?? `section-${index}`}>
+            {section.title && <Title level={3}>{section.title}</Title>}
+            <FormSummary data={section.data} name={section.title ?? "no-title"} />
+          </div>
+        ))
       ) : (
         <Paragraph>No data available for summary.</Paragraph>
       )}

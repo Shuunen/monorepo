@@ -27,7 +27,7 @@ export function FormSummary(props: FormSummaryProps) {
           </TableRow>
         </TableHeader>
       </Table>
-      <div className="max-h-96 w-full overflow-x-hidden overflow-y-auto">
+      <div className="w-full">
         <Table>
           <TableBody>
             {entries.map(([key, data]) => (
