@@ -3,7 +3,9 @@
  * @param props
  * @returns
  */
+import { useStableKeys } from "@monorepo/utils";
 import type { Color } from "../utils/colors.utils";
+import { useRef } from "preact/hooks";
 
 type BottleProperties = {
   readonly colors: Color[];
@@ -24,6 +26,7 @@ type BottleProperties = {
  * @returns the bottle component
  */
 export function AppBottle({ colors, index, isPouring = false, isPourTarget = false, isSelected }: BottleProperties) {
+  const { keys } = useStableKeys(useRef, colors.length);
   // bg-red-500 bg-green-500 bg-blue-500 bg-yellow-500
   return (
     <div
@@ -31,7 +34,7 @@ export function AppBottle({ colors, index, isPouring = false, isPourTarget = fal
       data-index={index}
     >
       {colors.map((color, colorIndex) => (
-        <div className={`bg-${color}-500 pointer-events-none h-7 w-12`} key={`${color + colorIndex}`} />
+        <div className={`bg-${color}-500 pointer-events-none h-7 w-12`} key={keys[colorIndex]} />
       ))}
     </div>
   );

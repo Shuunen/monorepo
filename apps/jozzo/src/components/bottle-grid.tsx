@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: fix later */
-import { tw } from "@monorepo/utils";
-import { useState } from "preact/hooks";
+import { tw, useStableKeys } from "@monorepo/utils";
+import { useRef, useState } from "preact/hooks";
 import Confetti from "react-confetti-boom";
 import hat from "../assets/hat.svg?react";
 import { playPouringSound, winEffects } from "../utils/effects.utils";
@@ -52,6 +52,7 @@ export function BottleGrid(properties: { state: (typeof machine)["state"] }) {
   const { state } = properties;
   const [pouringInfo, setPouringInfo] = useState<PouringInfo>();
   const hasWon = state === "win";
+  const { keys } = useStableKeys(useRef, machine.bottles.length);
   if (hasWon) winEffects();
 
   return (
@@ -66,7 +67,7 @@ export function BottleGrid(properties: { state: (typeof machine)["state"] }) {
             isPouring={pouringInfo !== undefined && pouringInfo.from === index && state === "pouring"}
             isPourTarget={pouringInfo !== undefined && pouringInfo.to === index && state === "pouring"}
             isSelected={machine.selected === index}
-            key={`bottle-${index}-${bottle.join("-")}`}
+            key={keys[index]}
           />
         ))}
       </div>
