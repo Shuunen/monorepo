@@ -37,7 +37,7 @@ export function getCustomErrorAction(
   if (!hasCustomErrorFn) {
     return { type: "none" };
   }
-  if (errorMessage) {
+  if (errorMessage !== undefined) {
     if (lastError !== errorMessage) {
       return { message: errorMessage, type: "set-error" };
     }
