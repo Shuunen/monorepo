@@ -266,3 +266,21 @@ export const SubtitleOnly: Story = {
     expect(heading).toHaveTextContent("This is a subtitle without a title");
   },
 };
+
+/**
+ * Section with label, label star, and description
+ */
+export const WithLabelStarAndDescription: Story = {
+  args: {
+    label: "This is a label",
+    labelStar: true,
+    description: "This section has a label with a required star.",
+  },
+  play: ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const label = canvas.getByText(/This is a label/);
+    expect(label).toBeInTheDocument();
+    const star = canvas.getByText("*");
+    expect(star).toBeInTheDocument();
+  },
+};
