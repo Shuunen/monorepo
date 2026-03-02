@@ -590,54 +590,146 @@ export function isRadioOrSelectMetadata(
   return metadata ? "options" in metadata : false;
 }
 
-// oxlint-disable-next-line max-statements, max-lines-per-function
+type SectionDataFromObjectItemProps = {
+  index: number;
+  innerShape: z.ZodObject["shape"];
+  item: AutoFormData;
+  key: string;
+};
+
+function sectionDataFromObjectItem({ innerShape, item, key, index }: SectionDataFromObjectItemProps) {
+  const sectionData: AutoFormSummarySection["data"] = {};
+  for (const innerKey of Object.keys(innerShape)) {
+    const innerFieldSchema = innerShape[innerKey] as z.ZodType;
+    const innerMetadata = getFieldMetadata(innerFieldSchema);
+    if (innerMetadata?.render === "section") {
+      continue;
+    }
+    const innerValue = isRadioOrSelectMetadata(innerMetadata)
+      ? innerMetadata.options.find(option => option.value === item[innerKey])?.label
+      : item[innerKey];
+    sectionData[`${key}.${index}.${innerKey}`] = {
+      label: innerMetadata?.label ?? innerKey,
+      value: innerValue,
+    };
+  }
+  return sectionData;
+}
+
+type SectionsFromArrayOfObjectsProps = {
+  data: AutoFormData;
+  fieldSchema: z.ZodType;
+  key: string;
+  metadata: AutoFormFieldMetadata | undefined;
+};
+
+function sectionsFromArrayOfObjects({ key, fieldSchema, metadata, data }: SectionsFromArrayOfObjectsProps) {
+  const items = data[key];
+  if (!Array.isArray(items) || items.length === 0) {
+    return [];
+  }
+  const elementResult = getElementSchema(fieldSchema);
+  if (!elementResult.ok || !isZodObject(elementResult.value)) {
+    return [];
+  }
+  const innerShape = (elementResult.value as z.ZodObject).shape;
+  const fieldLabel = metadata && "label" in metadata ? (metadata.label ?? key) : key;
+  const identifier =
+    metadata && "identifier" in metadata && isFunction(metadata.identifier) ? metadata.identifier : undefined;
+  const sections: Array<AutoFormSummarySection> = [];
+  for (let index = 0; index < items.length; index += 1) {
+    const item = items[index] as AutoFormData;
+    const itemTitle = identifier ? identifier(item) : `${fieldLabel} ${index + 1}`;
+    const sectionData = sectionDataFromObjectItem({ index, innerShape, item, key });
+    if (Object.keys(sectionData).length > 0) {
+      sections.push({ data: sectionData, title: itemTitle });
+    }
+  }
+  return sections;
+}
+
+function isArrayOfObjects(fieldSchema: z.ZodType) {
+  if (!isZodArray(fieldSchema)) {
+    return false;
+  }
+  const elementResult = getElementSchema(fieldSchema);
+  return elementResult.ok && isZodObject(elementResult.value);
+}
+
+function resolveFieldValue(metadata: AutoFormFieldMetadata | undefined, data: AutoFormData, key: string) {
+  if (isRadioOrSelectMetadata(metadata)) {
+    return metadata.options.find(option => option.value === data[key])?.label;
+  }
+  return data[key];
+}
+
+type SectionBuilderState = {
+  currentSectionData: AutoFormSummarySection["data"];
+  currentSectionTitle: AutoFormSummarySection["title"];
+  pendingArraySections: Array<AutoFormSummarySection>;
+  sections: Array<AutoFormSummarySection>;
+};
+
+function flushCurrentSection(state: SectionBuilderState) {
+  if (Object.keys(state.currentSectionData).length > 0) {
+    state.sections.push({ data: state.currentSectionData, title: state.currentSectionTitle });
+  }
+  state.sections.push(...state.pendingArraySections);
+  state.pendingArraySections = [];
+}
+
+type ProcessFieldForSectionProps = {
+  data: AutoFormData;
+  key: string;
+  shape: z.ZodObject["shape"];
+  state: SectionBuilderState;
+};
+
+function processFieldForSection({ key, shape, data, state }: ProcessFieldForSectionProps) {
+  const fieldSchema = shape[key] as z.ZodType;
+  /* c8 ignore start */
+  if (!fieldSchema) {
+    return;
+  }
+  /* c8 ignore stop */
+  const metadata = getFieldMetadata(fieldSchema);
+  if (metadata?.render === "section") {
+    flushCurrentSection(state);
+    state.currentSectionTitle = "title" in metadata ? metadata.title : undefined;
+    state.currentSectionData = {};
+    return;
+  }
+  if (isArrayOfObjects(fieldSchema)) {
+    state.pendingArraySections.push(...sectionsFromArrayOfObjects({ data, fieldSchema, key, metadata }));
+    return;
+  }
+  if (shouldIncludeField(fieldSchema, metadata, data)) {
+    state.currentSectionData[key] = {
+      /* c8 ignore start */
+      label: metadata?.label ?? key,
+      /* c8 ignore stop */
+      value: resolveFieldValue(metadata, data, key),
+    };
+  }
+}
+
 function sectionsFromEditableStep(schema: z.ZodObject, data: AutoFormData) {
   const stepMeta = getStepMetadata(schema);
   const stepState = stepMeta?.state;
   if (stepState === "readonly" || stepState === "upcoming") {
     return [];
   }
-  const sections: Array<AutoFormSummarySection> = [];
-  const shape = schema.shape;
-  const fieldKeys = Object.keys(shape);
-  let currentSectionTitle: AutoFormSummarySection["title"] = undefined;
-  let currentSectionData: AutoFormSummarySection["data"] = {};
-  function saveCurrentSection() {
-    if (Object.keys(currentSectionData).length > 0) {
-      sections.push({ data: currentSectionData, title: currentSectionTitle });
-    }
+  const state: SectionBuilderState = {
+    currentSectionData: {},
+    currentSectionTitle: undefined,
+    pendingArraySections: [],
+    sections: [],
+  };
+  for (const key of Object.keys(schema.shape)) {
+    processFieldForSection({ data, key, shape: schema.shape, state });
   }
-  for (const key of fieldKeys) {
-    const fieldSchema = shape[key] as z.ZodType;
-    /* c8 ignore start */
-    if (!fieldSchema) {
-      continue;
-    }
-    /* c8 ignore stop */
-    const metadata = getFieldMetadata(fieldSchema);
-    // Check if this field is a section marker
-    if (metadata?.render === "section") {
-      saveCurrentSection();
-      // Start new section
-      currentSectionTitle = "title" in metadata ? metadata.title : undefined;
-      currentSectionData = {};
-      continue;
-    }
-    // Add field to current section if it should be included
-    const value = isRadioOrSelectMetadata(metadata)
-      ? metadata.options.find(option => option.value === data[key])?.label
-      : data[key];
-    if (shouldIncludeField(fieldSchema, metadata, data)) {
-      currentSectionData[key] = {
-        /* c8 ignore start */
-        label: metadata?.label ?? key,
-        /* c8 ignore stop */
-        value,
-      };
-    }
-  }
-  saveCurrentSection();
-  return sections;
+  flushCurrentSection(state);
+  return state.sections;
 }
 
 /**

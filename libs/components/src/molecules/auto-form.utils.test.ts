@@ -1050,6 +1050,124 @@ describe("auto-form.utils", () => {
     expect(sections[0].title).toBeUndefined();
     expect(sections[0].data).toEqual({ b: { label: "B", value: "Bar" } });
   });
+  it("sectionsFromEditableSteps F should create dedicated sections for array of objects", () => {
+    const schema = z.object({
+      a: z.string().meta({ label: "A" }),
+      pets: forms(z.object({ name: z.string().meta({ label: "Name" }), breed: z.string().meta({ label: "Breed" }) })),
+    });
+    const data = {
+      a: "foo",
+      pets: [
+        { breed: "Labrador", name: "Buddy" },
+        { breed: "Poodle", name: "Max" },
+      ],
+    };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(3);
+    expect(sections[0]).toEqual({ data: { a: { label: "A", value: "foo" } }, title: undefined });
+    expect(sections[1].title).toBe("pets 1");
+    expect(sections[1].data).toEqual({
+      "pets.0.name": { label: "Name", value: "Buddy" },
+      "pets.0.breed": { label: "Breed", value: "Labrador" },
+    });
+    expect(sections[2].title).toBe("pets 2");
+  });
+  it("sectionsFromEditableSteps G should use identifier for array of objects section titles", () => {
+    const schema = z.object({
+      pets: forms(z.object({ name: z.string().meta({ label: "Name" }) }), {
+        identifier: data => `Pet: ${data?.name}`,
+        label: "Pets",
+      }),
+    });
+    const data = { pets: [{ name: "Buddy" }, { name: "Max" }] };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(2);
+    expect(sections[0].title).toBe("Pet: Buddy");
+    expect(sections[1].title).toBe("Pet: Max");
+  });
+  it("sectionsFromEditableSteps H should use field label for array of objects when no identifier", () => {
+    const schema = z.object({
+      pets: forms(z.object({ name: z.string().meta({ label: "Name" }) }), { label: "My Pets" }),
+    });
+    const data = { pets: [{ name: "Buddy" }] };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0].title).toBe("My Pets 1");
+  });
+  it("sectionsFromEditableSteps I should handle empty array of objects", () => {
+    const schema = z.object({
+      pets: forms(z.object({ name: z.string().meta({ label: "Name" }) })),
+    });
+    const data = { pets: [] };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(0);
+  });
+  it("sectionsFromEditableSteps J should handle missing array data", () => {
+    const schema = z.object({
+      pets: forms(z.object({ name: z.string().meta({ label: "Name" }) })),
+    });
+    const data = {};
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(0);
+  });
+  it("sectionsFromEditableSteps K should handle array of objects with select fields inside", () => {
+    const schema = z.object({
+      pets: forms(
+        z.object({
+          type: z.enum(["cat", "dog"]).meta({
+            label: "Type",
+            options: [
+              { label: "Cat", value: "cat" },
+              { label: "Dog", value: "dog" },
+            ],
+            render: "select",
+          }),
+        }),
+      ),
+    });
+    const data = { pets: [{ type: "dog" }] };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections[0].data["pets.0.type"]?.value).toBe("Dog");
+  });
+  it("sectionsFromEditableSteps L should place array sections after the current section", () => {
+    const schema = z.object({
+      a: z.string().meta({ label: "A" }),
+      pets: forms(z.object({ name: z.string().meta({ label: "Name" }) })),
+      b: z.string().meta({ label: "B" }),
+    });
+    const data = { a: "foo", b: "bar", pets: [{ name: "Buddy" }] };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(2);
+    expect(sections[0].data).toEqual({
+      a: { label: "A", value: "foo" },
+      b: { label: "B", value: "bar" },
+    });
+    expect(sections[1].title).toBe("pets 1");
+  });
+  it("sectionsFromEditableSteps M should skip section markers inside array of objects", () => {
+    const schema = z.object({
+      pets: forms(
+        z.object({
+          sectionA: section({ title: "Section A" }),
+          name: z.string().meta({ label: "Name" }),
+        }),
+      ),
+    });
+    const data = { pets: [{ name: "Buddy" }] };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data).toEqual({ "pets.0.name": { label: "Name", value: "Buddy" } });
+  });
+  it("sectionsFromEditableSteps N should handle field-list arrays of objects", () => {
+    const schema = z.object({
+      items: fields(z.object({ value: z.string().meta({ label: "Value" }) })),
+    });
+    const data = { items: [{ value: "a" }, { value: "b" }] };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(2);
+    expect(sections[0].title).toBe("items 1");
+    expect(sections[1].title).toBe("items 2");
+  });
 
   // getFieldMetadata
   it("getFieldMetadata A should return metadata when present", () => {
