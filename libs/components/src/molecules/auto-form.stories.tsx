@@ -600,10 +600,9 @@ export const StepperStates: Story = {
       const submitButtonPreviousStep = canvas.getByRole("button", { name: "Next" });
       await userEvent.click(submitButtonPreviousStep);
       expect(secondStepButton).toHaveAttribute("data-active", "true");
-      const petNameInput = canvas.getByTestId("input-text-pet-name");
-      expect(petNameInput).toBeInTheDocument();
-      expect(petNameInput).toBeDisabled();
-      expect(petNameInput).toHaveValue("Fido");
+      const formSummary = canvas.getByTestId("form-summary-no-title");
+      expect(formSummary).toHaveTextContent("Pet NameFido");
+      expect(formSummary).toHaveTextContent("Pet Agenot specified");
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
     });
@@ -892,10 +891,20 @@ export const summaryWithArrayOfObjects: Story = {
           subscribe: field(z.boolean(), { label: "Subscribe to newsletter" }),
           pets: forms(z.object({ name: z.string(), breed: z.string() })),
         }),
-        { title: "Pets" },
+        { title: "Pets", state: "readonly" },
+      ),
+      step(
+        z.object({
+          email: field(z.email("Invalid email address"), { label: "Email Address" }),
+          name: field(z.string().min(2, "Name is required"), { label: "Full Name" }),
+          age: field(z.number().min(0).max(120).optional(), { label: "Age" }),
+          subscribe: field(z.boolean(), { label: "Subscribe to newsletter" }),
+          pets: forms(z.object({ name: z.string(), breed: z.string() })),
+        }),
       ),
     ],
     useSummaryStep: true,
+    showLastStep: true,
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -912,6 +921,19 @@ export const summaryWithArrayOfObjects: Story = {
       const pet2 = canvas.getByTestId("form-summary-pets-2");
       expect(pet2).toHaveTextContent("Max");
       expect(pet2).toHaveTextContent("Poodle");
+    });
+    await step("go to readonly step", async () => {
+      const buttonStepPets = canvas.getByTestId("button-step-pets");
+      await userEvent.click(buttonStepPets);
+    });
+    await step("verify readonly step displays", () => {
+      const readonlyStep = canvas.getByTestId("auto-form-readonly-step");
+      expect(readonlyStep).toBeInTheDocument();
+      const pet1 = canvas.getByTestId("form-summary-pets-1");
+      expect(pet1).toHaveTextContent("Buddy");
+      expect(pet1).toHaveTextContent("Labrador");
+      const titlePets = canvas.getByTestId("title-pets");
+      expect(titlePets).toHaveTextContent("Pets");
     });
   },
 };

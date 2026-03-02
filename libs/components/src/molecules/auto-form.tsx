@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../atoms/button";
 import { Form } from "../atoms/form";
+import { Title } from "../atoms/typography";
 import { IconArrowLeft } from "../icons/icon-arrow-left";
 import { IconHome } from "../icons/icon-home";
 import { AutoFormFields } from "./auto-form-fields";
@@ -13,6 +14,7 @@ import { AutoFormNavigation } from "./auto-form-navigation";
 import { AutoFormStepper } from "./auto-form-stepper";
 import { AutoFormSubmissionStep } from "./auto-form-submission-step";
 import { AutoFormSummaryStep } from "./auto-form-summary-step";
+import { FormSummary } from "./form-summary";
 import { defaultIcons, defaultLabels } from "./auto-form.const";
 import type {
   AutoFormData,
@@ -30,6 +32,8 @@ import {
   hasCustomErrors,
   isStepClickable,
   normalizeData,
+  sectionsFromSchema,
+  typeLikeResolver,
 } from "./auto-form.utils";
 
 /**
@@ -276,7 +280,48 @@ export function AutoForm({
     );
   }
 
+  function renderReadonlyContent() {
+    const sections = sectionsFromSchema(currentSchema, formData);
+    const stepTitle = typeLikeResolver(stepMetadata?.title, formData) ?? `Step ${currentStep + 1}`;
+    const rightButton = isLastStep
+      ? {
+          label: finalLabels.lastStepButton,
+          name: "last-step-submit",
+          onClick: () => (useSummaryStep ? setShowSummary(true) : handleFinalSubmit),
+          type: "submit" as const,
+        }
+      : {
+          label: finalLabels.nextStep,
+          name: "step-next",
+          onClick: () => setCurrentStep(prev => prev + 1),
+          type: "submit" as const,
+        };
+    return (
+      <>
+        <div className="grid gap-8" data-testid="auto-form-readonly-step">
+          <Title level={1}>{stepTitle}</Title>
+          {sections.map((sectionItem, index) => (
+            <div className="grid gap-3" key={sectionItem.title ?? `section-${index}`}>
+              {sectionItem.title && <Title level={3}>{sectionItem.title}</Title>}
+              <FormSummary data={sectionItem.data} name={sectionItem.title ?? "no-title"} />
+            </div>
+          ))}
+        </div>
+        {showButtons && (
+          <AutoFormNavigation
+            centerButton={cancelButton}
+            leftButton={currentStep > 0 ? { onClick: handleBack } : undefined}
+            rightButton={rightButton}
+          />
+        )}
+      </>
+    );
+  }
+
   function renderFormContent() {
+    if (stepMetadata?.state === "readonly") {
+      return renderReadonlyContent();
+    }
     const rightButton = isLastStep
       ? { label: finalLabels.lastStepButton, name: "last-step-submit", type: "submit" as const }
       : { label: finalLabels.nextStep, name: "step-next", type: "submit" as const };

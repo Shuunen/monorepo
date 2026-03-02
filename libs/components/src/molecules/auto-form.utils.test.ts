@@ -41,6 +41,7 @@ import {
   parseDependsOn,
   section,
   sectionsFromEditableSteps,
+  sectionsFromSchema,
   step,
   typeLikeResolver,
 } from "./auto-form.utils";
@@ -1167,6 +1168,29 @@ describe("auto-form.utils", () => {
     expect(sections).toHaveLength(2);
     expect(sections[0].title).toBe("items 1");
     expect(sections[1].title).toBe("items 2");
+  });
+
+  // sectionsFromSchema
+  it("sectionsFromSchema A should build sections regardless of step state", () => {
+    const schema = z.object({ a: z.string().meta({ label: "A" }) }).meta({ state: "readonly" });
+    const data = { a: "foo" };
+    const sections = sectionsFromSchema(schema, data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
+  });
+  it("sectionsFromSchema B should build sections for editable steps too", () => {
+    const schema = z.object({ b: z.string().meta({ label: "B" }) }).meta({ state: "editable" });
+    const data = { b: "bar" };
+    const sections = sectionsFromSchema(schema, data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data).toEqual({ b: { label: "B", value: "bar" } });
+  });
+  it("sectionsFromSchema C should build sections for upcoming steps", () => {
+    const schema = z.object({ c: z.string().meta({ label: "C" }) }).meta({ state: "upcoming" });
+    const data = { c: "baz" };
+    const sections = sectionsFromSchema(schema, data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data).toEqual({ c: { label: "C", value: "baz" } });
   });
 
   // getFieldMetadata
