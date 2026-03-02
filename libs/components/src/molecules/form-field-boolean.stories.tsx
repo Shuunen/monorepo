@@ -4,7 +4,7 @@ import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
-import { field } from "./auto-form.utils";
+import { field, section } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
@@ -532,6 +532,60 @@ export const CheckboxMultipleFields: Story = {
         rememberMe: true,
       };
       expect(submittedData).toContainHTML(stringify(expectedData, true));
+    });
+  },
+};
+
+const noNewsletterSelected = (data: Record<string, unknown>) => {
+  const { newsletterRecommendations, newsletterUpdates, newsletterOffers } = data;
+  return !newsletterRecommendations && !newsletterUpdates && !newsletterOffers;
+};
+
+/**
+ * Checkbox group
+ */
+export const CheckboxGroup: Story = {
+  args: {
+    schemas: [
+      z.object({
+        newsletterSection: section({
+          label: "Select at least one newsletter",
+          labelStar: true,
+          description: "Choose the newsletters you want to subscribe to.",
+        }),
+        newsletterRecommendations: field(z.boolean().optional(), {
+          label: "Monthly recommendations from the chef",
+          errors: data => (noNewsletterSelected(data) ? "" : undefined),
+          render: "checkbox",
+        }),
+        newsletterUpdates: field(z.boolean().optional(), {
+          label: "Weekly product updates",
+          errors: data => (noNewsletterSelected(data) ? "" : undefined),
+          render: "checkbox",
+        }),
+        newsletterOffers: field(z.boolean().optional(), {
+          label: "Exclusive offers and discounts",
+          errors: data => (noNewsletterSelected(data) ? "Please select at least one newsletter" : undefined),
+          render: "checkbox",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+    const submitButton = canvas.getByRole("button", { name: "Submit" });
+    await step("submit without selecting should show error", async () => {
+      await userEvent.click(submitButton);
+      const issues = canvas.queryAllByRole("alert");
+      expect(issues.map(el => el.textContent).join(",")).toBe("Please select at least one newsletter");
+      expect(submittedData).toContainHTML("{}");
+    });
+    await step("select one checkbox and submit should succeed", async () => {
+      const recommendations = canvas.getByTestId("checkbox-newsletter-recommendations");
+      await userEvent.click(recommendations);
+      await userEvent.click(submitButton);
+      expect(submittedData).toContainHTML(stringify({ newsletterRecommendations: true }, true));
     });
   },
 };
