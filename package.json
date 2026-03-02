@@ -117,7 +117,7 @@
     "storybook:build": "nx build-storybook components && echo storybook:build success",
     "storybook:doctor": "pnpm exec storybook doctor && echo storybook:doctor success",
     "storybook:report": "pnpm --dir libs/components exec vite preview --outDir storybook-html-reports",
-    "storybook:run": "nx run-storybook components",
+    "storybook:run": "nx run-storybook components --no-version-updates",
     "storybook:test": "nx test-storybook components && echo storybook:test success",
     "test": "nx run-many -t test && echo test success",
     "test:update": "nx run-many -t test --update && echo test:update success",
