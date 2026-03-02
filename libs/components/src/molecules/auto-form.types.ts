@@ -155,6 +155,7 @@ export type AutoFormFieldConditionalMetadata = {
   dependsOn?: string | DependsOnCondition[];
   /** More generic way to express condition on whether or not a field is visible. When provided, this function has precedence over `dependsOn`. */
   isVisible?: (formData: AutoFormData) => boolean;
+  showInSummary?: boolean;
 };
 
 /**

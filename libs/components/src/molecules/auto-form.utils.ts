@@ -700,6 +700,10 @@ function processFieldForSection({ key, shape, data, state }: ProcessFieldForSect
   /* c8 ignore stop */
   const metadata = getFieldMetadata(fieldSchema);
   if (metadata?.render === "section") {
+    const showSectionInSummary = !("showInSummary" in metadata) || metadata?.showInSummary;
+    if (!showSectionInSummary) {
+      return;
+    }
     flushCurrentSection(state);
     state.currentSectionTitle = "title" in metadata ? metadata.title : undefined;
     state.currentSectionData = {};
