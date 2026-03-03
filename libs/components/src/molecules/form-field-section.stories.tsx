@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, within } from "storybook/test";
+import { useForm, FormProvider } from "react-hook-form";
+import { expect, userEvent, within } from "storybook/test";
 import { FormFieldSection } from "./form-field-section";
 
 const meta = {
@@ -282,5 +283,55 @@ export const WithLabelStarAndDescription: Story = {
     expect(label).toBeInTheDocument();
     const star = canvas.getByText("*");
     expect(star).toBeInTheDocument();
+  },
+};
+
+/**
+ * Section with customRender that reads live form data via useWatch.
+ * Type into the inputs to see the custom section update reactively.
+ */
+export const WithCustomRender: Story = {
+  render: () => {
+    const form = useForm({ defaultValues: { email: "jane@example.com", name: "Jane Doe" } });
+
+    return (
+      <FormProvider {...form}>
+        <div className="grid w-md gap-4">
+          <label className="grid gap-1">
+            <span className="text-sm font-medium">Name</span>
+            <input className="rounded border px-3 py-2" {...form.register("name")} />
+          </label>
+          <label className="grid gap-1">
+            <span className="text-sm font-medium">Email</span>
+            <input className="rounded border px-3 py-2" {...form.register("email")} />
+          </label>
+          <FormFieldSection
+            customRender={formData => (
+              <div className="rounded-md border bg-muted/50 p-4 text-sm">
+                <p>
+                  <span className="font-semibold">Name:</span> {String(formData.name ?? "")}
+                </p>
+                <p>
+                  <span className="font-semibold">Email:</span> {String(formData.email ?? "")}
+                </p>
+              </div>
+            )}
+            description="This section renders custom JSX that reacts to form value changes."
+            title="Live Form Preview"
+          />
+        </div>
+      </FormProvider>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByText(/Live Form Preview/)).toBeInTheDocument();
+    expect(canvas.getByText("Jane Doe")).toBeInTheDocument();
+    expect(canvas.getByText("jane@example.com")).toBeInTheDocument();
+
+    const nameInput = canvas.getByDisplayValue("Jane Doe");
+    await userEvent.clear(nameInput);
+    await userEvent.type(nameInput, "John");
+    expect(canvas.getByText("John")).toBeInTheDocument();
   },
 };
