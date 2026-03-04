@@ -70,7 +70,7 @@ export function FormFieldUpload({
       // oxlint-disable-next-line no-nested-ternary
       buttons: isDisabled ? [] : uploadProgress === 0 ? [buttons.remove] : [buttons.retry, buttons.remove],
       icon: <FileXIcon className="size-5 text-destructive" />,
-      message: `Uploading failed! ${sizeProgress}`,
+      message: `Loading failed! ${sizeProgress}`,
     },
     idle: {
       buttons: [],
@@ -80,12 +80,12 @@ export function FormFieldUpload({
     success: {
       buttons: isDisabled ? [] : [buttons.remove],
       icon: <FileCheckIcon className="size-5 text-success" />,
-      message: `Uploading succeeded! ${sizeProgress}`,
+      message: `Loading succeeded! ${sizeProgress}`,
     },
     uploading: {
       buttons: [buttons.cancel],
       icon: <FileUpIcon className="size-5 text-muted-foreground" />,
-      message: `Uploading... ${sizeProgress}`,
+      message: `Loading... ${sizeProgress}`,
     },
   } as const;
   type UploadType = keyof typeof states;
