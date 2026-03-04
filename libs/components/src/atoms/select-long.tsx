@@ -141,7 +141,7 @@ export function SelectLong<Option, Value = string>(props: SelectLongProps<Option
           const label = props.getLabel(option);
           const value = String(props.getValue(option));
           return (
-            <SelectItem key={value} value={value} hidden={!isOptionVisible(option)} prefixDataTestId={props.name}>
+            <SelectItem key={value} value={value} hidden={!isOptionVisible(option)} name={props.name}>
               {label}
             </SelectItem>
           );
