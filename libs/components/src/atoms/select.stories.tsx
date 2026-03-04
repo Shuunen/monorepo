@@ -31,54 +31,54 @@ const meta: Meta<typeof Select> = {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Fruits</SelectLabel>
-          <SelectItem prefixDataTestId="fruit" value="apple">
+          <SelectItem name="fruit" value="apple">
             Apple
           </SelectItem>
-          <SelectItem prefixDataTestId="fruit" value="banana">
+          <SelectItem name="fruit" value="banana">
             Banana
           </SelectItem>
-          <SelectItem prefixDataTestId="fruit" value="blueberry">
+          <SelectItem name="fruit" value="blueberry">
             Blueberry
           </SelectItem>
-          <SelectItem prefixDataTestId="fruit" value="grapes">
+          <SelectItem name="fruit" value="grapes">
             Grapes
           </SelectItem>
-          <SelectItem prefixDataTestId="fruit" value="pineapple">
+          <SelectItem name="fruit" value="pineapple">
             Pineapple
           </SelectItem>
         </SelectGroup>
         <SelectSeparator />
         <SelectGroup>
           <SelectLabel>Vegetables</SelectLabel>
-          <SelectItem prefixDataTestId="fruit" value="aubergine">
+          <SelectItem name="fruit" value="aubergine">
             Aubergine
           </SelectItem>
-          <SelectItem prefixDataTestId="fruit" value="broccoli">
+          <SelectItem name="fruit" value="broccoli">
             Broccoli
           </SelectItem>
-          <SelectItem prefixDataTestId="fruit" disabled value="carrot">
+          <SelectItem name="fruit" disabled value="carrot">
             Carrot
           </SelectItem>
-          <SelectItem prefixDataTestId="fruit" value="courgette">
+          <SelectItem name="fruit" value="courgette">
             Courgette
           </SelectItem>
-          <SelectItem prefixDataTestId="fruit" value="leek">
+          <SelectItem name="fruit" value="leek">
             Leek
           </SelectItem>
         </SelectGroup>
         <SelectSeparator />
         <SelectGroup>
           <SelectLabel>Meat</SelectLabel>
-          <SelectItem prefixDataTestId="fruit" value="beef">
+          <SelectItem name="fruit" value="beef">
             Beef
           </SelectItem>
-          <SelectItem prefixDataTestId="fruit" value="chicken">
+          <SelectItem name="fruit" value="chicken">
             Chicken
           </SelectItem>
-          <SelectItem prefixDataTestId="fruit" value="lamb">
+          <SelectItem name="fruit" value="lamb">
             Lamb
           </SelectItem>
-          <SelectItem prefixDataTestId="fruit" value="pork">
+          <SelectItem name="fruit" value="pork">
             Pork
           </SelectItem>
         </SelectGroup>
