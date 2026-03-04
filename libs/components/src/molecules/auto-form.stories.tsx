@@ -99,7 +99,7 @@ const basicWithDefaultsSchema = z.object({
     label: "Accept terms and conditions (checked by default)",
     placeholder: "Check to accept",
   }),
-  subscribe: field(z.boolean(), {
+  subscribe: field(z.literal(true, "Please subscribe."), {
     label: "Subscribe to newsletter (unchecked by default)",
     placeholder: "Check to subscribe",
     render: "checkbox",
@@ -142,7 +142,7 @@ export const BasicWithDefaults: Story = {
       expect(submitButton).toBeEnabled();
       await userEvent.click(submitButton);
       const issues = await canvas.findAllByRole("alert");
-      expect(issues.map(el => el.textContent).join(",")).toBe("This field is required");
+      expect(issues.map(el => el.textContent).join(",")).toBe("Please subscribe.");
     });
 
     await step("check that form can be submitted when subscribe is checked", async () => {
