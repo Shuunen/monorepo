@@ -42,7 +42,7 @@ export const Basic: Story = {
   args: {
     schemas: [
       z.object({
-        agreedToTerms: field(z.boolean(), {
+        agreedToTerms: field(z.literal(true, "Please accept to continue"), {
           label: "I agree to the Terms and Conditions",
           placeholder: "Please accept the terms",
         }),
@@ -187,10 +187,11 @@ export const WithDefaultValueFalse: Story = {
       await userEvent.click(submitButton);
     });
 
-    await step("verify that we have errors on submit", () => {
+    await step("verify that we have no errors on submit", () => {
       const issues = canvas.queryAllByRole("alert");
-      expect(issues.map(el => el.textContent).join(",")).toBe("This field is required");
-      expect(submittedData).toContainHTML("{}");
+      expect(issues.map(el => el.textContent).join(",")).toBe("");
+      const expectedData = stringify({ subscribeToNewsletter: false }, true);
+      expect(submittedData).toContainHTML(expectedData);
     });
   },
 };
@@ -319,7 +320,7 @@ export const CheckboxBasic: Story = {
   args: {
     schemas: [
       z.object({
-        agreedToTerms: field(z.boolean(), {
+        agreedToTerms: field(z.literal(true, "Conditions need to be accepted."), {
           label: "I agree to the Terms and Conditions",
           placeholder: "Please accept the terms",
           render: "checkbox",
@@ -491,19 +492,24 @@ export const CheckboxMultipleFields: Story = {
   args: {
     schemas: [
       z.object({
-        acceptCookies: field(z.boolean(), {
-          label: "Accept Cookies",
-          placeholder: "Enable cookies for better experience",
+        requiredTrue: field(z.boolean(), {
+          label: "This one is required, could be true or false",
           render: "checkbox",
         }),
-        marketingEmails: field(z.boolean().optional(), {
-          label: "Marketing Emails",
-          placeholder: "Receive promotional offers",
+        requiredFalse: field(z.boolean(), {
+          label: "This one is also required, could be true or false",
           render: "checkbox",
         }),
-        rememberMe: field(z.boolean(), {
-          label: "Remember Me",
-          placeholder: "Keep me logged in",
+        booleanOptional: field(z.boolean().optional(), {
+          label: "This one is optional, undefined by default",
+          render: "checkbox",
+        }),
+        literalTrue: field(z.literal(true, "Please check this one"), {
+          label: "This one needs to be checked",
+          render: "checkbox",
+        }),
+        literalFalse: field(z.literal(false, "Please don't check this one"), {
+          label: "This one needs to be un-checked",
           render: "checkbox",
         }),
       }),
@@ -512,24 +518,34 @@ export const CheckboxMultipleFields: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
-    await step("toggle acceptCookies to true", async () => {
-      const acceptCookies = canvas.getByTestId("checkbox-accept-cookies");
-      await userEvent.click(acceptCookies);
-      expect(acceptCookies).toHaveAttribute("data-state", "checked");
-    });
-    await step("toggle rememberMe to true", async () => {
-      const rememberMe = canvas.getByTestId("checkbox-remember-me");
-      await userEvent.click(rememberMe);
-      expect(rememberMe).toHaveAttribute("data-state", "checked");
-    });
+    const submitButton = canvas.getByRole("button", { name: "Submit" });
+    const requiredTrue = canvas.getByTestId("checkbox-required-true");
+    const literalTrue = canvas.getByTestId("checkbox-literal-true");
+    const literalFalse = canvas.getByTestId("checkbox-literal-false");
     await step("submit form", async () => {
-      const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
+      const expectedData = {};
+      expect(submittedData).toContainHTML(stringify(expectedData, true));
+      const issues = canvas.queryAllByRole("alert");
+      expect(issues.map(el => el.textContent).join(",")).toBe("Please check this one");
     });
-    await step("verify submitted data", () => {
+    await step("play with literals", async () => {
+      await userEvent.click(literalTrue);
+      await userEvent.click(literalFalse);
+      const issues = canvas.queryAllByRole("alert");
+      expect(issues.map(el => el.textContent).join(",")).toBe("Please don't check this one");
+    });
+    await step("fix issues and submit", async () => {
+      await userEvent.click(literalFalse);
+      await userEvent.click(requiredTrue);
+      const issues = canvas.queryAllByRole("alert");
+      expect(issues.map(el => el.textContent).join(",")).toBe("");
+      await userEvent.click(submitButton);
       const expectedData = {
-        acceptCookies: true,
-        rememberMe: true,
+        requiredTrue: true, // true because we checked it
+        requiredFalse: false, // false because we automagically init it to false
+        literalTrue: true, // true because true in the schema and only possible to be true
+        literalFalse: false, // false because false in the schema and only possible to be false
       };
       expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
