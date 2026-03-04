@@ -356,24 +356,6 @@ describe("auto-form.utils", () => {
     expect(filtered.shape).toHaveProperty("a");
     expect(filtered.shape).not.toHaveProperty("b");
   });
-  it("filterSchema E should enforce required boolean fields to be true", () => {
-    const schema = z.object({
-      agreed: z.boolean().meta({ label: "Agreed" }),
-      name: z.string().meta({ label: "Name" }),
-    });
-    const filtered = filterSchema(schema);
-    expect(filtered.safeParse({ agreed: false, name: "John" }).success).toBe(false);
-    expect(filtered.safeParse({ agreed: true, name: "John" }).success).toBe(true);
-  });
-  it("filterSchema F should not enforce optional boolean fields to be true", () => {
-    const schema = z.object({
-      agreed: z.boolean().optional().meta({ label: "Agreed" }),
-    });
-    const filtered = filterSchema(schema);
-    expect(filtered.safeParse({ agreed: false }).success).toBe(true);
-    expect(filtered.safeParse({ agreed: true }).success).toBe(true);
-    expect(filtered.safeParse({}).success).toBe(true);
-  });
 
   // normalizeDataForSchema
   it("normalizeDataForSchema A should remove excluded fields and invisible fields", () => {

@@ -328,7 +328,6 @@ function isFilteredOut(fieldSchema: z.ZodType, formData: AutoFormData, metadata?
 
 /**
  * Returns a filtered schema with only visible fields.
- * Required boolean fields are enforced to be true (e.g. "I agree to terms").
  * @param schema the original Zod schema
  * @param formData the current form data to evaluate visibility
  * @returns a new Zod schema with only visible fields
@@ -343,8 +342,7 @@ export function filterSchema(schema: z.ZodObject, formData: AutoFormData = {}): 
       continue;
     }
     logger.debug(`filterSchema "${key}" of type "${fieldSchema.type}" isVisible`);
-    const useLiteral = isRequiredBoolean(fieldSchema) && metadata?.render !== "accept";
-    visibleShape[key] = useLiteral ? z.literal(true, { error: "This field is required" }) : fieldSchema;
+    visibleShape[key] = fieldSchema;
   }
   return z.object(visibleShape);
 }
