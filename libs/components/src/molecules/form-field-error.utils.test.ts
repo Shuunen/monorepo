@@ -4,6 +4,8 @@ import { computeCustomErrorMessage, getCustomErrorAction } from "./form-field-er
 const errorFnDynamicError = (data: Record<string, unknown>) => (data.age === 0 ? "Age must be positive" : undefined);
 const errorFnReturningNoError = () => undefined;
 const errorFnReturningError = () => "some error";
+const errorFnUsingParentData = (_data: Record<string, unknown>, parentData?: Record<string, unknown>) =>
+  parentData?.country === "FR" ? "Not available in France" : undefined;
 
 describe("form-field-error.utils", () => {
   // computeCustomErrorMessage
@@ -31,6 +33,14 @@ describe("form-field-error.utils", () => {
   });
   it("computeCustomErrorMessage F should return undefined when the error function returns undefined", () => {
     const result = computeCustomErrorMessage(errorFnReturningNoError, { name: "John" });
+    expect(result).toMatchInlineSnapshot(`undefined`);
+  });
+  it("computeCustomErrorMessage G should pass parentData to error function when provided", () => {
+    const result = computeCustomErrorMessage(errorFnUsingParentData, { name: "John" }, { country: "FR" });
+    expect(result).toMatchInlineSnapshot(`"Not available in France"`);
+  });
+  it("computeCustomErrorMessage H should pass undefined parentData when not provided", () => {
+    const result = computeCustomErrorMessage(errorFnUsingParentData, { name: "John" });
     expect(result).toMatchInlineSnapshot(`undefined`);
   });
 

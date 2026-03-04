@@ -83,6 +83,7 @@ export * from "./molecules/auto-form-field";
 export * from "./molecules/auto-form-field.utils";
 export * from "./molecules/auto-form-fields";
 export * from "./molecules/auto-form-navigation";
+export * from "./molecules/auto-form-parent-data";
 export * from "./molecules/auto-form-stepper";
 export * from "./molecules/auto-form-submission-step";
 export * from "./molecules/auto-form-summary-step";

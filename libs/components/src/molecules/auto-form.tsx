@@ -11,6 +11,7 @@ import { IconArrowLeft } from "../icons/icon-arrow-left";
 import { IconHome } from "../icons/icon-home";
 import { AutoFormFields } from "./auto-form-fields";
 import { AutoFormNavigation } from "./auto-form-navigation";
+import { AutoFormParentDataProvider, useAutoFormParentData } from "./auto-form-parent-data";
 import { AutoFormStepper } from "./auto-form-stepper";
 import { AutoFormSubmissionStep } from "./auto-form-submission-step";
 import { AutoFormSummaryStep } from "./auto-form-summary-step";
@@ -93,7 +94,9 @@ export function AutoForm({
   const finalLabels = { ...defaultLabels, ...labels };
   const [mode, setMode] = useState<"initial" | "subform">("initial");
   const [subformOptions, setSubformOptions] = useState<AutoFormSubformOptions | undefined>(undefined);
+  const [parentFormDataSnapshot, setParentFormDataSnapshot] = useState<AutoFormData | undefined>(undefined);
   const [pendingValidation, setPendingValidation] = useState(false);
+  const parentData = useAutoFormParentData();
   const form = useForm({
     defaultValues,
     mode: "onBlur",
@@ -151,7 +154,7 @@ export function AutoForm({
    */
   function handleStepSubmit() {
     const updatedData = updateFormData();
-    if (currentSchema && hasCustomErrors(currentSchema, updatedData)) {
+    if (currentSchema && hasCustomErrors(currentSchema, updatedData, parentData)) {
       logger?.warn("Step submission blocked by custom field errors");
       return;
     }
@@ -214,6 +217,7 @@ export function AutoForm({
       globalThis.window.scrollTo({ top: 0 });
       onSubformMode?.(false);
       setMode("subform");
+      setParentFormDataSnapshot({ ...formData, ...form.getValues() });
       setSubformOptions({
         initialData: options.initialData,
         onSubmit: data => {
@@ -224,7 +228,7 @@ export function AutoForm({
         schema: options.schema,
       });
     },
-    [backToInitialMode, onSubformMode],
+    [backToInitialMode, onSubformMode, formData, form],
   );
   const steps = useMemo(
     () =>
@@ -343,7 +347,7 @@ export function AutoForm({
     }
     logger?.info("Rendering subform", { subformOptions });
     return (
-      <>
+      <AutoFormParentDataProvider value={parentFormDataSnapshot}>
         {showBackButtonInSubform && (
           <Button name="subform-back" onClick={backToInitialMode} variant="outline">
             <IconArrowLeft />
@@ -356,7 +360,7 @@ export function AutoForm({
           schemas={[subformOptions.schema]}
           onSubformMode={value => setShowBackButtonInSubform(value)}
         />
-      </>
+      </AutoFormParentDataProvider>
     );
   }
 

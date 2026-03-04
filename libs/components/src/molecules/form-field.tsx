@@ -11,6 +11,7 @@ import {
 import type { z } from "zod";
 import { FormField, FormItem, FormMessage } from "../atoms/form";
 import { cn } from "../shadcn/utils";
+import { useAutoFormParentData } from "./auto-form-parent-data";
 import type { AutoFormStepState, AutoFormSubformOptions } from "./auto-form.types";
 import { getFieldMetadataOrThrow, getSchemaDefaultValue } from "./auto-form.utils";
 import { computeCustomErrorMessage, getCustomErrorAction } from "./form-field-error.utils";
@@ -40,11 +41,12 @@ export function FormFieldBase(props: FormFieldBaseProps) {
   const indented = metadata.dependsOn !== undefined || metadata.isVisible !== undefined;
   const customErrorFn = "errors" in metadata ? metadata.errors : undefined;
   const watchedValues = useWatch({ disabled: !customErrorFn });
+  const parentData = useAutoFormParentData();
   const { setError, clearErrors, setValue, getValues } = useFormContext();
   const lastCustomErrorRef = useRef<string | undefined>(undefined);
   const customErrorMessage = useMemo(
-    () => computeCustomErrorMessage(customErrorFn, watchedValues),
-    [watchedValues, customErrorFn],
+    () => computeCustomErrorMessage(customErrorFn, watchedValues, parentData),
+    [watchedValues, customErrorFn, parentData],
   );
   // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to run this once on mount
   useEffect(() => {
