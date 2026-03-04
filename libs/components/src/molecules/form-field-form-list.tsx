@@ -22,6 +22,7 @@ import {
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.types";
 import { isSubformFilled, nbFilledItems } from "./form-field-form-list.utils";
+import type { z } from "zod";
 
 function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean }) {
   let icon = <IconCircleClose />;
@@ -171,9 +172,10 @@ export function FormFieldFormList({
    * @param params.isReadonly whether the form is readonly
    */
   function onCompleteItem({ onChange, indexToComplete, itemData, dataTestId, isReadonly }: OnCompleteItemParams) {
-    const { value: elementSchema } = Result.unwrap(getElementSchema(fieldSchema));
-    invariant(elementSchema !== undefined, "elementSchema should be defined");
-    invariant(isZodObject(elementSchema), "elementSchema should be a zod object");
+    const result = Result.unwrap(getElementSchema(fieldSchema));
+    invariant(result.value !== undefined, "elementSchema should be defined");
+    invariant(isZodObject(result.value), "elementSchema should be a zod object");
+    const elementSchema = result.value as z.ZodObject;
     const onSubmit = (data: Record<string, unknown>) => {
       const mappedData = mapExternalDataToFormFields(elementSchema, data);
       logger?.info("Data from subform", { data, mappedData });

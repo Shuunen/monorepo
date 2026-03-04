@@ -86,6 +86,14 @@ describe("auto-form.utils", () => {
     const schema = z.boolean().optional().default(true);
     expect(isZodBoolean(schema)).toBe(true);
   });
+  it("isZodBoolean F should handle literal true", () => {
+    const schema = z.literal(true);
+    expect(isZodBoolean(schema)).toBe(true);
+  });
+  it("isZodBoolean G should handle literal false", () => {
+    const schema = z.literal(false);
+    expect(isZodBoolean(schema)).toBe(true);
+  });
   // isRequiredBoolean
   it("isRequiredBoolean A should return true for z.boolean()", () => {
     expect(isRequiredBoolean(z.boolean())).toBe(true);
@@ -1621,5 +1629,13 @@ describe("auto-form.utils", () => {
   it("getSchemaDefaultValue I should return undefined for array schema with prefault", () => {
     const schema = z.array(z.string()).prefault([]);
     expect(getSchemaDefaultValue(schema)).toBeUndefined();
+  });
+  it("getSchemaDefaultValue J should return undefined for accept field without default", () => {
+    const schema = acceptField({ label: "Terms" });
+    expect(getSchemaDefaultValue(schema)).toBeUndefined();
+  });
+  it("getSchemaDefaultValue K should return true for accept field with default", () => {
+    const schema = z.boolean().default(true).meta({ label: "Terms", render: "accept" });
+    expect(getSchemaDefaultValue(schema)).toBe(true);
   });
 });
