@@ -30,7 +30,7 @@ export function FormFieldRadio({ fieldName, fieldSchema, isOptional, logger, rea
             value={field.value || ""}
           >
             {metadata.placeholder && <Paragraph className="mb-1">{metadata.placeholder}</Paragraph>}
-            <div className={cn("flex gap-3", { "flex-col": isVertical })}>
+            <div className={cn("grid gap-3", { "lg:auto-cols-fr lg:grid-flow-col": !isVertical })}>
               {metadata.options.map(option => {
                 const itemId = `${fieldName}-${option.value}`;
                 return variant === "default" ? (
