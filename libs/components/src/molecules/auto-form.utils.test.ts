@@ -1450,6 +1450,21 @@ describe("auto-form.utils", () => {
     });
     expect(hasCustomErrors(schema, { color: "blue", size: "large" })).toBe(false);
   });
+  it("hasCustomErrors E should pass parentData to errors function", () => {
+    const schema = z.object({
+      name: field(z.string(), {
+        label: "Name",
+        errors: (_, parentData) => {
+          if (parentData?.country === "FR") {
+            return "Not available in France";
+          }
+          return undefined;
+        },
+      }),
+    });
+    expect(hasCustomErrors(schema, { name: "John" }, { country: "FR" })).toBe(true);
+    expect(hasCustomErrors(schema, { name: "John" }, { country: "US" })).toBe(false);
+  });
 
   // getSchemaDefaultValue
   it("getSchemaDefaultValue A should return default value from a default-wrapped schema", () => {

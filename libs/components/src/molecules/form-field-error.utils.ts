@@ -2,7 +2,7 @@ import { isObjectEmpty } from "@monorepo/utils";
 import { isPlainObject } from "es-toolkit";
 import type { AutoFormData } from "./auto-form.types";
 
-type CustomErrorFn = (data: AutoFormData) => string | undefined;
+type CustomErrorFn = (data: AutoFormData, parentData?: AutoFormData) => string | undefined;
 
 export type CustomErrorAction = { message: string; type: "set-error" } | { type: "clear-error" } | { type: "none" };
 
@@ -11,14 +11,19 @@ export type CustomErrorAction = { message: string; type: "set-error" } | { type:
  * Returns undefined if no custom error function is provided or if the watched values are not ready.
  * @param customErrorFn - The custom error validation function from field metadata
  * @param watchedValues - The current watched form values
+ * @param parentData - The parent form's data when in subform mode
  * @returns The error message string or undefined
  */
-export function computeCustomErrorMessage(customErrorFn: CustomErrorFn | undefined, watchedValues: AutoFormData) {
+export function computeCustomErrorMessage(
+  customErrorFn: CustomErrorFn | undefined,
+  watchedValues: AutoFormData,
+  parentData?: AutoFormData,
+) {
   if (!customErrorFn) {
     return undefined;
   }
   const shouldRun = isPlainObject(watchedValues) && !isObjectEmpty(watchedValues);
-  return shouldRun ? customErrorFn(watchedValues) : undefined;
+  return shouldRun ? customErrorFn(watchedValues, parentData) : undefined;
 }
 
 /**

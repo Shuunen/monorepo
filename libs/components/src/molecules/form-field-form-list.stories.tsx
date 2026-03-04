@@ -252,6 +252,23 @@ export const ExistingData: Story = {
   },
 };
 
+const applicantSchemaWithErrors = z.object({
+  name: field(z.string().min(2), {
+    label: "Child's Name",
+    placeholder: "Enter the name of the child",
+    errors: (data, parentData) => {
+      if (data?.name === "Bob" && parentData?.parentName === "Bob") {
+        return "Please do not name your child after you";
+      }
+      return undefined;
+    },
+  }),
+  age: field(z.number().min(0).max(120), {
+    label: "Child's Age",
+    placeholder: "Enter the age of the child",
+  }),
+});
+
 /**
  * Multi-step form list
  */
@@ -266,6 +283,10 @@ export const MultiStep: Story = {
     schemas: [
       step(
         z.object({
+          parentName: field(z.string().optional(), {
+            label: "Parent Name",
+            placeholder: "Enter the name of the parent",
+          }),
           email: field(z.email().optional(), {
             label: "Email",
             placeholder: "Enter your email",
@@ -274,7 +295,7 @@ export const MultiStep: Story = {
       ),
       step(
         z.object({
-          applicants: forms(applicantSchema, {
+          applicants: forms(applicantSchemaWithErrors, {
             icon: <IconDownload className="text-blue-500" />,
             identifier: data => (data?.name ? `${data.name} (${data.age} years)` : `New person - ${data?.index}`),
             label: "Fill in the applicants",
@@ -283,6 +304,26 @@ export const MultiStep: Story = {
         }),
       ),
     ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+    await step("verify initial state", () => {
+      expect(submittedData).toContainHTML(`{}`);
+    });
+    await step("setup parent name and go next step", async () => {
+      const parentNameInput = canvas.getByTestId("input-text-parent-name");
+      await userEvent.type(parentNameInput, "Bob");
+      const nextButton = canvas.getByRole("button", { name: "Next" });
+      await userEvent.click(nextButton);
+    });
+    await step("click on bob and see errors", async () => {
+      const allCompleteButtons = canvas.getAllByTestId("button-complete");
+      await userEvent.click(allCompleteButtons[1]);
+      const errors = canvas.getAllByRole("alert");
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toHaveTextContent("Please do not name your child after you");
+    });
   },
 };
 

@@ -180,8 +180,8 @@ export type AutoFormFieldBaseMetadata = {
   keyOut?: string;
   /** Zod codec to transform input and output data. */
   codec?: z.ZodCodec;
-  /** Custom error validation function that receives the current form data and returns an error message string or undefined. Useful for cross-field validation. */
-  errors?: (data: AutoFormData) => string | undefined;
+  /** Custom error validation function that receives the current form data and returns an error message string or undefined. Useful for cross-field validation. When used in a subform, parentData contains the parent form's data. */
+  errors?: (data: AutoFormData, parentData?: AutoFormData) => string | undefined;
 } & AutoFormFieldConditionalMetadata;
 
 export type AutoFormFieldBooleanMetadata = Simplify<
