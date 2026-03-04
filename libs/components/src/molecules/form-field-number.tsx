@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
 import { FormControl } from "../atoms/form";
 import { Input } from "../atoms/input";
-import { getFieldMetadataOrThrow, isZodNumber } from "./auto-form.utils";
+import { getFieldMetadataOrThrow, getUnwrappedSchema, isZodNumber } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import { getZodNumberMinMax, toLocalValue } from "./form-field-number.utils";
+import type { z } from "zod";
 
 type NumberInputProps = {
   field: ControllerRenderProps;
@@ -44,10 +45,11 @@ export function FormFieldNumber({ fieldName, fieldSchema, isOptional, logger, re
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { placeholder, state = "editable" } = metadata;
   const isDisabled = state === "disabled" || readonly;
-  if (!isZodNumber(fieldSchema)) {
+  const schema = getUnwrappedSchema(fieldSchema);
+  if (!isZodNumber(schema)) {
     throw new Error(`Field "${fieldName}" is not a number`);
   }
-  const { min, max } = getZodNumberMinMax(fieldSchema);
+  const { min, max } = getZodNumberMinMax(schema as z.ZodNumber);
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
 
   return (

@@ -57,11 +57,8 @@ export function getUnwrappedSchema(schema: z.ZodType) {
  * @returns true if the schema is (or contains) this zod type
  */
 function isZodType(fieldSchema: z.ZodType, type: z.ZodType["type"]) {
-  const isType = fieldSchema.type === type;
-  const isTypeLiteral =
-    fieldSchema.type === "optional" && (fieldSchema as z.ZodOptional<z.ZodType>).def.innerType.type === type;
-  const isTypeUnwrapped = getUnwrappedSchema(fieldSchema).type === type;
-  return isType || isTypeLiteral || isTypeUnwrapped;
+  const schema = getUnwrappedSchema(fieldSchema);
+  return schema.type === type;
 }
 
 /**
@@ -69,7 +66,7 @@ function isZodType(fieldSchema: z.ZodType, type: z.ZodType["type"]) {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodEnum; otherwise, false.
  */
-export function isZodEnum(fieldSchema: z.ZodType): fieldSchema is z.ZodEnum {
+export function isZodEnum(fieldSchema: z.ZodType) {
   return isZodType(fieldSchema, "enum");
 }
 
@@ -78,8 +75,20 @@ export function isZodEnum(fieldSchema: z.ZodType): fieldSchema is z.ZodEnum {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodBoolean; otherwise, false.
  */
-export function isZodBoolean(fieldSchema: z.ZodType): fieldSchema is z.ZodBoolean {
-  return isZodType(fieldSchema, "boolean");
+export function isZodBoolean(fieldSchema: z.ZodType) {
+  const schema = getUnwrappedSchema(fieldSchema);
+  return isZodBooleanLiteral(schema) || schema.type === "boolean";
+}
+
+/**
+ * Checks if the provided Zod schema is a ZodLiteral of boolean type (true or false).
+ * @param unwrappedSchema the Zod schema to check
+ * @returns true if the schema is a ZodLiteral with a boolean value; otherwise, false.
+ */
+function isZodBooleanLiteral(unwrappedSchema: z.ZodType) {
+  const isLiteral = unwrappedSchema.type === "literal";
+  const hasTrueFalseValues = [true, false].includes((unwrappedSchema as z.ZodLiteral<boolean>).value);
+  return isLiteral && hasTrueFalseValues;
 }
 
 /**
@@ -100,7 +109,7 @@ export function isRequiredBoolean(fieldSchema: z.ZodType) {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodNumber; otherwise, false.
  */
-export function isZodNumber(fieldSchema: z.ZodType): fieldSchema is z.ZodNumber {
+export function isZodNumber(fieldSchema: z.ZodType) {
   return isZodType(fieldSchema, "number");
 }
 
@@ -109,7 +118,7 @@ export function isZodNumber(fieldSchema: z.ZodType): fieldSchema is z.ZodNumber 
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodFile; otherwise, false.
  */
-export function isZodFile(fieldSchema: z.ZodType): fieldSchema is z.ZodFile {
+export function isZodFile(fieldSchema: z.ZodType) {
   return isZodType(fieldSchema, "file");
 }
 
@@ -118,7 +127,7 @@ export function isZodFile(fieldSchema: z.ZodType): fieldSchema is z.ZodFile {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodDate; otherwise, false.
  */
-export function isZodDate(fieldSchema: z.ZodType): fieldSchema is z.ZodDate {
+export function isZodDate(fieldSchema: z.ZodType) {
   const isDate = isZodType(fieldSchema, "date");
   const isDateString = fieldSchema.type === "string" && (fieldSchema as z.ZodString).format === "date";
   return isDate || isDateString;
@@ -129,7 +138,7 @@ export function isZodDate(fieldSchema: z.ZodType): fieldSchema is z.ZodDate {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodArray; otherwise, false.
  */
-export function isZodArray(fieldSchema: z.ZodType): fieldSchema is z.ZodArray {
+export function isZodArray(fieldSchema: z.ZodType) {
   return isZodType(fieldSchema, "array");
 }
 
@@ -138,7 +147,7 @@ export function isZodArray(fieldSchema: z.ZodType): fieldSchema is z.ZodArray {
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodObject; otherwise, false.
  */
-export function isZodObject(fieldSchema: z.ZodType): fieldSchema is z.ZodObject {
+export function isZodObject(fieldSchema: z.ZodType) {
   return isZodType(fieldSchema, "object");
 }
 
@@ -147,7 +156,7 @@ export function isZodObject(fieldSchema: z.ZodType): fieldSchema is z.ZodObject 
  * @param fieldSchema the Zod schema to check
  * @returns true if the schema is (or contains) a ZodString; otherwise, false.
  */
-export function isZodString(fieldSchema: z.ZodType): fieldSchema is z.ZodString {
+export function isZodString(fieldSchema: z.ZodType) {
   return isZodType(fieldSchema, "string");
 }
 
@@ -266,8 +275,7 @@ export function getElementSchema(fieldSchema: z.ZodType) {
     logger?.error("cant get element of a non-array schema");
     return Result.error("cant get element of a non-array schema");
   }
-  // we need to type as ZodType because as of today 2026-01-27 zod is typing an element as a weird internal z.core.$ZodType
-  return Result.ok(schema.element as z.ZodType);
+  return Result.ok((schema as z.ZodArray<z.ZodType>).element);
 }
 
 /**

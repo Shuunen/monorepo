@@ -12,18 +12,18 @@ export function toLocalValue(value: unknown) {
 
 /**
  * Extracts min and max values from a Zod number schema.
- * @param fieldSchema the Zod number schema to extract min/max from
+ * @param schema the unwrapped Zod number schema to extract min/max from
  * @returns an object with min and max values, each undefined if not set
  */
-export function getZodNumberMinMax(fieldSchema: z.ZodNumber): { min: number | undefined; max: number | undefined } {
+export function getZodNumberMinMax(schema: z.ZodNumber): { min: number | undefined; max: number | undefined } {
   return {
     max:
-      fieldSchema.maxValue !== undefined && fieldSchema.maxValue !== null && Number.isFinite(fieldSchema.maxValue)
-        ? (fieldSchema.maxValue as number)
+      schema.maxValue !== undefined && schema.maxValue !== null && Number.isFinite(schema.maxValue)
+        ? schema.maxValue
         : undefined,
     min:
-      fieldSchema.minValue !== undefined && fieldSchema.minValue !== null && Number.isFinite(fieldSchema.minValue)
-        ? (fieldSchema.minValue as number)
+      schema.minValue !== undefined && schema.minValue !== null && Number.isFinite(schema.minValue)
+        ? schema.minValue
         : undefined,
   };
 }
