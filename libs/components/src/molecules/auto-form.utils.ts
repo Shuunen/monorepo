@@ -25,6 +25,7 @@ import type {
   AutoFormStepMetadata,
   AutoFormSubmissionStepProps,
   AutoFormSummarySection,
+  AutoFormSummaryStepGroup,
   DependsOnCondition,
   TypeLike,
 } from "./auto-form.types";
@@ -602,7 +603,7 @@ function sectionDataFromObjectItem({ innerShape, item, key, index }: SectionData
   for (const innerKey of Object.keys(innerShape)) {
     const innerFieldSchema = innerShape[innerKey] as z.ZodType;
     const innerMetadata = getFieldMetadata(innerFieldSchema);
-    if (innerMetadata?.render === "section") {
+    if (innerMetadata?.render === "section" || innerMetadata?.excluded || !isFieldVisible(innerFieldSchema, item)) {
       continue;
     }
     const innerValue = isRadioOrSelectMetadata(innerMetadata)
@@ -644,7 +645,7 @@ function sectionsFromArrayOfObjects({ key, fieldSchema, metadata, data }: Sectio
   for (let index = 0; index < items.length; index += 1) {
     const item = items[index] as AutoFormData;
     /* c8 ignore start */
-    const itemTitle = identifier ? identifier(item) : `${fieldLabel} ${index + 1}`;
+    const itemTitle = identifier ? identifier({ ...item, index: index + 1 }) : `${fieldLabel} ${index + 1}`;
     const sectionData = sectionDataFromObjectItem({ index, innerShape, item, key });
     if (Object.keys(sectionData).length > 0) {
       sections.push({ data: sectionData, title: itemTitle });
@@ -765,6 +766,27 @@ export function sectionsFromEditableSteps(schemas: z.ZodObject[], data: AutoForm
     sections.push(...stepSections);
   }
   return sections;
+}
+
+/**
+ * Groups form data by step and then by sections for summary display.
+ * Each group contains the step title and its sections.
+ * Skips readonly and upcoming steps.
+ * @param schemas - Array of Zod schemas for all steps
+ * @param data - The complete form data
+ * @returns Array of step groups, each containing a step title and sections
+ */
+export function groupedSectionsFromEditableSteps(schemas: z.ZodObject[], data: AutoFormData) {
+  const groups: Array<AutoFormSummaryStepGroup> = [];
+  for (const schema of schemas) {
+    const sections = sectionsFromEditableStep(schema, data);
+    if (sections.length === 0) {
+      continue;
+    }
+    const stepMeta = getStepMetadata(schema);
+    groups.push({ sections, stepTitle: typeLikeResolver(stepMeta?.title, data) ?? undefined });
+  }
+  return groups;
 }
 
 /**

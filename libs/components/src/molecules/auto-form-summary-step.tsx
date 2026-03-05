@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import { Paragraph, Title } from "../atoms/typography";
-import type { AutoFormData } from "./auto-form.types";
-import { sectionsFromEditableSteps } from "./auto-form.utils";
+import type { AutoFormData, AutoFormSummarySection } from "./auto-form.types";
+import { groupedSectionsFromEditableSteps } from "./auto-form.utils";
 import { FormSummary } from "./form-summary";
 
 type Props = {
@@ -16,16 +16,23 @@ type Props = {
 };
 
 export function AutoFormSummaryStep(props: Props) {
-  const sections = sectionsFromEditableSteps(props.schemas, props.formData);
-  const hasData = sections.some(section => Object.keys(section.data).length > 0);
+  const groups = groupedSectionsFromEditableSteps(props.schemas, props.formData);
+  const hasData = groups.some(group =>
+    group.sections.some((section: AutoFormSummarySection) => Object.keys(section.data).length > 0),
+  );
   return (
     <div className="grid gap-8" data-testid="auto-form-summary-step">
       <Title level={1}>Summary</Title>
       {hasData ? (
-        sections.map((section, index) => (
-          <div className="grid gap-3" key={section.title ?? `section-${index}`}>
-            {section.title && <Title level={3}>{section.title}</Title>}
-            <FormSummary data={section.data} name={section.title ?? "no-title"} />
+        groups.map((group, groupIndex) => (
+          <div className="grid gap-6" key={group.stepTitle ?? `group-${groupIndex}`}>
+            {group.stepTitle && <Title level={2}>{group.stepTitle}</Title>}
+            {group.sections.map((section: AutoFormSummarySection, sectionIndex: number) => (
+              <div className="grid gap-3" key={section.title ?? `section-${sectionIndex}`}>
+                {section.title && <Title level={3}>{section.title}</Title>}
+                <FormSummary data={section.data} name={section.title ?? "no-title"} />
+              </div>
+            ))}
           </div>
         ))
       ) : (

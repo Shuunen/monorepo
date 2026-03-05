@@ -879,7 +879,7 @@ export const SummaryOnly: Story = {
   },
 };
 
-export const summaryWithArrayOfObjects: Story = {
+export const SummaryWithArrayOfObjects: Story = {
   args: {
     initialData: {
       email: "jane.doe@example.com",
