@@ -199,6 +199,9 @@
         "id-length": "off",
         "import/no-default-export": "off",
         "import/no-namespace": "off",
+        "jsx-no-new-function-as-prop": "off",
+        "jsx-no-new-object-as-prop": "off",
+        "jsx-props-no-spreading": "off",
         "max-classes-per-file": "off",
         "max-lines": "off",
         "max-lines-per-function": "off",
@@ -211,6 +214,7 @@
         "no-shadow": "off",
         "require-param": "off",
         "require-returns": "off",
+        "rules-of-hooks": "off",
         "sort-keys": "off",
         "unicorn/numeric-separators-style": "off"
       }
@@ -262,7 +266,7 @@
       }
     }
   ],
-  "plugins": ["import", "jsdoc", "oxc", "typescript", "unicorn", "vitest"],
+  "plugins": ["import", "jsdoc", "oxc", "promise", "react", "react-perf", "typescript", "unicorn", "vitest"],
   "rules": {
     "@typescript-eslint/array-type": "off",
     "@typescript-eslint/consistent-indexed-object-style": "off",
@@ -287,6 +291,10 @@
     "import/no-relative-parent-imports": "off",
     "jsdoc/require-param-type": "off",
     "jsdoc/require-returns-type": "off",
+    "jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
+    "jsx-max-depth": ["error", { "max": 7 }],
+    "jsx-no-jsx-as-prop": "off",
+    "jsx-no-new-function-as-prop": "off",
     "max-dependencies": ["error", 30],
     "max-statements": ["error", 20],
     "monorepo-plugin/no-restricted-syntax": [
@@ -296,6 +304,7 @@
         "selector": "CallExpression[callee.property.name='meta']"
       }
     ],
+    "no-array-index-key": "off",
     "no-async-await": "off",
     "no-console": "error",
     "no-continue": "off",
@@ -337,6 +346,8 @@
     "prefer-default-export": "off",
     "prefer-destructuring": "off",
     "prefer-ternary": "off",
+    "promise/avoid-new": "off",
+    "react-in-jsx-scope": "off",
     "sort-imports": "off",
     "unambiguous": "off",
     "unicorn/filename-case": [

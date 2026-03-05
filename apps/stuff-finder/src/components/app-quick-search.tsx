@@ -2,8 +2,8 @@ import { off, on, tw } from "@monorepo/utils";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { logger } from "../utils/logger.utils";
-import { navigate } from "../utils/navigation.utils";
 import { state, watchState } from "../utils/state.utils";
+import { navigateToSearch } from "../pages/page-search.const";
 
 function onSearch(event: React.KeyboardEvent<HTMLInputElement>) {
   const { key, target } = event;
@@ -12,7 +12,7 @@ function onSearch(event: React.KeyboardEvent<HTMLInputElement>) {
   if (value === "") return;
   logger.debug("onSearch", { value });
   state.sound = "start";
-  navigate(`/search/${value}`);
+  navigateToSearch(value);
 }
 
 const pagesWithInputs = new Set(["/item/add", "/item/add:id", "/item/edit/:id"]);

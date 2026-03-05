@@ -9,6 +9,7 @@ import { navigate } from "../utils/navigation.utils";
 import { listenUserSpeech } from "../utils/speech.utils";
 import { state, watchState } from "../utils/state.utils";
 import { theme } from "../utils/theme.utils";
+import { navigateToSearch } from "./page-search.const";
 
 const triggerColumnClasses =
   "flex w-full flex-col gap-3 text-gray-400 transition-colors hover:text-purple-600 duration-400 disabled:opacity-50 disabled:pointer-events-none";
@@ -32,7 +33,7 @@ export function PageHome({ ...properties }: Readonly<Record<string, unknown>>) {
     state.status = "listening";
     listenUserSpeech((transcript: string) => {
       logger.showInfo(`searching for "${transcript}"`);
-      navigate(`/search/${transcript}`);
+      navigateToSearch(transcript);
     });
   }, []);
 

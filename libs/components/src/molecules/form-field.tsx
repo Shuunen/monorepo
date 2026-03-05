@@ -48,7 +48,6 @@ export function FormFieldBase(props: FormFieldBaseProps) {
     () => computeCustomErrorMessage(customErrorFn, watchedValues, parentData),
     [watchedValues, customErrorFn, parentData],
   );
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to run this once on mount
   useEffect(() => {
     const currentValue = getValues(fieldName);
     if (currentValue !== undefined || isOptional) {
@@ -60,6 +59,8 @@ export function FormFieldBase(props: FormFieldBaseProps) {
     }
     props.logger?.info(`initializing field "${fieldName}" value to "${defaultValue}", it was undefined`);
     setValue(fieldName, defaultValue);
+    // we only want to run this once on mount
+    // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     const action = getCustomErrorAction(Boolean(customErrorFn), customErrorMessage, lastCustomErrorRef.current);

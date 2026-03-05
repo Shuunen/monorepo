@@ -14,7 +14,8 @@ export function setNavigate(aFunction: NavigateFunction) {
  * Navigates to the specified path
  * @param path - The target path to navigate to.
  * @param replace - Optional. If true, replaces the current entry in the history stack instead of adding a new one. Defaults to false.
+ * @param state - Optional. State to pass to the target route.
  */
-export function navigate(path: string, replace = false) {
-  if (navigateFunction) navigateFunction(path, { replace });
+export function navigate(path: string, replace = false, state?: unknown) {
+  if (navigateFunction) navigateFunction(path, { replace, state });
 }

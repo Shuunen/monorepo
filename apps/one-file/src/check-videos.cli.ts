@@ -97,6 +97,7 @@ const utils = {
    */
   getFileSizeInMb: (filepath: string): Promise<number> =>
     new Promise((resolve, reject) => {
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       stat(filepath, (error: Error | null, stats: { size: number }) => {
         if (error) reject(error);
         else resolve(Math.round(stats.size / 1_000_000));
@@ -164,6 +165,7 @@ const utils = {
    */
   listFiles: (filepath: string): Promise<string[]> =>
     new Promise((resolve, reject) => {
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       readdir(filepath, (/** @type {Error|null} */ error, /** @type {string[]} */ filenames) => {
         if (error) reject(error);
         else resolve(filenames);
@@ -176,6 +178,7 @@ const utils = {
    */
   readFile: (filepath: string): Promise<string> =>
     new Promise(resolve => {
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       readFile(filepath, "utf8", (/** @type {Error|null} */ error, /** @type {string} */ content) => {
         if (error) resolve("");
         else resolve(content);
@@ -199,6 +202,7 @@ const utils = {
    */
   shellCommand: (cmd: string) =>
     new Promise(resolve => {
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       exec(cmd, (/** @type {Error|null} */ error, /** @type {string} */ stdout, /** @type {string} */ stderr) => {
         if (error) logger.error(error);
         resolve(stdout || stderr);

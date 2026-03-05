@@ -8,6 +8,7 @@ const logger = new Logger();
 
 logger.info("mifare-classic script starting");
 
+// oxlint-disable-next-line promise/prefer-await-to-callbacks
 mifare.read((/** @type {any} */ error, /** @type {{ toJSON: () => any; }} */ data, /** @type {any} */ uid) => {
   if (error) throw error;
   logger.info("The NFC tag UID is", uid);

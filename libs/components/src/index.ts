@@ -31,7 +31,6 @@ export * from "./atoms/textarea";
 export * from "./atoms/toaster";
 export * from "./atoms/toggle";
 export * from "./atoms/tooltip";
-export * from "./atoms/typewriter-effect";
 export * from "./atoms/typography";
 export * from "./icons/icon-accept";
 export * from "./icons/icon-add";

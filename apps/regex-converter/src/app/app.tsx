@@ -1,18 +1,20 @@
-import { IconOwl, TypewriterEffectSmooth } from "@monorepo/components";
+import { IconOwl } from "@monorepo/components";
+import { TypewriterEffectSmooth } from "./typewriter-effect";
 import { Converter } from "./converter";
 
+const words = [
+  {
+    text: "Regex",
+  },
+  {
+    className: "text-secondary",
+    text: "Converter",
+  },
+];
+
 export function App() {
-  const words = [
-    {
-      text: "Regex",
-    },
-    {
-      className: "text-secondary",
-      text: "Converter",
-    },
-  ];
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-primary/5 to-info/15 p-24">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-br from-primary/5 to-info/15 p-24">
       <div className="prose prose-lg w-full max-w-screen">
         <h1 className="mt-0 flex justify-center text-center">
           <TypewriterEffectSmooth className="mt-0 mb-0" words={words} />

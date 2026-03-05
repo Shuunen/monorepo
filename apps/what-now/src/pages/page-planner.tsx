@@ -1,3 +1,4 @@
+// oxlint-disable react/no-multi-comp
 // oxlint-disable max-lines
 import { Button, FloatingMenu } from "@monorepo/components";
 import { dateIso10, formatDate } from "@monorepo/utils";
@@ -435,13 +436,11 @@ function usePlannerTasks() {
     setTasks(load.value.filter(task => task.isDone === false)); // Filter out completed tasks
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: FIX ME LATER
   useEffect(() => void loadTasks(), []);
 
   const handleFrequencyChange = useFrequencyChange(setModifications);
   const handleDateChange = useDateChange(tasks, modifications, setModifications);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: FIX ME LATER
   const handleSaveModifications = useCallback(async () => {
     if (!hasModifications) return;
     setSaving(true);
@@ -554,6 +553,8 @@ function usePlannerActions(
   };
 }
 
+const emptyFrequency: Record<string, number> = {};
+
 /**
  * The main planner page component
  * @returns JSX element for the planner page
@@ -585,12 +586,12 @@ export function PagePlanner() {
         saving={saving}
       />
       <PlannerContent
-        modifications={modifications.frequency || {}}
+        modifications={modifications.frequency || emptyFrequency}
         onDateChange={handleDateChange}
         onFrequencyChange={handleFrequencyChange}
         tasksByDay={tasksByDay}
       />
-      <PlannerMetrics modifications={modifications.frequency || {}} tasks={tasks} />
+      <PlannerMetrics modifications={modifications.frequency || emptyFrequency} tasks={tasks} />
       <FloatingMenu actions={actions} />
     </div>
   );

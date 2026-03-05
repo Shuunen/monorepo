@@ -1,3 +1,4 @@
+// oxlint-disable promise/prefer-await-to-then
 import { lazy } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { setNavigate } from "../utils/navigation.utils";
@@ -41,7 +42,7 @@ export function AppRoutes() {
       <Route element={<AsyncPageSettings />} path="/settings" />
       <Route element={<AsyncPageMetrics />} path="/metrics" />
       <Route element={<AsyncPageKitchenSink />} path="/kitchen-sink" />
-      <Route element={<AppLoader isLoading={true} />} path="/loading" />
+      <Route element={<AppLoader isLoading />} path="/loading" />
       <Route element={<AsyncPageError code="page-not-found" />} path="*" />
     </Routes>
   );

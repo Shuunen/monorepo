@@ -1,3 +1,4 @@
+// oxlint-disable react/no-multi-comp
 import { tw } from "@monorepo/utils";
 import InsightsIcon from "@mui/icons-material/Insights";
 import OutboxIcon from "@mui/icons-material/Outbox";
@@ -29,6 +30,8 @@ type MetricCardProps = {
   title: string;
 };
 
+const iconStyle = { fontSize: "3rem" };
+
 const MetricCard = memo(function MetricCardComponent(props: MetricCardProps) {
   const { title, color, amount, icon: Icon, items, onSelection, showPrice, children, loadingItemIds } = props;
   const isHidden = items?.length === 0;
@@ -39,7 +42,7 @@ const MetricCard = memo(function MetricCardComponent(props: MetricCardProps) {
     >
       {amount && Icon && (
         <div className="flex items-center">
-          <Icon className="opacity-30" sx={{ fontSize: "3rem" }} />
+          <Icon className="opacity-30" sx={iconStyle} />
           <p className="text-3xl font-bold">{amount}</p>
         </div>
       )}
@@ -217,7 +220,7 @@ export function PageMetrics({ ...properties }: Readonly<Record<string, unknown>>
           <MetricCard
             color={tw("text-red-600")}
             items={metrics.itemsWithoutLocation}
-            showPrice={true}
+            showPrice
             title={`Items without location : ${metrics.itemsWithoutLocation.length}`}
           />
           <MetricCard
@@ -241,7 +244,7 @@ export function PageMetrics({ ...properties }: Readonly<Record<string, unknown>>
           <MetricCard
             color={tw("text-green-700")}
             items={metrics.topValueItems}
-            showPrice={true}
+            showPrice
             title={`Top ${topValueItems} most valuable`}
           />
           <MetricCard

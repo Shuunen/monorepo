@@ -12,6 +12,9 @@
 // @version      1.1.6
 // ==/UserScript==
 
+// oxlint-disable promise/prefer-await-to-callbacks
+// oxlint-disable promise/prefer-await-to-then
+
 function GitlabMr() {
   const debounceTime = 300;
 

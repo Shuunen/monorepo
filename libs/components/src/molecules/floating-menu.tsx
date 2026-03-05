@@ -18,7 +18,7 @@ export function FloatingMenu({
   isSettingsRequired = false,
 }: Readonly<{ actions: FloatingMenuAction[]; isLoading?: boolean; isSettingsRequired?: boolean }>) {
   const [isOpen, setOpen] = useState(false);
-  const iconOpen = isOpen ? <PackageOpenIcon /> : <PackageIcon />;
+  const iconOpen = useMemo(() => (isOpen ? <PackageOpenIcon /> : <PackageIcon />), [isOpen]);
   const icon = useMemo(() => (isLoading ? <LoaderCircleIcon /> : iconOpen), [iconOpen, isLoading]);
   const availableActions = useMemo(
     () => (isSettingsRequired ? actions.filter(action => ["Home", "Settings"].includes(action.name)) : actions),

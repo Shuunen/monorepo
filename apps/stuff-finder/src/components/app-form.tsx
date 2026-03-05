@@ -10,7 +10,7 @@ import {
   Result,
   readClipboard,
 } from "@monorepo/utils";
-import { type ReactNode, useCallback, useEffect, useState } from "react";
+import { type ReactNode, type SubmitEvent, useCallback, useEffect, useState } from "react";
 import { alignClipboard, type Form, updateForm, validateForm } from "../utils/forms.utils";
 import { logger } from "../utils/logger.utils";
 import { colSpanClass, gridClass } from "../utils/theme.utils";
@@ -27,6 +27,8 @@ type Properties<FormType extends Form> = Readonly<{
   suggestions?: Record<string, string[]>;
 }>;
 
+const defaultSuggestions: Record<string, string[]> = {};
+
 // oxlint-disable-next-line max-lines-per-function
 export function AppForm<FormType extends Form>({
   children,
@@ -34,7 +36,7 @@ export function AppForm<FormType extends Form>({
   initialForm,
   onChange = functionReturningVoid,
   onSubmit = undefined,
-  suggestions = {},
+  suggestions = defaultSuggestions,
 }: Properties<FormType>) {
   const [form, setForm] = useState(initialForm);
 
@@ -45,7 +47,7 @@ export function AppForm<FormType extends Form>({
   }
 
   const onFormSubmit = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
+    (event: SubmitEvent<HTMLFormElement>) => {
       event.preventDefault();
       onSubmit?.(form);
     },
@@ -86,14 +88,17 @@ export function AppForm<FormType extends Form>({
   }, [form]);
 
   useEffect(() => {
-    const handler = on("focus", () =>
-      // oxlint-disable-next-line max-nested-callbacks
-      checkDataInClipboard().then(result => logger.result("clipboard data checked on focus", result)),
-    );
-    if (document.hasFocus())
-      checkDataInClipboard()
-        .then(result => logger.result("clipboard data checked on initial focus", result))
-        .catch(error => logger.error(`failed to check clipboard data on initial focus :`, error));
+    async function handleClipboardOnFocus() {
+      const result = await checkDataInClipboard();
+      logger.result("clipboard data checked on focus", result);
+    }
+    async function handleClipboardOnInitialFocus() {
+      const outerResult = await Result.trySafe(checkDataInClipboard());
+      if (!outerResult.ok) return logger.error("failed to check clipboard data on initial focus :", outerResult.error);
+      logger.result("clipboard data checked on initial focus", outerResult.value);
+    }
+    const handler = on("focus", () => void handleClipboardOnFocus());
+    if (document.hasFocus()) void handleClipboardOnInitialFocus();
     return () => off(handler);
   }, [checkDataInClipboard]);
 
@@ -104,7 +109,7 @@ export function AppForm<FormType extends Form>({
     <form
       autoComplete="off"
       className={`grid w-full gap-6 md:min-w-176 ${gridClass(form.columns)}`}
-      noValidate={true}
+      noValidate
       onSubmit={onFormSubmit}
       spellCheck={false}
     >

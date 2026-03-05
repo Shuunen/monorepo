@@ -92,6 +92,7 @@ function getDetails(filepath) {
   const isExisting = existsSync(filepath);
   const content = isExisting ? readFileSync(filepath, "utf8") : "";
   const updatedContent =
+    // oxlint-disable-next-line eslint-plugin-react-hooks/rules-of-hooks
     content.includes("\r") && !filepath.includes(".qbtheme") ? useUnixCarriageReturn(content) : content; // qbtheme files does not like \n
   const isContentEquals = content === updatedContent;
   if (!isContentEquals) writeFile(filepath, updatedContent);

@@ -230,6 +230,7 @@ describe("http-proxy", () => {
     startServer();
     // Get the callback function that was passed to listen
     const callback = mockListen.mock.calls[0][1];
+    // oxlint-disable-next-line promise/prefer-await-to-callbacks
     callback?.();
     // Verify logger calls (the Logger mock should have been called)
     expect(callback).toBeDefined();

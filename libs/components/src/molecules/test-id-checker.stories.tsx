@@ -30,7 +30,7 @@ const DemoPage = ({ testIds = [], description }: DemoProps) => (
       <span data-testid={testIds[7]}>© 2025 Sample App</span>
     </div>
 
-    <TestIdChecker forceVisible={true} />
+    <TestIdChecker forceVisible />
   </div>
 );
 

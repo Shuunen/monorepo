@@ -94,7 +94,7 @@ export function normalizePathWithSlash(filepath, shouldUseTilde = false, home = 
  * Copy a file
  * @param {string} source the source file
  * @param {string} destination the destination file
- * @returns {Promise<boolean>} some bool result; i dont know im in the train to Paris
+ * @returns {Promise<boolean>} some bool result; i don't know im in the train to Paris
  */
 /* v8 ignore next -- @preserve */
 export async function copy(source, destination) {
@@ -102,7 +102,7 @@ export async function copy(source, destination) {
   const destinationFolder = destination.replace(filename(destination), "");
   await mkdir(destinationFolder, { recursive: true });
 
-  return copyFile(source, destination)
+  return await copyFile(source, destination)
     .then(() => true)
     .catch(error => {
       logger.error(error);

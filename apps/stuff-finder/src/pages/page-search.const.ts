@@ -36,6 +36,22 @@ const fuseOptions = {
 
 export const maxNameLength = 20;
 
+export type SearchState = { header: string; results: Item[] };
+
+/**
+ * Search for items matching the input and navigate to the appropriate page
+ * @param input the input search string to look for
+ */
+export async function navigateToSearch(input: string) {
+  const data = await search(input);
+  if (data.results.length === 1) {
+    navigate(`/item/details/${data.results[0]?.$id ?? ""}/single`);
+    return;
+  }
+  logger.showInfo("navigateToSearch");
+  navigate(`/search/${input}`, false, data satisfies SearchState);
+}
+
 /**
  * Search for an item
  * @param input the input search string to look for
@@ -50,9 +66,9 @@ export async function search(input: string) {
   );
   if (result !== undefined) {
     navigate(`/item/details/${result.$id}/single`);
-    return { header: "", results: [] };
+    return { header: "", results: [] as Item[] };
   }
   const results = fuse.search(sanitize(input)).map(item => item.item);
-  const header = `${results.length} results found for “${sanitize(input)}”`;
+  const header = `${results.length} results found for "${sanitize(input)}"`;
   return { header, results };
 }

@@ -109,7 +109,7 @@ describe("image-viewer", () => {
   });
 
   it("ImageViewer G should show drag over overlay when dragging 2 files", () => {
-    render(<ImageViewer {...mockProps} isDraggingOver={true} nbDraggedFiles={2} />);
+    render(<ImageViewer {...mockProps} isDraggingOver nbDraggedFiles={2} />);
     const dropText = screen.getByText("Drop these 2 images to compare them");
     expect(dropText).toBeTruthy();
   });
@@ -136,7 +136,7 @@ describe("image-viewer", () => {
   });
 
   it("ImageViewer I should show left/right side messages when dragging 1 file", () => {
-    render(<ImageViewer {...mockProps} isDraggingLeft={true} isDraggingOver={true} nbDraggedFiles={1} />);
+    render(<ImageViewer {...mockProps} isDraggingLeft isDraggingOver nbDraggedFiles={1} />);
     const leftMessage = screen.getByText("Change left image");
     const rightMessage = screen.getByText("Change right image");
     expect(leftMessage).toBeTruthy();
@@ -144,7 +144,7 @@ describe("image-viewer", () => {
   });
 
   it("ImageViewer J should show contest message when dragging 3+ files", () => {
-    render(<ImageViewer {...mockProps} isDraggingOver={true} nbDraggedFiles={3} />);
+    render(<ImageViewer {...mockProps} isDraggingOver nbDraggedFiles={3} />);
     const contestMessage = screen.getByText("Drop these 3 images to start a contest");
     expect(contestMessage).toBeTruthy();
   });

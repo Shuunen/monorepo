@@ -1,10 +1,13 @@
-// oxlint-disable max-lines
 import { readFileSync } from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { request } from "node:https";
 import path from "node:path";
 import type { PassThrough } from "node:stream";
 import { fileURLToPath } from "node:url";
+
+// oxlint-disable max-lines
+// oxlint-disable promise/prefer-await-to-callbacks
+// oxlint-disable promise/prefer-await-to-then
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

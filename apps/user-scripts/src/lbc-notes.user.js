@@ -131,6 +131,7 @@ function LbcNotes() {
    * @returns {HTMLButtonElement} the clear store button
    */
   function getClearStoreButton(clearStoreCallback) {
+    // oxlint-disable-next-line react/button-has-type
     const button = document.createElement("button");
     button.textContent = "Clear notes store";
     button.classList.add(

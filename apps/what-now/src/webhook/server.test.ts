@@ -48,7 +48,7 @@ describe("server.cli.ts (integration)", () => {
     if (result.ok) return;
     if (Date.now() - start < timeout) {
       // oxlint-disable-next-line no-promise-executor-return
-      await new Promise(r => setTimeout(r, 100));
+      await new Promise(resolve => setTimeout(resolve, 100));
       return waitForServerReady(timeout, start);
     }
     throw new Error("Server startup timed out");
@@ -221,13 +221,13 @@ describe("server.cli.ts (unit)", () => {
   it("flattenResponse A should resolve with parsed JSON", () => {
     const mockRes = new PassThrough();
     let resolved = undefined;
-    const cb = serverModule.flattenResponse(
+    const func = serverModule.flattenResponse(
       v => {
         resolved = v;
       },
       () => "",
     );
-    cb(mockRes);
+    func(mockRes);
     mockRes.emit("data", Buffer.from('{"foo":123}'));
     mockRes.emit("end");
     expect(resolved).toMatchObject({ error: undefined, result: { foo: 123 } });
@@ -236,13 +236,13 @@ describe("server.cli.ts (unit)", () => {
   it("flattenResponse B should resolve with raw string if not JSON", () => {
     const mockRes = new PassThrough();
     let resolved = undefined;
-    const cb = serverModule.flattenResponse(
+    const func = serverModule.flattenResponse(
       v => {
         resolved = v;
       },
       () => "",
     );
-    cb(mockRes);
+    func(mockRes);
     mockRes.emit("data", Buffer.from("notjson"));
     mockRes.emit("end");
     expect(resolved).toMatchObject({ error: undefined, result: "notjson" });

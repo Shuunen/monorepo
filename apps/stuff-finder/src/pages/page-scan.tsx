@@ -9,8 +9,8 @@ import type Result from "@zxing/library/es2015/core/Result";
 import { useEffect, useRef, useState } from "react";
 import { AppPageCard } from "../components/app-page-card";
 import { logger } from "../utils/logger.utils";
-import { navigate } from "../utils/navigation.utils";
 import { state } from "../utils/state.utils";
+import { navigateToSearch } from "./page-search.const";
 
 const reader = new BrowserMultiFormatReader();
 const waitDelay = 200;
@@ -18,7 +18,7 @@ const waitDelay = 200;
 function onDecodeSuccess(result: Result) {
   const code = result.getText();
   logger.info("found qr or barcode :", code);
-  navigate(`/search/${code}`);
+  navigateToSearch(code);
 }
 
 /**

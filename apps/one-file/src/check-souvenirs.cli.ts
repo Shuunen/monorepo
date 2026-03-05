@@ -1,4 +1,4 @@
-// oxlint-disable max-lines
+// oxlint-disable promise/no-nesting, promise/prefer-await-to-then, promise/always-return, max-lines
 import { spawnSync } from "node:child_process";
 import { rename, unlink } from "node:fs/promises";
 import path from "node:path";

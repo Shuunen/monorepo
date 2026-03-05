@@ -83,6 +83,7 @@
         "noUndeclaredDependencies": "off",
         "noUndeclaredVariables": "error",
         "noUnresolvedImports": "off",
+        "useExhaustiveDependencies": "off",
         "useImportExtensions": "off"
       },
       "nursery": {
@@ -282,7 +283,6 @@
           "correctness": {
             "noInvalidUseBeforeDeclaration": "off",
             "noNestedComponentDefinitions": "off",
-            "useExhaustiveDependencies": "off",
             "useHookAtTopLevel": "off",
             "useJsxKeyInIterable": "off",
             "useUniqueElementIds": "off"

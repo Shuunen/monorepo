@@ -22,7 +22,7 @@ function setup() {
   const loadTasksDebounced = debounce(loadTasks, nbHueMax);
   on("user-activity", () => loadTasksDebounced("user-activity"));
   watchState("showErrorToast", () => toastError(state.showErrorToast));
-  on("error", (error: Readonly<Error>) => toastError(`global error catch : ${error.message}`));
+  on("error", (event: Readonly<Error>) => toastError(`global error catch : ${event.message}`));
   watchState("isSetup", () => loadTasksDebounced("is-setup"));
   checkUrlCredentials(document.location.hash);
 }

@@ -120,7 +120,7 @@ export function AppItemDetailsActions({ item }: Readonly<{ item: Item }>) {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDialog}>Cancel</Button>
-          <Button autoFocus={true} color="error" onClick={doDelete} variant="contained">
+          <Button autoFocus color="error" onClick={doDelete} variant="contained">
             Delete
           </Button>
         </DialogActions>

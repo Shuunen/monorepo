@@ -4,6 +4,7 @@ import { createRootRoute, createRouter, RouterProvider } from "@tanstack/react-r
 import "../src/styles.css";
 import "./tw.css";
 
+// oxlint-disable-next-line react/only-export-components
 const RouterDecorator: Decorator = Story => {
   const rootRoute = createRootRoute({ component: () => <Story /> });
   const routeTree = rootRoute;

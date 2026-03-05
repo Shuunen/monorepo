@@ -1,7 +1,7 @@
 import { mockItem } from "../utils/mock.utils";
 import { navigate } from "../utils/navigation.utils";
 import { state } from "../utils/state.utils";
-import { search } from "./page-search.const";
+import { navigateToSearch, search } from "./page-search.const";
 
 // Mock navigation utils
 vi.mock(import("../utils/navigation.utils"), () => ({
@@ -48,7 +48,7 @@ describe("page-search.const", () => {
 
     expect(result).toMatchInlineSnapshot(`
       {
-        "header": "2 results found for “test query”",
+        "header": "2 results found for "test query"",
         "results": [
           {
             "$id": "1",
@@ -85,5 +85,28 @@ describe("page-search.const", () => {
         "results": [],
       }
     `);
+  });
+
+  it("navigateToSearch A should navigate to search page with state", async () => {
+    await navigateToSearch("test query");
+    expect(vi.mocked(navigate)).toHaveBeenCalledWith("/search/test query", false, {
+      header: '2 results found for "test query"',
+      results: [
+        { $id: "1", name: "Test Item 1" },
+        { $id: "2", name: "Test Item 2" },
+      ],
+    });
+  });
+
+  it("navigateToSearch B should navigate to item details for exact match", async () => {
+    await navigateToSearch("REF123");
+    expect(vi.mocked(navigate)).toHaveBeenCalledWith("/item/details/1/single");
+  });
+
+  it("navigateToSearch C should navigate to item details for single fuzzy result", async () => {
+    const { default: Fuse } = await import("fuse.js/basic");
+    vi.spyOn(Fuse.prototype, "search").mockReturnValueOnce([{ item: { $id: "42", name: "Only Item" } }] as never);
+    await navigateToSearch("only");
+    expect(vi.mocked(navigate)).toHaveBeenCalledWith("/item/details/42/single");
   });
 });

@@ -1,4 +1,4 @@
-// oxlint-disable max-statements, no-unused-vars, max-lines-per-function
+// oxlint-disable react/button-has-type, promise/prefer-await-to-callbacks, max-statements, no-unused-vars, max-lines-per-function
 
 /**
  * Get the text content from the node behind a css selector
@@ -63,6 +63,7 @@ function createMbForm(app, callback = () => ({})) {
     form.addEventListener("submit", event => {
       event.preventDefault();
       const formData = new FormData(form);
+      // @ts-expect-error we will see later :D
       const values = Object.fromEntries(formData.entries());
       callback(values);
     });

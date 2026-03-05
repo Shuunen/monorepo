@@ -1,3 +1,4 @@
+// oxlint-disable react/no-multi-comp
 import { arrayAlign, cn, Result, useStableKeys } from "@monorepo/utils";
 import { invariant } from "es-toolkit";
 import { useEffect, useMemo, useRef } from "react";
@@ -45,7 +46,7 @@ function AutoFormField({
   }
 
   const Component = componentRegistry[render];
-
+  // oxlint-disable-next-line react/jsx-props-no-spreading
   return <Component {...props} />;
 }
 
@@ -69,11 +70,12 @@ export function FormFieldFieldList({
   const { setValue, unregister } = useFormContext();
   const items = useMemo(() => arrayAlign(fieldValue, length), [fieldValue, length]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we don't want to re-run this effect when the items change already bind in the useMemo
   useEffect(() => {
     if (length !== undefined && fieldValue?.length !== length) {
       setValue(fieldName, items, { shouldValidate: false });
     }
+    // we don't want to re-run this effect when the items change already bind in the useMemo
+    // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
   }, [length, fieldName, setValue]);
   const { addKey, keys, removeKey } = useStableKeys(useRef, items.length);
   /**
@@ -100,6 +102,7 @@ export function FormFieldFieldList({
   }
 
   return (
+    // oxlint-disable-next-line react/jsx-props-no-spreading
     <FormFieldBase {...props} showLabel={false}>
       {({ field }) => (
         <div className="flex w-full flex-col gap-4">

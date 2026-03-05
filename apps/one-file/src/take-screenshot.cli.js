@@ -50,6 +50,7 @@ async function logAdd(...stuff) {
  */
 function shellCommand(cmd) {
   return new Promise(resolve => {
+    // oxlint-disable-next-line promise/prefer-await-to-callbacks
     exec(cmd, (error, stdout, stderr) => {
       if (error) logger.error(error);
       void resolve(stdout || stderr);

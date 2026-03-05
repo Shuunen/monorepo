@@ -19,6 +19,10 @@ const defaultFiles = {
 
 const logger = new Logger();
 
+const schemas = [uploadStep];
+
+const imageStyles = { bottom: "79px", right: "205px", width: "30px" };
+
 // oxlint-disable-next-line max-lines-per-function
 export function App() {
   const [logoSrc, setLogoSrc] = useState(defaultFiles.logo);
@@ -52,7 +56,7 @@ export function App() {
       <Title level={3} variant="muted">
         This web app helps you test how your logo and icon will look like in different scenarios.
       </Title>
-      <AutoForm onSubmit={onFileUpload} schemas={[uploadStep]} />
+      <AutoForm onSubmit={onFileUpload} schemas={schemas} />
       <hr />
       <div className="card stripped-light">
         <img alt="Logo on light background" className="logo" src={logoSrc} />
@@ -171,12 +175,7 @@ export function App() {
       <hr />
       <div className="relative">
         <img alt="Android phone mock-up" className="relative z-10 w-xl" src="https://i.imgur.com/w2dOu18.png" />
-        <img
-          alt="Icon on Android app"
-          className="icon absolute z-0 object-contain"
-          src={iconSrc}
-          style={{ bottom: "79px", right: "205px", width: "30px" }}
-        />
+        <img alt="Icon on Android app" className="icon absolute z-0 object-contain" src={iconSrc} style={imageStyles} />
       </div>
       <Criteria name="Logo as an app icon" onSelection={pointValue => setPointAtIndex(18, pointValue)} />
       <hr />

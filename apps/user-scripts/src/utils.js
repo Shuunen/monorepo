@@ -85,25 +85,21 @@ class Shuutils {
    * @returns {Promise<void>} nothing
    */
   async animateCss(element, animation, canRemoveAfter = true) {
-    await new Promise(resolve => {
-      const animationName = `animate__${animation}`;
-      element.classList.add("animate__animated", animationName);
-      if (!canRemoveAfter) {
-        resolve("Animation ended, no need to remove");
-        return;
-      }
-      // When the animation ends, we clean the classes and resolve the Promise
-      /**
-       * Handle the animation end event
-       * @param {{ stopPropagation: () => void; }} event the event
-       */
-      function handleAnimationEnd(event) {
-        event.stopPropagation();
-        element.classList.remove("animate__animated", animationName);
-        resolve("Animation ended");
-      }
-      element.addEventListener("animationend", handleAnimationEnd, { once: true });
-    });
+    const animationName = `animate__${animation}`;
+    element.classList.add("animate__animated", animationName);
+    if (!canRemoveAfter) return;
+    const { promise, resolve } = Promise.withResolvers();
+    /**
+     * Handle the animation end event
+     * @param {{ stopPropagation: () => void; }} event the event
+     */
+    function handleAnimationEnd(event) {
+      event.stopPropagation();
+      element.classList.remove("animate__animated", animationName);
+      resolve("Animation ended");
+    }
+    element.addEventListener("animationend", handleAnimationEnd, { once: true });
+    await promise;
   }
   /**
    * Capitalizes the first letter of a string, does not change the rest /!\
@@ -140,7 +136,9 @@ class Shuutils {
     return async (/** @type {any} */ ...parameters) =>
       await new Promise(resolve => {
         clearTimeout(timeout);
+        // oxlint-disable-next-line promise/no-multiple-resolved
         timeout = setTimeout(() => {
+          // oxlint-disable-next-line promise/prefer-await-to-callbacks
           resolve(callback(...parameters));
         }, waitFor);
       });
@@ -394,6 +392,7 @@ class Shuutils {
   ) {
     await this.sleep(wait);
     const current = document.location.href;
+    // oxlint-disable-next-line promise/prefer-await-to-callbacks
     if (current !== last) callback(current);
     void this.onPageChange(callback, current, wait);
   }
@@ -548,6 +547,7 @@ class Shuutils {
     return (/** @type {any} */ ...parameters) => {
       if (!isReady) return;
       isReady = false;
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       callback(...parameters);
       setTimeout(() => {
         isReady = true;
