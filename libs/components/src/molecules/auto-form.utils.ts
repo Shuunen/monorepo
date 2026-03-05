@@ -19,13 +19,9 @@ import type {
   AutoFormFieldFieldsMetadata,
   AutoFormFieldFormsMetadata,
   AutoFormFieldMetadata,
-  AutoFormFieldRadioMetadata,
   AutoFormFieldSectionMetadata,
-  AutoFormFieldSelectMetadata,
   AutoFormStepMetadata,
   AutoFormSubmissionStepProps,
-  AutoFormSummarySection,
-  AutoFormSummaryStepGroup,
   DependsOnCondition,
   TypeLike,
 } from "./auto-form.types";
@@ -475,7 +471,11 @@ export function mapExternalDataToFormFields(schema: z.ZodObject, externalData: A
   return result;
 }
 
-function shouldIncludeField(fieldSchema: z.ZodType, metadata: AutoFormFieldMetadata | undefined, data: AutoFormData) {
+export function shouldIncludeField(
+  fieldSchema: z.ZodType,
+  metadata: AutoFormFieldMetadata | undefined,
+  data: AutoFormData,
+) {
   if (metadata?.render === "section") {
     return false;
   }
@@ -547,246 +547,6 @@ export function getStepMetadata(stepSchema: z.ZodObject): AutoFormStepMetadata |
     return undefined;
   }
   return stepSchema.meta() as AutoFormStepMetadata;
-}
-
-/**
- * Filters data for summary display by excluding fields from readonly and upcoming steps.
- * Only includes fields from editable steps.
- * @param schemas - Array of Zod schemas for all steps
- * @param data - The complete form data
- * @returns Filtered data containing only fields from editable steps
- */
-export function filterDataForSummary(schemas: z.ZodObject[], data: AutoFormData) {
-  const result: AutoFormData = {};
-  for (const schema of schemas) {
-    const stepMeta = getStepMetadata(schema);
-    const stepState = stepMeta?.state;
-    // Only include fields from editable steps (skip readonly and upcoming)
-    if (stepState === "readonly" || stepState === "upcoming") {
-      continue;
-    }
-    const shape = schema.shape;
-    for (const [key, value] of Object.entries(data)) {
-      const fieldSchema = shape[key] as z.ZodType;
-      if (!fieldSchema) {
-        continue;
-      }
-      const metadata = getFieldMetadata(fieldSchema);
-      if (shouldIncludeField(fieldSchema, metadata, data)) {
-        result[key] = value;
-      }
-    }
-  }
-  return result;
-}
-
-/**
- * Check whether field metadata has options.
- * @param metadata field metadata
- * @returns whether or not field metadata has options
- */
-export function isRadioOrSelectMetadata(
-  metadata?: AutoFormFieldMetadata,
-): metadata is AutoFormFieldRadioMetadata | AutoFormFieldSelectMetadata {
-  return metadata ? "options" in metadata : false;
-}
-
-type SectionDataFromObjectItemProps = {
-  index: number;
-  innerShape: z.ZodObject["shape"];
-  item: AutoFormData;
-  key: string;
-};
-
-function sectionDataFromObjectItem({ innerShape, item, key, index }: SectionDataFromObjectItemProps) {
-  const sectionData: AutoFormSummarySection["data"] = {};
-  for (const innerKey of Object.keys(innerShape)) {
-    const innerFieldSchema = innerShape[innerKey] as z.ZodType;
-    const innerMetadata = getFieldMetadata(innerFieldSchema);
-    if (innerMetadata?.render === "section" || innerMetadata?.excluded || !isFieldVisible(innerFieldSchema, item)) {
-      continue;
-    }
-    const innerValue = isRadioOrSelectMetadata(innerMetadata)
-      ? innerMetadata.options.find(option => option.value === item[innerKey])?.label
-      : item[innerKey];
-    sectionData[`${key}.${index}.${innerKey}`] = {
-      /* c8 ignore start */
-      label: innerMetadata?.label ?? innerKey,
-      /* c8 ignore stop */
-      value: innerValue,
-    };
-  }
-  return sectionData;
-}
-
-type SectionsFromArrayOfObjectsProps = {
-  data: AutoFormData;
-  fieldSchema: z.ZodType;
-  key: string;
-  metadata: AutoFormFieldMetadata | undefined;
-};
-
-function sectionsFromArrayOfObjects({ key, fieldSchema, metadata, data }: SectionsFromArrayOfObjectsProps) {
-  const items = data[key];
-  if (!Array.isArray(items) || items.length === 0) {
-    return [];
-  }
-  const elementResult = getElementSchema(fieldSchema);
-  /* c8 ignore start */
-  if (!elementResult.ok) {
-    return [];
-  }
-  const innerShape = (elementResult.value as z.ZodObject).shape;
-  const fieldLabel = metadata && "label" in metadata ? (metadata.label ?? key) : key;
-  /* c8 ignore stop */
-  const identifier =
-    metadata && "identifier" in metadata && isFunction(metadata.identifier) ? metadata.identifier : undefined;
-  const sections: Array<AutoFormSummarySection> = [];
-  for (let index = 0; index < items.length; index += 1) {
-    const item = items[index] as AutoFormData;
-    /* c8 ignore start */
-    const itemTitle = identifier ? identifier({ ...item, index: index + 1 }) : `${fieldLabel} ${index + 1}`;
-    const sectionData = sectionDataFromObjectItem({ index, innerShape, item, key });
-    if (Object.keys(sectionData).length > 0) {
-      sections.push({ data: sectionData, title: itemTitle });
-    }
-    /* c8 ignore stop */
-  }
-  return sections;
-}
-
-function isArrayOfObjects(fieldSchema: z.ZodType) {
-  if (!isZodArray(fieldSchema)) {
-    return false;
-  }
-  const elementResult = getElementSchema(fieldSchema);
-  return elementResult.ok && isZodObject(elementResult.value);
-}
-
-function resolveFieldValue(metadata: AutoFormFieldMetadata | undefined, data: AutoFormData, key: string) {
-  if (isRadioOrSelectMetadata(metadata)) {
-    return metadata.options.find(option => option.value === data[key])?.label;
-  }
-  return data[key];
-}
-
-type SectionBuilderState = {
-  currentSectionData: AutoFormSummarySection["data"];
-  currentSectionTitle: AutoFormSummarySection["title"];
-  pendingArraySections: Array<AutoFormSummarySection>;
-  sections: Array<AutoFormSummarySection>;
-};
-
-function flushCurrentSection(state: SectionBuilderState) {
-  if (Object.keys(state.currentSectionData).length > 0) {
-    state.sections.push({ data: state.currentSectionData, title: state.currentSectionTitle });
-  }
-  state.sections.push(...state.pendingArraySections);
-  state.pendingArraySections = [];
-}
-
-type ProcessFieldForSectionProps = {
-  data: AutoFormData;
-  key: string;
-  shape: z.ZodObject["shape"];
-  state: SectionBuilderState;
-};
-
-function processFieldForSection({ key, shape, data, state }: ProcessFieldForSectionProps) {
-  const fieldSchema = shape[key] as z.ZodType;
-  /* c8 ignore start */
-  if (!fieldSchema) {
-    return;
-  }
-  /* c8 ignore stop */
-  const metadata = getFieldMetadata(fieldSchema);
-  if (metadata?.render === "section") {
-    const showSectionInSummary = !("showInSummary" in metadata) || metadata?.showInSummary;
-    if (!showSectionInSummary) {
-      return;
-    }
-    flushCurrentSection(state);
-    state.currentSectionTitle = "title" in metadata ? metadata.title : undefined;
-    state.currentSectionData = {};
-    return;
-  }
-  if (isArrayOfObjects(fieldSchema)) {
-    state.pendingArraySections.push(...sectionsFromArrayOfObjects({ data, fieldSchema, key, metadata }));
-    return;
-  }
-  if (shouldIncludeField(fieldSchema, metadata, data)) {
-    state.currentSectionData[key] = {
-      /* c8 ignore start */
-      label: metadata?.label ?? key,
-      /* c8 ignore stop */
-      value: resolveFieldValue(metadata, data, key),
-    };
-  }
-}
-
-/**
- * Builds summary sections from a single schema regardless of step state.
- * @param schema - The Zod object schema for the step
- * @param data - The form data
- * @returns Array of summary sections
- */
-export function sectionsFromSchema(schema: z.ZodObject, data: AutoFormData) {
-  const state: SectionBuilderState = {
-    currentSectionData: {},
-    currentSectionTitle: undefined,
-    pendingArraySections: [],
-    sections: [],
-  };
-  for (const key of Object.keys(schema.shape)) {
-    processFieldForSection({ data, key, shape: schema.shape, state });
-  }
-  flushCurrentSection(state);
-  return state.sections;
-}
-
-function sectionsFromEditableStep(schema: z.ZodObject, data: AutoFormData) {
-  const stepMeta = getStepMetadata(schema);
-  const stepState = stepMeta?.state;
-  if (stepState === "readonly" || stepState === "upcoming") {
-    return [];
-  }
-  return sectionsFromSchema(schema, data);
-}
-
-/**
- * Groups form data by sections for summary display
- * @param schemas - Array of Zod schemas for all steps
- * @param data - The complete form data
- * @returns Array of section groups, each containing a title and data
- */
-export function sectionsFromEditableSteps(schemas: z.ZodObject[], data: AutoFormData) {
-  const sections: Array<AutoFormSummarySection> = [];
-  for (const schema of schemas) {
-    const stepSections = sectionsFromEditableStep(schema, data);
-    sections.push(...stepSections);
-  }
-  return sections;
-}
-
-/**
- * Groups form data by step and then by sections for summary display.
- * Each group contains the step title and its sections.
- * Skips readonly and upcoming steps.
- * @param schemas - Array of Zod schemas for all steps
- * @param data - The complete form data
- * @returns Array of step groups, each containing a step title and sections
- */
-export function groupedSectionsFromEditableSteps(schemas: z.ZodObject[], data: AutoFormData) {
-  const groups: Array<AutoFormSummaryStepGroup> = [];
-  for (const schema of schemas) {
-    const sections = sectionsFromEditableStep(schema, data);
-    if (sections.length === 0) {
-      continue;
-    }
-    const stepMeta = getStepMetadata(schema);
-    groups.push({ sections, stepTitle: typeLikeResolver(stepMeta?.title, data) ?? undefined });
-  }
-  return groups;
 }
 
 /**

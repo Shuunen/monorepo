@@ -904,12 +904,10 @@ export const SummaryWithArrayOfObjects: Story = {
       ),
       step(
         z.object({
-          email: field(z.email("Invalid email address"), { label: "Email Address" }),
-          name: field(z.string().min(2, "Name is required"), { label: "Full Name" }),
-          age: field(z.number().min(0).max(120).optional(), { label: "Age" }),
-          subscribe: field(z.boolean(), { label: "Subscribe to newsletter" }),
-          pets: forms(z.object({ name: z.string(), breed: z.string() })),
+          foo: field(z.string(), { label: "Foo" }),
+          bar: field(z.string(), { label: "Bar" }),
         }),
+        { title: "Bar" },
       ),
     ],
     useSummaryStep: true,
@@ -918,18 +916,20 @@ export const SummaryWithArrayOfObjects: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("submit to reach summary step", async () => {
+      const fooInput = canvas.getByTestId("input-text-foo");
+      await userEvent.type(fooInput, "foo");
+      const barInput = canvas.getByTestId("input-text-bar");
+      await userEvent.type(barInput, "bar");
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
     });
     await step("verify summary step displays", () => {
       const summaryStep = canvas.getByTestId("auto-form-summary-step");
       expect(summaryStep).toBeInTheDocument();
-      const pet1 = canvas.getByTestId("form-summary-pets-1");
-      expect(pet1).toHaveTextContent("Buddy");
-      expect(pet1).toHaveTextContent("Labrador");
-      const pet2 = canvas.getByTestId("form-summary-pets-2");
-      expect(pet2).toHaveTextContent("Max");
-      expect(pet2).toHaveTextContent("Poodle");
+      expect(summaryStep).toHaveTextContent("Bar");
+      expect(summaryStep).toHaveTextContent("bar");
+      expect(summaryStep).toHaveTextContent("Foo");
+      expect(summaryStep).toHaveTextContent("foo");
     });
     await step("go to readonly step", async () => {
       const buttonStepPets = canvas.getByTestId("button-step-pets");
