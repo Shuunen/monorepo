@@ -287,7 +287,7 @@ export function AutoForm({
       ? {
           label: finalLabels.lastStepButton,
           name: "last-step-submit",
-          onClick: () => (useSummaryStep ? setShowSummary(true) : handleFinalSubmit),
+          onClick: () => (useSummaryStep ? setShowSummary(true) : handleFinalSubmit()),
           type: "submit" as const,
         }
       : {

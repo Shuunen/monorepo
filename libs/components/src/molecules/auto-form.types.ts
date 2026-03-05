@@ -275,6 +275,14 @@ export type AutoFormSummarySection = {
   title?: string;
 };
 
+/** A group of summary sections belonging to a single step */
+export type AutoFormSummaryStepGroup = {
+  /** The sections within this step */
+  sections: AutoFormSummarySection[];
+  /** The step title, resolved from step metadata */
+  stepTitle?: string;
+};
+
 /** Options for displaying a subform in the auto form */
 export type AutoFormSubformOptions = {
   /** The step/zod schema for the subform */

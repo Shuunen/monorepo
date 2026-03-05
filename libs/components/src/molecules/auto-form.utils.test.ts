@@ -40,6 +40,7 @@ import {
   normalizeDataForSchema,
   parseDependsOn,
   section,
+  groupedSectionsFromEditableSteps,
   sectionsFromEditableSteps,
   sectionsFromSchema,
   step,
@@ -1196,6 +1197,35 @@ describe("auto-form.utils", () => {
     const schema = z.object({ section: section({ title: "Section", showInSummary: false }) });
     const sections = sectionsFromSchema(schema, {});
     expect(sections).toHaveLength(0);
+  });
+
+  // groupedSectionsFromEditableSteps
+  it("groupedSectionsFromEditableSteps A should group sections by step with titles", () => {
+    const schema1 = step(z.object({ a: z.string().meta({ label: "A" }) }), { title: "Step One" });
+    const schema2 = step(z.object({ b: z.string().meta({ label: "B" }) }), { title: "Step Two" });
+    const data = { a: "foo", b: "bar" };
+    const groups = groupedSectionsFromEditableSteps([schema1, schema2], data);
+    expect(groups).toHaveLength(2);
+    expect(groups[0].stepTitle).toBe("Step One");
+    expect(groups[0].sections).toHaveLength(1);
+    expect(groups[1].stepTitle).toBe("Step Two");
+    expect(groups[1].sections).toHaveLength(1);
+  });
+  it("groupedSectionsFromEditableSteps B should skip readonly and upcoming steps", () => {
+    const schema1 = step(z.object({ a: z.string().meta({ label: "A" }) }), { state: "readonly", title: "Readonly" });
+    const schema2 = step(z.object({ b: z.string().meta({ label: "B" }) }), { title: "Editable" });
+    const schema3 = step(z.object({ c: z.string().meta({ label: "C" }) }), { state: "upcoming", title: "Upcoming" });
+    const data = { a: "foo", b: "bar", c: "baz" };
+    const groups = groupedSectionsFromEditableSteps([schema1, schema2, schema3], data);
+    expect(groups).toHaveLength(1);
+    expect(groups[0].stepTitle).toBe("Editable");
+  });
+  it("groupedSectionsFromEditableSteps C should handle steps without title", () => {
+    const schema = z.object({ a: z.string().meta({ label: "A" }) });
+    const data = { a: "foo" };
+    const groups = groupedSectionsFromEditableSteps([schema], data);
+    expect(groups).toHaveLength(1);
+    expect(groups[0].stepTitle).toBeUndefined();
   });
 
   // getFieldMetadata
