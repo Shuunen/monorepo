@@ -56,6 +56,7 @@
     "XPathResult": "readonly"
   },
   "ignorePatterns": [".git", ".nx", "*.d.ts", "coverage", "dist", "node_modules", "out-tsc", "routeTree.gen.ts", "shadcn", "storybook-static", "test-output"],
+  "jsPlugins": ["./libs/oxc-plugins/monorepo.plugin.js"],
   "overrides": [
     {
       "files": ["*.tsx"],
@@ -288,6 +289,13 @@
     "jsdoc/require-returns-type": "off",
     "max-dependencies": ["error", 30],
     "max-statements": ["error", 20],
+    "monorepo-plugin/no-restricted-syntax": [
+      "error",
+      {
+        "message": "Please use dedicated auto-form utils instead of native Zod .meta({ myMeta }), use `field(z.string(), { myMeta })` instead for example.",
+        "selector": "CallExpression[callee.property.name='meta'][callee.object.type='CallExpression']"
+      }
+    ],
     "no-async-await": "off",
     "no-console": "error",
     "no-continue": "off",

@@ -1,0 +1,9 @@
+{
+  "name": "@monorepo/oxc-plugins",
+  "nx": {
+    "sourceRoot": "libs/oxc-plugins"
+  },
+  "private": true,
+  "type": "module",
+  "version": "0.0.0"
+}
