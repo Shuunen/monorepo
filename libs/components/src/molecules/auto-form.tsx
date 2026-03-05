@@ -32,9 +32,9 @@ import {
   hasCustomErrors,
   isStepClickable,
   normalizeData,
-  sectionsFromSchema,
   typeLikeResolver,
 } from "./auto-form.utils";
+import { sectionsFromSchema } from "./auto-form-summary-step.utils";
 
 /**
  * AutoForm is a black box, all in one form generator, takes Zod schemas in and build the ui, handle validation, state management, navigation, submission, etc.:
@@ -307,13 +307,11 @@ export function AutoForm({
             </div>
           ))}
         </div>
-        {showButtons && (
-          <AutoFormNavigation
-            centerButton={cancelButton}
-            leftButton={currentStep > 0 ? { onClick: handleBack } : undefined}
-            rightButton={rightButton}
-          />
-        )}
+        <AutoFormNavigation
+          centerButton={cancelButton}
+          leftButton={currentStep > 0 ? { onClick: handleBack } : undefined}
+          rightButton={rightButton}
+        />
       </>
     );
   }

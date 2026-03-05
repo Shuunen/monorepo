@@ -7,7 +7,6 @@ import {
   buildStepperSteps,
   field,
   fields,
-  filterDataForSummary,
   filterSchema,
   forms,
   getDefaultValues,
@@ -23,7 +22,6 @@ import {
   getUnwrappedSchema,
   hasCustomErrors,
   isFieldVisible,
-  isRadioOrSelectMetadata,
   isRequiredBoolean,
   isStepClickable,
   isZodArray,
@@ -40,9 +38,6 @@ import {
   normalizeDataForSchema,
   parseDependsOn,
   section,
-  groupedSectionsFromEditableSteps,
-  sectionsFromEditableSteps,
-  sectionsFromSchema,
   step,
   typeLikeResolver,
 } from "./auto-form.utils";
@@ -151,15 +146,15 @@ describe("auto-form.utils", () => {
 
   // isFieldVisible
   it("isFieldVisible A should return true if no dependsOn", () => {
-    const schema = z.string().meta({ label: "A" });
+    const schema = field(z.string(), { label: "A" });
     expect(isFieldVisible(schema, {})).toBe(true);
   });
   it("isFieldVisible B should return false if dependsOn is not set in data", () => {
-    const schema = z.string().meta({ dependsOn: "foo", label: "A" });
+    const schema = field(z.string(), { dependsOn: "foo", label: "A" });
     expect(isFieldVisible(schema, {})).toBe(false);
   });
   it("isFieldVisible C should return true if dependsOn is set in data", () => {
-    const schema = z.string().meta({ dependsOn: "foo", label: "A" });
+    const schema = field(z.string(), { dependsOn: "foo", label: "A" });
     expect(isFieldVisible(schema, { foo: 1 })).toBe(true);
   });
   it("isFieldVisible D should handle missing meta function", () => {
@@ -171,77 +166,77 @@ describe("auto-form.utils", () => {
     expect(isFieldVisible(schema, {})).toBe(true);
   });
   it("isFieldVisible F should handle field=value syntax with matching value", () => {
-    const schema = z.string().meta({ dependsOn: "breed=dog", label: "A" });
+    const schema = field(z.string(), { dependsOn: "breed=dog", label: "A" });
     expect(isFieldVisible(schema, { breed: "dog" })).toBe(true);
   });
   it("isFieldVisible G should handle field=value syntax with non-matching value", () => {
-    const schema = z.string().meta({ dependsOn: "breed=dog", label: "A" });
+    const schema = field(z.string(), { dependsOn: "breed=dog", label: "A" });
     expect(isFieldVisible(schema, { breed: "cat" })).toBe(false);
   });
   it("isFieldVisible H should handle field=value syntax with missing field", () => {
-    const schema = z.string().meta({ dependsOn: "breed=dog", label: "A" });
+    const schema = field(z.string(), { dependsOn: "breed=dog", label: "A" });
     expect(isFieldVisible(schema, {})).toBe(false);
   });
   it("isFieldVisible I should handle field=value syntax with numeric values", () => {
-    const schema = z.string().meta({ dependsOn: "age=5", label: "A" });
+    const schema = field(z.string(), { dependsOn: "age=5", label: "A" });
     expect(isFieldVisible(schema, { age: 5 })).toBe(true);
   });
   it("isFieldVisible J should handle metadata visible returning false", () => {
-    const schema = z.string().meta({ isVisible: () => false, label: "A" });
+    const schema = field(z.string(), { isVisible: () => false, label: "A" });
     expect(isFieldVisible(schema, {})).toBe(false);
   });
   it("isFieldVisible K should handle field!=value syntax with matching value (should be hidden)", () => {
-    const schema = z.string().meta({ dependsOn: "breed!=dog", label: "A" });
+    const schema = field(z.string(), { dependsOn: "breed!=dog", label: "A" });
     expect(isFieldVisible(schema, { breed: "dog" })).toBe(false);
   });
   it("isFieldVisible L should handle field!=value syntax with non-matching value (should be visible)", () => {
-    const schema = z.string().meta({ dependsOn: "breed!=dog", label: "A" });
+    const schema = field(z.string(), { dependsOn: "breed!=dog", label: "A" });
     expect(isFieldVisible(schema, { breed: "cat" })).toBe(true);
   });
   it("isFieldVisible M should handle field!=value syntax with missing field", () => {
-    const schema = z.string().meta({ dependsOn: "breed!=dog", label: "A" });
+    const schema = field(z.string(), { dependsOn: "breed!=dog", label: "A" });
     expect(isFieldVisible(schema, {})).toBe(true);
   });
   it("isFieldVisible N should handle field!=value syntax with numeric values", () => {
-    const schema = z.string().meta({ dependsOn: "age!=5", label: "A" });
+    const schema = field(z.string(), { dependsOn: "age!=5", label: "A" });
     expect(isFieldVisible(schema, { age: 5 })).toBe(false);
     expect(isFieldVisible(schema, { age: 10 })).toBe(true);
   });
   it("isFieldVisible O should handle mixed = and != operators in array", () => {
-    const schema = z.string().meta({ dependsOn: ["type=premium", "status!=inactive"], label: "A" });
+    const schema = field(z.string(), { dependsOn: ["type=premium", "status!=inactive"], label: "A" });
     expect(isFieldVisible(schema, { status: "active", type: "premium" })).toBe(true);
     expect(isFieldVisible(schema, { status: "inactive", type: "premium" })).toBe(false);
     expect(isFieldVisible(schema, { status: "active", type: "basic" })).toBe(false);
   });
   // OR functionality tests
   it("isFieldVisible P should handle OR group - first condition matches", () => {
-    const schema = z.string().meta({ dependsOn: [["breed=dog", "breed=cat"]], label: "A" });
+    const schema = field(z.string(), { dependsOn: [["breed=dog", "breed=cat"]], label: "A" });
     expect(isFieldVisible(schema, { breed: "dog" })).toBe(true);
   });
   it("isFieldVisible Q should handle OR group - second condition matches", () => {
-    const schema = z.string().meta({ dependsOn: [["breed=dog", "breed=cat"]], label: "A" });
+    const schema = field(z.string(), { dependsOn: [["breed=dog", "breed=cat"]], label: "A" });
     expect(isFieldVisible(schema, { breed: "cat" })).toBe(true);
   });
   it("isFieldVisible R should handle OR group - no condition matches (hidden)", () => {
-    const schema = z.string().meta({ dependsOn: [["breed=dog", "breed=cat"]], label: "A" });
+    const schema = field(z.string(), { dependsOn: [["breed=dog", "breed=cat"]], label: "A" });
     expect(isFieldVisible(schema, { breed: "bird" })).toBe(false);
   });
   it("isFieldVisible S should handle (A OR B) AND C - all satisfied", () => {
-    const schema = z.string().meta({ dependsOn: [["type=dog", "type=cat"], "hasOwner"], label: "A" });
+    const schema = field(z.string(), { dependsOn: [["type=dog", "type=cat"], "hasOwner"], label: "A" });
     expect(isFieldVisible(schema, { hasOwner: true, type: "dog" })).toBe(true);
     expect(isFieldVisible(schema, { hasOwner: true, type: "cat" })).toBe(true);
   });
   it("isFieldVisible T should handle (A OR B) AND C - OR satisfied but AND not", () => {
-    const schema = z.string().meta({ dependsOn: [["type=dog", "type=cat"], "hasOwner"], label: "A" });
+    const schema = field(z.string(), { dependsOn: [["type=dog", "type=cat"], "hasOwner"], label: "A" });
     expect(isFieldVisible(schema, { hasOwner: false, type: "dog" })).toBe(false);
     expect(isFieldVisible(schema, { hasOwner: false, type: "cat" })).toBe(false);
   });
   it("isFieldVisible U should handle (A OR B) AND C - AND satisfied but OR not", () => {
-    const schema = z.string().meta({ dependsOn: [["type=dog", "type=cat"], "hasOwner"], label: "A" });
+    const schema = field(z.string(), { dependsOn: [["type=dog", "type=cat"], "hasOwner"], label: "A" });
     expect(isFieldVisible(schema, { hasOwner: true, type: "bird" })).toBe(false);
   });
   it("isFieldVisible V should handle (A OR B) AND (C OR D)", () => {
-    const schema = z.string().meta({
+    const schema = field(z.string(), {
       dependsOn: [
         ["type=dog", "type=cat"],
         ["status=active", "status=pending"],
@@ -254,7 +249,7 @@ describe("auto-form.utils", () => {
     expect(isFieldVisible(schema, { status: "active", type: "bird" })).toBe(false);
   });
   it("isFieldVisible W should handle OR with != operator", () => {
-    const schema = z.string().meta({ dependsOn: [["status!=inactive", "override=true"]], label: "A" });
+    const schema = field(z.string(), { dependsOn: [["status!=inactive", "override=true"]], label: "A" });
     expect(isFieldVisible(schema, { status: "active" })).toBe(true);
     expect(isFieldVisible(schema, { override: "true", status: "inactive" })).toBe(true);
     expect(isFieldVisible(schema, { override: "false", status: "inactive" })).toBe(false);
@@ -316,8 +311,8 @@ describe("auto-form.utils", () => {
   // filterSchema
   it("filterSchema A should filter out fields not visible", () => {
     const shape = {
-      a: z.string().meta({ label: "A" }),
-      b: z.string().meta({ dependsOn: "a", label: "B" }),
+      a: field(z.string(), { label: "A" }),
+      b: field(z.string(), { dependsOn: "a", label: "B" }),
     };
     const schema = z.object(shape);
     const filtered = filterSchema(schema, { a: "something" });
@@ -329,8 +324,8 @@ describe("auto-form.utils", () => {
   });
   it("filterSchema B should filter out section fields", () => {
     const shape = {
-      a: z.string().meta({ label: "A" }),
-      b: z.string().meta({ label: "B", render: "section" }),
+      a: field(z.string(), { label: "A" }),
+      b: section({ title: "B" }),
     };
     const schema = z.object(shape);
     const filtered = filterSchema(schema, { a: "something" });
@@ -358,8 +353,8 @@ describe("auto-form.utils", () => {
   });
   it("filterSchema D should filter out readonly fields", () => {
     const shape = {
-      a: z.string().meta({ label: "A" }),
-      b: z.string().meta({ label: "B", state: "readonly" }),
+      a: field(z.string(), { label: "A" }),
+      b: field(z.string(), { label: "B", state: "readonly" }),
     };
     const schema = z.object(shape);
     const filtered = filterSchema(schema, {});
@@ -370,9 +365,9 @@ describe("auto-form.utils", () => {
   // normalizeDataForSchema
   it("normalizeDataForSchema A should remove excluded fields and invisible fields", () => {
     const shape = {
-      a: z.string().meta({ label: "A" }),
-      b: z.string().meta({ excluded: true, label: "B" }),
-      c: z.string().meta({ dependsOn: "a", label: "C" }),
+      a: field(z.string(), { label: "A" }),
+      b: field(z.string(), { excluded: true, label: "B" }),
+      c: field(z.string(), { dependsOn: "a", label: "C" }),
     };
     const schema = z.object(shape);
     const data = { a: "foo", b: "bar", c: "baz" };
@@ -391,8 +386,8 @@ describe("auto-form.utils", () => {
   });
   it("normalizeDataForSchema C should apply keyOut mapping when provided", () => {
     const schema = z.object({
-      anotherField: z.string().meta({ label: "Another" }),
-      internalName: z.string().meta({ keyOut: "externalName", label: "Name" }),
+      anotherField: field(z.string(), { label: "Another" }),
+      internalName: field(z.string(), { keyOut: "externalName", label: "Name" }),
     });
     const data = { anotherField: "bar", internalName: "foo" };
     const cleaned = normalizeDataForSchema(schema, data);
@@ -405,7 +400,7 @@ describe("auto-form.utils", () => {
   });
   it("normalizeDataForSchema D should use key mapping for both in and out when key is provided", () => {
     const schema = z.object({
-      internalName: z.string().meta({ key: "mappedName", label: "Name" }),
+      internalName: field(z.string(), { key: "mappedName", label: "Name" }),
     });
     const data = { internalName: "foo" };
     const cleaned = normalizeDataForSchema(schema, data);
@@ -417,8 +412,8 @@ describe("auto-form.utils", () => {
   });
   it("normalizeDataForSchema E should handle nested key mapping with dots in keyOut", () => {
     const schema = z.object({
-      userEmail: z.string().meta({ keyOut: "user.contact.email", label: "Email" }),
-      userName: z.string().meta({ keyOut: "user.info.name", label: "Name" }),
+      userEmail: field(z.string(), { keyOut: "user.contact.email", label: "Email" }),
+      userName: field(z.string(), { keyOut: "user.info.name", label: "Name" }),
     });
     const data = {
       userEmail: "jane@example.com",
@@ -440,8 +435,8 @@ describe("auto-form.utils", () => {
   });
   it("normalizeDataForSchema F should handle mixed nested and flat key mappings", () => {
     const schema = z.object({
-      age: z.number().meta({ label: "Age" }),
-      userEmail: z.string().meta({ keyOut: "user.email", label: "Email" }),
+      age: field(z.number(), { label: "Age" }),
+      userEmail: field(z.string(), { keyOut: "user.email", label: "Email" }),
     });
     const data = {
       age: 30,
@@ -459,8 +454,8 @@ describe("auto-form.utils", () => {
   });
   it("normalizeDataForSchema G should handle section fields", () => {
     const shape = {
-      a: z.string().meta({ label: "A" }),
-      b: z.string().meta({ label: "B", render: "section" }),
+      a: field(z.string(), { label: "A" }),
+      b: section({ title: "B" }),
     };
     const schema = z.object(shape);
     const data = { a: "something", b: "something" };
@@ -472,7 +467,7 @@ describe("auto-form.utils", () => {
     `);
   });
   it("normalizeDataForSchema H should handle metadata visible returning false", () => {
-    const schema = z.object({ a: z.string().meta({ isVisible: () => false, label: "A" }) });
+    const schema = z.object({ a: field(z.string(), { isVisible: () => false, label: "A" }) });
     const data = { a: "something" };
     const cleaned = normalizeDataForSchema(schema, data);
     expect(cleaned).toMatchInlineSnapshot(`{}`);
@@ -501,7 +496,7 @@ describe("auto-form.utils", () => {
     `);
   });
   it("normalizeDataForSchema J should handle ZodArray", () => {
-    const schema = z.object({ a: z.array(z.string()).meta({ label: "A" }) });
+    const schema = z.object({ a: field(z.array(z.string()), { label: "A" }) });
     const data = { a: ["foo", "bar"] };
     const cleaned = normalizeDataForSchema(schema, data);
     expect(cleaned).toMatchInlineSnapshot(`
@@ -602,8 +597,8 @@ describe("auto-form.utils", () => {
   // mapExternalDataToFormFields
   it("mapExternalDataToFormFields A should map data using keyIn metadata", () => {
     const schema = z.object({
-      age: z.number().meta({ label: "Age" }),
-      internalName: z.string().meta({ keyIn: "externalName", label: "Name" }),
+      age: field(z.number(), { label: "Age" }),
+      internalName: field(z.string(), { keyIn: "externalName", label: "Name" }),
     });
     const externalData = { age: 30, externalName: "John" };
     const result = mapExternalDataToFormFields(schema, externalData);
@@ -616,8 +611,8 @@ describe("auto-form.utils", () => {
   });
   it("mapExternalDataToFormFields B should use field name when no keyIn provided", () => {
     const schema = z.object({
-      age: z.number().meta({ label: "Age" }),
-      name: z.string().meta({ label: "Name" }),
+      age: field(z.number(), { label: "Age" }),
+      name: field(z.string(), { label: "Name" }),
     });
     const externalData = { age: 30, name: "John" };
     const result = mapExternalDataToFormFields(schema, externalData);
@@ -630,8 +625,8 @@ describe("auto-form.utils", () => {
   });
   it("mapExternalDataToFormFields C should skip fields not in external data", () => {
     const schema = z.object({
-      age: z.number().meta({ label: "Age" }),
-      name: z.string().meta({ label: "Name" }),
+      age: field(z.number(), { label: "Age" }),
+      name: field(z.string(), { label: "Name" }),
     });
     const externalData = { name: "John" };
     const result = mapExternalDataToFormFields(schema, externalData);
@@ -643,7 +638,7 @@ describe("auto-form.utils", () => {
   });
   it("mapExternalDataToFormFields D should use key mapping for input when key is provided", () => {
     const schema = z.object({
-      internalName: z.string().meta({ key: "mappedName", label: "Name" }),
+      internalName: field(z.string(), { key: "mappedName", label: "Name" }),
     });
     const externalData = { mappedName: "John" };
     const result = mapExternalDataToFormFields(schema, externalData);
@@ -669,7 +664,7 @@ describe("auto-form.utils", () => {
   });
   it("mapExternalDataToFormFields F should handle empty external data", () => {
     const schema = z.object({
-      name: z.string().meta({ label: "Name" }),
+      name: field(z.string(), { label: "Name" }),
     });
     const externalData = {};
     const result = mapExternalDataToFormFields(schema, externalData);
@@ -677,8 +672,8 @@ describe("auto-form.utils", () => {
   });
   it("mapExternalDataToFormFields G should handle nested key mapping with dots in keyIn", () => {
     const schema = z.object({
-      userEmail: z.string().meta({ keyIn: "user.contact.email", label: "Email" }),
-      userName: z.string().meta({ keyIn: "user.info.name", label: "Name" }),
+      userEmail: field(z.string(), { keyIn: "user.contact.email", label: "Email" }),
+      userName: field(z.string(), { keyIn: "user.info.name", label: "Name" }),
     });
     const externalData = {
       user: {
@@ -700,8 +695,8 @@ describe("auto-form.utils", () => {
   });
   it("mapExternalDataToFormFields H should handle mixed nested and flat key mappings", () => {
     const schema = z.object({
-      age: z.number().meta({ label: "Age" }),
-      userEmail: z.string().meta({ keyIn: "user.email", label: "Email" }),
+      age: field(z.number(), { label: "Age" }),
+      userEmail: field(z.string(), { keyIn: "user.email", label: "Email" }),
     });
     const externalData = {
       age: 30,
@@ -719,8 +714,8 @@ describe("auto-form.utils", () => {
   });
   it("mapExternalDataToFormFields I should skip nested fields with undefined values", () => {
     const schema = z.object({
-      userEmail: z.string().meta({ keyIn: "user.email", label: "Email" }),
-      userName: z.string().meta({ keyIn: "user.name", label: "Name" }),
+      userEmail: field(z.string(), { keyIn: "user.email", label: "Email" }),
+      userName: field(z.string(), { keyIn: "user.name", label: "Name" }),
     });
     const externalData = {
       user: {
@@ -872,11 +867,11 @@ describe("auto-form.utils", () => {
   // normalizeData
   it("normalizeData A should clean data across multiple schemas", () => {
     const schema1 = z.object({
-      a: z.string().meta({ label: "A" }),
-      b: z.string().meta({ excluded: true, label: "B" }),
+      a: field(z.string(), { label: "A" }),
+      b: field(z.string(), { excluded: true, label: "B" }),
     });
     const schema2 = z.object({
-      c: z.string().meta({ dependsOn: "a", label: "C" }),
+      c: field(z.string(), { dependsOn: "a", label: "C" }),
     });
     const data = { a: "foo", b: "bar", c: "baz" };
     const cleaned = normalizeData([schema1, schema2], data);
@@ -915,322 +910,9 @@ describe("auto-form.utils", () => {
     `);
   });
 
-  // filterDataForSummary
-  it("filterDataForSummary A should filter out fields from readonly steps", () => {
-    const schema1 = z.object({ a: z.string().meta({ label: "A" }) }).meta({ state: "readonly" });
-    const schema2 = z.object({ b: z.string().meta({ label: "B" }) }).meta({ state: "editable" });
-    const data = { a: "foo", b: "bar" };
-    const filtered = filterDataForSummary([schema1, schema2], data);
-    expect(filtered).toEqual({ b: "bar" });
-  });
-  it("filterDataForSummary B should filter out fields from upcoming steps", () => {
-    const schema1 = z.object({ a: z.string().meta({ label: "A" }) }).meta({ state: "upcoming" });
-    const schema2 = z.object({ b: z.string().meta({ label: "B" }) }).meta({ state: "editable" });
-    const data = { a: "foo", b: "bar" };
-    const filtered = filterDataForSummary([schema1, schema2], data);
-    expect(filtered).toEqual({ b: "bar" });
-  });
-  it("filterDataForSummary C should filter out invisible and excluded fields", () => {
-    const schema = z
-      .object({
-        a: z.string().meta({ label: "A" }),
-        b: z.string().meta({ excluded: true, label: "B" }),
-        c: z.string().meta({ dependsOn: "a", label: "C" }),
-      })
-      .meta({ state: "editable" });
-    const data = { a: "foo", b: "bar" };
-    const filtered = filterDataForSummary([schema], data);
-    expect(filtered).toEqual({ a: "foo" });
-  });
-  it("filterDataForSummary D should include fields from editable steps", () => {
-    const schema = z
-      .object({
-        a: z.string().meta({ label: "A" }),
-        b: z.string().meta({ label: "B" }),
-      })
-      .meta({ state: "editable" });
-    const data = { a: "foo", b: "bar" };
-    const filtered = filterDataForSummary([schema], data);
-    expect(filtered).toEqual({ a: "foo", b: "bar" });
-  });
-  it("filterDataForSummary E should handle steps without metadata", () => {
-    const schema = z.object({
-      a: z.string().meta({ label: "A" }),
-    });
-    const data = { a: "foo" };
-    const filtered = filterDataForSummary([schema], data);
-    expect(filtered).toEqual({ a: "foo" });
-  });
-  it("filterDataForSummary F should handle sections", () => {
-    const schema = z.object({
-      a: z.string().meta({ label: "A" }),
-      b: section({ title: "B Section" }),
-    });
-    const data = { a: "foo", b: "bar" };
-    const filtered = filterDataForSummary([schema], data);
-    expect(filtered).toEqual({ a: "foo" });
-  });
-
-  // isRadioOrSelectMetadata
-  it("isRadioOrSelectMetadata A should state that metadata are of radio or select type", () => {
-    expect(isRadioOrSelectMetadata({ label: "Foo", options: [] })).toBe(true);
-  });
-  it("isRadioOrSelectMetadata B should state that metadata are not of radio or select type", () => {
-    expect(isRadioOrSelectMetadata({ label: "Foo" })).toBe(false);
-    expect(isRadioOrSelectMetadata()).toBe(false);
-  });
-
-  // sectionsFromEditableSteps
-  it("sectionsFromEditableSteps A should skip readonly and upcoming steps", () => {
-    const schema1 = z
-      .object({
-        a: z.string().meta({ label: "A" }),
-      })
-      .meta({ state: "readonly" });
-    const schema2 = z
-      .object({
-        b: z.string().meta({ label: "B" }),
-      })
-      .meta({ state: "editable" });
-    const data = { a: "foo", b: "bar" };
-    const sections = sectionsFromEditableSteps([schema1, schema2], data);
-    expect(sections).toHaveLength(1);
-    expect(sections[0].data).toEqual({ b: { label: "B", value: "bar" } });
-  });
-  it("sectionsFromEditableSteps B should handle steps without sections", () => {
-    const schema = z
-      .object({
-        a: z.string().meta({ label: "A" }),
-        b: z.string().meta({ label: "B" }),
-      })
-      .meta({ state: "editable" });
-    const data = { a: "foo", b: "bar" };
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBeUndefined();
-    expect(sections[0].data).toEqual({
-      a: { label: "A", value: "foo" },
-      b: { label: "B", value: "bar" },
-    });
-  });
-  it("sectionsFromEditableSteps C should handle sections", () => {
-    const schema = z.object({
-      a: z.string().meta({ label: "A" }),
-      b: section({ title: "B Section" }),
-      c: section({}),
-    });
-    const data = { a: "foo", b: "bar" };
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBeUndefined();
-    expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
-  });
-  it("sectionsFromEditableSteps D should handle invisible fields", () => {
-    const schema = z.object({
-      a: z.string().meta({ label: "A" }),
-      b: z.string().meta({ isVisible: () => false, label: "B" }),
-    });
-    const data = { a: "foo", b: "bar" };
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBeUndefined();
-    expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
-  });
-  it("sectionsFromEditableSteps E should handle enum fields", () => {
-    const schema = z.object({
-      b: z.enum(["foo", "bar"]).meta({
-        label: "B",
-        options: [
-          { label: "Foo", value: "foo" },
-          { label: "Bar", value: "bar" },
-        ],
-      }),
-    });
-    const data = { b: "bar" };
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBeUndefined();
-    expect(sections[0].data).toEqual({ b: { label: "B", value: "Bar" } });
-  });
-  it("sectionsFromEditableSteps F should create dedicated sections for array of objects", () => {
-    const schema = z.object({
-      a: z.string().meta({ label: "A" }),
-      pets: forms(z.object({ name: z.string().meta({ label: "Name" }), breed: z.string().meta({ label: "Breed" }) })),
-    });
-    const data = {
-      a: "foo",
-      pets: [
-        { breed: "Labrador", name: "Buddy" },
-        { breed: "Poodle", name: "Max" },
-      ],
-    };
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections).toHaveLength(3);
-    expect(sections[0]).toEqual({ data: { a: { label: "A", value: "foo" } }, title: undefined });
-    expect(sections[1].title).toBe("pets 1");
-    expect(sections[1].data).toEqual({
-      "pets.0.name": { label: "Name", value: "Buddy" },
-      "pets.0.breed": { label: "Breed", value: "Labrador" },
-    });
-    expect(sections[2].title).toBe("pets 2");
-  });
-  it("sectionsFromEditableSteps G should use identifier for array of objects section titles", () => {
-    const schema = z.object({
-      pets: forms(z.object({ name: z.string().meta({ label: "Name" }) }), {
-        identifier: data => `Pet: ${data?.name}`,
-        label: "Pets",
-      }),
-    });
-    const data = { pets: [{ name: "Buddy" }, { name: "Max" }] };
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections).toHaveLength(2);
-    expect(sections[0].title).toBe("Pet: Buddy");
-    expect(sections[1].title).toBe("Pet: Max");
-  });
-  it("sectionsFromEditableSteps H should use field label for array of objects when no identifier", () => {
-    const schema = z.object({
-      pets: forms(z.object({ name: z.string().meta({ label: "Name" }) }), { label: "My Pets" }),
-    });
-    const data = { pets: [{ name: "Buddy" }] };
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBe("My Pets 1");
-  });
-  it("sectionsFromEditableSteps I should handle empty array of objects", () => {
-    const schema = z.object({
-      pets: forms(z.object({ name: z.string().meta({ label: "Name" }) })),
-    });
-    const data = { pets: [] };
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections).toHaveLength(0);
-  });
-  it("sectionsFromEditableSteps J should handle missing array data", () => {
-    const schema = z.object({
-      pets: forms(z.object({ name: z.string().meta({ label: "Name" }) })),
-    });
-    const data = {};
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections).toHaveLength(0);
-  });
-  it("sectionsFromEditableSteps K should handle array of objects with select fields inside", () => {
-    const schema = z.object({
-      pets: forms(
-        z.object({
-          type: z.enum(["cat", "dog"]).meta({
-            label: "Type",
-            options: [
-              { label: "Cat", value: "cat" },
-              { label: "Dog", value: "dog" },
-            ],
-            render: "select",
-          }),
-        }),
-      ),
-    });
-    const data = { pets: [{ type: "dog" }] };
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections[0].data["pets.0.type"]?.value).toBe("Dog");
-  });
-  it("sectionsFromEditableSteps L should place array sections after the current section", () => {
-    const schema = z.object({
-      a: z.string().meta({ label: "A" }),
-      pets: forms(z.object({ name: z.string().meta({ label: "Name" }) })),
-      b: z.string().meta({ label: "B" }),
-    });
-    const data = { a: "foo", b: "bar", pets: [{ name: "Buddy" }] };
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections).toHaveLength(2);
-    expect(sections[0].data).toEqual({
-      a: { label: "A", value: "foo" },
-      b: { label: "B", value: "bar" },
-    });
-    expect(sections[1].title).toBe("pets 1");
-  });
-  it("sectionsFromEditableSteps M should skip section markers inside array of objects", () => {
-    const schema = z.object({
-      pets: forms(
-        z.object({
-          sectionA: section({ title: "Section A" }),
-          name: z.string().meta({ label: "Name" }),
-        }),
-      ),
-    });
-    const data = { pets: [{ name: "Buddy" }] };
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections).toHaveLength(1);
-    expect(sections[0].data).toEqual({ "pets.0.name": { label: "Name", value: "Buddy" } });
-  });
-  it("sectionsFromEditableSteps N should handle field-list arrays of objects", () => {
-    const schema = z.object({
-      items: fields(z.object({ value: z.string().meta({ label: "Value" }) })),
-    });
-    const data = { items: [{ value: "a" }, { value: "b" }] };
-    const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections).toHaveLength(2);
-    expect(sections[0].title).toBe("items 1");
-    expect(sections[1].title).toBe("items 2");
-  });
-
-  // sectionsFromSchema
-  it("sectionsFromSchema A should build sections regardless of step state", () => {
-    const schema = z.object({ a: z.string().meta({ label: "A" }) }).meta({ state: "readonly" });
-    const data = { a: "foo" };
-    const sections = sectionsFromSchema(schema, data);
-    expect(sections).toHaveLength(1);
-    expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
-  });
-  it("sectionsFromSchema B should build sections for editable steps too", () => {
-    const schema = z.object({ b: z.string().meta({ label: "B" }) }).meta({ state: "editable" });
-    const data = { b: "bar" };
-    const sections = sectionsFromSchema(schema, data);
-    expect(sections).toHaveLength(1);
-    expect(sections[0].data).toEqual({ b: { label: "B", value: "bar" } });
-  });
-  it("sectionsFromSchema C should build sections for upcoming steps", () => {
-    const schema = z.object({ c: z.string().meta({ label: "C" }) }).meta({ state: "upcoming" });
-    const data = { c: "baz" };
-    const sections = sectionsFromSchema(schema, data);
-    expect(sections).toHaveLength(1);
-    expect(sections[0].data).toEqual({ c: { label: "C", value: "baz" } });
-  });
-  it("sectionsFromSchema D should skip sections with showInSummary set to false", () => {
-    const schema = z.object({ section: section({ title: "Section", showInSummary: false }) });
-    const sections = sectionsFromSchema(schema, {});
-    expect(sections).toHaveLength(0);
-  });
-
-  // groupedSectionsFromEditableSteps
-  it("groupedSectionsFromEditableSteps A should group sections by step with titles", () => {
-    const schema1 = step(z.object({ a: z.string().meta({ label: "A" }) }), { title: "Step One" });
-    const schema2 = step(z.object({ b: z.string().meta({ label: "B" }) }), { title: "Step Two" });
-    const data = { a: "foo", b: "bar" };
-    const groups = groupedSectionsFromEditableSteps([schema1, schema2], data);
-    expect(groups).toHaveLength(2);
-    expect(groups[0].stepTitle).toBe("Step One");
-    expect(groups[0].sections).toHaveLength(1);
-    expect(groups[1].stepTitle).toBe("Step Two");
-    expect(groups[1].sections).toHaveLength(1);
-  });
-  it("groupedSectionsFromEditableSteps B should skip readonly and upcoming steps", () => {
-    const schema1 = step(z.object({ a: z.string().meta({ label: "A" }) }), { state: "readonly", title: "Readonly" });
-    const schema2 = step(z.object({ b: z.string().meta({ label: "B" }) }), { title: "Editable" });
-    const schema3 = step(z.object({ c: z.string().meta({ label: "C" }) }), { state: "upcoming", title: "Upcoming" });
-    const data = { a: "foo", b: "bar", c: "baz" };
-    const groups = groupedSectionsFromEditableSteps([schema1, schema2, schema3], data);
-    expect(groups).toHaveLength(1);
-    expect(groups[0].stepTitle).toBe("Editable");
-  });
-  it("groupedSectionsFromEditableSteps C should handle steps without title", () => {
-    const schema = z.object({ a: z.string().meta({ label: "A" }) });
-    const data = { a: "foo" };
-    const groups = groupedSectionsFromEditableSteps([schema], data);
-    expect(groups).toHaveLength(1);
-    expect(groups[0].stepTitle).toBeUndefined();
-  });
-
   // getFieldMetadata
   it("getFieldMetadata A should return metadata when present", () => {
-    const schema = z.string().meta({ label: "Test" });
+    const schema = field(z.string(), { label: "Test" });
     const metadata = getFieldMetadata(schema);
     expect(metadata).toEqual({ label: "Test" });
   });
@@ -1252,7 +934,7 @@ describe("auto-form.utils", () => {
 
   // getFieldMetadataOrThrow
   it("getFieldMetadataOrThrow A should return metadata when present", () => {
-    const schema = z.string().meta({ label: "Test" });
+    const schema = field(z.string(), { label: "Test" });
     const metadata = getFieldMetadataOrThrow("testField", schema);
     expect(metadata).toEqual({ label: "Test" });
   });
@@ -1300,7 +982,7 @@ describe("auto-form.utils", () => {
 
   // getStepMetadata
   it("getStepMetadata A should return metadata when present", () => {
-    const schema = z.object({}).meta({ title: "Test Step" });
+    const schema = step(z.object({}), { title: "Test Step" });
     const metadata = getStepMetadata(schema);
     expect(metadata).toEqual({ title: "Test Step" });
   });
@@ -1360,7 +1042,7 @@ describe("auto-form.utils", () => {
 
   // getFormFieldRender
   it("getFormFieldRender A should return explicit render from metadata", () => {
-    const schema = z.string().meta({ render: "form-list" });
+    const schema = field(z.string(), { render: "form-list" });
     expect(getFormFieldRender(schema)).toBe("form-list");
   });
   it("getFormFieldRender B should return upload for file schema", () => {
@@ -1502,20 +1184,20 @@ describe("auto-form.utils", () => {
 
   // getDefaultValues
   it("getDefaultValues A should compute default values from schemas", () => {
-    const schema1 = z.object({ name: z.string().meta({ label: "Name" }) });
-    const schema2 = z.object({ age: z.number().meta({ label: "Age" }) });
+    const schema1 = z.object({ name: field(z.string(), { label: "Name" }) });
+    const schema2 = z.object({ age: field(z.number(), { label: "Age" }) });
     const initialData = { age: 30, name: "John" };
     const result = getDefaultValues([schema1, schema2], initialData);
     expect(result).toEqual({ age: 30, name: "John" });
   });
   it("getDefaultValues B should handle keyIn mapping", () => {
-    const schema = z.object({ userName: z.string().meta({ keyIn: "user.name", label: "Name" }) });
+    const schema = z.object({ userName: field(z.string(), { keyIn: "user.name", label: "Name" }) });
     const initialData = { user: { name: "Jane" } };
     const result = getDefaultValues([schema], initialData);
     expect(result).toEqual({ userName: "Jane" });
   });
   it("getDefaultValues C should handle empty initial data", () => {
-    const schema = z.object({ name: z.string().meta({ label: "Name" }) });
+    const schema = z.object({ name: field(z.string(), { label: "Name" }) });
     const result = getDefaultValues([schema], {});
     expect(result).toEqual({});
   });
@@ -1812,7 +1494,7 @@ describe("auto-form.utils", () => {
     expect(getSchemaDefaultValue(schema)).toBeUndefined();
   });
   it("getSchemaDefaultValue K should return true for accept field with default", () => {
-    const schema = z.boolean().default(true).meta({ label: "Terms", render: "accept" });
+    const schema = field(z.boolean().default(true), { label: "Terms", render: "accept" });
     expect(getSchemaDefaultValue(schema)).toBe(true);
   });
 });
