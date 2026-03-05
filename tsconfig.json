@@ -17,16 +17,19 @@
       "path": "./apps/logo-tester"
     },
     {
+      "path": "./apps/one-file"
+    },
+    {
       "path": "./apps/recipes"
     },
     {
       "path": "./apps/regex-converter"
     },
     {
-      "path": "./apps/sample-web-app"
+      "path": "./apps/sample-web-app-e2e"
     },
     {
-      "path": "./apps/sample-web-app-e2e"
+      "path": "./apps/sample-web-app"
     },
     {
       "path": "./apps/stuff-finder"
@@ -38,22 +41,22 @@
       "path": "./apps/vet-web"
     },
     {
+      "path": "./apps/what-now"
+    },
+    {
       "path": "./apps/what-now/electron"
     },
     {
       "path": "./libs/components"
     },
     {
+      "path": "./libs/oxc-plugins"
+    },
+    {
       "path": "./libs/utils"
     },
     {
       "path": "./libs/vite-plugins"
-    },
-    {
-      "path": "./apps/what-now"
-    },
-    {
-      "path": "./apps/one-file"
     }
   ]
 }

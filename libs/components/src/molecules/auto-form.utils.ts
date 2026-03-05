@@ -297,12 +297,10 @@ function toZodArray<Schema extends z.ZodType>(schema: Schema, minItems?: number,
  * @returns form schema with valid metadata
  * @example forms(z.object({ firstName: field(...) }), { identifier: data => `${data.firstName}` })
  */
-export function forms(formSchema: z.ZodObject, formsMetadata?: Omit<AutoFormFieldFormsMetadata, "render">) {
-  if (formsMetadata === undefined) {
-    return toZodArray(formSchema).meta({ render: "form-list" });
-  }
+export function forms(formSchema: z.ZodObject, formsMetadata: Omit<AutoFormFieldFormsMetadata, "render"> = {}) {
   const { maxItems } = formsMetadata;
-  return toZodArray(formSchema, undefined, maxItems).meta({ ...formsMetadata, render: "form-list" });
+  const schema = toZodArray(formSchema, undefined, maxItems);
+  return schema.meta({ ...formsMetadata, render: "form-list" });
 }
 
 /**
@@ -656,7 +654,7 @@ export function field<Schema extends z.ZodType>(fieldSchema: Schema, fieldMetada
  * @example acceptField({ label: "First-name", labels: { accept: "Confirmation", reject: "Non-confirmation" } })
  */
 export function acceptField(fieldMetadata: Omit<AutoFormFieldAcceptMetadata, "render">) {
-  return z.boolean().meta({ ...fieldMetadata, render: "accept" });
+  return field(z.boolean(), { ...fieldMetadata, render: "accept" });
 }
 
 /**
@@ -667,7 +665,7 @@ export function acceptField(fieldMetadata: Omit<AutoFormFieldAcceptMetadata, "re
  */
 export function section(sectionMetadata: Omit<AutoFormFieldSectionMetadata, "render">) {
   const metadata = { ...sectionMetadata, render: "section" } satisfies AutoFormFieldSectionMetadata;
-  return z.string().optional().meta(metadata);
+  return field(z.string().optional(), metadata);
 }
 
 /**
@@ -693,13 +691,11 @@ export function step<Schema extends z.ZodObject>(stepSchema: Schema, stepMetadat
  */
 export function fields<Schema extends z.ZodType>(
   fieldSchema: Schema,
-  fieldsMetadata?: Omit<AutoFormFieldFieldsMetadata, "render">,
+  fieldsMetadata: Omit<AutoFormFieldFieldsMetadata, "render"> = {},
 ) {
-  if (fieldsMetadata === undefined) {
-    return toZodArray(fieldSchema).meta({ render: "field-list" });
-  }
   const { minItems, maxItems } = fieldsMetadata;
-  return toZodArray(fieldSchema, minItems, maxItems).meta({ ...fieldsMetadata, render: "field-list" });
+  const schema = toZodArray(fieldSchema, minItems, maxItems);
+  return schema.meta({ ...fieldsMetadata, render: "field-list" });
 }
 
 /**

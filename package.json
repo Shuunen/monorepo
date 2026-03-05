@@ -22,6 +22,7 @@
     "@nx/vitest": "22.5.3",
     "@nx/web": "22.5.3",
     "@nx/workspace": "22.5.3",
+    "@oxlint/plugins": "^1.51.0",
     "@playwright/test": "~1.58.2",
     "@storybook/react-vite": "^10.2.14",
     "@swc-node/core": "^1.14.1",
