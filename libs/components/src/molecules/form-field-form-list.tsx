@@ -14,9 +14,11 @@ import { IconUpcoming } from "../icons/icon-upcoming";
 import type { AutoFormFieldFormsMetadata } from "./auto-form.types";
 import {
   getElementSchema,
+  getFieldMetadataOrThrow,
   isZodObject,
   mapExternalDataToFormFields,
   normalizeData,
+  step,
   typeLikeResolver,
 } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
@@ -115,7 +117,7 @@ export function FormFieldFormList({
   readonly = false,
   showForm,
 }: FormFieldBaseProps) {
-  const metadata = fieldSchema.meta() as AutoFormFieldFormsMetadata;
+  const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema) as AutoFormFieldFormsMetadata;
   const { label, maxItems, icon, identifier, nbItems, labels } = metadata;
   const fieldState = "state" in metadata ? metadata.state : undefined;
   const state = fieldState ?? stepState ?? "editable";
@@ -186,7 +188,7 @@ export function FormFieldFormList({
       initialData: normalizeData([elementSchema], itemData),
       onSubmit,
       querySelectorForScroll: `[data-testid='${dataTestId}']`,
-      schema: elementSchema.meta({ state: isReadonly ? "readonly" : "editable" }),
+      schema: step(elementSchema, { state: isReadonly ? "readonly" : "editable" }),
     });
   }
 

@@ -293,7 +293,7 @@
       "error",
       {
         "message": "Please use dedicated auto-form utils instead of native Zod .meta({ myMeta }), use `field(z.string(), { myMeta })` instead for example.",
-        "selector": "CallExpression[callee.property.name='meta'][callee.object.type='CallExpression']"
+        "selector": "CallExpression[callee.property.name='meta']"
       }
     ],
     "no-async-await": "off",

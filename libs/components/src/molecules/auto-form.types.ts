@@ -69,7 +69,6 @@ export type AutoFormStepState = "readonly" | "editable" | "upcoming";
 
 /**
  * Metadata describing the configuration and behavior of a step in an auto-generated multi-step form.
- * Applied to the schema object itself using `.meta()`.
  * example: `step(z.object({ ... }), { title: 'Personal Information', subtitle: 'Basic details', suffix: '1/3' })`
  */
 export type AutoFormStepMetadata = Simplify<
@@ -135,8 +134,10 @@ export type AutoFormFieldDateMetadata = Simplify<
  * Metadata describing the configuration and behavior of a section field in an auto-generated form.
  * example: `section({ title: 'Main infos', line: true })`
  */
-export type AutoFormFieldSectionMetadata = { render: "section" } & FormFieldSectionProps &
-  AutoFormFieldConditionalMetadata;
+export type AutoFormFieldSectionMetadata = Simplify<
+  { render: "section"; state?: "readonly"; placeholder?: ""; excluded?: boolean } & FormFieldSectionProps &
+    AutoFormFieldConditionalMetadata
+>;
 
 /** A single condition or an OR group of conditions (inner array = OR) */
 export type DependsOnCondition = string | string[];

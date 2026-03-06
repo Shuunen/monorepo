@@ -37,6 +37,7 @@ export function getFieldMetadata(fieldSchema?: z.ZodType): AutoFormFieldMetadata
   if (!fieldSchema || typeof fieldSchema.meta !== "function") {
     return undefined;
   }
+  // oxlint-disable-next-line monorepo-plugin/no-restricted-syntax
   return fieldSchema.meta() as AutoFormFieldMetadata;
 }
 
@@ -300,7 +301,7 @@ function toZodArray<Schema extends z.ZodType>(schema: Schema, minItems?: number,
 export function forms(formSchema: z.ZodObject, formsMetadata: Omit<AutoFormFieldFormsMetadata, "render"> = {}) {
   const { maxItems } = formsMetadata;
   const schema = toZodArray(formSchema, undefined, maxItems);
-  return schema.meta({ ...formsMetadata, render: "form-list" });
+  return field(schema, { ...formsMetadata, render: "form-list" });
 }
 
 /**
@@ -380,10 +381,12 @@ function getValueWithCodec({ fieldSchema, value, method, parentSchema }: GetValu
   const codec = metadata && "codec" in metadata && metadata.codec;
   if (codec) {
     const result = Result.trySafe(() => codec[method](value));
+    /* v8 ignore start */
     if (!result.ok) {
       logger.error("Failed to apply codec", { metadata, method, value });
       return undefined;
     }
+    /* v8 ignore end */
     return result.value;
   }
   return value;
@@ -491,16 +494,17 @@ export function shouldIncludeField(
  * Also applies keyOut mapping to convert field names back to external data format.
  * @param schema - The Zod schema object describing the form fields.
  * @param data - The submitted data object to be cleaned.
+ * @param originalData - The original form data before submission, used to evaluate visibility of fields.
  * @returns A new object containing only the fields that are visible and not excluded according to the schema, with keyOut mappings applied.
  */
-export function normalizeDataForSchema(schema: z.ZodObject, data: AutoFormData) {
+function normalizeDataForSchema(schema: z.ZodObject, data: AutoFormData, originalData: AutoFormData) {
   const shape = schema.shape;
   const result: AutoFormData = {};
   for (const [key, value] of Object.entries(data)) {
     const fieldSchema = shape[key] as z.ZodType;
     const metadata = getFieldMetadata(fieldSchema);
 
-    if (!shouldIncludeField(fieldSchema, metadata, data)) {
+    if (!shouldIncludeField(fieldSchema, metadata, originalData)) {
       continue;
     }
 
@@ -530,7 +534,7 @@ export function normalizeData(schemas: z.ZodObject[], data: AutoFormData) {
     if (schema === undefined) {
       logger.info("normalizeData detected undefined schema", { data, schemas });
     }
-    cleanedData = normalizeDataForSchema(schema, cleanedData);
+    cleanedData = normalizeDataForSchema(schema, cleanedData, data);
   }
   return cleanedData;
 }
@@ -544,6 +548,7 @@ export function getStepMetadata(stepSchema: z.ZodObject): AutoFormStepMetadata |
   if (typeof stepSchema.meta !== "function") {
     return undefined;
   }
+  // oxlint-disable-next-line monorepo-plugin/no-restricted-syntax
   return stepSchema.meta() as AutoFormStepMetadata;
 }
 
@@ -644,6 +649,7 @@ export function field<Schema extends z.ZodType>(fieldSchema: Schema, fieldMetada
   if (fieldMetadata === undefined) {
     return fieldSchema;
   }
+  // oxlint-disable-next-line monorepo-plugin/no-restricted-syntax
   return fieldSchema.meta(fieldMetadata);
 }
 
@@ -679,6 +685,7 @@ export function step<Schema extends z.ZodObject>(stepSchema: Schema, stepMetadat
   if (!stepMetadata) {
     return stepSchema;
   }
+  // oxlint-disable-next-line monorepo-plugin/no-restricted-syntax
   return stepSchema.meta(stepMetadata as Record<string, unknown>);
 }
 
@@ -695,7 +702,7 @@ export function fields<Schema extends z.ZodType>(
 ) {
   const { minItems, maxItems } = fieldsMetadata;
   const schema = toZodArray(fieldSchema, minItems, maxItems);
-  return schema.meta({ ...fieldsMetadata, render: "field-list" });
+  return field(schema, { ...fieldsMetadata, render: "field-list" });
 }
 
 /**
