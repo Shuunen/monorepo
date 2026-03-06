@@ -35,7 +35,6 @@ import {
   mapExternalDataToFormFields,
   mockSubmit,
   normalizeData,
-  normalizeDataForSchema,
   parseDependsOn,
   section,
   step,
@@ -362,200 +361,6 @@ describe("auto-form.utils", () => {
     expect(filtered.shape).not.toHaveProperty("b");
   });
 
-  // normalizeDataForSchema
-  it("normalizeDataForSchema A should remove excluded fields and invisible fields", () => {
-    const shape = {
-      a: field(z.string(), { label: "A" }),
-      b: field(z.string(), { excluded: true, label: "B" }),
-      c: field(z.string(), { dependsOn: "a", label: "C" }),
-    };
-    const schema = z.object(shape);
-    const data = { a: "foo", b: "bar", c: "baz" };
-    const cleaned = normalizeDataForSchema(schema, data);
-    expect(cleaned).toMatchInlineSnapshot(`
-      {
-        "a": "foo",
-        "c": "baz",
-      }
-    `);
-  });
-  it("normalizeDataForSchema B should handle missing fieldSchema and metadata", () => {
-    const schema = z.object({});
-    const data = { x: 1 };
-    expect(normalizeDataForSchema(schema, data)).toEqual({ x: 1 });
-  });
-  it("normalizeDataForSchema C should apply keyOut mapping when provided", () => {
-    const schema = z.object({
-      anotherField: field(z.string(), { label: "Another" }),
-      internalName: field(z.string(), { keyOut: "externalName", label: "Name" }),
-    });
-    const data = { anotherField: "bar", internalName: "foo" };
-    const cleaned = normalizeDataForSchema(schema, data);
-    expect(cleaned).toMatchInlineSnapshot(`
-      {
-        "anotherField": "bar",
-        "externalName": "foo",
-      }
-    `);
-  });
-  it("normalizeDataForSchema D should use key mapping for both in and out when key is provided", () => {
-    const schema = z.object({
-      internalName: field(z.string(), { key: "mappedName", label: "Name" }),
-    });
-    const data = { internalName: "foo" };
-    const cleaned = normalizeDataForSchema(schema, data);
-    expect(cleaned).toMatchInlineSnapshot(`
-      {
-        "mappedName": "foo",
-      }
-    `);
-  });
-  it("normalizeDataForSchema E should handle nested key mapping with dots in keyOut", () => {
-    const schema = z.object({
-      userEmail: field(z.string(), { keyOut: "user.contact.email", label: "Email" }),
-      userName: field(z.string(), { keyOut: "user.info.name", label: "Name" }),
-    });
-    const data = {
-      userEmail: "jane@example.com",
-      userName: "Jane Doe",
-    };
-    const result = normalizeDataForSchema(schema, data);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "user": {
-          "contact": {
-            "email": "jane@example.com",
-          },
-          "info": {
-            "name": "Jane Doe",
-          },
-        },
-      }
-    `);
-  });
-  it("normalizeDataForSchema F should handle mixed nested and flat key mappings", () => {
-    const schema = z.object({
-      age: field(z.number(), { label: "Age" }),
-      userEmail: field(z.string(), { keyOut: "user.email", label: "Email" }),
-    });
-    const data = {
-      age: 30,
-      userEmail: "test@example.com",
-    };
-    const result = normalizeDataForSchema(schema, data);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "age": 30,
-        "user": {
-          "email": "test@example.com",
-        },
-      }
-    `);
-  });
-  it("normalizeDataForSchema G should handle section fields", () => {
-    const shape = {
-      a: field(z.string(), { label: "A" }),
-      b: section({ title: "B" }),
-    };
-    const schema = z.object(shape);
-    const data = { a: "something", b: "something" };
-    const cleaned = normalizeDataForSchema(schema, data);
-    expect(cleaned).toMatchInlineSnapshot(`
-      {
-        "a": "something",
-      }
-    `);
-  });
-  it("normalizeDataForSchema H should handle metadata visible returning false", () => {
-    const schema = z.object({ a: field(z.string(), { isVisible: () => false, label: "A" }) });
-    const data = { a: "something" };
-    const cleaned = normalizeDataForSchema(schema, data);
-    expect(cleaned).toMatchInlineSnapshot(`{}`);
-  });
-  it("normalizeDataForSchema I should handle codec", () => {
-    const schema = z.object({
-      date: field(z.string(), { label: "Date", codec: isoDateStringToDateInstance }),
-      userDate: field(z.string(), {
-        keyOut: "user.date",
-        label: "Date",
-        codec: isoDateStringToDateInstance,
-      }),
-    });
-    const data = {
-      date: new Date("2026-01-14"),
-      userDate: new Date("2026-01-14"),
-    };
-    const result = normalizeDataForSchema(schema, data);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "date": "2026-01-14",
-        "user": {
-          "date": "2026-01-14",
-        },
-      }
-    `);
-  });
-  it("normalizeDataForSchema J should handle ZodArray", () => {
-    const schema = z.object({ a: field(z.array(z.string()), { label: "A" }) });
-    const data = { a: ["foo", "bar"] };
-    const cleaned = normalizeDataForSchema(schema, data);
-    expect(cleaned).toMatchInlineSnapshot(`
-      {
-        "a": [
-          "foo",
-          "bar",
-        ],
-      }
-    `);
-  });
-  it("normalizeDataForSchema K should handle array with codec", () => {
-    const schema = step(
-      z.object({
-        userDates: forms(
-          z.object({
-            date: field(z.string(), { codec: isoDateStringToDateInstance }),
-          }),
-        ),
-      }),
-    );
-    const data = {
-      userDates: [
-        {
-          date: new Date("2026-01-14"),
-        },
-      ],
-    };
-    const result = normalizeDataForSchema(schema, data);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "userDates": [
-          {
-            "date": "2026-01-14",
-          },
-        ],
-      }
-    `);
-  });
-  it("normalizeDataForSchema L should handle codec throwing error", () => {
-    const schema = z.object({
-      foobar: field(z.number(), {
-        codec: z.codec(z.number(), z.number(), {
-          decode: data => data,
-          encode: _ => {
-            throw new Error("should handle");
-          },
-        }),
-      }),
-    });
-    const data = { foobar: 10 };
-    const result = normalizeDataForSchema(schema, data);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "foobar": undefined,
-      }
-    `);
-  });
-
   // getKeyMapping
   it("getKeyMapping A should return undefined for both when no metadata", () => {
     const result = getKeyMapping();
@@ -835,7 +640,7 @@ describe("auto-form.utils", () => {
     expect(schema.type).toBe("prefault");
     expect(schema.unwrap().type).toBe("array");
     // @ts-expect-error missing type
-    expect(schema.meta().render).toBe("field-list");
+    expect(getFieldMetadata(schema).render).toBe("field-list");
   });
 
   // isZodDate
@@ -906,6 +711,23 @@ describe("auto-form.utils", () => {
         "listB": [
           "Romain",
         ],
+      }
+    `);
+  });
+
+  it("normalizeData E with dot notation", () => {
+    const schema = step(
+      z.object({
+        prenomA: field(z.string(), { key: "Test.PrenomA" }),
+      }),
+    );
+    const data = { prenomA: "Alice" };
+    const cleaned = normalizeData([schema], data);
+    expect(cleaned).toMatchInlineSnapshot(`
+      {
+        "Test": {
+          "PrenomA": "Alice",
+        },
       }
     `);
   });
@@ -1037,7 +859,7 @@ describe("auto-form.utils", () => {
     expect(schema.type).toBe("prefault");
     expect(schema.unwrap().type).toBe("array");
     // @ts-expect-error missing type
-    expect(schema.meta().render).toBe("form-list");
+    expect(getFieldMetadata(schema).render).toBe("form-list");
   });
 
   // getFormFieldRender

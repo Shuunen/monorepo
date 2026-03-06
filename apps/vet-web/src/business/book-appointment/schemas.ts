@@ -63,7 +63,6 @@ export const step3Allergies = step(
     isAllergicToSeafood: field(z.boolean().optional(), { label: "Allergic to seafood?" }),
     allergiesDocument: field(z.file().optional(), {
       label: "Upload allergies document",
-      description: "Upload any relevant medical documents regarding allergies.",
       placeholder: "Select a file",
     }),
   }),

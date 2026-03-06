@@ -9,7 +9,13 @@ import { IconMinus } from "../icons/icon-minus";
 import { IconReject } from "../icons/icon-reject";
 import { type AutoFormFieldProps, componentRegistry } from "./auto-form-field.utils";
 import type { AutoFormFieldFieldsMetadata } from "./auto-form.types";
-import { getElementSchema, getFieldMetadata, getFormFieldRender, typeLikeResolver } from "./auto-form.utils";
+import {
+  getElementSchema,
+  getFieldMetadata,
+  getFieldMetadataOrThrow,
+  getFormFieldRender,
+  typeLikeResolver,
+} from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 
 function AutoFormField({
@@ -51,7 +57,7 @@ export function FormFieldFieldList({
   logger,
   readonly = false,
 }: FormFieldBaseProps) {
-  const metadata = fieldSchema.meta() as AutoFormFieldFieldsMetadata;
+  const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema) as AutoFormFieldFieldsMetadata;
   const { maxItems, label, placeholder, nbItems, state } = metadata;
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
   const isDisabled = state === "disabled" || readonly;

@@ -47,7 +47,7 @@ const allFieldsSchema = z.object({
     placeholder: "Turn on or off",
   }),
   booleanFieldCode: section({
-    code: 'z.boolean().meta({ placeholder: "Turn on or off" })',
+    code: 'field(z.boolean(), { placeholder: "Turn on or off" })',
     line: true,
   }),
   // Accept (Radio buttons with Accept/Reject)
@@ -60,7 +60,7 @@ const allFieldsSchema = z.object({
     render: "accept",
   }),
   acceptCode: section({
-    code: 'z.boolean().meta({ render: "accept" })',
+    code: 'field(z.boolean(), { render: "accept" })',
     line: true,
   }),
   // Date
@@ -87,7 +87,7 @@ const allFieldsSchema = z.object({
     render: "date",
   }),
   stringDateFieldCode: section({
-    code: 'z.string().meta({ render: "date" }) // string containing a date',
+    code: 'field(z.string(), { render: "date" }) // string containing a date',
     line: true,
   }),
   // Email (text variant)
@@ -99,7 +99,7 @@ const allFieldsSchema = z.object({
     placeholder: "your@email.com",
   }),
   emailFieldCode: section({
-    code: 'z.email("Invalid email").meta({ placeholder: "your@email.com" })',
+    code: 'field(z.email("Invalid email"), { placeholder: "your@email.com" })',
     line: true,
   }),
   // Select
@@ -117,7 +117,7 @@ const allFieldsSchema = z.object({
     placeholder: "Choose an option",
   }),
   selectFieldCode: section({
-    code: "z.enum(['option1', ...]).meta({ placeholder: 'Choose an option' })",
+    code: "field(z.enum(['option1', ...]), { placeholder: 'Choose an option' })",
     line: true,
   }),
   // Number
@@ -142,7 +142,7 @@ const allFieldsSchema = z.object({
     placeholder: "Enter some text",
   }),
   textFieldCode: section({
-    code: 'z.string().meta({ placeholder: "Enter some text" })',
+    code: 'field(z.string(), { placeholder: "Enter some text" })',
     line: true,
   }),
   // Textarea
@@ -156,7 +156,7 @@ const allFieldsSchema = z.object({
     render: "textarea",
   }),
   textareaFieldCode: section({
-    code: 'z.string().meta({ render: "textarea" })',
+    code: 'field(z.string(), { render: "textarea" })',
     line: true,
   }),
   // Password
@@ -170,7 +170,7 @@ const allFieldsSchema = z.object({
     render: "password",
   }),
   passwordFieldCode: section({
-    code: 'z.string().meta({ render: "password" })',
+    code: 'field(z.string(), { render: "password" })',
     line: true,
   }),
   // Radio
@@ -189,7 +189,7 @@ const allFieldsSchema = z.object({
     render: "radio",
   }),
   radioFieldCode: section({
-    code: 'z.enum(["option1", ...]).meta({ render: "radio" })',
+    code: 'field(z.enum(["option1", ...]), { render: "radio" })',
     line: true,
   }),
   // Field List

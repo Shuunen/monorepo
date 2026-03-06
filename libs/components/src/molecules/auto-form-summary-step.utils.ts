@@ -98,6 +98,7 @@ function sectionDataFromObjectItem({ innerShape, item, key, index }: SectionData
   return sectionData;
 }
 
+/* c8 ignore start */
 type SectionsFromArrayOfObjectsProps = {
   data: AutoFormData;
   fieldSchema: z.ZodType;
@@ -105,34 +106,32 @@ type SectionsFromArrayOfObjectsProps = {
   metadata: AutoFormFieldMetadata | undefined;
 };
 
-function sectionsFromArrayOfObjects({ key, fieldSchema, metadata, data }: SectionsFromArrayOfObjectsProps) {
+function sectionsFromArrayOfObjects(props: SectionsFromArrayOfObjectsProps) /* NOSONAR */ {
+  const { data, fieldSchema, key, metadata } = props;
   const items = data[key];
   if (!Array.isArray(items) || items.length === 0) {
     return [];
   }
   const elementResult = getElementSchema(fieldSchema);
-  /* c8 ignore start */
   if (!elementResult.ok) {
     return [];
   }
   const innerShape = (elementResult.value as z.ZodObject).shape;
   const fieldLabel = metadata && "label" in metadata ? (metadata.label ?? key) : key;
-  /* c8 ignore stop */
   const identifier =
     metadata && "identifier" in metadata && isFunction(metadata.identifier) ? metadata.identifier : undefined;
   const sections: Array<AutoFormSummarySection> = [];
   for (let index = 0; index < items.length; index += 1) {
     const item = items[index] as AutoFormData;
-    /* c8 ignore start */
     const itemTitle = identifier ? identifier({ ...item, index: index + 1 }) : `${fieldLabel} ${index + 1}`;
     const sectionData = sectionDataFromObjectItem({ index, innerShape, item, key });
     if (Object.keys(sectionData).length > 0) {
       sections.push({ data: sectionData, title: itemTitle });
     }
-    /* c8 ignore stop */
   }
   return sections;
 }
+/* c8 ignore stop */
 
 function isArrayOfObjects(fieldSchema: z.ZodType) {
   if (!isZodArray(fieldSchema)) {

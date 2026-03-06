@@ -12,11 +12,11 @@ import { z } from 'zod'
 
 // Define your form schema
 const schema = z.object({
-  name: z.string().min(1).meta({
+  name: field(z.string().min(1), {
     label: 'Full Name',
     placeholder: 'John Doe',
   }),
-  email: z.email().meta({
+  email: field(z.email(), {
     label: 'Email Address',
     placeholder: 'john@example.com',
   }),
@@ -147,11 +147,11 @@ type AutoFormProps<Type extends z.ZodRawShape> = {
 
 ## Field Metadata
 
-Every field in your Zod schema must include `.meta()` with field configuration:
+Every field in your Zod schema must include metadata with field configuration :
 
 ```typescript
 const schema = z.object({
-  email: z.email().meta({
+  email: field(z.email(), {
     label: "Email Address",
     placeholder: "your@email.com",
     state: "editable",
@@ -214,46 +214,46 @@ type AutoFormFieldMetadata = {
 
 ```typescript
 // Text field
-name: z.string().meta({
+name: field(z.string(), {
   label: 'Full Name',
   placeholder: 'John Doe',
 }),
 
 // Email with validation
-email: z.email().meta({
+email: field(z.email(), {
   label: 'Email Address',
   placeholder: 'user@example.com',
 }),
 
 // Readonly field (user sees but can't edit)
-userId: z.string().meta({
+userId: field(z.string(), {
   label: 'User ID',
   state: 'readonly',
 }),
 
 // Disabled field (greyed out, can't interact)
-status: z.string().meta({
+status: field(z.string(), {
   label: 'Status',
   state: 'disabled',
 }),
 
 // Optional field only shown if another field has a value
-country: z.enum(['US', 'CA']).meta({
+country: field(z.enum(['US', 'CA']), {
   label: 'Country',
 }),
-state: z.string().meta({
+state: field(z.string(), {
   label: 'State',
   dependsOn: 'country',  // Only visible if country is selected
 }),
 
 // Field excluded from submission
-confirmPassword: z.string().meta({
+confirmPassword: field(z.string(), {
   label: 'Confirm Password',
   excluded: true,  // Not sent to server
 }),
 
 // Select with custom labels
-status: z.enum(['pending', 'approved']).meta({
+status: field(z.enum(['pending', 'approved']), {
   label: 'Application Status',
   options: [
     { label: 'Under Review', value: 'pending' },
@@ -262,14 +262,14 @@ status: z.enum(['pending', 'approved']).meta({
 }),
 
 // Data key mapping (for external APIs)
-firstName: z.string().meta({
+firstName: field(z.string(), {
   label: 'First Name',
   keyIn: 'user.profile.firstName',   // Read from this path
   keyOut: 'user.profile.firstName',  // Write to this path
 }),
 
 // Boolean field with description
-agreeTerms: z.boolean().meta({
+agreeTerms: field(z.boolean(), {
   label: 'I agree to the terms',
   placeholder: 'Must be checked to continue',
 }),
@@ -284,18 +284,18 @@ AutoForm automatically determines which component to render based on the Zod sch
 
 **Available field types:**
 
-- Text input (`z.string()`)
-- Textarea (`z.string().meta({ render: 'textarea' })`)
-- Password (`z.string().meta({ render: 'password' })`)
-- Email (`z.email()`)
-- Number (`z.number()`)
-- Boolean/Checkbox (`z.boolean()`)
-- Select/Dropdown (`z.enum()`)
-- Radio Group (`z.enum().meta({ render: 'radio' })`)
-- Date picker (`z.date()` or `z.string().meta({ render: 'date' })`)
-- File upload (`z.instanceof(File)`)
-- Accept/Reject buttons (`z.boolean().meta({ render: 'accept' })`)
-- Informational sections (`z.string().meta({ render: 'section' })`)
+- Text input (`field(z.string())`)
+- Textarea (`field(z.string(), { render: 'textarea' })`)
+- Password (`field(z.string(), { render: 'password' })`)
+- Email (`field(z.email())`)
+- Number (`field(z.number())`)
+- Boolean/Checkbox (`field(z.boolean())`)
+- Select/Dropdown (`field(z.enum())`)
+- Radio Group (`field(z.enum(), { render: 'radio' })`)
+- Date picker (`field(z.date())` or `field(z.string(), { render: 'date' })`)
+- File upload (`field(z.file())`)
+- Accept/Reject buttons (`field(z.boolean(), { render: 'accept' })`)
+- Informational sections (`field(z.string(), { render: 'section' })`)
 - Field List (`fields()` helper for repeatable simple fields)
 - Form List (`forms()` helper for repeatable sub-forms)
 
@@ -308,15 +308,15 @@ AutoForm automatically determines which component to render based on the Zod sch
 
 ```typescript
 z.object({
-  name: z.string().min(2, "At least 2 characters").meta({
+  name: field(z.string().min(2, "At least 2 characters"), {
     label: "Full Name",
     placeholder: "John Doe",
   }),
-  url: z.string().url("Must be valid URL").meta({
+  url: field(z.string().url("Must be valid URL"), {
     label: "Website",
     placeholder: "https://example.com",
   }),
-  bio: z.string().max(500).meta({
+  bio: field(z.string().max(500), {
     label: "Bio",
     placeholder: "Tell us about yourself",
   }),
@@ -338,17 +338,17 @@ z.object({
 
 ```typescript
 z.object({
-  description: z.string().min(10, "At least 10 characters").meta({
+  description: field(z.string().min(10, "At least 10 characters"), {
     label: "Description",
     placeholder: "Enter a detailed description",
     render: "textarea",
   }),
-  feedback: z.string().optional().meta({
+  feedback: field(z.string().optional(), {
     label: "Additional Feedback",
     placeholder: "Optional comments",
     render: "textarea",
   }),
-  terms: z.string().meta({
+  terms: field(z.string(), {
     label: "Terms & Conditions",
     render: "textarea",
     state: "readonly", // Display-only
@@ -373,17 +373,17 @@ z.object({
 
 ```typescript
 z.object({
-  password: z.string().min(8, "Password must be at least 8 characters").meta({
+  password: field(z.string().min(8, "Password must be at least 8 characters"), {
     label: "Password",
     placeholder: "Enter your password",
     render: "password",
   }),
-  newPassword: z.string().min(8).meta({
+  newPassword: field(z.string().min(8), {
     label: "New Password",
     placeholder: "Set a new password",
     render: "password",
   }),
-  confirmPassword: z.string().min(8).optional().meta({
+  confirmPassword: field(z.string().min(8).optional(), {
     label: "Confirm Password",
     placeholder: "Repeat your password",
     render: "password",
@@ -408,15 +408,15 @@ z.object({
 
 ```typescript
 z.object({
-  age: z.number().min(18).max(120).meta({
+  age: field(z.number().min(18).max(120), {
     label: "Age",
     placeholder: "25",
   }),
-  salary: z.number().positive("Must be positive").meta({
+  salary: field(z.number().positive("Must be positive"), {
     label: "Annual Salary",
     placeholder: "50000",
   }),
-  quantity: z.number().int("Must be whole number").meta({
+  quantity: field(z.number().int("Must be whole number"), {
     label: "Quantity",
   }),
 });
@@ -438,19 +438,19 @@ z.object({
 ```typescript
 z.object({
   // Interactive checkbox
-  agreeToTerms: z.boolean().meta({
+  agreeToTerms: field(z.boolean(), {
     label: "I agree to the Terms & Conditions",
     placeholder: "You must accept",
   }),
 
   // Optional boolean
-  newsletter: z.boolean().optional().meta({
+  newsletter: field(z.boolean().optional(), {
     label: "Subscribe to newsletter",
     placeholder: "Receive weekly updates",
   }),
 
   // Display-only (always checked, disabled)
-  systemAdmin: z.literal(true).meta({
+  systemAdmin: field(z.literal(true), {
     label: "System Administrator",
   }),
 });
@@ -472,13 +472,13 @@ z.object({
 ```typescript
 z.object({
   // Auto-capitalized labels from enum values
-  country: z.enum(["us", "ca", "mx"]).meta({
+  country: field(z.enum(["us", "ca", "mx"]), {
     label: "Country",
     placeholder: "Select your country",
   }),
 
   // Custom labels for options
-  status: z.enum(["pending", "approved", "rejected"]).meta({
+  status: field(z.enum(["pending", "approved", "rejected"]), {
     label: "Application Status",
     options: [
       { label: "Pending Review", value: "pending" },
@@ -488,7 +488,7 @@ z.object({
   }),
 
   // Optional select
-  department: z.enum(["sales", "engineering", "hr"]).optional().meta({
+  department: field(z.enum(["sales", "engineering", "hr"]).optional(), {
     label: "Department",
   }),
 });
@@ -511,20 +511,20 @@ z.object({
 ```typescript
 z.object({
   // Native Date field
-  birthDate: z.date().meta({
+  birthDate: field(z.date(), {
     label: "Date of Birth",
     placeholder: "Select your birth date",
   }),
 
   // String as date (useful for APIs that expect ISO string)
-  eventDate: z.string().meta({
+  eventDate: field(z.string(), {
     label: "Event Date",
     placeholder: "Select event date",
     render: "date",
   }),
 
   // Optional date field
-  reminderDate: z.date().optional().meta({
+  reminderDate: field(z.date().optional(), {
     label: "Reminder Date",
   }),
 });
@@ -541,7 +541,7 @@ z.object({
 
 ### 8. File Upload Fields
 
-**Zod Type:** `z.instanceof(File)` with validation
+**Zod Type:** `z.file()` with validation
 **Renders:** File input with progress
 
 ```typescript
@@ -549,18 +549,18 @@ import { fileSchema } from "@monorepo/components";
 
 z.object({
   // Document with extension validation
-  resume: fileSchema(["pdf", "doc", "docx"]).meta({
+  resume: field(fileSchema(["pdf", "doc", "docx"]), {
     label: "Resume",
     placeholder: "PDF or Word document",
   }),
 
   // Image with multiple formats
-  avatar: fileSchema(["jpg", "png", "gif"]).meta({
+  avatar: field(fileSchema(["jpg", "png", "gif"]), {
     label: "Profile Picture",
   }),
 
   // Archive file
-  portfolio: fileSchema(["zip", "rar"]).meta({
+  portfolio: field(fileSchema(["zip", "rar"]), {
     label: "Portfolio",
   }),
 });
@@ -585,13 +585,13 @@ z.object({
 ```typescript
 z.object({
   // Accept/Reject decision
-  approve: z.boolean().optional().meta({
+  approve: field(z.boolean().optional(), {
     label: "Do you approve this request?",
     render: "accept",
   }),
 
   // In sections for clarity
-  confirmDelete: z.boolean().meta({
+  confirmDelete: field(z.boolean(), {
     label: "Confirm deletion",
     description: "This action cannot be undone",
     render: "accept",
@@ -881,28 +881,28 @@ type AutoFormFormsMetadata = {
 
 ```typescript
 z.object({
-  section1Title: z.string().meta({
+  section1Title: field(z.string(), {
     title: "Account Settings",
     description: "Manage your account information",
     render: "section",
   }),
 
-  email: z.email().meta({
+  email: field(z.email(), {
     label: "Email Address",
   }),
 
-  section2Title: z.string().meta({
+  section2Title: field(z.string(), {
     title: "Security",
     description: "Update your password and two-factor authentication",
     render: "section",
   }),
 
-  password: z.string().min(8).meta({
+  password: field(z.string().min(8), {
     label: "New Password",
   }),
 
-  codeDisplay: z.string().meta({
-    code: 'z.email().meta({ label: "Email" })',
+  codeDisplay: field(z.string(), {
+    code: 'field(z.email(), { label: "Email" })',
     line: true,
     render: "section",
   }),
@@ -938,37 +938,37 @@ Use an array of schemas to create multi-step forms with automatic navigation:
 
 ```typescript
 // Step 1: Personal Information
-const step1Schema = z.object({
-  firstName: z.string().meta({
+const step1Schema = step(z.object({
+  firstName: field(z.string(), {
     label: 'First Name',
   }),
-  lastName: z.string().meta({
+  lastName: field(z.string(), {
     label: 'Last Name',
   }),
-}).meta({
+}), {
   title: '1. Personal Information',  // Step title on schema object
   subtitle: 'Basic personal details',  // Optional subtitle
 })
 
 // Step 2: Contact Details
-const step2Schema = z.object({
-  email: z.email().meta({
+const step2Schema = step(z.object({
+  email: field(z.email(), {
     label: 'Email Address',
   }),
-  phone: z.string().meta({
+  phone: field(z.string(), {
     label: 'Phone Number',
   }),
-}).meta({
+}), {
   title: '2. Contact Details',  // Step title on schema object
   subtitle: 'How we can reach you',  // Optional subtitle
 })
 
 // Step 3: Confirmation
-const step3Schema = z.object({
-  agreeToTerms: z.boolean().meta({
+const step3Schema = step(z.object({
+  agreeToTerms: field(z.boolean(), {
     label: 'I agree to Terms & Conditions',
   }),
-}).meta({
+}), {
   title: '3. Confirmation',  // Step title on schema object
   subtitle: 'Review and accept terms',  // Optional subtitle
 })
@@ -996,20 +996,20 @@ Show fields only when another field has a value:
 
 ```typescript
 const schema = z.object({
-  hasShippingAddress: z.boolean().meta({
+  hasShippingAddress: field(z.boolean(), {
     label: "Different shipping address?",
   }),
 
   // These only appear when hasShippingAddress is true
-  shippingStreet: z.string().meta({
+  shippingStreet: field(z.string(), {
     label: "Street Address",
     dependsOn: "hasShippingAddress",
   }),
-  shippingCity: z.string().meta({
+  shippingCity: field(z.string(), {
     label: "City",
     dependsOn: "hasShippingAddress",
   }),
-  shippingZip: z.string().meta({
+  shippingZip: field(z.string(), {
     label: "ZIP Code",
     dependsOn: "hasShippingAddress",
   }),
@@ -1028,24 +1028,24 @@ Show fields only when another field has a specific value:
 
 ```typescript
 const schema = z.object({
-  petType: z.enum(["dog", "cat"]).meta({
+  petType: field(z.enum(["dog", "cat"]), {
     label: "Pet Type",
   }),
 
   // Only visible when petType === 'dog'
-  exerciseRoutine: z.string().meta({
+  exerciseRoutine: field(z.string(), {
     label: "Exercise Routine",
     dependsOn: "petType=dog",
   }),
 
   // Only visible when petType === 'cat'
-  indoorSpace: z.string().meta({
+  indoorSpace: field(z.string(), {
     label: "Indoor Space",
     dependsOn: "petType=cat",
   }),
 
   // Visible when ownsParent is truthy (boolean or non-empty value)
-  parentName: z.string().meta({
+  parentName: field(z.string(), {
     label: "Parent Name",
     dependsOn: "ownsParent",
   }),
@@ -1086,17 +1086,17 @@ const apiData = {
 
 // Form schema with key mappings
 const schema = z.object({
-  firstName: z.string().meta({
+  firstName: field(z.string(), {
     label: 'First Name',
     keyIn: 'user.profile.firstName',   // Read from this path
     keyOut: 'user.profile.firstName',  // Write to this path
   }),
-  lastName: z.string().meta({
+  lastName: field(z.string(), {
     label: 'Last Name',
     keyIn: 'user.profile.lastName',
     keyOut: 'user.profile.lastName',
   }),
-  email: z.string().meta({
+  email: field(z.string(), {
     label: 'Email',
     keyIn: 'user.contact.email',
     keyOut: 'user.contact.email',
@@ -1126,10 +1126,10 @@ Some fields shouldn't be submitted (e.g., confirmation fields):
 
 ```typescript
 const schema = z.object({
-  password: z.string().meta({
+  password: field(z.string(), {
     label: "Password",
   }),
-  confirmPassword: z.string().meta({
+  confirmPassword: field(z.string(), {
     label: "Confirm Password",
     excluded: true, // Not included in submitted data
   }),
@@ -1218,19 +1218,19 @@ Control how users interact with fields:
 ```typescript
 const schema = z.object({
   // Normal interactive field
-  email: z.email().meta({
+  email: field(z.email(), {
     label: "Email",
     state: "editable", // (default)
   }),
 
   // User can see but not modify
-  userId: z.string().meta({
+  userId: field(z.string(), {
     label: "User ID",
     state: "readonly", // Value visible, can't change
   }),
 
   // Grayed out, cannot interact
-  status: z.string().meta({
+  status: field(z.string(), {
     label: "Status",
     state: "disabled", // Grayed out, locked
   }),
@@ -1355,7 +1355,7 @@ import { fileSchema } from '@monorepo/components'
 
 // Allow specific extensions
 const schema = z.object({
-  resume: fileSchema(['pdf', 'doc', 'docx']).meta({
+  resume: field(fileSchema(['pdf', 'doc', 'docx']), {
     label: 'Resume',
   }),
 })
@@ -1582,10 +1582,10 @@ z.instanceof(File)      → render: 'upload'
 z.array(...)            → render: 'field-list' or 'form-list' (via helpers)
 
 // Override with explicit render in metadata
-z.string().meta({ render: 'textarea' })      // Multi-line instead of single
-z.string().meta({ render: 'date' })          // Date picker (stores ISO string)
-z.string().meta({ render: 'password' })      // Password masked input
-z.enum([...]).meta({ render: 'radio' })      // Radio buttons instead of dropdown
+field(z.string(), { render: 'textarea' })      // Multi-line instead of single
+field(z.string(), { render: 'date' })          // Date picker (stores ISO string)
+field(z.string(), { render: 'password' })      // Password masked input
+field(z.enum([...]), { render: 'radio' })      // Radio buttons instead of dropdown
 ```
 
 **When to use explicit `render`:**
@@ -1610,15 +1610,15 @@ import { AutoForm } from '@monorepo/components'
 import { z } from 'zod'
 
 const schema = z.object({
-  name: z.string().min(1, 'Name required').meta({
+  name: field(z.string().min(1, 'Name required'), {
     label: 'Your Name',
     placeholder: 'John Doe',
   }),
-  email: z.email('Invalid email').meta({
+  email: field(z.email('Invalid email'), {
     label: 'Email Address',
     placeholder: 'john@example.com',
   }),
-  message: z.string().min(10, 'At least 10 characters').meta({
+  message: field(z.string().min(10, 'At least 10 characters'), {
     label: 'Message',
     placeholder: 'Tell us your message',
   }),
@@ -1642,34 +1642,34 @@ export function ContactForm() {
 
 ```typescript
 const shippingSchema = z.object({
-  email: z.email().meta({
+  email: field(z.email(), {
     label: 'Email',
     title: 'Shipping',
   }),
-  fullName: z.string().meta({
+  fullName: field(z.string(), {
     label: 'Full Name',
     title: 'Shipping',
   }),
-  address: z.string().meta({
+  address: field(z.string(), {
     label: 'Address',
     title: 'Shipping',
   }),
-  city: z.string().meta({
+  city: field(z.string(), {
     label: 'City',
     title: 'Shipping',
   }),
-  postalCode: z.string().meta({
+  postalCode: field(z.string(), {
     label: 'Postal Code',
     title: 'Shipping',
   }),
 })
 
 const billingSchema = z.object({
-  sameAsShipping: z.boolean().meta({
+  sameAsShipping: field(z.boolean(), {
     label: 'Same as shipping address',
     title: 'Billing',
   }),
-  billingAddress: z.string().meta({
+  billingAddress: field(z.string(), {
     label: 'Billing Address',
     dependsOn: 'sameAsShipping',
     title: 'Billing',
@@ -1677,15 +1677,15 @@ const billingSchema = z.object({
 })
 
 const paymentSchema = z.object({
-  cardNumber: z.string().regex(/^\d{16}$/).meta({
+  cardNumber: field(z.string().regex(/^\d{16}$/), {
     label: 'Card Number',
     title: 'Payment',
   }),
-  expiry: z.string().regex(/^\d{2}\/\d{2}$/).meta({
+  expiry: field(z.string().regex(/^\d{2}\/\d{2}$/), {
     label: 'MM/YY',
     title: 'Payment',
   }),
-  cvv: z.string().regex(/^\d{3}$/).meta({
+  cvv: field(z.string().regex(/^\d{3}$/), {
     label: 'CVV',
     title: 'Payment',
   }),
@@ -1711,29 +1711,29 @@ export function CheckoutForm() {
 import { fileSchema } from '@monorepo/components'
 
 const applicationSchema = z.object({
-  fullName: z.string().meta({
+  fullName: field(z.string(), {
     label: 'Full Name',
     title: 'Personal Info',
   }),
-  email: z.email().meta({
+  email: field(z.email(), {
     label: 'Email',
     title: 'Personal Info',
   }),
-  phone: z.string().meta({
+  phone: field(z.string(), {
     label: 'Phone',
     title: 'Personal Info',
   }),
 
-  resume: fileSchema(['pdf', 'doc', 'docx']).meta({
+  resume: field(fileSchema(['pdf', 'doc', 'docx']), {
     label: 'Resume',
     title: 'Documents',
   }),
-  coverLetter: fileSchema(['pdf', 'doc', 'docx']).optional().meta({
+  coverLetter: field(fileSchema(['pdf', 'doc', 'docx']).optional(), {
     label: 'Cover Letter (Optional)',
     title: 'Documents',
   }),
 
-  agreeToTerms: z.boolean().meta({
+  agreeToTerms: field(z.boolean(), {
     label: 'I agree to the privacy policy',
     title: 'Confirmation',
   }),
@@ -1765,7 +1765,7 @@ export function JobApplicationForm() {
 
 ```typescript
 const registrationSchema = z.object({
-  accountType: z.enum(["individual", "business"]).meta({
+  accountType: field(z.enum(["individual", "business"]), {
     label: "Account Type",
     options: [
       { label: "Personal Account", value: "individual" },
@@ -1773,21 +1773,21 @@ const registrationSchema = z.object({
     ],
   }),
 
-  firstName: z.string().meta({
+  firstName: field(z.string(), {
     label: "First Name",
     dependsOn: "accountType",
   }),
-  lastName: z.string().meta({
+  lastName: field(z.string(), {
     label: "Last Name",
     dependsOn: "accountType",
   }),
 
   // Only shown when accountType = 'business'
-  companyName: z.string().meta({
+  companyName: field(z.string(), {
     label: "Company Name",
     dependsOn: "accountType",
   }),
-  taxId: z.string().meta({
+  taxId: field(z.string(), {
     label: "Tax ID",
     dependsOn: "accountType",
   }),
@@ -1866,17 +1866,17 @@ View `auto-form.stories.tsx` for comprehensive examples.
 ### Fields not rendering
 
 **Problem:** No fields appear in form
-**Solution:** Check that all fields have `.meta()` with at least `label`
+**Solution:** Check that all fields are using the `field` utils with metadata, at least `label` metadata
 
 ```typescript
-// ❌ Wrong - no metadata
+// ❌ Wrong - no `field` utils, no metadata
 const schema = z.object({
   email: z.email(),
 });
 
-// ✅ Correct - has metadata
+// ✅ Correct - use `field` utils, has metadata
 const schema = z.object({
-  email: z.email().meta({
+  email: field(z.email(), {
     label: "Email Address",
   }),
 });
