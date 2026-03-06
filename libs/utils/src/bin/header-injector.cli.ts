@@ -7,10 +7,9 @@ import { Result } from "../lib/result.js";
 
 // use me like :
 //  bun libs/utils/src/bin/header-injector.cli.ts --header="Copyright 2026 ACME"
-//  bun libs/utils/src/bin/header-injector.cli.ts --remove
+//  bun libs/utils/src/bin/header-injector.cli.ts --remove --header="Copyright 2026 ACME"
 
 const logger = new Logger({ minimumLevel: /* c8 ignore next */ import.meta.main ? "3-info" : "7-error" });
-const headerPattern = /^\/\/ .+$/;
 const metrics = {
   /** Number of files where the header was added */
   addedHeader: 0,
@@ -44,15 +43,17 @@ function parseArgs(argv: string[]): Record<string, string> {
 }
 
 /**
- * Remove header from a file
+ * Remove header from a file only if it matches the expected header
  * @param file the file path to process
+ * @param header the exact header line to remove
  * @param content the file content
  * @param stats the metrics object to update
  * @returns void
  */
-function removeHeader(file: string, content: string, stats: Metrics) {
+// oxlint-disable-next-line max-params
+function removeHeader(file: string, header: string, content: string, stats: Metrics) {
   const lines = content.split("\n");
-  if (lines.length === 0 || !headerPattern.test(lines[0])) {
+  if (lines.length === 0 || lines[0] !== header) {
     stats.noHeader += 1;
     return;
   }
@@ -115,7 +116,7 @@ function processFile(options: ProcessFileOptions) {
   }
   const content = readResult.value;
   if (isRemoveMode) {
-    removeHeader(file, content, stats);
+    removeHeader(file, header, content, stats);
   } else {
     addOrMoveHeader(file, header, content, stats);
   }
@@ -148,12 +149,12 @@ export async function main(argv: string[]) {
   const args = parseArgs(argv);
   logger.info("header-injector.cli.ts started with args", yellow(JSON.stringify(args)));
   const isRemoveMode = args.remove !== undefined;
-  if (!isRemoveMode && !args.header) {
+  if (!args.header) {
     return Result.error("missing header argument");
   }
   const allFiles = await glob("**/*.ts", { filesOnly: true });
   const files = allFiles.filter(file => !file.endsWith(".d.ts") && !file.endsWith(".gen.ts"));
-  const header = isRemoveMode ? "" : `// ${args.header}`;
+  const header = `// ${args.header}`;
   logger.info(`${isRemoveMode ? "Removing" : "Scanning"} headers of ${files.length} files...`);
   for (const file of files) {
     processFile({ file, header, isRemoveMode, stats });
