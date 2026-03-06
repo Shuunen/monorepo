@@ -96,7 +96,7 @@ describe("header-injector.cli.ts", () => {
     vi.mocked(glob.default).mockResolvedValue(["a.ts", "b.ts"]);
     vi.mocked(fs.readFileSync).mockImplementation((...args: unknown[]) => mockFileContent(args[0] as string));
     const writeSpy = vi.mocked(fs.writeFileSync).mockReturnValue(undefined);
-    const result = await mod.main(["node", "script", "--remove"]);
+    const result = await mod.main(["node", "script", "--remove", "--header=HEADER"]);
     expect(result.ok).toBe(true);
     invariant(result.ok, "expected result to be ok");
     const { removedHeader, noHeader } = result.value;
@@ -109,12 +109,25 @@ describe("header-injector.cli.ts", () => {
     vi.mocked(glob.default).mockResolvedValue(["b.ts"]);
     vi.mocked(fs.readFileSync).mockReturnValue("console.log(2)");
     const writeSpy = vi.mocked(fs.writeFileSync);
-    const result = await mod.main(["node", "script", "--remove"]);
+    const result = await mod.main(["node", "script", "--remove", "--header=HEADER"]);
     expect(result.ok).toBe(true);
     invariant(result.ok, "expected result to be ok");
     const { removedHeader, noHeader } = result.value;
     expect(removedHeader, "G removedHeader").toBe(0);
     expect(noHeader, "G noHeader").toBe(1);
+    expect(writeSpy).not.toHaveBeenCalled();
+  });
+
+  it("main F should not remove header when it does not match --header", async () => {
+    vi.mocked(glob.default).mockResolvedValue(["a.ts"]);
+    vi.mocked(fs.readFileSync).mockReturnValue("// HEADER\nconsole.log(1)");
+    const writeSpy = vi.mocked(fs.writeFileSync);
+    const result = await mod.main(["node", "script", "--remove", "--header=OTHER"]);
+    expect(result.ok).toBe(true);
+    invariant(result.ok, "expected result to be ok");
+    const { removedHeader, noHeader } = result.value;
+    expect(removedHeader, "F2 removedHeader").toBe(0);
+    expect(noHeader, "F2 noHeader").toBe(1);
     expect(writeSpy).not.toHaveBeenCalled();
   });
 
@@ -124,7 +137,7 @@ describe("header-injector.cli.ts", () => {
     vi.mocked(fs.writeFileSync).mockImplementation(() => {
       throw new Error("disk full");
     });
-    const result = await mod.main(["node", "script", "--remove"]);
+    const result = await mod.main(["node", "script", "--remove", "--header=HEADER"]);
     expect(result.ok).toBe(true);
     invariant(result.ok, "expected result to be ok");
     const { removedHeader, writeError } = result.value;
