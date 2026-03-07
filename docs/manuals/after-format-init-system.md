@@ -313,33 +313,19 @@ bun cs --setup
 - [ ] [pimp with a 2k wallpaper](https://www.google.com/search?q=wallpaper+2k)
 - [ ] encrypt drive
 
-Plugins status for qBittorrent 5.1.1 :
+Setup Jackett :
 
-- BitSearch 1.1 : failing
-- BtDig 1.1 : failing
-- CloudTorrent 1.0 : failing
-- EliteTorrent 1.6 : failing
-- EzTV 1.17 : failing
-- **LimeTorrent 4.11 : working**
-- MagnetDL 2.1 : failing
-- **MyPrnClub 1.1 : working**
-- **SnowFl 1.3 : working**
-- SolidTorrents 2.5 : failing
-- **ThePirateBay 1.1 : working**
-- **ThePirateBay 3.7 : working**
-- **TheRarBg 1.3 : working**
-- **TorLock 2.26 : working**
-- Torrent Downloads 1.1 : failing
-- **Torrent9 2.0 : working**
-- TorrentDownload 1.1 : failing
-- TorrentFlix 1.0 : failing
-- TorrentGalaxy 0.8 : failing
-- **TorrentProject 1.6 : working**
-- **TorrentsCsv 1.6 : working**
-- **Traht 1.0 : working**
-- UnionDht 1.2 : failing
-- xClub 1.3 : failing
-- Zooqle 1.1 : failing
+1. Check [readme](https://github.com/Jackett/Jackett) for install guide
+2. Go to your [web dashboard](http://localhost:9117/) and copy your API key (you'll need it in the next steps)
+3. Download [latest qBittorrent search plugin for Jackett](https://raw.githubusercontent.com/qbittorrent/search-plugins/refs/heads/master/nova3/engines/jackett.py)
+4. Edit the plugin, replace `API_KEY` with the one you copied, then save it
+5. In qBittorrent, go to Search > Search plugins > Install a new one, select the plugin file you just edited, then install it
+6. You should now see Jackett in the list of search engines, you can use it to search for torrents from the indexers you added in Jackett
+7. You may need to run `bash ~/Projects/github/monorepo/apps/one-file/src/dns-bench.sh` to check the best DNS server for your location, then update it in your network settings
+8. Also use your flare solver local instance if any : `http://127.0.0.1:8191`
+9. Click on add indexers, filter by public and lang and select the ones you want, then add them all at once
+10. Redo the process with FR lang :p
+11. Test all indexers with the test button, if some are not working remove them
 
 Nice app to keep in mind :
 
