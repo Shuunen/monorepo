@@ -53,6 +53,7 @@ function Loading() {
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function RecipeMenu() {
   const [groupedRecipes, setGroupedRecipes] = useState<Record<string, Recipe[]>>({});
   const [isLoading, setIsLoading] = useState(true);

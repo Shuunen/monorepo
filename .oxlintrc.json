@@ -88,6 +88,12 @@
       }
     },
     {
+      "files": ["**/components/src/atoms/*.tsx"],
+      "rules": {
+        "no-multi-comp": "off"
+      }
+    },
+    {
       "files": ["**/components/src/molecules/*.tsx", "**/components/src/organisms/*.tsx"],
       "rules": {
         "no-restricted-imports": [
@@ -337,7 +343,6 @@
       }
     ],
     "no-map-spread": "off",
-    "no-multi-comp": "off",
     "no-named-export": "off",
     "no-rest-spread-properties": "off",
     "no-restricted-imports": [

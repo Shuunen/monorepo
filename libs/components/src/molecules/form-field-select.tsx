@@ -92,6 +92,7 @@ function VirtualizedOptions({
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function FormFieldSelect({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const [open, setOpen] = useState(false);
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema) as AutoFormFieldSelectMetadata;

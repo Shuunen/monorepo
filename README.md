@@ -42,7 +42,6 @@ nx dev sample-web-app
   - jsx-no-new-object-as-prop
   - jsx-props-no-spreading
   - no-array-index-key : conflicts with useStableKeys
-  - no-multi-comp
   - no-unescaped-entities
   - prefer-await-to-callbacks
   - prefer-await-to-then

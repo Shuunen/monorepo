@@ -26,6 +26,7 @@ function ErrorMessage({ error }: { error?: string }) {
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 function LoadingMessage() {
   return (
     <div className="flex h-full items-center justify-center" data-testid="loading">
@@ -35,6 +36,7 @@ function LoadingMessage() {
 }
 
 /* v8 ignore next -- @preserve */
+// oxlint-disable-next-line react/no-multi-comp
 export function RecipeViewer() {
   const { category, recipe } = useParams<RecipeParams>();
   const [RecipeComponent, setRecipeComponent] = useState<React.ComponentType | undefined>(undefined);

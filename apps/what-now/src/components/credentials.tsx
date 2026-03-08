@@ -139,6 +139,7 @@ function useCredentialsLogic() {
   return { fillForm, formData, handleInputChange, handleSubmit };
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function Credentials() {
   const { fillForm, formData, handleInputChange, handleSubmit } = useCredentialsLogic();
 

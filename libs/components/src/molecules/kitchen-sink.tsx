@@ -12,6 +12,7 @@ function ColorPaletteItem({ classes }: { classes: string }) {
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 function ColorPalette() {
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -54,6 +55,7 @@ function ColorPalette() {
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function KitchenSink() {
   return (
     <div

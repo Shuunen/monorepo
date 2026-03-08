@@ -31,6 +31,7 @@ function CustomRenderContent({ customRender }: { customRender: (formData: AutoFo
   return <>{customRender(formData)}</>;
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function FormFieldSection(props: FormFieldSectionProps) {
   return (
     <div className="grid gap-2">

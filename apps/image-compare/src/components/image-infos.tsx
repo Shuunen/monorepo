@@ -35,6 +35,7 @@ function ImageInfosColumn({
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function ImageInfos({ leftWin, infos }: { leftWin?: boolean; infos: Array<ImageMetadata | undefined> }) {
   return (
     <div className="flex w-full justify-between">

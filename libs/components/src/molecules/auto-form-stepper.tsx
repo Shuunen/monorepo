@@ -79,6 +79,7 @@ function AutoFormStep({ step, disabled = false, onStepClick, values }: AutoFormS
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function AutoFormStepper({ steps, onStepClick, disabled = false, width }: AutoFormStepperProps) {
   const values = useWatch();
   return (

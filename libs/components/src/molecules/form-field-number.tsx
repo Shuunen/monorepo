@@ -41,6 +41,7 @@ function NumberInput({ field, disabled, placeholder, min, max }: NumberInputProp
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function FormFieldNumber({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { placeholder, state = "editable" } = metadata;

@@ -158,6 +158,7 @@ function TestIdListItem({ id, index, occurrences, isValid }: TestIdInfo & { inde
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean }) {
   const [visible, setVisible] = useState(() => {
     if (forceVisible) {
