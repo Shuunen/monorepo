@@ -36,6 +36,7 @@ import {
   typeLikeResolver,
 } from "./auto-form.utils";
 import { sectionsFromSchema } from "./auto-form-summary-step.utils";
+import type { z } from "zod";
 
 /**
  * AutoForm is a black box, all in one form generator, takes Zod schemas in and build the ui, handle validation, state management, navigation, submission, etc.:
@@ -94,6 +95,7 @@ export function AutoForm({
   const finalLabels = { ...defaultLabels, ...labels };
   const [mode, setMode] = useState<"initial" | "subform">("initial");
   const [subformOptions, setSubformOptions] = useState<AutoFormSubformOptions | undefined>(undefined);
+  const subformSchemas = useMemo(() => [subformOptions?.schema], [subformOptions]);
   const [parentFormDataSnapshot, setParentFormDataSnapshot] = useState<AutoFormData | undefined>(undefined);
   const [pendingValidation, setPendingValidation] = useState(false);
   const parentData = useAutoFormParentData();
@@ -342,7 +344,7 @@ export function AutoForm({
   }
 
   function renderSubformContent() {
-    if (!subformOptions) {
+    if (!subformOptions || !subformSchemas[0]) {
       return;
     }
     logger?.info("Rendering subform", { subformOptions });
@@ -357,7 +359,7 @@ export function AutoForm({
         <AutoForm
           initialData={subformOptions.initialData}
           onSubmit={subformOptions.onSubmit}
-          schemas={[subformOptions.schema]}
+          schemas={subformSchemas as z.ZodObject[]}
           onSubformMode={value => setShowBackButtonInSubform(value)}
         />
       </AutoFormParentDataProvider>

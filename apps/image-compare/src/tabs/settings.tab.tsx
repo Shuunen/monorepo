@@ -13,6 +13,8 @@ const settingsSchema = step(
   }),
 );
 
+const schemas = [settingsSchema];
+
 export function Settings() {
   /* v8 ignore start */
   function onSubmit(updatedSettings: Record<string, unknown>) {
@@ -46,7 +48,7 @@ export function Settings() {
         <Paragraph>You can adjust your preferences here.</Paragraph>
       </motion.div>
       <div className="flex">
-        <AutoForm initialData={state} onSubmit={onSubmit} schemas={[settingsSchema]} />
+        <AutoForm initialData={state} onSubmit={onSubmit} schemas={schemas} />
       </div>
     </motion.div>
   );

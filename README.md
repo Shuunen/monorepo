@@ -34,7 +34,6 @@ nx dev sample-web-app
 - [ ] check if we can merge typecheck with building ( we need to find a solution that can leverage ts-go ) ( or wait for typescript 7)
 - [ ] check if we should enable
   - jsx-handler-names
-  - jsx-no-new-array-as-prop
   - jsx-no-new-function-as-prop
   - jsx-no-new-object-as-prop
   - jsx-props-no-spreading

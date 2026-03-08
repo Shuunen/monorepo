@@ -206,6 +206,7 @@
         "id-length": "off",
         "import/no-default-export": "off",
         "import/no-namespace": "off",
+        "jsx-no-new-array-as-prop": "off",
         "jsx-no-new-function-as-prop": "off",
         "jsx-no-new-object-as-prop": "off",
         "jsx-props-no-spreading": "off",
@@ -313,7 +314,6 @@
       }
     ],
     "jsx-no-jsx-as-prop": "off",
-    "jsx-no-new-array-as-prop": "off",
     "jsx-no-new-function-as-prop": "off",
     "jsx-no-new-object-as-prop": "off",
     "jsx-props-no-spreading": "off",
