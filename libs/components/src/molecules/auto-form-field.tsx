@@ -58,3 +58,5 @@ export const AutoFormField = memo(({ fieldName, fieldSchema, stepState, logger, 
   const Component = componentRegistry[render];
   return <Component {...props} />;
 });
+
+AutoFormField.displayName = "AutoFormField";
