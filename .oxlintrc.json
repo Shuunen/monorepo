@@ -285,7 +285,6 @@
     "curly": ["error", "multi"],
     "eslint/no-undefined": "off",
     "eslint/yoda": "off",
-    "exhaustive-deps": "off",
     "explicit-module-boundary-types": "off",
     "extensions": "off",
     "func-style": [

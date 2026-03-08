@@ -28,7 +28,7 @@ export function AppItemList(props: Props) {
       setSelection(newSelection);
       props.onSelection(newSelection);
     },
-    [props.onSelection, props],
+    [props],
   );
   // watch display state if not provided
   if (props.display === undefined)
