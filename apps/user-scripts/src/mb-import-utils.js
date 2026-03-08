@@ -63,7 +63,6 @@ function createMbForm(app, callback = () => ({})) {
     form.addEventListener("submit", event => {
       event.preventDefault();
       const formData = new FormData(form);
-      // @ts-expect-error we will see later :D
       const values = Object.fromEntries(formData.entries());
       callback(values);
     });

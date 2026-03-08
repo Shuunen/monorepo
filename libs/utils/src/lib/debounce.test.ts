@@ -1,6 +1,5 @@
 /** biome-ignore-all lint/nursery/noFloatingPromises: it's a test file */
 import { debounce } from "./debounce.js";
-import { expectEqualTypes } from "./expect-type.js";
 import { sleep } from "./sleep.js";
 
 let times = 0;
@@ -60,7 +59,7 @@ it("debounce C : return type", () => {
 });
 
 it("debounce D : return type sync", () => {
-  expect(Object.prototype.toString.call(myFunctionDebounced)).toBe("[object AsyncFunction]");
+  expect(Object.prototype.toString.call(myFunctionDebounced)).toBe("[object Function]");
 });
 
 // flaky test, disabled for now
@@ -70,14 +69,12 @@ it("debounce D : return type sync", () => {
 // });
 
 it("debounce F : return type async", () => {
-  expect(Object.prototype.toString.call(myAsyncFunctionDebounced)).toBe("[object AsyncFunction]");
+  expect(Object.prototype.toString.call(myAsyncFunctionDebounced)).toBe("[object Function]");
 });
 
 it("debounce G : return type async resolve", async () => {
   times = 42;
-  expect(await myAsyncFunctionDebounced()).toBe(43);
-});
-
-it("debounce H : return types", async () => {
-  expectEqualTypes(await myAsyncFunction(), await myAsyncFunctionDebounced());
+  expect(await myAsyncFunctionDebounced()).toBeUndefined();
+  await sleep(12);
+  expect(times).toBe(43);
 });

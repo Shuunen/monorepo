@@ -109,4 +109,11 @@ describe("page-search.const", () => {
     await navigateToSearch("only");
     expect(vi.mocked(navigate)).toHaveBeenCalledWith("/item/details/42/single");
   });
+
+  it("navigateToSearch D should fallback to empty id when single result has no id", async () => {
+    const { default: Fuse } = await import("fuse.js/basic");
+    vi.spyOn(Fuse.prototype, "search").mockReturnValueOnce([{ item: { name: "Only Item" } }] as never);
+    await navigateToSearch("only");
+    expect(vi.mocked(navigate)).toHaveBeenCalledWith("/item/details//single");
+  });
 });

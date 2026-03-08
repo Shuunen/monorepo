@@ -106,7 +106,7 @@
     "clean:v2": "rm -rf ./*/*/out-tsc ./*/*/test-output ./*/*/dist && pnpm install --force && echo clean:v2 success",
     "cs": "bun apps/config-sync",
     "dev": "nx dev components",
-    "lint": "pnpm lint:oxfmt && pnpm lint:oxlint && pnpm lint:biome && pnpm lint:sherif && echo lint success",
+    "lint": "pnpm lint:oxfmt && pnpm lint:oxlint && pnpm lint:sherif && echo lint success",
     "lint:biome": "biome check --error-on-warnings --write --unsafe && echo lint:biome success",
     "lint:ci": "oxfmt --check && oxlint --deny-warnings && biome check --error-on-warnings && echo lint:ci success",
     "lint:oxfmt": "oxfmt --write && echo lint:oxfmt success",
