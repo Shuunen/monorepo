@@ -62,6 +62,7 @@
       "files": ["*.tsx"],
       "rules": {
         "@typescript-eslint/explicit-module-boundary-types": "off",
+        "button-has-type": "error",
         "max-lines-per-function": ["error", 60],
         "max-nested-callbacks": ["error", 2],
         "require-returns": "off"
@@ -277,7 +278,6 @@
     "@typescript-eslint/array-type": "off",
     "@typescript-eslint/consistent-indexed-object-style": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "always-return": "off",
     "button-has-type": "off",
     "capitalized-comments": "off",
     "consistent-type-definitions": ["error", "type"],

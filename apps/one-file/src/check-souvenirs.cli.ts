@@ -1,4 +1,4 @@
-// oxlint-disable promise/no-nesting, promise/prefer-await-to-then, promise/always-return, max-lines
+// oxlint-disable promise/no-nesting, promise/prefer-await-to-then, max-lines
 import { spawnSync } from "node:child_process";
 import { rename, unlink } from "node:fs/promises";
 import path from "node:path";
@@ -110,6 +110,7 @@ export function setFileDateViaExifTool(file: string, date: ExifDateTime) {
       .then(() => {
         logger.debug(`Successfully set DateTimeOriginal for file ${green(file)} on first attempt`);
         count.dateFixes += 1;
+        return undefined;
       })
       .catch(async () => {
         logger.debug(`Failed to write DateTimeOriginal for file ${red(file)}, retrying...`);
@@ -125,6 +126,7 @@ export function setFileDateViaExifTool(file: string, date: ExifDateTime) {
           .then(() => {
             logger.debug(`Successfully set DateTimeOriginal for file ${green(file)} on second attempt`);
             count.dateFixes += 1;
+            return undefined;
           })
           // oxlint-disable-next-line max-nested-callbacks
           .catch(error => {

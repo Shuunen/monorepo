@@ -60,6 +60,7 @@ export function RecipeViewer() {
         // oxlint-disable-next-line max-nested-callbacks
         setRecipeComponent(() => module.ReactComponent);
         setIsLoading(false);
+        return undefined;
       })
       .catch(() => {
         setError(`La recette "${recipe}" dans la catégorie "${category}" n'existe pas.`);

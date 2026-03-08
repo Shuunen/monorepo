@@ -1,4 +1,4 @@
-// oxlint-disable react/button-has-type, promise/prefer-await-to-callbacks, max-statements, no-unused-vars, max-lines-per-function
+// oxlint-disable promise/prefer-await-to-callbacks, max-statements, no-unused-vars, max-lines-per-function
 
 /**
  * Get the text content from the node behind a css selector

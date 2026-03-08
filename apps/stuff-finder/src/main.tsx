@@ -12,13 +12,7 @@ const root = document.querySelector("#app");
 if (root) createRoot(root).render(<App />);
 else logger.error("root not found");
 
-await getItems()
-  // oxlint-disable-next-line promise/always-return
-  .then(result => {
-    state.status = result.ok ? "ready" : "settings-required";
-    if (result.ok) toastInfo(result.value);
-    else if (typeof result.error === "string") toastError(result.error);
-  })
-  .catch(error => {
-    logger.showError("error while getting items", error);
-  });
+const result = await getItems();
+state.status = result.ok ? "ready" : "settings-required";
+if (result.ok) toastInfo(result.value);
+else if (typeof result.error === "string") toastError(result.error);

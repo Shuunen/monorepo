@@ -34,12 +34,14 @@ export function useContestMode(callbacks: UseContestModeCallbacks): UseContestMo
           ...metadata,
           filename: contestState.currentMatch?.leftImage.filename ?? metadata.filename,
         });
+        return undefined;
       });
       void fetchImageMetadata(contestState.currentMatch.rightImage.url).then(metadata => {
         callbacksRef.current.onRightMetadataUpdate({
           ...metadata,
           filename: contestState.currentMatch?.rightImage.filename ?? metadata.filename,
         });
+        return undefined;
       });
     }
   }, [contestState]);

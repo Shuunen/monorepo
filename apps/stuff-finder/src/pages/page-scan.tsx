@@ -18,7 +18,32 @@ const waitDelay = 200;
 function onDecodeSuccess(result: Result) {
   const code = result.getText();
   logger.info("found qr or barcode :", code);
-  navigateToSearch(code);
+  void navigateToSearch(code);
+}
+
+function renderScanStatus(
+  status: "error" | "loading" | "need-perm" | "ready",
+  videoReference: React.RefObject<HTMLVideoElement | null>,
+) {
+  return (
+    <>
+      <Collapse in={status === "loading"}>
+        <Skeleton animation="wave" height={320} variant="rounded" />
+      </Collapse>
+      <Collapse in={status === "ready"}>
+        <div className="aspect-video max-h-80 overflow-hidden rounded-xl shadow-lg">
+          {/* biome-ignore lint/a11y/useMediaCaption: fix later */}
+          <video className="w-full object-cover" ref={videoReference} />
+        </div>
+      </Collapse>
+      <Collapse in={status === "need-perm"}>
+        <Alert severity="error">Permission needed, allow access to your camera to scan QR codes and barcodes.</Alert>
+      </Collapse>
+      <Collapse in={status === "error"}>
+        <Alert severity="error">An unknown error occurred while starting the video stream, check the logs.</Alert>
+      </Collapse>
+    </>
+  );
 }
 
 /**
@@ -58,6 +83,7 @@ export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
           // oxlint-disable-next-line max-nested-callbacks
           void sleep(waitDelay).then(() => {
             setStatus("ready");
+            return undefined;
           });
         // oxlint-disable-next-line max-nested-callbacks
         onDecode(result, error).catch(decodeError => {
@@ -79,21 +105,7 @@ export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
     <AppPageCard cardTitle="Scan" icon={QrCodeScannerIcon} pageCode="scan" pageTitle="Scan QR Code or Barcode">
       <div className="text-center">
         <h2 className="mb-6">Scan a QR Code or a barcode to search for it 👀</h2>
-        <Collapse in={status === "loading"}>
-          <Skeleton animation="wave" height={320} variant="rounded" />
-        </Collapse>
-        <Collapse in={status === "ready"}>
-          <div className="aspect-video max-h-80 overflow-hidden rounded-xl shadow-lg">
-            {/* biome-ignore lint/a11y/useMediaCaption: fix later */}
-            <video className="w-full object-cover" ref={videoReference} />
-          </div>
-        </Collapse>
-        <Collapse in={status === "need-perm"}>
-          <Alert severity="error">Permission needed, allow access to your camera to scan QR codes and barcodes.</Alert>
-        </Collapse>
-        <Collapse in={status === "error"}>
-          <Alert severity="error">An unknown error occurred while starting the video stream, check the logs.</Alert>
-        </Collapse>
+        {renderScanStatus(status, videoReference)}
       </div>
     </AppPageCard>
   );
