@@ -63,7 +63,6 @@ nx dev sample-web-app
   - no-unescaped-entities (10 issues)
   - no-array-index-key : conflicts with useStableKeys (9 issues)
   - prefer-regexp-exec (9 issues)
-  - no-unsafe-return (9 issues)
   - return-await (8 issues)
   - no-useless-default-assignment (7 issues)
   - no-meaningless-void-operator (7 issues)

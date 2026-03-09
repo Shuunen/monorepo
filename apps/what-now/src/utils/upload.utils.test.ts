@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-return
 import { functionReturningVoid, Result, toastError, toastSuccess } from "@monorepo/utils";
 import { type AppWriteTaskModel, addTask, getTasks, updateTask } from "./database.utils";
 import { logger } from "./logger.utils";

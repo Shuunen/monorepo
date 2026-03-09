@@ -109,7 +109,7 @@ function reviver(_key: string, value?: any) {
     return new RegExp(value.__regexSource__, value.__regexFlags__);
   }
   if (type === "function") {
-    // oxlint-disable-next-line no-new-func
+    // oxlint-disable-next-line no-new-func, no-unsafe-return
     return new Function(`return ${value.__function__}`)(); // NOSONAR
   }
   if (type === "file") {
@@ -118,6 +118,7 @@ function reviver(_key: string, value?: any) {
   if (type === "date") {
     return new Date(value.__date__);
   }
+  // oxlint-disable-next-line typescript/no-unsafe-return
   return value;
 }
 

@@ -27,6 +27,7 @@ export function Converter() {
     if (rulesParam) {
       const loaded = decodeFromUrl(rulesParam);
       /* v8 ignore if -- @preserve */
+      // oxlint-disable-next-line typescript/no-unsafe-return
       if (Array.isArray(loaded) && loaded.length > 0) return loaded;
     }
     return defaultRules;

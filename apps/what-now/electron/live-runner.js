@@ -1,4 +1,4 @@
-// oxlint-disable no-misused-promises, prefer-module, prefer-top-level-await, no-process-exit, max-nested-callbacks, no-null, no-require-imports, no-undef, no-commonjs
+// oxlint-disable prefer-module, prefer-top-level-await, no-process-exit, max-nested-callbacks, no-null, no-require-imports, no-undef, no-commonjs
 /** biome-ignore-all lint/correctness/noNodejsModules: we can use node here */
 // oxlint-disable-next-line import/no-nodejs-modules
 const cp = require('node:child_process')
@@ -67,7 +67,6 @@ function setupReloadWatcher() {
       }
     })
 }
-// oxlint-disable-next-line typescript/no-floating-promises
 ;(async () => {
   await runBuild()
   await spawnElectron()

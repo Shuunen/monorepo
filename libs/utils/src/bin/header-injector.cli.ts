@@ -34,6 +34,7 @@ type Metrics = typeof metrics;
  * @returns parsed arguments as key-value pairs
  */
 function parseArgs(argv: string[]): Record<string, string> {
+  // oxlint-disable-next-line typescript/no-unsafe-return
   return Object.fromEntries(
     argv.slice(nbThird).map(arg => {
       const parts = arg.replace("--", "").split("=");

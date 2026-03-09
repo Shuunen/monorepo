@@ -1,4 +1,4 @@
-// oxlint-disable react/no-multi-comp, react/no-unescaped-entities, id-length, no-magic-numbers
+// oxlint-disable no-multi-comp, id-length, no-magic-numbers
 import { Paragraph, Title } from "@monorepo/components";
 import { cn } from "@monorepo/utils";
 import { motion, type Variants } from "framer-motion";

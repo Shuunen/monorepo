@@ -620,7 +620,6 @@ class Shuutils {
   }
 }
 
-// oxlint-disable-next-line typescript/no-unnecessary-condition
 if (globalThis.window === undefined)
   // oxlint-disable-next-line no-commonjs, no-undef, prefer-module
   module.exports = {

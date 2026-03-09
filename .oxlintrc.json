@@ -401,7 +401,6 @@
     "no-unsafe-assignment": "off",
     "no-unsafe-call": "off",
     "no-unsafe-member-access": "off",
-    "no-unsafe-return": "off",
     "no-unsafe-type-assertion": "off",
     "no-use-before-define": [
       "error",

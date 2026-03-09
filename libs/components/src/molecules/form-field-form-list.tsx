@@ -195,7 +195,6 @@ export function FormFieldFormList({
   }
 
   return (
-    // oxlint-disable-next-line react/jsx-props-no-spreading
     <FormFieldBase {...props} showLabel={false}>
       {/* oxlint-disable-next-line no-shadow */}
       {({ field, fieldState, formState }) => {

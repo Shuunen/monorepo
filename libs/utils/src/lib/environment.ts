@@ -47,6 +47,7 @@ export function isTestEnvironment(glob: Record<string, unknown> = globalThis) {
   }
   // @ts-expect-error type issue
   const useBunTest = "Bun" in glob && glob?.Bun?.argv.join(" ").includes(".test.");
+  // oxlint-disable-next-line typescript/no-unsafe-return
   return useBunTest;
 }
 

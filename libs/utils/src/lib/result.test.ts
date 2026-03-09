@@ -60,7 +60,6 @@ it("Result.unwrap A ok", () => {
 it("Result.unwrap B error", () => {
   // oxlint-disable-next-line typescript/no-unsafe-return
   const result = Result.trySafe(() => JSON.parse('{"a": 42'));
-  // oxlint-disable-next-line typescript/no-unsafe-assignment
   const { error, value } = Result.unwrap(result);
   expect(value).toMatchInlineSnapshot(`undefined`);
   expect(String(error)).toContain("SyntaxError");

@@ -46,7 +46,6 @@ function AutoFormField({
   }
 
   const Component = componentRegistry[render];
-  // oxlint-disable-next-line react/jsx-props-no-spreading
   return <Component {...props} />;
 }
 
@@ -102,7 +101,6 @@ export function FormFieldFieldList({
   }
 
   return (
-    // oxlint-disable-next-line react/jsx-props-no-spreading
     <FormFieldBase {...props} showLabel={false}>
       {({ field }) => (
         <div className="flex w-full flex-col gap-4">

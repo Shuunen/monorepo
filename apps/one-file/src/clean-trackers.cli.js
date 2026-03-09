@@ -115,7 +115,6 @@ logger.info(`clean-trackers.cli start, watch is ${willWatch ? "on" : "off"}`);
 
 if (willWatch) {
   logger.info(`watching ${willCheckFile ? "file" : "clipboard"} input...`);
-  // oxlint-disable-next-line typescript/no-misused-promises
   setInterval(doClean, nbMsInSecond);
 } else {
   await doClean();
