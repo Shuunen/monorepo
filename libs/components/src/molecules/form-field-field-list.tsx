@@ -9,6 +9,7 @@ import { Paragraph, Title } from "../atoms/typography";
 import { IconMinus } from "../icons/icon-minus";
 import { IconReject } from "../icons/icon-reject";
 import { type AutoFormFieldProps, componentRegistry } from "./auto-form-field.utils";
+import { useAutoFormParentData } from "./auto-form-parent-data";
 import type { AutoFormFieldFieldsMetadata } from "./auto-form.types";
 import {
   getElementSchema,
@@ -65,7 +66,8 @@ export function FormFieldFieldList({
   invariant(elementSchema !== undefined, "elementSchema should be defined");
   const fieldValue = useWatch({ name: fieldName });
   const formValues = useWatch({ disabled: nbItems === undefined });
-  const length = typeLikeResolver(nbItems, formValues);
+  const parentData = useAutoFormParentData();
+  const length = typeLikeResolver(nbItems, formValues, parentData);
   const { setValue, unregister } = useFormContext();
   const normalizedFieldValue = useMemo<unknown[] | undefined>(
     () => (Array.isArray(fieldValue) ? fieldValue : undefined),

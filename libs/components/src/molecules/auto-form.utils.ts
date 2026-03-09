@@ -862,14 +862,19 @@ export function buildStepperSteps({
 /**
  * Resolves a TypeLike value to its actual type.
  * @param value - A value that can be either of type Type or a function that returns Type
- * @param data - Optional AutoFormData to pass to the resolver function if value is a function
- * @returns The resolved value of type Type. If value is a function, it will be called with data and its result returned. Otherwise, value is returned as-is.
+ * @param autoFormData - Optional current form data to pass to the resolver function
+ * @param parentData - Optional parent form data (when in subform) to pass to the resolver function
+ * @returns The resolved value of type Type. If value is a function, it will be called with autoFormData and parentData and its result returned. Otherwise, value is returned as-is.
  * @example typeLikeResolver((data) => data.name, { name: "John" }); // returns "John"
  */
-export function typeLikeResolver<Type>(value: TypeLike<Type>, data?: AutoFormData): Type {
+export function typeLikeResolver<Type>(
+  value: TypeLike<Type>,
+  autoFormData?: AutoFormData,
+  parentData?: AutoFormData,
+): Type {
   if (isFunction(value)) {
-    logger.debug("Resolving TypeLike value using provided data", { data, value });
-    return value(data);
+    logger.debug("Resolving TypeLike value using provided data", { autoFormData, parentData, value });
+    return value(autoFormData, parentData);
   }
   return value;
 }

@@ -2,6 +2,7 @@ import { cn, slugify } from "@monorepo/utils";
 import { useWatch } from "react-hook-form";
 import { Button } from "../atoms/button";
 import { Title } from "../atoms/typography";
+import { useAutoFormParentData } from "./auto-form-parent-data";
 import type { AutoFormData, StringLike } from "./auto-form.types";
 import { typeLikeResolver } from "./auto-form.utils";
 
@@ -39,12 +40,13 @@ type AutoFormStepProps = {
   disabled?: boolean;
   onStepClick: (idx: number) => void;
   values: AutoFormData;
+  parentData?: AutoFormData;
 };
 
-function AutoFormStep({ step, disabled = false, onStepClick, values }: AutoFormStepProps) {
+function AutoFormStep({ step, disabled = false, onStepClick, values, parentData }: AutoFormStepProps) {
   const { title, subtitle, suffix, icon, active, idx, state, indent, section } = step;
-  const resolvedSubtitle = typeLikeResolver(subtitle, values);
-  const resolvedSuffix = typeLikeResolver(suffix, values);
+  const resolvedSubtitle = typeLikeResolver(subtitle, values, parentData);
+  const resolvedSuffix = typeLikeResolver(suffix, values, parentData);
   const btnClasses = cn(
     "h-10 w-full border border-transparent",
     { "h-16 rounded-xl": resolvedSubtitle },
@@ -53,7 +55,7 @@ function AutoFormStep({ step, disabled = false, onStepClick, values }: AutoFormS
   );
   return (
     <div className="grid gap-2">
-      {section && <Title level={4}>{typeLikeResolver(section, values)}</Title>}
+      {section && <Title level={4}>{typeLikeResolver(section, values, parentData)}</Title>}
       <div className={cn("flex items-center gap-0.5", { "pointer-events-none opacity-60": state === "upcoming" })}>
         {indent && <div className={cn("h-10 w-1 shrink-0 bg-gray-200", { "h-16": resolvedSubtitle })} />}
         <Button
@@ -61,14 +63,14 @@ function AutoFormStep({ step, disabled = false, onStepClick, values }: AutoFormS
           data-active={active}
           data-state={state}
           disabled={disabled}
-          name={`step-${slugify(typeLikeResolver(title ?? idx.toString(), values))}`}
+          name={`step-${slugify(typeLikeResolver(title ?? idx.toString(), values, parentData))}`}
           onClick={() => onStepClick(idx)}
           variant="ghost"
         >
           {icon}
           <div className="ml-2 flex grow flex-col text-start">
             <div className="flex items-center gap-1">
-              <span>{typeLikeResolver(title, values)}</span>
+              <span>{typeLikeResolver(title, values, parentData)}</span>
               {resolvedSuffix && <span className="text-xs text-muted-foreground">{resolvedSuffix}</span>}
             </div>
             {resolvedSubtitle && <span className="text-xs text-muted-foreground">{resolvedSubtitle}</span>}
@@ -82,13 +84,15 @@ function AutoFormStep({ step, disabled = false, onStepClick, values }: AutoFormS
 // oxlint-disable-next-line react/no-multi-comp
 export function AutoFormStepper({ steps, onStepClick, disabled = false, width }: AutoFormStepperProps) {
   const values = useWatch();
+  const parentData = useAutoFormParentData();
   return (
     <div className={cn("mr-10 flex flex-col gap-4", { [`w-[${width}px]`]: width })}>
       {steps.map(step => (
         <AutoFormStep
           disabled={disabled}
-          key={typeLikeResolver(step.title, values)}
+          key={typeLikeResolver(step.title, values, parentData)}
           onStepClick={onStepClick}
+          parentData={parentData}
           step={step}
           values={values}
         />

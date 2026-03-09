@@ -1,5 +1,6 @@
 import type { z } from "zod";
 import { Paragraph, Title } from "../atoms/typography";
+import { useAutoFormParentData } from "./auto-form-parent-data";
 import { groupedSectionsFromEditableSteps } from "./auto-form-summary-step.utils";
 import type { AutoFormData, AutoFormSummarySection } from "./auto-form.types";
 import { FormSummary } from "./form-summary";
@@ -16,7 +17,8 @@ type Props = {
 };
 
 export function AutoFormSummaryStep(props: Props) {
-  const groups = groupedSectionsFromEditableSteps(props.schemas, props.formData);
+  const parentData = useAutoFormParentData();
+  const groups = groupedSectionsFromEditableSteps(props.schemas, props.formData, parentData);
   const hasData = groups.some(group =>
     group.sections.some((section: AutoFormSummarySection) => Object.keys(section.data).length > 0),
   );

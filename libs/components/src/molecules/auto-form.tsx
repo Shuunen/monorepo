@@ -288,8 +288,8 @@ export function AutoForm({
   }
 
   function renderReadonlyContent() {
-    const sections = sectionsFromSchema(currentSchema, formData);
-    const stepTitle = typeLikeResolver(stepMetadata?.title, formData) ?? `Step ${currentStep + 1}`;
+    const sections = sectionsFromSchema(currentSchema, formData, parentData);
+    const stepTitle = typeLikeResolver(stepMetadata?.title, formData, parentData) ?? `Step ${currentStep + 1}`;
     const rightButton = isLastStep
       ? {
           label: finalLabels.lastStepButton,

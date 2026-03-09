@@ -9,7 +9,7 @@ import type { FormSummaryData } from "./form-summary";
 /** The data output from auto form, sadly not typed :'( */
 export type AutoFormData = Record<string, unknown>;
 
-export type TypeLike<Type> = Type | ((data?: AutoFormData) => Type);
+export type TypeLike<Type> = Type | ((autoFormData?: AutoFormData, parentData?: AutoFormData) => Type);
 
 export type NumberLike = TypeLike<number>;
 
@@ -229,7 +229,7 @@ export type AutoFormFieldMetadata =
 export type AutoFormFieldSelectMetadata = Simplify<
   AutoFormFieldBaseMetadata & {
     /** The options for the select field, with label and value */
-    options: SelectOption[];
+    options: TypeLike<SelectOption[]>;
     render?: "select";
   }
 >;
