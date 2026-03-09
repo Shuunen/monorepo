@@ -1,4 +1,4 @@
-import { cn } from "@monorepo/utils";
+import { cn, functionReturningVoid } from "@monorepo/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef, useState } from "react";
 import { FormControl } from "../atoms/form";
@@ -30,7 +30,7 @@ function VirtualizedOptions({
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) {
-      return;
+      return functionReturningVoid;
     }
     function stopScrollPropagation(event: Event) {
       event.stopPropagation();

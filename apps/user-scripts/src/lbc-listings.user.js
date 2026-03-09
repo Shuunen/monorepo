@@ -144,20 +144,20 @@ function LbcListings() {
     const link = document.querySelector(`[href*="${id}"]`);
     if (!link) {
       document.location.reload();
-      return;
+      return undefined;
     } // we need to have that next data in page
     const element = link.parentElement;
     if (!element) {
       utils.error("no element found for link", link);
-      return;
+      return undefined;
     }
     if (element.classList.contains("hidden")) {
       utils.debug("ad is hidden", id);
-      return;
+      return undefined;
     }
     if (element.classList.contains(cls.marker)) {
       utils.debug("ad already processed", id);
-      return;
+      return undefined;
     }
     return element;
   }

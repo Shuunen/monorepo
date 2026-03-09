@@ -189,7 +189,7 @@ function JustEtfExport() {
   function extractRowData(row) {
     /** @type {HTMLAnchorElement | null} */
     const fundNameLink = row.querySelector(selectors.fundName);
-    if (!fundNameLink) return;
+    if (!fundNameLink) return undefined;
     const cells = row.querySelectorAll(selectors.cells);
     const fundName = fundNameLink.textContent.trim();
     const provider = fundName.split(" ")[0]; // crude way to extract provider from fund name, can be improved

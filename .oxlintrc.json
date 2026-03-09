@@ -294,7 +294,6 @@
     "button-has-type": "off",
     "capitalized-comments": "off",
     "consistent-indexed-object-style": "off",
-    "consistent-return": "off",
     "consistent-type-definitions": ["error", "type"],
     "consistent-type-specifier-style": "off",
     "curly": ["error", "multi"],

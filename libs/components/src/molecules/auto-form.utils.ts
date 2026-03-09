@@ -442,7 +442,7 @@ function getDataForField({
   const hasData = sourceKey in externalData || isSourceKeyNested;
 
   if (!hasData) {
-    return;
+    return undefined;
   }
 
   const value = isSourceKeyNested ? getNested(externalData, sourceKey) : externalData[sourceKey];

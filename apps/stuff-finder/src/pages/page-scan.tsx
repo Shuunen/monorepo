@@ -1,5 +1,5 @@
 // oxlint-disable prefer-await-to-then
-import { sleep } from "@monorepo/utils";
+import { functionReturningVoid, sleep } from "@monorepo/utils";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import { Alert, Collapse } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
@@ -73,7 +73,7 @@ export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
     // this run once, when the component is mounted
     if (videoReference.current === null) {
       logger.showError("video element is null");
-      return;
+      return functionReturningVoid;
     }
     logger.debug("starting video stream decoding...");
     state.sound = "start";

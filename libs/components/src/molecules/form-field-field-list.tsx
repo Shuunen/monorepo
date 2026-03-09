@@ -42,7 +42,7 @@ function AutoFormField({
   const render = getFormFieldRender(fieldSchema);
 
   if (!render || render === "section" || render === "field-list") {
-    return;
+    return undefined;
   }
 
   const Component = componentRegistry[render];

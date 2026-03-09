@@ -60,7 +60,6 @@ Nitpicks to re-enable one day :
 
 To sort :
 
-- consistent-return (19 issues)
 - promise/avoid-new (19 issues)
 - no-array-index-key : conflicts with useStableKeys (9 issues)
 - jsx-handler-names : seems too neat pick (5 issues)

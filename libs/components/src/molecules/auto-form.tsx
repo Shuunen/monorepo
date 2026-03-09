@@ -251,7 +251,7 @@ export function AutoForm({
 
   function renderSubmissionContent() {
     if (!submissionProps) {
-      return;
+      return undefined;
     }
     const showBackButton = submissionProps.status === "error" || submissionProps.status === "unknown-error";
     const showHomeButton = submissionProps.status === "success" || submissionProps.status === "warning";
@@ -346,7 +346,7 @@ export function AutoForm({
 
   function renderSubformContent() {
     if (!subformOptions || !subformSchemas[0]) {
-      return;
+      return undefined;
     }
     logger?.info("Rendering subform", { subformOptions });
     return (

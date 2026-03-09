@@ -13,6 +13,7 @@ import {
   shouldResetPan,
 } from "../utils/comparison.utils";
 import { getContainedSize, type ImageMetadata } from "../utils/image.utils";
+import { functionReturningVoid } from "@monorepo/utils";
 
 type UsePanZoomReturn = {
   cursor: "auto" | "grab" | "grabbing";
@@ -46,7 +47,7 @@ export function usePanZoom(
 
   useEffect(() => {
     const container = imageContainerRef.current;
-    if (!container) return;
+    if (!container) return functionReturningVoid;
     const handleWheelEvent = (e: globalThis.WheelEvent) => {
       e.preventDefault();
       const metadata = leftImageMetadata || rightImageMetadata;

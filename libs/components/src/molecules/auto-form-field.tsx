@@ -7,6 +7,7 @@ import type { AutoFormData } from "./auto-form.types";
 import { getFieldMetadata, getFormFieldRender, isFieldVisible } from "./auto-form.utils";
 import { FormFieldFieldList } from "./form-field-field-list";
 import { FormFieldSection } from "./form-field-section";
+import { functionReturningVoid } from "@monorepo/utils";
 
 function createVisibilitySubscriber(fieldSchema: z.ZodType, setVisible: Dispatch<SetStateAction<boolean>>) {
   return (formValues: AutoFormData) => {
@@ -29,14 +30,14 @@ export const AutoFormField = memo(({ fieldName, fieldSchema, stepState, logger, 
 
   useEffect(() => {
     if (!needsWatch) {
-      return;
+      return functionReturningVoid;
     }
     const subscription = watch(createVisibilitySubscriber(fieldSchema, setVisible));
     return () => subscription.unsubscribe();
   }, [fieldSchema, watch, needsWatch]);
 
   if (!visible) {
-    return;
+    return undefined;
   }
 
   logger?.info("Rendering", { fieldName });

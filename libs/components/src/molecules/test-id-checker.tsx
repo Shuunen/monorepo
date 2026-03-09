@@ -6,6 +6,7 @@ import { Button } from "../atoms/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card";
 import { IconWarning } from "../icons/icon-warning";
 import { cn } from "../shadcn/utils";
+import { functionReturningVoid } from "@monorepo/utils";
 
 const STORAGE_KEY = "showTestIdChecker";
 const INTERVAL = 1000;
@@ -85,7 +86,7 @@ function useTestIds(visible: boolean) {
   const listElement = useRef<HTMLUListElement>(null);
   useEffect(() => {
     if (!visible) {
-      return;
+      return functionReturningVoid;
     }
 
     const update = () => {
@@ -173,7 +174,7 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
   const { testIds, listElement } = useTestIds(visible);
   const hasErrors = testIds.some(id => !id.isValid);
   if (!visible) {
-    return;
+    return undefined;
   }
   return (
     <Card
