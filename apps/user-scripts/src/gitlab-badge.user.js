@@ -59,6 +59,7 @@ function injectStyles(string = "") {
  * @returns {Promise<string>} A Promise that resolves with a message when the animation ends.
  */
 function animateCss(element, animation, canRemoveAfter = true) {
+  // oxlint-disable-next-line promise/avoid-new
   return new Promise(resolve => {
     const animationName = `animate__${animation}`;
     element.classList.add("animate__animated", animationName);

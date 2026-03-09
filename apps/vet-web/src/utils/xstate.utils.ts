@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createActor } from "xstate";
 import type { z } from "zod";
 
-export function useMachineSchemas<Input>(machine: Parameters<typeof createActor>[0], input: Input) {
+export function useMachineSchemas(machine: Parameters<typeof createActor>[0], input: unknown) {
   const [schemas, setSchemas] = useState<z.ZodObject[]>([]);
   useEffect(() => {
     const actor = createActor(machine, { input });

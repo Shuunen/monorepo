@@ -1,4 +1,4 @@
-import { alignForSnap, Result, stringify } from "@monorepo/utils";
+import { alignForSnap, Result, sleep, stringify } from "@monorepo/utils";
 import { type ChildProcess, spawn } from "node:child_process";
 import type http from "node:http";
 import { PassThrough } from "node:stream";
@@ -47,8 +47,7 @@ describe("server.cli.ts (integration)", () => {
     const result = await request("/hello");
     if (result.ok) return;
     if (Date.now() - start < timeout) {
-      // oxlint-disable-next-line no-promise-executor-return
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await sleep(100);
       return waitForServerReady(timeout, start);
     }
     throw new Error("Server startup timed out");

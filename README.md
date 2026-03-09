@@ -57,13 +57,8 @@ Nitpicks to re-enable one day :
 - jsx-props-no-spreading (57 issues)
 - jsx-no-new-object-as-prop (54 issues)
 - no-misused-promises : seems like a duplicate about promise handling (23 issues)
-
-To sort :
-
-- promise/avoid-new (19 issues)
 - no-array-index-key : conflicts with useStableKeys (9 issues)
-- jsx-handler-names : seems too neat pick (5 issues)
-- no-unnecessary-type-parameters : we like to use them sometimes (5 issues)
+- jsx-handler-names (5 issues)
 
 ## Thanks
 

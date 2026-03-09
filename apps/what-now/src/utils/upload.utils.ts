@@ -14,6 +14,7 @@ import { logger } from "./logger.utils";
  * @returns Promise that resolves with the selected file or undefined if cancelled
  */
 export function selectJsonFile(): Promise<File | undefined> {
+  // oxlint-disable-next-line promise/avoid-new
   return new Promise(resolve => {
     const input = document.createElement("input");
     input.type = "file";

@@ -95,6 +95,7 @@ function setupOutputHandlers(child: ReturnType<typeof spawn>, errorOutput: strin
 }
 
 function executeCommand(component: string) {
+  // oxlint-disable-next-line promise/avoid-new
   return new Promise<ResultType<string, string>>(resolve => {
     const args = ["dlx", "shadcn@latest", "add", "--yes", "--overwrite", `--cwd=libs/components`, component];
     const command = [`pnpm`, ...args].join(" ");

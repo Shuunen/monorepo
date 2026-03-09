@@ -112,6 +112,7 @@ export function makeRequest({
   method: string;
   payload: string;
 }): Promise<{ result: unknown; error: string | undefined }> {
+  // oxlint-disable-next-line promise/avoid-new
   return new Promise(resolve => {
     if (url.includes("fake-endpoint.local")) {
       resolve({
@@ -172,6 +173,7 @@ export function respondBadRequest({
 
 export function collectRequestBody(req: IncomingMessage | PassThrough): Promise<string> {
   const context = "collectRequestBody";
+  // oxlint-disable-next-line promise/avoid-new
   return new Promise((resolve, reject) => {
     let body = "";
     req.on("data", (chunk: Buffer) => {

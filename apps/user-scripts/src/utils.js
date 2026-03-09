@@ -137,6 +137,7 @@ class Shuutils {
     // oxlint-disable-next-line init-declarations
     let timeout;
     return async (/** @type {any} */ ...parameters) => {
+      // oxlint-disable-next-line promise/avoid-new
       await new Promise(resolve => {
         clearTimeout(timeout);
         // oxlint-disable-next-line promise/no-multiple-resolved
@@ -534,6 +535,7 @@ class Shuutils {
    * @example await utils.sleep(1000) // sleep for 1 second
    */
   async sleep(ms) {
+    // oxlint-disable-next-line promise/avoid-new
     await new Promise(resolve => {
       setTimeout(resolve, ms);
     });
