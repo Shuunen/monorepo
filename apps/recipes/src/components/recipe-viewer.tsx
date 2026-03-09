@@ -87,7 +87,7 @@ export function RecipeViewer() {
       >
         <Link to="/">
           <MoveLeftIcon />
-          Retour à l'accueil
+          Retour à l&apos;accueil
           <HomeIcon />
         </Link>
       </Button>

@@ -392,10 +392,11 @@ export const Everything: Story = {
                 <strong>Upcoming state:</strong> Step 5 (not started, upcoming with faded style)
               </li>
               <li>
-                <strong>Subtitles:</strong> Additional context below each title (like "Name, email, phone")
+                <strong>Subtitles:</strong> Additional context below each title (like &quot;Name, email, phone&quot;)
               </li>
               <li>
-                <strong>Suffixes:</strong> Additional context on the right (like "Part 1/2", "FINAL")
+                <strong>Suffixes:</strong> Additional context on the right (like &quot;Part 1/2&quot;,
+                &quot;FINAL&quot;)
               </li>
               <li>
                 <strong>Disabled mode:</strong> Toggle above to disable all steps

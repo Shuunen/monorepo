@@ -82,8 +82,8 @@ export function KitchenSink() {
 
         <h3>Option 2 : customize everything</h3>
         <p>
-          If you don't want to use the <code>prose</code> class, you can customize the typography styles by applying
-          Tailwind CSS classes directly to the unstyled elements.
+          If you don&apos;t want to use the <code>prose</code> class, you can customize the typography styles by
+          applying Tailwind CSS classes directly to the unstyled elements.
         </p>
         <p>For example :</p>
         <p className="text-lg">This is a paragraph with large text.</p>

@@ -43,7 +43,7 @@ const statusDelay = 300;
 const onStatusChange = debounce(onStatusChangeSync, statusDelay);
 
 watchState("status", () => {
-  void onStatusChange(state.status);
+  onStatusChange(state.status);
 });
 
 export type State = typeof state;

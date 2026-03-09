@@ -6,7 +6,7 @@ type DemoProps = {
   description?: string;
 };
 
-const DemoPage = ({ testIds = [], description }: DemoProps) => (
+const DemoPage = ({ testIds, description }: DemoProps) => (
   <div className="space-y-4 px-4 py-28">
     <div data-testid={testIds[0]}>
       <h1 className="mb-4 text-2xl font-bold" data-testid={testIds[1]}>

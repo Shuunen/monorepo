@@ -64,7 +64,7 @@ function GitlabMr() {
     if (labelInside) labelInside.textContent = label;
     element.after(button);
     fetch(href)
-      .then(async response => await response.text())
+      .then(response => response.text())
       .then(html => {
         const matches = html.match(/class="merge-request" data-id/gu);
         const nb = matches ? matches.length : 0;

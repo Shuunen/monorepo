@@ -82,7 +82,7 @@ function SaveurBiereRatings() {
       data = await fetch(
         `https://wrapapi.com/use/jojo/untappd/history/0.0.1?user=${user}&search=${name}&wrapAPIKey=${wrapApiKey}`,
       )
-        .then(async response => await response.json())
+        .then(response => response.json())
         .then(response => response.data);
       utils.log(`fetched ${data ? "" : "EMPTY "}data`, data, "for item", name);
       localStorage.setItem(storageKey, data ? JSON.stringify(data) : "EMPTY");

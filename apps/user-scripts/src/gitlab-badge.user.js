@@ -58,12 +58,12 @@ function injectStyles(string = "") {
  * @param {boolean} [canRemoveAfter] - Whether to remove animation classes after the animation ends.
  * @returns {Promise<string>} A Promise that resolves with a message when the animation ends.
  */
-async function animateCss(element, animation, canRemoveAfter = true) {
-  return await new Promise(resolve => {
+function animateCss(element, animation, canRemoveAfter = true) {
+  return new Promise(resolve => {
     const animationName = `animate__${animation}`;
     element.classList.add("animate__animated", animationName);
     if (!canRemoveAfter) {
-      void resolve("Animation ended, no need to remove");
+      resolve("Animation ended, no need to remove");
       return;
     }
     // When the animation ends, we clean the classes and resolve the Promise
@@ -72,7 +72,7 @@ async function animateCss(element, animation, canRemoveAfter = true) {
       event => {
         event.stopPropagation();
         element.classList.remove("animate__animated", animationName);
-        void resolve("Animation ended");
+        resolve("Animation ended");
       },
       { once: true },
     );
@@ -122,7 +122,7 @@ function GitlabBadge() {
     void start("focus");
   });
   globalThis.addEventListener("click", () => startDebounced("click"));
-  utils.onPageChange(async () => await start("page-change"));
+  utils.onPageChange(() => start("page-change"));
 }
 
 if (globalThis.window) GitlabBadge();

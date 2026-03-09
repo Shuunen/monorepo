@@ -122,7 +122,7 @@ function G2aBatchCompare() {
     const search = `${utils.readableString(game.title).toLowerCase()} steam`;
     game.priceLocalSearchUrl = `https://www.g2a.com/search?query=${search}`;
     const url = `https://www.g2a.com/search/api/v3/suggestions?itemsPerPage=5&phrase=${search}&currency=EUR&variantCategory=189`;
-    const { data } = await globalThis.fetch(url).then(async response => await response.json());
+    const { data } = await globalThis.fetch(url).then(response => response.json());
     if (data === undefined || data.items === undefined || data.items.length === 0) return;
     let lowestPrice = 0;
     let lowestUrl = "";

@@ -114,7 +114,7 @@ export function makeRequest({
 }): Promise<{ result: unknown; error: string | undefined }> {
   return new Promise(resolve => {
     if (url.includes("fake-endpoint.local")) {
-      void resolve({
+      resolve({
         error: undefined,
         result: { message: "This is a fake endpoint response for testing.", success: true },
       });

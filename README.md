@@ -60,13 +60,8 @@ nx dev sample-web-app
   - unbound-method (14 issues)
   - await-thenable (14 issues)
   - non-nullable-type-assertion-style : maybe too neat pick for now (11 issues)
-  - no-unescaped-entities (10 issues)
   - no-array-index-key : conflicts with useStableKeys (9 issues)
-  - prefer-regexp-exec (9 issues)
-  - return-await (8 issues)
-  - no-useless-default-assignment (7 issues)
-  - no-meaningless-void-operator (7 issues)
-  - jsx-handler-names (5 issues)
+  - jsx-handler-names : seems too neat pick (5 issues)
   - no-unnecessary-type-parameters : we like to use them sometimes (5 issues)
 
 ## Thanks

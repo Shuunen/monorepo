@@ -51,7 +51,7 @@ function SteamWishlistExport() {
     const row = await utils.waitToDetect(selectors.row, wait);
     if (row === undefined) return list;
     list.push(getGameData(row));
-    return await getGames(list);
+    return getGames(list);
   }
   /**
    * Copies the games to the clipboard.

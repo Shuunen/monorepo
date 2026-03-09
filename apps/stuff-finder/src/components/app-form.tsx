@@ -35,7 +35,7 @@ export function AppForm<FormType extends Form>({
   error: parentError = "",
   initialForm,
   onChange = functionReturningVoid,
-  onSubmit = undefined,
+  onSubmit,
   suggestions = defaultSuggestions,
 }: Properties<FormType>) {
   const [form, setForm] = useState(initialForm);

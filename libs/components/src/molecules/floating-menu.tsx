@@ -13,7 +13,7 @@ export type FloatingMenuAction = {
 };
 
 export function FloatingMenu({
-  actions = [],
+  actions,
   isLoading = false,
   isSettingsRequired = false,
 }: Readonly<{ actions: FloatingMenuAction[]; isLoading?: boolean; isSettingsRequired?: boolean }>) {

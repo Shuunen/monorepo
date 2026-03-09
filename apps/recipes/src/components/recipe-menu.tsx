@@ -24,7 +24,7 @@ type Recipe = {
 function parseRecipesFromPaths(recipeModules: Record<string, () => Promise<unknown>>): Recipe[] {
   const recipes: Recipe[] = [];
   for (const path of Object.keys(recipeModules)) {
-    const match = path.match(RECIPE_PATH_REGEX);
+    const match = RECIPE_PATH_REGEX.exec(path);
     if (!match) continue;
     const [, category, name] = match;
     /* v8 ignore next -- @preserve */

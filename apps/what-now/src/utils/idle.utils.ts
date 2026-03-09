@@ -50,7 +50,7 @@ new (class IdleService {
       globalThis.addEventListener(
         name,
         event => {
-          void resetTimer(event.type);
+          resetTimer(event.type);
         },
         true,
       );

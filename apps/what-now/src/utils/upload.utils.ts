@@ -21,7 +21,7 @@ export function selectJsonFile(): Promise<File | undefined> {
     const handleChange = (event: Event) => {
       const target = event.target as HTMLInputElement;
       const file = target.files?.[0];
-      void resolve(file);
+      resolve(file);
     };
     input.addEventListener("change", handleChange);
     input.click();

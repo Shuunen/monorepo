@@ -26,7 +26,8 @@ const mockSharpToFile = vi.fn().mockResolvedValue(undefined);
 const mockSharpJpeg = vi.fn().mockReturnValue({ toFile: mockSharpToFile });
 const mockSharp = vi.fn().mockReturnValue({ jpeg: mockSharpJpeg });
 
-vi.mock(import("sharp"), () => ({
+// oxlint-disable-next-line vitest/prefer-import-in-mock
+vi.mock("sharp", () => ({
   default: mockSharp,
 }));
 
@@ -35,7 +36,8 @@ const mockWrite = vi.fn().mockResolvedValue(undefined);
 const mockRewriteAllTags = vi.fn().mockResolvedValue(undefined);
 const mockEnd = vi.fn();
 
-vi.mock(import("exiftool-vendored"), () => ({
+// oxlint-disable-next-line vitest/prefer-import-in-mock
+vi.mock("exiftool-vendored", () => ({
   // biome-ignore lint/style/useNamingConvention: its ok
   ExifDateTime: class ExifDateTime {
     constructor(
@@ -57,7 +59,7 @@ vi.mock(import("exiftool-vendored"), () => ({
     // biome-ignore lint/style/useNamingConvention: its ok
     static fromISO(str: string) {
       const date = new Date(str);
-      const tzMatch = str.match(/([+-])(\d{2}):(\d{2})$/);
+      const tzMatch = /([+-])(\d{2}):(\d{2})$/.exec(str);
       let tzoffsetMinutes: number | undefined = undefined;
       if (tzMatch) {
         const sign = tzMatch[1] === "+" ? 1 : -1;
@@ -249,8 +251,8 @@ describe("check-souvenirs.cli", () => {
       pathMonth: undefined,
       pathYear: "2006",
     });
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(8);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(8);
   });
 
   it("getNewExifDateBasedOnExistingDate B should use path month when exifMonthIncorrect is true and pathMonth exists", () => {
@@ -264,8 +266,8 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "08",
       pathYear: "2006",
     });
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(8);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(8);
   });
 
   it("getNewExifDateBasedOnExistingDate C should use originalExifDate when exifYearIncorrect is false", () => {
@@ -279,8 +281,8 @@ describe("check-souvenirs.cli", () => {
       pathMonth: undefined,
       pathYear: "2006",
     });
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(8);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(8);
   });
 
   it("getNewExifDateBasedOnExistingDate D should use exifDate when originalExifDate is undefined", () => {
@@ -293,13 +295,13 @@ describe("check-souvenirs.cli", () => {
       pathMonth: undefined,
       pathYear: undefined,
     });
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(8);
-    expect(result.day).toBe(15);
-    expect(result.hour).toBe(12);
-    expect(result.minute).toBe(30);
-    expect(result.second).toBe(45);
-    expect(result.millisecond).toBe(100);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(8);
+    expect(result?.day).toBe(15);
+    expect(result?.hour).toBe(12);
+    expect(result?.minute).toBe(30);
+    expect(result?.second).toBe(45);
+    expect(result?.millisecond).toBe(100);
   });
 
   it("getNewExifDateBasedOnExistingDate E should handle both year and month corrections", () => {
@@ -313,8 +315,8 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "08",
       pathYear: "2006",
     });
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(8);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(8);
   });
 
   it("getNewExifDateBasedOnExistingDate F should use exifDate year when exifYearIncorrect is true but pathYear is undefined", () => {
@@ -328,7 +330,7 @@ describe("check-souvenirs.cli", () => {
       pathMonth: undefined,
       pathYear: undefined,
     });
-    expect(result.year).toBe(2005);
+    expect(result?.year).toBe(2005);
   });
 
   it("getNewExifDateBasedOnExistingDate G should use exifDate month when exifMonthIncorrect is true but pathMonth is undefined", () => {
@@ -342,7 +344,7 @@ describe("check-souvenirs.cli", () => {
       pathMonth: undefined,
       pathYear: "2006",
     });
-    expect(result.month).toBe(7);
+    expect(result?.month).toBe(7);
   });
 
   it("getNewExifDateBasedOnExistingDate H should adjust day 31 to 30 when changing month from October to November", () => {
@@ -356,12 +358,12 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "11",
       pathYear: "2023",
     });
-    expect(result.year).toBe(2023);
-    expect(result.month).toBe(11);
-    expect(result.day).toBe(30);
-    expect([16, 17]).toContain(result.hour);
-    expect(result.minute).toBe(51);
-    expect(result.second).toBe(15);
+    expect(result?.year).toBe(2023);
+    expect(result?.month).toBe(11);
+    expect(result?.day).toBe(30);
+    expect([16, 17]).toContain(result?.hour);
+    expect(result?.minute).toBe(51);
+    expect(result?.second).toBe(15);
   });
 
   it("getNewExifDateBasedOnExistingDate I should adjust day 31 to 28 when changing month to February in non-leap year", () => {
@@ -375,9 +377,9 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "02",
       pathYear: "2023",
     });
-    expect(result.year).toBe(2023);
-    expect(result.month).toBe(2);
-    expect(result.day).toBe(28);
+    expect(result?.year).toBe(2023);
+    expect(result?.month).toBe(2);
+    expect(result?.day).toBe(28);
   });
 
   it("getNewExifDateBasedOnExistingDate J should adjust day 31 to 29 when changing month to February in leap year", () => {
@@ -391,9 +393,9 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "02",
       pathYear: "2024",
     });
-    expect(result.year).toBe(2024);
-    expect(result.month).toBe(2);
-    expect(result.day).toBe(29);
+    expect(result?.year).toBe(2024);
+    expect(result?.month).toBe(2);
+    expect(result?.day).toBe(29);
   });
 
   it("getNewExifDateBasedOnExistingDate K should not adjust day when it is valid for the target month", () => {
@@ -407,9 +409,9 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "11",
       pathYear: "2023",
     });
-    expect(result.year).toBe(2023);
-    expect(result.month).toBe(11);
-    expect(result.day).toBe(15);
+    expect(result?.year).toBe(2023);
+    expect(result?.month).toBe(11);
+    expect(result?.day).toBe(15);
   });
 
   it("getNewExifDateBasedOnExistingDate L should preserve timezone offset when adjusting date", () => {
@@ -423,7 +425,7 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "11",
       pathYear: "2023",
     });
-    expect(result.tzoffsetMinutes).toBe(60);
+    expect(result?.tzoffsetMinutes).toBe(60);
   });
 
   it("getNewExifDateBasedOnExistingDate M should handle negative timezone offset", () => {
@@ -437,7 +439,7 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "10",
       pathYear: "2023",
     });
-    expect(result.tzoffsetMinutes).toBe(-300);
+    expect(result?.tzoffsetMinutes).toBe(-300);
   });
 
   it("setFileDate A should set photo date successfully on first attempt", async () => {
@@ -876,17 +878,17 @@ describe("check-souvenirs.cli", () => {
   it("getExifDateFromYearAndMonth A should return ExifDateTime for valid year and month", () => {
     const result = getExifDateFromYearAndMonth("2006", "08");
     expect(result).toBeInstanceOf(ExifDateTime);
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(8);
-    expect(result.day).toBe(1);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(8);
+    expect(result?.day).toBe(1);
   });
 
   it("getExifDateFromYearAndMonth B should return ExifDateTime for valid year without month", () => {
     const result = getExifDateFromYearAndMonth("2006", undefined);
     expect(result).toBeInstanceOf(ExifDateTime);
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(1);
-    expect(result.day).toBe(1);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(1);
+    expect(result?.day).toBe(1);
   });
 
   it("isPhoto A should return true for jpg extension", () => {

@@ -36,14 +36,14 @@ function MbImportFromAmazonMusic() {
       artist: textFromSelector(selectors.artist),
       date: { day: "0", month: "0", year: "0" },
       // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-      label: (details.match(/Label: (?<name>\S+)/u) || [])[1] || "",
+      label: (/Label: (?<name>\S+)/u.exec(details) || [])[1] || "",
       title: textFromSelector(selectors.title),
       tracks: getTracks(),
       url: document.location.href,
       urlType: "77",
     };
     // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-    const dateMatches = details.match(/origine : (?<day>\d{1,2}) (?<month>\S+) (?<year>\d{4})/u);
+    const dateMatches = /origine : (?<day>\d{1,2}) (?<month>\S+) (?<year>\d{4})/u.exec(details);
     if (dateMatches?.groups?.year) {
       const months = [
         "janvier",

@@ -77,8 +77,8 @@ export function About() {
         </motion.div>
         <motion.div variants={textAnimation}>
           <Paragraph>
-            You can upload your own images <Num>4</Num> & <Num>5</Num> by clicking the "Left Image" <Num>9</Num> and
-            "Right Image" <Num>11</Num> buttons.'
+            You can upload your own images <Num>4</Num> & <Num>5</Num> by clicking the &ldquo;Left Image&rdquo;{" "}
+            <Num>9</Num> and &ldquo;Right Image&rdquo; <Num>11</Num> buttons.
           </Paragraph>
         </motion.div>
         <motion.div variants={textAnimation}>
@@ -90,7 +90,7 @@ export function About() {
         <motion.div variants={textAnimation}>
           <Paragraph>
             The zoom level is displayed at the bottom right corner <Num>8</Num>. You can reset the zoom and pan by
-            clicking the "Reset View" button <Num>10</Num>.
+            clicking the &ldquo;Reset View&rdquo; button <Num>10</Num>.
           </Paragraph>
         </motion.div>
         <motion.div variants={textAnimation}>
