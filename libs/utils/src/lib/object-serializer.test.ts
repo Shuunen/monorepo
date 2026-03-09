@@ -162,6 +162,7 @@ it("objectDeserialize C regex", () => {
     }
   `);
   // @ts-expect-error type is unknown
+  // oxlint-disable-next-line typescript/no-unsafe-call
   expect(object.regex.test("ho123")).toBe(true);
 });
 
@@ -274,6 +275,7 @@ it("objectDeserialize H person", () => {
   expect(object.details.hatedFood).toBe(null);
   expect(object.nameRegex instanceof RegExp).toBe(true);
   // @ts-expect-error type is unknown
+  // oxlint-disable-next-line typescript/no-unsafe-call
   expect(object.nameRegex.test("John")).toBe(true);
   // @ts-expect-error type is unknown
   expect(object.nameValidator("Jo")).toBe(false);

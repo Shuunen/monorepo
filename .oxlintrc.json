@@ -386,11 +386,9 @@
     "no-unassigned-import": "off",
     "no-undefined": "off",
     "no-unnecessary-condition": "off",
-    "no-unnecessary-type-assertion": "off",
     "no-unnecessary-type-parameters": "off",
     "no-unsafe-argument": "off",
     "no-unsafe-assignment": "off",
-    "no-unsafe-call": "off",
     "no-unsafe-member-access": "off",
     "no-unsafe-type-assertion": "off",
     "no-use-before-define": [

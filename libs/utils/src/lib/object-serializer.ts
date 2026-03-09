@@ -46,6 +46,7 @@ function replacer(this: unknown, key: string, value?: Readonly<unknown>) {
   // @ts-expect-error type issue
   if (this[key] instanceof Date) {
     // @ts-expect-error type issue
+    // oxlint-disable-next-line typescript/no-unsafe-call
     return { __date__: this[key].toISOString() };
   }
   return value;
@@ -109,7 +110,7 @@ function reviver(_key: string, value?: any) {
     return new RegExp(value.__regexSource__, value.__regexFlags__);
   }
   if (type === "function") {
-    // oxlint-disable-next-line no-new-func, no-unsafe-return, no-implied-eval
+    // oxlint-disable-next-line no-new-func, no-unsafe-return, no-implied-eval, no-unsafe-call
     return new Function(`return ${value.__function__}`)(); // NOSONAR
   }
   if (type === "file") {

@@ -25,6 +25,7 @@ vi.mock(import("./database.utils"), () => ({
 function createMockFileInput(files: File[] = []) {
   const mockClick = vi.fn();
   const mockAddEventListener = vi.fn((event, handler) => {
+    // oxlint-disable-next-line typescript/no-unsafe-call
     if (event === "change") setTimeout(() => handler({ target: { files } }), 0);
   });
   return {

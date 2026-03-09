@@ -51,7 +51,7 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const numberInput = canvas.getByTestId("input-number-age") as HTMLInputElement;
+    const numberInput = canvas.getByTestId("input-number-age");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     expect(numberInput).toBeInTheDocument();
@@ -90,7 +90,7 @@ export const WithPrefault: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const numberInput = canvas.getByTestId("input-number-quantity") as HTMLInputElement;
+    const numberInput = canvas.getByTestId("input-number-quantity");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("verify prefault value is displayed", async () => {
@@ -125,7 +125,7 @@ export const WithInitialValue: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const numberInput = canvas.getByTestId("input-number-quantity") as HTMLInputElement;
+    const numberInput = canvas.getByTestId("input-number-quantity");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("verify initial value is displayed", () => {
       expect(numberInput).toHaveValue(10);
@@ -179,7 +179,7 @@ export const Disabled: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const studentIdInput = canvas.getByTestId("input-number-student-id") as HTMLInputElement;
+    const studentIdInput = canvas.getByTestId("input-number-student-id");
     expect(studentIdInput).toBeDisabled();
     expect(studentIdInput).toHaveValue(12345);
   },
@@ -203,7 +203,7 @@ export const Readonly: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const priceInput = canvas.getByTestId("input-number-price") as HTMLInputElement;
+    const priceInput = canvas.getByTestId("input-number-price");
     expect(priceInput).toHaveValue(99.99);
   },
 };
@@ -225,7 +225,7 @@ export const MinMax: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const priceInput = canvas.getByTestId("input-number-price") as HTMLInputElement;
+    const priceInput = canvas.getByTestId("input-number-price");
     expect(priceInput).toHaveAttribute("min", "50");
     expect(priceInput).toHaveAttribute("max", "100");
   },
@@ -255,8 +255,8 @@ export const MultipleFields: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const widthInput = canvas.getByTestId("input-number-width") as HTMLInputElement;
-    const heightInput = canvas.getByTestId("input-number-height") as HTMLInputElement;
+    const widthInput = canvas.getByTestId("input-number-width");
+    const heightInput = canvas.getByTestId("input-number-height");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("fill width", async () => {

@@ -8,6 +8,7 @@ const httpBadRequest = 400;
 const httpServerError = 500;
 const port = 3001;
 
+// oxlint-disable-next-line typescript/no-unsafe-call
 app.use(cors());
 app.use(express.json());
 

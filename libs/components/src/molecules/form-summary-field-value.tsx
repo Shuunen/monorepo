@@ -37,7 +37,7 @@ export function FormSummaryFieldValue({ value, name }: Props) {
         <a
           className="flex cursor-pointer items-center gap-2 underline"
           data-testid={slugify(`summary-file-${name}`)}
-          onClick={() => downloadFile(value as File)}
+          onClick={() => downloadFile(value)}
         >
           <IconDownload /> {value.name}
         </a>

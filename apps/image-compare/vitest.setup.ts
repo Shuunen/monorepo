@@ -21,7 +21,7 @@ function scheduleLoadEvent(image: HTMLImageElement): void {
 }
 globalThis.document.createElement = vi.fn((tagName: string) => {
   if (tagName === "img") {
-    const img = mockCreateElement(tagName) as HTMLImageElement;
+    const img = mockCreateElement(tagName);
     // Immediately trigger load event when src is set
     Object.defineProperty(img, "src", {
       get() {

@@ -1,4 +1,4 @@
-import { alignForSnap, Result } from "@monorepo/utils";
+import { alignForSnap, Result, stringify } from "@monorepo/utils";
 import { type ChildProcess, spawn } from "node:child_process";
 import type http from "node:http";
 import { PassThrough } from "node:stream";
@@ -34,7 +34,7 @@ async function request(
   const options = { body, headers, method } satisfies RequestInit;
   try {
     const res = await fetch(url, options);
-    const text = await (method === "GET" ? res.text() : res.json());
+    const text = stringify(await (method === "GET" ? res.text() : res.json()));
     return Result.ok({ response: text, status: res.status });
   } catch (error) {
     return Result.error(error instanceof Error ? error.message : error);
@@ -85,14 +85,9 @@ describe("server.cli.ts (integration)", () => {
     if (!result.ok) throw new Error(`Request C failed : ${result.error}`);
     const { status, response } = result.value;
     expect(status).toBe(400);
-    expect(alignForSnap(response)).toMatchInlineSnapshot(`
-      "{
-        "datetime": "xxxx-xx-xx xx:xx:xx",
-        "message": "Invalid body : must be an object with a progress property, got \\"\\"",
-        "ok": false,
-        "progress": 0
-      }"
-    `);
+    expect(alignForSnap(response)).toMatchInlineSnapshot(
+      `"{"datetime":"xxxx-xx-xx xx:xx:xx","message":"Invalid body : must be an object with a progress property, got \\"\\"","ok":false,"progress":0}"`,
+    );
   });
 
   it("D should respond 200 to POST /set-progress with valid body", async () => {
@@ -102,32 +97,9 @@ describe("server.cli.ts (integration)", () => {
     if (!result.ok) throw new Error(`Request D failed : ${result.error}`);
     const { status, response } = result.value;
     expect(status).toBe(200);
-    expect(alignForSnap(response)).toMatchInlineSnapshot(`
-      "{
-        "data": {
-          "bri": 255,
-          "hue": 15000,
-          "on": true,
-          "sat": 255
-        },
-        "datetime": "xxxx-xx-xx xx:xx:xx",
-        "message": "Emitted hue and trmnl color successfully",
-        "nextTask": "Review code",
-        "ok": true,
-        "progress": 75,
-        "remaining": "30",
-        "response": {
-          "hue": {
-            "message": "This is a fake endpoint response for testing.",
-            "success": true
-          },
-          "trmnl": {
-            "message": "This is a fake endpoint response for testing.",
-            "success": true
-          }
-        }
-      }"
-    `);
+    expect(alignForSnap(response)).toMatchInlineSnapshot(
+      `"{"data":{"bri":255,"hue":15000,"on":true,"sat":255},"datetime":"xxxx-xx-xx xx:xx:xx","message":"Emitted hue and trmnl color successfully","nextTask":"Review code","ok":true,"progress":75,"remaining":"30","response":{"hue":{"message":"This is a fake endpoint response for testing.","success":true},"trmnl":{"message":"This is a fake endpoint response for testing.","success":true}}}"`,
+    );
   });
 });
 

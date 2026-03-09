@@ -6,6 +6,7 @@ import { z } from "zod";
 import { AutoForm } from "./auto-form";
 import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
+import { invariant } from "es-toolkit";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
 
@@ -52,7 +53,7 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const textarea = canvas.getByTestId("textarea-description") as HTMLTextAreaElement;
+    const textarea = canvas.getByTestId("textarea-description");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     expect(textarea).toBeInTheDocument();
@@ -91,7 +92,7 @@ export const WithPrefault: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const textarea = canvas.getByTestId("textarea-description") as HTMLTextAreaElement;
+    const textarea = canvas.getByTestId("textarea-description");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("verify prefault value is displayed", () => {
@@ -127,7 +128,7 @@ export const WithInitialValue: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const textarea = canvas.getByTestId("textarea-content") as HTMLTextAreaElement;
+    const textarea = canvas.getByTestId("textarea-content");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("verify initial value is displayed", () => {
@@ -186,7 +187,7 @@ export const Disabled: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const textarea = canvas.getByTestId("textarea-feedback") as HTMLTextAreaElement;
+    const textarea = canvas.getByTestId("textarea-feedback");
     expect(textarea).toBeDisabled();
     expect(textarea).toHaveValue("This is disabled feedback");
   },
@@ -211,7 +212,7 @@ export const Readonly: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const textarea = canvas.getByTestId("textarea-terms") as HTMLTextAreaElement;
+    const textarea = canvas.getByTestId("textarea-terms");
     expect(textarea).toHaveAttribute("readonly");
     expect(textarea).toHaveValue("By using this service, you agree to our terms and conditions.");
   },
@@ -239,8 +240,8 @@ export const MultipleFields: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const summaryTextarea = canvas.getByTestId("textarea-summary") as HTMLTextAreaElement;
-    const detailsTextarea = canvas.getByTestId("textarea-details") as HTMLTextAreaElement;
+    const summaryTextarea = canvas.getByTestId("textarea-summary");
+    const detailsTextarea = canvas.getByTestId("textarea-details");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("fill summary", async () => {
@@ -288,7 +289,8 @@ export const LongText: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const textarea = canvas.getByTestId("textarea-article") as HTMLTextAreaElement;
+    const textarea = canvas.getByTestId("textarea-article");
+    invariant(textarea instanceof HTMLTextAreaElement, "Expected textarea to be an HTMLTextAreaElement");
 
     await step("verify long text is displayed", () => {
       expect(textarea.value.length).toBeGreaterThan(100);

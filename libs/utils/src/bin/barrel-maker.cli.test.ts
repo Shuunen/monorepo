@@ -19,8 +19,7 @@ describe("barrel-maker cli", () => {
   });
 
   it("make A ext empty and default index.ts", async () => {
-    // @ts-expect-error import issue
-    const { make } = await import("./barrel-maker.cli");
+    const { make } = await import("./barrel-maker.cli.ts");
     const { value } = await make({ ext: "", header: "// Copyright ACME\n", target: "./{atoms,icons,molecules}/*.tsx" });
     expect(value.content).toMatchSnapshot();
     expect(value.files).toMatchSnapshot();
@@ -28,8 +27,7 @@ describe("barrel-maker cli", () => {
   });
 
   it("make B index.js and ext .js", async () => {
-    // @ts-expect-error import issue
-    const { make } = await import("./barrel-maker.cli");
+    const { make } = await import("./barrel-maker.cli.ts");
     const { value } = await make({
       ext: ".js",
       header: "// Copyright ACME\n",
@@ -42,8 +40,7 @@ describe("barrel-maker cli", () => {
   });
 
   it("make C undefined ext", async () => {
-    // @ts-expect-error import issue
-    const { make } = await import("./barrel-maker.cli");
+    const { make } = await import("./barrel-maker.cli.ts");
     const { value } = await make({
       ext: undefined,
       target: "./{atoms,icons,molecules}/*.tsx",
@@ -54,15 +51,13 @@ describe("barrel-maker cli", () => {
   });
 
   it("main A missing target", async () => {
-    // @ts-expect-error import issue
-    const { main } = await import("./barrel-maker.cli");
+    const { main } = await import("./barrel-maker.cli.ts");
     const { error } = Result.unwrap(await main(["node", "script.ts"]));
     expect(error).toMatchInlineSnapshot(`"missing target argument"`);
   });
 
   it("main B with args", async () => {
-    // @ts-expect-error import issue
-    const { main } = await import("./barrel-maker.cli");
+    const { main } = await import("./barrel-maker.cli.ts");
     const { value } = Result.unwrap(
       await main([
         "node",
@@ -73,25 +68,18 @@ describe("barrel-maker cli", () => {
         "--index=index.js",
       ]),
     );
-    // @ts-expect-error import issue
     expect(value?.content).toMatchSnapshot();
-    // @ts-expect-error import issue
     expect(value?.files).toMatchSnapshot();
-    // @ts-expect-error import issue
     expect(alignForSnap(value?.out)).toContain(`libs/utils/index.js`);
   });
 
   it("main C without header", async () => {
-    // @ts-expect-error import issue
-    const { main } = await import("./barrel-maker.cli");
+    const { main } = await import("./barrel-maker.cli.ts");
     const { value } = Result.unwrap(
       await main(["node", "script.ts", "--target=./{atoms,icons,molecules}/*.tsx", "--ext=.js", "--index=index.js"]),
     );
-    // @ts-expect-error import issue
     expect(value?.content).toMatchSnapshot();
-    // @ts-expect-error import issue
     expect(value?.files).toMatchSnapshot();
-    // @ts-expect-error import issue
     expect(alignForSnap(value?.out)).toContain(`libs/utils/index.js`);
   });
 });

@@ -46,8 +46,10 @@ function updateTsConfig(name: string): void {
   logger.info("Updating tsconfig.json...");
   const tsConfigPath = join(process.cwd(), "tsconfig.json");
   const tsConfig = JSON.parse(readFileSync(tsConfigPath, "utf8"));
+  // oxlint-disable-next-line typescript/no-unsafe-call
   tsConfig.references.push({ path: `./apps/${name}` });
   // sort the references array for nicer git diffs
+  // oxlint-disable-next-line typescript/no-unsafe-call
   tsConfig.references.sort((referenceA: { path: string }, referenceB: { path: string }) =>
     referenceA.path.localeCompare(referenceB.path),
   );
