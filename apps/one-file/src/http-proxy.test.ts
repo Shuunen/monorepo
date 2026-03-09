@@ -1,4 +1,5 @@
 // oxlint-disable typescript/unbound-method
+import { sleep } from "@monorepo/utils";
 import type { Request, Response } from "express";
 import {
   app,
@@ -10,7 +11,6 @@ import {
   webhookHandler,
   webhookRoute,
 } from "./http-proxy.cli";
-import { sleep } from "@monorepo/utils";
 
 // oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("express", () => {

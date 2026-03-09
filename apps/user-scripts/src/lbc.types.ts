@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/style/useNamingConvention: cant change these */
-
 type LbcAdAttribute = {
   generic: boolean;
   key_label?: string;

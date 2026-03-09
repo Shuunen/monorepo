@@ -645,7 +645,6 @@ export const StepperStates: Story = {
 export const KeyMapping: Story = {
   args: {
     initialData: {
-      // biome-ignore lint/style/useNamingConvention: we use snake_case for testing purposes
       email_address: "james.doe@example.com",
       "userName-Input": "Jam Doe",
     },
@@ -680,7 +679,6 @@ export const KeyMapping: Story = {
     });
     await step("verify submitted data", async () => {
       const expectedData = {
-        // biome-ignore lint/style/useNamingConvention: we use snake_case for testing purposes
         email_address: "james.doe@example.com",
         "user-name-output": "Jam Doe",
       };
@@ -696,9 +694,7 @@ export const NestedKeyMapping: Story = {
   args: {
     initialData: {
       user: {
-        // biome-ignore lint/style/useNamingConvention: we use snake_case for testing purposes
         contact_info: {
-          // biome-ignore lint/style/useNamingConvention: we use snake_case for testing purposes
           email_address: "jane.doe@example.com",
         },
         "personal-Info": {

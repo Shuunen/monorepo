@@ -1,3 +1,4 @@
+import { functionReturningVoid } from "@monorepo/utils";
 /* c8 ignore start */
 // oxlint-disable-next-line no-restricted-imports
 import { XIcon } from "lucide-react";
@@ -6,7 +7,6 @@ import { Button } from "../atoms/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card";
 import { IconWarning } from "../icons/icon-warning";
 import { cn } from "../shadcn/utils";
-import { functionReturningVoid } from "@monorepo/utils";
 
 const STORAGE_KEY = "showTestIdChecker";
 const INTERVAL = 1000;
@@ -36,7 +36,6 @@ const getAllTestIds = () =>
     // oxlint-disable-next-line prefer-native-coercion-functions
     .filter((id): id is string => Boolean(id));
 
-// biome-ignore lint/performance/useTopLevelRegex: Fix later
 const isValidTestId = (testId: string) => /^[a-zA-Z0-9-]+$/u.test(testId);
 
 // Helper function to compare arrays of test IDs

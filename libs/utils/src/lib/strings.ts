@@ -24,14 +24,10 @@ export function sanitize(sentence: string, willLower = true) {
  * @returns The slugified string, e.g. "slug-me-with-love"
  */
 export function slugify(string: string) {
-  return (
-    sanitize(string) // Clean the string
-      .replaceAll(/\W+/giu, "-") // Replace all non word with dash
-      // biome-ignore lint/performance/useTopLevelRegex: it's fine
-      .replace(/^-*/u, "") // Trim dash from start
-      // biome-ignore lint/performance/useTopLevelRegex: it's fine
-      .replace(/-$/u, "") // Trim dash from end
-  );
+  return sanitize(string) // Clean the string
+    .replaceAll(/\W+/giu, "-") // Replace all non word with dash
+    .replace(/^-*/u, "") // Trim dash from start
+    .replace(/-$/u, ""); // Trim dash from end
 }
 
 /**

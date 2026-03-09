@@ -51,7 +51,6 @@ function LinxoAio() {
       element.classList.add(processed);
       element.dataset.highlightReason = "wrong-category";
       // oxlint-disable no-undef
-      // biome-ignore lint/correctness/noUndeclaredVariables: RoughNotation exists
       const annotation = RoughNotation.annotate(element, { color: "yellow", type: "highlight" });
       annotation.show();
       // oxlint-enable no-undef

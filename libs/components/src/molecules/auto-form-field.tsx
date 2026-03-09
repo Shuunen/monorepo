@@ -1,3 +1,4 @@
+import { functionReturningVoid } from "@monorepo/utils";
 import { type Dispatch, type SetStateAction, memo, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
@@ -7,7 +8,6 @@ import type { AutoFormData } from "./auto-form.types";
 import { getFieldMetadata, getFormFieldRender, isFieldVisible } from "./auto-form.utils";
 import { FormFieldFieldList } from "./form-field-field-list";
 import { FormFieldSection } from "./form-field-section";
-import { functionReturningVoid } from "@monorepo/utils";
 
 function createVisibilitySubscriber(fieldSchema: z.ZodType, setVisible: Dispatch<SetStateAction<boolean>>) {
   return (formValues: AutoFormData) => {

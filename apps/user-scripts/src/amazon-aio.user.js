@@ -115,7 +115,6 @@ function AmazonAio() {
    * @returns {number} The price
    */
   function getPrice(text) {
-    // biome-ignore lint/performance/useTopLevelRegex: FIX ME later
     const price = Number.parseFloat(text.replace(",", ".").replace(/\s/u, "") ?? "0");
     if (price === 0) utils.warn("failed to calc price from", { text });
     return price;
@@ -162,7 +161,6 @@ function AmazonAio() {
    * @returns {void} nothing and alter the score section dom element
    */
   // oxlint-disable complexity
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   function addPricePerWeight({ currency, price, product, scoreSection }) {
     const pricePerWeightElement = product.querySelector(selectors.productPricePerWeight);
     const pricePerWeightSection = document.createElement("div");
@@ -172,7 +170,6 @@ function AmazonAio() {
         currencyPer = "",
         pricePer = "",
         unitPer = "",
-        // biome-ignore lint/performance/useTopLevelRegex: FIX ME later
       } = /(?<pricePer>\d?\s?\d+[,.]\d+)(?<currencyPer>€)\/(?<unitPer>\w+)/u.exec(
         pricePerWeightElement.textContent ?? "",
       )?.groups ?? {};
@@ -190,7 +187,6 @@ function AmazonAio() {
         utils.warn("failed to find title in", product);
         return;
       }
-      // biome-ignore lint/performance/useTopLevelRegex: FIX ME later
       const { unitPer = "", weightPer = "" } = /(?<weightPer>\d+)\s?(?<unitPer>[kKgG]+)/u.exec(title)?.groups ?? {};
       if (weightPer === "") {
         utils.log("failed to find weight in :", title);
@@ -257,7 +253,6 @@ function AmazonAio() {
    */
   function getRating(element) {
     const html = element.outerHTML;
-    // biome-ignore lint/performance/useTopLevelRegex: FIX ME later
     const value = /\d[,.]\d ?/u.exec(html)?.[0] ?? "0";
     const count = Number.parseFloat(value.replace(",", "."));
     if (count === 0) utils.warn("failed to find rating in", element);
@@ -270,7 +265,6 @@ function AmazonAio() {
    */
   function getReviews(element) {
     const html = element.outerHTML;
-    // biome-ignore lint/performance/useTopLevelRegex: FIX ME later
     const { p1 = "", p2 = "" } = /"(?<p1>\d+)(?:&nbsp;)?(?<p2>\d+)&nbsp;/u.exec(html)?.groups ?? {};
     const parts = p1 + p2;
     const count = Number.parseInt(parts || "0", 10);

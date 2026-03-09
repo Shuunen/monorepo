@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a **TypeScript React monorepo** with 13+ applications and 3 shared libraries, managed by **Nx** and **pnpm**. It uses modern tooling: **Vite** for bundling, **Vitest** for testing, **Biome** and **OxLint** for linting/formatting, and **Tailwind CSS** for styling.
+This is a **TypeScript React monorepo** with 13+ applications and 3 shared libraries, managed by **Nx** and **pnpm**. It uses modern tooling: **Vite** for bundling, **Vitest** for testing, **OxLint** for linting/formatting, and **Tailwind CSS** for styling.
 
 ## Common Commands
 
@@ -67,7 +67,6 @@ pnpm run check
 pnpm run lint
 
 # Check specific tool
-pnpm check:biome    # Biome linting/formatting
 pnpm check:oxlint   # Rust-based linting
 pnpm check:lock     # pnpm lockfile validation
 pnpm check:nx       # Nx validation (lints all projects individually)
@@ -155,8 +154,7 @@ Each project has `project.json` (Nx) defining:
 
 **Code Quality:**
 
-- Biome 2.3 (primary formatter & linter)
-- oxlint 1.25 (Rust-based secondary linting layer)
+- oxlint 1.25 (Rust-based linting layer)
 
 **Other Tools:**
 
@@ -251,11 +249,6 @@ See `.github/copilot-instructions.md` for detailed patterns:
 
 ### Linting & Formatting
 
-**Biome** :
-
-- Handles formatting + linting
-- Enforced on save in VS Code
-
 **OxLint** :
 
 - Handles formatting + linting
@@ -267,7 +260,7 @@ See `.github/copilot-instructions.md` for detailed patterns:
 pnpm run check
 ```
 
-This validates: lock file integrity, monorepo structure, Biome rules, oxlint rules, and Nx consistency
+This validates: lock file integrity, monorepo structure, oxlint rules, and Nx consistency
 
 ## Essential Patterns & Anti-Patterns
 
@@ -366,7 +359,7 @@ nx reset
 
 GitHub Actions workflow in `.github/workflows/ci.yml` runs:
 
-- Linting (Biome + oxlint)
+- Linting (OxLint)
 - Unit/component tests
 - Build verification
 - E2E tests (sample-web-app-e2e)

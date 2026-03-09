@@ -35,19 +35,16 @@ function MbImportFromSpotify() {
       },
       artist:
         textFromSelector('.entity-info.media h2 a, .os-content a[href^="/artist/"]') ||
-        // biome-ignore lint/performance/useTopLevelRegex: FIX me later
         /^.+\b\s(?<artist>.+)$/u.exec(textFromSelector(".entity-info.media h2"))?.groups?.artist ||
         "",
       date: { day: "0", month: "0", year: "0" },
       label:
-        // biome-ignore lint/performance/useTopLevelRegex: FIX me later
         /[\d\s©℗]+(?<label>.*)/u.exec(textFromSelector('.copyrights li, .os-content p[as="p"]'))?.groups?.label || "",
       title: textFromSelector(selectors.title),
       tracks: getTracks(),
       url: document.location.href,
       urlType: "85",
     };
-    // biome-ignore lint/performance/useTopLevelRegex: FIX me later
     const dateMatches = /datePublished":"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/u.exec(
       textFromSelector('script[type="application/ld+json"]'),
     );

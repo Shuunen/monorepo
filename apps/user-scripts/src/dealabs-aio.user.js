@@ -125,7 +125,6 @@ function DealabsAio() {
       filterElement.value = filter;
       // @ts-expect-error autosize is loaded in the window
       // oxlint-disable no-undef
-      // biome-ignore lint/correctness/noUndeclaredVariables: it is declared in the global scope
       autosize.update(filterElement);
     }
     checkItems();
@@ -155,7 +154,6 @@ function DealabsAio() {
     filterElement.value = filter;
     // @ts-expect-error autosize is loaded in the window
     // oxlint-disable no-undef
-    // biome-ignore lint/correctness/noUndeclaredVariables: it is declared in the global scope
     autosize(filterElement);
     filterElement.addEventListener("keyup", () => onFilterChangeDebounced());
     container.before(filterElement);

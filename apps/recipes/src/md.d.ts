@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/style/useImportType: hey */
-/** biome-ignore-all lint/style/useExportType: hey */
 declare module "*.md" {
   // "unknown" would be more detailed depends on how you structure frontmatter
   const attributes: Record<string, unknown>;

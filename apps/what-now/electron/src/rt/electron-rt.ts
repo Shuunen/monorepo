@@ -1,7 +1,5 @@
 // oxlint-disable-next-line unicorn/no-abusive-eslint-disable
 /* oxlint-disable */
-/** biome-ignore-all lint/suspicious/noExplicitAny: it's ok here */
-/** biome-ignore-all lint/correctness/noNodejsModules: it's ok here */
 import { randomBytes } from 'node:crypto';
 import { EventEmitter } from 'node:events';
 import { contextBridge, ipcRenderer } from 'electron';

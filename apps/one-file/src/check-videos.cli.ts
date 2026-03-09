@@ -119,12 +119,10 @@ const utils = {
     const media = result.value.format;
     const video = result.value.streams?.find(
       (/** @type {{ codec_type: string; }} */ stream) => stream.codec_type === "video",
-      // biome-ignore lint/style/useNamingConvention: ffprobe uses snake_case
     ) ?? { avg_frame_rate: "", codec_name: "", codec_type: "", color_transfer: "", duration: "", height: 0, width: 0 };
     const title = utils.cleanTitle(media?.tags?.title);
     const extension = path.extname(filepath).slice(1);
     const filename = title.length > 0 ? `${title}.${extension}` : "";
-    // biome-ignore lint/security/noGlobalEval: it's safe here
     const avgFrameRate = Number(eval(video.avg_frame_rate));
     // logger.info(utils.prettyPrint(video))
     return {

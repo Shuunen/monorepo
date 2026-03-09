@@ -12,7 +12,11 @@
         "command": "cd electron && npm install && pnpm electron:make",
         "cwd": "{projectRoot}"
       },
-      "outputs": ["{projectRoot}/electron/build/src/**/*.js", "{projectRoot}/electron/build/src/**/*.d.ts", "{projectRoot}/electron/build/tsconfig.tsbuildinfo"]
+      "outputs": [
+        "{projectRoot}/electron/build/src/**/*.js",
+        "{projectRoot}/electron/build/src/**/*.d.ts",
+        "{projectRoot}/electron/build/tsconfig.tsbuildinfo"
+      ]
     },
     "dev-desktop": {
       "continuous": true,

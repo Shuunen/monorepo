@@ -103,42 +103,38 @@ export function formatTimezoneOffset(offsetMinutes: number): string {
 }
 
 export function setFileDateViaExifTool(file: string, date: ExifDateTime) {
-  return (
-    exif
-      // biome-ignore lint/style/useNamingConvention: its ok
-      .write(file, { DateTimeOriginal: date }) // first attempt
-      .then(() => {
-        logger.debug(`Successfully set DateTimeOriginal for file ${green(file)} on first attempt`);
-        count.dateFixes += 1;
-        return undefined;
-      })
-      .catch(async () => {
-        logger.debug(`Failed to write DateTimeOriginal for file ${red(file)}, retrying...`);
-        // sometimes exif tool fails to write the date, so we rewrite all tags as a workaround
-        await exif.rewriteAllTags(file, `${file}.new`); // cant rewrite in place so write to new file
-        await unlink(file); // remove original
-        await rename(`${file}.new`, file); // rename new to original name
-        logger.debug(`Rewrote all tags for file ${green(file)}, retrying to set DateTimeOriginal...`);
-        await exif
-          // biome-ignore lint/style/useNamingConvention: its ok
-          .write(file, { DateTimeOriginal: date }) // second attempt
-          // oxlint-disable-next-line max-nested-callbacks
-          .then(() => {
-            logger.debug(`Successfully set DateTimeOriginal for file ${green(file)} on second attempt`);
-            count.dateFixes += 1;
-            return undefined;
-          })
-          // oxlint-disable-next-line max-nested-callbacks
-          .catch((error: unknown) => {
-            logger.error(`Failed again to write DateTimeOriginal for file ${red(file)} : ${String(error)}`);
-          });
-        logger.debug(`Successfully set DateTimeOriginal for file ${green(file)} on second attempt`);
-      })
-      .finally(() => {
-        // created by exif tool
-        void unlink(`${file}_original`).catch(functionReturningVoid);
-      })
-  );
+  return exif
+    .write(file, { DateTimeOriginal: date }) // first attempt
+    .then(() => {
+      logger.debug(`Successfully set DateTimeOriginal for file ${green(file)} on first attempt`);
+      count.dateFixes += 1;
+      return undefined;
+    })
+    .catch(async () => {
+      logger.debug(`Failed to write DateTimeOriginal for file ${red(file)}, retrying...`);
+      // sometimes exif tool fails to write the date, so we rewrite all tags as a workaround
+      await exif.rewriteAllTags(file, `${file}.new`); // cant rewrite in place so write to new file
+      await unlink(file); // remove original
+      await rename(`${file}.new`, file); // rename new to original name
+      logger.debug(`Rewrote all tags for file ${green(file)}, retrying to set DateTimeOriginal...`);
+      await exif
+        .write(file, { DateTimeOriginal: date }) // second attempt
+        // oxlint-disable-next-line max-nested-callbacks
+        .then(() => {
+          logger.debug(`Successfully set DateTimeOriginal for file ${green(file)} on second attempt`);
+          count.dateFixes += 1;
+          return undefined;
+        })
+        // oxlint-disable-next-line max-nested-callbacks
+        .catch((error: unknown) => {
+          logger.error(`Failed again to write DateTimeOriginal for file ${red(file)} : ${String(error)}`);
+        });
+      logger.debug(`Successfully set DateTimeOriginal for file ${green(file)} on second attempt`);
+    })
+    .finally(() => {
+      // created by exif tool
+      void unlink(`${file}_original`).catch(functionReturningVoid);
+    });
 }
 
 let isMkvPropEditAvailable: boolean | undefined = undefined;

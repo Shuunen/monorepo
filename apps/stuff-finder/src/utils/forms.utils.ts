@@ -76,7 +76,6 @@ export function validateForm<FormType extends Form>(form: FormType) {
           value === ""
             ? `${label} is required`
             : `${label} is invalid, "${String(value)}" should match ${String(regex)}`;
-      // biome-ignore lint/performance/noAccumulatingSpread: this whole validation is a joke, we should use a proper library
       return { ...accumulator, [field]: { ...form.fields[field], isValid } };
     },
     {},

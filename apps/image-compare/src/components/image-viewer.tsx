@@ -1,6 +1,3 @@
-/** biome-ignore-all lint/a11y/noStaticElementInteractions: fix me later */
-/** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: fix me later  */
-/** biome-ignore-all lint/correctness/useUniqueElementIds: fix me later */
 // oxlint-disable id-length, no-magic-numbers
 import { Button } from "@monorepo/components";
 import { cn } from "@monorepo/utils";

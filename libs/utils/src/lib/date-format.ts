@@ -1,9 +1,7 @@
 const formatRegex = /y{4}|yy|M{4}|MM|dd|d|e{4}|e{3}|HH|mm|ss|\s/gu;
 
 const formatTokens: Record<string, Intl.DateTimeFormatOptions> = {
-  // biome-ignore lint/style/useNamingConvention: we need to match commonly used tokens
   MM: { month: "2-digit" },
-  // biome-ignore lint/style/useNamingConvention: we need to match commonly used tokens
   MMMM: { month: "long" },
   d: { day: "numeric" }, // oxlint-disable-line id-length
   dd: { day: "2-digit" },
@@ -14,7 +12,6 @@ const formatTokens: Record<string, Intl.DateTimeFormatOptions> = {
 };
 
 const timeTokens: Record<string, (date: Date) => number> = {
-  // biome-ignore lint/style/useNamingConvention: we need to match commonly used tokens
   HH: date => date.getHours(),
   mm: date => date.getMinutes(),
   ss: date => date.getSeconds(),

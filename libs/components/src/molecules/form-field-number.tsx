@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
+import type { z } from "zod";
 import { FormControl } from "../atoms/form";
 import { Input } from "../atoms/input";
 import { getFieldMetadataOrThrow, getUnwrappedSchema, isZodNumber } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import { getZodNumberMinMax, toLocalValue } from "./form-field-number.utils";
-import type { z } from "zod";
 
 type NumberInputProps = {
   field: ControllerRenderProps;

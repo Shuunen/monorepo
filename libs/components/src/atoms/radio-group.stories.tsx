@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
-import { Label } from "./label";
 import { IconAccept } from "../icons/icon-accept";
-import { IconWarning } from "../icons/icon-warning";
 import { IconReject } from "../icons/icon-reject";
+import { IconWarning } from "../icons/icon-warning";
+import { Label } from "./label";
 import { RadioGroup, RadioGroupChoiceCard, RadioGroupItem } from "./radio-group";
 
 const meta = {
@@ -54,17 +54,14 @@ export const Default: Story = {
   render: () => (
     <RadioGroup defaultValue="comfortable" name="radio-group">
       <div className="flex items-center space-x-2">
-        {/** biome-ignore lint/correctness/useUniqueElementIds: it's ok here */}
         <RadioGroupItem id="r1" name="radio-item-1" value="default" />
         <Label htmlFor="r1">Default</Label>
       </div>
       <div className="flex items-center space-x-2">
-        {/** biome-ignore lint/correctness/useUniqueElementIds: it's ok here */}
         <RadioGroupItem id="r2" name="radio-item-2" value="comfortable" />
         <Label htmlFor="r2">Comfortable</Label>
       </div>
       <div className="flex items-center space-x-2">
-        {/** biome-ignore lint/correctness/useUniqueElementIds: it's ok here */}
         <RadioGroupItem id="r3" name="radio-item-3" value="compact" />
         <Label htmlFor="r3">Compact</Label>
       </div>
@@ -105,7 +102,6 @@ export const Card: Story = {
 
   render: () => (
     <RadioGroup defaultValue="idk" name="subscribe">
-      {/** biome-ignore-start lint/correctness/useUniqueElementIds: it's ok here */}
       <RadioGroupChoiceCard
         description="I'm sure."
         icon={IconAccept}
@@ -130,7 +126,6 @@ export const Card: Story = {
         name="subscribe"
         value="nope"
       />
-      {/** biome-ignore-end lint/correctness/useUniqueElementIds: it's ok here */}
     </RadioGroup>
   ),
 };

@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
-import "webcomponent-qr-code";
 import { cn, nbEighth, nbSeventh, nbSixth } from "@monorepo/utils";
+import "webcomponent-qr-code";
+import { useEffect, useRef } from "react";
 import type { Item } from "../types/item.types";
 import { type PrintSize, printSizes } from "../types/print.types";
 import { logger } from "../utils/logger.utils";

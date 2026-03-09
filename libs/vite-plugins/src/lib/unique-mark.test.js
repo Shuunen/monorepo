@@ -44,11 +44,9 @@ describe("vite-plugin-unique-mark", () => {
     d: {
       example: "placeholder inside a more complex HTML/JSX structure",
       input: `<motion.div variants={textAnimation}>
-             {/** biome-ignore lint/correctness/useUniqueElementIds: it's ok */}
              <div className="text-center text-sm font-mono pb-4" id="my-placeholder"></div>
            </motion.div>`,
       output: `<motion.div variants={textAnimation}>
-             {/** biome-ignore lint/correctness/useUniqueElementIds: it's ok */}
              <div className="text-center text-sm font-mono pb-4" id="my-placeholder">MARK</div>
            </motion.div>`,
     },

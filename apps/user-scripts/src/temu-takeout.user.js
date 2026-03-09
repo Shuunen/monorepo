@@ -20,7 +20,6 @@
 function getData() {
   // @ts-expect-error rawData is not defined but exists in the page
   // oxlint-disable no-undef
-  // biome-ignore lint/correctness/noUndeclaredVariables: rawData is not defined but exists in the page
   const { store } = rawData;
   if (store === undefined) throw new Error("No rawData.store in page");
   if (store.googleShoppingJson !== undefined) {

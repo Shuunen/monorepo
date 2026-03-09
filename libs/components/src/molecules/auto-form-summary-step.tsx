@@ -1,8 +1,8 @@
 import type { z } from "zod";
 import { Paragraph, Title } from "../atoms/typography";
+import { groupedSectionsFromEditableSteps } from "./auto-form-summary-step.utils";
 import type { AutoFormData, AutoFormSummarySection } from "./auto-form.types";
 import { FormSummary } from "./form-summary";
-import { groupedSectionsFromEditableSteps } from "./auto-form-summary-step.utils";
 
 type Props = {
   /**

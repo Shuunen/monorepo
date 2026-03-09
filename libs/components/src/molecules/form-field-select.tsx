@@ -1,6 +1,7 @@
 import { cn, functionReturningVoid } from "@monorepo/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "../atoms/button";
 import { FormControl } from "../atoms/form";
 import { Popover, PopoverContent, PopoverTrigger } from "../atoms/popover";
 import { IconCheck } from "../icons/icon-check";
@@ -8,7 +9,6 @@ import { IconChevronDown } from "../icons/icon-chevron-down";
 import type { AutoFormFieldSelectMetadata, SelectOption } from "./auto-form.types";
 import { getFieldMetadataOrThrow } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
-import { Button } from "../atoms/button";
 
 const itemHeight = 32;
 const maxHeight = 256;

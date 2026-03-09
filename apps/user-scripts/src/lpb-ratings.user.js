@@ -452,7 +452,6 @@ function LpbRatings() {
     threshold: 0.4,
   };
   // @ts-expect-error Fuse is globally available
-  // biome-ignore lint/correctness/noUndeclaredVariables: globally available
   const fuse = new Fuse(ratings, fuseSettings); // oxlint-disable-line no-undef
 
   const utils = new Shuutils("lpb-ratings");

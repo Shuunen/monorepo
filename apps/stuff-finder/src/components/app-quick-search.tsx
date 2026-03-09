@@ -1,9 +1,9 @@
 import { off, on, tw } from "@monorepo/utils";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { navigateToSearch } from "../pages/page-search.const";
 import { logger } from "../utils/logger.utils";
 import { state, watchState } from "../utils/state.utils";
-import { navigateToSearch } from "../pages/page-search.const";
 
 function onSearch(event: React.KeyboardEvent<HTMLInputElement>) {
   const { key, target } = event;
@@ -41,7 +41,8 @@ export function AppQuickSearch({
         searchReference.current?.focus();
       }, focusDelay);
     });
-    const keypressHandler = on("keypress", (event: KeyboardEvent) => {
+    const keypressHandler = on("keypress", (_data, event) => {
+      if (!(event instanceof KeyboardEvent)) return;
       const canFocus = !pagesWithInputs.has(path ?? "") && isUsable;
       if (!canFocus) return;
       // oxlint-disable-next-line typescript/prefer-optional-chain

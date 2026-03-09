@@ -33,7 +33,6 @@ function renderScanStatus(
       </Collapse>
       <Collapse in={status === "ready"}>
         <div className="aspect-video max-h-80 overflow-hidden rounded-xl shadow-lg">
-          {/* biome-ignore lint/a11y/useMediaCaption: fix later */}
           <video className="w-full object-cover" ref={videoReference} />
         </div>
       </Collapse>

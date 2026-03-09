@@ -49,7 +49,6 @@ const config = {
  * @returns {number|undefined} the listing id
  */
 function getListingId(url = document.location.href) {
-  // biome-ignore lint/performance/useTopLevelRegex: FIX me later
   const id = /\/(?<id>\d{5,15})\b/u.exec(url)?.groups?.id;
   return id ? Number.parseInt(id, 10) : undefined;
 }
@@ -86,9 +85,7 @@ function getNoteIdFromNote(noteElement) {
 function LbcNotes() {
   if (globalThis.matchMedia === undefined) return;
   // oxlint-disable no-undef
-  // biome-ignore lint/correctness/noUndeclaredVariables: globally available
   const { clear: clearStore, get: getNoteFromStore, set: setInStore } = idbKeyval;
-  // biome-ignore lint/correctness/noUndeclaredVariables: globally available
   tailwind.config = {
     corePlugins: {
       preflight: false,
@@ -103,7 +100,6 @@ function LbcNotes() {
     floatingSidebar: '[class^="styles_sideColumn__"]',
   };
   /* Init DB */
-  // biome-ignore lint/correctness/noUndeclaredVariables: globally available
   const { Client, ID, Query, TablesDB } = Appwrite;
   const db = {
     databaseId: localStorage.getItem("lbcNotes_databaseId"),
@@ -496,7 +492,6 @@ function LbcNotes() {
   }
 
   // @ts-expect-error GM_addStyle is globally available
-  // biome-ignore lint/correctness/noUndeclaredVariables: should be available
   GM_addStyle(`
     .${utils.id}--note.loading {
       background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);

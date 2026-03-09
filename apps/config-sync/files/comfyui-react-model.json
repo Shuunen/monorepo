@@ -167,7 +167,23 @@
       },
       "size": [330, 454],
       "type": "ReActorMaskHelper",
-      "widgets_values": ["bbox/face_yolov8m.pt", 0.5, 10, 3, 10, "sam_vit_l_0b3195.pth", 0, 0.93, 0, 0.7, "False", "open", 6, 15, 1]
+      "widgets_values": [
+        "bbox/face_yolov8m.pt",
+        0.5,
+        10,
+        3,
+        10,
+        "sam_vit_l_0b3195.pth",
+        0,
+        0.93,
+        0,
+        0.7,
+        "False",
+        "open",
+        6,
+        15,
+        1
+      ]
     },
     {
       "flags": {},
@@ -247,7 +263,19 @@
       },
       "size": [315, 358],
       "type": "ReActorFaceSwap",
-      "widgets_values": [true, "inswapper_128.onnx", "retinaface_resnet50", "codeformer-v0.1.0.pth", 1, 0.5, "female", "female", "0", "0", 1]
+      "widgets_values": [
+        true,
+        "inswapper_128.onnx",
+        "retinaface_resnet50",
+        "codeformer-v0.1.0.pth",
+        1,
+        0.5,
+        "female",
+        "female",
+        "0",
+        "0",
+        1
+      ]
     },
     {
       "flags": {},

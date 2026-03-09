@@ -1,6 +1,6 @@
 import { IconOwl } from "@monorepo/components";
-import { TypewriterEffectSmooth } from "./typewriter-effect";
 import { Converter } from "./converter";
+import { TypewriterEffectSmooth } from "./typewriter-effect";
 
 const words = [
   {

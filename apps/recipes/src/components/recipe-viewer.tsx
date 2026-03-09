@@ -11,7 +11,6 @@ type RecipeParams = {
 };
 
 type RecipeModule = {
-  // biome-ignore lint/style/useNamingConvention: can't change that
   ReactComponent: React.ComponentType;
 };
 

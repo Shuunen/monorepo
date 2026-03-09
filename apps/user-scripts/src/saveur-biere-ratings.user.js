@@ -67,7 +67,6 @@ function SaveurBiereRatings() {
     element.classList.add(utils.id);
     element.parentElement.style.height = "auto";
   }
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   async function fetchRating(item) {
     const titleElement = utils.findOne(selectors.title, item);
     if (titleElement === null) return utils.error("cant find item title");

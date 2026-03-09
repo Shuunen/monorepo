@@ -55,12 +55,9 @@ Just go to the `User settings (JSON)` .
 
 "editor.codeActionsOnSave": {
     "source.addMissingImports.ts": "explicit",
-    "source.fixAll.biome": "explicit",
     "source.fixAll.oxc": "explicit",
     "source.fixAll.ts": "explicit",
-    "source.organizeImports": "explicit",
-    "source.removeUnusedImports": "explicit",
-    "source.sortImports": "explicit"
+    "source.removeUnusedImports": "explicit"
   },
 
 ```

@@ -1,6 +1,5 @@
 // oxlint-disable-next-line unicorn/no-abusive-eslint-disable
 /* oxlint-disable */
-/** biome-ignore-all lint/correctness/noNodejsModules: we can use node here */
 const cp = require('node:child_process')
 const chokidar = require('chokidar')
 const electron = require('electron')
@@ -43,8 +42,7 @@ async function spawnElectron() {
 function setupReloadWatcher() {
   reloadWatcher.watcher = chokidar
     .watch('./src/**/*', {
-      // biome-ignore lint/performance/useTopLevelRegex: fix me later
-      ignored: /[/\\]\./,
+            ignored: /[/\\]\./,
       persistent: true,
     })
     .on('ready', () => {

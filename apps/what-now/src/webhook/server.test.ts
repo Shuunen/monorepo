@@ -1,7 +1,7 @@
-import { alignForSnap, Result, sleep, stringify } from "@monorepo/utils";
 import { type ChildProcess, spawn } from "node:child_process";
 import type http from "node:http";
 import { PassThrough } from "node:stream";
+import { alignForSnap, Result, sleep, stringify } from "@monorepo/utils";
 import * as serverModule from "./server.cli";
 
 // Suppress unhandled errors to prevent Vitest from reporting them globally

@@ -1,4 +1,5 @@
 // oxlint-disable max-lines-per-function, id-length, no-nested-ternary
+import { functionReturningVoid } from "@monorepo/utils";
 import { type MouseEvent, type MouseEventHandler, type RefObject, useEffect, useRef, useState } from "react";
 import {
   calculateNewPan,
@@ -13,7 +14,6 @@ import {
   shouldResetPan,
 } from "../utils/comparison.utils";
 import { getContainedSize, type ImageMetadata } from "../utils/image.utils";
-import { functionReturningVoid } from "@monorepo/utils";
 
 type UsePanZoomReturn = {
   cursor: "auto" | "grab" | "grabbing";

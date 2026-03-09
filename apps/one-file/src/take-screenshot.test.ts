@@ -18,7 +18,6 @@ it("parseVideoMetadata A", () => {
 
 const ffProbeOutputB = {
   format: {
-    // biome-ignore lint/style/useNamingConvention: ff naming convention
     bit_rate: 123_456,
     duration: 789,
     filename: "plop.mp4",
@@ -29,26 +28,18 @@ const ffProbeOutputB = {
   },
   streams: [
     {
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       avg_frame_rate: "25/1",
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       codec_name: "aac",
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       codec_type: "audio",
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       color_transfer: "",
       duration: "",
       height: 0,
       width: 0,
     },
     {
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       avg_frame_rate: "25/1",
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       codec_name: "h264",
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       codec_type: "video",
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       color_transfer: "",
       duration: "00:00:00.000000",
       height: 1080,
@@ -70,7 +61,6 @@ it("parseVideoMetadata B", () => {
 
 const ffProbeOutputCnoVideo = {
   format: {
-    // biome-ignore lint/style/useNamingConvention: ff naming convention
     bit_rate: 123_456,
     duration: 123,
     filename: "jazz.mp3",
@@ -81,13 +71,9 @@ const ffProbeOutputCnoVideo = {
   },
   streams: [
     {
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       avg_frame_rate: "25/1",
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       codec_name: "aac",
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       codec_type: "audio",
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       color_transfer: "",
       duration: "",
       height: 0,
@@ -103,13 +89,9 @@ it("parseVideoMetadata C", () => {
 const ffProbeOutputDnoFormat = {
   streams: [
     {
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       avg_frame_rate: "25/1",
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       codec_name: "h264",
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       codec_type: "video",
-      // biome-ignore lint/style/useNamingConvention: ff naming convention
       color_transfer: "",
       duration: "12",
       height: 720,

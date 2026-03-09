@@ -21,7 +21,6 @@ export function getPath(url = "", addLang = "") {
     path = "";
   }
   path = removeExtraSlashes(path);
-  // biome-ignore lint/performance/useTopLevelRegex: fix me later
   path = path.replace(/^\/[a-z]{2}\//u, "/"); // remove any lang from path
   if (addLang !== "") {
     path = `/${addLang}/${path}`;

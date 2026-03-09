@@ -1,7 +1,5 @@
 // oxlint-disable-next-line unicorn/no-abusive-eslint-disable
 /* oxlint-disable */
-/** biome-ignore-all lint/correctness/noNodejsModules: we can use node here */
-/** biome-ignore-all lint/style/useNamingConvention: it's Electron conventions */
 import { join } from 'node:path';
 import { type CapacitorElectronConfig, CapacitorSplashScreen, CapElectronEventEmitter, setupCapacitorElectronPlugins } from '@capacitor-community/electron';
 import chokidar from 'chokidar';
@@ -20,8 +18,7 @@ const reloadWatcher = {
 export function setupReloadWatcher(electronCapacitorApp: ElectronCapacitorApp): void {
   reloadWatcher.watcher = chokidar
     .watch(join(app.getAppPath(), 'app'), {
-      // biome-ignore lint/performance/useTopLevelRegex: fix me later
-      ignored: /[/\\]\./,
+            ignored: /[/\\]\./,
       persistent: true,
     })
     .on('ready', () => {
@@ -71,8 +68,7 @@ export class ElectronCapacitorApp {
   }
 
   // Helper function to load in the app.
-  // biome-ignore lint/suspicious/noExplicitAny: it's ok here
-  private async loadMainWindow(thisRef: any) {
+    private async loadMainWindow(thisRef: any) {
     await thisRef.loadWebApp(thisRef.MainWindow)
   }
 
@@ -156,8 +152,7 @@ export class ElectronCapacitorApp {
       this.SplashScreen.init(this.loadMainWindow, this)
     } else
       this.loadMainWindow(this).catch((error: unknown) => {
-        // biome-ignore lint/suspicious/noConsole: it's ok in this context
-        console.error('Error loading main window:', error)
+                console.error('Error loading main window:', error)
       })
 
     // Security

@@ -19,7 +19,6 @@ Run `nx test utils` to execute the unit tests via [Vitest](https://vitest.dev/).
 
 - [ ] use zod
 - [ ] add willOutputToFile option to the logger
-- [ ] re-enable useTopLevelRegex in biome
 
 ## Thanks
 

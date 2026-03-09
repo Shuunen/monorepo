@@ -1,9 +1,9 @@
 import { cn, slugify } from "@monorepo/utils";
+import { useWatch } from "react-hook-form";
 import { Button } from "../atoms/button";
 import { Title } from "../atoms/typography";
 import type { AutoFormData, StringLike } from "./auto-form.types";
 import { typeLikeResolver } from "./auto-form.utils";
-import { useWatch } from "react-hook-form";
 
 export type AutoFormStepperStep = {
   /** Optional section identifier for this step. */

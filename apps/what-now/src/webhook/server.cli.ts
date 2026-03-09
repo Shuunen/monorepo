@@ -43,7 +43,6 @@ export function log(severity: "info" | "warn" | "error", context: string, ...arg
   // if in unit test, do not log
   if (process.env.VITEST) return;
   const paddedSeverity = `[${severity}]`.padStart(options.severityPadding);
-  // biome-ignore lint/suspicious/noConsole: allowed in this context
   console.log(`${datetime()} ${paddedSeverity} [${context}]`, ...args); // oxlint-disable-line no-console
 }
 
@@ -271,7 +270,6 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
   const hueBody = getHueColorBody(progress);
   log("info", context, `Prepared hue body: ${hueBody}`);
   const trmnlPayload = JSON.stringify({
-    // biome-ignore lint/style/useNamingConvention: cannot change external API
     merge_variables: {
       nextTitle: nextTask,
       progress,

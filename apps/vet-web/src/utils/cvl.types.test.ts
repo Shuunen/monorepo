@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/useNamingConvention: it'ok here */
 import type { CodeVersion, CodeVersionLabel } from "./cvl.types.ts";
 
 describe("cvl.types", () => {

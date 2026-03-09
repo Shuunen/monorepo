@@ -20,9 +20,7 @@ nx dev sample-web-app
 
 ## Todo
 
-- [ ] remove `noUndeclaredDependencies: "off"` from `biome.json` when Biome supports monorepo, for no it's reporting falsy undeclared dependencies
 - [ ] remove `explicit-module-boundary-types: off` from oxlint conf and declare types everywhere ?
-- [ ] investigate why biome is showing warnings
 - [ ] add knip (does it works with monorepo ?)
 - [ ] investigate if we need to split output from tsc and build ( right now lib/app go to dist but tsconfig.spec goes to out-tsc)
 - [ ] investigate why we need local dependencies like react in utils when react is already in the root package.json, in the other hand apps/sample-web-app works without local react dependency
@@ -62,7 +60,6 @@ Nitpicks to re-enable one day :
 
 ## Thanks
 
-- [Biome](https://biomejs.dev) : super fast linter & formatter
 - [Boxy Svg](https://boxy-svg.com) : simple & effective svg editor
 - [Bun](https://bun.sh) : super fast runtime for JavaScript and TypeScript
 - [Github](https://github.com) : for all their great work year after year, pushing OSS forward

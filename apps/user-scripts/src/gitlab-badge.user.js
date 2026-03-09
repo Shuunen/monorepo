@@ -26,10 +26,8 @@ const steps = {
 async function getNbContributions() {
   // @ts-expect-error gon is a global variable set by Gitlab
   // oxlint-disable no-undef
-  // biome-ignore lint/correctness/noUndeclaredVariables: it's a global variable set by Gitlab
   const isOnUserProfile = gon.feature_category === "user_profile";
   // @ts-expect-error gon is a global variable set by Gitlab
-  // biome-ignore lint/correctness/noUndeclaredVariables: it's a global variable set by Gitlab
   const username = isOnUserProfile ? document.location.pathname.slice(1) : gon.current_username;
   if (!username) throw new Error("No username found, looked in global gon.current_username");
   const url = `https://gitlab.com/users/${username}/calendar.json`;

@@ -1,5 +1,4 @@
 /* v8 ignore start -- @preserve */
-/** biome-ignore-all lint/suspicious/noConsole: old POC */
 // oxlint-disable no-console, no-undef
 
 const socket = new WebSocket("ws://localhost:54430");

@@ -13,7 +13,6 @@
 // ==/UserScript==
 
 // @ts-nocheck
-/** biome-ignore-all lint/performance/useTopLevelRegex: FIX me later */
 // oxlint-disable no-magic-numbers
 
 /**

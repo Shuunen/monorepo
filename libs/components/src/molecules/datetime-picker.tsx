@@ -37,7 +37,6 @@ type DatetimePickerProps = {
   onChange?: (date: Date | undefined) => void;
 } & NameProp;
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: datetime picker handles multiple modes (date, date-time, time)
 export function DatetimePicker({
   mode = "date-time",
   readonly = false,

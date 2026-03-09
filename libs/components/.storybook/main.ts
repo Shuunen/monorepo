@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/correctness/noNodejsModules: it's a config file */
 import { createRequire } from "node:module";
 import path from "node:path";
 import type { StorybookConfig } from "@storybook/react-vite";

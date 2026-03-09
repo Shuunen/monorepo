@@ -66,7 +66,6 @@ function TradeRepublicAio() {
   /**
    * Show the invested amount and times
    */
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   function showInvested() {
     let injected = 0;
     let spent = 0;

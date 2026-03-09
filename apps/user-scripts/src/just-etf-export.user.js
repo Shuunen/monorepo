@@ -79,33 +79,22 @@ function mapHeaderToProperty(header, row) {
     "1Y Perf": row.perf1y,
     "3Y Perf": row.perf3y,
     "5Y Perf": row.perf5y,
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Acc: isAccumulating ? "TRUE" : "FALSE",
     "ETF / Stock": row.name,
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Fees: row.fees,
-    // biome-ignore lint/style/useNamingConvention: it's ok
     ISIN: row.isin,
-    // biome-ignore lint/style/useNamingConvention: it's ok
     PEA: "",
     "Perf. ann.": "",
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Provider: row.provider,
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Quantalys: "",
     "R/Risk 1Y": row.perfRisk1y,
     "R/Risk 3Y": row.perfRisk3y,
     "R/Risk 5Y": row.perfRisk5y,
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Score: "",
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Shares: "",
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Sharpe: "",
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Ticker: row.ticker,
     "Ticker alt": "",
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Volatilité: "",
     plan: "",
   };

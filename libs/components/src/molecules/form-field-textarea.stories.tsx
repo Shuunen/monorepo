@@ -1,12 +1,12 @@
 import { isBrowserEnvironment, Logger, stringify } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { invariant } from "es-toolkit";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
 import { AutoForm } from "./auto-form";
 import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
-import { invariant } from "es-toolkit";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
 

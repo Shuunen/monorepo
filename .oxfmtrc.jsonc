@@ -5,23 +5,21 @@
   "bracketSpacing": true,
   "endOfLine": "lf",
   // needs to be disabled to work with experimentalTailwindcss, will be fixed in the future
-  // "experimentalSortImports": {
-  //   "ignoreCase": true,
-  //   "newlinesBetween": false,
-  // },
+  "experimentalSortImports": {
+    "ignoreCase": true,
+    "newlinesBetween": false,
+  },
   // sort but not alphabetically
   "experimentalSortPackageJson": false,
   "experimentalTailwindcss": {
     "functions": ["clsx", "cn", "cva", "tw"],
     "preserveDuplicates": false,
     "preserveWhitespace": false,
-    "stylesheet": "./libs/components/src/styles.css"
+    "stylesheet": "./libs/components/src/styles.css",
   },
   "ignorePatterns": [
     "**/.git",
     "**/.nx",
-    "**/*.json",
-    "**/*.jsonc",
     "**/coverage",
     "**/android",
     "**/electron",
@@ -34,7 +32,7 @@
     "**/storybook-static",
     "**/test-output",
     "**/types/**/*.d.ts",
-    "**/.storybook/tw.css"
+    "**/.storybook/tw.css",
   ],
   "objectWrap": "preserve",
   "printWidth": 120,
@@ -44,5 +42,5 @@
   "singleQuote": false,
   "tabWidth": 2,
   "trailingComma": "all",
-  "useTabs": false
+  "useTabs": false,
 }

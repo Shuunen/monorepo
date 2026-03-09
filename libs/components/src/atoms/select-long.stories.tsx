@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/useNamingConvention: it's ok here */
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { expect, fn, userEvent, within } from "storybook/test";

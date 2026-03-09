@@ -4,6 +4,7 @@ import { cn, nbPercentMax, scrollToElement, sleep } from "@monorepo/utils";
 import { Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import type { z } from "zod";
 import { Button } from "../atoms/button";
 import { Form } from "../atoms/form";
 import { Title } from "../atoms/typography";
@@ -15,7 +16,7 @@ import { AutoFormParentDataProvider, useAutoFormParentData } from "./auto-form-p
 import { AutoFormStepper } from "./auto-form-stepper";
 import { AutoFormSubmissionStep } from "./auto-form-submission-step";
 import { AutoFormSummaryStep } from "./auto-form-summary-step";
-import { FormSummary } from "./form-summary";
+import { sectionsFromSchema } from "./auto-form-summary-step.utils";
 import { defaultIcons, defaultLabels } from "./auto-form.const";
 import type {
   AutoFormData,
@@ -35,8 +36,7 @@ import {
   normalizeData,
   typeLikeResolver,
 } from "./auto-form.utils";
-import { sectionsFromSchema } from "./auto-form-summary-step.utils";
-import type { z } from "zod";
+import { FormSummary } from "./form-summary";
 
 /**
  * AutoForm is a black box, all in one form generator, takes Zod schemas in and build the ui, handle validation, state management, navigation, submission, etc.:

@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/suspicious/noArrayIndexKey: not my code */
-/** biome-ignore-all lint/correctness/useExhaustiveDependencies: not my code */
 // oxlint-disable arrow-body-style, max-lines-per-function
 import { cn } from "@monorepo/utils";
 import { motion } from "motion/react";

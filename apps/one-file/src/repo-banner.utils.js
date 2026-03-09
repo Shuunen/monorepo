@@ -1,7 +1,5 @@
 // oxlint-disable import/no-nodejs-modules
-// biome-ignore lint/correctness/noNodejsModules: ok here
 import { readFileSync, statSync } from "node:fs";
-// biome-ignore lint/correctness/noNodejsModules: ok here
 import path from "node:path";
 import { Logger } from "@monorepo/utils";
 

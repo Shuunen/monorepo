@@ -62,11 +62,8 @@ async function TextGuard() {
     element.dataset.txtGrd = "forbidden";
     counts.forbidden += 1;
     // oxlint-disable no-undef
-    // biome-ignore lint/correctness/noUndeclaredVariables: RoughNotation exists in global
     const annotation1 = RoughNotation.annotate(element, { color: "red", strokeWidth: 4, type: "box" });
-    // biome-ignore lint/correctness/noUndeclaredVariables: RoughNotation exists in global
     const annotation2 = RoughNotation.annotate(element, { color: "yellow", type: "highlight" });
-    // biome-ignore lint/correctness/noUndeclaredVariables: RoughNotation exists in global
     const annotationGroup = RoughNotation.annotationGroup([annotation1, annotation2]);
     annotationGroup.show();
     utils.error(`Forbidden word detected: ${word}`);
@@ -112,7 +109,6 @@ async function TextGuard() {
    * @param {string} word - The word to search for.
    * @returns {Array<HTMLElement>} - An array of elements that contain the specified word.
    */
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   function findElementsByQueryAll(word) {
     const needle = sanitize(word);
     const elements = Array.from(document.querySelectorAll("*"));

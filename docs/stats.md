@@ -64,10 +64,7 @@ At some point I created these custom nx tasks in the root nx.json :
       "commands": [
         "echo 'Running oxlint...'",
         "oxlint --deny-warnings --fix --fix-suggestions --fix-dangerously {projectRoot}",
-        "echo 'Lint with oxlint done ✅'",
-        "echo 'Running biome...'",
-        "biome check --error-on-warnings --write --unsafe {projectRoot}",
-        "echo 'Lint with biome done ✅'"
+        "echo 'Lint with oxlint done ✅'"
       ],
       "cwd": "{workspaceRoot}"
     }

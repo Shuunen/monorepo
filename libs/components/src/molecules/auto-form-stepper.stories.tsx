@@ -1,13 +1,13 @@
+import { dateIso10 } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useId, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Skeleton } from "../atoms/skeleton";
-import { defaultIcons } from "./auto-form.const";
-import { AutoFormStepper } from "./auto-form-stepper";
-import { today, yesterday } from "./form-field-date.utils";
-import { dateIso10 } from "@monorepo/utils";
-import type { AutoFormData } from "./auto-form.types";
 import { expect, within } from "storybook/test";
+import { Skeleton } from "../atoms/skeleton";
+import { AutoFormStepper } from "./auto-form-stepper";
+import { defaultIcons } from "./auto-form.const";
+import type { AutoFormData } from "./auto-form.types";
+import { today, yesterday } from "./form-field-date.utils";
 
 const meta: Meta<typeof AutoFormStepper> = {
   component: AutoFormStepper,

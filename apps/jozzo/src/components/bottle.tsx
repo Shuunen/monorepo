@@ -1,11 +1,6 @@
-/**
- * Display a bottle
- * @param props
- * @returns
- */
 import { useStableKeys } from "@monorepo/utils";
-import type { Color } from "../utils/colors.utils";
 import { useRef } from "preact/hooks";
+import type { Color } from "../utils/colors.utils";
 
 type BottleProperties = {
   readonly colors: Color[];

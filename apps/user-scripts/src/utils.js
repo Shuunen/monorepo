@@ -157,7 +157,6 @@ class Shuutils {
   debug(...stuff) {
     if (!this.willDebug) return;
     if (this.id.length > 0) stuff.unshift(`${this.id} :`);
-    // biome-ignore lint/suspicious/noConsole: it's ok here :)
     console.log(...stuff);
   }
   /**
@@ -194,7 +193,6 @@ class Shuutils {
    */
   error(...stuff) {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`);
-    // biome-ignore lint/suspicious/noConsole: it's ok here :)
     console.error(...stuff);
   }
   /**
@@ -273,7 +271,6 @@ class Shuutils {
    */
   groupCollapsed(...stuff) {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`);
-    // biome-ignore lint/suspicious/noConsole: it's ok here :)
     console.groupCollapsed(...stuff);
   }
   /**
@@ -282,7 +279,6 @@ class Shuutils {
    * @example utils.groupEnd()
    */
   groupEnd() {
-    // biome-ignore lint/suspicious/noConsole: it's ok here :)
     console.groupEnd();
   }
   /**
@@ -377,7 +373,6 @@ class Shuutils {
    */
   log(...stuff) {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`);
-    // biome-ignore lint/suspicious/noConsole: it's ok here :)
     console.log(...stuff);
   }
   /**
@@ -410,7 +405,6 @@ class Shuutils {
     // Normalize all space-like characters to regular space
     const normalizedInput = input.replaceAll(/[\s\u00A0\u2000-\u200B\u202F\u205F\u3000]+/gu, " ").trim();
     const parsePriceRegex =
-      // biome-ignore lint/performance/useTopLevelRegex: FIX me later
       /^(?<sign>-)?\+?(?<currencyStart>[$€])? ?(?:(?<integers>[\d .,]+)(?<decimals>[.,]\d{2})|(?<integersOnly>[\d .,]+)) ?(?<currencyEnd>[$€])?$/u;
     const {
       currencyEnd,
@@ -625,6 +619,5 @@ class Shuutils {
 if (globalThis.window === undefined)
   // oxlint-disable-next-line no-commonjs, no-undef, prefer-module
   module.exports = {
-    // biome-ignore lint/style/useNamingConvention: nope
     Shuutils,
   };

@@ -37,7 +37,6 @@ export const itemBoxes = [
 export const boxRooms = {
   bureau: ["E", "P", "Q", "T", "Z", "Bureau"] satisfies string[],
   cuisine: ["Cuisine"] satisfies string[],
-  // biome-ignore lint/style/useNamingConvention: to be refactored
   entrée: ["A", "B", "D", "H", "M", "O", "W", "R", "V", "Entrée"] satisfies string[],
   garage: ["Garage"] satisfies string[],
   "salle de bain": ["S", "Salle de bain"] satisfies string[],

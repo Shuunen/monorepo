@@ -54,7 +54,6 @@ function G2aBatchCompare() {
   }
   function same(stringA, stringB) {
     // oxlint-disable no-undef
-    // biome-ignore lint/correctness/noUndeclaredVariables: it is declared in the global scope
     const hasResult = Boolean(didYouMean(cleanGameName(stringA), [cleanGameName(stringB)]));
     if (utils.app.debug) utils.log(`${hasResult ? "same" : "different"} : "${stringA}" & "${stringB}"`);
     return hasResult;
@@ -127,7 +126,6 @@ function G2aBatchCompare() {
     let lowestPrice = 0;
     let lowestUrl = "";
     for (const result of data.items) {
-      // biome-ignore lint/performance/useTopLevelRegex: FIX me later
       if (!/\b(?:europe|euw|global)\b/iu.test(result.name)) {
         utils.log("incorrect right ?", result.name);
         continue;

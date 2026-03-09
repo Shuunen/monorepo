@@ -85,7 +85,6 @@ const updateRow = vi.fn(
   },
 );
 
-// biome-ignore lint/style/useNamingConvention: I cant change this, it's part of the Appwrite SDK
 class TablesDB {
   createRow = createRow;
   deleteRow = deleteRow;
@@ -135,7 +134,6 @@ function reset() {
 
 // oxlint-disable-next-line sort-keys
 export const databaseMock = {
-  // biome-ignore lint/style/useNamingConvention: I cant change this, it's part of the Appwrite SDK
   appwrite: { Client, Query, Storage, TablesDB },
   createFile,
   createRow,
@@ -143,7 +141,6 @@ export const databaseMock = {
   deleteRow,
   listFiles,
   listRows,
-  // biome-ignore lint/style/useNamingConvention: I cant change this, it's part of the Appwrite SDK
   Query,
   reset,
   updateRow,

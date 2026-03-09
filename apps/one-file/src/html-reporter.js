@@ -53,7 +53,6 @@ export class HtmlReporter {
   }
 
   // oxlint-disable max-statements
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: it's just a POC
   scan() {
     this.index++;
     const char = this.input[this.index];

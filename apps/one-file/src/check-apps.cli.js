@@ -1,8 +1,8 @@
-/* v8 ignore start -- @preserve */
-import { list } from "7zip-min";
-import { blue, green, Logger, nbPercentMax, nbThird, red, Result, yellow } from "@monorepo/utils";
+/* v8 ignore start */
 import { readdirSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { list } from "7zip-min";
+import { blue, green, Logger, nbPercentMax, nbThird, red, Result, yellow } from "@monorepo/utils";
 
 // Use me like : node ~/Projects/github/monorepo/apps/one-file/src/check-apps.cli.js "/d/Apps/"
 

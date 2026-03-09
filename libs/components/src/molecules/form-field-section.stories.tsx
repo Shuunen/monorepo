@@ -1,8 +1,8 @@
+import { stringify } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useForm, FormProvider } from "react-hook-form";
 import { expect, userEvent, within } from "storybook/test";
 import { FormFieldSection } from "./form-field-section";
-import { stringify } from "@monorepo/utils";
 
 const meta = {
   component: FormFieldSection,

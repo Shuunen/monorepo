@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/useNamingConvention: it'ok */
 import {
   calculateNewPan,
   calculateNewZoom,

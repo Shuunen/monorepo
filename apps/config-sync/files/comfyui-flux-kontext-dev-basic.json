@@ -400,7 +400,9 @@
       "size": [320, 88],
       "title": "How to enable multiple image input",
       "type": "MarkdownNote",
-      "widgets_values": ["Click on the **Load image (from output)** node and use **Ctrl + B** to enable multiple image input support."]
+      "widgets_values": [
+        "Click on the **Load image (from output)** node and use **Ctrl + B** to enable multiple image input support."
+      ]
     },
     {
       "bgcolor": "#653",
@@ -416,7 +418,9 @@
       "size": [340, 90],
       "title": "About multi-round edit",
       "type": "MarkdownNote",
-      "widgets_values": ["The **Load Image (from Outputs)** node allows you to fetch the last image from the output. Click on the **refresh** button to fetch the latest image or manually select an image from the dropdown list."]
+      "widgets_values": [
+        "The **Load Image (from Outputs)** node allows you to fetch the last image from the output. Click on the **refresh** button to fetch the latest image or manually select an image from the dropdown list."
+      ]
     },
     {
       "flags": {},

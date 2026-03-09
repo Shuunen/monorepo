@@ -1,5 +1,5 @@
-import { daysAgo, daysAgoIso10, daysFromNow, readableTimeAgo } from "./date-relative.js";
 import { dateIso10 } from "./date-iso.js";
+import { daysAgo, daysAgoIso10, daysFromNow, readableTimeAgo } from "./date-relative.js";
 
 describe("date-relative", () => {
   it("daysFromNow A without param", () => {

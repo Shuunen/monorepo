@@ -24,7 +24,6 @@ const yesterday = daysAgoIso10(1);
 
 // oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("appwrite", () => {
-  // biome-ignore lint/style/useNamingConvention: ok here
   class TablesDB {
     constructor(client?: Client) {
       if (client) functionReturningVoid();
@@ -81,7 +80,6 @@ vi.mock("appwrite", () => {
   const Query = {
     limit: functionReturningVoid,
   };
-  // biome-ignore lint/style/useNamingConvention: I can't change this
   return { Client, Query, TablesDB };
 });
 

@@ -1,4 +1,3 @@
-/** biome-ignore-all assist/source/useSortedKeys: it's ok in schemas */
 import { field, step } from "@monorepo/components";
 import { z } from "zod";
 import { ageInput } from "../../utils/age.utils";

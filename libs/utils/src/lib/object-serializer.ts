@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: it's ok here */
 import { nbSpacesIndent } from "./constants.js";
 import { objectSort } from "./object-sort.js";
 

@@ -1,7 +1,7 @@
+import { copyFileSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { Logger, Result } from "@monorepo/utils";
-import { copyFileSync } from "node:fs";
 
 const regexes = {
   carriageReturn: /\r\n/gu,

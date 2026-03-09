@@ -1,3 +1,4 @@
+import { isFunction } from "es-toolkit";
 import type { z } from "zod";
 import type {
   AutoFormData,
@@ -17,7 +18,6 @@ import {
   shouldIncludeField,
   typeLikeResolver,
 } from "./auto-form.utils";
-import { isFunction } from "es-toolkit";
 
 /**
  * Filters data for summary display by excluding fields from readonly and upcoming steps.

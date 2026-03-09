@@ -21,7 +21,7 @@ This is an **Nx monorepo** using **pnpm** workspace management with React web ap
 - **`libs/utils`**: Central utility library providing DOM helpers, state management, logging, and all kind of utilities
 - **`libs/vite-plugins`**: Custom Vite plugins for build tooling
 - **`apps/*`**: Individual applications (web apps, CLI tools, user scripts)
-- All projects use **TypeScript**, **Vitest** for testing, and **Biome** and **OxLint** for linting/formatting
+- All projects use **TypeScript**, **Vitest** for testing and **OxLint** for linting/formatting
 
 ## Key Development Patterns
 
@@ -90,7 +90,6 @@ nx test <project-name>  # Run tests for specific project
 nx build <project-name> # Build specific project
 
 # Quality assurance
-pnpm check:biome        # Format and lint with Biome
 pnpm check:oxlint       # Additional linting with Oxlint
 pnpm check:nx           # Run all Nx tasks (lint, test, build, typecheck)
 
@@ -124,7 +123,6 @@ nx run-many -t build     # Build all projects
 ## Build & Integration
 
 - **Vitest** workspace configuration via `vitest.workspace.ts`
-- **Biome** handles formatting/linting with strict configuration
 - **OxLint** for additional linting rules
 - **Coverage thresholds** - uncovered code blocks CI
 - **Nx** plugins automatically detect and configure tasks from tool configs

@@ -6,7 +6,6 @@
  * @param {HTMLElement} [context] the context
  * @returns {string} the text content
  */
-// biome-ignore lint/correctness/noUnusedVariables: it's exposed globally
 function textFromSelector(selector, context) {
   const element = (context ?? document).querySelector(selector);
   if (!element) return "";
@@ -140,7 +139,6 @@ function addMbSubmit(form, label = "Export to MusicBrainz") {
  * @param {{ app: { id:string, title: string }, title: string, artist: string, date: {day:string, month:string, year: string}, tracks: {number: string, name: string, artist: string, duration: string}[], label: string, url: string, urlType: string }} data the data to insert
  * @returns {void} nothing
  */
-// biome-ignore lint/correctness/noUnusedVariables: it is used
 function insertMbForm({ app, artist, date, label, title, tracks, url, urlType }) {
   if (!title || !artist) return;
   const form = createMbForm(app);

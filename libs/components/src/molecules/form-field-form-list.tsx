@@ -3,6 +3,7 @@ import { arrayAlign, cn, isObjectEmpty, nbThird, Result, useStableKeys } from "@
 import { invariant } from "es-toolkit";
 import { useEffect, useMemo, useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import type { z } from "zod";
 import { Badge } from "../atoms/badge";
 import { Button } from "../atoms/button";
 import { Paragraph, Title } from "../atoms/typography";
@@ -25,7 +26,6 @@ import {
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.types";
 import { isSubformFilled, nbFilledItems } from "./form-field-form-list.utils";
-import type { z } from "zod";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);

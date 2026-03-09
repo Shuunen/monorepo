@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/correctness/useUniqueElementIds: fix me later */
 // oxlint-disable id-length
 import { Button } from "@monorepo/components";
 import { cn } from "@monorepo/utils";

@@ -322,7 +322,6 @@ function LbcListings() {
    * @param {LbcCarAd} ad the car ad to process
    * @returns {LbcCustomInfo[]} the custom infos
    */
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   function getCustomInfosCar(ad) {
     const infos = [getOwnerInfo(ad, false)];
     const year = Number.parseInt(ad.attributes.find(attribute => attribute.key === "regdate")?.value ?? "", 10);

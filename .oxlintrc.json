@@ -55,7 +55,19 @@
     "XPathEvaluator": "readonly",
     "XPathResult": "readonly"
   },
-  "ignorePatterns": [".git", ".nx", "*.d.ts", "coverage", "dist", "node_modules", "out-tsc", "routeTree.gen.ts", "shadcn", "storybook-static", "test-output"],
+  "ignorePatterns": [
+    ".git",
+    ".nx",
+    "*.d.ts",
+    "coverage",
+    "dist",
+    "node_modules",
+    "out-tsc",
+    "routeTree.gen.ts",
+    "shadcn",
+    "storybook-static",
+    "test-output"
+  ],
   "jsPlugins": ["./libs/oxc-plugins/monorepo.plugin.js"],
   "overrides": [
     {

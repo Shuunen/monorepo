@@ -1,6 +1,6 @@
 // oxlint-disable typescript/parameter-properties
-import { alignForSnap, stringify } from "@monorepo/utils";
 import path from "node:path";
+import { alignForSnap, stringify } from "@monorepo/utils";
 
 const mockUnlink = vi.fn().mockResolvedValue(undefined);
 const mockRename = vi.fn().mockResolvedValue(undefined);
@@ -38,7 +38,6 @@ const mockEnd = vi.fn();
 
 // oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("exiftool-vendored", () => ({
-  // biome-ignore lint/style/useNamingConvention: its ok
   ExifDateTime: class ExifDateTime {
     constructor(
       public year: number,
@@ -56,7 +55,6 @@ vi.mock("exiftool-vendored", () => ({
     toString() {
       return `${this.year}-${String(this.month).padStart(2, "0")}-${String(this.day).padStart(2, "0")}T${String(this.hour).padStart(2, "0")}:${String(this.minute).padStart(2, "0")}:${String(this.second).padStart(2, "0")}`;
     }
-    // biome-ignore lint/style/useNamingConvention: its ok
     static fromISO(str: string) {
       const date = new Date(str);
       const tzMatch = /([+-])(\d{2}):(\d{2})$/.exec(str);
@@ -79,7 +77,6 @@ vi.mock("exiftool-vendored", () => ({
       );
     }
   },
-  // biome-ignore lint/style/useNamingConvention: its ok
   ExifTool: class ExifTool {
     [Symbol.asyncDispose] = mockEnd;
     end = mockEnd;
@@ -206,7 +203,6 @@ describe("check-souvenirs.cli", () => {
 
   it("getExifDateFromSiblings A should return ExifDateTime from previous sibling", async () => {
     const siblingDate = new ExifDateTime(2006, 8, 14, 10, 20, 30, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
     const result = await getExifDateFromSiblings({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -218,7 +214,6 @@ describe("check-souvenirs.cli", () => {
   });
 
   it("getExifDateFromSiblings B should convert string DateTimeOriginal to ExifDateTime", async () => {
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: "2006-08-14T10:20:30" });
     const result = await getExifDateFromSiblings({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -446,7 +441,6 @@ describe("check-souvenirs.cli", () => {
     mockWrite.mockResolvedValue(undefined);
     const exifDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0);
     await setFileDate("test.jpg", exifDate);
-    // biome-ignore lint/style/useNamingConvention: its ok
     expect(mockWrite).toHaveBeenCalledWith("test.jpg", { DateTimeOriginal: exifDate });
     expect(count.dateFixes).toBe(1);
   });
@@ -504,7 +498,6 @@ describe("check-souvenirs.cli", () => {
 
   it("checkFileDate B should handle year mismatch", async () => {
     const originalDate = new ExifDateTime(2005, 8, 15, 12, 30, 45, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -516,7 +509,6 @@ describe("check-souvenirs.cli", () => {
 
   it("checkFileDate C should handle month mismatch", async () => {
     const originalDate = new ExifDateTime(2006, 7, 15, 12, 30, 45, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -528,7 +520,6 @@ describe("check-souvenirs.cli", () => {
 
   it("checkFileDate D should handle both year and month mismatch", async () => {
     const originalDate = new ExifDateTime(2005, 7, 15, 12, 30, 45, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -539,7 +530,6 @@ describe("check-souvenirs.cli", () => {
   });
 
   it("checkFileDate E should handle string DateTimeOriginal", async () => {
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: "2005-08-15T12:30:45" });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -551,7 +541,6 @@ describe("check-souvenirs.cli", () => {
 
   it("checkFileDate F should handle correct date", async () => {
     const correctDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: correctDate });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -563,7 +552,6 @@ describe("check-souvenirs.cli", () => {
 
   it("checkFileDate G should handle year mismatch with no path year", async () => {
     const originalDate = new ExifDateTime(2005, 8, 15, 12, 30, 45, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\random.jpg`,
@@ -575,7 +563,6 @@ describe("check-souvenirs.cli", () => {
 
   it("checkFileDate H should handle month mismatch with no path month", async () => {
     const originalDate = new ExifDateTime(2006, 7, 15, 12, 30, 45, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\2006\random.jpg`,
@@ -587,7 +574,6 @@ describe("check-souvenirs.cli", () => {
 
   it("setFileDateBasedOnSiblings A should set date from previous sibling", async () => {
     const siblingDate = new ExifDateTime(2006, 8, 14, 10, 20, 30, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
     await setFileDateBasedOnSiblings(
       {
@@ -603,7 +589,6 @@ describe("check-souvenirs.cli", () => {
 
   it("setFileDateBasedOnSiblings B should set date from next sibling", async () => {
     const siblingDate = new ExifDateTime(2006, 8, 16, 14, 25, 35, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
     await setFileDateBasedOnSiblings(
       {
@@ -637,7 +622,6 @@ describe("check-souvenirs.cli", () => {
 
   it("setFileDateBasedOnSiblings D should correct year from sibling date", async () => {
     const siblingDate = new ExifDateTime(2005, 8, 14, 10, 20, 30, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
     await setFileDateBasedOnSiblings(
       {
@@ -655,7 +639,6 @@ describe("check-souvenirs.cli", () => {
 
   it("setFileDateBasedOnSiblings E should correct month from sibling date", async () => {
     const siblingDate = new ExifDateTime(2006, 7, 14, 10, 20, 30, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
     await setFileDateBasedOnSiblings(
       {
@@ -672,7 +655,6 @@ describe("check-souvenirs.cli", () => {
   });
 
   it("setFileDateBasedOnSiblings F should handle string DateTimeOriginal from sibling", async () => {
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: "2006-08-14T10:20:30" });
     await setFileDateBasedOnSiblings(
       {
@@ -846,7 +828,6 @@ describe("check-souvenirs.cli", () => {
   });
 
   it("checkPngTransparency C should warn about RGB PNG without transparency", async () => {
-    // biome-ignore lint/style/useNamingConvention: cant fix
     mockRead.mockResolvedValue({ ColorType: "RGB" });
     await checkPngTransparency(String.raw`D:\Souvenirs\test.png`);
     expect(logger.inMemoryLogs.some(log => log.includes("PNG file without transparency detected"))).toBe(true);
@@ -857,7 +838,6 @@ describe("check-souvenirs.cli", () => {
   });
 
   it("checkPngTransparency D should not warn about PNG with RGBA ColorType", async () => {
-    // biome-ignore lint/style/useNamingConvention: cant fix
     mockRead.mockResolvedValue({ ColorType: "RGBA" });
     await checkPngTransparency(String.raw`D:\Souvenirs\test.png`);
     expect(logger.inMemoryLogs.some(log => log.includes("PNG file without transparency"))).toBe(false);

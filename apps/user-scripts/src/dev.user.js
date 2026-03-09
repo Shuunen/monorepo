@@ -15,7 +15,6 @@
 
 function Dev() {
   // oxlint-disable no-console
-  // biome-ignore lint/suspicious/noConsole: it's ok here
   console.log("hello from dev script, loading __HEY_CHANGE_ME__");
 }
 
