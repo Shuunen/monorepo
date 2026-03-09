@@ -198,9 +198,9 @@ it("dispatch tasks list with mixed success and failure", async () => {
   await dispatchTasksAndUpdate([successTask, failureTask]);
 });
 
-it("dispatch task A : cannot dispatch a daily task", async () => {
+it("dispatch task A : cannot dispatch a daily task", () => {
   const task = taskMock({ completedOn: yesterday, once: "day" });
-  const result = await dispatchTask(task);
+  const result = dispatchTask(task);
   expect(result).toMatchInlineSnapshot(`
     Err {
       "error": "daily task, nothing to dispatch",
@@ -209,15 +209,15 @@ it("dispatch task A : cannot dispatch a daily task", async () => {
   `);
 });
 
-it("dispatch task B : can dispatch a weekly task completed yesterday", async () => {
+it("dispatch task B : can dispatch a weekly task completed yesterday", () => {
   const task = taskMock({ completedOn: yesterday, once: "week" });
-  const result = await dispatchTask(task);
+  const result = dispatchTask(task);
   expect(result.ok).toBe(true);
 });
 
-it("dispatch task C : cannot dispatch a one time task", async () => {
+it("dispatch task C : cannot dispatch a one time task", () => {
   const task = taskMock({ completedOn: yesterday, once: "yes" });
-  const result = await dispatchTask(task);
+  const result = dispatchTask(task);
   expect(result).toMatchInlineSnapshot(`
     Err {
       "error": "one-time task, cannot dispatch",
@@ -226,9 +226,9 @@ it("dispatch task C : cannot dispatch a one time task", async () => {
   `);
 });
 
-it("dispatch task D : cannot dispatch a weekly task completed 7 days ago", async () => {
+it("dispatch task D : cannot dispatch a weekly task completed 7 days ago", () => {
   const task = taskMock({ completedOn: daysAgoIso10(7), once: "week" });
-  const result = await dispatchTask(task);
+  const result = dispatchTask(task);
   expect(result).toMatchInlineSnapshot(`
     Err {
       "error": "task already dispatched",

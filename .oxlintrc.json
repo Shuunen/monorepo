@@ -290,7 +290,6 @@
   "plugins": ["import", "jsdoc", "oxc", "promise", "react", "react-perf", "typescript", "unicorn", "vitest"],
   "rules": {
     "array-type": "off",
-    "await-thenable": "off",
     "button-has-type": "off",
     "capitalized-comments": "off",
     "consistent-indexed-object-style": "off",

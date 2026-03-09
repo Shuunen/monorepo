@@ -1,6 +1,7 @@
-import { copyFile, mkdir } from "node:fs/promises";
+import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { Logger, Result } from "@monorepo/utils";
+import { copyFileSync } from "node:fs";
 
 const regexes = {
   carriageReturn: /\r\n/gu,
@@ -101,7 +102,7 @@ export async function copy(source, destination) {
   // destination will be created or overwritten by default.
   const destinationFolder = destination.replace(filename(destination), "");
   await mkdir(destinationFolder, { recursive: true });
-  const result = await Result.trySafe(() => copyFile(source, destination));
+  const result = Result.trySafe(() => copyFileSync(source, destination));
   if (!result.ok) {
     logger.error(result.error);
     return false;

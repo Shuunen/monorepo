@@ -176,9 +176,10 @@ describe("server.cli.ts (unit)", () => {
   });
 
   it("sendCorsHeaders A should set headers", () => {
-    const res = { setHeader: vi.fn() } as unknown as http.ServerResponse;
+    const setHeader = vi.fn();
+    const res = { setHeader } as unknown as http.ServerResponse;
     serverModule.sendCorsHeaders(res);
-    expect(res.setHeader).toHaveBeenCalledWith("Access-Control-Allow-Origin", "*");
+    expect(setHeader).toHaveBeenCalledWith("Access-Control-Allow-Origin", "*");
   });
 
   it("parseProgressBody A should handle valid input", () => {
@@ -201,21 +202,25 @@ describe("server.cli.ts (unit)", () => {
   });
 
   it("respondNotFound A should write 404", () => {
-    const res = { end: vi.fn(), writeHead: vi.fn() } as unknown as http.ServerResponse;
+    const end = vi.fn();
+    const writeHead = vi.fn();
+    const res = { end, writeHead } as unknown as http.ServerResponse;
     serverModule.respondNotFound(res);
-    expect(res.writeHead).toHaveBeenCalledWith(serverModule.options.codes.notFound, {
+    expect(writeHead).toHaveBeenCalledWith(serverModule.options.codes.notFound, {
       "Content-Type": "application/json",
     });
-    expect(res.end).toHaveBeenCalled();
+    expect(end).toHaveBeenCalled();
   });
 
   it("respondBadRequest A should write 400", () => {
-    const res = { end: vi.fn(), writeHead: vi.fn() } as unknown as http.ServerResponse;
+    const end = vi.fn();
+    const writeHead = vi.fn();
+    const res = { end, writeHead } as unknown as http.ServerResponse;
     serverModule.respondBadRequest({ message: "bad", nextTask: undefined, progress: 0, remaining: undefined, res });
-    expect(res.writeHead).toHaveBeenCalledWith(serverModule.options.codes.badRequest, {
+    expect(writeHead).toHaveBeenCalledWith(serverModule.options.codes.badRequest, {
       "Content-Type": "application/json",
     });
-    expect(res.end).toHaveBeenCalled();
+    expect(end).toHaveBeenCalled();
   });
 
   it("flattenResponse A should resolve with parsed JSON", () => {

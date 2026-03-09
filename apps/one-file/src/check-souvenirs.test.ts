@@ -863,15 +863,15 @@ describe("check-souvenirs.cli", () => {
     expect(logger.inMemoryLogs.some(log => log.includes("PNG file without transparency"))).toBe(false);
   });
 
-  it("cleanFilePath A should warn about special characters in the path", async () => {
+  it("cleanFilePath A should warn about special characters in the path", () => {
     const inputPath = "/Souvenirs/2006/2006-00_Super test@@@!folder/pic.png";
-    await cleanFilePath(inputPath);
+    cleanFilePath(inputPath);
     expect(logger.inMemoryLogs.some(log => log.includes("contains forbidden characters"))).toBe(true);
   });
 
-  it("cleanFilePath B should rename file with special characters", async () => {
+  it("cleanFilePath B should rename file with special characters", () => {
     const inputPath = "test!2!!&@*(file#.jpg";
-    const result = await cleanFilePath(inputPath);
+    const result = cleanFilePath(inputPath);
     expect(result).toMatchInlineSnapshot(`"test-2-file.jpg"`);
   });
 

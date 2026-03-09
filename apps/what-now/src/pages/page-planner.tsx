@@ -535,10 +535,10 @@ function usePlannerActions(
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
   loadTasks: () => Promise<void>,
 ) {
-  const handleTasksDispatch = useCallback(async () => {
+  const handleTasksDispatch = useCallback(() => {
     const active = tasks.filter(task => isTaskActive(task));
     logger.info("dispatching active tasks...", { active });
-    await dispatchTasks(active);
+    dispatchTasks(active);
     setTasks([...tasks]);
   }, [tasks, setTasks]);
 

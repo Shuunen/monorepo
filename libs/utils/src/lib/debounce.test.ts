@@ -74,7 +74,7 @@ it("debounce F : return type async", () => {
 
 it("debounce G : return type async resolve", async () => {
   times = 42;
-  expect(await myAsyncFunctionDebounced()).toBeUndefined();
+  expect(myAsyncFunctionDebounced()).toBeUndefined();
   await sleep(12);
   expect(times).toBe(43);
 });

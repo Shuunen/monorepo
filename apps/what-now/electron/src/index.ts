@@ -47,7 +47,7 @@ if (electronIsDev)
   // Security - Set Content-Security-Policy based on whether or not we are in dev mode.
   // setupContentSecurityPolicy(myCapacitorApp.getCustomURLScheme())
   // Initialize our app, build windows, and load content.
-  await myCapacitorApp.init()
+   myCapacitorApp.init()
   // Register global shortcut for toggling DevTools (Ctrl+Shift+I)
   // oxlint-disable-next-line unicorn/prefer-module
   const { globalShortcut } = require('electron')
@@ -70,10 +70,10 @@ app.on('window-all-closed', () => {
 })
 
 // When the dock icon is clicked.
-app.on('activate', async () => {
+app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (myCapacitorApp.getMainWindow().isDestroyed()) await myCapacitorApp.init()
+  if (myCapacitorApp.getMainWindow().isDestroyed())  myCapacitorApp.init()
 })
 
 // Place all ipc or other electron api calls and custom functionality under this line
