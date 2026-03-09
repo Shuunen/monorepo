@@ -202,7 +202,7 @@ export function parseFormUrlEncoded(body: string): Record<string, string> {
 
 export function parseProgressBody(body: string) {
   let progress = 0;
-  let remaining: unknown = undefined;
+  let remaining: string | undefined = undefined;
   let nextTask: unknown = undefined;
   let parseError: string | undefined = undefined;
   const context = "parseProgressBody";

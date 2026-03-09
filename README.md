@@ -55,7 +55,6 @@ nx dev sample-web-app
   - no-unsafe-argument (22 issues)
   - consistent-return (19 issues)
   - promise/avoid-new (19 issues)
-  - no-base-to-string (17 issues)
   - no-array-index-key : conflicts with useStableKeys (9 issues)
   - jsx-handler-names : seems too neat pick (5 issues)
   - no-unnecessary-type-parameters : we like to use them sometimes (5 issues)

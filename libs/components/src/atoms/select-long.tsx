@@ -1,6 +1,6 @@
 // oxlint-disable no-duplicate-imports
 // oxlint-disable max-lines-per-function
-import { cn } from "@monorepo/utils";
+import { cn, stringify } from "@monorepo/utils";
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { IconSearch } from "../icons/icon-search";
 import { IconX } from "../icons/icon-x";
@@ -26,7 +26,7 @@ export type SelectLongProps<Option, Value = string> = ComponentProps<typeof Shad
 
 const minValuesForFilter = 10;
 
-const valueToString = (val: unknown): string | undefined => (val === undefined ? undefined : String(val));
+const valueToString = (val: unknown): string | undefined => (val === undefined ? undefined : stringify(val));
 
 export function SelectLong<Option, Value = string>(props: SelectLongProps<Option, Value>) {
   const [search, setSearch] = useState("");

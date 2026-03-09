@@ -56,7 +56,7 @@ function createIssueCountLink(repoFullName, count) {
 function getRepoFullName(repo) {
   const repoLinkElement = repo.querySelector(selectors.repoLink);
   const repoLink = repoLinkElement?.getAttribute("href") ?? "";
-  if (repoLink === "") throw new Error(`no repo link found in : ${repo}`);
+  if (repoLink === "") throw new Error(`no repo link found in repo element`);
   const repoFullName = repoLink.slice(1); // remove the leading /
   if (!repoFullName) throw new Error(`failed to extract repo full name from link :${repoLink}`);
   return repoFullName;

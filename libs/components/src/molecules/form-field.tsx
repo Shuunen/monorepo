@@ -1,4 +1,4 @@
-import type { Logger } from "@monorepo/utils";
+import { stringify, type Logger } from "@monorepo/utils";
 import { useEffect, useMemo, useRef } from "react";
 import {
   useFormContext,
@@ -57,7 +57,7 @@ export function FormFieldBase(props: FormFieldBaseProps) {
     if (defaultValue === undefined) {
       return;
     }
-    props.logger?.info(`initializing field "${fieldName}" value to "${defaultValue}", it was undefined`);
+    props.logger?.info(`initializing field "${fieldName}" value to "${stringify(defaultValue)}", it was undefined`);
     setValue(fieldName, defaultValue);
     // we only want to run this once on mount
     // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
