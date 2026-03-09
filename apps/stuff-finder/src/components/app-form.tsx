@@ -27,8 +27,6 @@ type Properties<FormType extends Form> = Readonly<{
   suggestions?: Record<string, string[]>;
 }>;
 
-const defaultSuggestions: Record<string, string[]> = {};
-
 // oxlint-disable-next-line max-lines-per-function
 export function AppForm<FormType extends Form>({
   children,
@@ -36,7 +34,7 @@ export function AppForm<FormType extends Form>({
   initialForm,
   onChange = functionReturningVoid,
   onSubmit,
-  suggestions = defaultSuggestions,
+  suggestions,
 }: Properties<FormType>) {
   const [form, setForm] = useState(initialForm);
 

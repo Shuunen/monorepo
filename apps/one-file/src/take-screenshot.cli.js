@@ -150,12 +150,10 @@ async function init() {
   const lastInput = await fs.readFile(lastInputFile, "utf8").catch(() => "60");
   await logAdd("Last input :", lastInput);
   const ask = createInterface({ input: process.stdin, output: process.stdout });
-  ask.question(`  Please type the time in mmss or ss (enter to use "${lastInput}") : `, time => {
-    void takeScreenAt(time || lastInput)
-      // oxlint-disable-next-line promise/prefer-await-to-then
-      .then(beep)
-      // oxlint-disable-next-line max-nested-callbacks, prefer-await-to-then
-      .then(() => ask.close()); // close the readline interface to allow the process to exit
+  ask.question(`  Please type the time in mmss or ss (enter to use "${lastInput}") : `, async time => {
+    await takeScreenAt(time || lastInput);
+    await beep();
+    ask.close(); // close the readline interface to allow the process to exit
   });
 }
 

@@ -345,7 +345,6 @@
       }
     ],
     "no-array-index-key": "off",
-    "no-array-index-key : conflicts with useStableKeys": "off",
     "no-async-await": "off",
     "no-confusing-void-expression": "off",
     "no-console": "error",
@@ -420,7 +419,6 @@
     "unicorn/prefer-spread": "off",
     "vitest/prefer-called-times": "off",
     "vitest/prefer-to-be-falsy": "off",
-    "vitest/prefer-to-be-truthy": "off",
-    "yoda": "off"
+    "vitest/prefer-to-be-truthy": "off"
   }
 }
