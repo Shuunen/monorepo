@@ -5,6 +5,7 @@ export function getNodeText(node: ReactNode): string {
     return "";
   }
 
+  // oxlint-disable-next-line typescript/switch-exhaustiveness-check
   switch (typeof node) {
     case "string":
     case "number": {

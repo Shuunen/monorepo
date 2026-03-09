@@ -44,6 +44,7 @@ export function AppQuickSearch({
     const keypressHandler = on("keypress", (event: KeyboardEvent) => {
       const canFocus = !pagesWithInputs.has(path ?? "") && isUsable;
       if (!canFocus) return;
+      // oxlint-disable-next-line typescript/prefer-optional-chain
       const isInInput = event.target instanceof HTMLElement && event.target.tagName.toLowerCase() === "input";
       if (isInInput) return;
       logger.debug("keypress on correct page & not in search input, will focus quick-search", { path });

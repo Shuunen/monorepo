@@ -181,7 +181,7 @@ export const CodeVersion: Story = {
       placeholder="Select a code & version"
       options={codeVersionOptions}
       getLabel={opt => opt.label}
-      getValue={opt => `${opt.Code}`}
+      getValue={opt => opt.Code}
     />
   ),
   play: async ({ canvasElement, step, args }) => {

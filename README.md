@@ -68,15 +68,6 @@ nx dev sample-web-app
   - no-meaningless-void-operator (7 issues)
   - jsx-handler-names (5 issues)
   - no-unnecessary-type-parameters : we like to use them sometimes (5 issues)
-  - prefer-readonly (5 issues)
-  - prefer-optional-chain (5 issues)
-  - use-unknown-in-catch-callback-variable (4 issues)
-  - no-unnecessary-template-expression (4 issues)
-  - no-unnecessary-type-arguments (2 issues)
-  - switch-exhaustiveness-check (1 issues)
-  - prefer-promise-reject-errors (1 issues)
-  - no-unnecessary-boolean-literal-compare (1 issues)
-  - no-implied-eval (1 issues)
 
 ## Thanks
 

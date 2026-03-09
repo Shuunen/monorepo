@@ -13,7 +13,7 @@ type Properties = Readonly<{
 
 export function AppFormFieldText({ field, form, id, suggestions, updateField }: Properties) {
   const onChange = useCallback(
-    (event: React.SyntheticEvent<Element, Event>) => {
+    (event: React.SyntheticEvent) => {
       updateField(id, event.target);
     },
     [id, updateField],

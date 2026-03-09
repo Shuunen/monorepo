@@ -1188,7 +1188,6 @@ describe("auto-form.utils", () => {
   // typeLikeResolver
   it("typeLikeResolver A should resolve a function", () => {
     const userProfile = { name: "John doe" };
-    // oxlint-disable-next-line typescript/no-unsafe-return
     const result = typeLikeResolver(data => data?.name, userProfile);
     expect(result).toBe("John doe");
   });

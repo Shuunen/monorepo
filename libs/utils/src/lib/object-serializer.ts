@@ -109,7 +109,7 @@ function reviver(_key: string, value?: any) {
     return new RegExp(value.__regexSource__, value.__regexFlags__);
   }
   if (type === "function") {
-    // oxlint-disable-next-line no-new-func, no-unsafe-return
+    // oxlint-disable-next-line no-new-func, no-unsafe-return, no-implied-eval
     return new Function(`return ${value.__function__}`)(); // NOSONAR
   }
   if (type === "file") {

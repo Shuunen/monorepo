@@ -433,7 +433,7 @@ function usePlannerTasks() {
   async function loadTasks() {
     const load = await getTasks();
     if (!load.ok) throw new Error("Failed to load tasks");
-    setTasks(load.value.filter(task => task.isDone === false)); // Filter out completed tasks
+    setTasks(load.value.filter(task => !task.isDone)); // Filter out completed tasks
   }
 
   useEffect(() => void loadTasks(), []);

@@ -125,7 +125,7 @@ function AmazonPricePerWeight() {
     const matches = text.toLowerCase().match(regex.weight);
     if (app.processOne) utils.log("found weight matches & unit :", matches);
     const data = { unit: "", weight: 0 };
-    if (matches && matches.length === 3) {
+    if (matches?.length === 3) {
       data.weight = matches[1];
       data.unit = matches[2];
     }
@@ -138,7 +138,7 @@ function AmazonPricePerWeight() {
   function getBulk(text) {
     const matches = text.match(regex.bulk);
     // utils.log('found bulk matches :', matches)
-    let bulk = matches && matches.length === 2 ? matches[1] : "1";
+    let bulk = matches?.length === 2 ? matches[1] : "1";
     bulk = Number.parseInt(bulk, 10);
     // utils.log('found bulk', bulk)
     return bulk;

@@ -312,8 +312,8 @@ export function handlePostSetProgress(req: IncomingMessage, res: ServerResponse)
       log("info", context, "Request body collected for /set-progress");
       return handleSetProgressRequest({ body, res });
     })
-    .catch(error => {
-      log("error", context, `Error collecting request body: ${error?.message ?? error}`);
+    .catch((error: unknown) => {
+      log("error", context, `Error collecting request body: ${error instanceof Error ? error.message : String(error)}`);
       respondBadRequest({
         message: "Failed to read request body",
         nextTask: undefined,

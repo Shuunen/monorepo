@@ -60,7 +60,7 @@ export async function webhookHandler(req: Request, res: Response) {
     res.status(httpBadRequest).json({ error: "Invalid URL provided" });
     return;
   }
-  await handleProxyResponse(targetUrl, req.body, res).catch(error => handleWebhookError(error, res));
+  await handleProxyResponse(targetUrl, req.body, res).catch((error: unknown) => handleWebhookError(error, res));
 }
 
 export function handleWebhookError(error: unknown, res: Response) {

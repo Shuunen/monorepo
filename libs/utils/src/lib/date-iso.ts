@@ -127,7 +127,7 @@ function partialDateDisplay(dateString: string): string {
   }
 
   if (month === "00") {
-    return `${year}`;
+    return year;
   }
   if (month !== "00" && day === "00") {
     return `${month}/${year}`;
