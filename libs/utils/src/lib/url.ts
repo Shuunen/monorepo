@@ -8,8 +8,9 @@ import { Result } from "./result.js";
  */
 export function toBase64(str: string) {
   return globalThis.btoa(
-    // oxlint-disable-next-line id-length
-    encodeURIComponent(str).replaceAll(/%([0-9A-F]{2})/g, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16))),
+    encodeURIComponent(str).replaceAll(/%([0-9A-F]{2})/g, (_value: string, hex: string) =>
+      String.fromCodePoint(Number.parseInt(hex, 16)),
+    ),
   );
 }
 

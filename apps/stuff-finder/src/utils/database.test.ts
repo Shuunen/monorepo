@@ -48,16 +48,20 @@ describe("database.utils", () => {
         "value": [],
       }
     `);
-    expect(databaseMock.listDocuments).toHaveBeenNthCalledWith(1, "databaseA", "collectionA", [
-      { isThisMockedDataFromMock: true, limit: 100 },
-      { isThisMockedDataFromMock: true, offset: 0 },
-    ]);
+    expect(databaseMock.listRows).toHaveBeenNthCalledWith(1, {
+      databaseId: "databaseA",
+      queries: [
+        { isThisMockedDataFromMock: true, limit: 100 },
+        { isThisMockedDataFromMock: true, offset: 0 },
+      ],
+      tableId: "collectionA",
+    });
     expect(databaseMock.Query.limit).toHaveBeenCalledOnce();
     expect(databaseMock.Query.offset).toHaveBeenCalledOnce();
   });
 
   it("getItemsRemotely B failure", async () => {
-    databaseMock.listDocuments.mockRejectedValueOnce(new Error("some error"));
+    databaseMock.listRows.mockRejectedValueOnce(new Error("some error"));
     const result = await getItemsRemotely();
     expect(result.ok).toBe(false);
     expect(Result.unwrap(result).error).toMatchInlineSnapshot(`[Error: some error]`);
@@ -65,7 +69,7 @@ describe("database.utils", () => {
 
   it("getItemsRemotely C success with 2 items", async () => {
     const items = [mockItemModel({ $id: "some-item-uuid-a" }), mockItemModel({ $id: "some-other-item-uuid-b" })];
-    databaseMock.listDocuments.mockResolvedValueOnce({ documents: items, total: 2 });
+    databaseMock.listRows.mockResolvedValueOnce({ rows: items, total: 2 });
     const result = await getItemsRemotely();
     expect(result.ok).toBe(true);
     const remoteItems = Result.unwrap(result).value;
@@ -74,10 +78,14 @@ describe("database.utils", () => {
       `"some-item-uuid-a, some-other-item-uuid-b"`,
     );
     expect(remoteItems).toMatchSnapshot();
-    expect(databaseMock.listDocuments).toHaveBeenNthCalledWith(1, "databaseA", "collectionA", [
-      { isThisMockedDataFromMock: true, limit: 100 },
-      { isThisMockedDataFromMock: true, offset: 0 },
-    ]);
+    expect(databaseMock.listRows).toHaveBeenNthCalledWith(1, {
+      databaseId: "databaseA",
+      queries: [
+        { isThisMockedDataFromMock: true, limit: 100 },
+        { isThisMockedDataFromMock: true, offset: 0 },
+      ],
+      tableId: "collectionA",
+    });
     expect(databaseMock.Query.limit).toHaveBeenCalledTimes(2);
     expect(databaseMock.Query.offset).toHaveBeenCalledTimes(2);
   });
@@ -87,7 +95,7 @@ describe("database.utils", () => {
     // @ts-expect-error we want to test a malformed item
     itemA.isPrinted = "incorrect value will become false by default";
     const items = [itemA];
-    databaseMock.listDocuments.mockResolvedValueOnce({ documents: items, total: 2 });
+    databaseMock.listRows.mockResolvedValueOnce({ rows: items, total: 2 });
     const result = await getItemsRemotely();
     expect(result.ok).toBe(true);
     expect(Result.unwrap(result).value?.[0]?.isPrinted).toBe(false);
@@ -98,7 +106,7 @@ describe("database.utils", () => {
     // @ts-expect-error we want to test a malformed item
     itemA.$id = null;
     const items = [itemA];
-    databaseMock.listDocuments.mockResolvedValueOnce({ documents: items, total: 2 });
+    databaseMock.listRows.mockResolvedValueOnce({ rows: items, total: 2 });
     const result = await getItemsRemotely();
     expect(result.ok).toBe(false);
     expect(Result.unwrap(result).error).toMatchInlineSnapshot(`"getItemsRemotely failed, see logs for details"`);
@@ -137,17 +145,16 @@ describe("database.utils", () => {
     const item = mockItem({ photos: [photoUrl] });
     const itemModel = itemToAppWriteModel(item);
     expect(itemModel.ok).toBe(true);
-    if (itemModel.ok) databaseMock.createDocument.mockResolvedValueOnce(mockItemModel(itemModel.value));
+    if (itemModel.ok) databaseMock.createRow.mockResolvedValueOnce(mockItemModel(itemModel.value));
     const result = await addItemRemotely(item);
     expect(mockFetch).toHaveBeenNthCalledWith(1, photoUrl);
     expect(databaseMock.createFile).toHaveBeenCalledTimes(0);
-    expect(databaseMock.createDocument).toHaveBeenNthCalledWith(
-      1,
-      "databaseA",
-      "collectionA",
-      expect.anything(),
-      expect.anything(),
-    );
+    expect(databaseMock.createRow).toHaveBeenNthCalledWith(1, {
+      data: expect.anything(),
+      databaseId: "databaseA",
+      rowId: expect.anything(),
+      tableId: "collectionA",
+    });
     expect(result.ok).toBe(true);
     const photos = Result.unwrap(result).value?.photos;
     expect(photos?.[0]).toMatchInlineSnapshot(`"https://example.com/photo.png"`);
@@ -155,7 +162,7 @@ describe("database.utils", () => {
   });
 
   it("addItemRemotely E but create failed", async () => {
-    databaseMock.createDocument.mockRejectedValueOnce(new Error("some error"));
+    databaseMock.createRow.mockRejectedValueOnce(new Error("some error"));
     const item = mockItem();
     const result = await addItemRemotely(item);
     expect(result.ok).toBe(false);
@@ -166,7 +173,7 @@ describe("database.utils", () => {
     const malformedItemModel = mockItemModel({ name: "add item remotely F" });
     // @ts-expect-error we want to test a malformed item
     malformedItemModel.$id = null;
-    databaseMock.createDocument.mockResolvedValueOnce(malformedItemModel);
+    databaseMock.createRow.mockResolvedValueOnce(malformedItemModel);
     const item = mockItem();
     const result = await addItemRemotely(item);
     expect(result.ok).toBe(false);
@@ -206,7 +213,7 @@ describe("database.utils", () => {
   });
 
   it("updateItemRemotely D but update failed", async () => {
-    databaseMock.updateDocument.mockRejectedValueOnce(new Error("some error"));
+    databaseMock.updateRow.mockRejectedValueOnce(new Error("some error"));
     const item = mockItem();
     const result = await updateItemRemotely(item);
     expect(result.ok).toBe(false);
@@ -217,7 +224,7 @@ describe("database.utils", () => {
     const malformedItemModel = mockItemModel({ name: "update item remotely E" });
     // @ts-expect-error we want to test a malformed item
     malformedItemModel.$id = null;
-    databaseMock.updateDocument.mockResolvedValueOnce(malformedItemModel);
+    databaseMock.updateRow.mockResolvedValueOnce(malformedItemModel);
     const item = mockItem();
     const result = await updateItemRemotely(item);
     expect(result.ok).toBe(false);
@@ -268,8 +275,16 @@ describe("database.utils", () => {
     expect(mockFetch).toHaveBeenNthCalledWith(1, photoUrlA);
     expect(mockFetch).toHaveBeenNthCalledWith(2, photoUrlC);
     expect(databaseMock.createFile).toHaveBeenCalledTimes(2);
-    expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, "bucketA", "reference-b-photo-0-jpg", expect.anything());
-    expect(databaseMock.createFile).toHaveBeenNthCalledWith(2, "bucketA", "reference-b-photo-2-jpg", expect.anything());
+    expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, {
+      bucketId: "bucketA",
+      file: expect.anything(),
+      fileId: "reference-b-photo-0-jpg",
+    });
+    expect(databaseMock.createFile).toHaveBeenNthCalledWith(2, {
+      bucketId: "bucketA",
+      file: expect.anything(),
+      fileId: "reference-b-photo-2-jpg",
+    });
   });
 
   it("uploadPhotosIfNeeded C with bucket photos, should not upload", async () => {
@@ -394,10 +409,13 @@ describe("database.utils", () => {
     const result = await listImages();
     expect(result.ok).toBe(true);
     expect(Result.unwrap(result).value).toHaveLength(0);
-    expect(databaseMock.listFiles).toHaveBeenNthCalledWith(1, "bucketA", [
-      { isThisMockedDataFromMock: true, limit: 100 },
-      { isThisMockedDataFromMock: true, offset: 0 },
-    ]);
+    expect(databaseMock.listFiles).toHaveBeenNthCalledWith(1, {
+      bucketId: "bucketA",
+      queries: [
+        { isThisMockedDataFromMock: true, limit: 100 },
+        { isThisMockedDataFromMock: true, offset: 0 },
+      ],
+    });
   });
 
   it("listImages B failure", async () => {
@@ -418,10 +436,13 @@ describe("database.utils", () => {
       `"some-image-file-uuid-a, some-other-image-file-uuid-b"`,
     );
     expect(images).toMatchSnapshot();
-    expect(databaseMock.listFiles).toHaveBeenNthCalledWith(1, "bucketA", [
-      { isThisMockedDataFromMock: true, limit: 100 },
-      { isThisMockedDataFromMock: true, offset: 0 },
-    ]);
+    expect(databaseMock.listFiles).toHaveBeenNthCalledWith(1, {
+      bucketId: "bucketA",
+      queries: [
+        { isThisMockedDataFromMock: true, limit: 100 },
+        { isThisMockedDataFromMock: true, offset: 0 },
+      ],
+    });
   });
 
   it("getItemId A item with reference & name", () => {
@@ -454,7 +475,11 @@ describe("database.utils", () => {
     const result = await uploadImage("file-name", "https://example.com/photo.jpg");
     expect(result.ok).toBe(true);
     expect(Result.unwrap(result).value).toMatchInlineSnapshot(`"file-name-jpg"`);
-    expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, "bucketA", "file-name-jpg", expect.anything());
+    expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, {
+      bucketId: "bucketA",
+      file: expect.anything(),
+      fileId: "file-name-jpg",
+    });
   });
 
   it("uploadImage B filename without extension, url point to a png => no upload", async () => {
@@ -470,7 +495,11 @@ describe("database.utils", () => {
     const result = await uploadImage("file-name.jpg", "https://example.com/photo.jpg");
     expect(result.ok).toBe(true);
     expect(Result.unwrap(result).value).toMatchInlineSnapshot(`"file-name-jpg"`);
-    expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, "bucketA", "file-name-jpg", expect.anything());
+    expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, {
+      bucketId: "bucketA",
+      file: expect.anything(),
+      fileId: "file-name-jpg",
+    });
   });
 
   it("uploadImage D create file fail => fallback to input url", async () => {
@@ -481,7 +510,11 @@ describe("database.utils", () => {
     const result = await uploadImage("file-name.jpg", "https://example.com/photo.jpg");
     expect(result.ok).toBe(true);
     expect(Result.unwrap(result).value).toMatchInlineSnapshot(`"https://example.com/photo.jpg"`);
-    expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, "bucketA", "file-name-jpg", expect.anything());
+    expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, {
+      bucketId: "bucketA",
+      file: expect.anything(),
+      fileId: "file-name-jpg",
+    });
     logger.enable();
   });
 
@@ -497,8 +530,12 @@ describe("database.utils", () => {
     const result = await uploadImage("file-name.jpg", "https://example.com/photo.jpg");
     expect(result.ok).toBe(true);
     expect(Result.unwrap(result).value).toMatchInlineSnapshot(`"file-name-jpg"`);
-    expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, "bucketA", "file-name-jpg", expect.anything());
-    expect(databaseMock.deleteFile).toHaveBeenNthCalledWith(1, "bucketA", "file-name-jpg");
+    expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, {
+      bucketId: "bucketA",
+      file: expect.anything(),
+      fileId: "file-name-jpg",
+    });
+    expect(databaseMock.deleteFile).toHaveBeenNthCalledWith(1, { bucketId: "bucketA", fileId: "file-name-jpg" });
     logger.enable();
   });
 
@@ -531,7 +568,7 @@ describe("database.utils", () => {
         "isThisMockedDataFromMock": true,
       }
     `);
-    expect(databaseMock.deleteFile).toHaveBeenNthCalledWith(1, "bucketA", "image-uuid");
+    expect(databaseMock.deleteFile).toHaveBeenNthCalledWith(1, { bucketId: "bucketA", fileId: "image-uuid" });
     logger.enable();
   });
 
@@ -541,17 +578,17 @@ describe("database.utils", () => {
     const result = await deleteImageRemotely("image-uuid");
     expect(result.ok).toBe(false);
     expect(Result.unwrap(result).error).toMatchInlineSnapshot(`[Error: some error]`);
-    expect(databaseMock.deleteFile).toHaveBeenNthCalledWith(1, "bucketA", "image-uuid");
+    expect(databaseMock.deleteFile).toHaveBeenNthCalledWith(1, { bucketId: "bucketA", fileId: "image-uuid" });
     logger.enable();
   });
 
   it("deleteItemRemotely A success", async () => {
     logger.disable();
-    databaseMock.deleteDocument.mockResolvedValueOnce({
+    databaseMock.deleteRow.mockResolvedValueOnce({
       $id: "some-item-uuid",
-      collectionId: "collectionA",
       databaseId: "databaseA",
       isThisMockedDataFromMock: true,
+      tableId: "collectionA",
     });
     const item = mockItem({
       $id: "item-uuid",
@@ -559,10 +596,14 @@ describe("database.utils", () => {
     });
     const result = await deleteItemRemotely(item);
     expect(result.ok).toBe(true);
-    expect(databaseMock.deleteDocument).toHaveBeenNthCalledWith(1, "databaseA", "collectionA", "item-uuid");
+    expect(databaseMock.deleteRow).toHaveBeenNthCalledWith(1, {
+      databaseId: "databaseA",
+      rowId: "item-uuid",
+      tableId: "collectionA",
+    });
     expect(databaseMock.deleteFile).toHaveBeenCalledTimes(2);
-    expect(databaseMock.deleteFile).toHaveBeenNthCalledWith(1, "bucketA", "photo-uuid-1");
-    expect(databaseMock.deleteFile).toHaveBeenNthCalledWith(2, "bucketA", "photo-uuid-3");
+    expect(databaseMock.deleteFile).toHaveBeenNthCalledWith(1, { bucketId: "bucketA", fileId: "photo-uuid-1" });
+    expect(databaseMock.deleteFile).toHaveBeenNthCalledWith(2, { bucketId: "bucketA", fileId: "photo-uuid-3" });
     logger.enable();
   });
 

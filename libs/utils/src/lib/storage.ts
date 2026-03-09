@@ -19,6 +19,9 @@ function get<Type = unknown>(key: string, defaultValue?: Type) {
   if (data === undefined || data === null || data === "") {
     return defaultValue;
   }
+  if (typeof data !== "string") {
+    return data as Type;
+  }
   const result = parseJson<Type>(data);
   if (!result.ok) {
     return data as Type;

@@ -8,7 +8,7 @@ import { getFieldMetadata, getFormFieldRender, isFieldVisible } from "./auto-for
 import { FormFieldFieldList } from "./form-field-field-list";
 import { FormFieldSection } from "./form-field-section";
 
-function createVisibilitySubscriber(fieldSchema: z.ZodTypeAny, setVisible: Dispatch<SetStateAction<boolean>>) {
+function createVisibilitySubscriber(fieldSchema: z.ZodType, setVisible: Dispatch<SetStateAction<boolean>>) {
   return (formValues: AutoFormData) => {
     const newVisible = isFieldVisible(fieldSchema, formValues);
     setVisible(prev => (prev === newVisible ? prev : newVisible));

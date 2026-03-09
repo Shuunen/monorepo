@@ -49,19 +49,17 @@ Nice to have rules to re-enable later :
 - no-unnecessary-condition (88 issues)
 - no-unsafe-assignment (58 issues)
 - prefer-nullish-coalescing (48 issues)
+- restrict-template-expressions (33 issues)
 
 Nitpicks to re-enable one day :
 
 - strict-void-return (133 issues)
 - jsx-props-no-spreading (57 issues)
 - jsx-no-new-object-as-prop (54 issues)
+- no-misused-promises : seems like a duplicate about promise handling (23 issues)
 
 To sort :
 
-- restrict-template-expressions (33 issues)
-- no-deprecated (27 issues)
-- no-misused-promises (23 issues)
-- no-unsafe-argument (22 issues)
 - consistent-return (19 issues)
 - promise/avoid-new (19 issues)
 - no-array-index-key : conflicts with useStableKeys (9 issues)

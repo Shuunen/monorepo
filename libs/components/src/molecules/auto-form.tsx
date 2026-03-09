@@ -147,6 +147,7 @@ export function AutoForm({
     logger?.info("Final form submitted", { cleanedData });
     const result = await onSubmit(cleanedData);
     if (useSubmissionStep) {
+      // oxlint-disable-next-line typescript/no-unsafe-argument
       setSubmissionProps(result.submission);
     }
   }
@@ -164,7 +165,7 @@ export function AutoForm({
     if (isLastStep && useSummaryStep) {
       setShowSummary(true);
     } else if (isLastStep) {
-      void handleFinalSubmit();
+      handleFinalSubmit();
     } else {
       setCurrentStep(prev => prev + 1);
     }

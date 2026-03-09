@@ -77,7 +77,7 @@ describe("object-cap-nesting utils", () => {
   it("capNesting E inherited properties", () => {
     // Create an object with inherited properties to test hasOwn check
     const proto = { inherited: "value" };
-    const obj = Object.create(proto);
+    const obj: Record<string, unknown> = Object.create(proto);
     obj.own = "ownValue";
     obj.nested = { deep: "deepValue" };
     const result = capNesting(obj, 2) as Record<string, unknown>;

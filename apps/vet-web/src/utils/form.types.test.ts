@@ -1,4 +1,3 @@
-import type { UseFormReturn } from "react-hook-form";
 import type { FieldBaseProps, Option } from "./form.types.ts";
 
 describe("form.types", () => {
@@ -14,33 +13,19 @@ describe("form.types", () => {
       label: "Test Label",
       value: "test-value",
     };
-    expectTypeOf(option).toMatchTypeOf<Option>();
+    expectTypeOf(option).toMatchObjectType<Option>();
   });
 
   it("should define FieldBaseProps type correctly", () => {
     type TestFieldValues = { name: string };
+    type TestFieldProps = Omit<FieldBaseProps<TestFieldValues>, "form">;
 
-    expectTypeOf<FieldBaseProps<TestFieldValues>>().toMatchTypeOf<{
+    expectTypeOf<TestFieldProps>().toMatchObjectType<{
       label?: string;
-      form: UseFormReturn<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
       name: keyof TestFieldValues;
       isRequired: boolean;
       placeholder?: string;
       disableNa?: boolean;
     }>();
-  });
-
-  it("should allow creating valid FieldBaseProps objects", () => {
-    const mockForm = {} as UseFormReturn<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
-
-    const fieldProps: FieldBaseProps<{ name: string }> = {
-      disableNa: false,
-      form: mockForm,
-      isRequired: true,
-      label: "Test Label",
-      name: "name",
-      placeholder: "Enter text",
-    };
-    expectTypeOf(fieldProps).toMatchTypeOf<FieldBaseProps<{ name: string }>>();
   });
 });

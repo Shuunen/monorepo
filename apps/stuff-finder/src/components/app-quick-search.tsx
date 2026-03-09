@@ -68,5 +68,5 @@ export function AppQuickSearch({
 
   const classes = tw(`${theme[mode]} ${theme.common}`);
 
-  return <input className={classes} onKeyPress={onSearch} placeholder={placeholder} ref={searchReference} />;
+  return <input className={classes} onKeyUp={onSearch} placeholder={placeholder} ref={searchReference} />;
 }

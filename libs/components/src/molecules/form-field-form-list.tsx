@@ -27,6 +27,10 @@ import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.typ
 import { isSubformFilled, nbFilledItems } from "./form-field-form-list.utils";
 import type { z } from "zod";
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean }) {
   let icon = <IconCircleClose />;
   let label = "Incomplete";
@@ -128,12 +132,16 @@ export function FormFieldFormList({
   const showAddButton = !(readonly || maxItems === 1 || nbItems);
   const length = typeLikeResolver(nbItems, formValues);
   const { setValue, unregister } = useFormContext();
+  const normalizedFieldValue = useMemo(
+    () => (Array.isArray(fieldValue) ? fieldValue.filter(value => isRecord(value)) : undefined),
+    [fieldValue],
+  );
   const items = useMemo(
     () =>
-      length === undefined && fieldValue === undefined
+      length === undefined && normalizedFieldValue === undefined
         ? []
-        : arrayAlign<Record<string, unknown>>(fieldValue, length, {}),
-    [fieldValue, length],
+        : arrayAlign<Record<string, unknown>>(normalizedFieldValue, length, {}),
+    [normalizedFieldValue, length],
   );
 
   useEffect(() => {

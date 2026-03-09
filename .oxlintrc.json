@@ -350,7 +350,6 @@
     "no-console": "error",
     "no-continue": "off",
     "no-default-export": "error",
-    "no-deprecated": "off",
     "no-floating-promises": "off",
     "no-inline-comments": "off",
     "no-magic-numbers": [
@@ -387,7 +386,6 @@
     "no-undefined": "off",
     "no-unnecessary-condition": "off",
     "no-unnecessary-type-parameters": "off",
-    "no-unsafe-argument": "off",
     "no-unsafe-assignment": "off",
     "no-unsafe-member-access": "off",
     "no-unsafe-type-assertion": "off",

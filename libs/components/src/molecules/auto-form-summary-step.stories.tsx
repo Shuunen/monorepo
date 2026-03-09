@@ -33,7 +33,7 @@ export const Simple: Story = {
           age: field(z.number().min(0), {
             label: "Age label",
           }),
-          email: field(z.string().email(), {
+          email: field(z.email(), {
             label: "Email label",
           }),
           info: section({

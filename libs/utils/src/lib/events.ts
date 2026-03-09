@@ -1,7 +1,7 @@
 type ListenerMedia = Element | HTMLElement | typeof globalThis | Window;
 
 export type Listener = {
-  callback: (event: unknown) => unknown;
+  callback: (event: Event) => unknown;
   media: ListenerMedia;
   name: string;
 };
@@ -39,9 +39,10 @@ export function on<Data>(
    * @param event the event
    * @returns the result of the callback
    */
-  function onCallback(event: unknown) {
-    // oxlint-disable-next-line promise/prefer-await-to-callbacks
-    return callback(/* c8 ignore next */ event instanceof CustomEvent ? event.detail : event, event as Event);
+  function onCallback(event: Event) {
+    const eventData = event instanceof CustomEvent ? (event.detail as unknown as Data) : (event as Data);
+    // oxlint-disable-next-line prefer-await-to-callbacks
+    return callback(eventData, event);
   }
   media.addEventListener(name, onCallback, { passive: true });
   return { callback: onCallback, media, name };

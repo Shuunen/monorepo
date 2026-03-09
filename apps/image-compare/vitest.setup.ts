@@ -11,6 +11,7 @@ globalThis.fetch = vi.fn(() =>
 );
 
 // Mock Image loading to prevent actual image loads
+// oxlint-disable-next-line typescript/no-deprecated
 const mockCreateElement = globalThis.document.createElement.bind(globalThis.document);
 function dispatchLoadEvent(image: HTMLImageElement): void {
   const loadEvent = new Event("load");
@@ -19,6 +20,7 @@ function dispatchLoadEvent(image: HTMLImageElement): void {
 function scheduleLoadEvent(image: HTMLImageElement): void {
   setTimeout(() => dispatchLoadEvent(image), 0);
 }
+// oxlint-disable-next-line typescript/no-deprecated
 globalThis.document.createElement = vi.fn((tagName: string) => {
   if (tagName === "img") {
     const img = mockCreateElement(tagName);

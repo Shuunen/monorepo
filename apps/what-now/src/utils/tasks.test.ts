@@ -24,24 +24,45 @@ const yesterday = daysAgoIso10(1);
 
 // oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("appwrite", () => {
-  class Databases {
+  // biome-ignore lint/style/useNamingConvention: ok here
+  class TablesDB {
     constructor(client?: Client) {
       if (client) functionReturningVoid();
     }
-    async createDocument(databaseId: string, collectionId: string, documentId: string, data: object) {
+    async createRow({
+      databaseId,
+      tableId,
+      rowId,
+      data,
+    }: {
+      databaseId: string;
+      tableId: string;
+      rowId: string;
+      data: object;
+    }) {
       await sleep(10);
-      if (documentId === "fail-trigger") throw new Error("fail-trigger");
-      return { $id: documentId, collectionId, databaseId, ...data };
+      if (rowId === "fail-trigger") throw new Error("fail-trigger");
+      return { $id: rowId, tableId, databaseId, ...data };
     }
-    async listDocuments(databaseId: string, collectionId: string) {
+    async listRows({ databaseId, tableId }: { databaseId: string; tableId: string }) {
       await sleep(10);
       if (databaseId === "fail-trigger") throw new Error("fail-trigger");
-      return { documents: [{ $id: databaseId, name: collectionId }] };
+      return { rows: [{ $id: databaseId, name: tableId }] };
     }
-    async updateDocument(databaseId: string, collectionId: string, documentId: string, data: object) {
+    async updateRow({
+      databaseId,
+      tableId,
+      rowId,
+      data,
+    }: {
+      databaseId: string;
+      tableId: string;
+      rowId: string;
+      data: object;
+    }) {
       await sleep(10);
-      if (documentId === "fail-trigger") throw new Error("fail-trigger");
-      return { $id: documentId, collectionId, databaseId, ...data };
+      if (rowId === "fail-trigger") throw new Error("fail-trigger");
+      return { $id: rowId, tableId, databaseId, ...data };
     }
   }
   class Client {
@@ -61,7 +82,7 @@ vi.mock("appwrite", () => {
     limit: functionReturningVoid,
   };
   // biome-ignore lint/style/useNamingConvention: I can't change this
-  return { Client, Databases, Query };
+  return { Client, Query, TablesDB };
 });
 
 it("isTaskActive A : a task without completed on is active", () => {

@@ -67,7 +67,11 @@ export function FormFieldFieldList({
   const formValues = useWatch({ disabled: nbItems === undefined });
   const length = typeLikeResolver(nbItems, formValues);
   const { setValue, unregister } = useFormContext();
-  const items = useMemo(() => arrayAlign(fieldValue, length), [fieldValue, length]);
+  const normalizedFieldValue = useMemo<unknown[] | undefined>(
+    () => (Array.isArray(fieldValue) ? fieldValue : undefined),
+    [fieldValue],
+  );
+  const items = useMemo(() => arrayAlign(normalizedFieldValue, length), [normalizedFieldValue, length]);
 
   useEffect(() => {
     if (length !== undefined && fieldValue?.length !== length) {

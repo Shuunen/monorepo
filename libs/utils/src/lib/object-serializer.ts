@@ -97,29 +97,71 @@ function detect(value?: unknown) /* NOSONAR */ {
   return "unknown";
 }
 
+type SerializedRegex = {
+  __regexFlags__: string;
+  __regexSource__: string;
+};
+
+type SerializedFunction = {
+  __function__: string;
+};
+
+type SerializedFile = {
+  __fileName__: string;
+  __fileSize__: number;
+  __fileType__: string;
+};
+
+type SerializedDate = {
+  __date__: string;
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isSerializedRegex(value: unknown): value is SerializedRegex {
+  return isRecord(value) && typeof value.__regexSource__ === "string" && typeof value.__regexFlags__ === "string";
+}
+
+function isSerializedFunction(value: unknown): value is SerializedFunction {
+  return isRecord(value) && typeof value.__function__ === "string";
+}
+
+function isSerializedFile(value: unknown): value is SerializedFile {
+  return (
+    isRecord(value) &&
+    typeof value.__fileName__ === "string" &&
+    typeof value.__fileSize__ === "number" &&
+    typeof value.__fileType__ === "string"
+  );
+}
+
+function isSerializedDate(value: unknown): value is SerializedDate {
+  return isRecord(value) && typeof value.__date__ === "string";
+}
+
 /**
  * Reviver function for JSON.parse
  * @param _key the key of the object
  * @param value the value of the object
  * @returns the value of the object
  */
-// oxlint-disable-next-line no-explicit-any
-function reviver(_key: string, value?: any) {
+function reviver(_key: string, value?: unknown) {
   const type = detect(value);
-  if (type === "regex") {
+  if (type === "regex" && isSerializedRegex(value)) {
     return new RegExp(value.__regexSource__, value.__regexFlags__);
   }
-  if (type === "function") {
+  if (type === "function" && isSerializedFunction(value)) {
     // oxlint-disable-next-line no-new-func, no-unsafe-return, no-implied-eval, no-unsafe-call
     return new Function(`return ${value.__function__}`)(); // NOSONAR
   }
-  if (type === "file") {
+  if (type === "file" && isSerializedFile(value)) {
     return new File([], value.__fileName__, { type: value.__fileType__ });
   }
-  if (type === "date") {
+  if (type === "date" && isSerializedDate(value)) {
     return new Date(value.__date__);
   }
-  // oxlint-disable-next-line typescript/no-unsafe-return
   return value;
 }
 

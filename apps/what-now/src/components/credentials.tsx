@@ -55,7 +55,7 @@ function getFieldKey(index: number): keyof FormData {
 type CredentialsFormProps = {
   formData: FormData;
   onInputChange: (field: keyof FormData, value: string) => void;
-  onSubmit: (event: React.FormEvent) => void;
+  onSubmit: (event: React.SyntheticEvent) => void;
 };
 
 function CredentialsForm({ formData, onInputChange, onSubmit }: CredentialsFormProps) {
@@ -119,7 +119,7 @@ function useCredentialsLogic() {
   }, []);
 
   const handleSubmit = useCallback(
-    (event: React.FormEvent) => {
+    (event: React.SyntheticEvent) => {
       event.preventDefault();
       const { apiCollection, apiDatabase, webhook } = formData;
       const isOk = validateCredentials(apiDatabase, apiCollection);

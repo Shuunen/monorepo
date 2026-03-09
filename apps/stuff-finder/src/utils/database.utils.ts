@@ -9,7 +9,7 @@ import {
   slugify,
   toastSuccess,
 } from "@monorepo/utils";
-import { Client, Databases, type Models, Query, Storage } from "appwrite";
+import { Client, type Models, Query, Storage, TablesDB } from "appwrite";
 import { safeParse } from "valibot";
 import { defaultImage, uuidMaxLength } from "../constants";
 import type { Item, ItemModel } from "../types/item.types";
@@ -19,7 +19,7 @@ import { state } from "./state.utils";
 import { normalizePhotoUrl } from "./url.utils";
 
 const client = new Client();
-const database = new Databases(client);
+const tablesDb = new TablesDB(client);
 const storage = new Storage(client);
 const projectId = "stuff-finder";
 client.setProject(projectId);
@@ -64,7 +64,7 @@ export function fileTypeToExtension(type: string) {
 }
 
 export async function deleteImageRemotely(id: string) {
-  const result = await Result.trySafe(storage.deleteFile(state.credentials.bucketId, id));
+  const result = await Result.trySafe(storage.deleteFile({ bucketId: state.credentials.bucketId, fileId: id }));
   if (result.ok) logger.success(`image "${id}" deleted successfully`);
   else logger.error(`image "${id}" deletion failed`, result.error);
   return result;
@@ -77,11 +77,11 @@ export async function uploadImage(fileName: string, url: string) {
   const finalFileName = hasExtension ? fileName : `${fileName}.${extension.value}`;
   const file = new File([blob], finalFileName, { type: blob.type });
   const id = slugify(finalFileName.replaceAll(/[_.]/gu, "-")).slice(0, uuidMaxLength);
-  let upload = await Result.trySafe(storage.createFile(state.credentials.bucketId, id, file));
+  let upload = await Result.trySafe(storage.createFile({ bucketId: state.credentials.bucketId, file, fileId: id }));
   if (!upload.ok) {
     logger.error("uploadImage failed", upload.error);
     if (String(upload.error).includes("requested ID already exists")) await deleteImageRemotely(id);
-    upload = await Result.trySafe(storage.createFile(state.credentials.bucketId, id, file)); // retry
+    upload = await Result.trySafe(storage.createFile({ bucketId: state.credentials.bucketId, file, fileId: id })); // retry
   }
   if (!upload.ok) return Result.ok(url);
   return Result.ok(upload.value.$id);
@@ -116,7 +116,9 @@ export async function listImages(bucketId = state.credentials.bucketId) {
   let shouldCheckNextPage = true;
   while (shouldCheckNextPage) {
     // oxlint-disable-next-line no-await-in-loop
-    const result = await Result.trySafe(storage.listFiles(bucketId, [Query.limit(nbPercentMax), Query.offset(offset)]));
+    const result = await Result.trySafe(
+      storage.listFiles({ bucketId, queries: [Query.limit(nbPercentMax), Query.offset(offset)] }),
+    );
     if (!result.ok) return result;
     if (result.value.files.length === 0) shouldCheckNextPage = false;
     else {
@@ -152,15 +154,16 @@ export async function getItemsRemotely() {
   while (shouldCheckNextPage) {
     // oxlint-disable-next-line no-await-in-loop
     const result = await Result.trySafe(
-      database.listDocuments<ItemModel>(state.credentials.databaseId, state.credentials.collectionId, [
-        Query.limit(nbPercentMax),
-        Query.offset(offset),
-      ]),
+      tablesDb.listRows<ItemModel>({
+        databaseId: state.credentials.databaseId,
+        queries: [Query.limit(nbPercentMax), Query.offset(offset)],
+        tableId: state.credentials.collectionId,
+      }),
     );
     if (!result.ok) return result;
-    if (result.value.documents.length === 0) shouldCheckNextPage = false;
+    if (result.value.rows.length === 0) shouldCheckNextPage = false;
     else {
-      items.push(...result.value.documents);
+      items.push(...result.value.rows);
       offset += nbPercentMax;
     }
   }
@@ -231,7 +234,7 @@ export async function addItemRemotely(item: Item, currentState = state) {
   const payload = itemToAppWriteModel(data.value);
   if (!payload.ok) return payload;
   const post = await Result.trySafe(
-    database.createDocument<ItemModel>(databaseId, collectionId, id.value, payload.value),
+    tablesDb.createRow<ItemModel>({ data: payload.value, databaseId, rowId: id.value, tableId: collectionId }),
   );
   if (!post.ok) return post;
   const parse = safeParse(itemSchema, post.value);
@@ -241,7 +244,7 @@ export async function addItemRemotely(item: Item, currentState = state) {
 
 export async function deleteItemRemotely(item: Item, currentState = state) {
   const { collectionId, databaseId } = currentState.credentials;
-  const result = await Result.trySafe(database.deleteDocument(databaseId, collectionId, item.$id));
+  const result = await Result.trySafe(tablesDb.deleteRow({ databaseId, rowId: item.$id, tableId: collectionId }));
   /* v8 ignore if -- @preserve */
   if (result.ok)
     for (const photo of item.photos) {
@@ -260,7 +263,7 @@ export async function updateItemRemotely(item: Item, currentState = state) {
   const payload = itemToAppWriteModel(data.value);
   if (!payload.ok) return payload;
   const post = await Result.trySafe(
-    database.updateDocument<ItemModel>(databaseId, collectionId, data.value.$id, payload.value),
+    tablesDb.updateRow<ItemModel>({ data: payload.value, databaseId, rowId: data.value.$id, tableId: collectionId }),
   );
   if (!post.ok) return post;
   const parse = safeParse(itemSchema, post.value);
