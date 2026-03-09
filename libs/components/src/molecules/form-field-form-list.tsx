@@ -13,6 +13,7 @@ import { IconCircleClose } from "../icons/icon-circle-close";
 import { IconReject } from "../icons/icon-reject";
 import { IconTrash } from "../icons/icon-trash";
 import { IconUpcoming } from "../icons/icon-upcoming";
+import { useAutoFormParentData } from "./auto-form-parent-data";
 import type { AutoFormFieldFormsMetadata } from "./auto-form.types";
 import {
   getElementSchema,
@@ -129,8 +130,9 @@ export function FormFieldFormList({
   const props = { fieldName, fieldSchema, isOptional, logger, readonly: state === "readonly" || readonly };
   const fieldValue = useWatch({ name: fieldName });
   const formValues = useWatch({ disabled: nbItems === undefined });
+  const parentData = useAutoFormParentData();
   const showAddButton = !(readonly || maxItems === 1 || nbItems);
-  const length = typeLikeResolver(nbItems, formValues);
+  const length = typeLikeResolver(nbItems, formValues, parentData);
   const { setValue, unregister } = useFormContext();
   const normalizedFieldValue = useMemo(
     () => (Array.isArray(fieldValue) ? fieldValue.filter(value => isRecord(value)) : undefined),

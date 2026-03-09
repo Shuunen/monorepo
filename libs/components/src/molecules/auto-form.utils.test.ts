@@ -1189,6 +1189,12 @@ describe("auto-form.utils", () => {
     const result = typeLikeResolver("John doe", userProfile);
     expect(result).toBe("John doe");
   });
+  it("typeLikeResolver C should call function with autoFormData and parentData", () => {
+    const formData = { x: 1 };
+    const parentData = { y: 2 };
+    const result = typeLikeResolver((autoFormData, parent) => `${autoFormData?.x}-${parent?.y}`, formData, parentData);
+    expect(result).toBe("1-2");
+  });
 
   // hasCustomErrors
   it("hasCustomErrors A should return false when no field has errors metadata", () => {
