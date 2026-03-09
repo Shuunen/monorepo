@@ -356,6 +356,83 @@ export const CustomLabels: Story = {
   },
 };
 
+export const WithOptionsAsFunction: Story = {
+  args: {
+    schemas: [
+      z.object({
+        color: field(z.enum(["red", "green", "blue"]), {
+          label: "Favorite Color",
+          options: data => {
+            if (data?.name === "John") {
+              return [
+                { label: "Red", value: "red" },
+                { label: "Blue", value: "blue" },
+              ];
+            }
+            return [
+              { label: "Red", value: "red" },
+              { label: "Green", value: "green" },
+              { label: "Blue", value: "blue" },
+            ];
+          },
+          placeholder: "Choose a color",
+        }),
+        name: field(z.string().optional(), {
+          label: "Name",
+          placeholder: "Enter your name",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const canvasBody = within(canvasElement.ownerDocument.body);
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+    await step("select color option", async () => {
+      const colorTrigger = canvas.getByTestId("button-color");
+      await userEvent.click(colorTrigger);
+      const colorListbox = canvasBody.getByTestId("select-options-color");
+      const colorOptions = within(colorListbox).getAllByRole("option");
+      await expect(colorOptions[0]).toHaveTextContent("Red");
+      await expect(colorOptions[1]).toHaveTextContent("Green");
+      await expect(colorOptions[2]).toHaveTextContent("Blue");
+      await userEvent.click(colorOptions[2]);
+      await expect(colorTrigger).toHaveTextContent("Blue");
+    });
+    await step("submit form and verify submitted data", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      await expect(submittedData).toContainHTML(stringify({ color: "blue" }, true));
+    });
+    await step("change name to Jane and submit form and verify submitted data", async () => {
+      const nameInput = canvas.getByTestId("input-text-name");
+      await userEvent.clear(nameInput);
+      await userEvent.type(nameInput, "Jane");
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      await expect(submittedData).toContainHTML(stringify({ color: "blue", name: "Jane" }, true));
+    });
+    await step("change name to John and verify color options", async () => {
+      const nameInput = canvas.getByTestId("input-text-name");
+      await userEvent.clear(nameInput);
+      await userEvent.type(nameInput, "John");
+      const colorTrigger = canvas.getByTestId("button-color");
+      await userEvent.click(colorTrigger);
+      const colorListbox = canvasBody.getByTestId("select-options-color");
+      const colorOptions = within(colorListbox).getAllByRole("option");
+      await expect(colorOptions[0]).toHaveTextContent("Red");
+      await expect(colorOptions[1]).toHaveTextContent("Blue");
+      await userEvent.click(colorOptions[0]);
+      await expect(colorTrigger).toHaveTextContent("Red");
+    });
+    await step("submit form and verify submitted data", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      await expect(submittedData).toContainHTML(stringify({ color: "red", name: "John" }, true));
+    });
+  },
+};
+
 /**
  * Performance test for select field
  */
