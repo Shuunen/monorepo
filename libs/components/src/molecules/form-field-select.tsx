@@ -1,13 +1,16 @@
 import { cn, functionReturningVoid } from "@monorepo/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { isFunction } from "es-toolkit";
 import { useEffect, useRef, useState } from "react";
+import { useWatch } from "react-hook-form";
 import { Button } from "../atoms/button";
 import { FormControl } from "../atoms/form";
 import { Popover, PopoverContent, PopoverTrigger } from "../atoms/popover";
 import { IconCheck } from "../icons/icon-check";
 import { IconChevronDown } from "../icons/icon-chevron-down";
+import { useAutoFormParentData } from "./auto-form-parent-data";
 import type { AutoFormFieldSelectMetadata, SelectOption } from "./auto-form.types";
-import { getFieldMetadataOrThrow } from "./auto-form.utils";
+import { getFieldMetadataOrThrow, typeLikeResolver } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 
 const itemHeight = 32;
@@ -97,8 +100,11 @@ export function FormFieldSelect({ fieldName, fieldSchema, isOptional, logger, re
   const [open, setOpen] = useState(false);
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema) as AutoFormFieldSelectMetadata;
   const { label = "", options, placeholder, state = "editable" } = metadata;
-  if (!Array.isArray(options)) {
-    throw new TypeError(`Field "${fieldName}" requires "options" in metadata`);
+  const formData = useWatch({ disabled: !isFunction(options) });
+  const parentData = useAutoFormParentData();
+  const resolvedOptions = typeLikeResolver(options, formData, parentData);
+  if (!Array.isArray(resolvedOptions)) {
+    throw new TypeError(`Field "${fieldName}" requires "options" in metadata (array or function returning array)`);
   }
   const isDisabled = state === "disabled" || readonly;
   const placeholderText = placeholder ?? `Select ${label}`;
@@ -107,7 +113,7 @@ export function FormFieldSelect({ fieldName, fieldSchema, isOptional, logger, re
   return (
     <FormFieldBase {...props}>
       {({ field }) => {
-        const selectedOption = options.find(opt => opt.value === field.value);
+        const selectedOption = resolvedOptions.find(opt => opt.value === field.value);
         return (
           <FormControl>
             <Popover open={open} onOpenChange={setOpen}>
@@ -127,7 +133,7 @@ export function FormFieldSelect({ fieldName, fieldSchema, isOptional, logger, re
                     field.onChange(value);
                     setOpen(false);
                   }}
-                  options={options}
+                  options={resolvedOptions}
                 />
               </PopoverContent>
             </Popover>

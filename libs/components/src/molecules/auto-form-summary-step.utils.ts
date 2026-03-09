@@ -1,4 +1,3 @@
-// oxlint-disable max-lines
 import { isFunction } from "es-toolkit";
 import type { z } from "zod";
 import type {
@@ -68,7 +67,6 @@ type SectionDataFromObjectItemProps = {
   innerShape: z.ZodObject["shape"];
   item: AutoFormData;
   key: string;
-  parentData?: AutoFormData;
 };
 
 /**
@@ -82,7 +80,7 @@ type SectionDataFromObjectItemProps = {
  * @param SectionData.parentData - Optional parent form data for TypeLike resolution
  * @returns The data for the section
  */
-function sectionDataFromObjectItem({ data, innerShape, item, key, index, parentData }: SectionDataFromObjectItemProps) {
+function sectionDataFromObjectItem({ data, innerShape, item, key, index }: SectionDataFromObjectItemProps) {
   const sectionData: AutoFormSummarySection["data"] = {};
   for (const innerKey of Object.keys(innerShape)) {
     const innerFieldSchema = innerShape[innerKey] as z.ZodType;
@@ -93,7 +91,7 @@ function sectionDataFromObjectItem({ data, innerShape, item, key, index, parentD
     const hasOptions = isRadioOrSelectMetadata(innerMetadata);
     let innerValue = item[innerKey];
     if (hasOptions) {
-      const options = typeLikeResolver(innerMetadata.options, data, parentData);
+      const options = typeLikeResolver(innerMetadata.options, item, data);
       /* c8 ignore start */
       if (Array.isArray(options)) {
         innerValue = options.find(opt => opt.value === innerValue)?.label;
@@ -116,11 +114,10 @@ type SectionsFromArrayOfObjectsProps = {
   fieldSchema: z.ZodType;
   key: string;
   metadata: AutoFormFieldMetadata | undefined;
-  parentData?: AutoFormData;
 };
 
 function sectionsFromArrayOfObjects(props: SectionsFromArrayOfObjectsProps) /* NOSONAR */ {
-  const { data, fieldSchema, key, metadata, parentData } = props;
+  const { data, fieldSchema, key, metadata } = props;
   const items = data[key];
   if (!Array.isArray(items) || items.length === 0) {
     return [];
@@ -137,7 +134,7 @@ function sectionsFromArrayOfObjects(props: SectionsFromArrayOfObjectsProps) /* N
   for (let index = 0; index < items.length; index += 1) {
     const item = items[index] as AutoFormData;
     const itemTitle = identifier ? identifier({ ...item, index: index + 1 }) : `${fieldLabel} ${index + 1}`;
-    const sectionData = sectionDataFromObjectItem({ data, index, innerShape, item, key, parentData });
+    const sectionData = sectionDataFromObjectItem({ data, index, innerShape, item, key });
     if (Object.keys(sectionData).length > 0) {
       sections.push({ data: sectionData, title: itemTitle });
     }
@@ -215,9 +212,7 @@ function processFieldForSection({ key, shape, data, state }: ProcessFieldForSect
     return;
   }
   if (isArrayOfObjects(fieldSchema)) {
-    state.pendingArraySections.push(
-      ...sectionsFromArrayOfObjects({ data, fieldSchema, key, metadata, parentData: state.parentData }),
-    );
+    state.pendingArraySections.push(...sectionsFromArrayOfObjects({ data, fieldSchema, key, metadata }));
     return;
   }
   if (shouldIncludeField(fieldSchema, metadata, data)) {
