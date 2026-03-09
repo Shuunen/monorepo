@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-assignment
 import { fireEvent, render } from "@testing-library/react";
 import { RuleLine, Rules } from "./rules";
 import type { Rule } from "./types";

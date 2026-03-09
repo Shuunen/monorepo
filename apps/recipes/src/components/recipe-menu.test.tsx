@@ -16,7 +16,7 @@ describe(RecipeMenu, () => {
     // Either loading state or loaded recipes should be present
     const hasLoading = screen.queryByText("Chargement des recettes...");
     const hasRecipes = screen.queryByText("Desserts 🍰");
-    expect(hasLoading || hasRecipes).toBeTruthy();
+    expect(hasLoading ?? hasRecipes).toBeTruthy();
   });
 
   it("RecipeMenu B should render recipes after loading", async () => {
@@ -83,7 +83,7 @@ describe(RecipeMenu, () => {
 
     // Since we're not on a recipe page, links should have inactive state
     // This covers the isActive: false case in navClasses function
-    const recipeLink = navLinks.find(link => (link as HTMLAnchorElement).textContent?.includes("chips"));
+    const recipeLink = navLinks.find(link => link.textContent.includes("chips"));
     expect(recipeLink).toBeTruthy();
   });
 

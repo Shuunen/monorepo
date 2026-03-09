@@ -3,7 +3,6 @@ import { list } from "7zip-min";
 import { blue, green, Logger, nbPercentMax, nbThird, red, Result, yellow } from "@monorepo/utils";
 import { readdirSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { promisify } from "node:util";
 
 // Use me like : node ~/Projects/github/monorepo/apps/one-file/src/check-apps.cli.js "/d/Apps/"
 
@@ -27,7 +26,6 @@ const nbSpaces = 2;
 const archivesExtensions = new Set(["7z", "exe", "rar", "zip"]);
 const readableExtensions = new Set(["7z", "zip"]);
 const checkArchives = parameters.includes("--check");
-const listArchive = promisify(list);
 
 /**
  * Calculate the similarity between two strings
@@ -175,13 +173,13 @@ async function checkArchive(archive) {
   const extension = getExtension(archive);
   if (!readableExtensions.has(extension)) return;
   const expectedFolder = archive.replace(`.${extension}`, "");
-  const result = await Result.trySafe(listArchive(pathToArchive));
+  const result = await Result.trySafe(list(pathToArchive));
   if (!result.ok) {
     logger.error(`Error while listing ${color(archive)}`, result.error);
     return;
   }
   const content = result.value;
-  const firstFolder = content?.find(item => ["D", "DA"].includes(item.attr));
+  const firstFolder = content.find(item => ["D", "DA"].includes(item.attr));
   if (firstFolder === undefined) logger.error(`Failed to find a folder in : ${color(archive)}`);
   else logger.debug(`${archive} content`, firstFolder);
   const isValid = firstFolder?.name === expectedFolder;

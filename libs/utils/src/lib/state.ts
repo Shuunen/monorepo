@@ -1,3 +1,4 @@
+// oxlint-disable promise/prefer-await-to-callbacks
 import type { ShuutilsStorage } from "./storage.js";
 
 type StateCallback = (() => void) | ((updatedKey: string, updatedValue?: unknown) => void);

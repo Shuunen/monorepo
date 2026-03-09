@@ -53,7 +53,7 @@ function shellCommand(cmd) {
     // oxlint-disable-next-line promise/prefer-await-to-callbacks
     exec(cmd, (error, stdout, stderr) => {
       if (error) logger.error(error);
-      void resolve(stdout || stderr);
+      resolve(stdout || stderr);
     });
   });
 }
@@ -123,7 +123,7 @@ async function getTasks(input) {
  */
 async function takeScreenAt(input) {
   await logAdd(`Input : "${input}"`);
-  if (input) fs.writeFile(lastInputFile, input);
+  if (input) void fs.writeFile(lastInputFile, input);
   const tasks = await getTasks(input);
   await logAdd(`Tasks prepared : ${tasks.length}`);
   for (const task of tasks) {
@@ -150,10 +150,12 @@ async function init() {
   const lastInput = await fs.readFile(lastInputFile, "utf8").catch(() => "60");
   await logAdd("Last input :", lastInput);
   const ask = createInterface({ input: process.stdin, output: process.stdout });
-  ask.question(`  Please type the time in mmss or ss (enter to use "${lastInput}") : `, async time => {
-    await takeScreenAt(time || lastInput);
-    await beep();
-    ask.close(); // close the readline interface to allow the process to exit
+  ask.question(`  Please type the time in mmss or ss (enter to use "${lastInput}") : `, time => {
+    void takeScreenAt(time || lastInput)
+      // oxlint-disable-next-line promise/prefer-await-to-then
+      .then(beep)
+      // oxlint-disable-next-line max-nested-callbacks, prefer-await-to-then
+      .then(() => ask.close()); // close the readline interface to allow the process to exit
   });
 }
 

@@ -126,7 +126,7 @@ export function injectMarkInAssets(assets, placeholder, version) {
 export function getProjectVersion(projectRoot) {
   try {
     const pkg = JSON.parse(readFileSync(join(projectRoot, "package.json"), "utf8"));
-    return pkg.version || "";
+    return pkg.version ?? "";
   } catch (error) {
     if (error instanceof Error) {
       console.error("Could not read project package.json for version", error.message);
@@ -143,7 +143,7 @@ export function getProjectVersion(projectRoot) {
  * @returns {import('vite').Plugin} Vite plugin object.
  */
 export function uniqueMark(options = {}) {
-  const placeholder = options.placeholder || "unique-mark";
+  const placeholder = options.placeholder ?? "unique-mark";
   let projectRoot = "";
   let projectVersion = "";
   return {

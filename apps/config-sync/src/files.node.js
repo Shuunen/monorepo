@@ -95,7 +95,7 @@ function getDetails(filepath) {
     // oxlint-disable-next-line eslint-plugin-react-hooks/rules-of-hooks
     content.includes("\r") && !filepath.includes(".qbtheme") ? useUnixCarriageReturn(content) : content; // qbtheme files does not like \n
   const isContentEquals = content === updatedContent;
-  if (!isContentEquals) writeFile(filepath, updatedContent);
+  if (!isContentEquals) void writeFile(filepath, updatedContent);
   return { content: updatedContent, filepath, isExisting };
 }
 

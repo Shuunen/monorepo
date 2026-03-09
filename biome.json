@@ -87,7 +87,7 @@
         "useImportExtensions": "off"
       },
       "nursery": {
-        "noFloatingPromises": "error"
+        "noFloatingPromises": "off"
       },
       "performance": {
         "useTopLevelRegex": "error"

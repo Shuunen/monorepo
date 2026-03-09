@@ -32,16 +32,52 @@ nx dev sample-web-app
 
 - [ ] check if splitting exports like in the business lib helps with performances or not
 - [ ] check if we can merge typecheck with building ( we need to find a solution that can leverage ts-go ) ( or wait for typescript 7)
-- [ ] check if we should enable
-  - jsx-handler-names
-  - jsx-no-new-function-as-prop
-  - jsx-no-new-object-as-prop
-  - jsx-props-no-spreading
-  - no-array-index-key : conflicts with useStableKeys
-  - no-unescaped-entities
-  - prefer-await-to-callbacks
-  - prefer-await-to-then
-  - promise/avoid-new
+- [ ] temporary disabled rules, check if we should enable :
+  - prefer-readonly-parameter-types (1421 issues)
+  - no-floating-promises (609 issues)
+  - strict-boolean-expressions (178 issues)
+  - no-unsafe-type-assertion (165 issues)
+  - strict-void-return (133 issues)
+  - no-confusing-void-expression : maybe too neat pick for now (132 issues)
+  - no-unsafe-member-access (110 issues)
+  - jsx-no-new-function-as-prop (98 issues)
+  - no-unnecessary-condition (88 issues)
+  - no-unsafe-call (84 issues)
+  - no-unsafe-assignment (76 issues)
+  - promise-function-async : issue with functions returning new Promise() instead of Promise.withResolvers() which is not supported by tsconfig.base.json yet (65 issues)
+  - jsx-props-no-spreading (57 issues)
+  - jsx-no-new-object-as-prop (54 issues)
+  - prefer-nullish-coalescing (48 issues)
+  - no-unnecessary-type-assertion (44 issues)
+  - restrict-template-expressions (33 issues)
+  - no-deprecated (27 issues)
+  - no-misused-promises (23 issues)
+  - no-unsafe-argument (22 issues)
+  - consistent-return (19 issues)
+  - promise/avoid-new (19 issues)
+  - no-base-to-string (17 issues)
+  - no-redundant-type-constituents (15 issues)
+  - unbound-method (14 issues)
+  - await-thenable (14 issues)
+  - non-nullable-type-assertion-style : maybe too neat pick for now (11 issues)
+  - no-unescaped-entities (10 issues)
+  - no-array-index-key : conflicts with useStableKeys (9 issues)
+  - prefer-regexp-exec (9 issues)
+  - no-unsafe-return (9 issues)
+  - return-await (8 issues)
+  - no-useless-default-assignment (7 issues)
+  - no-meaningless-void-operator (7 issues)
+  - jsx-handler-names (5 issues)
+  - no-unnecessary-type-parameters : we like to use them sometimes (5 issues)
+  - prefer-readonly (5 issues)
+  - prefer-optional-chain (5 issues)
+  - use-unknown-in-catch-callback-variable (4 issues)
+  - no-unnecessary-template-expression (4 issues)
+  - no-unnecessary-type-arguments (2 issues)
+  - switch-exhaustiveness-check (1 issues)
+  - prefer-promise-reject-errors (1 issues)
+  - no-unnecessary-boolean-literal-compare (1 issues)
+  - no-implied-eval (1 issues)
 
 ## Thanks
 

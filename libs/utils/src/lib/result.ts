@@ -45,6 +45,7 @@ function trySafe<T, E = unknown>(fn: () => T): Result<T, E>;
 function trySafe<T, E = unknown>(promise: Promise<T>): Promise<Result<T, E>>;
 function trySafe<T, E = unknown>(fnOrPromise: (() => T) | Promise<T>): Result<T, E> | Promise<Result<T, E>> {
   if (fnOrPromise instanceof Promise) {
+    // oxlint-disable-next-line promise/prefer-await-to-then
     return fnOrPromise.then(ok).catch(err as (error: unknown) => Err<E>);
   }
 

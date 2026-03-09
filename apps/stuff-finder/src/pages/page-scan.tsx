@@ -1,3 +1,4 @@
+// oxlint-disable prefer-await-to-then
 import { sleep } from "@monorepo/utils";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import { Alert, Collapse } from "@mui/material";
@@ -90,6 +91,7 @@ export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
           logger.showError("error decoding video stream :", decodeError);
         });
       })
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       .catch((error: unknown) => {
         const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
         state.sound = "error";

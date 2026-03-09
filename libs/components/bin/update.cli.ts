@@ -11,7 +11,7 @@ function listComponents(startFrom?: string): string[] {
   const components = files
     .filter(file => file.endsWith(".tsx") && file !== "utils.ts")
     .map(file => file.replace(".tsx", ""));
-  if (!startFrom) {
+  if (startFrom === undefined) {
     return components;
   }
   const startIndex = components.indexOf(startFrom);

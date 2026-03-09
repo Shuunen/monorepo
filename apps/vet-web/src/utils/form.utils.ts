@@ -13,6 +13,7 @@ import type { Option } from "./form.types.ts";
  */
 export function useFormChangeDetector<InputValues extends FieldValues>(
   form: UseFormReturn<InputValues>,
+  // oxlint-disable-next-line promise/prefer-await-to-callbacks
   callback: (values: InputValues) => void,
 ) {
   /* v8 ignore start -- @preserve */

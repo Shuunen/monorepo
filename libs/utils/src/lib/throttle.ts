@@ -15,6 +15,7 @@ export function throttle<Arguments extends readonly unknown[], Return>(
       return;
     }
     isReady = false;
+    // oxlint-disable-next-line promise/prefer-await-to-callbacks
     callback(...arguments_);
     setTimeout(() => {
       isReady = true;

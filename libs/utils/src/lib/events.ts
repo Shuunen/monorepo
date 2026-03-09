@@ -40,6 +40,7 @@ export function on<Data>(
    * @returns the result of the callback
    */
   function onCallback(event: unknown) {
+    // oxlint-disable-next-line promise/prefer-await-to-callbacks
     return callback(/* c8 ignore next */ event instanceof CustomEvent ? event.detail : event, event as Event);
   }
   media.addEventListener(name, onCallback, { passive: true });

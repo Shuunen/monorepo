@@ -182,7 +182,7 @@ export function collectRequestBody(req: IncomingMessage | PassThrough): Promise<
       log("info", context, `Request body fully received: ${body.length} bytes`);
       resolve(body);
     });
-    req.on("error", error => {
+    req.on("error", (error: Error) => {
       log("error", context, `Error receiving request body: ${error?.message ?? error}`);
       reject(error);
     });

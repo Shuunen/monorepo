@@ -9,7 +9,6 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const srcDir = path.resolve(__dirname, "../src");
-const filePattern = /\.user\.js$/;
 const logger = new Logger();
 
 type Guideline = {
@@ -111,10 +110,10 @@ const guidelines: Guideline[] = [
   },
   {
     check: (content: string, filePath?: string) => {
-      if (!filePath) return false;
+      if (filePath === undefined) return false;
       const baseName = path.basename(filePath, ".user.js");
       const expectedName = baseName
-        .replace(regexMainFuncKebab, (_substr, character) => character.toUpperCase())
+        .replace(regexMainFuncKebab, (_substr, character: string) => character.toUpperCase())
         .replace(regexMainFuncPascal, matchGroup => matchGroup[0].toUpperCase() + matchGroup[1]);
       return regexMainFuncDef(expectedName).test(content);
     },
@@ -171,7 +170,7 @@ function lintFile(filePath: string): string[] {
 function main() {
   const files = fs
     .readdirSync(srcDir)
-    .filter(fileName => filePattern.test(fileName))
+    .filter(fileName => fileName.endsWith(".user.js"))
     .map(fileName => path.join(srcDir, fileName));
   let foundIssues = false;
   for (const filePath of files) {

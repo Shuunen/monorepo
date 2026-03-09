@@ -1,3 +1,4 @@
+// oxlint-disable promise/prefer-await-to-callbacks
 /**
  * Creates a function that memoizes the result of `callback`
  * @copyright inspired from Angus Croll package `just-memoize` under MIT License Copyright (c) 2016-2023

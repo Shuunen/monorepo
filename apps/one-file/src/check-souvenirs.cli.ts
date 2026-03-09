@@ -129,14 +129,14 @@ export function setFileDateViaExifTool(file: string, date: ExifDateTime) {
             return undefined;
           })
           // oxlint-disable-next-line max-nested-callbacks
-          .catch(error => {
-            logger.error(`Failed again to write DateTimeOriginal for file ${red(file)} : ${error}`);
+          .catch((error: unknown) => {
+            logger.error(`Failed again to write DateTimeOriginal for file ${red(file)} : ${String(error)}`);
           });
         logger.debug(`Successfully set DateTimeOriginal for file ${green(file)} on second attempt`);
       })
-      .finally(async () => {
+      .finally(() => {
         // created by exif tool
-        await unlink(`${file}_original`).catch(functionReturningVoid);
+        void unlink(`${file}_original`).catch(functionReturningVoid);
       })
   );
 }
@@ -202,7 +202,7 @@ export function isFileSupportedForDateSetting(filePath: string) {
   return isPhoto(filePath) || isMatroskaVideo(filePath);
 }
 
-export function setFileDate(file: string, date: ExifDateTime) {
+export function setFileDate(file: string, date?: ExifDateTime) {
   const isoString = date?.toString()?.split("T")[0];
   if (isoString === undefined) {
     logger.error(`Invalid date provided for file ${red(file)}`, date);
@@ -214,7 +214,7 @@ export function setFileDate(file: string, date: ExifDateTime) {
     logger.info(blue("Dry run enabled, avoid setting date"));
     return Promise.resolve();
   }
-  if (isPhoto(file)) return setFileDateViaExifTool(file, date);
+  if (isPhoto(file)) return setFileDateViaExifTool(file, date as ExifDateTime);
   if (isMatroskaVideo(file)) return setFileDateViaMkvTool(file, isoString);
   logger.warn(`Cannot set date for unsupported file type: ${yellow(file)}`);
   return Promise.resolve();
@@ -254,7 +254,7 @@ export function getNewExifDateBasedOnExistingDate({
   const datePart = `${newYear}-${newMonth.toString().padStart(nbThird, "0")}-${day.toString().padStart(nbThird, "0")}`;
   const timePart = `${hour.toString().padStart(nbThird, "0")}:${minute.toString().padStart(nbThird, "0")}:${second.toString().padStart(nbThird, "0")}.${millisecond.toString().padStart(millisecondPadding, "0")}`;
   const isoString = `${datePart}T${timePart}${formatTimezoneOffset(tzOffsetMinutes)}`;
-  return ExifDateTime.fromISO(isoString) as ExifDateTime;
+  return ExifDateTime.fromISO(isoString);
 }
 
 export async function checkFileDateTimeOriginal({
@@ -287,7 +287,7 @@ export async function checkFileDateTimeOriginal({
       originalExifDate,
       pathMonth,
       pathYear,
-    });
+    }) as ExifDateTime;
     await setFileDate(file, newExifDate);
   } else {
     logger.debug(`DateTimeOriginal EXIF tag is correct for file ${blue(file)}`);
@@ -301,14 +301,14 @@ export async function getExifDateFromSiblings(file: File): Promise<ExifDateTime 
     for (const sibling of siblings) {
       // oxlint-disable-next-line no-await-in-loop
       const tags = await exif.read(sibling);
-      if (!tags.DateTimeOriginal) continue;
+      if (tags.DateTimeOriginal === undefined) continue;
       /* v8 ignore next -- @preserve */
       logger.debug(
         `Found DateTimeOriginal in sibling file ${sibling} : ${green(tags.DateTimeOriginal.toString() ?? "undefined")}`,
       );
       return tags.DateTimeOriginal instanceof ExifDateTime
         ? tags.DateTimeOriginal
-        : (ExifDateTime.fromISO(tags.DateTimeOriginal) as ExifDateTime);
+        : ExifDateTime.fromISO(tags.DateTimeOriginal);
     }
     return undefined;
   })();
@@ -317,12 +317,15 @@ export async function getExifDateFromSiblings(file: File): Promise<ExifDateTime 
 
 export function getExifDateFromYearAndMonth(pathYear: string, pathMonth?: string) {
   const isoString = `${pathYear}-${pathMonth ?? "01"}-01T00:00:00.000`;
-  return ExifDateTime.fromISO(isoString) as ExifDateTime;
+  return ExifDateTime.fromISO(isoString);
 }
 
 export async function getNewExifDateBasedOnSiblings(file: File, pathYear: string, pathMonth?: string) {
   const referenceDate = (await getExifDateFromSiblings(file)) ?? getExifDateFromYearAndMonth(pathYear, pathMonth);
-  const exifDate = toDate(referenceDate);
+  /* v8 ignore start */
+  const fallbackDate = new Date(`${pathYear}-${pathMonth ?? "01"}-01T00:00:00.000`);
+  const exifDate = referenceDate === undefined ? fallbackDate : toDate(referenceDate);
+  /* v8 ignore stop */
   const exifYear = exifDate.getFullYear().toString();
   const exifYearIncorrect = exifYear !== pathYear;
   const exifMonth = (exifDate.getMonth() + 1).toString().padStart(nbThird, "0");
@@ -340,7 +343,7 @@ export async function getNewExifDateBasedOnSiblings(file: File, pathYear: string
 
 export async function setFileDateBasedOnSiblings(file: File, pathYear: string, pathMonth?: string) {
   logger.info(`No DateTimeOriginal EXIF tag for file ${blue(file.currentFilePath)}, checking siblings...`);
-  const newExifDate = await getNewExifDateBasedOnSiblings(file, pathYear, pathMonth);
+  const newExifDate = (await getNewExifDateBasedOnSiblings(file, pathYear, pathMonth)) as ExifDateTime;
   await setFileDate(file.currentFilePath, newExifDate);
 }
 
@@ -352,20 +355,20 @@ export async function checkFileDate(file: File) {
   }
   const { month: pathMonth, year: pathYear } = dateFromPath(file.currentFilePath).value;
   logger.debug(`Extracted date from path : year=${pathYear ?? "undefined"}, month=${pathMonth ?? "undefined"}`);
-  if (!pathYear) {
+  if (pathYear === undefined) {
     logger.warn(`No year found in path for file ${red(file.currentFilePath)}, skipping date check`);
     return;
   }
   const tags = await exif.read(file.currentFilePath);
   logger.debug(`Extracted DateTimeOriginal from exif : DateTimeOriginal=${tags.DateTimeOriginal ?? "undefined"}`);
-  if (tags.DateTimeOriginal)
+  if (tags.DateTimeOriginal === undefined) await setFileDateBasedOnSiblings(file, pathYear, pathMonth);
+  else
     await checkFileDateTimeOriginal({
       dateTimeOriginal: tags.DateTimeOriginal,
       file: file.currentFilePath,
       pathMonth,
       pathYear,
     });
-  else await setFileDateBasedOnSiblings(file, pathYear, pathMonth);
 }
 
 export async function checkFilePathExtensionCase(filePath: string): Promise<string> {

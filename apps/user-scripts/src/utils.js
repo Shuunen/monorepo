@@ -36,7 +36,10 @@ class Shuutils {
     element.style = `position: fixed; display: flex; align-items: center; gap: 9px; bottom: ${bottom + padding}px; right: ${padding}px; z-index: 99999; padding: 12px 20px 11px 14px; background: linear-gradient(45deg, ${backgrounds[0]}, 20%, ${backgrounds[1]}); color: white; border-radius: 5px; box-shadow: 0 3px 7px 0 rgba(0,0,0,.5); font-size: 18px; opacity: 0; transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; transform: translateX(300px);`;
     element.innerHTML = `<span style="${iconStyle}border-radius: 50%; color: ${backgrounds[1]}; background-color: #ffffff90; width: 20px; height: 20px; text-align: center; font-weight: bolder; font-size: 12px;">${icon}</span><span style="margin-top: -1px;">${message}</span>`;
     this.#toastShow(element);
-    if (delay > 0) setTimeout(() => this.#toastHide(element), delay);
+    if (delay > 0)
+      setTimeout(() => {
+        this.#toastHide(element);
+      }, delay);
   }
   /**
    * Hides the toast element by applying a transform and removing it after a delay.
@@ -133,7 +136,7 @@ class Shuutils {
     /** @type {ReturnType<typeof setTimeout>} */
     // oxlint-disable-next-line init-declarations
     let timeout;
-    return async (/** @type {any} */ ...parameters) =>
+    return async (/** @type {any} */ ...parameters) => {
       await new Promise(resolve => {
         clearTimeout(timeout);
         // oxlint-disable-next-line promise/no-multiple-resolved
@@ -142,6 +145,7 @@ class Shuutils {
           resolve(callback(...parameters));
         }, waitFor);
       });
+    };
   }
   /**
    * Console.log stuff with app id if debug is true
@@ -378,7 +382,7 @@ class Shuutils {
   /**
    * Wait for location.href to change and call a callback
    * @param {Function} callback the callback to call when location.href changes
-   * @param {string} last the last location.href, dont use it
+   * @param {string} last the last location.href, don't use it
    * @param {number} wait the time to wait between each try
    * @returns {Promise<void>} nothing
    * @example utils.onPageChange((url) => { console.log('new url :', url) })
@@ -604,7 +608,7 @@ class Shuutils {
       this.log(`stop searching after 5 fails to detect : "${selector}"`);
       return undefined;
     }
-    return await this.waitToDetect(selector, wait, nbTries + 1);
+    return this.waitToDetect(selector, wait, nbTries + 1);
   }
   /**
    * Console.warn stuff with app id
@@ -616,6 +620,7 @@ class Shuutils {
   }
 }
 
+// oxlint-disable-next-line typescript/no-unnecessary-condition
 if (globalThis.window === undefined)
   // oxlint-disable-next-line no-commonjs, no-undef, prefer-module
   module.exports = {

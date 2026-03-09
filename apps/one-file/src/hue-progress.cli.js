@@ -49,7 +49,7 @@ async function setProgress(percent = 0) {
     headers: { "Content-Type": "application/json" },
     method: "PUT",
   };
-  const result = await Result.trySafe(() => fetch(hueEndpoint, request));
+  const result = await Result.trySafe(fetch(hueEndpoint, request));
   if (result.ok) logger.info("emitted hue color successfully");
   else logger.error("error emitting hue color", result.error);
 }
