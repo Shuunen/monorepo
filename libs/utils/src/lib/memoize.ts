@@ -22,7 +22,6 @@ export function memoize<Callback extends (...arguments_: Parameters<Callback>) =
       cache[key] = callback(...parameters);
     }
     // oxlint-disable no-non-null-assertion
-    // biome-ignore lint/style/noNonNullAssertion: needed here
     return cache[key]!;
   }
   memoized.cache = cache;

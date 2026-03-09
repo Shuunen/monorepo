@@ -95,8 +95,6 @@ function LbcNotes() {
     },
   };
   const utils = new Shuutils("lbc-nts");
-  // Remove me one day :)
-  utils.tw ||= classes => classes.split(" ");
   const cls = {
     marker: `${utils.id}-processed`,
   };

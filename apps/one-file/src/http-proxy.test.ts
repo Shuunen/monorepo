@@ -1,3 +1,4 @@
+// oxlint-disable typescript/unbound-method
 import type { Request, Response } from "express";
 import {
   app,

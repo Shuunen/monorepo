@@ -1,10 +1,11 @@
-// oxlint-disable no-undef, no-null, no-var-requires, no-require-imports
+// oxlint-disable-next-line unicorn/no-abusive-eslint-disable
+/* oxlint-disable */
 /** biome-ignore-all lint/nursery/noFloatingPromises: it's ok here */
-import { type CapacitorElectronConfig, getCapacitorElectronConfig, setupElectronDeepLinking } from '@capacitor-community/electron'
-import { app, MenuItem, type MenuItemConstructorOptions } from 'electron'
-import electronIsDev from 'electron-is-dev'
-import unhandled from 'electron-unhandled'
-import { ElectronCapacitorApp, setupReloadWatcher } from './setup'
+import { type CapacitorElectronConfig, getCapacitorElectronConfig, setupElectronDeepLinking } from '@capacitor-community/electron';
+import { app, MenuItem, type MenuItemConstructorOptions } from 'electron';
+import electronIsDev from 'electron-is-dev';
+import unhandled from 'electron-unhandled';
+import { ElectronCapacitorApp, setupReloadWatcher } from './setup';
 
 // Graceful handling of unhandled errors.
 unhandled()

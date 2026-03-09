@@ -22,7 +22,8 @@ export function base64ToFile(base64: string, filename: string) {
 
   // Convert binary string to Uint8Array.
   for (let index = 0; index < base64BinaryResult.value.length; index += 1) {
-    uint8Arr[index] = base64BinaryResult.value.codePointAt(index) as number;
+    // oxlint-disable-next-line typescript/no-non-null-assertion
+    uint8Arr[index] = base64BinaryResult.value.codePointAt(index)!;
   }
 
   /* c8 ignore start */

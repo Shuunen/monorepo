@@ -95,6 +95,7 @@
       "recommended": true,
       "style": {
         "noImplicitBoolean": "off",
+        "noNonNullAssertion": "off",
         "useBlockStatements": "off",
         "useNamingConvention": "error"
       },

@@ -76,7 +76,6 @@ export function pour(from: Readonly<Bottle>, to: Readonly<Bottle>, amount?: numb
       logger.info(`pouring ${color} from a at index ${colorIndex} to b at index ${index}`);
       lastColor = color;
       // oxlint-disable no-non-null-assertion
-      // biome-ignore lint/style/noNonNullAssertion: needed
       cloneTo[index] = color!;
       // oxlint-enable no-non-null-assertion
       cloneFrom[colorIndex] = "";

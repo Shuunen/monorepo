@@ -1,14 +1,14 @@
-// oxlint-disable prefer-readonly, prefer-await-to-then, prefer-await-to-callbacks, no-magic-numbers, id-length, no-console, max-nested-callbacks, no-explicit-any, max-lines-per-function, no-null, class-methods-use-this
+// oxlint-disable-next-line unicorn/no-abusive-eslint-disable
+/* oxlint-disable */
 /** biome-ignore-all lint/correctness/noNodejsModules: we can use node here */
 /** biome-ignore-all lint/style/useNamingConvention: it's Electron conventions */
-// oxlint-disable-next-line import/no-nodejs-modules
-import { join } from 'node:path'
-import { type CapacitorElectronConfig, CapacitorSplashScreen, CapElectronEventEmitter, setupCapacitorElectronPlugins } from '@capacitor-community/electron'
-import chokidar from 'chokidar'
-import { app, BrowserWindow, Menu, MenuItem, type MenuItemConstructorOptions, nativeImage, Tray } from 'electron'
-import electronIsDev from 'electron-is-dev'
-import electronServe from 'electron-serve'
-import windowStateKeeper from 'electron-window-state'
+import { join } from 'node:path';
+import { type CapacitorElectronConfig, CapacitorSplashScreen, CapElectronEventEmitter, setupCapacitorElectronPlugins } from '@capacitor-community/electron';
+import chokidar from 'chokidar';
+import { app, BrowserWindow, Menu, MenuItem, type MenuItemConstructorOptions, nativeImage, Tray } from 'electron';
+import electronIsDev from 'electron-is-dev';
+import electronServe from 'electron-serve';
+import windowStateKeeper from 'electron-window-state';
 
 // Define components for a watcher to detect when the webapp is changed so we can reload in Dev mode.
 const reloadWatcher = {

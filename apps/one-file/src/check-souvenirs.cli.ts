@@ -214,7 +214,8 @@ export function setFileDate(file: string, date?: ExifDateTime) {
     logger.info(blue("Dry run enabled, avoid setting date"));
     return Promise.resolve();
   }
-  if (isPhoto(file)) return setFileDateViaExifTool(file, date as ExifDateTime);
+  // oxlint-disable-next-line typescript/no-non-null-assertion
+  if (isPhoto(file)) return setFileDateViaExifTool(file, date!);
   if (isMatroskaVideo(file)) return setFileDateViaMkvTool(file, isoString);
   logger.warn(`Cannot set date for unsupported file type: ${yellow(file)}`);
   return Promise.resolve();
@@ -287,7 +288,7 @@ export async function checkFileDateTimeOriginal({
       originalExifDate,
       pathMonth,
       pathYear,
-    }) as ExifDateTime;
+    });
     await setFileDate(file, newExifDate);
   } else {
     logger.debug(`DateTimeOriginal EXIF tag is correct for file ${blue(file)}`);
@@ -343,7 +344,7 @@ export async function getNewExifDateBasedOnSiblings(file: File, pathYear: string
 
 export async function setFileDateBasedOnSiblings(file: File, pathYear: string, pathMonth?: string) {
   logger.info(`No DateTimeOriginal EXIF tag for file ${blue(file.currentFilePath)}, checking siblings...`);
-  const newExifDate = (await getNewExifDateBasedOnSiblings(file, pathYear, pathMonth)) as ExifDateTime;
+  const newExifDate = await getNewExifDateBasedOnSiblings(file, pathYear, pathMonth);
   await setFileDate(file.currentFilePath, newExifDate);
 }
 

@@ -95,10 +95,11 @@ describe("image.utils", () => {
         length: 3,
       } as unknown as FileList;
       const onContestStart = vi.fn();
+      const infoSpy = vi.spyOn(logger, "info").mockImplementation(functionReturningVoid);
       handleMultipleFilesUpload(fileList, { onContestStart });
       await sleep(20); // Wait for async FileReader operations
       expect(onContestStart).toHaveBeenCalled();
-      expect(logger.info).toHaveBeenCalledWith("Contest mode started with 3 images.");
+      expect(infoSpy).toHaveBeenCalledWith("Contest mode started with 3 images.");
     });
 
     it("handleMultipleFilesUpload D should handle empty FileList for two images", () => {

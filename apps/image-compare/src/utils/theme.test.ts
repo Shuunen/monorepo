@@ -2,11 +2,12 @@ import { functionReturningVoid } from "@monorepo/utils";
 import * as loggerUtils from "./logger.utils";
 import { setDarkTheme } from "./theme.utils";
 
-vi.spyOn(loggerUtils.logger, "info").mockImplementation(functionReturningVoid);
+const infoSpy = vi.spyOn(loggerUtils.logger, "info").mockImplementation(functionReturningVoid);
 
 describe("theme.utils", () => {
   beforeEach(() => {
     document.documentElement.classList.remove("dark");
+    infoSpy.mockClear();
   });
 
   it("setDarkTheme A should enable dark theme when isDark is true", () => {
@@ -20,15 +21,13 @@ describe("theme.utils", () => {
     expect(document.documentElement.classList.contains("dark")).toBe(false);
   });
 
-  it("setDarkTheme C should log enabling message when isDark is true", async () => {
-    const { logger } = await import("./logger.utils");
+  it("setDarkTheme C should log enabling message when isDark is true", () => {
     setDarkTheme(true);
-    expect(logger.info).toHaveBeenCalledWith("Enabling dark theme");
+    expect(infoSpy).toHaveBeenCalledWith("Enabling dark theme");
   });
 
-  it("setDarkTheme D should log disabling message when isDark is false", async () => {
-    const { logger } = await import("./logger.utils");
+  it("setDarkTheme D should log disabling message when isDark is false", () => {
     setDarkTheme(false);
-    expect(logger.info).toHaveBeenCalledWith("Disabling dark theme");
+    expect(infoSpy).toHaveBeenCalledWith("Disabling dark theme");
   });
 });

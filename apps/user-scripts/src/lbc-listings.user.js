@@ -134,9 +134,6 @@ function LbcListings() {
     marker: `${utils.id}-processed`,
   };
 
-  // Remove me one day :)
-  utils.tw ||= classes => classes.split(" ");
-
   /**
    * Get the ad element from the ad object
    * @param {LbcAd} ad the ad object

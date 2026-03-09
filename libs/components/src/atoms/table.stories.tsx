@@ -92,8 +92,8 @@ export const Default: Story = {
       const invoiceCell = canvas.getByText(invoice.invoice);
       const row = invoiceCell.closest("tr");
       expect(row).not.toBeNull();
-
-      const rowUtils = within(row as HTMLTableRowElement);
+      // oxlint-disable-next-line typescript/no-non-null-assertion
+      const rowUtils = within(row!);
 
       // Now within this row, these texts are unique
       expect(rowUtils.getByText(invoice.paymentStatus)).toBeInTheDocument();

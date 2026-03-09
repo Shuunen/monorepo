@@ -366,7 +366,6 @@
     "no-misused-promises": "off",
     "no-named-export": "off",
     "no-optional-chaining": "off",
-    "no-redundant-type-constituents": "off",
     "no-relative-parent-imports": "off",
     "no-rest-spread-properties": "off",
     "no-restricted-imports": [
@@ -404,7 +403,6 @@
     "no-useless-undefined": "off",
     "no-void": "off",
     "no-warning-comments": "off",
-    "non-nullable-type-assertion-style": "off",
     "number-literal-case": "off",
     "prefer-default-export": "off",
     "prefer-destructuring": "off",
@@ -419,7 +417,6 @@
     "strict-boolean-expressions": "off",
     "strict-void-return": "off",
     "unambiguous": "off",
-    "unbound-method": "off",
     "unicorn/prefer-spread": "off",
     "vitest/prefer-called-times": "off",
     "vitest/prefer-to-be-falsy": "off",
