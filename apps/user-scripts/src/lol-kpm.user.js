@@ -38,13 +38,13 @@ function LolKpm() {
    */
   function showKpmOnRow(row) {
     const kdaPlate = row.querySelector(".kda-plate");
-    if (!kdaPlate || !kdaPlate.textContent) {
+    if (!kdaPlate?.textContent) {
       utils.showError("Could not find .kda-plate or its text content");
       return;
     }
     const kills = Number.parseInt(kdaPlate.textContent.split("/")[0], 10);
     const dateDuration = row.querySelector(".date-duration");
-    if (!dateDuration || !dateDuration.textContent) {
+    if (!dateDuration?.textContent) {
       utils.showError("Could not find .date-duration or its text content");
       return;
     }

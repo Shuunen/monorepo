@@ -1,7 +1,7 @@
-import { alignForSnap, Result } from "@monorepo/utils";
 import { type ChildProcess, spawn } from "node:child_process";
 import type http from "node:http";
 import { PassThrough } from "node:stream";
+import { alignForSnap, Result, sleep, stringify } from "@monorepo/utils";
 import * as serverModule from "./server.cli";
 
 // Suppress unhandled errors to prevent Vitest from reporting them globally
@@ -34,7 +34,7 @@ async function request(
   const options = { body, headers, method } satisfies RequestInit;
   try {
     const res = await fetch(url, options);
-    const text = await (method === "GET" ? res.text() : res.json());
+    const text = stringify(await (method === "GET" ? res.text() : res.json()));
     return Result.ok({ response: text, status: res.status });
   } catch (error) {
     return Result.error(error instanceof Error ? error.message : error);
@@ -47,8 +47,7 @@ describe("server.cli.ts (integration)", () => {
     const result = await request("/hello");
     if (result.ok) return;
     if (Date.now() - start < timeout) {
-      // oxlint-disable-next-line no-promise-executor-return
-      await new Promise(r => setTimeout(r, 100));
+      await sleep(100);
       return waitForServerReady(timeout, start);
     }
     throw new Error("Server startup timed out");
@@ -85,14 +84,9 @@ describe("server.cli.ts (integration)", () => {
     if (!result.ok) throw new Error(`Request C failed : ${result.error}`);
     const { status, response } = result.value;
     expect(status).toBe(400);
-    expect(alignForSnap(response)).toMatchInlineSnapshot(`
-      "{
-        "datetime": "xxxx-xx-xx xx:xx:xx",
-        "message": "Invalid body : must be an object with a progress property, got \\"\\"",
-        "ok": false,
-        "progress": 0
-      }"
-    `);
+    expect(alignForSnap(response)).toMatchInlineSnapshot(
+      `"{"datetime":"xxxx-xx-xx xx:xx:xx","message":"Invalid body : must be an object with a progress property, got \\"\\"","ok":false,"progress":0}"`,
+    );
   });
 
   it("D should respond 200 to POST /set-progress with valid body", async () => {
@@ -102,32 +96,9 @@ describe("server.cli.ts (integration)", () => {
     if (!result.ok) throw new Error(`Request D failed : ${result.error}`);
     const { status, response } = result.value;
     expect(status).toBe(200);
-    expect(alignForSnap(response)).toMatchInlineSnapshot(`
-      "{
-        "data": {
-          "bri": 255,
-          "hue": 15000,
-          "on": true,
-          "sat": 255
-        },
-        "datetime": "xxxx-xx-xx xx:xx:xx",
-        "message": "Emitted hue and trmnl color successfully",
-        "nextTask": "Review code",
-        "ok": true,
-        "progress": 75,
-        "remaining": "30",
-        "response": {
-          "hue": {
-            "message": "This is a fake endpoint response for testing.",
-            "success": true
-          },
-          "trmnl": {
-            "message": "This is a fake endpoint response for testing.",
-            "success": true
-          }
-        }
-      }"
-    `);
+    expect(alignForSnap(response)).toMatchInlineSnapshot(
+      `"{"data":{"bri":255,"hue":15000,"on":true,"sat":255},"datetime":"xxxx-xx-xx xx:xx:xx","message":"Emitted hue and trmnl color successfully","nextTask":"Review code","ok":true,"progress":75,"remaining":"30","response":{"hue":{"message":"This is a fake endpoint response for testing.","success":true},"trmnl":{"message":"This is a fake endpoint response for testing.","success":true}}}"`,
+    );
   });
 });
 
@@ -176,9 +147,10 @@ describe("server.cli.ts (unit)", () => {
   });
 
   it("sendCorsHeaders A should set headers", () => {
-    const res = { setHeader: vi.fn() } as unknown as http.ServerResponse;
+    const setHeader = vi.fn();
+    const res = { setHeader } as unknown as http.ServerResponse;
     serverModule.sendCorsHeaders(res);
-    expect(res.setHeader).toHaveBeenCalledWith("Access-Control-Allow-Origin", "*");
+    expect(setHeader).toHaveBeenCalledWith("Access-Control-Allow-Origin", "*");
   });
 
   it("parseProgressBody A should handle valid input", () => {
@@ -201,33 +173,37 @@ describe("server.cli.ts (unit)", () => {
   });
 
   it("respondNotFound A should write 404", () => {
-    const res = { end: vi.fn(), writeHead: vi.fn() } as unknown as http.ServerResponse;
+    const end = vi.fn();
+    const writeHead = vi.fn();
+    const res = { end, writeHead } as unknown as http.ServerResponse;
     serverModule.respondNotFound(res);
-    expect(res.writeHead).toHaveBeenCalledWith(serverModule.options.codes.notFound, {
+    expect(writeHead).toHaveBeenCalledWith(serverModule.options.codes.notFound, {
       "Content-Type": "application/json",
     });
-    expect(res.end).toHaveBeenCalled();
+    expect(end).toHaveBeenCalled();
   });
 
   it("respondBadRequest A should write 400", () => {
-    const res = { end: vi.fn(), writeHead: vi.fn() } as unknown as http.ServerResponse;
+    const end = vi.fn();
+    const writeHead = vi.fn();
+    const res = { end, writeHead } as unknown as http.ServerResponse;
     serverModule.respondBadRequest({ message: "bad", nextTask: undefined, progress: 0, remaining: undefined, res });
-    expect(res.writeHead).toHaveBeenCalledWith(serverModule.options.codes.badRequest, {
+    expect(writeHead).toHaveBeenCalledWith(serverModule.options.codes.badRequest, {
       "Content-Type": "application/json",
     });
-    expect(res.end).toHaveBeenCalled();
+    expect(end).toHaveBeenCalled();
   });
 
   it("flattenResponse A should resolve with parsed JSON", () => {
     const mockRes = new PassThrough();
     let resolved = undefined;
-    const cb = serverModule.flattenResponse(
+    const func = serverModule.flattenResponse(
       v => {
         resolved = v;
       },
       () => "",
     );
-    cb(mockRes);
+    func(mockRes);
     mockRes.emit("data", Buffer.from('{"foo":123}'));
     mockRes.emit("end");
     expect(resolved).toMatchObject({ error: undefined, result: { foo: 123 } });
@@ -236,13 +212,13 @@ describe("server.cli.ts (unit)", () => {
   it("flattenResponse B should resolve with raw string if not JSON", () => {
     const mockRes = new PassThrough();
     let resolved = undefined;
-    const cb = serverModule.flattenResponse(
+    const func = serverModule.flattenResponse(
       v => {
         resolved = v;
       },
       () => "",
     );
-    cb(mockRes);
+    func(mockRes);
     mockRes.emit("data", Buffer.from("notjson"));
     mockRes.emit("end");
     expect(resolved).toMatchObject({ error: undefined, result: "notjson" });

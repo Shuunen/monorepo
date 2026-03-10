@@ -52,7 +52,7 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const passwordInput = canvas.getByTestId("input-password-password") as HTMLInputElement;
+    const passwordInput = canvas.getByTestId("input-password-password");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     expect(passwordInput).toBeInTheDocument();
@@ -92,7 +92,7 @@ export const WithPrefault: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const passwordInput = canvas.getByTestId("input-password-password") as HTMLInputElement;
+    const passwordInput = canvas.getByTestId("input-password-password");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("verify prefault value is displayed", () => {
@@ -128,7 +128,7 @@ export const WithInitialValue: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const passwordInput = canvas.getByTestId("input-password-password") as HTMLInputElement;
+    const passwordInput = canvas.getByTestId("input-password-password");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("verify initial value is displayed", () => {
@@ -187,7 +187,7 @@ export const Disabled: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const passwordInput = canvas.getByTestId("input-password-password") as HTMLInputElement;
+    const passwordInput = canvas.getByTestId("input-password-password");
     expect(passwordInput).toBeDisabled();
     expect(passwordInput).toHaveValue("DisabledPass123");
     expect(passwordInput).toHaveAttribute("type", "password");
@@ -213,7 +213,7 @@ export const Readonly: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const passwordInput = canvas.getByTestId("input-password-password") as HTMLInputElement;
+    const passwordInput = canvas.getByTestId("input-password-password");
     expect(passwordInput).toHaveAttribute("readonly");
     expect(passwordInput).toHaveValue("ReadonlyPass123");
     expect(passwordInput).toHaveAttribute("type", "password");
@@ -247,8 +247,8 @@ export const MultipleFields: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const passwordInput = canvas.getByTestId("input-password-password") as HTMLInputElement;
-    const confirmPasswordInput = canvas.getByTestId("input-password-confirm-password") as HTMLInputElement;
+    const passwordInput = canvas.getByTestId("input-password-password");
+    const confirmPasswordInput = canvas.getByTestId("input-password-confirm-password");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("fill password", async () => {

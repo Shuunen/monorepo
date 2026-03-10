@@ -79,13 +79,13 @@ function createCloseHandler(
 }
 
 function setupOutputHandlers(child: ReturnType<typeof spawn>, errorOutput: string[]) {
-  child.stdout?.on("data", data => {
+  child.stdout?.on("data", (data: Buffer) => {
     const message = data.toString().trim();
     if (message) {
       errorOutput.push(message.replaceAll("\n", " "));
     }
   });
-  child.stderr?.on("data", data => {
+  child.stderr?.on("data", (data: Buffer) => {
     const message = data.toString().trim();
     if (message) {
       errorOutput.push(message.replaceAll("\n", " "));
@@ -95,6 +95,7 @@ function setupOutputHandlers(child: ReturnType<typeof spawn>, errorOutput: strin
 }
 
 function executeCommand(component: string) {
+  // oxlint-disable-next-line promise/avoid-new
   return new Promise<ResultType<string, string>>(resolve => {
     const args = ["dlx", "shadcn@latest", "add", "--yes", "--overwrite", `--cwd=libs/components`, component];
     const command = [`pnpm`, ...args].join(" ");
@@ -103,7 +104,9 @@ function executeCommand(component: string) {
     const errorOutput: string[] = [];
     setupOutputHandlers(child, errorOutput);
     child.on("close", createCloseHandler(component, errorOutput, resolve));
-    child.on("error", error => void resolve(Result.error(`Command failed: ${error.message}`)));
+    child.on("error", error => {
+      resolve(Result.error(`Command failed: ${error.message}`));
+    });
   });
 }
 
@@ -129,11 +132,12 @@ export async function updateComponent(component: string) {
 }
 
 async function main() {
-  const component = process.argv.slice(nbThird)[0];
-  if (!component) {
+  const component = process.argv.slice(nbThird).at(0);
+  if (component === undefined) {
     exitWithError("Please provide a component name to add, ex : pnpm add:shadcn breadcrumb");
+  } else {
+    await downloadComponent(component);
   }
-  await downloadComponent(component);
 }
 
 if (import.meta.main) {

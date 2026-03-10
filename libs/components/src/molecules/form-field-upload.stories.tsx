@@ -77,7 +77,7 @@ export const Required: Story = {
     await step("upload a file successfully and submit the form", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       const file = new File(["hello"], "test-doc.pdf", { type: "application/pdf" });
-      const input = canvas.getByTestId("input-file-document-upload-idle") as HTMLInputElement;
+      const input = canvas.getByTestId("input-file-document-upload-idle");
       await userEvent.upload(input, file);
       await sleep(nbHueMax); // needed
       expect(submittedData).toContainHTML("undefined");
@@ -111,7 +111,7 @@ export const ExistingFile: Story = {
     const canvas = within(canvasElement);
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("shows the existing file in the upload field", () => {
-      const fileInput = canvas.getByTestId("document-upload-success") as HTMLInputElement;
+      const fileInput = canvas.getByTestId("document-upload-success");
       expect(fileInput).toBeInTheDocument();
       expect(submittedData).toContainHTML("undefined");
     });
@@ -139,7 +139,7 @@ export const FileSchemaValidation: Story = {
     const canvas = within(canvasElement);
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("accepts valid pdf", async () => {
-      const input = canvas.getByTestId("input-file-document-upload-idle") as HTMLInputElement;
+      const input = canvas.getByTestId("input-file-document-upload-idle");
       const file = new File(["test"], "document.pdf", { type: "application/pdf" });
       await userEvent.upload(input, file);
       await sleep(nbHueMax);
@@ -151,7 +151,7 @@ export const FileSchemaValidation: Story = {
     await step("rejects invalid txt file", async () => {
       const removeButton = canvas.getByRole("button", { name: "Remove" });
       await userEvent.click(removeButton);
-      const input = canvas.getByTestId("input-file-document-upload-idle") as HTMLInputElement;
+      const input = canvas.getByTestId("input-file-document-upload-idle");
       const file = new File(["test"], "document.txt", { type: "text/plain" });
       await userEvent.upload(input, file);
       await sleep(nbHueMax);

@@ -116,18 +116,14 @@ function partialDateDisplay(dateString: string): string {
   if (!match) {
     return INVALID_DATE;
   }
-  const year = match[1];
-  // oxlint-disable-next-line no-magic-numbers
-  const month = match[2];
-  // oxlint-disable-next-line no-magic-numbers
-  const day = match[3];
+  const [, year, month, day] = match;
 
   if (year === "0000") {
     return INVALID_DATE;
   }
 
   if (month === "00") {
-    return `${year}`;
+    return year;
   }
   if (month !== "00" && day === "00") {
     return `${month}/${year}`;

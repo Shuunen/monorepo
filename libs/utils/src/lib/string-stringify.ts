@@ -19,5 +19,6 @@ export function stringify(data: unknown, willIndent = false) {
   if (typeof data === "object") {
     return objectSerialize(data as Readonly<Record<string, unknown>>, false, willIndent);
   }
+  // oxlint-disable-next-line typescript/no-base-to-string
   return String(data); //NOSONAR
 }

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import type { ControllerRenderProps } from "react-hook-form";
+import type { z } from "zod";
 import { FormControl } from "../atoms/form";
 import { Input } from "../atoms/input";
 import { getFieldMetadataOrThrow, getUnwrappedSchema, isZodNumber } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import { getZodNumberMinMax, toLocalValue } from "./form-field-number.utils";
-import type { z } from "zod";
 
 type NumberInputProps = {
   field: ControllerRenderProps;
@@ -28,7 +28,7 @@ function NumberInput({ field, disabled, placeholder, min, max }: NumberInputProp
         {...field}
         disabled={disabled}
         onChange={event => {
-          const value = event.target.value;
+          const { value } = event.target;
           setLocalValue(value);
           field.onChange(value === "" ? undefined : Number(value));
         }}
@@ -41,6 +41,7 @@ function NumberInput({ field, disabled, placeholder, min, max }: NumberInputProp
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function FormFieldNumber({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
   const { placeholder, state = "editable" } = metadata;

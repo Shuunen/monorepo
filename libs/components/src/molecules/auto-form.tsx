@@ -4,6 +4,7 @@ import { cn, nbPercentMax, scrollToElement, sleep } from "@monorepo/utils";
 import { Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import type { z } from "zod";
 import { Button } from "../atoms/button";
 import { Form } from "../atoms/form";
 import { Title } from "../atoms/typography";
@@ -15,7 +16,7 @@ import { AutoFormParentDataProvider, useAutoFormParentData } from "./auto-form-p
 import { AutoFormStepper } from "./auto-form-stepper";
 import { AutoFormSubmissionStep } from "./auto-form-submission-step";
 import { AutoFormSummaryStep } from "./auto-form-summary-step";
-import { FormSummary } from "./form-summary";
+import { sectionsFromSchema } from "./auto-form-summary-step.utils";
 import { defaultIcons, defaultLabels } from "./auto-form.const";
 import type {
   AutoFormData,
@@ -35,7 +36,7 @@ import {
   normalizeData,
   typeLikeResolver,
 } from "./auto-form.utils";
-import { sectionsFromSchema } from "./auto-form-summary-step.utils";
+import { FormSummary } from "./form-summary";
 
 /**
  * AutoForm is a black box, all in one form generator, takes Zod schemas in and build the ui, handle validation, state management, navigation, submission, etc.:
@@ -94,6 +95,7 @@ export function AutoForm({
   const finalLabels = { ...defaultLabels, ...labels };
   const [mode, setMode] = useState<"initial" | "subform">("initial");
   const [subformOptions, setSubformOptions] = useState<AutoFormSubformOptions | undefined>(undefined);
+  const subformSchemas = useMemo(() => [subformOptions?.schema], [subformOptions]);
   const [parentFormDataSnapshot, setParentFormDataSnapshot] = useState<AutoFormData | undefined>(undefined);
   const [pendingValidation, setPendingValidation] = useState(false);
   const parentData = useAutoFormParentData();
@@ -145,6 +147,7 @@ export function AutoForm({
     logger?.info("Final form submitted", { cleanedData });
     const result = await onSubmit(cleanedData);
     if (useSubmissionStep) {
+      // oxlint-disable-next-line typescript/no-unsafe-argument
       setSubmissionProps(result.submission);
     }
   }
@@ -162,7 +165,7 @@ export function AutoForm({
     if (isLastStep && useSummaryStep) {
       setShowSummary(true);
     } else if (isLastStep) {
-      void handleFinalSubmit();
+      handleFinalSubmit();
     } else {
       setCurrentStep(prev => prev + 1);
     }
@@ -248,7 +251,7 @@ export function AutoForm({
 
   function renderSubmissionContent() {
     if (!submissionProps) {
-      return;
+      return undefined;
     }
     const showBackButton = submissionProps.status === "error" || submissionProps.status === "unknown-error";
     const showHomeButton = submissionProps.status === "success" || submissionProps.status === "warning";
@@ -342,8 +345,8 @@ export function AutoForm({
   }
 
   function renderSubformContent() {
-    if (!subformOptions) {
-      return;
+    if (!subformOptions || !subformSchemas[0]) {
+      return undefined;
     }
     logger?.info("Rendering subform", { subformOptions });
     return (
@@ -357,7 +360,7 @@ export function AutoForm({
         <AutoForm
           initialData={subformOptions.initialData}
           onSubmit={subformOptions.onSubmit}
-          schemas={[subformOptions.schema]}
+          schemas={subformSchemas as z.ZodObject[]}
           onSubformMode={value => setShowBackButtonInSubform(value)}
         />
       </AutoFormParentDataProvider>

@@ -75,7 +75,4 @@ export type Item = {
 export type ItemSuggestions = Record<keyof Item, string[]>;
 
 export type ItemModel = InferOutput<typeof itemModelSchema> &
-  Pick<
-    Models.Document,
-    "$collectionId" | "$createdAt" | "$databaseId" | "$id" | "$permissions" | "$sequence" | "$updatedAt"
-  >;
+  Pick<Models.Row, "$createdAt" | "$databaseId" | "$id" | "$permissions" | "$sequence" | "$tableId" | "$updatedAt">;

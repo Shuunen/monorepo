@@ -1,4 +1,5 @@
 // oxlint-disable max-lines-per-function, id-length, no-nested-ternary
+import { functionReturningVoid } from "@monorepo/utils";
 import { type MouseEvent, type MouseEventHandler, type RefObject, useEffect, useRef, useState } from "react";
 import {
   calculateNewPan,
@@ -46,7 +47,7 @@ export function usePanZoom(
 
   useEffect(() => {
     const container = imageContainerRef.current;
-    if (!container) return;
+    if (!container) return functionReturningVoid;
     const handleWheelEvent = (e: globalThis.WheelEvent) => {
       e.preventDefault();
       const metadata = leftImageMetadata || rightImageMetadata;

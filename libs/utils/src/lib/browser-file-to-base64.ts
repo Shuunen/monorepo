@@ -7,6 +7,7 @@ import { Result, type ResultType } from "./result.js";
  * @returns the base64 string
  */
 export function fileToBase64(file: File): Promise<ResultType<string, string>> {
+  // oxlint-disable-next-line promise/avoid-new
   return new Promise(resolve => {
     const reader = new FileReader();
 

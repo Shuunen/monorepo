@@ -14,7 +14,7 @@ type AutoFormFieldsProps = {
 };
 
 export function AutoFormFields({ schema, state: stepState, logger, showForm }: AutoFormFieldsProps) {
-  const shape = schema.shape;
+  const { shape } = schema;
   const fields = Object.keys(shape);
   logger?.info("AutoFormFields displaying", { fields, shape });
   return (

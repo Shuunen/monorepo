@@ -80,7 +80,8 @@ function readFile() {
 }
 
 async function readInput() {
-  return willCheckFile ? readFile() : await readClipboard();
+  const value = willCheckFile ? readFile() : await readClipboard();
+  return value;
 }
 
 /**

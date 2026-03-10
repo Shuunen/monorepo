@@ -1,6 +1,6 @@
 // oxlint-disable typescript/parameter-properties
-import { alignForSnap, stringify } from "@monorepo/utils";
 import path from "node:path";
+import { alignForSnap, stringify } from "@monorepo/utils";
 
 const mockUnlink = vi.fn().mockResolvedValue(undefined);
 const mockRename = vi.fn().mockResolvedValue(undefined);
@@ -26,7 +26,8 @@ const mockSharpToFile = vi.fn().mockResolvedValue(undefined);
 const mockSharpJpeg = vi.fn().mockReturnValue({ toFile: mockSharpToFile });
 const mockSharp = vi.fn().mockReturnValue({ jpeg: mockSharpJpeg });
 
-vi.mock(import("sharp"), () => ({
+// oxlint-disable-next-line vitest/prefer-import-in-mock
+vi.mock("sharp", () => ({
   default: mockSharp,
 }));
 
@@ -35,8 +36,8 @@ const mockWrite = vi.fn().mockResolvedValue(undefined);
 const mockRewriteAllTags = vi.fn().mockResolvedValue(undefined);
 const mockEnd = vi.fn();
 
-vi.mock(import("exiftool-vendored"), () => ({
-  // biome-ignore lint/style/useNamingConvention: its ok
+// oxlint-disable-next-line vitest/prefer-import-in-mock
+vi.mock("exiftool-vendored", () => ({
   ExifDateTime: class ExifDateTime {
     constructor(
       public year: number,
@@ -54,10 +55,9 @@ vi.mock(import("exiftool-vendored"), () => ({
     toString() {
       return `${this.year}-${String(this.month).padStart(2, "0")}-${String(this.day).padStart(2, "0")}T${String(this.hour).padStart(2, "0")}:${String(this.minute).padStart(2, "0")}:${String(this.second).padStart(2, "0")}`;
     }
-    // biome-ignore lint/style/useNamingConvention: its ok
     static fromISO(str: string) {
       const date = new Date(str);
-      const tzMatch = str.match(/([+-])(\d{2}):(\d{2})$/);
+      const tzMatch = /([+-])(\d{2}):(\d{2})$/.exec(str);
       let tzoffsetMinutes: number | undefined = undefined;
       if (tzMatch) {
         const sign = tzMatch[1] === "+" ? 1 : -1;
@@ -77,7 +77,6 @@ vi.mock(import("exiftool-vendored"), () => ({
       );
     }
   },
-  // biome-ignore lint/style/useNamingConvention: its ok
   ExifTool: class ExifTool {
     [Symbol.asyncDispose] = mockEnd;
     end = mockEnd;
@@ -204,7 +203,6 @@ describe("check-souvenirs.cli", () => {
 
   it("getExifDateFromSiblings A should return ExifDateTime from previous sibling", async () => {
     const siblingDate = new ExifDateTime(2006, 8, 14, 10, 20, 30, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
     const result = await getExifDateFromSiblings({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -216,7 +214,6 @@ describe("check-souvenirs.cli", () => {
   });
 
   it("getExifDateFromSiblings B should convert string DateTimeOriginal to ExifDateTime", async () => {
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: "2006-08-14T10:20:30" });
     const result = await getExifDateFromSiblings({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -249,8 +246,8 @@ describe("check-souvenirs.cli", () => {
       pathMonth: undefined,
       pathYear: "2006",
     });
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(8);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(8);
   });
 
   it("getNewExifDateBasedOnExistingDate B should use path month when exifMonthIncorrect is true and pathMonth exists", () => {
@@ -264,8 +261,8 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "08",
       pathYear: "2006",
     });
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(8);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(8);
   });
 
   it("getNewExifDateBasedOnExistingDate C should use originalExifDate when exifYearIncorrect is false", () => {
@@ -279,8 +276,8 @@ describe("check-souvenirs.cli", () => {
       pathMonth: undefined,
       pathYear: "2006",
     });
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(8);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(8);
   });
 
   it("getNewExifDateBasedOnExistingDate D should use exifDate when originalExifDate is undefined", () => {
@@ -293,13 +290,13 @@ describe("check-souvenirs.cli", () => {
       pathMonth: undefined,
       pathYear: undefined,
     });
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(8);
-    expect(result.day).toBe(15);
-    expect(result.hour).toBe(12);
-    expect(result.minute).toBe(30);
-    expect(result.second).toBe(45);
-    expect(result.millisecond).toBe(100);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(8);
+    expect(result?.day).toBe(15);
+    expect(result?.hour).toBe(12);
+    expect(result?.minute).toBe(30);
+    expect(result?.second).toBe(45);
+    expect(result?.millisecond).toBe(100);
   });
 
   it("getNewExifDateBasedOnExistingDate E should handle both year and month corrections", () => {
@@ -313,8 +310,8 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "08",
       pathYear: "2006",
     });
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(8);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(8);
   });
 
   it("getNewExifDateBasedOnExistingDate F should use exifDate year when exifYearIncorrect is true but pathYear is undefined", () => {
@@ -328,7 +325,7 @@ describe("check-souvenirs.cli", () => {
       pathMonth: undefined,
       pathYear: undefined,
     });
-    expect(result.year).toBe(2005);
+    expect(result?.year).toBe(2005);
   });
 
   it("getNewExifDateBasedOnExistingDate G should use exifDate month when exifMonthIncorrect is true but pathMonth is undefined", () => {
@@ -342,7 +339,7 @@ describe("check-souvenirs.cli", () => {
       pathMonth: undefined,
       pathYear: "2006",
     });
-    expect(result.month).toBe(7);
+    expect(result?.month).toBe(7);
   });
 
   it("getNewExifDateBasedOnExistingDate H should adjust day 31 to 30 when changing month from October to November", () => {
@@ -356,12 +353,12 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "11",
       pathYear: "2023",
     });
-    expect(result.year).toBe(2023);
-    expect(result.month).toBe(11);
-    expect(result.day).toBe(30);
-    expect([16, 17]).toContain(result.hour);
-    expect(result.minute).toBe(51);
-    expect(result.second).toBe(15);
+    expect(result?.year).toBe(2023);
+    expect(result?.month).toBe(11);
+    expect(result?.day).toBe(30);
+    expect([16, 17]).toContain(result?.hour);
+    expect(result?.minute).toBe(51);
+    expect(result?.second).toBe(15);
   });
 
   it("getNewExifDateBasedOnExistingDate I should adjust day 31 to 28 when changing month to February in non-leap year", () => {
@@ -375,9 +372,9 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "02",
       pathYear: "2023",
     });
-    expect(result.year).toBe(2023);
-    expect(result.month).toBe(2);
-    expect(result.day).toBe(28);
+    expect(result?.year).toBe(2023);
+    expect(result?.month).toBe(2);
+    expect(result?.day).toBe(28);
   });
 
   it("getNewExifDateBasedOnExistingDate J should adjust day 31 to 29 when changing month to February in leap year", () => {
@@ -391,9 +388,9 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "02",
       pathYear: "2024",
     });
-    expect(result.year).toBe(2024);
-    expect(result.month).toBe(2);
-    expect(result.day).toBe(29);
+    expect(result?.year).toBe(2024);
+    expect(result?.month).toBe(2);
+    expect(result?.day).toBe(29);
   });
 
   it("getNewExifDateBasedOnExistingDate K should not adjust day when it is valid for the target month", () => {
@@ -407,9 +404,9 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "11",
       pathYear: "2023",
     });
-    expect(result.year).toBe(2023);
-    expect(result.month).toBe(11);
-    expect(result.day).toBe(15);
+    expect(result?.year).toBe(2023);
+    expect(result?.month).toBe(11);
+    expect(result?.day).toBe(15);
   });
 
   it("getNewExifDateBasedOnExistingDate L should preserve timezone offset when adjusting date", () => {
@@ -423,7 +420,7 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "11",
       pathYear: "2023",
     });
-    expect(result.tzoffsetMinutes).toBe(60);
+    expect(result?.tzoffsetMinutes).toBe(60);
   });
 
   it("getNewExifDateBasedOnExistingDate M should handle negative timezone offset", () => {
@@ -437,14 +434,13 @@ describe("check-souvenirs.cli", () => {
       pathMonth: "10",
       pathYear: "2023",
     });
-    expect(result.tzoffsetMinutes).toBe(-300);
+    expect(result?.tzoffsetMinutes).toBe(-300);
   });
 
   it("setFileDate A should set photo date successfully on first attempt", async () => {
     mockWrite.mockResolvedValue(undefined);
     const exifDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0);
     await setFileDate("test.jpg", exifDate);
-    // biome-ignore lint/style/useNamingConvention: its ok
     expect(mockWrite).toHaveBeenCalledWith("test.jpg", { DateTimeOriginal: exifDate });
     expect(count.dateFixes).toBe(1);
   });
@@ -502,7 +498,6 @@ describe("check-souvenirs.cli", () => {
 
   it("checkFileDate B should handle year mismatch", async () => {
     const originalDate = new ExifDateTime(2005, 8, 15, 12, 30, 45, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -514,7 +509,6 @@ describe("check-souvenirs.cli", () => {
 
   it("checkFileDate C should handle month mismatch", async () => {
     const originalDate = new ExifDateTime(2006, 7, 15, 12, 30, 45, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -526,7 +520,6 @@ describe("check-souvenirs.cli", () => {
 
   it("checkFileDate D should handle both year and month mismatch", async () => {
     const originalDate = new ExifDateTime(2005, 7, 15, 12, 30, 45, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -537,7 +530,6 @@ describe("check-souvenirs.cli", () => {
   });
 
   it("checkFileDate E should handle string DateTimeOriginal", async () => {
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: "2005-08-15T12:30:45" });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -549,7 +541,6 @@ describe("check-souvenirs.cli", () => {
 
   it("checkFileDate F should handle correct date", async () => {
     const correctDate = new ExifDateTime(2006, 8, 15, 12, 30, 45, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: correctDate });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\2006\2006-08_House\test.jpg`,
@@ -561,7 +552,6 @@ describe("check-souvenirs.cli", () => {
 
   it("checkFileDate G should handle year mismatch with no path year", async () => {
     const originalDate = new ExifDateTime(2005, 8, 15, 12, 30, 45, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\random.jpg`,
@@ -573,7 +563,6 @@ describe("check-souvenirs.cli", () => {
 
   it("checkFileDate H should handle month mismatch with no path month", async () => {
     const originalDate = new ExifDateTime(2006, 7, 15, 12, 30, 45, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: originalDate });
     await checkFileDate({
       currentFilePath: String.raw`D:\Souvenirs\2006\random.jpg`,
@@ -585,7 +574,6 @@ describe("check-souvenirs.cli", () => {
 
   it("setFileDateBasedOnSiblings A should set date from previous sibling", async () => {
     const siblingDate = new ExifDateTime(2006, 8, 14, 10, 20, 30, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
     await setFileDateBasedOnSiblings(
       {
@@ -601,7 +589,6 @@ describe("check-souvenirs.cli", () => {
 
   it("setFileDateBasedOnSiblings B should set date from next sibling", async () => {
     const siblingDate = new ExifDateTime(2006, 8, 16, 14, 25, 35, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
     await setFileDateBasedOnSiblings(
       {
@@ -635,7 +622,6 @@ describe("check-souvenirs.cli", () => {
 
   it("setFileDateBasedOnSiblings D should correct year from sibling date", async () => {
     const siblingDate = new ExifDateTime(2005, 8, 14, 10, 20, 30, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
     await setFileDateBasedOnSiblings(
       {
@@ -647,13 +633,12 @@ describe("check-souvenirs.cli", () => {
       "08",
     );
     expect(mockWrite).toHaveBeenCalled();
-    const writeCall = mockWrite.mock.calls[0];
-    expect(writeCall[1].DateTimeOriginal.year).toBe(2006);
+    const writeCall = mockWrite.mock.calls.at(0);
+    expect(writeCall?.[1].DateTimeOriginal.year).toBe(2006);
   });
 
   it("setFileDateBasedOnSiblings E should correct month from sibling date", async () => {
     const siblingDate = new ExifDateTime(2006, 7, 14, 10, 20, 30, 0);
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: siblingDate });
     await setFileDateBasedOnSiblings(
       {
@@ -665,12 +650,11 @@ describe("check-souvenirs.cli", () => {
       "08",
     );
     expect(mockWrite).toHaveBeenCalled();
-    const writeCall = mockWrite.mock.calls[0];
-    expect(writeCall[1].DateTimeOriginal.month).toBe(8);
+    const writeCall = mockWrite.mock.calls.at(0);
+    expect(writeCall?.[1].DateTimeOriginal.month).toBe(8);
   });
 
   it("setFileDateBasedOnSiblings F should handle string DateTimeOriginal from sibling", async () => {
-    // biome-ignore lint/style/useNamingConvention: its ok
     mockRead.mockResolvedValue({ DateTimeOriginal: "2006-08-14T10:20:30" });
     await setFileDateBasedOnSiblings(
       {
@@ -844,7 +828,6 @@ describe("check-souvenirs.cli", () => {
   });
 
   it("checkPngTransparency C should warn about RGB PNG without transparency", async () => {
-    // biome-ignore lint/style/useNamingConvention: cant fix
     mockRead.mockResolvedValue({ ColorType: "RGB" });
     await checkPngTransparency(String.raw`D:\Souvenirs\test.png`);
     expect(logger.inMemoryLogs.some(log => log.includes("PNG file without transparency detected"))).toBe(true);
@@ -855,38 +838,37 @@ describe("check-souvenirs.cli", () => {
   });
 
   it("checkPngTransparency D should not warn about PNG with RGBA ColorType", async () => {
-    // biome-ignore lint/style/useNamingConvention: cant fix
     mockRead.mockResolvedValue({ ColorType: "RGBA" });
     await checkPngTransparency(String.raw`D:\Souvenirs\test.png`);
     expect(logger.inMemoryLogs.some(log => log.includes("PNG file without transparency"))).toBe(false);
   });
 
-  it("cleanFilePath A should warn about special characters in the path", async () => {
+  it("cleanFilePath A should warn about special characters in the path", () => {
     const inputPath = "/Souvenirs/2006/2006-00_Super test@@@!folder/pic.png";
-    await cleanFilePath(inputPath);
+    cleanFilePath(inputPath);
     expect(logger.inMemoryLogs.some(log => log.includes("contains forbidden characters"))).toBe(true);
   });
 
-  it("cleanFilePath B should rename file with special characters", async () => {
+  it("cleanFilePath B should rename file with special characters", () => {
     const inputPath = "test!2!!&@*(file#.jpg";
-    const result = await cleanFilePath(inputPath);
+    const result = cleanFilePath(inputPath);
     expect(result).toMatchInlineSnapshot(`"test-2-file.jpg"`);
   });
 
   it("getExifDateFromYearAndMonth A should return ExifDateTime for valid year and month", () => {
     const result = getExifDateFromYearAndMonth("2006", "08");
     expect(result).toBeInstanceOf(ExifDateTime);
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(8);
-    expect(result.day).toBe(1);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(8);
+    expect(result?.day).toBe(1);
   });
 
   it("getExifDateFromYearAndMonth B should return ExifDateTime for valid year without month", () => {
     const result = getExifDateFromYearAndMonth("2006", undefined);
     expect(result).toBeInstanceOf(ExifDateTime);
-    expect(result.year).toBe(2006);
-    expect(result.month).toBe(1);
-    expect(result.day).toBe(1);
+    expect(result?.year).toBe(2006);
+    expect(result?.month).toBe(1);
+    expect(result?.day).toBe(1);
   });
 
   it("isPhoto A should return true for jpg extension", () => {

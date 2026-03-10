@@ -42,7 +42,6 @@ export const Default: Story = {
   render: args => (
     <div className="flex flex-col gap-2">
       <Label {...args} />
-      {/** biome-ignore lint/correctness/useUniqueElementIds: it's ok here */}
       <input data-testid="input-field" id="test-input" />
     </div>
   ),

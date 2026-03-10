@@ -63,7 +63,6 @@ async function start() {
   else logger.info(green("\n\nSync done, no actions required :)"));
 }
 
-// oxlint-disable-next-line prefer-top-level-await
-start().catch(error => {
+await start().catch(error => {
   logger.error(error);
 });

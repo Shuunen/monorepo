@@ -12,6 +12,9 @@
 // @version      1.1.6
 // ==/UserScript==
 
+// oxlint-disable promise/prefer-await-to-callbacks
+// oxlint-disable promise/prefer-await-to-then
+
 function GitlabMr() {
   const debounceTime = 300;
 
@@ -61,7 +64,7 @@ function GitlabMr() {
     if (labelInside) labelInside.textContent = label;
     element.after(button);
     fetch(href)
-      .then(async response => await response.text())
+      .then(response => response.text())
       .then(html => {
         const matches = html.match(/class="merge-request" data-id/gu);
         const nb = matches ? matches.length : 0;
@@ -89,13 +92,9 @@ function GitlabMr() {
     text.classList.add("label");
     link.after(text);
     link.parentElement.style.display = "none";
-    await addButton(
-      link.parentElement,
-      "MR affectée(s)",
-      link.href.replace("assignee_username", "wip=no&assignee_username"),
-    );
+    addButton(link.parentElement, "MR affectée(s)", link.href.replace("assignee_username", "wip=no&assignee_username"));
     await utils.sleep(debounceTime);
-    await addButton(
+    addButton(
       link.parentElement,
       "MR ouverte(s)",
       `${link.href.replace("assignee_username", "author_username")}&state=opened`,

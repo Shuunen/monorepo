@@ -79,33 +79,22 @@ function mapHeaderToProperty(header, row) {
     "1Y Perf": row.perf1y,
     "3Y Perf": row.perf3y,
     "5Y Perf": row.perf5y,
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Acc: isAccumulating ? "TRUE" : "FALSE",
     "ETF / Stock": row.name,
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Fees: row.fees,
-    // biome-ignore lint/style/useNamingConvention: it's ok
     ISIN: row.isin,
-    // biome-ignore lint/style/useNamingConvention: it's ok
     PEA: "",
     "Perf. ann.": "",
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Provider: row.provider,
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Quantalys: "",
     "R/Risk 1Y": row.perfRisk1y,
     "R/Risk 3Y": row.perfRisk3y,
     "R/Risk 5Y": row.perfRisk5y,
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Score: "",
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Shares: "",
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Sharpe: "",
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Ticker: row.ticker,
     "Ticker alt": "",
-    // biome-ignore lint/style/useNamingConvention: it's ok
     Volatilité: "",
     plan: "",
   };
@@ -189,10 +178,10 @@ function JustEtfExport() {
   function extractRowData(row) {
     /** @type {HTMLAnchorElement | null} */
     const fundNameLink = row.querySelector(selectors.fundName);
-    if (!fundNameLink) return;
+    if (!fundNameLink) return undefined;
     const cells = row.querySelectorAll(selectors.cells);
     const fundName = fundNameLink.textContent.trim();
-    const provider = fundName.split(" ")[0]; // crude way to extract provider from fund name, can be improved
+    const provider = fundName.split(" ").at(0) ?? ""; // crude way to extract provider from fund name, can be improved
     const name = fundName.replace(provider, "").trim();
     return {
       currency: extractCellData("currency", cells[2]),

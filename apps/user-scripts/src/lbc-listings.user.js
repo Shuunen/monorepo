@@ -134,9 +134,6 @@ function LbcListings() {
     marker: `${utils.id}-processed`,
   };
 
-  // Remove me one day :)
-  utils.tw ||= classes => classes.split(" ");
-
   /**
    * Get the ad element from the ad object
    * @param {LbcAd} ad the ad object
@@ -147,20 +144,20 @@ function LbcListings() {
     const link = document.querySelector(`[href*="${id}"]`);
     if (!link) {
       document.location.reload();
-      return;
+      return undefined;
     } // we need to have that next data in page
     const element = link.parentElement;
     if (!element) {
       utils.error("no element found for link", link);
-      return;
+      return undefined;
     }
     if (element.classList.contains("hidden")) {
       utils.debug("ad is hidden", id);
-      return;
+      return undefined;
     }
     if (element.classList.contains(cls.marker)) {
       utils.debug("ad already processed", id);
-      return;
+      return undefined;
     }
     return element;
   }
@@ -325,7 +322,6 @@ function LbcListings() {
    * @param {LbcCarAd} ad the car ad to process
    * @returns {LbcCustomInfo[]} the custom infos
    */
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   function getCustomInfosCar(ad) {
     const infos = [getOwnerInfo(ad, false)];
     const year = Number.parseInt(ad.attributes.find(attribute => attribute.key === "regdate")?.value ?? "", 10);

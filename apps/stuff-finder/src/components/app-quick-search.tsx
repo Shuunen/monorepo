@@ -1,8 +1,8 @@
 import { off, on, tw } from "@monorepo/utils";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { navigateToSearch } from "../pages/page-search.const";
 import { logger } from "../utils/logger.utils";
-import { navigate } from "../utils/navigation.utils";
 import { state, watchState } from "../utils/state.utils";
 
 function onSearch(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -12,7 +12,7 @@ function onSearch(event: React.KeyboardEvent<HTMLInputElement>) {
   if (value === "") return;
   logger.debug("onSearch", { value });
   state.sound = "start";
-  navigate(`/search/${value}`);
+  navigateToSearch(value);
 }
 
 const pagesWithInputs = new Set(["/item/add", "/item/add:id", "/item/edit/:id"]);
@@ -41,9 +41,11 @@ export function AppQuickSearch({
         searchReference.current?.focus();
       }, focusDelay);
     });
-    const keypressHandler = on("keypress", (event: KeyboardEvent) => {
+    const keypressHandler = on("keypress", (_data, event) => {
+      if (!(event instanceof KeyboardEvent)) return;
       const canFocus = !pagesWithInputs.has(path ?? "") && isUsable;
       if (!canFocus) return;
+      // oxlint-disable-next-line typescript/prefer-optional-chain
       const isInInput = event.target instanceof HTMLElement && event.target.tagName.toLowerCase() === "input";
       if (isInInput) return;
       logger.debug("keypress on correct page & not in search input, will focus quick-search", { path });
@@ -67,5 +69,5 @@ export function AppQuickSearch({
 
   const classes = tw(`${theme[mode]} ${theme.common}`);
 
-  return <input className={classes} onKeyPress={onSearch} placeholder={placeholder} ref={searchReference} />;
+  return <input className={classes} onKeyUp={onSearch} placeholder={placeholder} ref={searchReference} />;
 }

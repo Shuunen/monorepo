@@ -16,7 +16,7 @@ describe("main", () => {
     const { root } = await import("./main");
     expect(mockCreateRoot).toHaveBeenCalled();
     expect(root).toBeDefined();
-    expect(root.render).toBe(mockRender);
+    expect(root).toHaveProperty("render", mockRender);
     expect(mockRender).toHaveBeenCalled();
   });
 });

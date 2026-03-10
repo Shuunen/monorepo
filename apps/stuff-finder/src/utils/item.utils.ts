@@ -41,7 +41,7 @@ export const letterBoxFormat = /^[A-Z] \(/u;
 
 export function itemBoxToRoom(box: Item["box"]) {
   const isLetterBox = letterBoxFormat.test(box);
-  const letter = box[0];
+  const letter = box.at(0);
   if (letter === undefined) return undefined;
   for (const [location, boxes] of Object.entries(boxRooms))
     if (boxes.includes(isLetterBox ? letter : box)) return location as keyof typeof boxRooms;
@@ -225,7 +225,7 @@ function formatLetterBoxLocation(input: Item, short = false) {
   /* v8 ignore next 5 -- @preserve */
   const room = short ? "" : capitalize(itemBoxToRoom(input.box) ?? "");
   const drawer = input.drawer && input.drawer > 0 ? `‧${input.drawer}` : ""; // '‧2' or ''
-  const details = input.box.split(" (")[1]; // 'bricolage & sport)'
+  const details = input.box.split(" (").at(1); // 'bricolage & sport)'
   const infos = short || details === undefined ? "" : ` (${details}`; // ' (bricolage & sport)'
   return `${room}${room.length > 0 ? " " : ""}${box}${drawer} ${infos}`.trim().replaceAll(/ {2,}/gu, " "); // 'Salon G‧2 (bricolage & sport)' or 'Salon G‧2'
 }

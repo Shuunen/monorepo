@@ -2,11 +2,13 @@ import { AutoForm, mockSubmit } from "@monorepo/components";
 import { createFileRoute } from "@tanstack/react-router";
 import { formSchema } from "../business/contact.schemas";
 
+const contactSchemas = [formSchema];
+
 function Contact() {
   return (
     <AutoForm
       onSubmit={() => mockSubmit("success", "Message sent successfully!")}
-      schemas={[formSchema]}
+      schemas={contactSchemas}
       useSubmissionStep
     />
   );

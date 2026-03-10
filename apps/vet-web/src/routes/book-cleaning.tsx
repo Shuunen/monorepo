@@ -3,8 +3,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { step1Schema, step2Schema } from "../business/book-cleaning/schemas";
 
+const schemas = [step1Schema, step2Schema];
+
 function RouteComponent() {
-  const schemas = [step1Schema, step2Schema];
   const [submittedData, setSubmittedData] = useState<object>({});
   function onSubmit(data: object) {
     setSubmittedData(data);

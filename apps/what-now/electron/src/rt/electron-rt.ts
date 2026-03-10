@@ -1,9 +1,8 @@
-// oxlint-disable prefer-module, import/no-nodejs-modules, no-dynamic-delete, max-nested-callbacks, no-array-for-each, max-lines-per-function, no-explicit-any, no-undef, no-commonjs, no-require-imports
-/** biome-ignore-all lint/suspicious/noExplicitAny: it's ok here */
-/** biome-ignore-all lint/correctness/noNodejsModules: it's ok here */
-import { randomBytes } from 'node:crypto'
-import { EventEmitter } from 'node:events'
-import { contextBridge, ipcRenderer } from 'electron'
+// oxlint-disable-next-line unicorn/no-abusive-eslint-disable
+/* oxlint-disable */
+import { randomBytes } from 'node:crypto';
+import { EventEmitter } from 'node:events';
+import { contextBridge, ipcRenderer } from 'electron';
 
 ////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-var-requires

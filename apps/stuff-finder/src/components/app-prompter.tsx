@@ -21,6 +21,7 @@ export function AppPrompter() {
 
   useEffect(() => {
     if (prompterReference.current === null) return;
+    // oxlint-disable-next-line typescript/no-unsafe-call
     type(prompterReference.current, ...sequence);
   }, []);
 

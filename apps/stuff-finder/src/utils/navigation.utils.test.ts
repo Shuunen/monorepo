@@ -42,4 +42,11 @@ describe("navigation.utils", () => {
     expect(mockNavigate).toHaveBeenNthCalledWith(2, "/second", { replace: true });
     expect(mockNavigate).toHaveBeenNthCalledWith(3, "/third", { replace: false });
   });
+
+  it("navigate E should pass state to the navigate function", () => {
+    setNavigate(mockNavigate);
+    const routeState = { header: "test", results: [] };
+    navigate("/search/foo", false, routeState);
+    expect(mockNavigate).toHaveBeenCalledWith("/search/foo", { replace: false, state: routeState });
+  });
 });

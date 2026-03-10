@@ -1,7 +1,6 @@
 {
   "recommendations": [
     "alexkrechik.cucumberautocomplete",
-    "biomejs.biome",
     "bradlc.vscode-tailwindcss",
     "davidanson.vscode-markdownlint",
     "ms-playwright.playwright",

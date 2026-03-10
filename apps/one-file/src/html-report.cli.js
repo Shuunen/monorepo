@@ -41,8 +41,6 @@ function showReport(stats) {
  */
 async function startReport(input = "") {
   let content = input; // lets assume input is some html
-  // biome-ignore lint/style/useNamingConvention: it's
-  // biome-ignore lint/performance/useTopLevelRegex: ok buddy ^^
   const isLikeAPath = /[\w-]+\.\w{2,4}$/u.test(input);
   if (isLikeAPath) {
     logger.info("Scanning file", gray(input));

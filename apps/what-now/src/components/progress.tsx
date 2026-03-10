@@ -62,9 +62,9 @@ const showProgress = debounce(showProgressSync, nbHueMax);
 
 export function Progress({ tasks }: { tasks: Task[] }) {
   const total = tasks.length;
-  if (total === 0) return;
+  if (total === 0) return undefined;
   const remaining = tasks.filter(task => isTaskActive(task)).length;
   const percent = nbPercentMax - Math.round((remaining / total) * nbPercentMax);
-  void showProgress(percent);
+  showProgress(percent);
   return <div className="border border-dashed border-white" data-testid="progress" style={{ width: `${percent}%` }} />;
 }

@@ -22,50 +22,74 @@ export function mockFile(data: Partial<Models.File> = {}) {
   } satisfies Models.File as Models.File;
 }
 
-const createFile = vi.fn(async (bucketId: string, fileId: string, _file: File) => {
+const createFile = vi.fn(async ({ bucketId, fileId }: { bucketId: string; file: File; fileId: string }) => {
   await sleep(nbDaysInWeek);
   return { $id: fileId, bucketId, isThisMockedDataFromMock: true };
 });
 
-const deleteFile = vi.fn(async (bucketId: string, fileId: string, _file: File) => {
+const deleteFile = vi.fn(async ({ bucketId, fileId }: { bucketId: string; fileId: string }) => {
   await sleep(nbDaysInWeek);
   return { $id: fileId, bucketId, isThisMockedDataFromMock: true };
 });
 
-const listFiles = vi.fn(async (_bucketId: string, _queries: [{ limit: number }, { offset: number }]) => {
+const listFiles = vi.fn(async (_params: { bucketId: string; queries?: unknown[] }) => {
   await sleep(nbDaysInWeek);
   return { files: [], total: 0 } satisfies Models.FileList as Models.FileList;
 });
 
-// oxlint-disable-next-line max-params
-const createDocument = vi.fn(async (databaseId: string, collectionId: string, documentId: string, data: object) => {
+const createRow = vi.fn(
+  async ({
+    data,
+    databaseId,
+    rowId,
+    tableId,
+  }: {
+    data: object;
+    databaseId: string;
+    rowId: string;
+    tableId: string;
+  }) => {
+    await sleep(nbDaysInWeek);
+    const item = mockItemModel({ $databaseId: databaseId, $id: rowId, $tableId: tableId, ...data });
+    return item satisfies Models.Row as Models.Row;
+  },
+);
+
+const deleteRow = vi.fn(
+  async ({ databaseId, rowId, tableId }: { databaseId: string; rowId: string; tableId: string }) => {
+    await sleep(nbDaysInWeek);
+    return { $id: rowId, databaseId, isThisMockedDataFromMock: true, tableId };
+  },
+);
+
+const listRows = vi.fn(async (_params: { databaseId: string; queries?: unknown[]; tableId: string }) => {
   await sleep(nbDaysInWeek);
-  const item = mockItemModel({ $collectionId: collectionId, $databaseId: databaseId, $id: documentId, ...data });
-  return item satisfies Models.Document as Models.Document;
+  return { rows: [], total: 0 } satisfies Models.RowList<ItemModel> as Models.RowList<ItemModel>;
 });
 
-const deleteDocument = vi.fn(async (databaseId: string, collectionId: string, documentId: string) => {
-  await sleep(nbDaysInWeek);
-  return { $id: documentId, collectionId, databaseId, isThisMockedDataFromMock: true };
-});
+const updateRow = vi.fn(
+  async ({
+    data,
+    databaseId,
+    rowId,
+    tableId,
+  }: {
+    data: object;
+    databaseId: string;
+    rowId: string;
+    tableId: string;
+  }) => {
+    await sleep(nbDaysInWeek);
+    const item = mockItemModel({ $databaseId: databaseId, $id: rowId, $tableId: tableId, ...data });
+    return item satisfies Models.Row as Models.Row;
+  },
+);
 
-const listDocuments = vi.fn(async (_databaseId: string, _collectionId: string) => {
-  await sleep(nbDaysInWeek);
-  return { documents: [], total: 0 } satisfies Models.DocumentList<ItemModel> as Models.DocumentList<ItemModel>;
-});
-
-// oxlint-disable-next-line max-params
-const updateDocument = vi.fn(async (databaseId: string, collectionId: string, documentId: string, data: object) => {
-  await sleep(nbDaysInWeek);
-  const item = mockItemModel({ $collectionId: collectionId, $databaseId: databaseId, $id: documentId, ...data });
-  return item satisfies Models.Document as Models.Document;
-});
-
-class Databases {
-  createDocument = createDocument;
-  deleteDocument = deleteDocument;
-  listDocuments = listDocuments;
-  updateDocument = updateDocument;
+class TablesDB {
+  createRow = createRow;
+  deleteRow = deleteRow;
+  listRows = listRows;
+  updateRow = updateRow;
   constructor(client?: Client) {
     if (client) functionReturningVoid();
   }
@@ -97,29 +121,27 @@ const Query = {
 };
 
 function reset() {
-  createDocument.mockClear();
   createFile.mockClear();
-  listFiles.mockClear();
-  deleteDocument.mockClear();
+  createRow.mockClear();
   deleteFile.mockClear();
-  listDocuments.mockClear();
-  updateDocument.mockClear();
+  deleteRow.mockClear();
+  listFiles.mockClear();
+  listRows.mockClear();
+  updateRow.mockClear();
   Query.limit.mockClear();
   Query.offset.mockClear();
 }
 
 // oxlint-disable-next-line sort-keys
 export const databaseMock = {
-  // biome-ignore lint/style/useNamingConvention: I cant change this, it's part of the Appwrite SDK
-  appwrite: { Client, Databases, Query, Storage },
-  createDocument,
+  appwrite: { Client, Query, Storage, TablesDB },
   createFile,
-  deleteDocument,
+  createRow,
   deleteFile,
-  listDocuments,
+  deleteRow,
   listFiles,
-  // biome-ignore lint/style/useNamingConvention: I cant change this, it's part of the Appwrite SDK
+  listRows,
   Query,
   reset,
-  updateDocument,
+  updateRow,
 };

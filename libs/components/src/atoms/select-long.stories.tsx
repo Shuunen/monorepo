@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/useNamingConvention: it's ok here */
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
@@ -181,7 +180,7 @@ export const CodeVersion: Story = {
       placeholder="Select a code & version"
       options={codeVersionOptions}
       getLabel={opt => opt.label}
-      getValue={opt => `${opt.Code}`}
+      getValue={opt => opt.Code}
     />
   ),
   play: async ({ canvasElement, step, args }) => {

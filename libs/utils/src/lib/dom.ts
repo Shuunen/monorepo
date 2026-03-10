@@ -186,11 +186,8 @@ export function css(href: string) {
  * @param context the dom context to search in
  * @returns the element or null if not found
  */
-export function findOne<Type extends Element = HTMLElement>(
-  selector: string,
-  context: Document | HTMLElement = document,
-) {
-  return context.querySelector<Type>(selector);
+export function findOne(selector: string, context: Document | HTMLElement = document) {
+  return context.querySelector(selector);
 }
 
 /**

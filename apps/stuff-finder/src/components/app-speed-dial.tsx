@@ -63,8 +63,6 @@ export function AppSpeedDial({
   return (
     <>
       <Fade in={isOpen}>
-        {/* biome-ignore lint/a11y/useKeyWithClickEvents: later */}
-        {/* biome-ignore lint/a11y/noStaticElementInteractions: just a div */}
         <div
           className="absolute right-0 bottom-0 z-10 size-full bg-linear-to-tl"
           data-component="speed-dial-backdrop"

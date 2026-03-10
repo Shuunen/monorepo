@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/useNamingConvention: it'ok here */
 import type { CodeVersion, CodeVersionLabel } from "./cvl.types.ts";
 
 describe("cvl.types", () => {
@@ -23,7 +22,7 @@ describe("cvl.types", () => {
       label: "Test Label",
       Version: "01",
     };
-    expectTypeOf(cvl).toMatchTypeOf<CodeVersionLabel>();
+    expectTypeOf(cvl).toMatchObjectType<CodeVersionLabel>();
   });
 
   it("should allow creating valid CodeVersion objects", () => {
@@ -31,6 +30,6 @@ describe("cvl.types", () => {
       Code: "TEST",
       Version: "01",
     };
-    expectTypeOf(cv).toMatchTypeOf<CodeVersion>();
+    expectTypeOf(cv).toMatchObjectType<CodeVersion>();
   });
 });

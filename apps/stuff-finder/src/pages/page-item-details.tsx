@@ -7,7 +7,7 @@ import { state } from "../utils/state.utils";
 
 export function PageItemDetails() {
   const { id, context } = useParams<{ id: string; context?: string }>();
-  if (typeof id !== "string") return <>An id in the url is required, got "{id}"</>;
+  if (typeof id !== "string") return <>An id in the url is required, got &quot;{id}&quot;</>;
   const item = state.items.find(one => one.$id === id);
   if (item === undefined) return <>Item with id &quot;{id}&quot; not found ;(</>;
   logger.debug("PageItemDetails", { item });

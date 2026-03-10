@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: it's ok here */
 import type { Logger, Simplify } from "@monorepo/utils";
 import type { JSX, ReactNode } from "react";
 import type { z } from "zod";

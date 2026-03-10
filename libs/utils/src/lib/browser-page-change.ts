@@ -19,8 +19,8 @@ export async function onPageChange(callback = onPageChangeDefaultCallback, wait 
   await sleep(wait);
   const current = document.location.href;
   if (current !== last) {
+    // oxlint-disable-next-line promise/prefer-await-to-callbacks
     callback(current);
   }
-  // biome-ignore lint/nursery/noFloatingPromises: we dont want to wait for the next call
   onPageChange(callback, wait, current);
 }

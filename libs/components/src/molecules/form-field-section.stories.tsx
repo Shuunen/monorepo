@@ -1,3 +1,4 @@
+import { stringify } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useForm, FormProvider } from "react-hook-form";
 import { expect, userEvent, within } from "storybook/test";
@@ -309,10 +310,10 @@ export const WithCustomRender: Story = {
             customRender={formData => (
               <div className="rounded-md border bg-muted/50 p-4 text-sm">
                 <p>
-                  <span className="font-semibold">Name:</span> {String(formData.name ?? "")}
+                  <span className="font-semibold">Name:</span> {stringify(formData.name)}
                 </p>
                 <p>
-                  <span className="font-semibold">Email:</span> {String(formData.email ?? "")}
+                  <span className="font-semibold">Email:</span> {stringify(formData.email)}
                 </p>
               </div>
             )}

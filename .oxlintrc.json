@@ -55,16 +55,42 @@
     "XPathEvaluator": "readonly",
     "XPathResult": "readonly"
   },
-  "ignorePatterns": [".git", ".nx", "*.d.ts", "coverage", "dist", "node_modules", "out-tsc", "routeTree.gen.ts", "shadcn", "storybook-static", "test-output"],
+  "ignorePatterns": [
+    ".git",
+    ".nx",
+    "*.d.ts",
+    "coverage",
+    "dist",
+    "node_modules",
+    "out-tsc",
+    "routeTree.gen.ts",
+    "shadcn",
+    "storybook-static",
+    "test-output"
+  ],
   "jsPlugins": ["./libs/oxc-plugins/monorepo.plugin.js"],
   "overrides": [
     {
       "files": ["*.tsx"],
       "rules": {
-        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "button-has-type": "error",
+        "explicit-module-boundary-types": "off",
         "max-lines-per-function": ["error", 60],
         "max-nested-callbacks": ["error", 2],
         "require-returns": "off"
+      }
+    },
+    {
+      "files": ["*.js"],
+      "rules": {
+        "no-unnecessary-condition": "off",
+        "no-unsafe-argument": "off",
+        "no-unsafe-assignment": "off",
+        "no-unsafe-call": "off",
+        "no-unsafe-member-access": "off",
+        "no-unsafe-return": "off",
+        "strict-boolean-expressions": "off",
+        "use-unknown-in-catch-callback-variable": "off"
       }
     },
     {
@@ -85,6 +111,12 @@
         "no-null": "off",
         "no-restricted-imports": "off",
         "sort-keys": "off"
+      }
+    },
+    {
+      "files": ["**/components/src/atoms/*.tsx"],
+      "rules": {
+        "no-multi-comp": "off"
       }
     },
     {
@@ -188,37 +220,43 @@
         "vi": "readonly"
       },
       "rules": {
-        "import/no-nodejs-modules": "off",
-        "max-nested-callbacks": "off"
+        "max-nested-callbacks": "off",
+        "no-nodejs-modules": "off"
       }
     },
     {
       "files": ["*.stories.tsx", "*.test.{js,ts,tsx}"],
       "rules": {
-        "eslint/no-negated-condition": "off",
         "id-length": "off",
-        "import/no-default-export": "off",
-        "import/no-namespace": "off",
+        "jsx-no-new-array-as-prop": "off",
+        "jsx-no-new-function-as-prop": "off",
+        "jsx-no-new-object-as-prop": "off",
+        "jsx-props-no-spreading": "off",
         "max-classes-per-file": "off",
         "max-lines": "off",
         "max-lines-per-function": "off",
         "max-nested-callbacks": "off",
         "max-params": "off",
         "max-statements": "off",
+        "no-base-to-string": "off",
+        "no-default-export": "off",
         "no-magic-numbers": "off",
+        "no-namespace": "off",
+        "no-negated-condition": "off",
         "no-null": "off",
         "no-restricted-imports": "off",
         "no-shadow": "off",
+        "numeric-separators-style": "off",
         "require-param": "off",
         "require-returns": "off",
-        "sort-keys": "off",
-        "unicorn/numeric-separators-style": "off"
+        "rules-of-hooks": "off",
+        "sort-keys": "off"
       }
     },
     {
       "files": ["**/routes/**/*.ts", "**/routes/**/*.tsx"],
       "rules": {
-        "unicorn/filename-case": "off"
+        "filename-case": "off"
       }
     },
     {
@@ -239,8 +277,8 @@
     {
       "files": ["**/*.{cli,node}.{js,ts}", "**/.storybook/main.{js,ts}", "*.config.ts", "apps/*-e2e/**"],
       "rules": {
-        "import/no-nodejs-modules": "off",
-        "unicorn/no-process-exit": "off"
+        "no-nodejs-modules": "off",
+        "no-process-exit": "off"
       }
     },
     {
@@ -262,19 +300,25 @@
       }
     }
   ],
-  "plugins": ["import", "jsdoc", "oxc", "typescript", "unicorn", "vitest"],
+  "plugins": ["import", "jsdoc", "oxc", "promise", "react", "react-perf", "typescript", "unicorn", "vitest"],
   "rules": {
-    "@typescript-eslint/array-type": "off",
-    "@typescript-eslint/consistent-indexed-object-style": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
+    "array-type": "off",
+    "button-has-type": "off",
     "capitalized-comments": "off",
+    "consistent-indexed-object-style": "off",
     "consistent-type-definitions": ["error", "type"],
     "consistent-type-specifier-style": "off",
     "curly": ["error", "multi"],
-    "eslint/no-undefined": "off",
-    "eslint/yoda": "off",
+    "explicit-function-return-type": "off",
     "explicit-module-boundary-types": "off",
+    "exports-last": "off",
     "extensions": "off",
+    "filename-case": [
+      "error",
+      {
+        "case": "kebabCase"
+      }
+    ],
     "func-style": [
       "error",
       "declaration",
@@ -282,11 +326,26 @@
         "allowArrowFunctions": true
       }
     ],
-    "import/exports-last": "off",
-    "import/group-exports": "off",
-    "import/no-relative-parent-imports": "off",
+    "group-exports": "off",
     "jsdoc/require-param-type": "off",
     "jsdoc/require-returns-type": "off",
+    "jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [".jsx", ".tsx"]
+      }
+    ],
+    "jsx-handler-names": "off",
+    "jsx-max-depth": [
+      "error",
+      {
+        "max": 7
+      }
+    ],
+    "jsx-no-jsx-as-prop": "off",
+    "jsx-no-new-function-as-prop": "off",
+    "jsx-no-new-object-as-prop": "off",
+    "jsx-props-no-spreading": "off",
     "max-dependencies": ["error", 30],
     "max-statements": ["error", 20],
     "monorepo-plugin/no-restricted-syntax": [
@@ -296,10 +355,13 @@
         "selector": "CallExpression[callee.property.name='meta']"
       }
     ],
+    "no-array-index-key": "off",
     "no-async-await": "off",
+    "no-confusing-void-expression": "off",
     "no-console": "error",
     "no-continue": "off",
     "no-default-export": "error",
+    "no-floating-promises": "off",
     "no-inline-comments": "off",
     "no-magic-numbers": [
       "error",
@@ -310,7 +372,10 @@
       }
     ],
     "no-map-spread": "off",
+    "no-misused-promises": "off",
     "no-named-export": "off",
+    "no-optional-chaining": "off",
+    "no-relative-parent-imports": "off",
     "no-rest-spread-properties": "off",
     "no-restricted-imports": [
       "error",
@@ -329,23 +394,33 @@
     ],
     "no-ternary": "off",
     "no-unassigned-import": "off",
-    "no-use-before-define": ["error", { "functions": false }],
+    "no-undefined": "off",
+    "no-unnecessary-condition": "off",
+    "no-unsafe-assignment": "off",
+    "no-unsafe-member-access": "off",
+    "no-unsafe-type-assertion": "off",
+    "no-use-before-define": [
+      "error",
+      {
+        "functions": false
+      }
+    ],
+    "no-useless-undefined": "off",
     "no-void": "off",
     "no-warning-comments": "off",
     "number-literal-case": "off",
-    "oxc/no-optional-chaining": "off",
+    "prefer-at": "error",
     "prefer-default-export": "off",
-    "prefer-destructuring": "off",
+    "prefer-nullish-coalescing": "off",
+    "prefer-readonly-parameter-types": "off",
     "prefer-ternary": "off",
+    "promise-function-async": "off",
+    "react-in-jsx-scope": "off",
+    "restrict-template-expressions": "off",
     "sort-imports": "off",
+    "strict-boolean-expressions": "off",
+    "strict-void-return": "off",
     "unambiguous": "off",
-    "unicorn/filename-case": [
-      "error",
-      {
-        "case": "kebabCase"
-      }
-    ],
-    "unicorn/no-useless-undefined": "off",
     "unicorn/prefer-spread": "off",
     "vitest/prefer-called-times": "off",
     "vitest/prefer-to-be-falsy": "off",

@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/performance/useTopLevelRegex: fix me later */
 import { logger } from "./logger.utils";
 import { type CredentialField, state } from "./state.utils";
 

@@ -5,6 +5,7 @@ function get(key: string, defaultValue: string): string;
 function get(key: string, defaultValue: boolean): boolean;
 function get(key: string, defaultValue: number): number;
 function get<Type = unknown>(_key: string, _defaultValue: Type): Type;
+// oxlint-disable-next-line typescript/no-unnecessary-type-parameters
 function get<Type = unknown>(key: string): Type | undefined;
 
 /**
@@ -18,6 +19,9 @@ function get<Type = unknown>(key: string, defaultValue?: Type) {
   const data = storage.media[path]; // don't use getItem because it's not supported by all browsers or in memory object storage
   if (data === undefined || data === null || data === "") {
     return defaultValue;
+  }
+  if (typeof data !== "string") {
+    return data as Type;
   }
   const result = parseJson<Type>(data);
   if (!result.ok) {

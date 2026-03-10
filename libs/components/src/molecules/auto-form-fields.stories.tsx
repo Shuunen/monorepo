@@ -1,4 +1,3 @@
-/** biome-ignore-all assist/source/useSortedKeys: not needed here */
 import { isBrowserEnvironment, Logger, sleep, stringify } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";

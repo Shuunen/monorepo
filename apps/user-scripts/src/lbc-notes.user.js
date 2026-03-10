@@ -49,7 +49,6 @@ const config = {
  * @returns {number|undefined} the listing id
  */
 function getListingId(url = document.location.href) {
-  // biome-ignore lint/performance/useTopLevelRegex: FIX me later
   const id = /\/(?<id>\d{5,15})\b/u.exec(url)?.groups?.id;
   return id ? Number.parseInt(id, 10) : undefined;
 }
@@ -86,17 +85,13 @@ function getNoteIdFromNote(noteElement) {
 function LbcNotes() {
   if (globalThis.matchMedia === undefined) return;
   // oxlint-disable no-undef
-  // biome-ignore lint/correctness/noUndeclaredVariables: globally available
   const { clear: clearStore, get: getNoteFromStore, set: setInStore } = idbKeyval;
-  // biome-ignore lint/correctness/noUndeclaredVariables: globally available
   tailwind.config = {
     corePlugins: {
       preflight: false,
     },
   };
   const utils = new Shuutils("lbc-nts");
-  // Remove me one day :)
-  utils.tw ||= classes => classes.split(" ");
   const cls = {
     marker: `${utils.id}-processed`,
   };
@@ -105,8 +100,7 @@ function LbcNotes() {
     floatingSidebar: '[class^="styles_sideColumn__"]',
   };
   /* Init DB */
-  // biome-ignore lint/correctness/noUndeclaredVariables: globally available
-  const { Client, Databases, ID, Query } = Appwrite;
+  const { Client, ID, Query, TablesDB } = Appwrite;
   const db = {
     databaseId: localStorage.getItem("lbcNotes_databaseId"),
     endpoint: "https://cloud.appwrite.io/v1",
@@ -122,7 +116,7 @@ function LbcNotes() {
     return;
   }
   const client = new Client();
-  const databases = new Databases(client);
+  const tablesDb = new TablesDB(client);
   client.setEndpoint(db.endpoint).setProject(db.project);
 
   /**
@@ -246,8 +240,18 @@ function LbcNotes() {
       if (!db.databaseId) throw new Error("db.databaseId is not defined");
       if (!db.notesCollectionId) throw new Error("db.notesCollectionId is not defined");
       const response = await (noteId
-        ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note: noteContent })
-        : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note: noteContent }));
+        ? tablesDb.updateRow({
+            data: { note: noteContent },
+            databaseId: db.databaseId,
+            rowId: noteId,
+            tableId: db.notesCollectionId,
+          })
+        : tablesDb.createRow({
+            data: { listingId, note: noteContent },
+            databaseId: db.databaseId,
+            rowId: ID.unique(),
+            tableId: db.notesCollectionId,
+          }));
       saveNoteSuccess({ listingId, noteContent, noteId: response.$id }, noteElement);
       updateNoteStyle(noteElement); /* @ts-ignore */
     } catch (error) {
@@ -269,10 +273,12 @@ function LbcNotes() {
   async function loadNoteFromAppWrite(listingId) {
     if (!db.databaseId) throw new Error("db.databaseId is not defined");
     if (!db.notesCollectionId) throw new Error("db.notesCollectionId is not defined");
-    const notesByListingId = await databases.listDocuments(db.databaseId, db.notesCollectionId, [
-      Query.equal("listingId", listingId),
-    ]);
-    const [first] = notesByListingId.documents;
+    const notesByListingId = await tablesDb.listRows({
+      databaseId: db.databaseId,
+      queries: [Query.equal("listingId", listingId)],
+      tableId: db.notesCollectionId,
+    });
+    const [first] = notesByListingId.rows;
     const note = { listingId, noteContent: first?.note || "", noteId: first?.$id || "" };
     if (note) utils.debug(`loaded note for listing ${listingId} from AppWrite`, note);
     else utils.debug(`no note found for listing ${listingId} in AppWrite`);
@@ -486,7 +492,6 @@ function LbcNotes() {
   }
 
   // @ts-expect-error GM_addStyle is globally available
-  // biome-ignore lint/correctness/noUndeclaredVariables: should be available
   GM_addStyle(`
     .${utils.id}--note.loading {
       background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);

@@ -1,6 +1,7 @@
-import { cn } from "@monorepo/utils";
+import { cn, functionReturningVoid } from "@monorepo/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "../atoms/button";
 import { FormControl } from "../atoms/form";
 import { Popover, PopoverContent, PopoverTrigger } from "../atoms/popover";
 import { IconCheck } from "../icons/icon-check";
@@ -8,7 +9,6 @@ import { IconChevronDown } from "../icons/icon-chevron-down";
 import type { AutoFormFieldSelectMetadata, SelectOption } from "./auto-form.types";
 import { getFieldMetadataOrThrow } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
-import { Button } from "../atoms/button";
 
 const itemHeight = 32;
 const maxHeight = 256;
@@ -30,7 +30,7 @@ function VirtualizedOptions({
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) {
-      return;
+      return functionReturningVoid;
     }
     function stopScrollPropagation(event: Event) {
       event.stopPropagation();
@@ -92,6 +92,7 @@ function VirtualizedOptions({
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function FormFieldSelect({ fieldName, fieldSchema, isOptional, logger, readonly = false }: FormFieldBaseProps) {
   const [open, setOpen] = useState(false);
   const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema) as AutoFormFieldSelectMetadata;

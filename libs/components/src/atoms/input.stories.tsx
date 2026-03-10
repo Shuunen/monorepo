@@ -23,16 +23,16 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const input = canvas.getByTestId("input-text-default") as HTMLInputElement;
+    const input = canvas.getByTestId("input-text-default");
 
     // Renders with correct placeholder
     expect(input).toBeInTheDocument();
     expect(input).toHaveAttribute("placeholder", "Enter text here");
-    expect(input.value).toBe("");
+    expect(input).toHaveValue("");
 
     // Typing should update the value
     await userEvent.type(input, "Hello world", { delay: 40 });
-    expect(input.value).toBe("Hello world");
+    expect(input).toHaveValue("Hello world");
   },
 };
 
@@ -45,7 +45,7 @@ export const Disabled: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const input = canvas.getByTestId("input-text-disabled") as HTMLInputElement;
+    const input = canvas.getByTestId("input-text-disabled");
 
     // Renders disabled with correct placeholder
     expect(input).toBeInTheDocument();
@@ -54,7 +54,7 @@ export const Disabled: Story = {
 
     // Typing should NOT change the value
     await userEvent.type(input, "Trying to type", { delay: 40 });
-    expect(input.value).toBe("");
+    expect(input).toHaveValue("");
   },
 };
 
@@ -68,16 +68,16 @@ export const Readonly: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const input = canvas.getByTestId("input-text-readonly") as HTMLInputElement;
+    const input = canvas.getByTestId("input-text-readonly");
 
     // Renders readonly with correct placeholder & initial value
     expect(input).toBeInTheDocument();
     expect(input).toHaveAttribute("placeholder", "Readonly input");
     expect(input).toHaveAttribute("readonly");
-    expect(input.value).toBe("Initial value");
+    expect(input).toHaveValue("Initial value");
 
     // Typing should NOT change the value
     await userEvent.type(input, " - edited", { delay: 40 });
-    expect(input.value).toBe("Initial value");
+    expect(input).toHaveValue("Initial value");
   },
 };

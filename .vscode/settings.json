@@ -12,10 +12,10 @@
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[typescript]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
@@ -62,14 +62,15 @@
     "Registrator",
     "Romain",
     "scrollbars",
-    "sherif",
     "shadcn",
+    "sherif",
     "sunday",
     "tanstack",
     "télécom",
     "trmnl",
     "Trmnl",
     "tsgo",
+    "tsgolint",
     "unstub",
     "userscript",
     "utils",
@@ -91,7 +92,7 @@
   "editor.quickSuggestions": {
     "strings": "on"
   },
+  "js/ts.experimental.useTsgo": true,
   "oxc.fixKind": "all",
-  "oxc.unusedDisableDirectives": "deny",
-  "typescript.experimental.useTsgo": true
+  "oxc.unusedDisableDirectives": "deny"
 }

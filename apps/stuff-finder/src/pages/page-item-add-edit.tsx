@@ -1,4 +1,4 @@
-import { dom, objectSum, off, on, Result } from "@monorepo/utils";
+import { dom, functionReturningVoid, objectSum, off, on, Result } from "@monorepo/utils";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import SaveIcon from "@mui/icons-material/Save";
@@ -120,7 +120,7 @@ export function PageItemAddEdit({ isEdit = false }: Readonly<{ isEdit?: boolean 
   useEffect(() => {
     if (photoReference.current === null) {
       logger.showError("photo not found");
-      return;
+      return functionReturningVoid;
     }
     const handler = on(
       "error",
@@ -129,7 +129,7 @@ export function PageItemAddEdit({ isEdit = false }: Readonly<{ isEdit?: boolean 
       },
       photoReference.current,
     );
-    return () => {
+    return function cleanupPhotoErrorHandler() {
       off(handler);
     };
   }, []);

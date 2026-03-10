@@ -39,7 +39,7 @@ function removeExtension(filename: string) {
 }
 
 type MakeProps = {
-  header: string;
+  header?: string;
   target: string;
   index?: string;
   ext?: string;
@@ -55,7 +55,7 @@ type MakeProps = {
  * @returns result object with content and out on success, or error message on failure
  * @example bun barrel-maker.cli.ts --target="./lib/*.ts" --header='Copyright 2025 ACME' --ext=".js"
  */
-export async function make({ header = "", target, index = "index.ts", ext }: MakeProps) {
+export async function make({ header, target, index = "index.ts", ext }: MakeProps) {
   const out = path.join(process.cwd(), index);
   logger.info("Listing entries", target);
   const files = await glob(target, { filesOnly: true });
@@ -67,7 +67,7 @@ export async function make({ header = "", target, index = "index.ts", ext }: Mak
         "/",
       ),
     );
-  const content = `${header}${list.toSorted().join("\n")}\n`;
+  const content = `${header ?? ""}${list.toSorted().join("\n")}\n`;
   logger.info("Into barrel file", out);
   writeFileSync(out, content);
   logger.success("Barrel file updated !");
@@ -79,7 +79,7 @@ export async function make({ header = "", target, index = "index.ts", ext }: Mak
  * @param argv the command line arguments
  * @returns result object with content, files, and out on success, or error message on failure
  */
-export async function main(argv: string[]) {
+export function main(argv: string[]) {
   logger.debug("barrel-maker.cli.ts started");
   const args = Object.fromEntries(argv.slice(nbThird).map(arg => arg.replace("--", "").split("=")));
   if (!args.target) {
@@ -93,11 +93,10 @@ export async function main(argv: string[]) {
     target: args.target,
   } satisfies MakeProps;
   logger.debug("options", options);
-  return await make(options);
+  return make(options);
 }
 
 /* c8 ignore start */
 if (import.meta.main) {
-  // oxlint-disable-next-line prefer-top-level-await
   void main(process.argv);
 }

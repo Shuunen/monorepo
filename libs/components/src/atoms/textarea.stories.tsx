@@ -26,14 +26,14 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const textarea = canvas.getByPlaceholderText("Enter your message here") as HTMLTextAreaElement;
+    const textarea = canvas.getByPlaceholderText("Enter your message here");
 
     expect(textarea).toBeDefined();
-    expect(textarea.value).toBe("");
+    expect(textarea).toHaveValue("");
 
     // Typing should update the value
     await userEvent.type(textarea, "Hello world", { delay: 40 });
-    expect(textarea.value).toBe("Hello world");
+    expect(textarea).toHaveValue("Hello world");
   },
 };
 
@@ -49,14 +49,14 @@ export const Disabled: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    const textarea = canvas.getByPlaceholderText("Disabled textarea") as HTMLTextAreaElement;
+    const textarea = canvas.getByPlaceholderText("Disabled textarea");
 
     expect(textarea).toBeDefined();
     expect(textarea).toBeDisabled();
-    expect(textarea.value).toBe("");
+    expect(textarea).toHaveValue("");
 
     // Typing should NOT update the value
     await userEvent.type(textarea, "Hello world", { delay: 40 });
-    expect(textarea.value).toBe("");
+    expect(textarea).toHaveValue("");
   },
 };

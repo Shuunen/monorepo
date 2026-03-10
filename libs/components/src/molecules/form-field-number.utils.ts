@@ -1,3 +1,4 @@
+import { stringify } from "@monorepo/utils";
 import type { z } from "zod";
 
 /**
@@ -7,7 +8,7 @@ import type { z } from "zod";
  */
 
 export function toLocalValue(value: unknown) {
-  return value === undefined || value === null ? "" : String(value);
+  return value === undefined || value === null ? "" : stringify(value);
 }
 
 /**

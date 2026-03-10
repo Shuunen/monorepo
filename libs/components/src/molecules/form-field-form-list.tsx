@@ -1,7 +1,9 @@
+// oxlint-disable react/no-multi-comp
 import { arrayAlign, cn, isObjectEmpty, nbThird, Result, useStableKeys } from "@monorepo/utils";
 import { invariant } from "es-toolkit";
 import { useEffect, useMemo, useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import type { z } from "zod";
 import { Badge } from "../atoms/badge";
 import { Button } from "../atoms/button";
 import { Paragraph, Title } from "../atoms/typography";
@@ -24,7 +26,10 @@ import {
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.types";
 import { isSubformFilled, nbFilledItems } from "./form-field-form-list.utils";
-import type { z } from "zod";
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
 
 function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean }) {
   let icon = <IconCircleClose />;
@@ -127,19 +132,24 @@ export function FormFieldFormList({
   const showAddButton = !(readonly || maxItems === 1 || nbItems);
   const length = typeLikeResolver(nbItems, formValues);
   const { setValue, unregister } = useFormContext();
+  const normalizedFieldValue = useMemo(
+    () => (Array.isArray(fieldValue) ? fieldValue.filter(value => isRecord(value)) : undefined),
+    [fieldValue],
+  );
   const items = useMemo(
     () =>
-      length === undefined && fieldValue === undefined
+      length === undefined && normalizedFieldValue === undefined
         ? []
-        : arrayAlign<Record<string, unknown>>(fieldValue, length, {}),
-    [fieldValue, length],
+        : arrayAlign<Record<string, unknown>>(normalizedFieldValue, length, {}),
+    [normalizedFieldValue, length],
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we don't want to re-run this effect when the items change already bind in the useMemo
   useEffect(() => {
     if (length !== undefined && fieldValue?.length !== length) {
       setValue(fieldName, items, { shouldValidate: false });
     }
+    // we don't want to re-run this effect when the items change already bind in the useMemo
+    // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
   }, [length, fieldName, setValue]);
   const { addKey, keys, removeKey } = useStableKeys(useRef, items.length);
   /**

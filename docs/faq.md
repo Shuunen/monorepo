@@ -1,8 +1,9 @@
 # FAQ
 
 - [FAQ](#faq)
-  - [Cannot find module](#cannot-find-module)
-    - [Vitest](#vitest)
+  - [Issues and errors](#issues-and-errors)
+    - [OxLint is not working in VSCode](#oxlint-is-not-working-in-vscode)
+    - [Cannot find module Vitest](#cannot-find-module-vitest)
   - [Formatter](#formatter)
   - [Shadcn](#shadcn)
     - [How to add a new component from the Shadcn library to the project ?](#how-to-add-a-new-component-from-the-shadcn-library-to-the-project-)
@@ -10,9 +11,17 @@
     - [How to run the storybook ?](#how-to-run-the-storybook-)
     - [Where should I put my story ?](#where-should-i-put-my-story-)
 
-## Cannot find module
+## Issues and errors
 
-### Vitest
+### OxLint is not working in VSCode
+
+Sometimes oxlint cli works but the VSCode extension doesn't work.
+
+First check the output of the extension and see if there is any error.
+
+Sometimes the extension can also contains bugs like 1.49.0 and 1.49.1 that is unable to load the config (with the custom plugin) even when oxlint 1.49.0 (and above) works fine in the cli, in this case you can downgrade the extension to 1.48.0 and wait for the next release of the extension.
+
+### Cannot find module Vitest
 
 If you have this kind of issue :
 
@@ -46,12 +55,9 @@ Just go to the `User settings (JSON)` .
 
 "editor.codeActionsOnSave": {
     "source.addMissingImports.ts": "explicit",
-    "source.fixAll.biome": "explicit",
     "source.fixAll.oxc": "explicit",
     "source.fixAll.ts": "explicit",
-    "source.organizeImports": "explicit",
-    "source.removeUnusedImports": "explicit",
-    "source.sortImports": "explicit"
+    "source.removeUnusedImports": "explicit"
   },
 
 ```

@@ -1,3 +1,4 @@
+// oxlint-disable react/no-multi-comp
 import { arrayAlign, cn, Result, useStableKeys } from "@monorepo/utils";
 import { invariant } from "es-toolkit";
 import { useEffect, useMemo, useRef } from "react";
@@ -41,11 +42,10 @@ function AutoFormField({
   const render = getFormFieldRender(fieldSchema);
 
   if (!render || render === "section" || render === "field-list") {
-    return;
+    return undefined;
   }
 
   const Component = componentRegistry[render];
-
   return <Component {...props} />;
 }
 
@@ -67,13 +67,18 @@ export function FormFieldFieldList({
   const formValues = useWatch({ disabled: nbItems === undefined });
   const length = typeLikeResolver(nbItems, formValues);
   const { setValue, unregister } = useFormContext();
-  const items = useMemo(() => arrayAlign(fieldValue, length), [fieldValue, length]);
+  const normalizedFieldValue = useMemo<unknown[] | undefined>(
+    () => (Array.isArray(fieldValue) ? fieldValue : undefined),
+    [fieldValue],
+  );
+  const items = useMemo(() => arrayAlign(normalizedFieldValue, length), [normalizedFieldValue, length]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we don't want to re-run this effect when the items change already bind in the useMemo
   useEffect(() => {
     if (length !== undefined && fieldValue?.length !== length) {
       setValue(fieldName, items, { shouldValidate: false });
     }
+    // we don't want to re-run this effect when the items change already bind in the useMemo
+    // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
   }, [length, fieldName, setValue]);
   const { addKey, keys, removeKey } = useStableKeys(useRef, items.length);
   /**

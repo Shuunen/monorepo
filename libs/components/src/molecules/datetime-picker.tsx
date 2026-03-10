@@ -1,4 +1,4 @@
-// oxlint-disable no-magic-numbers, max-lines-per-function, complexity
+// oxlint-disable no-magic-numbers, max-lines-per-function, complexity, react/jsx-max-depth
 import { dateIsoToReadableDatetime } from "@monorepo/utils";
 import { addDays } from "date-fns";
 import { useEffect, useRef, useState } from "react";
@@ -37,7 +37,6 @@ type DatetimePickerProps = {
   onChange?: (date: Date | undefined) => void;
 } & NameProp;
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: datetime picker handles multiple modes (date, date-time, time)
 export function DatetimePicker({
   mode = "date-time",
   readonly = false,
@@ -59,7 +58,6 @@ export function DatetimePicker({
   const dateInputRef = useRef<HTMLInputElement>(null);
   const timeInputRef = useRef<HTMLInputElement>(null);
   // Sync internal state when defaultValue appears after initial mount (e.g., from prefault schema defaults)
-  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally syncing only when defaultValue timestamp changes
   useEffect(() => {
     if (defaultValue && !date) {
       setDate(defaultValue);
@@ -69,6 +67,8 @@ export function DatetimePicker({
         setTimeValue(formatTime(defaultValue));
       }
     }
+    // intentionally syncing only when defaultValue timestamp changes
+    // oxlint-disable-next-line eslint-plugin-react-hooks/exhaustive-deps
   }, [defaultValue?.getTime()]);
 
   const handleMaskedDateChange = (maskedValue: string) => {

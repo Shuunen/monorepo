@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/useNamingConvention: it'ok here */
 import { ageSchema, ages } from "./age.utils";
 
 describe("Ages Schema Tests", () => {

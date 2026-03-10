@@ -1,6 +1,5 @@
 import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@monorepo/components";
 import { Link } from "@tanstack/react-router";
-
 import type { ReactNode } from "react";
 
 type BookCardProps = {

@@ -48,6 +48,7 @@ export function RuleLine({
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function Rules({ rules, setRules }: { rules: Rule[]; setRules: (rules: Rule[]) => void }) {
   function updateRule(id: string, key: keyof Rule, value: string | boolean) {
     /* v8 ignore next -- @preserve */

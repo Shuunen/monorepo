@@ -35,7 +35,6 @@
 // @ts-nocheck FIX ME later, I don't use Laptop Helper for now
 // oxlint-disable no-magic-numbers
 // oxlint-disable no-immediate-mutation
-/** biome-ignore-all lint/suspicious/noAssignInExpressions: for a2b & b2a functions */
 
 /**
  * Get the color for a given score percentage
@@ -166,11 +165,9 @@ function b2a(a) {
       (f = 63 & (j >> 18)),
       (g = 63 & (j >> 12)),
       (h = 63 & (j >> 6)),
-      // biome-ignore lint/complexity/noCommaOperator: it's not my code
       (i = 63 & j),
       (n[l++] = b.charAt(f) + b.charAt(g) + b.charAt(h) + b.charAt(i)));
   while (k < a.length);
-  // biome-ignore lint/complexity/noCommaOperator: it's not my code
   return ((m = n.join("")), (o = a.length % 3), (o ? m.slice(0, o - 3) : m) + "===".slice(o || 3));
 }
 
@@ -434,12 +431,10 @@ function LaptopHelper() {
     const color = getColorForScore(score);
     // @ts-expect-error RoughNotation is a global variable
     // oxlint-disable no-undef
-    // biome-ignore lint/correctness/noUndeclaredVariables: it's a global var
     let annotation = RoughNotation.annotate(element, { color, type: "highlight" });
     annotation.show();
     if (score >= 80) {
       // @ts-expect-error RoughNotation is a global variable
-      // biome-ignore lint/correctness/noUndeclaredVariables: it's a global var
       annotation = RoughNotation.annotate(element.parentElement, { color: "darkgreen", type: "bracket" });
       annotation.show();
     }

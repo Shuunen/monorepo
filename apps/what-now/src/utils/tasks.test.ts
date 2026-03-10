@@ -24,24 +24,44 @@ const yesterday = daysAgoIso10(1);
 
 // oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("appwrite", () => {
-  class Databases {
+  class TablesDB {
     constructor(client?: Client) {
       if (client) functionReturningVoid();
     }
-    async createDocument(databaseId: string, collectionId: string, documentId: string, data: object) {
+    async createRow({
+      databaseId,
+      tableId,
+      rowId,
+      data,
+    }: {
+      databaseId: string;
+      tableId: string;
+      rowId: string;
+      data: object;
+    }) {
       await sleep(10);
-      if (documentId === "fail-trigger") throw new Error("fail-trigger");
-      return { $id: documentId, collectionId, databaseId, ...data };
+      if (rowId === "fail-trigger") throw new Error("fail-trigger");
+      return { $id: rowId, tableId, databaseId, ...data };
     }
-    async listDocuments(databaseId: string, collectionId: string) {
+    async listRows({ databaseId, tableId }: { databaseId: string; tableId: string }) {
       await sleep(10);
       if (databaseId === "fail-trigger") throw new Error("fail-trigger");
-      return { documents: [{ $id: databaseId, name: collectionId }] };
+      return { rows: [{ $id: databaseId, name: tableId }] };
     }
-    async updateDocument(databaseId: string, collectionId: string, documentId: string, data: object) {
+    async updateRow({
+      databaseId,
+      tableId,
+      rowId,
+      data,
+    }: {
+      databaseId: string;
+      tableId: string;
+      rowId: string;
+      data: object;
+    }) {
       await sleep(10);
-      if (documentId === "fail-trigger") throw new Error("fail-trigger");
-      return { $id: documentId, collectionId, databaseId, ...data };
+      if (rowId === "fail-trigger") throw new Error("fail-trigger");
+      return { $id: rowId, tableId, databaseId, ...data };
     }
   }
   class Client {
@@ -60,8 +80,7 @@ vi.mock("appwrite", () => {
   const Query = {
     limit: functionReturningVoid,
   };
-  // biome-ignore lint/style/useNamingConvention: I can't change this
-  return { Client, Databases, Query };
+  return { Client, Query, TablesDB };
 });
 
 it("isTaskActive A : a task without completed on is active", () => {
@@ -198,9 +217,9 @@ it("dispatch tasks list with mixed success and failure", async () => {
   await dispatchTasksAndUpdate([successTask, failureTask]);
 });
 
-it("dispatch task A : cannot dispatch a daily task", async () => {
+it("dispatch task A : cannot dispatch a daily task", () => {
   const task = taskMock({ completedOn: yesterday, once: "day" });
-  const result = await dispatchTask(task);
+  const result = dispatchTask(task);
   expect(result).toMatchInlineSnapshot(`
     Err {
       "error": "daily task, nothing to dispatch",
@@ -209,15 +228,15 @@ it("dispatch task A : cannot dispatch a daily task", async () => {
   `);
 });
 
-it("dispatch task B : can dispatch a weekly task completed yesterday", async () => {
+it("dispatch task B : can dispatch a weekly task completed yesterday", () => {
   const task = taskMock({ completedOn: yesterday, once: "week" });
-  const result = await dispatchTask(task);
+  const result = dispatchTask(task);
   expect(result.ok).toBe(true);
 });
 
-it("dispatch task C : cannot dispatch a one time task", async () => {
+it("dispatch task C : cannot dispatch a one time task", () => {
   const task = taskMock({ completedOn: yesterday, once: "yes" });
-  const result = await dispatchTask(task);
+  const result = dispatchTask(task);
   expect(result).toMatchInlineSnapshot(`
     Err {
       "error": "one-time task, cannot dispatch",
@@ -226,9 +245,9 @@ it("dispatch task C : cannot dispatch a one time task", async () => {
   `);
 });
 
-it("dispatch task D : cannot dispatch a weekly task completed 7 days ago", async () => {
+it("dispatch task D : cannot dispatch a weekly task completed 7 days ago", () => {
   const task = taskMock({ completedOn: daysAgoIso10(7), once: "week" });
-  const result = await dispatchTask(task);
+  const result = dispatchTask(task);
   expect(result).toMatchInlineSnapshot(`
     Err {
       "error": "task already dispatched",

@@ -5,6 +5,7 @@ const AutoFormParentDataContext = createContext<AutoFormData | undefined>(undefi
 
 export const AutoFormParentDataProvider = AutoFormParentDataContext.Provider;
 
+// oxlint-disable-next-line only-export-components
 export function useAutoFormParentData() {
   return useContext(AutoFormParentDataContext);
 }

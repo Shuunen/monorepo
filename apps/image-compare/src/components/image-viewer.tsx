@@ -1,6 +1,3 @@
-/** biome-ignore-all lint/a11y/noStaticElementInteractions: fix me later */
-/** biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: fix me later  */
-/** biome-ignore-all lint/correctness/useUniqueElementIds: fix me later */
 // oxlint-disable id-length, no-magic-numbers
 import { Button } from "@monorepo/components";
 import { cn } from "@monorepo/utils";
@@ -179,8 +176,8 @@ export function ImageViewer({
           whileTap={{ scale: 0.95 }}
         >
           <div className="flex gap-1">
-            <div className="h-6 w-1 rounded bg-primary-foreground"></div>
-            <div className="h-6 w-1 rounded bg-primary-foreground"></div>
+            <div className="h-6 w-1 rounded bg-primary-foreground" />
+            <div className="h-6 w-1 rounded bg-primary-foreground" />
           </div>
         </motion.div>
       </motion.div>

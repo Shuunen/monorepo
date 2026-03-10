@@ -1,14 +1,12 @@
-// oxlint-disable no-magic-numbers, id-length, no-console, max-nested-callbacks, no-explicit-any, max-lines-per-function, no-null, class-methods-use-this
-/** biome-ignore-all lint/correctness/noNodejsModules: we can use node here */
-/** biome-ignore-all lint/style/useNamingConvention: it's Electron conventions */
-// oxlint-disable-next-line import/no-nodejs-modules
-import { join } from 'node:path'
-import { type CapacitorElectronConfig, CapacitorSplashScreen, CapElectronEventEmitter, setupCapacitorElectronPlugins } from '@capacitor-community/electron'
-import chokidar from 'chokidar'
-import { app, BrowserWindow, Menu, MenuItem, type MenuItemConstructorOptions, nativeImage, Tray } from 'electron'
-import electronIsDev from 'electron-is-dev'
-import electronServe from 'electron-serve'
-import windowStateKeeper from 'electron-window-state'
+// oxlint-disable-next-line unicorn/no-abusive-eslint-disable
+/* oxlint-disable */
+import { join } from 'node:path';
+import { type CapacitorElectronConfig, CapacitorSplashScreen, CapElectronEventEmitter, setupCapacitorElectronPlugins } from '@capacitor-community/electron';
+import chokidar from 'chokidar';
+import { app, BrowserWindow, Menu, MenuItem, type MenuItemConstructorOptions, nativeImage, Tray } from 'electron';
+import electronIsDev from 'electron-is-dev';
+import electronServe from 'electron-serve';
+import windowStateKeeper from 'electron-window-state';
 
 // Define components for a watcher to detect when the webapp is changed so we can reload in Dev mode.
 const reloadWatcher = {
@@ -20,8 +18,7 @@ const reloadWatcher = {
 export function setupReloadWatcher(electronCapacitorApp: ElectronCapacitorApp): void {
   reloadWatcher.watcher = chokidar
     .watch(join(app.getAppPath(), 'app'), {
-      // biome-ignore lint/performance/useTopLevelRegex: fix me later
-      ignored: /[/\\]\./,
+            ignored: /[/\\]\./,
       persistent: true,
     })
     .on('ready', () => {
@@ -71,8 +68,7 @@ export class ElectronCapacitorApp {
   }
 
   // Helper function to load in the app.
-  // biome-ignore lint/suspicious/noExplicitAny: it's ok here
-  private async loadMainWindow(thisRef: any) {
+    private async loadMainWindow(thisRef: any) {
     await thisRef.loadWebApp(thisRef.MainWindow)
   }
 
@@ -155,9 +151,8 @@ export class ElectronCapacitorApp {
       })
       this.SplashScreen.init(this.loadMainWindow, this)
     } else
-      this.loadMainWindow(this).catch(error => {
-        // biome-ignore lint/suspicious/noConsole: it's ok in this context
-        console.error('Error loading main window:', error)
+      this.loadMainWindow(this).catch((error: unknown) => {
+                console.error('Error loading main window:', error)
       })
 
     // Security

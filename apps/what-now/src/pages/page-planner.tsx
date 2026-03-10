@@ -1,3 +1,4 @@
+// oxlint-disable react/no-multi-comp
 // oxlint-disable max-lines
 import { Button, FloatingMenu } from "@monorepo/components";
 import { dateIso10, formatDate } from "@monorepo/utils";
@@ -432,16 +433,14 @@ function usePlannerTasks() {
   async function loadTasks() {
     const load = await getTasks();
     if (!load.ok) throw new Error("Failed to load tasks");
-    setTasks(load.value.filter(task => task.isDone === false)); // Filter out completed tasks
+    setTasks(load.value.filter(task => !task.isDone)); // Filter out completed tasks
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: FIX ME LATER
   useEffect(() => void loadTasks(), []);
 
   const handleFrequencyChange = useFrequencyChange(setModifications);
   const handleDateChange = useDateChange(tasks, modifications, setModifications);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: FIX ME LATER
   const handleSaveModifications = useCallback(async () => {
     if (!hasModifications) return;
     setSaving(true);
@@ -536,10 +535,10 @@ function usePlannerActions(
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>,
   loadTasks: () => Promise<void>,
 ) {
-  const handleTasksDispatch = useCallback(async () => {
+  const handleTasksDispatch = useCallback(() => {
     const active = tasks.filter(task => isTaskActive(task));
     logger.info("dispatching active tasks...", { active });
-    await dispatchTasks(active);
+    dispatchTasks(active);
     setTasks([...tasks]);
   }, [tasks, setTasks]);
 
@@ -553,6 +552,8 @@ function usePlannerActions(
     handleTasksUploadAndReload,
   };
 }
+
+const emptyFrequency: Record<string, number> = {};
 
 /**
  * The main planner page component
@@ -585,12 +586,12 @@ export function PagePlanner() {
         saving={saving}
       />
       <PlannerContent
-        modifications={modifications.frequency || {}}
+        modifications={modifications.frequency || emptyFrequency}
         onDateChange={handleDateChange}
         onFrequencyChange={handleFrequencyChange}
         tasksByDay={tasksByDay}
       />
-      <PlannerMetrics modifications={modifications.frequency || {}} tasks={tasks} />
+      <PlannerMetrics modifications={modifications.frequency || emptyFrequency} tasks={tasks} />
       <FloatingMenu actions={actions} />
     </div>
   );

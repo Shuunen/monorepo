@@ -35,21 +35,18 @@ function MbImportFromSpotify() {
       },
       artist:
         textFromSelector('.entity-info.media h2 a, .os-content a[href^="/artist/"]') ||
-        // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-        textFromSelector(".entity-info.media h2").match(/^.+\b\s(?<artist>.+)$/u)?.groups?.artist ||
+        /^.+\b\s(?<artist>.+)$/u.exec(textFromSelector(".entity-info.media h2"))?.groups?.artist ||
         "",
       date: { day: "0", month: "0", year: "0" },
       label:
-        // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-        textFromSelector('.copyrights li, .os-content p[as="p"]').match(/[\d\s©℗]+(?<label>.*)/u)?.groups?.label || "",
+        /[\d\s©℗]+(?<label>.*)/u.exec(textFromSelector('.copyrights li, .os-content p[as="p"]'))?.groups?.label || "",
       title: textFromSelector(selectors.title),
       tracks: getTracks(),
       url: document.location.href,
       urlType: "85",
     };
-    const dateMatches = textFromSelector('script[type="application/ld+json"]').match(
-      // biome-ignore lint/performance/useTopLevelRegex: FIX me later
-      /datePublished":"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/u,
+    const dateMatches = /datePublished":"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/u.exec(
+      textFromSelector('script[type="application/ld+json"]'),
     );
     if (dateMatches?.groups?.day) {
       data.date.year = dateMatches.groups.year;

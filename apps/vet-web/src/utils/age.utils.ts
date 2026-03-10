@@ -1,5 +1,3 @@
-/** biome-ignore-all lint/style/useNamingConvention: it'ok here */
-/** biome-ignore-all assist/source/useSortedKeys: conflict with oxlint */
 import { field } from "@monorepo/components";
 import { z } from "zod";
 import type { CodeVersionLabel } from "./cvl.types.ts";

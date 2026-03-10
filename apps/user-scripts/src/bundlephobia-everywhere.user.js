@@ -59,7 +59,7 @@ function BundlephobiaEverywhere() {
     }
     const copyBlock = utils.findOne(".lh-copy span");
     if (copyBlock) text = `${copyBlock.textContent}\n${text}`;
-    const name = (text.match(pkgManagerRegex) || text.match(onlineLibRegex))?.groups?.name;
+    const name = (pkgManagerRegex.exec(text) || onlineLibRegex.exec(text))?.groups?.name;
     if (name === undefined) {
       utils.warn("failed to find a npm package name in this page");
       return;

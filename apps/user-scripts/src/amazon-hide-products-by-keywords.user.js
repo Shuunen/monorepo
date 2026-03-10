@@ -142,7 +142,6 @@ function AmazonHideProductsByKeywords() {
       const filter = utils.findOne(`.${cls.filter}`);
       filter.value = app.filter;
       // oxlint-disable no-undef
-      // biome-ignore lint/correctness/noUndeclaredVariables: it is declared in the global scope
       autosize.update(filter);
     }
     checkProducts();
@@ -219,7 +218,6 @@ function AmazonHideProductsByKeywords() {
     // oxlint-disable no-undef
     container.innerHTML = html;
     const filter = utils.findOne(`.${cls.filter}`);
-    // biome-ignore lint/correctness/noUndeclaredVariables: it is declared in the global scope
     autosize(filter);
     filter.addEventListener("keyup", onFilterChangeDebounced);
     const suggestions = utils.findOne(`.${cls.suggestions}`);

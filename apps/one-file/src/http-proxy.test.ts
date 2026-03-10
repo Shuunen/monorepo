@@ -1,3 +1,5 @@
+// oxlint-disable typescript/unbound-method
+import { sleep } from "@monorepo/utils";
 import type { Request, Response } from "express";
 import {
   app,
@@ -202,8 +204,7 @@ describe("http-proxy", () => {
     mockRequest.body = { test: "data" };
     webhookRoute(mockRequest as Request, mockResponse as Response);
     // Wait for async operation to complete
-    // oxlint-disable-next-line no-promise-executor-return
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await sleep(1);
     expect(mockResponse.status).toHaveBeenCalledWith(200);
   });
 
@@ -214,8 +215,7 @@ describe("http-proxy", () => {
     mockRequest.body = { test: "data" };
     webhookRoute(mockRequest as Request, mockResponse as Response);
     // Wait for async operation to complete
-    // oxlint-disable-next-line no-promise-executor-return
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await sleep(1);
     expect(mockResponse.status).toHaveBeenCalledWith(500);
     expect(mockResponse.json).toHaveBeenCalledWith({ error: "Network error" });
   });
@@ -228,8 +228,10 @@ describe("http-proxy", () => {
   it("startServer B should log server info when callback is called", () => {
     const mockListen = vi.mocked(app.listen);
     startServer();
+    const call = mockListen.mock.calls.at(0);
     // Get the callback function that was passed to listen
-    const callback = mockListen.mock.calls[0][1];
+    const callback = call?.at(1);
+    // oxlint-disable-next-line promise/prefer-await-to-callbacks, no-unsafe-call
     callback?.();
     // Verify logger calls (the Logger mock should have been called)
     expect(callback).toBeDefined();

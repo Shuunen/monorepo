@@ -29,17 +29,21 @@ export function useContestMode(callbacks: UseContestModeCallbacks): UseContestMo
     if (contestState?.currentMatch) {
       callbacksRef.current.onLeftImageUpdate(contestState.currentMatch.leftImage.url);
       callbacksRef.current.onRightImageUpdate(contestState.currentMatch.rightImage.url);
+      // oxlint-disable-next-line promise/prefer-await-to-then
       void fetchImageMetadata(contestState.currentMatch.leftImage.url).then(metadata => {
         callbacksRef.current.onLeftMetadataUpdate({
           ...metadata,
           filename: contestState.currentMatch?.leftImage.filename ?? metadata.filename,
         });
+        return undefined;
       });
+      // oxlint-disable-next-line promise/prefer-await-to-then
       void fetchImageMetadata(contestState.currentMatch.rightImage.url).then(metadata => {
         callbacksRef.current.onRightMetadataUpdate({
           ...metadata,
           filename: contestState.currentMatch?.rightImage.filename ?? metadata.filename,
         });
+        return undefined;
       });
     }
   }, [contestState]);

@@ -57,9 +57,9 @@ export function useDragDrop(callbacks: UseDragDropCallbacks): UseDragDropReturn 
     e.preventDefault();
     e.stopPropagation();
     setIsDraggingOver(false);
-    const files = e.dataTransfer.files;
+    const { files } = e.dataTransfer;
     if (files.length === 1) {
-      const file = files[0];
+      const [file] = files;
       if (isDraggingLeft)
         handleSingleFileUpload(file, {
           imageSide: "left",

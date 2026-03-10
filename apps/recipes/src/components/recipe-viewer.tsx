@@ -11,7 +11,6 @@ type RecipeParams = {
 };
 
 type RecipeModule = {
-  // biome-ignore lint/style/useNamingConvention: can't change that
   ReactComponent: React.ComponentType;
 };
 
@@ -26,6 +25,7 @@ function ErrorMessage({ error }: { error?: string }) {
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 function LoadingMessage() {
   return (
     <div className="flex h-full items-center justify-center" data-testid="loading">
@@ -35,6 +35,7 @@ function LoadingMessage() {
 }
 
 /* v8 ignore next -- @preserve */
+// oxlint-disable-next-line react/no-multi-comp, max-lines-per-function
 export function RecipeViewer() {
   const { category, recipe } = useParams<RecipeParams>();
   const [RecipeComponent, setRecipeComponent] = useState<React.ComponentType | undefined>(undefined);
@@ -54,11 +55,14 @@ export function RecipeViewer() {
 
     // Dynamically import the recipe markdown file
     import(`../recipes/${category}/${recipe}.md`)
+      // oxlint-disable-next-line promise/prefer-await-to-then
       .then((module: RecipeModule) => {
         // oxlint-disable-next-line max-nested-callbacks
         setRecipeComponent(() => module.ReactComponent);
         setIsLoading(false);
+        return undefined;
       })
+      // oxlint-disable-next-line promise/prefer-await-to-then
       .catch(() => {
         setError(`La recette "${recipe}" dans la catégorie "${category}" n'existe pas.`);
         setIsLoading(false);
@@ -82,7 +86,7 @@ export function RecipeViewer() {
       >
         <Link to="/">
           <MoveLeftIcon />
-          Retour à l'accueil
+          Retour à l&apos;accueil
           <HomeIcon />
         </Link>
       </Button>

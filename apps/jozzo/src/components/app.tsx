@@ -12,7 +12,6 @@ import { machine } from "../utils/state.utils";
 export function App() {
   const [state, setState] = useState<(typeof machine)["state"]>("initial");
   machine.watchContext("state", () => setState(machine.state));
-  // biome-ignore lint/suspicious/noConsole: remove me later ^^
   console.count("render"); // oxlint-disable-line no-console
   return (
     <div className="container mx-auto flex h-screen w-full max-w-xl flex-col items-center justify-center gap-6 pb-44 align-middle">

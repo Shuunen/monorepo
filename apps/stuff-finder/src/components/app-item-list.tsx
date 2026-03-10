@@ -13,25 +13,26 @@ type Props = Readonly<{
 }>;
 
 export function AppItemList(props: Props) {
-  const [display, setDisplay] = useState<Display>(props.display ?? state.display);
+  const { display: displayProp, items, loadingItemIds, onSelection, showPrice } = props;
+  const [display, setDisplay] = useState<Display>(displayProp ?? state.display);
   // handle selection
   const [, setSelection] = useState<Item[]>([]);
   const selectionRef = useRef<Item[]>([]);
   const onSelect = useCallback(
     (item: Item, isSelected: boolean) => {
-      if (props.onSelection === undefined) return;
+      if (onSelection === undefined) return;
       const currentSelection = selectionRef.current;
       const newSelection = isSelected
         ? [...currentSelection, item]
         : currentSelection.filter(data => data.$id !== item.$id);
       selectionRef.current = newSelection;
       setSelection(newSelection);
-      props.onSelection(newSelection);
+      onSelection(newSelection);
     },
-    [props.onSelection, props],
+    [onSelection],
   );
   // watch display state if not provided
-  if (props.display === undefined)
+  if (displayProp === undefined)
     watchState("display", () => {
       setDisplay(state.display);
     });
@@ -41,14 +42,14 @@ export function AppItemList(props: Props) {
         className={`grid grid-cols-1 bg-gray-100 ${display === "list" ? "" : "xs:grid-cols-2 gap-3 p-3 sm:grid-cols-3 sm:gap-5 sm:p-5"}`}
         data-type="list"
       >
-        {props.items.map(item => (
+        {items.map(item => (
           <AppItemListEntry
             display={display}
-            isLoading={props.loadingItemIds?.includes(item.$id)}
+            isLoading={loadingItemIds?.includes(item.$id)}
             item={item}
             key={item.$id}
-            onSelect={props.onSelection ? onSelect : undefined}
-            showPrice={props.showPrice}
+            onSelect={onSelection ? onSelect : undefined}
+            showPrice={showPrice}
           />
         ))}
       </div>

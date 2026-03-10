@@ -45,9 +45,10 @@ const cases = [
   },
 ] satisfies { input: Input; label: string }[];
 
+const onSubmit = () => mockSubmit("success", "Appointment booked successfully!");
+
 function Form({ input }: { input: Input }) {
   const schemas = useMachineSchemas(machine, input);
-  const onSubmit = () => mockSubmit("success", "Appointment booked successfully!");
   return (
     <div className="flex flex-col gap-4">
       {schemas.length > 0 && (
@@ -56,7 +57,7 @@ function Form({ input }: { input: Input }) {
           onSubmit={onSubmit}
           schemas={schemas}
           showLastStep
-          showMenu={true}
+          showMenu
           useSubmissionStep
           useSummaryStep
         />
@@ -66,6 +67,7 @@ function Form({ input }: { input: Input }) {
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 function RouteComponent() {
   return (
     <div className="flex flex-col gap-8">

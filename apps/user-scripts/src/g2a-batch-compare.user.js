@@ -43,6 +43,7 @@ function G2aBatchCompare() {
 
   const utils = new Shuutils("g2a-bcp");
   function cleanGameName(string) {
+    // oxlint-disable-next-line prefer-destructuring
     const output = string
       .toLowerCase()
       .split(" deluxe edition")[0]
@@ -54,7 +55,6 @@ function G2aBatchCompare() {
   }
   function same(stringA, stringB) {
     // oxlint-disable no-undef
-    // biome-ignore lint/correctness/noUndeclaredVariables: it is declared in the global scope
     const hasResult = Boolean(didYouMean(cleanGameName(stringA), [cleanGameName(stringB)]));
     if (utils.app.debug) utils.log(`${hasResult ? "same" : "different"} : "${stringA}" & "${stringB}"`);
     return hasResult;
@@ -122,12 +122,11 @@ function G2aBatchCompare() {
     const search = `${utils.readableString(game.title).toLowerCase()} steam`;
     game.priceLocalSearchUrl = `https://www.g2a.com/search?query=${search}`;
     const url = `https://www.g2a.com/search/api/v3/suggestions?itemsPerPage=5&phrase=${search}&currency=EUR&variantCategory=189`;
-    const { data } = await globalThis.fetch(url).then(async response => await response.json());
+    const { data } = await globalThis.fetch(url).then(response => response.json());
     if (data === undefined || data.items === undefined || data.items.length === 0) return;
     let lowestPrice = 0;
     let lowestUrl = "";
     for (const result of data.items) {
-      // biome-ignore lint/performance/useTopLevelRegex: FIX me later
       if (!/\b(?:europe|euw|global)\b/iu.test(result.name)) {
         utils.log("incorrect right ?", result.name);
         continue;

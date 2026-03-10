@@ -30,6 +30,7 @@ export function handlePlural(translated: string, data?: Readonly<Record<string, 
   if (!translated.includes("|")) {
     return fillTemplate(translated, data);
   }
+  // oxlint-disable-next-line typescript/no-base-to-string
   const count = Number.parseInt(String(data?.count ?? "1"), 10);
   const [partA = "", partB = "", partC = ""] = translated.split(" | ");
   if (partC.length > 0 && count > 1) {

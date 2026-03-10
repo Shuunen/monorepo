@@ -19,6 +19,7 @@ it("Result.error", () => {
 });
 
 it("Result.trySafe A ok", () => {
+  // oxlint-disable-next-line typescript/no-unsafe-return
   const result = Result.trySafe(() => JSON.parse('{"a": 42}'));
   expect(result).toMatchInlineSnapshot(`
     Ok {
@@ -31,6 +32,7 @@ it("Result.trySafe A ok", () => {
 });
 
 it("Result.trySafe B error", () => {
+  // oxlint-disable-next-line typescript/no-unsafe-return
   const result = Result.trySafe(() => JSON.parse('{"a": 42'));
   expect(result.ok).toBe(false);
   if (!result.ok) {
@@ -56,6 +58,7 @@ it("Result.unwrap A ok", () => {
 });
 
 it("Result.unwrap B error", () => {
+  // oxlint-disable-next-line typescript/no-unsafe-return
   const result = Result.trySafe(() => JSON.parse('{"a": 42'));
   const { error, value } = Result.unwrap(result);
   expect(value).toMatchInlineSnapshot(`undefined`);

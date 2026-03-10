@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, within } from "storybook/test";
 import { z } from "zod";
-import { field, section, step } from "./auto-form.utils";
 import { AutoFormSummaryStep } from "./auto-form-summary-step";
+import { field, section, step } from "./auto-form.utils";
 
 const meta = {
   component: AutoFormSummaryStep,
@@ -33,7 +33,7 @@ export const Simple: Story = {
           age: field(z.number().min(0), {
             label: "Age label",
           }),
-          email: field(z.string().email(), {
+          email: field(z.email(), {
             label: "Email label",
           }),
           info: section({

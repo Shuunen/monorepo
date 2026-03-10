@@ -67,7 +67,6 @@ function SaveurBiereRatings() {
     element.classList.add(utils.id);
     element.parentElement.style.height = "auto";
   }
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: FIX me later
   async function fetchRating(item) {
     const titleElement = utils.findOne(selectors.title, item);
     if (titleElement === null) return utils.error("cant find item title");
@@ -82,7 +81,7 @@ function SaveurBiereRatings() {
       data = await fetch(
         `https://wrapapi.com/use/jojo/untappd/history/0.0.1?user=${user}&search=${name}&wrapAPIKey=${wrapApiKey}`,
       )
-        .then(async response => await response.json())
+        .then(response => response.json())
         .then(response => response.data);
       utils.log(`fetched ${data ? "" : "EMPTY "}data`, data, "for item", name);
       localStorage.setItem(storageKey, data ? JSON.stringify(data) : "EMPTY");

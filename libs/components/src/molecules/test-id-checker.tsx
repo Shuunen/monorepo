@@ -1,3 +1,4 @@
+import { functionReturningVoid } from "@monorepo/utils";
 /* c8 ignore start */
 // oxlint-disable-next-line no-restricted-imports
 import { XIcon } from "lucide-react";
@@ -35,7 +36,6 @@ const getAllTestIds = () =>
     // oxlint-disable-next-line prefer-native-coercion-functions
     .filter((id): id is string => Boolean(id));
 
-// biome-ignore lint/performance/useTopLevelRegex: Fix later
 const isValidTestId = (testId: string) => /^[a-zA-Z0-9-]+$/u.test(testId);
 
 // Helper function to compare arrays of test IDs
@@ -85,7 +85,7 @@ function useTestIds(visible: boolean) {
   const listElement = useRef<HTMLUListElement>(null);
   useEffect(() => {
     if (!visible) {
-      return;
+      return functionReturningVoid;
     }
 
     const update = () => {
@@ -158,6 +158,7 @@ function TestIdListItem({ id, index, occurrences, isValid }: TestIdInfo & { inde
   );
 }
 
+// oxlint-disable-next-line react/no-multi-comp
 export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean }) {
   const [visible, setVisible] = useState(() => {
     if (forceVisible) {
@@ -172,7 +173,7 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
   const { testIds, listElement } = useTestIds(visible);
   const hasErrors = testIds.some(id => !id.isValid);
   if (!visible) {
-    return;
+    return undefined;
   }
   return (
     <Card

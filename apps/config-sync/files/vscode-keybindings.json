@@ -30,13 +30,6 @@
     "when": "editorTextFocus && !editorReadonly"
   },
   {
-    "args": {
-      "commands": ["typescript.restartTsServer", "oxc.restartServer", "biome.restart"]
-    },
-    "command": "runCommands",
-    "key": "ctrl+oem_8"
-  },
-  {
     "command": "-filesExplorer.findInFolder",
     "key": "shift+alt+f",
     "when": "explorerResourceIsFolder && explorerViewletVisible && filesExplorerFocus && !inputFocus"

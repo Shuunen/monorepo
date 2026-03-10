@@ -14,4 +14,5 @@ export function FormDescription({ ...props }: FormDescriptionProps) {
   return <ShadFormDescription data-testid={testIdFromProps("form-description", props)} {...props} />;
 }
 
+// oxlint-disable-next-line only-export-components
 export { Form, FormControl, FormField, FormItem, FormLabel, useFormField } from "../shadcn/form";

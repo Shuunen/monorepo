@@ -86,7 +86,6 @@ export function cleanFileName(file: string): string {
       // remove extra spaces
       .replaceAll(/\s+/g, " ")
       // remove spaces before extension(s), like " .en.srt" => ".en.srt" or " .mp4" => ".mp4"
-      // biome-ignore lint/performance/useTopLevelRegex: it's ok
       .replace(/\s+(\.(?:\w{2,4}\.)*\w{2,4})$/, "$1")
       // trim spaces
       .trim()

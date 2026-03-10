@@ -1,3 +1,4 @@
+// oxlint-disable promise/prefer-await-to-callbacks
 /**
  * Creates a function that memoizes the result of `callback`
  * @copyright inspired from Angus Croll package `just-memoize` under MIT License Copyright (c) 2016-2023
@@ -21,7 +22,6 @@ export function memoize<Callback extends (...arguments_: Parameters<Callback>) =
       cache[key] = callback(...parameters);
     }
     // oxlint-disable no-non-null-assertion
-    // biome-ignore lint/style/noNonNullAssertion: needed here
     return cache[key]!;
   }
   memoized.cache = cache;

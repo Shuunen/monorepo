@@ -1,10 +1,13 @@
-// oxlint-disable max-lines
 import { readFileSync } from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { request } from "node:https";
 import path from "node:path";
 import type { PassThrough } from "node:stream";
 import { fileURLToPath } from "node:url";
+
+// oxlint-disable max-lines
+// oxlint-disable promise/prefer-await-to-callbacks
+// oxlint-disable promise/prefer-await-to-then
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,7 +43,6 @@ export function log(severity: "info" | "warn" | "error", context: string, ...arg
   // if in unit test, do not log
   if (process.env.VITEST) return;
   const paddedSeverity = `[${severity}]`.padStart(options.severityPadding);
-  // biome-ignore lint/suspicious/noConsole: allowed in this context
   console.log(`${datetime()} ${paddedSeverity} [${context}]`, ...args); // oxlint-disable-line no-console
 }
 
@@ -109,9 +111,10 @@ export function makeRequest({
   method: string;
   payload: string;
 }): Promise<{ result: unknown; error: string | undefined }> {
+  // oxlint-disable-next-line promise/avoid-new
   return new Promise(resolve => {
     if (url.includes("fake-endpoint.local")) {
-      void resolve({
+      resolve({
         error: undefined,
         result: { message: "This is a fake endpoint response for testing.", success: true },
       });
@@ -169,6 +172,7 @@ export function respondBadRequest({
 
 export function collectRequestBody(req: IncomingMessage | PassThrough): Promise<string> {
   const context = "collectRequestBody";
+  // oxlint-disable-next-line promise/avoid-new
   return new Promise((resolve, reject) => {
     let body = "";
     req.on("data", (chunk: Buffer) => {
@@ -179,7 +183,7 @@ export function collectRequestBody(req: IncomingMessage | PassThrough): Promise<
       log("info", context, `Request body fully received: ${body.length} bytes`);
       resolve(body);
     });
-    req.on("error", error => {
+    req.on("error", (error: Error) => {
       log("error", context, `Error receiving request body: ${error?.message ?? error}`);
       reject(error);
     });
@@ -199,7 +203,7 @@ export function parseFormUrlEncoded(body: string): Record<string, string> {
 
 export function parseProgressBody(body: string) {
   let progress = 0;
-  let remaining: unknown = undefined;
+  let remaining: string | undefined = undefined;
   let nextTask: unknown = undefined;
   let parseError: string | undefined = undefined;
   const context = "parseProgressBody";
@@ -266,7 +270,6 @@ export async function handleSetProgressRequest({ body, res }: { body: string; re
   const hueBody = getHueColorBody(progress);
   log("info", context, `Prepared hue body: ${hueBody}`);
   const trmnlPayload = JSON.stringify({
-    // biome-ignore lint/style/useNamingConvention: cannot change external API
     merge_variables: {
       nextTitle: nextTask,
       progress,
@@ -309,8 +312,8 @@ export function handlePostSetProgress(req: IncomingMessage, res: ServerResponse)
       log("info", context, "Request body collected for /set-progress");
       return handleSetProgressRequest({ body, res });
     })
-    .catch(error => {
-      log("error", context, `Error collecting request body: ${error?.message ?? error}`);
+    .catch((error: unknown) => {
+      log("error", context, `Error collecting request body: ${error instanceof Error ? error.message : String(error)}`);
       respondBadRequest({
         message: "Failed to read request body",
         nextTask: undefined,

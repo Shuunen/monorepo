@@ -2,7 +2,7 @@
 import { Paragraph, Title } from "@monorepo/components";
 import { cn } from "@monorepo/utils";
 import { motion } from "framer-motion";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import type { ContestState } from "../utils/comparison.utils";
 import type { ImageMetadata } from "../utils/image.utils";
 import { logger } from "../utils/logger.utils";
@@ -26,7 +26,7 @@ export const ContestHeader = memo(function HeaderComponent(props: ContestHeaderP
   const isContestComplete = contestState?.isComplete ?? false;
   const title = getTitle(isContestComplete, isContestMode, contestState);
   const leftWin = contestState?.isComplete ? contestState.winner?.filename === leftImageMetadata?.filename : undefined;
-  const imageInfos = [leftImageMetadata, rightImageMetadata];
+  const imageInfos = useMemo(() => [leftImageMetadata, rightImageMetadata], [leftImageMetadata, rightImageMetadata]);
   logger.info("Rendering ContestHeader");
   return (
     <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: -20 }} transition={{ duration: 0.6 }}>

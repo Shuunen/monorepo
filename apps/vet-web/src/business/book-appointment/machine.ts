@@ -1,8 +1,7 @@
-/** biome-ignore-all assist/source/useSortedKeys: it'ok in this context */
 import { assign, setup } from "xstate";
-import { step1AnimalDetails, step2bTheDiet, step2CatDetails, step2DogDetails, step3Allergies } from "./schemas";
 import { isCat, isFrench } from "./machine.guards";
 import type { Context, Input } from "./machine.types";
+import { step1AnimalDetails, step2bTheDiet, step2CatDetails, step2DogDetails, step3Allergies } from "./schemas";
 
 export const machine = setup({
   types: {

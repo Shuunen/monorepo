@@ -4,6 +4,7 @@
  * @returns promise that resolve in the provided time
  */
 export function sleep(ms = 1000) {
+  // oxlint-disable-next-line promise/avoid-new
   return new Promise(resolve => {
     setTimeout(() => resolve(ms), ms);
   });

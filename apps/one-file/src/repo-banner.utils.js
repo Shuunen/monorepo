@@ -1,7 +1,5 @@
 // oxlint-disable import/no-nodejs-modules
-// biome-ignore lint/correctness/noNodejsModules: ok here
 import { readFileSync, statSync } from "node:fs";
-// biome-ignore lint/correctness/noNodejsModules: ok here
 import path from "node:path";
 import { Logger } from "@monorepo/utils";
 
@@ -65,11 +63,10 @@ const regex = {
  * @param folderPath the folder to extract data from
  * @returns {Object} the extracted data with color, description, name, and scope
  */
-// oxlint-disable-next-line complexity
 export function extractData(folderPath = process.cwd()) {
   const defaults = { color: "#024eb8", description: "A placeholder description", name: "unknown", scope: "JohnDoe" };
   const infos = [safeRead(".vscode/settings.json", folderPath), safeRead("package.json", folderPath)].join("\n");
-  const packageName = regex.packageName.exec(infos)?.groups?.name?.split("/")?.toReversed?.()[0];
+  const packageName = regex.packageName.exec(infos)?.groups?.name.split("/").toReversed?.()[0];
   const scopeAndName = regex.scopeAndName.exec(infos)?.groups;
   const name = packageName ?? /* v8 ignore next -- @preserve */ scopeAndName?.name ?? defaults.name;
   const scope = scopeAndName?.scope ?? defaults.scope;

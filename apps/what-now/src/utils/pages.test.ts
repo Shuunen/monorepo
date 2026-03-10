@@ -139,8 +139,8 @@ it("useActions E should call navigate with correct path when home action is clic
   globalThis.location.pathname = "/settings";
   mockNavigate.mockClear();
   const actions = useActions();
-  const homeAction = actions[0];
-  homeAction.handleClick();
+  const homeAction = actions.at(0);
+  homeAction?.handleClick();
   expect(mockNavigate).toHaveBeenCalledWith("/");
 });
 
@@ -148,8 +148,8 @@ it("useActions F should call navigate with correct path when settings action is 
   globalThis.location.pathname = "/";
   mockNavigate.mockClear();
   const actions = useActions();
-  const settingsAction = actions[2]; // Settings is now at index 2
-  settingsAction.handleClick();
+  const settingsAction = actions.at(2); // Settings is now at index 2
+  settingsAction?.handleClick();
   expect(mockNavigate).toHaveBeenCalledWith("/settings");
 });
 
@@ -157,8 +157,8 @@ it("useActions G should call navigate with correct path when about action is cli
   globalThis.location.pathname = "/";
   mockNavigate.mockClear();
   const actions = useActions();
-  const aboutAction = actions[3]; // About is now at index 3
-  aboutAction.handleClick();
+  const aboutAction = actions.at(3); // About is now at index 3
+  aboutAction?.handleClick();
   expect(mockNavigate).toHaveBeenCalledWith("/about");
 });
 
@@ -166,7 +166,7 @@ it("useActions H should call navigate with correct path when planner action is c
   globalThis.location.pathname = "/";
   mockNavigate.mockClear();
   const actions = useActions();
-  const plannerAction = actions[1]; // Planner is at index 1
-  plannerAction.handleClick();
+  const plannerAction = actions.at(1); // Planner is at index 1
+  plannerAction?.handleClick();
   expect(mockNavigate).toHaveBeenCalledWith("/planner");
 });

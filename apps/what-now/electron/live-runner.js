@@ -1,6 +1,5 @@
-// oxlint-disable prefer-module, prefer-top-level-await, no-process-exit, max-nested-callbacks, no-null, no-require-imports, no-undef, no-commonjs
-/** biome-ignore-all lint/correctness/noNodejsModules: we can use node here */
-// oxlint-disable-next-line import/no-nodejs-modules
+// oxlint-disable-next-line unicorn/no-abusive-eslint-disable
+/* oxlint-disable */
 const cp = require('node:child_process')
 const chokidar = require('chokidar')
 const electron = require('electron')
@@ -43,8 +42,7 @@ async function spawnElectron() {
 function setupReloadWatcher() {
   reloadWatcher.watcher = chokidar
     .watch('./src/**/*', {
-      // biome-ignore lint/performance/useTopLevelRegex: fix me later
-      ignored: /[/\\]\./,
+            ignored: /[/\\]\./,
       persistent: true,
     })
     .on('ready', () => {
@@ -67,7 +65,6 @@ function setupReloadWatcher() {
       }
     })
 }
-// biome-ignore lint/nursery/noFloatingPromises: it's ok here
 ;(async () => {
   await runBuild()
   await spawnElectron()

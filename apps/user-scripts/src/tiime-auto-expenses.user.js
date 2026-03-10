@@ -212,7 +212,7 @@ function TiimeAutoExpenses() {
    */
   async function setComment(comment) {
     utils.log(`setting comment "${comment}"`);
-    const textarea = await utils.findOne(selectors.formInputComment);
+    const textarea = utils.findOne(selectors.formInputComment);
     if (textarea === undefined) {
       utils.showError("formInputComment not found");
       return;
@@ -304,7 +304,7 @@ function TiimeAutoExpenses() {
     }
     elements.newExpenseBtn.click();
     await setName(label);
-    await setDate();
+    setDate();
     await setTtcAmount(amount);
     await setTvaAmount(tva);
     await setLabel(label);

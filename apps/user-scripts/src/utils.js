@@ -36,7 +36,10 @@ class Shuutils {
     element.style = `position: fixed; display: flex; align-items: center; gap: 9px; bottom: ${bottom + padding}px; right: ${padding}px; z-index: 99999; padding: 12px 20px 11px 14px; background: linear-gradient(45deg, ${backgrounds[0]}, 20%, ${backgrounds[1]}); color: white; border-radius: 5px; box-shadow: 0 3px 7px 0 rgba(0,0,0,.5); font-size: 18px; opacity: 0; transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; transform: translateX(300px);`;
     element.innerHTML = `<span style="${iconStyle}border-radius: 50%; color: ${backgrounds[1]}; background-color: #ffffff90; width: 20px; height: 20px; text-align: center; font-weight: bolder; font-size: 12px;">${icon}</span><span style="margin-top: -1px;">${message}</span>`;
     this.#toastShow(element);
-    if (delay > 0) setTimeout(() => this.#toastHide(element), delay);
+    if (delay > 0)
+      setTimeout(() => {
+        this.#toastHide(element);
+      }, delay);
   }
   /**
    * Hides the toast element by applying a transform and removing it after a delay.
@@ -85,25 +88,21 @@ class Shuutils {
    * @returns {Promise<void>} nothing
    */
   async animateCss(element, animation, canRemoveAfter = true) {
-    await new Promise(resolve => {
-      const animationName = `animate__${animation}`;
-      element.classList.add("animate__animated", animationName);
-      if (!canRemoveAfter) {
-        resolve("Animation ended, no need to remove");
-        return;
-      }
-      // When the animation ends, we clean the classes and resolve the Promise
-      /**
-       * Handle the animation end event
-       * @param {{ stopPropagation: () => void; }} event the event
-       */
-      function handleAnimationEnd(event) {
-        event.stopPropagation();
-        element.classList.remove("animate__animated", animationName);
-        resolve("Animation ended");
-      }
-      element.addEventListener("animationend", handleAnimationEnd, { once: true });
-    });
+    const animationName = `animate__${animation}`;
+    element.classList.add("animate__animated", animationName);
+    if (!canRemoveAfter) return;
+    const { promise, resolve } = Promise.withResolvers();
+    /**
+     * Handle the animation end event
+     * @param {{ stopPropagation: () => void; }} event the event
+     */
+    function handleAnimationEnd(event) {
+      event.stopPropagation();
+      element.classList.remove("animate__animated", animationName);
+      resolve("Animation ended");
+    }
+    element.addEventListener("animationend", handleAnimationEnd, { once: true });
+    await promise;
   }
   /**
    * Capitalizes the first letter of a string, does not change the rest /!\
@@ -137,13 +136,17 @@ class Shuutils {
     /** @type {ReturnType<typeof setTimeout>} */
     // oxlint-disable-next-line init-declarations
     let timeout;
-    return async (/** @type {any} */ ...parameters) =>
+    return async (/** @type {any} */ ...parameters) => {
+      // oxlint-disable-next-line promise/avoid-new
       await new Promise(resolve => {
         clearTimeout(timeout);
+        // oxlint-disable-next-line promise/no-multiple-resolved
         timeout = setTimeout(() => {
+          // oxlint-disable-next-line promise/prefer-await-to-callbacks
           resolve(callback(...parameters));
         }, waitFor);
       });
+    };
   }
   /**
    * Console.log stuff with app id if debug is true
@@ -154,7 +157,6 @@ class Shuutils {
   debug(...stuff) {
     if (!this.willDebug) return;
     if (this.id.length > 0) stuff.unshift(`${this.id} :`);
-    // biome-ignore lint/suspicious/noConsole: it's ok here :)
     console.log(...stuff);
   }
   /**
@@ -191,7 +193,6 @@ class Shuutils {
    */
   error(...stuff) {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`);
-    // biome-ignore lint/suspicious/noConsole: it's ok here :)
     console.error(...stuff);
   }
   /**
@@ -270,7 +271,6 @@ class Shuutils {
    */
   groupCollapsed(...stuff) {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`);
-    // biome-ignore lint/suspicious/noConsole: it's ok here :)
     console.groupCollapsed(...stuff);
   }
   /**
@@ -279,7 +279,6 @@ class Shuutils {
    * @example utils.groupEnd()
    */
   groupEnd() {
-    // biome-ignore lint/suspicious/noConsole: it's ok here :)
     console.groupEnd();
   }
   /**
@@ -374,13 +373,12 @@ class Shuutils {
    */
   log(...stuff) {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`);
-    // biome-ignore lint/suspicious/noConsole: it's ok here :)
     console.log(...stuff);
   }
   /**
    * Wait for location.href to change and call a callback
    * @param {Function} callback the callback to call when location.href changes
-   * @param {string} last the last location.href, dont use it
+   * @param {string} last the last location.href, don't use it
    * @param {number} wait the time to wait between each try
    * @returns {Promise<void>} nothing
    * @example utils.onPageChange((url) => { console.log('new url :', url) })
@@ -394,6 +392,7 @@ class Shuutils {
   ) {
     await this.sleep(wait);
     const current = document.location.href;
+    // oxlint-disable-next-line promise/prefer-await-to-callbacks
     if (current !== last) callback(current);
     void this.onPageChange(callback, current, wait);
   }
@@ -406,7 +405,6 @@ class Shuutils {
     // Normalize all space-like characters to regular space
     const normalizedInput = input.replaceAll(/[\s\u00A0\u2000-\u200B\u202F\u205F\u3000]+/gu, " ").trim();
     const parsePriceRegex =
-      // biome-ignore lint/performance/useTopLevelRegex: FIX me later
       /^(?<sign>-)?\+?(?<currencyStart>[$€])? ?(?:(?<integers>[\d .,]+)(?<decimals>[.,]\d{2})|(?<integersOnly>[\d .,]+)) ?(?<currencyEnd>[$€])?$/u;
     const {
       currencyEnd,
@@ -531,6 +529,7 @@ class Shuutils {
    * @example await utils.sleep(1000) // sleep for 1 second
    */
   async sleep(ms) {
+    // oxlint-disable-next-line promise/avoid-new
     await new Promise(resolve => {
       setTimeout(resolve, ms);
     });
@@ -548,6 +547,7 @@ class Shuutils {
     return (/** @type {any} */ ...parameters) => {
       if (!isReady) return;
       isReady = false;
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       callback(...parameters);
       setTimeout(() => {
         isReady = true;
@@ -604,7 +604,7 @@ class Shuutils {
       this.log(`stop searching after 5 fails to detect : "${selector}"`);
       return undefined;
     }
-    return await this.waitToDetect(selector, wait, nbTries + 1);
+    return this.waitToDetect(selector, wait, nbTries + 1);
   }
   /**
    * Console.warn stuff with app id
@@ -619,6 +619,5 @@ class Shuutils {
 if (globalThis.window === undefined)
   // oxlint-disable-next-line no-commonjs, no-undef, prefer-module
   module.exports = {
-    // biome-ignore lint/style/useNamingConvention: nope
     Shuutils,
   };

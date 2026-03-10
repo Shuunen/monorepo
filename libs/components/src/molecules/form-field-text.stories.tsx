@@ -51,7 +51,7 @@ export const Basic: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const textInput = canvas.getByTestId("input-text-username") as HTMLInputElement;
+    const textInput = canvas.getByTestId("input-text-username");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     expect(textInput).toBeInTheDocument();
@@ -89,7 +89,7 @@ export const WithPrefault: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const textInput = canvas.getByTestId("input-text-username") as HTMLInputElement;
+    const textInput = canvas.getByTestId("input-text-username");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("verify prefault value is displayed", () => {
@@ -124,7 +124,7 @@ export const WithInitialValue: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const textInput = canvas.getByTestId("input-text-name") as HTMLInputElement;
+    const textInput = canvas.getByTestId("input-text-name");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("verify initial value is displayed", () => {
@@ -181,7 +181,7 @@ export const Disabled: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const emailInput = canvas.getByTestId("input-text-email") as HTMLInputElement;
+    const emailInput = canvas.getByTestId("input-text-email");
     expect(emailInput).toBeDisabled();
     expect(emailInput).toHaveValue("user@example.com");
   },
@@ -205,7 +205,7 @@ export const Readonly: Story = {
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const accountIdInput = canvas.getByTestId("input-text-account-id") as HTMLInputElement;
+    const accountIdInput = canvas.getByTestId("input-text-account-id");
     expect(accountIdInput).toHaveAttribute("readonly");
     expect(accountIdInput).toHaveValue("ACC-12345");
   },
@@ -235,8 +235,8 @@ export const MultipleFields: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const firstNameInput = canvas.getByTestId("input-text-first-name") as HTMLInputElement;
-    const lastNameInput = canvas.getByTestId("input-text-last-name") as HTMLInputElement;
+    const firstNameInput = canvas.getByTestId("input-text-first-name");
+    const lastNameInput = canvas.getByTestId("input-text-last-name");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("fill first name", async () => {
@@ -277,7 +277,7 @@ export const DontAllowEmptyValue: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const usernameInput = canvas.getByTestId("input-text-username") as HTMLInputElement;
+    const usernameInput = canvas.getByTestId("input-text-username");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
     await step("fill username with spaces and submit", async () => {

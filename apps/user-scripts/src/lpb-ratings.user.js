@@ -430,9 +430,9 @@ function createReview(name, rating) {
   const review = document.createElement("div");
   review.classList.add("my-review");
   review.style.width = `${Math.max((rating / 5) * 100, 20)}%`; // 5 stars will be 100% width
-  review.style.height = `${12}px`;
+  review.style.height = `12px`;
   review.style.margin = "2px 0";
-  review.style.borderRadius = `${5}px`;
+  review.style.borderRadius = `5px`;
   review.style.backgroundColor = "red";
   review.style.backgroundImage = 'url("https://i.pinimg.com/originals/d5/a7/cb/d5a7cb46e2f15a8fed10aaf1dd00965c.gif")';
   review.style.backgroundBlendMode = "color-dodge";
@@ -452,7 +452,6 @@ function LpbRatings() {
     threshold: 0.4,
   };
   // @ts-expect-error Fuse is globally available
-  // biome-ignore lint/correctness/noUndeclaredVariables: globally available
   const fuse = new Fuse(ratings, fuseSettings); // oxlint-disable-line no-undef
 
   const utils = new Shuutils("lpb-ratings");

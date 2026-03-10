@@ -1,6 +1,6 @@
 import { Result } from "@monorepo/utils";
-import type { Models } from "appwrite";
-import type { AppWriteTask, Task } from "../types";
+import type { Task } from "../types";
+import type { AppWriteTaskModel } from "./database.utils";
 import * as databaseUtils from "./database.utils";
 import {
   allDayIndices,
@@ -21,8 +21,6 @@ import * as tasksUtils from "./tasks.utils";
 vi.mock(import("./database.utils"));
 vi.mock(import("./tasks.utils"));
 
-type AppWriteTaskModel = AppWriteTask & Models.Document;
-
 const mockTask: Task = {
   completedOn: "2023-01-01T10:00:00Z",
   id: "task-1",
@@ -33,12 +31,12 @@ const mockTask: Task = {
 };
 
 const mockAppWriteTask: AppWriteTaskModel = {
-  $collectionId: "collection-id",
   $createdAt: "2023-01-01T10:00:00Z",
   $databaseId: "database-id",
   $id: "task-1",
   $permissions: [],
   $sequence: 1,
+  $tableId: "collection-id",
   $updatedAt: "2023-01-01T10:00:00Z",
   "completed-on": "2023-01-01T10:00:00Z",
   done: false,

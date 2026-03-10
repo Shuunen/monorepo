@@ -1,4 +1,5 @@
-import { sleep } from "@monorepo/utils";
+// oxlint-disable prefer-await-to-then
+import { functionReturningVoid, sleep } from "@monorepo/utils";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import { Alert, Collapse } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
@@ -9,8 +10,8 @@ import type Result from "@zxing/library/es2015/core/Result";
 import { useEffect, useRef, useState } from "react";
 import { AppPageCard } from "../components/app-page-card";
 import { logger } from "../utils/logger.utils";
-import { navigate } from "../utils/navigation.utils";
 import { state } from "../utils/state.utils";
+import { navigateToSearch } from "./page-search.const";
 
 const reader = new BrowserMultiFormatReader();
 const waitDelay = 200;
@@ -18,7 +19,31 @@ const waitDelay = 200;
 function onDecodeSuccess(result: Result) {
   const code = result.getText();
   logger.info("found qr or barcode :", code);
-  navigate(`/search/${code}`);
+  void navigateToSearch(code);
+}
+
+function renderScanStatus(
+  status: "error" | "loading" | "need-perm" | "ready",
+  videoReference: React.RefObject<HTMLVideoElement | null>,
+) {
+  return (
+    <>
+      <Collapse in={status === "loading"}>
+        <Skeleton animation="wave" height={320} variant="rounded" />
+      </Collapse>
+      <Collapse in={status === "ready"}>
+        <div className="aspect-video max-h-80 overflow-hidden rounded-xl shadow-lg">
+          <video className="w-full object-cover" ref={videoReference} />
+        </div>
+      </Collapse>
+      <Collapse in={status === "need-perm"}>
+        <Alert severity="error">Permission needed, allow access to your camera to scan QR codes and barcodes.</Alert>
+      </Collapse>
+      <Collapse in={status === "error"}>
+        <Alert severity="error">An unknown error occurred while starting the video stream, check the logs.</Alert>
+      </Collapse>
+    </>
+  );
 }
 
 /**
@@ -47,7 +72,7 @@ export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
     // this run once, when the component is mounted
     if (videoReference.current === null) {
       logger.showError("video element is null");
-      return;
+      return functionReturningVoid;
     }
     logger.debug("starting video stream decoding...");
     state.sound = "start";
@@ -58,12 +83,14 @@ export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
           // oxlint-disable-next-line max-nested-callbacks
           void sleep(waitDelay).then(() => {
             setStatus("ready");
+            return undefined;
           });
         // oxlint-disable-next-line max-nested-callbacks
-        onDecode(result, error).catch(decodeError => {
+        onDecode(result, error).catch((decodeError: unknown) => {
           logger.showError("error decoding video stream :", decodeError);
         });
       })
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       .catch((error: unknown) => {
         const message = error instanceof Error ? error.message.toLowerCase() : String(error).toLowerCase();
         state.sound = "error";
@@ -79,21 +106,7 @@ export function PageScan({ ...properties }: Readonly<Record<string, unknown>>) {
     <AppPageCard cardTitle="Scan" icon={QrCodeScannerIcon} pageCode="scan" pageTitle="Scan QR Code or Barcode">
       <div className="text-center">
         <h2 className="mb-6">Scan a QR Code or a barcode to search for it 👀</h2>
-        <Collapse in={status === "loading"}>
-          <Skeleton animation="wave" height={320} variant="rounded" />
-        </Collapse>
-        <Collapse in={status === "ready"}>
-          <div className="aspect-video max-h-80 overflow-hidden rounded-xl shadow-lg">
-            {/* biome-ignore lint/a11y/useMediaCaption: fix later */}
-            <video className="w-full object-cover" ref={videoReference} />
-          </div>
-        </Collapse>
-        <Collapse in={status === "need-perm"}>
-          <Alert severity="error">Permission needed, allow access to your camera to scan QR codes and barcodes.</Alert>
-        </Collapse>
-        <Collapse in={status === "error"}>
-          <Alert severity="error">An unknown error occurred while starting the video stream, check the logs.</Alert>
-        </Collapse>
+        {renderScanStatus(status, videoReference)}
       </div>
     </AppPageCard>
   );

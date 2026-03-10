@@ -1,4 +1,3 @@
-/** biome-ignore-all assist/source/useSortedKeys: it's ok in schemas */
 import { field } from "@monorepo/components";
 import { nbThird } from "@monorepo/utils";
 import { z } from "zod";

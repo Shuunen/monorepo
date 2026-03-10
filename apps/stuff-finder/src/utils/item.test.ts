@@ -49,13 +49,12 @@ describe("item.utils", () => {
     const result = await addItem(item, state);
     expect(result.ok).toBe(true); // should be a success to have added the item remotely & locally
     expect(result).toMatchSnapshot();
-    expect(databaseMock.createDocument).toHaveBeenNthCalledWith(
-      1,
-      "databaseA",
-      "collectionA",
-      "reference-b",
-      removeAppWriteFields(item),
-    );
+    expect(databaseMock.createRow).toHaveBeenNthCalledWith(1, {
+      data: removeAppWriteFields(item),
+      databaseId: "databaseA",
+      rowId: "reference-b",
+      tableId: "collectionA",
+    });
     expect(state.items).toHaveLength(3); // because we just added a new item, the number of items should increase
   });
 
@@ -67,13 +66,12 @@ describe("item.utils", () => {
     const result = await updateItem(item1, state);
     expect(result.ok).toBe(true); // should be a success to have updated the item remotely & locally
     expect(result).toMatchSnapshot();
-    expect(databaseMock.updateDocument).toHaveBeenNthCalledWith(
-      1,
-      "databaseA",
-      "collectionA",
-      "1",
-      removeAppWriteFields(item1),
-    );
+    expect(databaseMock.updateRow).toHaveBeenNthCalledWith(1, {
+      data: removeAppWriteFields(item1),
+      databaseId: "databaseA",
+      rowId: "1",
+      tableId: "collectionA",
+    });
     expect(state.items).toHaveLength(2); // because we just updated an existing item, the number of items should not change
   });
 
@@ -101,9 +99,13 @@ describe("item.utils", () => {
     const stateA = mockState({ items: [itemA, mockItem({ $id: "itemB" })] });
     const result = await deleteItem(itemA, stateA);
     expect(result.ok).toBe(true);
-    expect(databaseMock.deleteDocument).toHaveBeenNthCalledWith(1, "databaseA", "collectionA", "itemA");
+    expect(databaseMock.deleteRow).toHaveBeenNthCalledWith(1, {
+      databaseId: "databaseA",
+      rowId: "itemA",
+      tableId: "collectionA",
+    });
     expect(JSON.stringify(Result.unwrap(result).value)).toMatchInlineSnapshot(
-      `"{"$id":"itemA","collectionId":"collectionA","databaseId":"databaseA","isThisMockedDataFromMock":true}"`,
+      `"{"$id":"itemA","databaseId":"databaseA","isThisMockedDataFromMock":true,"tableId":"collectionA"}"`,
     );
     logger.enable();
   });
@@ -119,7 +121,11 @@ describe("item.utils", () => {
     expect(result.ok).toBe(false);
     expect(error).toMatchInlineSnapshot(`"item not found in state"`);
     expect(stateA.items).toHaveLength(1);
-    expect(databaseMock.deleteDocument).toHaveBeenNthCalledWith(1, "databaseA", "collectionA", "non-existing-id");
+    expect(databaseMock.deleteRow).toHaveBeenNthCalledWith(1, {
+      databaseId: "databaseA",
+      rowId: "non-existing-id",
+      tableId: "collectionA",
+    });
     logger.enable();
   });
 
@@ -283,10 +289,14 @@ describe("item.utils", () => {
     const { error, value } = Result.unwrap(result);
     expect(error).toBe(undefined);
     expect(value?.includes("0 items loaded")).toBe(true);
-    expect(databaseMock.listDocuments).toHaveBeenNthCalledWith(1, "", "", [
-      { isThisMockedDataFromMock: true, limit: 100 },
-      { isThisMockedDataFromMock: true, offset: 0 },
-    ]);
+    expect(databaseMock.listRows).toHaveBeenNthCalledWith(1, {
+      databaseId: "",
+      queries: [
+        { isThisMockedDataFromMock: true, limit: 100 },
+        { isThisMockedDataFromMock: true, offset: 0 },
+      ],
+      tableId: "",
+    });
   });
 
   it("getItems B items empty, items fresh => fetch successful", async () => {
@@ -295,10 +305,14 @@ describe("item.utils", () => {
     const { error, value } = Result.unwrap(result);
     expect(error).toBe(undefined);
     expect(value?.includes("0 items loaded")).toBe(true);
-    expect(databaseMock.listDocuments).toHaveBeenNthCalledWith(1, "", "", [
-      { isThisMockedDataFromMock: true, limit: 100 },
-      { isThisMockedDataFromMock: true, offset: 0 },
-    ]);
+    expect(databaseMock.listRows).toHaveBeenNthCalledWith(1, {
+      databaseId: "",
+      queries: [
+        { isThisMockedDataFromMock: true, limit: 100 },
+        { isThisMockedDataFromMock: true, offset: 0 },
+      ],
+      tableId: "",
+    });
   });
 
   it("getItems C items not empty, items not fresh => fetch successful", async () => {
@@ -307,22 +321,30 @@ describe("item.utils", () => {
     const { error, value } = Result.unwrap(result);
     expect(error).toBe(undefined);
     expect(value?.includes("0 items loaded")).toBe(true);
-    expect(databaseMock.listDocuments).toHaveBeenNthCalledWith(1, "", "", [
-      { isThisMockedDataFromMock: true, limit: 100 },
-      { isThisMockedDataFromMock: true, offset: 0 },
-    ]);
+    expect(databaseMock.listRows).toHaveBeenNthCalledWith(1, {
+      databaseId: "",
+      queries: [
+        { isThisMockedDataFromMock: true, limit: 100 },
+        { isThisMockedDataFromMock: true, offset: 0 },
+      ],
+      tableId: "",
+    });
   });
 
   it("getItems D items not empty, items not fresh => fetch failed", async () => {
-    databaseMock.listDocuments.mockRejectedValueOnce(new Error("some error"));
+    databaseMock.listRows.mockRejectedValueOnce(new Error("some error"));
     const twoMinutesAgo = Date.now() - 2 * 60 * 1000;
     const result = await getItems([mockItem()], twoMinutesAgo);
     const { error } = Result.unwrap(result);
     expect(error).toMatchInlineSnapshot(`[Error: some error]`);
-    expect(databaseMock.listDocuments).toHaveBeenNthCalledWith(1, "", "", [
-      { isThisMockedDataFromMock: true, limit: 100 },
-      { isThisMockedDataFromMock: true, offset: 0 },
-    ]);
+    expect(databaseMock.listRows).toHaveBeenNthCalledWith(1, {
+      databaseId: "",
+      queries: [
+        { isThisMockedDataFromMock: true, limit: 100 },
+        { isThisMockedDataFromMock: true, offset: 0 },
+      ],
+      tableId: "",
+    });
   });
 
   it("getItems E items not empty, items fresh => no fetch", async () => {
@@ -331,6 +353,6 @@ describe("item.utils", () => {
     const { error, value } = Result.unwrap(result);
     expect(error).toBe(undefined);
     expect(value).toMatchInlineSnapshot(`"tasks are fresh (now)"`);
-    expect(databaseMock.listDocuments).not.toHaveBeenCalled();
+    expect(databaseMock.listRows).not.toHaveBeenCalled();
   });
 });

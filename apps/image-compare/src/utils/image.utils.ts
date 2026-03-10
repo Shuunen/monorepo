@@ -48,6 +48,7 @@ export function readImageFile(
 }
 
 function getImageDimensions(src: string): Promise<{ height: number; width: number }> {
+  // oxlint-disable-next-line promise/avoid-new
   return new Promise((resolve, reject) => {
     const img = globalThis.document.createElement("img");
     img.addEventListener("load", () => resolve({ height: img.naturalHeight, width: img.naturalWidth }));

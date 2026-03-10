@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/a11y/useKeyWithClickEvents: fix later */
 import { tw, useStableKeys } from "@monorepo/utils";
 import { useRef, useState } from "preact/hooks";
 import Confetti from "react-confetti-boom";
@@ -58,7 +57,6 @@ export function BottleGrid(properties: { state: (typeof machine)["state"] }) {
   return (
     <div className="mt-6 mb-12 flex justify-center">
       {hasWon && <Confetti mode="fall" />}
-      {/** biome-ignore lint/a11y/noStaticElementInteractions: fix me later */}
       <div className="grid grid-cols-3 gap-12" onClick={event => handleBottleClick(event, setPouringInfo)}>
         {machine.bottles.map((bottle, index) => (
           <AppBottle

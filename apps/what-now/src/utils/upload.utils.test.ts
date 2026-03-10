@@ -1,3 +1,4 @@
+// oxlint-disable typescript/no-unsafe-return
 import { functionReturningVoid, Result, toastError, toastSuccess } from "@monorepo/utils";
 import { type AppWriteTaskModel, addTask, getTasks, updateTask } from "./database.utils";
 import { logger } from "./logger.utils";
@@ -24,6 +25,7 @@ vi.mock(import("./database.utils"), () => ({
 function createMockFileInput(files: File[] = []) {
   const mockClick = vi.fn();
   const mockAddEventListener = vi.fn((event, handler) => {
+    // oxlint-disable-next-line typescript/no-unsafe-call
     if (event === "change") setTimeout(() => handler({ target: { files } }), 0);
   });
   return {

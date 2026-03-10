@@ -4,13 +4,26 @@ import { exec } from "node:child_process";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { createInterface } from "node:readline";
-import { consoleLog, Logger, nbFourth, nbPixelSm, nbSecondsInMinute, nbThird, sleep } from "@monorepo/utils";
+import {
+  consoleLog,
+  Logger,
+  nbFourth,
+  nbPixelSm,
+  nbSecondsInMinute,
+  nbThird,
+  Result,
+  sleep,
+  stringify,
+} from "@monorepo/utils";
 import {
   getFfmpegCommand,
   getScreenshotFilename,
   parseUserInput,
   parseVideoMetadata,
 } from "./take-screenshot.utils.js";
+
+// usage :
+// bun ~/Projects/github/monorepo/apps/one-file/src/take-screenshot.cli.js /path/to/video.mp4 mmss
 
 /**
  * @typedef {import('./take-screenshot.types').Metadata} Metadata
@@ -46,15 +59,15 @@ async function logAdd(...stuff) {
 
 /**
  * @param {string} cmd shell command to execute
- * @returns {Promise<string>} the output of the command
+ * @returns {string} the output of the command whether it's stdout or stderr
  */
 function shellCommand(cmd) {
-  return new Promise(resolve => {
-    exec(cmd, (error, stdout, stderr) => {
-      if (error) logger.error(error);
-      void resolve(stdout || stderr);
-    });
-  });
+  const result = Result.trySafe(() => exec(cmd));
+  if (result.error) {
+    logger.error(result.error);
+    return result.error.message;
+  }
+  return stringify(result.value.stdout) || result.value.stderr;
 }
 
 /**
@@ -78,7 +91,8 @@ async function getFileSize(filePath) {
  * @returns {Promise<Metadata>} the metadata of the video file
  */
 async function getVideoMetadata(filePath) {
-  const output = await shellCommand(`ffprobe -show_format -show_streams -print_format json -v quiet -i "${filePath}" `);
+  const output = shellCommand(`ffprobe -show_format -show_streams -print_format json -v quiet -i "${filePath}" `);
+  await logAdd(`ffprobe output : ${output}`);
   if (!output.startsWith("{")) throw new Error(`ffprobe output should be JSON but got :${output}`);
   const data = JSON.parse(output);
   const metadata = parseVideoMetadata(data);
@@ -122,14 +136,14 @@ async function getTasks(input) {
  */
 async function takeScreenAt(input) {
   await logAdd(`Input : "${input}"`);
-  if (input) fs.writeFile(lastInputFile, input);
+  if (input) void fs.writeFile(lastInputFile, input);
   const tasks = await getTasks(input);
   await logAdd(`Tasks prepared : ${tasks.length}`);
   for (const task of tasks) {
     const cmd = getFfmpegCommand(task);
     await deleteFile(task.screenPath);
     await logAdd("Command :", cmd);
-    await logAdd(await shellCommand(cmd));
+    await logAdd(shellCommand(cmd));
   }
 }
 

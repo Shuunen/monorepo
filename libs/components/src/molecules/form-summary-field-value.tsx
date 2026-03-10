@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/a11y/useValidAnchor: fix that later */
 import { slugify, stringify } from "@monorepo/utils";
 import { TableCell } from "../atoms/table";
 import { IconDownload } from "../icons/icon-download";
@@ -33,11 +32,10 @@ export function FormSummaryFieldValue({ value, name }: Props) {
   if (value instanceof File) {
     return (
       <TableCell className="overflow-hidden text-ellipsis">
-        {/** biome-ignore lint/a11y/noStaticElementInteractions: fix that later */}
         <a
           className="flex cursor-pointer items-center gap-2 underline"
           data-testid={slugify(`summary-file-${name}`)}
-          onClick={() => downloadFile(value as File)}
+          onClick={() => downloadFile(value)}
         >
           <IconDownload /> {value.name}
         </a>

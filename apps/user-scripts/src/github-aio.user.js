@@ -12,6 +12,9 @@
 // @version      1.0.0
 // ==/UserScript==
 
+// oxlint-disable promise/prefer-await-to-callbacks
+// oxlint-disable promise/prefer-await-to-then
+
 const bugIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" class="octicon octicon-repo-issues" viewBox="0 0 53 53">
   <path d="M39 0c2 0 4 2 4 3 0 2-2 4-4 4h-1l-3 4 6 6-14 2-14-2 5-6-3-4h-1c-2 0-4-2-4-4 0-1 2-3 4-3s4 2 4 3l-1 2 4 4 6-1 5 1 4-4V3c0-1 1-3 3-3zm12 29c1 0 2 0 2 2l-2 2h-7v4l7 3c2 1 2 2 2 3l-3 1-8-3c-2 6-8 11-14 12V22c5 0 10-1 14-3v1l8-3c1 0 2 0 3 2 0 1 0 2-2 2l-7 3v5h7zM2 29h7l1-5-8-3-2-2 3-2 8 3v-1c4 2 9 2 14 3v31c-6-1-11-6-14-12l-7 3-3-1c-1-1 0-2 1-3l8-3-1-5-7 1-2-2c0-2 1-2 2-2z"/>
 </svg>`;
@@ -53,7 +56,7 @@ function createIssueCountLink(repoFullName, count) {
 function getRepoFullName(repo) {
   const repoLinkElement = repo.querySelector(selectors.repoLink);
   const repoLink = repoLinkElement?.getAttribute("href") ?? "";
-  if (repoLink === "") throw new Error(`no repo link found in : ${repo}`);
+  if (repoLink === "") throw new Error(`no repo link found in repo element`);
   const repoFullName = repoLink.slice(1); // remove the leading /
   if (!repoFullName) throw new Error(`failed to extract repo full name from link :${repoLink}`);
   return repoFullName;

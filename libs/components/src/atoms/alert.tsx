@@ -69,7 +69,7 @@ export function Alert({ type, title, children, closable, className }: AlertProps
   }, [type, title, className]);
 
   if (!isVisible) {
-    return;
+    return undefined;
   }
 
   return (

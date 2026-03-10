@@ -91,7 +91,7 @@ export const DateOnlySubmit: Story = {
 };
 
 export const DateOnlyWithNoon: Story = {
-  render: () => <DatetimePicker name="dateOnlyNoon" mode="date" defaultToNoon={true} />,
+  render: () => <DatetimePicker name="dateOnlyNoon" mode="date" defaultToNoon />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const dateInput = canvas.getByPlaceholderText("DD/MM/YYYY");
@@ -119,7 +119,7 @@ export const DateOnlyWithNoonSubmit: Story = {
     return (
       <div className="space-y-4">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <DatetimePicker name="submitDateNoon" mode="date" defaultToNoon={true} onChange={setSelectedDate} />
+          <DatetimePicker name="submitDateNoon" mode="date" defaultToNoon onChange={setSelectedDate} />
           <button type="submit" className="rounded bg-primary px-4 py-2 text-primary-foreground hover:bg-primary/90">
             Submit
           </button>

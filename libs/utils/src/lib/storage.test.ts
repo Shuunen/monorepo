@@ -85,7 +85,8 @@ it("storage get array value for key", () => {
 });
 
 it("storage clear value for key", () => {
-  expect(storage.clear(key)).toBe(undefined);
+  storage.clear(key);
+  expect(storage.get(key)).toBe(undefined);
 });
 
 it("storage get return undefined when key is not found", () => {
@@ -117,7 +118,8 @@ it("storage contains a prefixed key", () => {
   expect(hasOwn(storage.media, "test-Michael")).toBe(true);
 });
 it("storage clear value for key with prefix", () => {
-  expect(storage.clear(key)).toBe(undefined);
+  storage.clear(key);
+  expect(storage.get(key)).toBe(undefined);
 });
 
 const returnA = storage.get(key);

@@ -1,7 +1,7 @@
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
-import { useStableKeys } from "./react-stable-keys.js";
 import { act, renderHook } from "@testing-library/react";
 import { useRef } from "react";
+import { useStableKeys } from "./react-stable-keys.js";
 
 if (!GlobalRegistrator.isRegistered) {
   GlobalRegistrator.register();

@@ -1,3 +1,4 @@
+import { functionReturningVoid } from "@monorepo/utils";
 import { type Dispatch, type SetStateAction, memo, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
@@ -8,7 +9,7 @@ import { getFieldMetadata, getFormFieldRender, isFieldVisible } from "./auto-for
 import { FormFieldFieldList } from "./form-field-field-list";
 import { FormFieldSection } from "./form-field-section";
 
-function createVisibilitySubscriber(fieldSchema: z.ZodTypeAny, setVisible: Dispatch<SetStateAction<boolean>>) {
+function createVisibilitySubscriber(fieldSchema: z.ZodType, setVisible: Dispatch<SetStateAction<boolean>>) {
   return (formValues: AutoFormData) => {
     const newVisible = isFieldVisible(fieldSchema, formValues);
     setVisible(prev => (prev === newVisible ? prev : newVisible));
@@ -29,14 +30,14 @@ export const AutoFormField = memo(({ fieldName, fieldSchema, stepState, logger, 
 
   useEffect(() => {
     if (!needsWatch) {
-      return;
+      return functionReturningVoid;
     }
     const subscription = watch(createVisibilitySubscriber(fieldSchema, setVisible));
     return () => subscription.unsubscribe();
   }, [fieldSchema, watch, needsWatch]);
 
   if (!visible) {
-    return;
+    return undefined;
   }
 
   logger?.info("Rendering", { fieldName });
@@ -58,3 +59,5 @@ export const AutoFormField = memo(({ fieldName, fieldSchema, stepState, logger, 
   const Component = componentRegistry[render];
   return <Component {...props} />;
 });
+
+AutoFormField.displayName = "AutoFormField";

@@ -1,10 +1,10 @@
-// oxlint-disable no-undef, no-null, no-var-requires, no-require-imports
-/** biome-ignore-all lint/nursery/noFloatingPromises: it's ok here */
-import { type CapacitorElectronConfig, getCapacitorElectronConfig, setupElectronDeepLinking } from '@capacitor-community/electron'
-import { app, MenuItem, type MenuItemConstructorOptions } from 'electron'
-import electronIsDev from 'electron-is-dev'
-import unhandled from 'electron-unhandled'
-import { ElectronCapacitorApp, setupReloadWatcher } from './setup'
+// oxlint-disable-next-line unicorn/no-abusive-eslint-disable
+/* oxlint-disable */
+import { type CapacitorElectronConfig, getCapacitorElectronConfig, setupElectronDeepLinking } from '@capacitor-community/electron';
+import { app, MenuItem, type MenuItemConstructorOptions } from 'electron';
+import electronIsDev from 'electron-is-dev';
+import unhandled from 'electron-unhandled';
+import { ElectronCapacitorApp, setupReloadWatcher } from './setup';
 
 // Graceful handling of unhandled errors.
 unhandled()
@@ -47,7 +47,7 @@ if (electronIsDev)
   // Security - Set Content-Security-Policy based on whether or not we are in dev mode.
   // setupContentSecurityPolicy(myCapacitorApp.getCustomURLScheme())
   // Initialize our app, build windows, and load content.
-  await myCapacitorApp.init()
+   myCapacitorApp.init()
   // Register global shortcut for toggling DevTools (Ctrl+Shift+I)
   // oxlint-disable-next-line unicorn/prefer-module
   const { globalShortcut } = require('electron')
@@ -70,10 +70,10 @@ app.on('window-all-closed', () => {
 })
 
 // When the dock icon is clicked.
-app.on('activate', async () => {
+app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (myCapacitorApp.getMainWindow().isDestroyed()) await myCapacitorApp.init()
+  if (myCapacitorApp.getMainWindow().isDestroyed())  myCapacitorApp.init()
 })
 
 // Place all ipc or other electron api calls and custom functionality under this line

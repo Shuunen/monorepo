@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/useNamingConvention: it's ok here */
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { isBrowserEnvironment, isDeployedInDevNamespace, isDevEnvironment, isTestEnvironment } from "./environment.js";
 

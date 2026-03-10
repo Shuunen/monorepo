@@ -20,9 +20,7 @@ nx dev sample-web-app
 
 ## Todo
 
-- [ ] remove `noUndeclaredDependencies: "off"` from `biome.json` when Biome supports monorepo, for no it's reporting falsy undeclared dependencies
 - [ ] remove `explicit-module-boundary-types: off` from oxlint conf and declare types everywhere ?
-- [ ] investigate why biome is showing warnings
 - [ ] add knip (does it works with monorepo ?)
 - [ ] investigate if we need to split output from tsc and build ( right now lib/app go to dist but tsconfig.spec goes to out-tsc)
 - [ ] investigate why we need local dependencies like react in utils when react is already in the root package.json, in the other hand apps/sample-web-app works without local react dependency
@@ -33,9 +31,41 @@ nx dev sample-web-app
 - [ ] check if splitting exports like in the business lib helps with performances or not
 - [ ] check if we can merge typecheck with building ( we need to find a solution that can leverage ts-go ) ( or wait for typescript 7)
 
+## OXC Rules to enable
+
+Important rules to re-enable quickly :
+
+- no-floating-promises : important for example when we forgot to await a promise (609 issues)
+- no-unsafe-member-access (50 issues)
+
+Nice to have rules to re-enable later :
+
+- prefer-readonly-parameter-types : will be nice to have, not urgent (1421 issues)
+- strict-boolean-expressions : nice to have, to avoid truthy/falsy assertions (161 issues)
+- no-unsafe-type-assertion (165 issues)
+- jsx-no-new-function-as-prop (98 issues)
+- no-unnecessary-condition (88 issues)
+- no-unsafe-assignment (58 issues)
+- prefer-nullish-coalescing (48 issues)
+- restrict-template-expressions (33 issues)
+
+Nitpicks to re-enable one day :
+
+- strict-void-return (133 issues)
+- jsx-props-no-spreading (57 issues)
+- jsx-no-new-object-as-prop (54 issues)
+- no-misused-promises : seems like a duplicate about promise handling (23 issues)
+- no-array-index-key : conflicts with useStableKeys (9 issues)
+- jsx-handler-names (5 issues)
+
+Nice to have as js-plugin :
+
+- naming-convention : enforces naming conventions (camelCase, PascalCase, etc.) like it was in Biome
+
+Make a dedicated PR to enable the jest oxlint plugin.
+
 ## Thanks
 
-- [Biome](https://biomejs.dev) : super fast linter & formatter
 - [Boxy Svg](https://boxy-svg.com) : simple & effective svg editor
 - [Bun](https://bun.sh) : super fast runtime for JavaScript and TypeScript
 - [Github](https://github.com) : for all their great work year after year, pushing OSS forward

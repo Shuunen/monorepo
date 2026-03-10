@@ -74,7 +74,6 @@ src/
 
 ## Thanks
 
-- [Biome](https://biomejs.dev) : super fast linter & formatter
 - [Boxy Svg](https://boxy-svg.com) : simple & effective svg editor
 - [Esbuild](https://github.com/evanw/esbuild) : an extremely fast JavaScript bundler and minifier
 - [Favicon](https://realfavicongenerator.net/) : the favicon generator

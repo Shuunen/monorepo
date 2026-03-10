@@ -8,6 +8,7 @@ const httpBadRequest = 400;
 const httpServerError = 500;
 const port = 3001;
 
+// oxlint-disable-next-line typescript/no-unsafe-call
 app.use(cors());
 app.use(express.json());
 
@@ -48,12 +49,19 @@ export async function handleProxyResponse(targetUrl: string, body: unknown, res:
 
 export async function webhookHandler(req: Request, res: Response) {
   const targetUrl = req.query.url;
-  if (typeof targetUrl !== "string")
-    return res.status(httpBadRequest).json({ error: "Target URL is required as query parameter: ?url=..." });
-  if (!targetUrl)
-    return res.status(httpBadRequest).json({ error: "Target URL is required as query parameter: ?url=..." });
-  if (!validateUrl(targetUrl)) return res.status(httpBadRequest).json({ error: "Invalid URL provided" });
-  await handleProxyResponse(targetUrl, req.body, res);
+  if (typeof targetUrl !== "string") {
+    res.status(httpBadRequest).json({ error: "Target URL is required as query parameter: ?url=..." });
+    return;
+  }
+  if (!targetUrl) {
+    res.status(httpBadRequest).json({ error: "Target URL is required as query parameter: ?url=..." });
+    return;
+  }
+  if (!validateUrl(targetUrl)) {
+    res.status(httpBadRequest).json({ error: "Invalid URL provided" });
+    return;
+  }
+  await handleProxyResponse(targetUrl, req.body, res).catch((error: unknown) => handleWebhookError(error, res));
 }
 
 export function handleWebhookError(error: unknown, res: Response) {
@@ -62,7 +70,7 @@ export function handleWebhookError(error: unknown, res: Response) {
 }
 
 export function webhookRoute(req: Request, res: Response) {
-  webhookHandler(req, res).catch(error => handleWebhookError(error, res));
+  void webhookHandler(req, res);
 }
 
 app.post("/webhook", webhookRoute);

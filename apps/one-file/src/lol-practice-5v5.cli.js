@@ -22,7 +22,6 @@ const data = {
   isCustom: true,
 };
 const options = {
-  // biome-ignore lint/style/useNamingConvention: it's ok buddy
   headers: { Authorization: "", "Content-Type": "application/json" },
   hostname: "127.0.0.1",
   method: "POST",

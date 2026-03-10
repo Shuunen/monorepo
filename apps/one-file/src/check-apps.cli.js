@@ -1,8 +1,8 @@
-/* v8 ignore start -- @preserve */
-import { list } from "7zip-min";
-import { blue, green, Logger, nbPercentMax, nbThird, red, yellow } from "@monorepo/utils";
+/* v8 ignore start */
 import { readdirSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { list } from "7zip-min";
+import { blue, green, Logger, nbPercentMax, nbThird, red, Result, yellow } from "@monorepo/utils";
 
 // Use me like : node ~/Projects/github/monorepo/apps/one-file/src/check-apps.cli.js "/d/Apps/"
 
@@ -168,29 +168,28 @@ function checkCloseName(groupNames, groupName) {
  * @param {string} archive the archive to check, like "Clavier.Plus.Plus_108.7z"
  * @returns {Promise<void>} a promise that resolves to true if the archive contains the same name
  */
-function checkArchive(archive) {
+async function checkArchive(archive) {
   const pathToArchive = path.join(appsPath, archive);
   const extension = getExtension(archive);
   if (!readableExtensions.has(extension)) return;
   const expectedFolder = archive.replace(`.${extension}`, "");
-  return new Promise(resolve => {
-    list(pathToArchive, (error, content) => {
-      if (error) logger.error(`Error while listing ${color(archive)}`, error);
-      // oxlint-disable-next-line max-nested-callbacks
-      const firstFolder = content?.find(item => ["D", "DA"].includes(item.attr));
-      if (firstFolder === undefined) logger.error(`Failed to find a folder in : ${color(archive)}`);
-      else logger.debug(`${archive} content`, firstFolder);
-      const isValid = firstFolder?.name === expectedFolder;
-      if (!isValid && firstFolder)
-        logger.warn(`Found ${color(firstFolder.name)} instead of ${color(expectedFolder)} in ${color(archive)}`);
-      if (!isValid)
-        writeFileSync(
-          path.join(currentFolder, `check-apps-error-${expectedFolder}.json`),
-          JSON.stringify(content, undefined, nbSpaces),
-        );
-      void resolve();
-    });
-  });
+  const result = await Result.trySafe(list(pathToArchive));
+  if (!result.ok) {
+    logger.error(`Error while listing ${color(archive)}`, result.error);
+    return;
+  }
+  const content = result.value;
+  const firstFolder = content.find(item => ["D", "DA"].includes(item.attr));
+  if (firstFolder === undefined) logger.error(`Failed to find a folder in : ${color(archive)}`);
+  else logger.debug(`${archive} content`, firstFolder);
+  const isValid = firstFolder?.name === expectedFolder;
+  if (!isValid && firstFolder)
+    logger.warn(`Found ${color(firstFolder.name)} instead of ${color(expectedFolder)} in ${color(archive)}`);
+  if (!isValid)
+    writeFileSync(
+      path.join(currentFolder, `check-apps-error-${expectedFolder}.json`),
+      JSON.stringify(content, undefined, nbSpaces),
+    );
 }
 
 /**

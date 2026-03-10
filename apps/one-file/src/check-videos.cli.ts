@@ -1,5 +1,5 @@
 /* v8 ignore start -- @preserve */
-// oxlint-disable max-lines, no-eval, require-returns, no-magic-numbers, require-param-description
+// oxlint-disable avoid-new, max-lines, no-eval, require-returns, no-magic-numbers, require-param-description
 import { exec } from "node:child_process";
 import { readdir, readFile, renameSync, stat, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -97,6 +97,7 @@ const utils = {
    */
   getFileSizeInMb: (filepath: string): Promise<number> =>
     new Promise((resolve, reject) => {
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       stat(filepath, (error: Error | null, stats: { size: number }) => {
         if (error) reject(error);
         else resolve(Math.round(stats.size / 1_000_000));
@@ -118,12 +119,10 @@ const utils = {
     const media = result.value.format;
     const video = result.value.streams?.find(
       (/** @type {{ codec_type: string; }} */ stream) => stream.codec_type === "video",
-      // biome-ignore lint/style/useNamingConvention: ffprobe uses snake_case
     ) ?? { avg_frame_rate: "", codec_name: "", codec_type: "", color_transfer: "", duration: "", height: 0, width: 0 };
     const title = utils.cleanTitle(media?.tags?.title);
     const extension = path.extname(filepath).slice(1);
     const filename = title.length > 0 ? `${title}.${extension}` : "";
-    // biome-ignore lint/security/noGlobalEval: it's safe here
     const avgFrameRate = Number(eval(video.avg_frame_rate));
     // logger.info(utils.prettyPrint(video))
     return {
@@ -164,6 +163,7 @@ const utils = {
    */
   listFiles: (filepath: string): Promise<string[]> =>
     new Promise((resolve, reject) => {
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       readdir(filepath, (/** @type {Error|null} */ error, /** @type {string[]} */ filenames) => {
         if (error) reject(error);
         else resolve(filenames);
@@ -176,6 +176,7 @@ const utils = {
    */
   readFile: (filepath: string): Promise<string> =>
     new Promise(resolve => {
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       readFile(filepath, "utf8", (/** @type {Error|null} */ error, /** @type {string} */ content) => {
         if (error) resolve("");
         else resolve(content);
@@ -199,6 +200,7 @@ const utils = {
    */
   shellCommand: (cmd: string) =>
     new Promise(resolve => {
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       exec(cmd, (/** @type {Error|null} */ error, /** @type {string} */ stdout, /** @type {string} */ stderr) => {
         if (error) logger.error(error);
         resolve(stdout || stderr);

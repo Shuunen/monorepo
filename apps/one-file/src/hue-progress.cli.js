@@ -4,7 +4,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import path from "node:path";
-import { Logger, nbPercentMax } from "@monorepo/utils";
+import { Logger, nbPercentMax, Result } from "@monorepo/utils";
 
 const currentFolder = import.meta.dirname;
 const wsPort = 54_430;
@@ -42,20 +42,16 @@ function getHueColorBody(percent = 0) {
  * @param {number} percent the progress percentage
  * @returns {void} a promise that resolves when the hue color is emitted
  */
-function setProgress(percent = 0) {
+async function setProgress(percent = 0) {
   logger.info(`Setting progress to ${percent}%`);
   const request = {
     body: getHueColorBody(percent),
     headers: { "Content-Type": "application/json" },
     method: "PUT",
   };
-  fetch(hueEndpoint, request)
-    .then(() => {
-      logger.info("emitted hue color successfully");
-    })
-    .catch(error => {
-      logger.error("error emitting hue color", error);
-    });
+  const result = await Result.trySafe(fetch(hueEndpoint, request));
+  if (result.ok) logger.info("emitted hue color successfully");
+  else logger.error("error emitting hue color", result.error);
 }
 
 const sockets = new Set();

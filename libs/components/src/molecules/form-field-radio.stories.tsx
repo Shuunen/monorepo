@@ -3,13 +3,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
+import { IconAccept } from "../icons/icon-accept";
+import { IconReject } from "../icons/icon-reject";
+import { IconWarning } from "../icons/icon-warning";
 import { AutoForm } from "./auto-form";
 import type { AutoFormData } from "./auto-form.types";
 import { field } from "./auto-form.utils";
 import { DebugData } from "./debug-data";
-import { IconAccept } from "../icons/icon-accept";
-import { IconWarning } from "../icons/icon-warning";
-import { IconReject } from "../icons/icon-reject";
 
 const logger = new Logger({ minimumLevel: isBrowserEnvironment() ? "3-info" : "5-warn" });
 
