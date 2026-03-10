@@ -627,11 +627,16 @@ export function getFieldMetadataOrThrow(fieldName: string, fieldSchema?: z.ZodTy
  * @param parentData the parent form's data when in subform mode
  * @returns true if any field has a custom error
  */
-export function hasCustomErrors(schema: z.ZodObject, data: AutoFormData, parentData?: AutoFormData) {
+export function hasCustomErrors(
+  schema: z.ZodObject<Record<string, z.ZodType>>,
+  data: AutoFormData,
+  parentData?: AutoFormData,
+) {
   const { shape } = schema;
   for (const fieldSchema of Object.values(shape)) {
-    const metadata = getFieldMetadata(fieldSchema as z.ZodType);
-    if (metadata && "errors" in metadata && metadata.errors?.(data, parentData)) {
+    const metadata = getFieldMetadata(fieldSchema);
+    const isVisible = isFieldVisible(fieldSchema, data);
+    if (isVisible && metadata && "errors" in metadata && metadata.errors?.(data, parentData)) {
       return true;
     }
   }
