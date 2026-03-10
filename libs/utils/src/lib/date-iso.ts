@@ -28,7 +28,7 @@ export function dateToIsoString(date: Readonly<Date>, shouldRemoveTimezone = fal
  * @returns string like : "2019-12-31"
  */
 export function dateIso10(date: Readonly<Date> = new Date()) {
-  return String(date.toISOString().split("T")[0]);
+  return date.toISOString().split("T")[0];
 }
 
 /**

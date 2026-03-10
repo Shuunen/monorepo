@@ -73,9 +73,7 @@ export function validateForm<FormType extends Form>(form: FormType) {
       const isValid = isEmptyButNotRequired || isUndefinedButNotRequired || isValidText || isBoolean;
       if (!isValid)
         errorMessage =
-          value === ""
-            ? `${label} is required`
-            : `${label} is invalid, "${String(value)}" should match ${String(regex)}`;
+          value === "" ? `${label} is required` : `${label} is invalid, "${value}" should match ${String(regex)}`;
       return { ...accumulator, [field]: { ...form.fields[field], isValid } };
     },
     {},

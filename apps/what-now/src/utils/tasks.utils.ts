@@ -99,7 +99,7 @@ export function isDataOlderThan(milliseconds: number) {
 
 export async function loadTasks(reason: string) {
   if (!state.isSetup) return Result.error("not setup, cannot load tasks");
-  if (state.tasks.length > 0 && !isDataOlderThan(Number(nbMsInMinute)))
+  if (state.tasks.length > 0 && !isDataOlderThan(nbMsInMinute))
     return Result.ok(`tasks are fresh (${readableTimeAgo(Date.now() - state.tasksTimestamp)})`);
   const result = await fetchList(reason);
   if (!result.ok) return result;

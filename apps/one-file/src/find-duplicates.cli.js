@@ -61,8 +61,8 @@ class CheckDuplicates {
     for (let aIndex = 0; aIndex < this.nbElements; aIndex += 1)
       for (let bIndex = 0; bIndex < this.nbElements; bIndex += 1) {
         if (aIndex === bIndex) continue;
-        const itemA = String(this.elements[aIndex]);
-        const itemB = String(this.elements[bIndex]);
+        const itemA = this.elements[aIndex];
+        const itemB = this.elements[bIndex];
         const key = `${aIndex}|${bIndex}`;
         const keyAlt = `${bIndex}|${aIndex}`;
         if (this.results[key] || this.results[keyAlt]) continue;

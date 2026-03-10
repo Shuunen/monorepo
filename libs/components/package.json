@@ -34,7 +34,7 @@
   "devDependencies": {
     "@chromatic-com/storybook": "^5.0.1",
     "@storybook/addon-coverage": "^3.0.0",
-    "@storybook/addon-vitest": "10.2.16",
+    "@storybook/addon-vitest": "10.2.17",
     "@vitest/browser": "^4.0.18",
     "@vitest/browser-playwright": "^4.0.18",
     "@vitest/ui": "^4.0.18",

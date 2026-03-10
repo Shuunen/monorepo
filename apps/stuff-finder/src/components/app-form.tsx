@@ -123,7 +123,7 @@ export function AppForm<FormType extends Form>({
         </div>
       ))}
       <div className="order-last flex justify-center md:col-span-full">
-        {Boolean(errorMessage) && Boolean(form.isTouched) && <p className="text-red-500">{errorMessage}</p>}
+        {Boolean(errorMessage) && form.isTouched && <p className="text-red-500">{errorMessage}</p>}
         {onSubmit !== undefined && (
           <Button disabled={!canSubmit} name="submit" type="submit" variant={canSubmit ? "ghost" : "default"}>
             Save

@@ -4,7 +4,7 @@ import { blue, gray, Logger, nbPercentMax, nbThird, yellow } from "@monorepo/uti
 import { HtmlReporter } from "./html-reporter.mjs";
 
 const /** @type {Record<string, string>} */ explanations = {
-    attr: String(blue("attributes")),
+    attr: blue("attributes"),
     css: `${blue("css")} code`,
     styles: `${blue("styles")} inline`,
     tags: `${blue("tag")} names`,

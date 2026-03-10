@@ -144,7 +144,7 @@ export function PageItemAddEdit({ isEdit = false }: Readonly<{ isEdit?: boolean 
       pageTitle={`${isEdit ? "Edit" : "Add"} item`}
     >
       <div className="mb-20 flex max-h-[90%] flex-col overflow-x-hidden overflow-y-auto md:mb-0 md:max-h-full">
-        {Boolean(isEdit) && (
+        {isEdit && (
           <p className="text-center">
             Please fill in the form below to edit the item, you can change any field you want 🔄
           </p>

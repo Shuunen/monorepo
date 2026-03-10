@@ -7,7 +7,7 @@
 export function hasOption(name: string, process: NodeJS.Process | undefined = globalThis.process): boolean {
   const argv = process?.argv ?? [];
   const env = process?.env?.[name] ?? "";
-  return argv.includes(`--${name}`) || env.toString() === "true";
+  return argv.includes(`--${name}`) || env === "true";
 }
 
 /**

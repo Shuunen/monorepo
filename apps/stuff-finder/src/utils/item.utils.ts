@@ -56,7 +56,7 @@ export function statusStringToStatus(status: string) {
 }
 
 function valuesToOptions(values: ReadonlyArray<string>, addEmpty = false) {
-  const options = values.map(value => ({ label: String(value), value: String(value) }));
+  const options = values.map(value => ({ label: value, value: value }));
   if (addEmpty) options.unshift({ label: "", value: "" });
   return options;
 }

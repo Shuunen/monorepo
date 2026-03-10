@@ -15,7 +15,7 @@ const __dirname = path.dirname(__filename);
 // populate .env variables from .env file if process.env.HUE_ENDPOINT or process.env.TRMNL_ENDPOINT not set
 if (!process.env.HUE_ENDPOINT || !process.env.TRMNL_ENDPOINT) {
   const dotenv = readFileSync(`${__dirname}/.env`, "utf8");
-  const lines = dotenv.toString().split("\n");
+  const lines = dotenv.split("\n");
   for (const line of lines) {
     const [key, value] = line.split("=");
     if (key && value && !process.env[key]) process.env[key] = value;

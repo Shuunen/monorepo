@@ -208,7 +208,7 @@ export function FormFieldFormList({
     <FormFieldBase {...props} showLabel={false}>
       {/* oxlint-disable-next-line no-shadow */}
       {({ field, fieldState, formState }) => {
-        const hasError = Boolean(formState.isSubmitted) && nbFilledItems(items) !== items.length;
+        const hasError = formState.isSubmitted && nbFilledItems(items) !== items.length;
         return (
           <div className="flex w-full flex-col gap-4">
             {label && <Title>{label}</Title>}

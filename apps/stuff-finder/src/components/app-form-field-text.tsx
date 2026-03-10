@@ -23,7 +23,7 @@ export function AppFormFieldText({ field, form, id, suggestions, updateField }: 
     (parameters: AutocompleteRenderInputParams) => (
       <TextField
         {...parameters}
-        error={Boolean(form.isTouched) && !field.isValid}
+        error={form.isTouched && !field.isValid}
         label={field.label}
         onChange={onChange}
         required={field.isRequired}
