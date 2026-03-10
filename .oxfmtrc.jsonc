@@ -4,19 +4,6 @@
   "bracketSameLine": false,
   "bracketSpacing": true,
   "endOfLine": "lf",
-  // needs to be disabled to work with experimentalTailwindcss, will be fixed in the future
-  "experimentalSortImports": {
-    "ignoreCase": true,
-    "newlinesBetween": false,
-  },
-  // sort but not alphabetically
-  "experimentalSortPackageJson": false,
-  "experimentalTailwindcss": {
-    "functions": ["clsx", "cn", "cva", "tw"],
-    "preserveDuplicates": false,
-    "preserveWhitespace": false,
-    "stylesheet": "./libs/components/src/styles.css",
-  },
   "ignorePatterns": [
     "**/.git",
     "**/.nx",
@@ -40,6 +27,18 @@
   "semi": true,
   "singleAttributePerLine": false,
   "singleQuote": false,
+  "sortImports": {
+    "ignoreCase": true,
+    "newlinesBetween": false,
+  },
+  // sort but not alphabetically
+  "sortPackageJson": false,
+  "sortTailwindcss": {
+    "functions": ["clsx", "cn", "cva", "tw"],
+    "preserveDuplicates": false,
+    "preserveWhitespace": false,
+    "stylesheet": "./libs/components/src/styles.css",
+  },
   "tabWidth": 2,
   "trailingComma": "all",
   "useTabs": false,
