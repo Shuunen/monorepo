@@ -1613,8 +1613,45 @@ export const SummaryWithEnumFields: Story = {
   },
 };
 
-/*
-TODO, ordered by priority :
-- Display a red error step if issue
-- Write a story where we feed the AutoForm a whole new schema after a variant change (for dynamic schemas)
-*/
+export const CustomErrorsWithDependentFields: Story = {
+  args: {
+    schemas: [
+      z.object({
+        firstName: field(z.string().optional(), {
+          label: "First Name",
+          placeholder: "Enter your first name",
+          key: "user.firstName",
+        }),
+        lastName: field(z.string().optional(), {
+          label: "Last Name",
+          placeholder: "Enter your last name",
+          key: "user.lastName",
+          dependsOn: "firstName",
+          errors: data => {
+            if (data.firstName === undefined) {
+              return "First name is required";
+            }
+            return undefined;
+          },
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("verify no error on submit", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      await expect(submittedData).toContainHTML(stringify({ user: {} }, true));
+    });
+    await step("fill first name field and submit", async () => {
+      const firstNameInput = canvas.getByTestId("input-text-first-name");
+      await userEvent.type(firstNameInput, "Jane");
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      await expect(submittedData).toContainHTML(stringify({ user: { firstName: "Jane" } }, true));
+    });
+  },
+};

@@ -1286,6 +1286,23 @@ describe("auto-form.utils", () => {
     expect(hasCustomErrors(schema, { name: "John" }, { country: "FR" })).toBe(true);
     expect(hasCustomErrors(schema, { name: "John" }, { country: "US" })).toBe(false);
   });
+  it("hasCustomErrors F should return false when field is not visible", () => {
+    const schema = z.object({
+      foo: field(z.string().optional(), { label: "Foo" }),
+      name: field(z.string(), {
+        label: "Name",
+        dependsOn: "foo",
+        errors: (_, parentData) => {
+          if (!parentData?.foo) {
+            return "Foo is missing";
+          }
+          return "Name has an error";
+        },
+      }),
+    });
+    expect(hasCustomErrors(schema, { name: "John" })).toBe(false);
+    expect(hasCustomErrors(schema, { foo: "bar", name: "John" })).toBe(true);
+  });
 
   // getSchemaDefaultValue
   it("getSchemaDefaultValue A should return default value from a default-wrapped schema", () => {
