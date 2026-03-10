@@ -633,8 +633,8 @@ describe("check-souvenirs.cli", () => {
       "08",
     );
     expect(mockWrite).toHaveBeenCalled();
-    const writeCall = mockWrite.mock.calls[0];
-    expect(writeCall[1].DateTimeOriginal.year).toBe(2006);
+    const writeCall = mockWrite.mock.calls.at(0);
+    expect(writeCall?.[1].DateTimeOriginal.year).toBe(2006);
   });
 
   it("setFileDateBasedOnSiblings E should correct month from sibling date", async () => {
@@ -650,8 +650,8 @@ describe("check-souvenirs.cli", () => {
       "08",
     );
     expect(mockWrite).toHaveBeenCalled();
-    const writeCall = mockWrite.mock.calls[0];
-    expect(writeCall[1].DateTimeOriginal.month).toBe(8);
+    const writeCall = mockWrite.mock.calls.at(0);
+    expect(writeCall?.[1].DateTimeOriginal.month).toBe(8);
   });
 
   it("setFileDateBasedOnSiblings F should handle string DateTimeOriginal from sibling", async () => {

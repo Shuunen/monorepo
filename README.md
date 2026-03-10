@@ -58,6 +58,12 @@ Nitpicks to re-enable one day :
 - no-array-index-key : conflicts with useStableKeys (9 issues)
 - jsx-handler-names (5 issues)
 
+Nice to have as js-plugin :
+
+- naming-convention : enforces naming conventions (camelCase, PascalCase, etc.) like it was in Biome
+
+Make a dedicated PR to enable the jest oxlint plugin.
+
 ## Thanks
 
 - [Boxy Svg](https://boxy-svg.com) : simple & effective svg editor

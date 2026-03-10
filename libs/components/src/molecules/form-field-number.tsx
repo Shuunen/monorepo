@@ -28,7 +28,7 @@ function NumberInput({ field, disabled, placeholder, min, max }: NumberInputProp
         {...field}
         disabled={disabled}
         onChange={event => {
-          const value = event.target.value;
+          const { value } = event.target;
           setLocalValue(value);
           field.onChange(value === "" ? undefined : Number(value));
         }}

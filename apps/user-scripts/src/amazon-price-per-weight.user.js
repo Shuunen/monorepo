@@ -125,8 +125,8 @@ function AmazonPricePerWeight() {
     if (app.processOne) utils.log("found weight matches & unit :", matches);
     const data = { unit: "", weight: 0 };
     if (matches?.length === 3) {
-      data.weight = matches[1];
-      data.unit = matches[2];
+      data.weight = matches.at(1) ?? 0;
+      data.unit = matches.at(2) ?? "";
     }
     if (data.unit === "-") data.unit = "g";
     else if (data.unit === "") utils.warn("failed to find a unit in :", text);
@@ -158,7 +158,7 @@ function AmazonPricePerWeight() {
     if (matches.length === 3) {
       data.price = priceStringToFloat(matches[1]);
       data.weight = 1;
-      data.unit = matches[2];
+      data.unit = matches.at(2) ?? "";
     }
     if (data.unit === "unit") data.unit = "";
 

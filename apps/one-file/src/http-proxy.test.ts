@@ -228,9 +228,10 @@ describe("http-proxy", () => {
   it("startServer B should log server info when callback is called", () => {
     const mockListen = vi.mocked(app.listen);
     startServer();
+    const call = mockListen.mock.calls.at(0);
     // Get the callback function that was passed to listen
-    const callback = mockListen.mock.calls[0][1];
-    // oxlint-disable-next-line promise/prefer-await-to-callbacks
+    const callback = call?.at(1);
+    // oxlint-disable-next-line promise/prefer-await-to-callbacks, no-unsafe-call
     callback?.();
     // Verify logger calls (the Logger mock should have been called)
     expect(callback).toBeDefined();

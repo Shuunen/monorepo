@@ -34,8 +34,8 @@ export function base64ToFile(base64: string, filename: string) {
 
   // Create a Blob from the Uint8Array and return the File object.
   const blob = new Blob([uint8Arr], { type: mimeType });
-  const extension = mimeType.split("/")[1];
-  if (!extension) {
+  const extension = mimeType.split("/").at(1);
+  if (extension === undefined) {
     return Result.error("No extension found.");
   }
   /* c8 ignore stop */

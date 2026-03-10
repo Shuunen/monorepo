@@ -43,6 +43,7 @@ function G2aBatchCompare() {
 
   const utils = new Shuutils("g2a-bcp");
   function cleanGameName(string) {
+    // oxlint-disable-next-line prefer-destructuring
     const output = string
       .toLowerCase()
       .split(" deluxe edition")[0]

@@ -132,11 +132,12 @@ export async function updateComponent(component: string) {
 }
 
 async function main() {
-  const component = process.argv.slice(nbThird)[0];
-  if (!component) {
+  const component = process.argv.slice(nbThird).at(0);
+  if (component === undefined) {
     exitWithError("Please provide a component name to add, ex : pnpm add:shadcn breadcrumb");
+  } else {
+    await downloadComponent(component);
   }
-  await downloadComponent(component);
 }
 
 if (import.meta.main) {

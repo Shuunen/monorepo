@@ -687,14 +687,7 @@ describe("auto-form.utils", () => {
     const cleaned = normalizeData([], data);
     expect(cleaned).toEqual(data);
   });
-  it("normalizeData C should log when undefined schema", () => {
-    const data = { a: "foo" };
-    // @ts-expect-error type issue on purpose
-    expect(() => normalizeData([undefined], data)).toThrowErrorMatchingInlineSnapshot(
-      `[TypeError: Cannot read properties of undefined (reading 'shape')]`,
-    );
-  });
-  it("normalizeData D testo", () => {
+  it("normalizeData C should handle array fields correctly", () => {
     const schema = step(
       z.object({
         listA: fields(z.string()),

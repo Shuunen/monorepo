@@ -35,7 +35,7 @@ export function filterDataForSummary(schemas: z.ZodObject[], data: AutoFormData)
     if (stepState === "readonly" || stepState === "upcoming") {
       continue;
     }
-    const shape = schema.shape;
+    const { shape } = schema;
     for (const [key, value] of Object.entries(data)) {
       const fieldSchema = shape[key] as z.ZodType;
       if (!fieldSchema) {

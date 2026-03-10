@@ -47,5 +47,5 @@ async function updateAll(startFrom?: string) {
   await processAll(components);
 }
 
-const component = process.argv.slice(nbThird)[0];
+const component = process.argv.slice(nbThird).at(0);
 await updateAll(component);

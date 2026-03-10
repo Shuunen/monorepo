@@ -66,7 +66,7 @@ function extractFunctionNames(content: string, mainName: string, boundaries: { e
   const outsideFunctions: string[] = [];
   let match: RegExpExecArray | null = regexFunctionDef.exec(content);
   while (match) {
-    const functionName = match[1];
+    const functionName = match.at(1) ?? "";
     const functionIndex = match.index;
     const isNotMainFunction = functionName !== mainName;
     const isOutsideMainFunction = functionIndex < boundaries.start || functionIndex > boundaries.end;
@@ -81,7 +81,7 @@ function getOutsideFunctions(content: string): string[] {
   regexMainFunctionDef.lastIndex = 0;
   const mainMatch = regexMainFunctionDef.exec(content);
   if (!mainMatch) return [];
-  const mainName = mainMatch[1];
+  const mainName = mainMatch.at(1) ?? "";
   const boundaries = findMainFunctionBoundaries(content, mainName);
   if (boundaries.start === -1) return [];
   return extractFunctionNames(content, mainName, boundaries);
@@ -136,7 +136,7 @@ const guidelines: Guideline[] = [
       if (outsideFunctions.length === 0) return true;
       const exportsMatch = regexModuleExports.exec(content);
       if (!exportsMatch) return false;
-      const exported = exportsMatch[1];
+      const exported = exportsMatch.at(1) ?? "";
       return outsideFunctions.every(fn => exported.includes(fn));
     },
     error: (content: string) => {
@@ -146,7 +146,7 @@ const guidelines: Guideline[] = [
       const exportsMatch = regexModuleExports.exec(content);
       if (!exportsMatch)
         return `camelCase functions outside main PascalCase function must be exported via module.exports. Missing functions: ${outsideFunctions.join(", ")}`;
-      const exported = exportsMatch[1];
+      const exported = exportsMatch.at(1) ?? "";
       const missingFunctions = outsideFunctions.filter(fn => !exported.includes(fn));
       if (missingFunctions.length === 0)
         return "camelCase functions outside main PascalCase function must be exported via module.exports";

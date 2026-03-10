@@ -337,7 +337,7 @@ function isFilteredOut(fieldSchema: z.ZodType, formData: AutoFormData, metadata?
  * @returns a new Zod schema with only visible fields
  */
 export function filterSchema(schema: z.ZodObject, formData: AutoFormData = {}): z.ZodObject {
-  const shape = schema.shape;
+  const { shape } = schema;
   const visibleShape: Record<string, z.ZodType> = {};
   for (const key of Object.keys(shape)) {
     const fieldSchema = shape[key] as z.ZodType;
@@ -456,7 +456,7 @@ function getDataForField({
  * @returns A new object with data mapped to schema field names using keyIn mappings
  */
 export function mapExternalDataToFormFields(schema: z.ZodObject, externalData: AutoFormData) {
-  const shape = schema.shape;
+  const { shape } = schema;
   const result: AutoFormData = {};
   for (const fieldName of Object.keys(shape)) {
     const fieldSchema = shape[fieldName] as z.ZodType;
@@ -498,7 +498,7 @@ export function shouldIncludeField(
  * @returns A new object containing only the fields that are visible and not excluded according to the schema, with keyOut mappings applied.
  */
 function normalizeDataForSchema(schema: z.ZodObject, data: AutoFormData, originalData: AutoFormData) {
-  const shape = schema.shape;
+  const { shape } = schema;
   const result: AutoFormData = {};
   for (const [key, value] of Object.entries(data)) {
     const fieldSchema = shape[key] as z.ZodType;
@@ -628,7 +628,7 @@ export function getFieldMetadataOrThrow(fieldName: string, fieldSchema?: z.ZodTy
  * @returns true if any field has a custom error
  */
 export function hasCustomErrors(schema: z.ZodObject, data: AutoFormData, parentData?: AutoFormData) {
-  const shape = schema.shape;
+  const { shape } = schema;
   for (const fieldSchema of Object.values(shape)) {
     const metadata = getFieldMetadata(fieldSchema as z.ZodType);
     if (metadata && "errors" in metadata && metadata.errors?.(data, parentData)) {

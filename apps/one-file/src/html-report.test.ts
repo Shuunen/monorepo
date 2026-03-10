@@ -69,7 +69,7 @@ for (const { input, output, title } of samples) {
     expect(actual.total).toBe(output.total);
   });
 }
-
+// oxlint-disable-next-line prefer-destructuring
 const { input, output, title } = samples[5];
 const actualDebug = new HtmlReporter(input, true);
 it(`html-report debug ${title} attr`, () => {
