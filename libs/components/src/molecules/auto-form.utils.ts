@@ -1,15 +1,5 @@
 // oxlint-disable max-lines
-import {
-  getNested,
-  isString,
-  Logger,
-  nbPercentMax,
-  nbThird,
-  Result,
-  setNested,
-  sleep,
-  stringify,
-} from "@monorepo/utils";
+import { getNested, isString, Logger, nbPercentMax, Result, setNested, sleep, stringify } from "@monorepo/utils";
 import { isFunction } from "es-toolkit";
 import type { ReactNode } from "react";
 import { z } from "zod";
@@ -158,7 +148,7 @@ export function isZodString(fieldSchema: z.ZodType) {
   return isZodType(fieldSchema, "string");
 }
 
-export type DependsOnOperator = "=" | "!=";
+export type DependsOnOperator = "=" | "!=" | ">" | "<" | ">=" | "<=";
 
 export type ParsedDependsOn = {
   fieldName: string;
@@ -170,28 +160,40 @@ export type ParsedDependsOn = {
  * Parses a dependsOn string to extract field name and optional expected value.
  * Supports formats like:
  * - 'fieldName' - checks if fieldName is truthy
+ * - 'fieldName=value' - checks if fieldName equals value
  * - 'fieldName!=value' - checks if fieldName is different from value
+ * - 'fieldName>value' - checks if fieldName is greater than value
+ * - 'fieldName<value' - checks if fieldName is less than value
+ * - 'fieldName>=value' - checks if fieldName is greater than or equal to value
+ * - 'fieldName<=value' - checks if fieldName is less than or equal to value
  * @param dependsOn the dependsOn string to parse
  * @returns an object with fieldName, optional expectedValue, and optional operator
  */
 export function parseDependsOnSingleValue(dependsOn: string): ParsedDependsOn {
-  const notEqualsIndex = dependsOn.indexOf("!=");
-  if (notEqualsIndex !== -1) {
+  const operators = [">=", "<=", "!=", ">", "<", "="] as const;
+  let selectedOperator: DependsOnOperator | undefined = undefined;
+  let selectedIndex = Number.POSITIVE_INFINITY;
+  for (const op of operators) {
+    const index = dependsOn.indexOf(op);
+    if (index === -1) {
+      continue;
+    }
+    const isEarlierOperator = index < selectedIndex;
+    const isLongerOperatorAtSameIndex =
+      index === selectedIndex && (selectedOperator === undefined || op.length > selectedOperator.length);
+    if (isEarlierOperator || isLongerOperatorAtSameIndex) {
+      selectedIndex = index;
+      selectedOperator = op;
+    }
+  }
+  if (selectedOperator !== undefined) {
     return {
-      expectedValue: dependsOn.slice(notEqualsIndex + nbThird),
-      fieldName: dependsOn.slice(0, notEqualsIndex),
-      operator: "!=",
+      expectedValue: dependsOn.slice(selectedIndex + selectedOperator.length),
+      fieldName: dependsOn.slice(0, selectedIndex),
+      operator: selectedOperator,
     };
   }
-  const equalsIndex = dependsOn.indexOf("=");
-  if (equalsIndex === -1) {
-    return { fieldName: dependsOn };
-  }
-  return {
-    expectedValue: dependsOn.slice(equalsIndex + 1),
-    fieldName: dependsOn.slice(0, equalsIndex),
-    operator: "=",
-  };
+  return { fieldName: dependsOn };
 }
 
 /**
@@ -236,8 +238,23 @@ function evaluateCondition({ fieldName, expectedValue, operator }: ParsedDepends
   const fieldValue = formData[fieldName];
   // If expectedValue is specified, check based on operator
   if (expectedValue !== undefined) {
-    const isEqual = stringify(fieldValue) === expectedValue;
-    return operator === "!=" ? !isEqual : isEqual;
+    if (operator === "=" || operator === "!=") {
+      const isEqual = stringify(fieldValue) === expectedValue;
+      return operator === "!=" ? !isEqual : isEqual;
+    }
+    // Comparison operators: parse as numbers
+    const numFieldValue = Number.parseFloat(String(fieldValue));
+    const numExpectedValue = Number.parseFloat(expectedValue);
+    if (operator === ">") {
+      return numFieldValue > numExpectedValue;
+    }
+    if (operator === "<") {
+      return numFieldValue < numExpectedValue;
+    }
+    if (operator === ">=") {
+      return numFieldValue >= numExpectedValue;
+    }
+    return numFieldValue <= numExpectedValue;
   }
   // Otherwise, check for truthiness
   return Boolean(fieldValue);

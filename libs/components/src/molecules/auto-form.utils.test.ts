@@ -1,4 +1,4 @@
-import { dateIso10 } from "@monorepo/utils";
+import { dateIso10, stringify } from "@monorepo/utils";
 import { invariant } from "es-toolkit";
 import { createElement } from "react";
 import { z } from "zod";
@@ -253,19 +253,58 @@ describe("auto-form.utils", () => {
     expect(isFieldVisible(schema, { override: "true", status: "inactive" })).toBe(true);
     expect(isFieldVisible(schema, { override: "false", status: "inactive" })).toBe(false);
   });
+  it("isFieldVisible X should handle field>value syntax", () => {
+    const schema = field(z.string(), { dependsOn: "age>18", label: "A" });
+    expect(isFieldVisible(schema, { age: 19 })).toBe(true);
+    expect(isFieldVisible(schema, { age: 18 })).toBe(false);
+    expect(isFieldVisible(schema, { age: 17 })).toBe(false);
+  });
+  it("isFieldVisible XA should handle equality values containing >", () => {
+    const schema = field(z.string(), { dependsOn: "url=https://a>b", label: "A" });
+    expect(isFieldVisible(schema, { url: "https://a>b" })).toBe(true);
+    expect(isFieldVisible(schema, { url: "https://a" })).toBe(false);
+  });
+  it("isFieldVisible XB should handle inequality values containing <", () => {
+    const schema = field(z.string(), { dependsOn: "url!=https://a<b", label: "A" });
+    expect(isFieldVisible(schema, { url: "https://a<b" })).toBe(false);
+    expect(isFieldVisible(schema, { url: "https://a" })).toBe(true);
+  });
+  it("isFieldVisible Y should handle field<value syntax", () => {
+    const schema = field(z.string(), { dependsOn: "age<65", label: "A" });
+    expect(isFieldVisible(schema, { age: 64 })).toBe(true);
+    expect(isFieldVisible(schema, { age: 65 })).toBe(false);
+    expect(isFieldVisible(schema, { age: 66 })).toBe(false);
+  });
+  it("isFieldVisible Z should handle field>=value syntax", () => {
+    const schema = field(z.string(), { dependsOn: "age>=18", label: "A" });
+    expect(isFieldVisible(schema, { age: 19 })).toBe(true);
+    expect(isFieldVisible(schema, { age: 18 })).toBe(true);
+    expect(isFieldVisible(schema, { age: 17 })).toBe(false);
+  });
+  it("isFieldVisible AA should handle field<=value syntax", () => {
+    const schema = field(z.string(), { dependsOn: "age<=65", label: "A" });
+    expect(isFieldVisible(schema, { age: 64 })).toBe(true);
+    expect(isFieldVisible(schema, { age: 65 })).toBe(true);
+    expect(isFieldVisible(schema, { age: 66 })).toBe(false);
+  });
+  it("isFieldVisible AB should handle comparison with string numeric values", () => {
+    const schema = field(z.string(), { dependsOn: "count>5", label: "A" });
+    expect(isFieldVisible(schema, { count: "10" })).toBe(true);
+    expect(isFieldVisible(schema, { count: "3" })).toBe(false);
+  });
+  it("isFieldVisible AC should handle comparison operators in AND array", () => {
+    const schema = field(z.string(), { dependsOn: ["age>=18", "age<=65"], label: "A" });
+    expect(isFieldVisible(schema, { age: 30 })).toBe(true);
+    expect(isFieldVisible(schema, { age: 18 })).toBe(true);
+    expect(isFieldVisible(schema, { age: 65 })).toBe(true);
+    expect(isFieldVisible(schema, { age: 17 })).toBe(false);
+    expect(isFieldVisible(schema, { age: 66 })).toBe(false);
+  });
 
   // parseDependsOn
   it("parseDependsOn A should parse simple field name", () => {
     const result = parseDependsOn("fieldName");
-    expect(result).toMatchInlineSnapshot(`
-      [
-        [
-          {
-            "fieldName": "fieldName",
-          },
-        ],
-      ]
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"[[{"fieldName":"fieldName"}]]"`);
   });
   it("parseDependsOn B should parse field=value syntax", () => {
     const result = parseDependsOn("breed=dog");
@@ -305,6 +344,34 @@ describe("auto-form.utils", () => {
       ["field3=c", "field4=d"],
     ]);
     expect(result).toMatchSnapshot();
+  });
+  it("parseDependsOn K should parse field>value syntax", () => {
+    const result = parseDependsOn("age>18");
+    expect(stringify(result)).toMatchInlineSnapshot(`"[[{"expectedValue":"18","fieldName":"age","operator":">"}]]"`);
+  });
+  it("parseDependsOn L should parse field<value syntax", () => {
+    const result = parseDependsOn("age<65");
+    expect(stringify(result)).toMatchInlineSnapshot(`"[[{"expectedValue":"65","fieldName":"age","operator":"<"}]]"`);
+  });
+  it("parseDependsOn M should parse field>=value syntax", () => {
+    const result = parseDependsOn("age>=18");
+    expect(stringify(result)).toMatchInlineSnapshot(`"[[{"expectedValue":"18","fieldName":"age","operator":">="}]]"`);
+  });
+  it("parseDependsOn N should parse field<=value syntax", () => {
+    const result = parseDependsOn("age<=65");
+    expect(stringify(result)).toMatchInlineSnapshot(`"[[{"expectedValue":"65","fieldName":"age","operator":"<="}]]"`);
+  });
+  it("parseDependsOn O should prefer the leftmost operator when value contains >", () => {
+    const result = parseDependsOn("url=https://a>b");
+    expect(stringify(result)).toMatchInlineSnapshot(
+      `"[[{"expectedValue":"https://a>b","fieldName":"url","operator":"="}]]"`,
+    );
+  });
+  it("parseDependsOn P should prefer the leftmost operator when value contains <", () => {
+    const result = parseDependsOn("url!=https://a<b");
+    expect(stringify(result)).toMatchInlineSnapshot(
+      `"[[{"expectedValue":"https://a<b","fieldName":"url","operator":"!="}]]"`,
+    );
   });
 
   // filterSchema
@@ -373,30 +440,15 @@ describe("auto-form.utils", () => {
   });
   it("getKeyMapping B should use key for both keyIn and keyOut when key is provided", () => {
     const result = getKeyMapping({ key: "mappedKey" });
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "keyIn": "mappedKey",
-        "keyOut": "mappedKey",
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"keyIn":"mappedKey","keyOut":"mappedKey"}"`);
   });
   it("getKeyMapping C should use keyIn and keyOut when provided separately", () => {
     const result = getKeyMapping({ keyIn: "inputKey", keyOut: "outputKey" });
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "keyIn": "inputKey",
-        "keyOut": "outputKey",
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"keyIn":"inputKey","keyOut":"outputKey"}"`);
   });
   it("getKeyMapping D should prioritize keyIn and keyOut over key", () => {
     const result = getKeyMapping({ key: "mappedKey", keyIn: "inputKey", keyOut: "outputKey" });
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "keyIn": "inputKey",
-        "keyOut": "outputKey",
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"keyIn":"inputKey","keyOut":"outputKey"}"`);
   });
 
   // mapExternalDataToFormFields
@@ -407,12 +459,7 @@ describe("auto-form.utils", () => {
     });
     const externalData = { age: 30, externalName: "John" };
     const result = mapExternalDataToFormFields(schema, externalData);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "age": 30,
-        "internalName": "John",
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"age":30,"internalName":"John"}"`);
   });
   it("mapExternalDataToFormFields B should use field name when no keyIn provided", () => {
     const schema = z.object({
@@ -421,12 +468,7 @@ describe("auto-form.utils", () => {
     });
     const externalData = { age: 30, name: "John" };
     const result = mapExternalDataToFormFields(schema, externalData);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "age": 30,
-        "name": "John",
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"age":30,"name":"John"}"`);
   });
   it("mapExternalDataToFormFields C should skip fields not in external data", () => {
     const schema = z.object({
@@ -435,11 +477,7 @@ describe("auto-form.utils", () => {
     });
     const externalData = { name: "John" };
     const result = mapExternalDataToFormFields(schema, externalData);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "name": "John",
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"name":"John"}"`);
   });
   it("mapExternalDataToFormFields D should use key mapping for input when key is provided", () => {
     const schema = z.object({
@@ -447,11 +485,7 @@ describe("auto-form.utils", () => {
     });
     const externalData = { mappedName: "John" };
     const result = mapExternalDataToFormFields(schema, externalData);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "internalName": "John",
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"internalName":"John"}"`);
   });
   it("mapExternalDataToFormFields E should handle fields without meta function", () => {
     const schema = z.object({
@@ -460,12 +494,7 @@ describe("auto-form.utils", () => {
     });
     const externalData = { age: 30, name: "John" };
     const result = mapExternalDataToFormFields(schema, externalData);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "age": 30,
-        "name": "John",
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"age":30,"name":"John"}"`);
   });
   it("mapExternalDataToFormFields F should handle empty external data", () => {
     const schema = z.object({
@@ -491,12 +520,7 @@ describe("auto-form.utils", () => {
       },
     };
     const result = mapExternalDataToFormFields(schema, externalData);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "userEmail": "jane@example.com",
-        "userName": "Jane Doe",
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"userEmail":"jane@example.com","userName":"Jane Doe"}"`);
   });
   it("mapExternalDataToFormFields H should handle mixed nested and flat key mappings", () => {
     const schema = z.object({
@@ -510,12 +534,7 @@ describe("auto-form.utils", () => {
       },
     };
     const result = mapExternalDataToFormFields(schema, externalData);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "age": 30,
-        "userEmail": "test@example.com",
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"age":30,"userEmail":"test@example.com"}"`);
   });
   it("mapExternalDataToFormFields I should skip nested fields with undefined values", () => {
     const schema = z.object({
@@ -528,11 +547,7 @@ describe("auto-form.utils", () => {
       },
     };
     const result = mapExternalDataToFormFields(schema, externalData);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "userEmail": "test@example.com",
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"userEmail":"test@example.com"}"`);
   });
   it("mapExternalDataToFormFields J should use codec", () => {
     const schema = z.object({
@@ -546,12 +561,9 @@ describe("auto-form.utils", () => {
       },
     };
     const result = mapExternalDataToFormFields(schema, externalData);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "date": 2026-01-14T00:00:00.000Z,
-        "userDate": 2026-01-14T00:00:00.000Z,
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(
+      `"{"date":{"__date__":"2026-01-14T00:00:00.000Z"},"userDate":{"__date__":"2026-01-14T00:00:00.000Z"}}"`,
+    );
   });
   it("mapExternalDataToFormFields K should handle array using codec", () => {
     const schema = z.object({
@@ -571,16 +583,9 @@ describe("auto-form.utils", () => {
       ],
     };
     const result = mapExternalDataToFormFields(schema, externalData);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "users": [
-          {
-            "date": 2026-01-14T00:00:00.000Z,
-            "userDate": 2026-01-14T00:00:00.000Z,
-          },
-        ],
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(
+      `"{"users":[{"date":{"__date__":"2026-01-14T00:00:00.000Z"},"userDate":{"__date__":"2026-01-14T00:00:00.000Z"}}]}"`,
+    );
   });
   it("mapExternalDataToFormFields L should handle array using codec with optional", () => {
     const schema = z.object({
@@ -590,13 +595,7 @@ describe("auto-form.utils", () => {
       users: ["2026-01-14"],
     };
     const result = mapExternalDataToFormFields(schema, externalData);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "users": [
-          2026-01-14T00:00:00.000Z,
-        ],
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"users":[{"__date__":"2026-01-14T00:00:00.000Z"}]}"`);
   });
   it("mapExternalDataToFormFields M should handle array with non-array as input value", () => {
     const schema = z.object({
@@ -606,13 +605,7 @@ describe("auto-form.utils", () => {
       users: "John",
     };
     const result = mapExternalDataToFormFields(schema, externalData);
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "users": [
-          "John",
-        ],
-      }
-    `);
+    expect(stringify(result)).toMatchInlineSnapshot(`"{"users":["John"]}"`);
   });
 
   // fields
@@ -696,16 +689,7 @@ describe("auto-form.utils", () => {
     );
     const data = { listA: ["Alice"], listB: ["Romain"] };
     const cleaned = normalizeData([schema], data);
-    expect(cleaned).toMatchInlineSnapshot(`
-      {
-        "listA": [
-          "Alice",
-        ],
-        "listB": [
-          "Romain",
-        ],
-      }
-    `);
+    expect(stringify(cleaned)).toMatchInlineSnapshot(`"{"listA":["Alice"],"listB":["Romain"]}"`);
   });
 
   it("normalizeData E with dot notation", () => {
@@ -716,13 +700,7 @@ describe("auto-form.utils", () => {
     );
     const data = { prenomA: "Alice" };
     const cleaned = normalizeData([schema], data);
-    expect(cleaned).toMatchInlineSnapshot(`
-      {
-        "Test": {
-          "PrenomA": "Alice",
-        },
-      }
-    `);
+    expect(stringify(cleaned)).toMatchInlineSnapshot(`"{"Test":{"PrenomA":"Alice"}}"`);
   });
 
   // getFieldMetadata
