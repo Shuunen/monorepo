@@ -1,4 +1,4 @@
-import { slugify, stringify } from "@monorepo/utils";
+import { dateIsoToReadableDatetime, slugify, stringify } from "@monorepo/utils";
 import { TableCell } from "../atoms/table";
 import { IconDownload } from "../icons/icon-download";
 
@@ -26,7 +26,11 @@ export function FormSummaryFieldValue({ value, name }: Props) {
   }
 
   if (value instanceof Date) {
-    return <TableCell className="overflow-hidden text-ellipsis">{String(value)}</TableCell>;
+    return (
+      <TableCell className="overflow-hidden text-ellipsis">
+        {dateIsoToReadableDatetime(value, { withTime: false })}
+      </TableCell>
+    );
   }
 
   if (value instanceof File) {
