@@ -6,10 +6,11 @@ const mimeTypeRegex = /:(?<mimeType>[^;]+);/; // NOSONAR
  * Convert a base64 string to a `File` instance.
  *
  * @param base64 the base64 string
- * @param filename the output filename
+ * @param filename the output filename with extension
+ * @param checkExtension if false, does not check if the filename contains extension
  * @returns the base64 string
  */
-export function base64ToFile(base64: string, filename: string) {
+export function base64ToFile(base64: string, filename: string, checkExtension = true) {
   // Strip off the data URL prefix if present.
   const [dataUrlPrefix, base64String] = base64.split(",");
   // Decode Base64 to binary string.
@@ -34,13 +35,13 @@ export function base64ToFile(base64: string, filename: string) {
 
   // Create a Blob from the Uint8Array and return the File object.
   const blob = new Blob([uint8Arr], { type: mimeType });
-  const extension = mimeType.split("/").at(1);
-  if (extension === undefined) {
-    return Result.error("No extension found.");
-  }
   /* c8 ignore stop */
 
-  const file = new File([blob], `${filename}.${extension}`, { type: mimeType });
+  if (checkExtension && !/\.\w{2,5}$/.test(filename)) {
+    return Result.error("Missing extension in the filename.");
+  }
+
+  const file = new File([blob], filename, { type: mimeType });
 
   return Result.ok(file);
 }
