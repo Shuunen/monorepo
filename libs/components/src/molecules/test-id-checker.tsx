@@ -1,11 +1,10 @@
-import { functionReturningVoid } from "@monorepo/utils";
 /* c8 ignore start */
-// oxlint-disable-next-line no-restricted-imports
-import { XIcon } from "lucide-react";
+import { functionReturningVoid } from "@monorepo/utils";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../atoms/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../atoms/card";
 import { IconWarning } from "../icons/icon-warning";
+import { IconX } from "../icons/icon-x";
 import { cn } from "../shadcn/utils";
 
 const STORAGE_KEY = "showTestIdChecker";
@@ -195,7 +194,7 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
           }}
           variant="ghost"
         >
-          <XIcon />
+          <IconX />
         </Button>
       </CardHeader>
       <CardContent className="overflow-y-auto p-0">
