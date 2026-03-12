@@ -5,7 +5,7 @@
     "types": ["vitest/globals", "vitest/importMeta", "vite/client", "node", "vitest"]
   },
   "extends": "../../tsconfig.base.json",
-  "include": ["**/*.test.js"],
+  "include": ["src/**/*.test.js"],
   "references": [
     {
       "path": "./tsconfig.lib.json"

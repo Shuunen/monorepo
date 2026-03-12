@@ -1,33 +1,27 @@
-import { eslintCompatPlugin } from "@oxlint/plugins";
-
-/**
- * @typedef {import("@oxlint/plugins").Rule} Rule
- * @typedef {import("@oxlint/plugins").Span} Node
- */
+import { defineRule, eslintCompatPlugin, type Node } from "@oxlint/plugins";
 
 // source : https://github.com/eslint/eslint/blob/main/lib/rules/no-restricted-syntax.js
-/** @type {Rule} */
-const noRestrictedSyntaxRule = {
+const noRestrictedSyntaxRule = defineRule({
   create(context) {
     // oxlint-disable-next-line unicorn/no-array-reduce
-    return /** @type {Array<string | { selector: string, message?: string }>} */ (context.options).reduce(
-      (result, selectorOrObject) => {
-        const isStringFormat = typeof selectorOrObject === "string";
-        const hasCustomMessage = !isStringFormat && Boolean(selectorOrObject.message);
-        const selector = isStringFormat ? selectorOrObject : selectorOrObject.selector;
-        const message = hasCustomMessage ? selectorOrObject.message : `Using '${selector}' is not allowed.`;
-        return Object.assign(result, {
-          [selector](/** @type {Node} */ node) {
-            context.report({
-              data: { message },
-              messageId: "restrictedSyntax",
-              node,
-            });
-          },
-        });
-      },
-      /** @type {Record<string, (node: Node) => void>} */ ({}),
-    );
+    return context.options.reduce<Record<string, (node: Node) => void>>((result, selectorOrObject) => {
+      const isStringFormat = typeof selectorOrObject === "string";
+      // @ts-expect-error not our source code
+      const hasCustomMessage = !isStringFormat && Boolean(selectorOrObject.message);
+      // @ts-expect-error not our source code
+      const selector = isStringFormat ? selectorOrObject : selectorOrObject.selector;
+      // @ts-expect-error not our source code
+      const message = hasCustomMessage ? selectorOrObject.message : `Using '${selector}' is not allowed.`;
+      return Object.assign(result, {
+        [selector](node: Node) {
+          context.report({
+            data: { message },
+            messageId: "restrictedSyntax",
+            node,
+          });
+        },
+      });
+    }, {});
   },
   meta: {
     docs: {
@@ -61,7 +55,7 @@ const noRestrictedSyntaxRule = {
     },
     type: "suggestion",
   },
-};
+});
 
 const plugin = eslintCompatPlugin({
   meta: {

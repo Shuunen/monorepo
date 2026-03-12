@@ -5,13 +5,13 @@
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["esnext"],
-    "outDir": "types",
-    "sourceMap": false,
-    "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
+    "outDir": "out-tsc/tsc",
+    "rootDir": "src",
+    "tsBuildInfoFile": "out-tsc/tsc/tsconfig.lib.tsbuildinfo",
     "types": ["node"]
   },
-  "exclude": ["**/*.test.js"],
+  "exclude": ["out-tsc", "dist", "src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.stories.tsx", "vite.config.ts"],
   "extends": "../../tsconfig.base.json",
-  "include": ["**/*.js"],
+  "include": ["src/**/*.ts"],
   "references": []
 }

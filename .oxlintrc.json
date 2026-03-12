@@ -68,7 +68,7 @@
     "storybook-static",
     "test-output"
   ],
-  "jsPlugins": ["./libs/oxc-plugins/monorepo.plugin.js"],
+  "jsPlugins": [{ "name": "monorepo-plugin", "specifier": "./libs/oxc-plugins/src/monorepo.plugin.ts" }],
   "overrides": [
     {
       "files": ["*.tsx"],
