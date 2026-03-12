@@ -256,7 +256,8 @@
     {
       "files": ["**/routes/**/*.ts", "**/routes/**/*.tsx"],
       "rules": {
-        "filename-case": "off"
+        "filename-case": "off",
+        "only-throw-error": "off"
       }
     },
     {

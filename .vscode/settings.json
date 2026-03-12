@@ -95,5 +95,6 @@
   },
   "js/ts.experimental.useTsgo": true,
   "oxc.fixKind": "all",
+  "oxc.typeAware": true,
   "oxc.unusedDisableDirectives": "deny"
 }
