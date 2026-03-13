@@ -12,6 +12,18 @@ export default defineConfig({
     emptyOutDir: true,
     outDir: "./dist",
     reportCompressedSize: true,
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            {
+              name: "react",
+              test: /react/,
+            },
+          ],
+        },
+      },
+    },
   },
   cacheDir: "../../node_modules/.vite/apps/what-now",
   html: {

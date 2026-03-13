@@ -11,6 +11,18 @@ export default defineConfig({
     emptyOutDir: true,
     outDir: "./dist",
     reportCompressedSize: true,
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            {
+              name: "react-dom",
+              test: /react-dom/,
+            },
+          ],
+        },
+      },
+    },
   },
   cacheDir: "../../node_modules/.vite/apps/sample-web-app",
   plugins: [react(), tailwindcss(), uniqueMark()],
