@@ -1655,3 +1655,67 @@ export const CustomErrorsWithDependentFields: Story = {
     });
   },
 };
+
+export const CustomKeysInSubform: Story = {
+  args: {
+    schemas: [
+      z.object({
+        firstName: field(z.string(), {
+          label: "First Name",
+          placeholder: "Enter your first name",
+          key: "user.firstName",
+        }),
+        subform: forms(
+          z.object({
+            lastName: field(z.string(), {
+              label: "Last Name",
+              placeholder: "Enter your last name",
+              key: "user.lastName",
+            }),
+            otherField: field(z.string(), {
+              label: "Other Field",
+              placeholder: "Enter your other field",
+            }),
+          }),
+        ),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("fill first name field and submit", async () => {
+      const firstNameInput = canvas.getByTestId("input-text-first-name");
+      await userEvent.type(firstNameInput, "Jane");
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      await expect(submittedData).toContainHTML(stringify({ user: { firstName: "Jane" } }, true));
+    });
+    await step("fill subform fields and submit", async () => {
+      const addSubformButton = canvas.getByTestId("button-add");
+      await userEvent.click(addSubformButton);
+      const completeSubformButton = canvas.getByTestId("button-complete");
+      await userEvent.click(completeSubformButton);
+      const lastNameInput = canvas.getByTestId("input-text-last-name");
+      await userEvent.type(lastNameInput, "Doe");
+      const otherFieldInput = canvas.getByTestId("input-text-other-field");
+      await userEvent.type(otherFieldInput, "Other Field");
+      const submitSubformButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitSubformButton);
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      const submittedData = canvas.getByTestId("debug-data-submitted-data");
+      await expect(submittedData).toContainHTML(
+        stringify({ user: { firstName: "Jane", lastName: "Doe" }, otherField: "Other Field" }, true),
+      );
+    });
+    await step("should see subform data map correctly", async () => {
+      const completeSubformButton = canvas.getByTestId("button-complete");
+      await userEvent.click(completeSubformButton);
+      const lastNameInput = canvas.getByTestId("input-text-last-name");
+      await expect(lastNameInput).toHaveValue("Doe");
+      const otherFieldInput = canvas.getByTestId("input-text-other-field");
+      await expect(otherFieldInput).toHaveValue("Other Field");
+    });
+  },
+};

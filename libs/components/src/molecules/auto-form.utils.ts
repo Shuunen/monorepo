@@ -506,6 +506,44 @@ export function shouldIncludeField(
   return true;
 }
 
+function setResultValue(result: AutoFormData, outputKey: string, value: unknown) {
+  if (outputKey.includes(".")) {
+    setNested(result, outputKey, value);
+  } else {
+    result[outputKey] = value;
+  }
+}
+
+function hasInnerKeyMappings(elementSchema: z.ZodObject) {
+  return Object.values(elementSchema.shape).some(fieldSch => {
+    const fieldMeta = getFieldMetadata(fieldSch as z.ZodType);
+    const { keyOut: fieldKeyOut } = getKeyMapping(fieldMeta);
+    return fieldKeyOut !== undefined;
+  });
+}
+
+function normalizeFormListField(result: AutoFormData, fieldSchema: z.ZodType, value: unknown[]) {
+  const elementSchemaResult = getElementSchema(fieldSchema);
+  if (!elementSchemaResult.ok || !isZodObject(elementSchemaResult.value)) {
+    return false;
+  }
+  const elementSchema = elementSchemaResult.value as z.ZodObject;
+  if (!hasInnerKeyMappings(elementSchema)) {
+    return false;
+  }
+  for (const item of value as AutoFormData[]) {
+    for (const [fieldName, fieldValue] of Object.entries(item)) {
+      const innerFieldSchema = elementSchema.shape[fieldName] as z.ZodType;
+      const innerMetadata = getFieldMetadata(innerFieldSchema);
+      const { keyOut } = getKeyMapping(innerMetadata);
+      const outputKey = keyOut ?? fieldName;
+      const valueWithCodec = getValueFromCodec({ fieldSchema: innerFieldSchema, method: "encode", value: fieldValue });
+      setResultValue(result, outputKey, valueWithCodec);
+    }
+  }
+  return true;
+}
+
 /**
  * Cleans the submitted form data by filtering out fields that are not visible or are marked as excluded in the schema metadata.
  * Also applies keyOut mapping to convert field names back to external data format.
@@ -525,16 +563,19 @@ function normalizeDataForSchema(schema: z.ZodObject, data: AutoFormData, origina
       continue;
     }
 
-    // Apply keyOut mapping if provided
+    if (
+      fieldSchema &&
+      isZodArray(fieldSchema) &&
+      Array.isArray(value) &&
+      normalizeFormListField(result, fieldSchema, value)
+    ) {
+      continue;
+    }
+
     const { keyOut } = getKeyMapping(metadata);
     const outputKey = keyOut ?? key;
     const valueWithCodec = getValueFromCodec({ fieldSchema, method: "encode", value });
-    // Check if outputKey contains a dot (nested path)
-    if (outputKey.includes(".")) {
-      setNested(result, outputKey, valueWithCodec);
-    } else {
-      result[outputKey] = valueWithCodec;
-    }
+    setResultValue(result, outputKey, valueWithCodec);
   }
   return result;
 }
