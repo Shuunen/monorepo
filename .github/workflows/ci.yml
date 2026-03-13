@@ -53,8 +53,8 @@ jobs:
       - name: Check if Playwright is needed
         id: check_playwright
         run: |
-          echo "Checking affected projects with test-storybook target..."
-          AFFECTED_PROJECTS=$(pnpm exec nx show projects --affected -t test-storybook --json 2>/dev/null || echo "[]")
+          echo "Checking affected projects using Playwright..."
+          AFFECTED_PROJECTS=$(pnpm exec nx show projects --affected -t test-storybook sample-web-app-e2e --json 2>/dev/null || echo "[]")
           echo "Affected projects JSON: $AFFECTED_PROJECTS"
 
           if echo "$AFFECTED_PROJECTS" | grep -q '"components"'; then
