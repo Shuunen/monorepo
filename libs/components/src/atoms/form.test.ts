@@ -2,7 +2,7 @@ import { testIdFromProps } from "./form.utils";
 
 describe("form.utils", () => {
   it("testIdFromProps A with empty name", () => {
-    expect(() => testIdFromProps("prefix", { name: "" })).toThrowError(
+    expect(() => testIdFromProps("prefix", { name: "" })).toThrow(
       "name cannot be empty string when deriving testId from name",
     );
   });
@@ -10,12 +10,12 @@ describe("form.utils", () => {
     expect(testIdFromProps("prefix", { name: "myFieldName" })).toBe("prefix-my-field-name");
   });
   it("testIdFromProps C throws error when prefix is empty string and name is used", () => {
-    expect(() => testIdFromProps("", { name: "myFieldName" })).toThrowError(
+    expect(() => testIdFromProps("", { name: "myFieldName" })).toThrow(
       "prefix cannot be empty string when deriving testId from name",
     );
   });
   it("testIdFromProps D throws error when name is empty string", () => {
-    expect(() => testIdFromProps("prefix", { name: "" })).toThrowError(
+    expect(() => testIdFromProps("prefix", { name: "" })).toThrow(
       "name cannot be empty string when deriving testId from name",
     );
   });

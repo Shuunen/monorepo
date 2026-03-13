@@ -433,12 +433,12 @@ function getValueFromCodec({ fieldSchema, value, method, parentSchema }: GetValu
     return getValueWithCodec({ fieldSchema, method, parentSchema, value });
   }
 
-  const valueAsArray: unknown[] = /* c8 ignore next */ Array.isArray(value) ? value : [value];
+  const valueAsArray: unknown[] = /* v8 ignore next */ Array.isArray(value) ? value : [value];
   return valueAsArray.map(item => {
     const unwrappedSchema = getUnwrappedSchema(fieldSchema);
     return getValueFromCodec({
       fieldSchema:
-        /* c8 ignore next */ "element" in unwrappedSchema ? (unwrappedSchema.element as z.ZodType) : unwrappedSchema,
+        /* v8 ignore next */ "element" in unwrappedSchema ? (unwrappedSchema.element as z.ZodType) : unwrappedSchema,
       method,
       parentSchema: (fieldSchema as z.ZodArray<z.ZodType>).unwrap(),
       value: item,

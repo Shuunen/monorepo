@@ -16,7 +16,8 @@ function removeExtraSlashes(url: string) {
  * @returns Path
  */
 export function getPath(url = "", addLang = "") {
-  let path = /* c8 ignore next */ url === "" && isBrowserEnvironment() ? document.location.pathname : url;
+  /* v8 ignore next */
+  let path = url === "" && isBrowserEnvironment() ? document.location.pathname : url;
   if (path === "blank") {
     path = "";
   }
@@ -38,5 +39,6 @@ export function getPage(url = "") {
   if (path === "") {
     return "index";
   }
-  return /* c8 ignore next */ path.split(".")[0] ?? "";
+  /* v8 ignore next */
+  return path.split(".")[0] ?? "";
 }

@@ -997,7 +997,7 @@ describe("auto-form.utils", () => {
 
   it("getDefaultValues D undefined handling", () => {
     // @ts-expect-error type issue on purpose
-    expect(() => getDefaultValues([undefined], {})).toThrowError();
+    expect(() => getDefaultValues([undefined], {})).toThrow();
   });
 
   // getLastAccessibleStepIndex

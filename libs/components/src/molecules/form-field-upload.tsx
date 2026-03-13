@@ -111,13 +111,13 @@ export function FormFieldUpload({
   useEffect(() => () => uploadIntervalRef.current && clearInterval(uploadIntervalRef.current), []);
 
   function resetUpload() {
-    /* c8 ignore next 3 */
+    /* v8 ignore next 3 */
     // oxlint-disable-next-line no-unused-expressions
     uploadIntervalRef.current && clearInterval(uploadIntervalRef.current);
     setSelectedFile(undefined);
     setUploadState("idle");
     setUploadProgress(0);
-    /* c8 ignore next */
+    /* v8 ignore next */
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -125,7 +125,7 @@ export function FormFieldUpload({
 
   function removeFile(onChange: ControllerRenderProps["onChange"]) {
     resetUpload();
-    /* c8 ignore next 2 */
+    /* v8 ignore next 2 */
     onFileChange?.(undefined);
     onFileRemove?.();
     onChange(undefined);
@@ -159,7 +159,7 @@ export function FormFieldUpload({
         if (shouldFail && newProgress >= uploadPercentFail) {
           clearInterval(uploadIntervalRef.current);
           setUploadState("error");
-          /* c8 ignore next */
+          /* v8 ignore next */
           onFileUploadError?.("Upload failed");
           return newProgress;
         }
@@ -170,7 +170,7 @@ export function FormFieldUpload({
 
   function handleFileSelect(event: React.ChangeEvent<HTMLInputElement>, onChange: (value: File) => void) {
     const file = event.target.files?.[0];
-    /* c8 ignore next 3 */
+    /* v8 ignore next 3 */
     if (!file) {
       return;
     }

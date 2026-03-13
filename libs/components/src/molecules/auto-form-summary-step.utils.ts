@@ -92,23 +92,23 @@ function sectionDataFromObjectItem({ data, innerShape, item, key, index }: Secti
     let innerValue = item[innerKey];
     if (hasOptions) {
       const options = typeLikeResolver(innerMetadata.options, item, data);
-      /* c8 ignore start */
+      /* v8 ignore start */
       if (Array.isArray(options)) {
         innerValue = options.find(opt => opt.value === innerValue)?.label;
       }
-      /* c8 ignore stop */
+      /* v8 ignore stop */
     }
     sectionData[`${key}.${index}.${innerKey}`] = {
-      /* c8 ignore start */
+      /* v8 ignore start */
       label: innerMetadata?.label ?? innerKey,
-      /* c8 ignore stop */
+      /* v8 ignore stop */
       value: innerValue,
     };
   }
   return sectionData;
 }
 
-/* c8 ignore start */
+/* v8 ignore start */
 type SectionsFromArrayOfObjectsProps = {
   data: AutoFormData;
   fieldSchema: z.ZodType;
@@ -141,7 +141,7 @@ function sectionsFromArrayOfObjects(props: SectionsFromArrayOfObjectsProps) /* N
   }
   return sections;
 }
-/* c8 ignore stop */
+/* v8 ignore stop */
 
 function isArrayOfObjects(fieldSchema: z.ZodType) {
   if (!isZodArray(fieldSchema)) {
@@ -159,10 +159,10 @@ function resolveFieldValue(
   parentData?: AutoFormData,
 ) {
   if (isRadioOrSelectMetadata(metadata)) {
-    /* c8 ignore start */
+    /* v8 ignore start */
     const options = typeLikeResolver(metadata.options, data, parentData);
     return Array.isArray(options) ? options.find(opt => opt.value === data[key])?.label : data[key];
-    /* c8 ignore stop */
+    /* v8 ignore stop */
   }
   return data[key];
 }
@@ -192,11 +192,11 @@ type ProcessFieldForSectionProps = {
 
 function processFieldForSection({ key, shape, data, state }: ProcessFieldForSectionProps) {
   const fieldSchema = shape[key] as z.ZodType;
-  /* c8 ignore start */
+  /* v8 ignore start */
   if (!fieldSchema) {
     return;
   }
-  /* c8 ignore stop */
+  /* v8 ignore stop */
   const metadata = getFieldMetadata(fieldSchema);
   if (metadata?.render === "section") {
     const showSectionInSummary = !("showInSummary" in metadata) || metadata?.showInSummary;
@@ -217,9 +217,9 @@ function processFieldForSection({ key, shape, data, state }: ProcessFieldForSect
   }
   if (shouldIncludeField(fieldSchema, metadata, data)) {
     state.currentSectionData[key] = {
-      /* c8 ignore start */
+      /* v8 ignore start */
       label: metadata?.label ?? key,
-      /* c8 ignore stop */
+      /* v8 ignore stop */
       value: resolveFieldValue(metadata, data, key, state.parentData),
     };
   }

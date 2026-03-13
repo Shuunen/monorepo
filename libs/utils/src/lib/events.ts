@@ -13,13 +13,13 @@ export type Listener = {
  * @param media the media to emit the event from, like window or a dom element
  */
 export function emit<Data>(name: string, data?: Readonly<Data>, media: ListenerMedia = globalThis) {
-  /* c8 ignore start */
+  /* v8 ignore start */
   if (data === undefined) {
     media.dispatchEvent(new CustomEvent(name));
   } else {
     media.dispatchEvent(new CustomEvent(name, { detail: data }));
   }
-  /* c8 ignore stop */
+  /* v8 ignore stop */
 }
 
 /**

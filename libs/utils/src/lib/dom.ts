@@ -215,12 +215,12 @@ export async function waitToDetect(selector: string, wait = 500, nbTries = 0, ma
   if (element) {
     return Result.ok(element);
   }
-  /* c8 ignore start */
+  /* v8 ignore start */
   if (nbTries > maxTry) {
     return Result.error(`stop searching after 5 fails to detect : "${selector}"`);
   }
   return waitToDetect(selector, wait, nbTries + 1, maxTry);
-  /* c8 ignore stop */
+  /* v8 ignore stop */
 }
 
 /**

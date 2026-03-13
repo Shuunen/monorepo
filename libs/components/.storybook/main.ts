@@ -27,9 +27,11 @@ const config: StorybookConfig = {
   },
   stories: ["../src/**/*.@(mdx|stories.tsx)", "../../../apps/*/src/**/*.stories.@(js|jsx|ts|tsx|mdx)"],
   viteFinal: viteConfig => {
-    viteConfig.esbuild = {
-      ...viteConfig.esbuild,
-      jsx: "automatic",
+    viteConfig.oxc = {
+      ...viteConfig.oxc,
+      jsx: {
+        runtime: "automatic",
+      },
     };
     return viteConfig;
   },

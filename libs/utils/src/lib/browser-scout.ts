@@ -49,7 +49,8 @@ type BrowserContext = Readonly<{
  * @returns the user agent string
  */
 export function getUserAgent() {
-  return /* c8 ignore next */ isBrowserEnvironment() ? globalThis.navigator.userAgent : "Unknown user agent";
+  /* v8 ignore next */
+  return isBrowserEnvironment() ? globalThis.navigator.userAgent : "Unknown user agent";
 }
 
 /**
@@ -60,7 +61,8 @@ export function getUserAgent() {
 export function getVersion(userAgent = getUserAgent()) {
   for (const [browser, regex] of Object.entries(versions)) {
     if (regex.test(userAgent)) {
-      return /* c8 ignore next */ regex.exec(userAgent)?.groups?.version ?? `Unknown ${browser} version`;
+      /* v8 ignore next */
+      return regex.exec(userAgent)?.groups?.version ?? `Unknown ${browser} version`;
     }
   }
   return "Unknown version";
@@ -137,7 +139,8 @@ export function browserContext() {
   const isBrowser = isBrowserEnvironment();
   const userAgent = getUserAgent();
   const browser = getBrowser(userAgent);
-  return /* c8 ignore next */ {
+  /* v8 ignore next */
+  return {
     browser,
     isInternetExplorer: browser === "Internet Explorer",
     isMobile: isMobile(userAgent),

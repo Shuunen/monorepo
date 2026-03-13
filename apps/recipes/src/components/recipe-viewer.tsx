@@ -52,7 +52,7 @@ export function RecipeViewer() {
     setIsLoading(true);
     setError(undefined);
     setRecipeComponent(undefined);
-
+    /* v8 ignore start */
     // Dynamically import the recipe markdown file
     import(`../recipes/${category}/${recipe}.md`)
       // oxlint-disable-next-line promise/prefer-await-to-then
@@ -67,6 +67,7 @@ export function RecipeViewer() {
         setError(`La recette "${recipe}" dans la catégorie "${category}" n'existe pas.`);
         setIsLoading(false);
       });
+    /* v8 ignore stop */
   }, [category, recipe]);
 
   if (!category || !recipe || error) return <ErrorMessage error={error} />;

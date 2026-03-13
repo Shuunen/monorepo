@@ -2,7 +2,8 @@ import { execSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { Logger, parseJson, Result, stringify } from "@monorepo/utils";
 
-const logger = new Logger({ minimumLevel: /* c8 ignore next */ import.meta.main ? "3-info" : "7-error" });
+/* v8 ignore next */
+const logger = new Logger({ minimumLevel: import.meta.main ? "3-info" : "7-error" });
 const commitRegex = /(?<ticket>\w+-\d+)[ :]+(?<type>\w+(?<scope>\([\w-]+\))?: ?)?(?<message>[\w -.:/<>]+)/;
 
 /**
@@ -75,7 +76,7 @@ export function main() {
   logger.info(`Changelog generated successfully at ${output}`);
 }
 
-/* c8 ignore start */
+/* v8 ignore start */
 if (import.meta.main) {
   main();
 }

@@ -66,7 +66,9 @@ export const storage = {
   clear,
   get,
   has,
-  media: /* c8 ignore next */ typeof localStorage === "undefined" ? ({} as Storage) : localStorage,
+  /* v8 ignore start */
+  media: typeof localStorage === "undefined" ? ({} as Storage) : localStorage,
+  /* v8 ignore stop */
   prefix: "", // prefix all keys in the storage with a custom string
   set,
 };

@@ -27,7 +27,7 @@ export function base64ToFile(base64: string, filename: string, checkExtension = 
     uint8Arr[index] = base64BinaryResult.value.codePointAt(index)!;
   }
 
-  /* c8 ignore start */
+  /* v8 ignore start */
   const mimeType = mimeTypeRegex.exec(dataUrlPrefix)?.groups?.mimeType;
   if (!mimeType) {
     return Result.error("No mime type found.");
@@ -35,7 +35,7 @@ export function base64ToFile(base64: string, filename: string, checkExtension = 
 
   // Create a Blob from the Uint8Array and return the File object.
   const blob = new Blob([uint8Arr], { type: mimeType });
-  /* c8 ignore stop */
+  /* v8 ignore stop */
 
   if (checkExtension && !/\.\w{2,5}$/.test(filename)) {
     return Result.error("Missing extension in the filename.");

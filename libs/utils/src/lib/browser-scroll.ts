@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start */
 import { invariant } from "es-toolkit";
 
 export function scrollToElement(querySelector: string) {

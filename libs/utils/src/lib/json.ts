@@ -30,8 +30,8 @@ export function parseJson<Type>(json: string) {
   try {
     return Result.ok(objectDeserialize(json) as Type);
   } catch (error) {
-    return Result.error(
-      `Invalid JSON string: ${/* c8 ignore next */ error instanceof Error ? error.message : String(error)}`,
-    );
+    /* v8 ignore next */
+    const message = error instanceof Error ? error.message : String(error);
+    return Result.error(`Invalid JSON string: ${message}`);
   }
 }

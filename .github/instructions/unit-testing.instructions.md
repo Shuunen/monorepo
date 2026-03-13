@@ -114,12 +114,12 @@ When writing tests, follow these guidelines :
 
 Use ignore instructions if you want to ignore branches for test coverage :
 
-- `/* c8 ignore start */` to start ignoring a block of code
-- `/* c8 ignore stop */` to stop ignoring a block of code
-- `/* c8 ignore next */` to ignore the next line or statement
+- `/* v8 ignore start */` to start ignoring a block of code
+- `/* v8 ignore stop */` to stop ignoring a block of code
+- `/* v8 ignore next */` to ignore the next line or statement
 
 Add the preserve comment tag if the ignore instructions are not recognized :
 
-- `/* c8 ignore start -- @preserve */` to start ignoring a block of code
-- `/* c8 ignore stop -- @preserve */` to stop ignoring a block of code
-- `/* c8 ignore next -- @preserve */` to ignore the next line or statement
+- `/* v8 ignore start -- @preserve */` to start ignoring a block of code
+- `/* v8 ignore stop -- @preserve */` to stop ignoring a block of code
+- `/* v8 ignore next -- @preserve */` to ignore the next line or statement

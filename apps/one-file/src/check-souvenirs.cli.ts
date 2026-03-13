@@ -532,6 +532,6 @@ export async function start() {
   logger.success("Check Souvenirs is done");
 }
 
-/* v8 ignore next 2 -- @preserve */
 // avoid running this script if it's imported for testing
+/* v8 ignore if */
 if (process.argv[1]?.includes("check-souvenirs.cli.ts")) await start();

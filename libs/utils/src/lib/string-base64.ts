@@ -20,7 +20,7 @@ export function parseBase64(string: string) {
   if (!isBase64(string)) {
     return result;
   }
-  /* c8 ignore start */
+  /* v8 ignore start */
   const type = base64TypeRegex.exec(string);
   if (type && typeof type[0] === "string") {
     [result.type] = type;
@@ -29,7 +29,7 @@ export function parseBase64(string: string) {
   if (base64.length > 1 && typeof base64[1] === "string") {
     [, result.base64] = base64;
   }
-  /* c8 ignore stop */
+  /* v8 ignore stop */
   // oxlint-disable-next-line no-magic-numbers
   result.size = Math.round((result.base64.length * 3) / 4);
   return result;

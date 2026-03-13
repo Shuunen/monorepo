@@ -35,7 +35,7 @@ describe("page-item-print.utils", () => {
   it("findItemById B should throw when item does not exist", async () => {
     const { state } = await import("../utils/state.utils");
     state.items = [];
-    expect(() => findItemById("missing")).toThrowError('Item with id "missing" not found ;(');
+    expect(() => findItemById("missing")).toThrow('Item with id "missing" not found ;(');
   });
 
   it("handlePrintAction A should mark item as printed and show success", async () => {

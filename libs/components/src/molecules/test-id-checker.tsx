@@ -1,4 +1,4 @@
-/* c8 ignore start */
+/* v8 ignore start */
 import { functionReturningVoid } from "@monorepo/utils";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../atoms/button";

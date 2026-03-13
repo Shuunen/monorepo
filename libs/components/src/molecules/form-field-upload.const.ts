@@ -8,8 +8,10 @@ const oneSecond = 1000;
 const twoSeconds = 2000;
 const fileExtensionRegex = /\.([^.]+)$/;
 
-export const uploadDurationFail = /* c8 ignore next */ isTestEnvironment() ? 1 : oneSecond; // ms
-export const uploadDurationSuccess = /* c8 ignore next */ isTestEnvironment() ? 1 : twoSeconds; // ms
+/* v8 ignore start */
+export const uploadDurationFail = isTestEnvironment() ? 1 : oneSecond; // ms
+export const uploadDurationSuccess = isTestEnvironment() ? 1 : twoSeconds; // ms
+/* v8 ignore stop */
 export const uploadPercentFail = 61; // %
 export const maxPercent = 100;
 export const emptyFile = new File([], "");

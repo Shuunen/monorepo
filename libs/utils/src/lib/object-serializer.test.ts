@@ -38,7 +38,7 @@ it("objectSerialize D arrow function", () => {
 });
 it("objectSerialize E function", () => {
   expect(objectSerialize({ func: add })).toMatchInlineSnapshot(
-    String.raw`"{"func":{"__function__":"function add(numberA, numberB) {\n  return numberA + numberB;\n}"}}"`,
+    String.raw`"{"func":{"__function__":"function add(numberA, numberB) {\n\treturn numberA + numberB;\n}"}}"`,
   );
 });
 it("objectSerialize F object with sort", () => {
@@ -179,7 +179,7 @@ it("objectDeserialize D arrow function", () => {
 
 it("objectDeserialize E function", () => {
   const object = objectDeserialize(
-    String.raw`{"func":{"__function__":"function add(numberA, numberB) {\n  return numberA + numberB;\n}"}}`,
+    String.raw`{"func":{"__function__":"function add(numberA, numberB) {\n\treturn numberA + numberB;\n}"}}`,
   );
   expect(object).toMatchInlineSnapshot(`
     {

@@ -24,9 +24,10 @@ export class Machine {
    */
   #checkWin() {
     const { bottles } = this.#context;
-    /* v8 ignore next 2 -- @preserve */
     // oxlint-disable-next-line max-nested-callbacks
-    if (bottles.every(bottle => bottle.every(color => color === bottle[0]))) this.#transition("ready", "win");
+    const isWin = bottles.every(bottle => bottle.every(color => color === bottle[0]));
+    /* v8 ignore if */
+    if (isWin) this.#transition("ready", "win");
   }
   /**
    * Transition from one state to another

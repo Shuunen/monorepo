@@ -99,13 +99,14 @@ export function crc32(text: string) {
   const crcTable = createCrc32Table();
   let crc = -1;
   for (let index = 0; index < text.length; index += 1) {
-    const code = /* c8 ignore next */ text.codePointAt(index) ?? 0;
+    /* v8 ignore next */
+    const code = text.codePointAt(index) ?? 0;
     // oxlint-disable no-bitwise, no-magic-numbers
     const key: number = (code ^ crc) & 0xff;
     const value: number | undefined = crcTable[key];
-    /* c8 ignore start */
+    /* v8 ignore start */
     if (value !== undefined && value !== 0) {
-      /* c8 ignore stop */
+      /* v8 ignore stop */
       crc = value ^ (crc >>> 8);
     }
   }

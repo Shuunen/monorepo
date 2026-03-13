@@ -23,7 +23,7 @@ describe("state", () => {
   it("state B initial cannot go into selected", () => {
     const machine = new Machine();
     expect(machine.state).toBe("initial");
-    expect(() => machine.select(2)).toThrowError();
+    expect(() => machine.select(2)).toThrow();
   });
 
   it("state C selected > ready", () => {

@@ -90,7 +90,9 @@ export class Logger {
 
   public options: LoggerOptions = {
     isActive: true,
-    minimumLevel: /* c8 ignore next */ isVerbose() ? "1-debug" : "3-info",
+    /* v8 ignore start */
+    minimumLevel: isVerbose() ? "1-debug" : "3-info",
+    /* v8 ignore stop */
     willLogDate: false,
     willLogDelay: true,
     willLogTime: false,
@@ -249,11 +251,11 @@ export class Logger {
    */
   public showError(...stuff: Readonly<unknown[]>) {
     this.error(...stuff);
-    /* c8 ignore start */
+    /* v8 ignore start */
     if (isBrowserEnvironment()) {
       toastError(clean(...stuff));
     }
-    /* c8 ignore stop */
+    /* v8 ignore stop */
   }
 
   /**
@@ -263,11 +265,11 @@ export class Logger {
    */
   public showInfo(...stuff: Readonly<unknown[]>) {
     this.info(...stuff);
-    /* c8 ignore start */
+    /* v8 ignore start */
     if (isBrowserEnvironment()) {
       toastInfo(clean(...stuff));
     }
-    /* c8 ignore stop */
+    /* v8 ignore stop */
   }
 
   /**
@@ -277,11 +279,11 @@ export class Logger {
    */
   public showSuccess(...stuff: Readonly<unknown[]>) {
     this.success(...stuff);
-    /* c8 ignore start */
+    /* v8 ignore start */
     if (isBrowserEnvironment()) {
       toastSuccess(clean(...stuff));
     }
-    /* c8 ignore stop */
+    /* v8 ignore stop */
   }
 
   /**
@@ -334,7 +336,7 @@ export class Logger {
     errorLevel: "error" | "warn" = "error",
   ) {
     this.result(message, result, okLevel, errorLevel);
-    /* c8 ignore start */
+    /* v8 ignore start */
     if (isBrowserEnvironment()) {
       const isOk = result.ok;
       const level = isOk ? okLevel : errorLevel;
@@ -342,7 +344,7 @@ export class Logger {
       const showMethod = toastMethods[level];
       showMethod(`${message}: ${clean(isOk ? result.value : result.error)}`);
     }
-    /* c8 ignore stop */
+    /* v8 ignore stop */
   }
 
   /**

@@ -9,7 +9,8 @@ import { Result } from "../lib/result.js";
 //  bun libs/utils/src/bin/header-injector.cli.ts --header="Copyright 2026 ACME"
 //  bun libs/utils/src/bin/header-injector.cli.ts --remove --header="Copyright 2026 ACME"
 
-const logger = new Logger({ minimumLevel: /* c8 ignore next */ import.meta.main ? "3-info" : "7-error" });
+/* v8 ignore next */
+const logger = new Logger({ minimumLevel: import.meta.main ? "3-info" : "7-error" });
 const metrics = {
   /** Number of files where the header was added */
   addedHeader: 0,
@@ -163,7 +164,7 @@ export async function main(argv: string[]) {
   return Result.ok(stats);
 }
 
-/* c8 ignore start */
+/* v8 ignore start */
 if (import.meta.main) {
   const result = await main(process.argv);
   if (result.ok) {
