@@ -2,7 +2,6 @@
 
 - [FAQ](#faq)
   - [Issues and errors](#issues-and-errors)
-    - [OxLint is not working in VSCode](#oxlint-is-not-working-in-vscode)
     - [Cannot find module Vitest](#cannot-find-module-vitest)
   - [Formatter](#formatter)
   - [Shadcn](#shadcn)
@@ -10,16 +9,10 @@
   - [Storybook](#storybook)
     - [How to run the storybook ?](#how-to-run-the-storybook-)
     - [Where should I put my story ?](#where-should-i-put-my-story-)
+  - [Performance](#performance)
+    - [Optimizing bundle size](#optimizing-bundle-size)
 
 ## Issues and errors
-
-### OxLint is not working in VSCode
-
-Sometimes oxlint cli works but the VSCode extension doesn't work.
-
-First check the output of the extension and see if there is any error.
-
-Sometimes the extension can also contains bugs like 1.49.0 and 1.49.1 that is unable to load the config (with the custom plugin) even when oxlint 1.49.0 (and above) works fine in the cli, in this case you can downgrade the extension to 1.48.0 and wait for the next release of the extension.
 
 ### Cannot find module Vitest
 
@@ -83,3 +76,27 @@ You can either run the command: `nx run components:run-storybook` or directly ru
 ### Where should I put my story ?
 
 Stories always stay with his component. Wherever there is your component is where your story must be.
+
+## Performance
+
+### Optimizing bundle size
+
+Go to your project `vite.config.ts` file and add the `analyzer` plugin from `vite-bundle-analyzer` to your plugins list. It will generate a nice report of your bundle size and its dependencies.
+
+```ts
+import { analyzer } from "vite-bundle-analyzer";
+
+export default defineConfig({
+  // ...
+  plugins: [
+    // ...
+    analyzer(),
+  ],
+});
+```
+
+Then run the build command to see the generated report in your browser.
+
+```bash
+nx build your-project-name
+```

@@ -36,8 +36,6 @@
 - 2.1.0 : 1KB html + 18KB css + 726KB js
 - 2.2.0 : 1KB html + 18KB css + 691KB js (after making everything lazy & optimizing common deps)
 
-Check build stats in details by running `pnpm build:analyze`.
-
 ## Thanks
 
 - [101 Soundboards](https://www.101soundboards.com/sounds/1295599-barcode-scan-beep-09) : for the various sounds used in the app
