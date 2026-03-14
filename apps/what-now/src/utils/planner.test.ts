@@ -28,6 +28,7 @@ const mockTask: Task = {
   minutes: 30,
   name: "Test Task",
   once: "week",
+  reason: "just because",
 };
 
 const mockAppWriteTask: AppWriteTaskModel = {
@@ -43,6 +44,7 @@ const mockAppWriteTask: AppWriteTaskModel = {
   minutes: 30,
   name: "Test Task",
   once: "2-weeks",
+  reason: "just because",
 };
 
 describe("planner utils", () => {

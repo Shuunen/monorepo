@@ -25,7 +25,7 @@ export function modelToLocalTask(task: AppWriteTaskModel) {
     minutes: task.minutes,
     name: task.name,
     once: task.once,
-    reason: task.reason ?? undefined,
+    reason: task.reason,
   } satisfies Task;
 }
 
@@ -57,7 +57,7 @@ export function localToRemoteTask(task: Readonly<Task>) {
     minutes: task.minutes,
     name: task.name,
     once: task.once,
-    reason: task.reason ?? "",
+    reason: task.reason,
   } satisfies AppWriteTask;
 }
 

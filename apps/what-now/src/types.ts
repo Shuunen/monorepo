@@ -23,7 +23,7 @@ export type Task = {
   /**
    * The reason to take time and energy to do this task :)
    */
-  reason?: string;
+  reason: string;
 };
 
 export type AppWriteTask = {
@@ -38,5 +38,5 @@ export type AppWriteTask = {
   /** @example "day" */
   once: string;
   /** @example null */
-  reason?: string | null;
+  reason: string;
 };

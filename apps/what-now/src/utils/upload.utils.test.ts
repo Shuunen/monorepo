@@ -108,7 +108,15 @@ describe("upload.utils", () => {
 
   it("uploadTasksToDatabase B should update existing tasks successfully", async () => {
     const uploadTasks = [createMockTask("1", "Existing Task")];
-    const mockTask = { completedOn: "", id: "1", isDone: false, minutes: 30, name: "Existing Task", once: "no" };
+    const mockTask = {
+      completedOn: "",
+      id: "1",
+      isDone: false,
+      minutes: 30,
+      name: "Existing Task",
+      once: "no",
+      reason: "just because",
+    };
     vi.mocked(getTasks).mockResolvedValue(Result.ok([mockTask]));
     vi.mocked(updateTask).mockResolvedValue(Result.ok({} as never));
     const result = await uploadTasksToDatabase(uploadTasks);
@@ -129,7 +137,15 @@ describe("upload.utils", () => {
 
   it("uploadTasksToDatabase D should handle errors when updating tasks", async () => {
     const uploadTasks = [createMockTask("1", "Existing Task")];
-    const mockTask = { completedOn: "", id: "1", isDone: false, minutes: 30, name: "Existing Task", once: "no" };
+    const mockTask = {
+      completedOn: "",
+      id: "1",
+      isDone: false,
+      minutes: 30,
+      name: "Existing Task",
+      once: "no",
+      reason: "just because",
+    };
     vi.mocked(getTasks).mockResolvedValue(Result.ok([mockTask]));
     vi.mocked(updateTask).mockResolvedValue(Result.error("Update failed"));
     const result = await uploadTasksToDatabase(uploadTasks);
