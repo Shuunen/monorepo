@@ -1,0 +1,29 @@
+[
+  {
+    "id": "get-some-sun",
+    "completedOn": "2026-01-30T00:00:00.000+00:00",
+    "isDone": false,
+    "minutes": 15,
+    "name": "get some sun",
+    "once": "day",
+    "reason": "it feels so good to be outside and get some sun on my skin, even for just a few minutes"
+  },
+  {
+    "id": "do-some-stretching",
+    "completedOn": "2026-02-22T00:00:00.000+00:00",
+    "isDone": false,
+    "minutes": 1,
+    "name": "do some stretching",
+    "once": "2-days",
+    "reason": ""
+  },
+  {
+    "id": "go-in-nature",
+    "completedOn": "2026-02-22T00:00:00.000+00:00",
+    "isDone": false,
+    "minutes": 30,
+    "name": "go in nature see some trees",
+    "once": "week",
+    "reason": "I love being in nature, it helps me relax and recharge my batteries"
+  }
+]

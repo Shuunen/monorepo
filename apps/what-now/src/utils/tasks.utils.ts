@@ -152,7 +152,7 @@ export function taskMock(fields: Partial<Task> = {}): Task {
     minutes = 20,
     name = "a super task",
     once = "day",
-    reason,
+    reason = "just because",
   } = { ...fields };
   return { completedOn, id, isDone, minutes, name, once, reason } satisfies Task;
 }

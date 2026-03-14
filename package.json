@@ -41,6 +41,7 @@
     "cli-progress": "^3.12.0",
     "date-fns": "^4.1.0",
     "dequal": "^2.0.3",
+    "dotenv": "^17.3.1",
     "es-toolkit": "^1.45.1",
     "happy-dom": "^20.8.4",
     "knip": "^5.88.0",
