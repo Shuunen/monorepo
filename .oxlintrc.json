@@ -50,6 +50,7 @@
     "TextDecoder": "readonly",
     "TextEncoder": "readonly",
     "URL": "readonly",
+    "URLSearchParams": "readonly",
     "window": "readonly",
     "XMLSerializer": "readonly",
     "XPathEvaluator": "readonly",

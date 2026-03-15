@@ -5,8 +5,14 @@ const tasks: Task[] = [];
 
 export const { state, watchState } = createState(
   {
-    apiCollection: "",
-    apiDatabase: "",
+    /** the couch database name */
+    couchDb: "",
+    /** the couch database password */
+    couchPass: "",
+    /** the couch database base url */
+    couchUrl: "",
+    /** the couch database user */
+    couchUser: "",
     isLoading: false,
     /** true if the app is ready to use */
     isSetup: false,
@@ -23,7 +29,15 @@ export const { state, watchState } = createState(
     webhook: "",
   },
   storage,
-  /* v8 ignore next -- @preserve */ ["apiDatabase", "apiCollection", "tasks", "tasksTimestamp", "webhook"],
+  /* v8 ignore next -- @preserve */ [
+    "couchDb",
+    "couchPass",
+    "couchUrl",
+    "couchUser",
+    "tasks",
+    "tasksTimestamp",
+    "webhook",
+  ],
 );
 
-export type CredentialField = keyof Pick<typeof state, "apiCollection" | "apiDatabase" | "webhook">;
+export type CredentialField = keyof Pick<typeof state, "couchDb" | "couchPass" | "couchUrl" | "couchUser" | "webhook">;

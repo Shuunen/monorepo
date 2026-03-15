@@ -1,22 +1,19 @@
 import { isBrowserEnvironment } from "@monorepo/utils";
+import type { TaskDocument } from "../types";
 import { localToRemoteTask, modelToLocalTask, modelToRemoteTask } from "./database.utils";
 
 describe("database.utils", () => {
   const taskModelA = {
-    $createdAt: "2025-01-26T18:46:36.962+00:00",
-    $databaseId: "6796758d0018464afda2",
-    $id: "test-task-id",
-    $permissions: [],
-    $sequence: 175,
-    $tableId: "6796759300059f9201af",
-    $updatedAt: "2025-08-03T08:59:26.617+00:00",
-    "completed-on": "2025-08-03T00:00:00.000+00:00",
-    done: false,
+    _id: "test-task-id",
+    _rev: "1-rev",
+    completedOn: "2025-08-03T00:00:00.000+00:00",
+    isDone: false,
     minutes: 5,
     name: "test task",
     once: "month",
     reason: "test reason",
-  };
+    type: "task",
+  } satisfies Readonly<TaskDocument>;
 
   const taskLocalA = {
     completedOn: "2025-08-03T00:00:00.000+00:00",
@@ -28,13 +25,27 @@ describe("database.utils", () => {
     reason: "test reason",
   };
 
-  const taskRemoteA = {
-    "completed-on": "2025-08-03T00:00:00.000+00:00",
-    done: false,
+  const taskRemoteFromModelA = {
+    _id: "test-task-id",
+    _rev: "1-rev",
+    completedOn: "2025-08-03T00:00:00.000+00:00",
+    isDone: false,
     minutes: 5,
     name: "test task",
     once: "month",
     reason: "test reason",
+    type: "task",
+  };
+
+  const taskRemoteFromLocalA = {
+    _id: "test-task-id",
+    completedOn: "2025-08-03T00:00:00.000+00:00",
+    isDone: false,
+    minutes: 5,
+    name: "test task",
+    once: "month",
+    reason: "test reason",
+    type: "task",
   };
 
   it("should detect browser env", () => {
@@ -46,10 +57,10 @@ describe("database.utils", () => {
   });
 
   it("modelToRemoteTask A", () => {
-    expect(modelToRemoteTask(taskModelA)).toStrictEqual(taskRemoteA);
+    expect(modelToRemoteTask(taskModelA)).toStrictEqual(taskRemoteFromModelA);
   });
 
   it("localToRemoteTask A", () => {
-    expect(localToRemoteTask(taskLocalA)).toStrictEqual(taskRemoteA);
+    expect(localToRemoteTask(taskLocalA)).toStrictEqual(taskRemoteFromLocalA);
   });
 });

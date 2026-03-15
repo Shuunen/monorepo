@@ -1,6 +1,5 @@
 import { Result } from "@monorepo/utils";
 import type { Task } from "../types";
-import type { AppWriteTaskModel } from "./database.utils";
 import * as databaseUtils from "./database.utils";
 import {
   allDayIndices,
@@ -28,22 +27,6 @@ const mockTask: Task = {
   minutes: 30,
   name: "Test Task",
   once: "week",
-  reason: "just because",
-};
-
-const mockAppWriteTask: AppWriteTaskModel = {
-  $createdAt: "2023-01-01T10:00:00Z",
-  $databaseId: "database-id",
-  $id: "task-1",
-  $permissions: [],
-  $sequence: 1,
-  $tableId: "collection-id",
-  $updatedAt: "2023-01-01T10:00:00Z",
-  "completed-on": "2023-01-01T10:00:00Z",
-  done: false,
-  minutes: 30,
-  name: "Test Task",
-  once: "2-weeks",
   reason: "just because",
 };
 
@@ -216,7 +199,7 @@ describe("planner utils", () => {
     const modifications = { "task-1": 14 };
     const dateModifications = {};
     const tasks = [mockTask];
-    vi.mocked(databaseUtils.updateTask).mockResolvedValue(Result.ok(mockAppWriteTask));
+    vi.mocked(databaseUtils.updateTask).mockResolvedValue(Result.ok({ skipped: true }));
     const result = await saveTaskModifications(modifications, dateModifications, tasks);
     expect(result.ok).toBe(true);
     expect(databaseUtils.updateTask).toHaveBeenCalledWith({
@@ -248,7 +231,7 @@ describe("planner utils", () => {
     const task2 = { ...mockTask, id: "task-2" };
     const tasks = [mockTask, task2];
     vi.mocked(databaseUtils.updateTask)
-      .mockResolvedValueOnce(Result.ok(mockAppWriteTask))
+      .mockResolvedValueOnce(Result.ok({ skipped: true }))
       .mockResolvedValueOnce(Result.error("failure"));
     const result = await saveTaskModifications(modifications, dateModifications, tasks);
     expect(result.ok).toBe(false);
@@ -258,7 +241,7 @@ describe("planner utils", () => {
     const modifications = {};
     const dateModifications = { "task-1": "2023-10-01T00:00:00.000Z" };
     const tasks = [mockTask];
-    vi.mocked(databaseUtils.updateTask).mockResolvedValue(Result.ok(mockAppWriteTask));
+    vi.mocked(databaseUtils.updateTask).mockResolvedValue(Result.ok({ skipped: true }));
     const result = await saveTaskModifications(modifications, dateModifications, tasks);
     expect(result.ok).toBe(true);
     expect(databaseUtils.updateTask).toHaveBeenCalledWith({
@@ -271,7 +254,7 @@ describe("planner utils", () => {
     const modifications = { "task-1": 7 };
     const dateModifications = { "task-1": "2023-10-01T00:00:00.000Z" };
     const tasks = [mockTask];
-    vi.mocked(databaseUtils.updateTask).mockResolvedValue(Result.ok(mockAppWriteTask));
+    vi.mocked(databaseUtils.updateTask).mockResolvedValue(Result.ok({ skipped: true }));
     const result = await saveTaskModifications(modifications, dateModifications, tasks);
     expect(result.ok).toBe(true);
     expect(databaseUtils.updateTask).toHaveBeenCalledTimes(2); // Should be called twice: once for frequency, once for date
