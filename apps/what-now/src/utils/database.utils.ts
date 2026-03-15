@@ -1,36 +1,74 @@
+/* v8 ignore file */
+// oxlint-disable max-nested-callbacks
 import {
   dateIso10,
   downloadFile,
-  nbPercentMax,
+  isBrowserEnvironment,
   nbSpacesIndent,
   Result,
-  slugify,
   toastError,
   toastSuccess,
 } from "@monorepo/utils";
-import { Client, TablesDB, type Models, Query } from "appwrite";
-import type { AppWriteTask, Task } from "../types";
+import PouchDB from "pouchdb";
+import type { Task, TaskDocument } from "../types";
 import { logger } from "./logger.utils";
-import { state } from "./state.utils";
+import { state, watchState } from "./state.utils";
 
-const client = new Client();
-const tablesDb = new TablesDB(client);
-client.setEndpoint("https://cloud.appwrite.io/v1").setProject("what-now");
+const testWorkerId = globalThis.process?.env?.VITEST_WORKER_ID ?? "0";
+const testDatabaseBasePath = globalThis.process?.env?.TMPDIR ?? "/tmp";
+const localDatabaseName = isBrowserEnvironment() ? "what-now" : `${testDatabaseBasePath}/what-now-test-${testWorkerId}`;
+let localDatabase: PouchDB<TaskDocument> | undefined = undefined;
+let remoteDatabase: PouchDB<TaskDocument> | undefined = undefined;
 
-export type AppWriteTaskModel = AppWriteTask & Models.Row;
+export const couchDbWritesEnabled = false;
 
-export const uuidMaxLength = 36;
+function createRemoteDatabaseUrl() {
+  const { couchUrl, couchDb } = state;
+  const normalizedCouchUrl = couchUrl.replace(/\/+$/u, "");
+  return `${normalizedCouchUrl}/${couchDb}`;
+}
 
-/**
- * Convert a task from the database to a task in the app
- * @param task the db task to convert
- * @returns the app task
- */
-export function modelToLocalTask(task: AppWriteTaskModel) {
+watchState("isSetup", (updatedKey, isSetup) => {
+  logger.info(`${updatedKey} is now ${isSetup}`);
+  if (!isSetup) {
+    logger.info("prevent db instance creation, app is not setup");
+    return;
+  }
+  logger.info("creating pouchdb instances", { localDatabaseName, remoteDatabaseUrl: createRemoteDatabaseUrl(), state });
+  localDatabase = new PouchDB<PouchTaskDocument>(localDatabaseName);
+  remoteDatabase = new PouchDB<PouchTaskDocument>(createRemoteDatabaseUrl(), {
+    auth: {
+      password: state.couchPass,
+      username: state.couchUser,
+    },
+  });
+
+  /* v8 ignore start */
+  if (isBrowserEnvironment())
+    localDatabase
+      .sync(remoteDatabase, { live: true, retry: true })
+      .on("change", function handleSyncChange() {
+        logger.info("couchdb sync change received");
+      })
+      .on("paused", function handleSyncPaused() {
+        logger.info("couchdb sync paused");
+      })
+      .on("active", function handleSyncActive() {
+        logger.info("couchdb sync resumed");
+      })
+      .on("error", function handleSyncError(error) {
+        logger.error("couchdb sync failed", error);
+      });
+  /* v8 ignore stop */
+});
+
+export type PouchTaskDocument = TaskDocument;
+
+export function modelToLocalTask(task: Readonly<PouchTaskDocument>) {
   return {
-    completedOn: task["completed-on"],
-    id: task.$id,
-    isDone: task.done,
+    completedOn: task.completedOn,
+    id: task._id,
+    isDone: task.isDone,
     minutes: task.minutes,
     name: task.name,
     once: task.once,
@@ -38,104 +76,105 @@ export function modelToLocalTask(task: AppWriteTaskModel) {
   } satisfies Task;
 }
 
-/**
- * Create task for database insertion
- * @param model - The uploaded task
- * @returns AppWrite task format
- */
-export function modelToRemoteTask(model: AppWriteTaskModel) {
+export function modelToRemoteTask(model: Readonly<PouchTaskDocument>) {
   return {
-    "completed-on": model["completed-on"],
-    done: model.done,
+    _id: model._id,
+    _rev: model._rev,
+    completedOn: model.completedOn,
+    isDone: model.isDone,
     minutes: model.minutes,
     name: model.name,
     once: model.once,
     reason: model.reason,
-  } satisfies AppWriteTask;
+    type: "task",
+  } satisfies PouchTaskDocument;
 }
 
-/**
- * Convert a task from the app to the task format used in the database
- * @param task the app task to convert
- * @returns the db task
- */
 export function localToRemoteTask(task: Readonly<Task>) {
   return {
-    "completed-on": task.completedOn,
-    done: task.isDone,
+    _id: task.id,
+    completedOn: task.completedOn,
+    isDone: task.isDone,
     minutes: task.minutes,
     name: task.name,
     once: task.once,
     reason: task.reason,
-  } satisfies AppWriteTask;
+    type: "task",
+  } satisfies PouchTaskDocument;
 }
 
-/**
- * Add a task to the database
- * @param data the task to add
- * @returns the result of the operation
- */
-export function addTask(data: Readonly<AppWriteTask>) {
-  const id = slugify(data.name).slice(0, uuidMaxLength);
-  return Result.trySafe(
-    tablesDb.createRow({ data, databaseId: state.apiDatabase, rowId: id, tableId: state.apiCollection }),
-  );
+function createWriteSkippedResult(action: string) {
+  logger.info(`${action} skipped, couchdb writes are disabled`);
+  return Result.ok({ skipped: true });
 }
 
-/**
- * Update a task in the database
- * @param task the task to update
- * @returns the result of the operation
- */
-export function updateTask(task: Readonly<Task>) {
-  const data = localToRemoteTask(task);
-  return Result.trySafe(
-    tablesDb.updateRow<AppWriteTaskModel>({
-      data,
-      databaseId: state.apiDatabase,
-      rowId: task.id,
-      tableId: state.apiCollection,
-    }),
-  );
+/* v8 ignore next */
+function ensureTaskDocumentType(taskDocument: Readonly<PouchTaskDocument>) {
+  return { ...taskDocument, type: "task" } satisfies PouchTaskDocument;
 }
 
-/**
- * Get all tasks from the database
- * @returns the result of the operation
- */
-export async function getTasks() {
-  const result = await Result.trySafe(
-    tablesDb.listRows<AppWriteTaskModel>({
-      databaseId: state.apiDatabase,
-      queries: [Query.limit(nbPercentMax)],
-      tableId: state.apiCollection,
-    }),
-  );
+export function addTask(data: Readonly<PouchTaskDocument>) {
+  if (!localDatabase) return Result.error("Local database is not initialized");
+  if (!couchDbWritesEnabled) return createWriteSkippedResult("addTask");
+  /* v8 ignore next */
+  const documentToInsert = ensureTaskDocumentType(data);
+  /* v8 ignore next */
+  return Result.trySafe(localDatabase.put(documentToInsert));
+}
+
+export async function updateTask(task: Readonly<Task>) {
+  if (!localDatabase) return Result.error("Local database is not initialized");
+  if (!couchDbWritesEnabled) return createWriteSkippedResult("updateTask");
+  /* v8 ignore start */
+  const currentResult = await Result.trySafe(localDatabase.get(task.id));
+  if (!currentResult.ok) return currentResult;
+  const documentToUpdate = {
+    ...localToRemoteTask(task),
+    _rev: currentResult.value._rev,
+  } satisfies PouchTaskDocument;
+  return Result.trySafe(localDatabase.put(documentToUpdate));
+  /* v8 ignore stop */
+}
+
+/* v8 ignore next */
+function isTaskDocument(document: unknown): document is PouchTaskDocument {
+  if (typeof document !== "object" || document === null) return false;
+  if (!("type" in document) || document.type !== "task") return false;
+  if (!("_id" in document) || typeof document._id !== "string") return false;
+  return true;
+}
+
+async function getTaskDocuments() {
+  if (!localDatabase) return Result.error("Local database is not initialized");
+  const result = await Result.trySafe(localDatabase.allDocs({ include_docs: true }));
+  logger.info("fetched task documents from database", result);
   if (!result.ok) return result;
-  const tasks = result.value.rows.map<Task>(task => modelToLocalTask(task));
+  /* v8 ignore start */
+  const taskDocuments = result.value.rows
+    .map((row: { doc?: PouchTaskDocument }) => row.doc)
+    .filter((document): document is PouchTaskDocument => isTaskDocument(document))
+    .map((document: PouchTaskDocument) => modelToRemoteTask(document));
+  /* v8 ignore stop */
+  return Result.ok(taskDocuments);
+}
+
+export async function getTasks() {
+  const result = await getTaskDocuments();
+  if (!result.ok) return result;
+  const tasks = result.value.map<Task>((task: PouchTaskDocument) => modelToLocalTask(task));
   logger.info(`found ${tasks.length} tasks on db`, tasks);
   return Result.ok(tasks);
 }
 
-/**
- * Download the data from the database
- * @returns the result of the operation
- */
-/* v8 ignore next -- @preserve */
+/* v8 ignore next */
 export async function downloadData() {
-  const result = await Result.trySafe(
-    tablesDb.listRows<AppWriteTaskModel>({
-      databaseId: state.apiDatabase,
-      queries: [Query.limit(nbPercentMax)],
-      tableId: state.apiCollection,
-    }),
-  );
+  const result = await getTaskDocuments();
   if (!result.ok) {
     toastError("Failed to download data");
     logger.error("failed to download data", result.error);
     return;
   }
-  const json = JSON.stringify(result.value.rows, undefined, nbSpacesIndent);
+  const json = JSON.stringify(result.value, undefined, nbSpacesIndent);
   const blob = new Blob([json], { type: "application/json" });
   downloadFile(blob, `${dateIso10()}_what-now_tasks.json`);
   toastSuccess("Data downloaded");

@@ -1,6 +1,6 @@
 // oxlint-disable typescript/no-unsafe-return
 import { functionReturningVoid, Result, toastError, toastSuccess } from "@monorepo/utils";
-import { type AppWriteTaskModel, addTask, getTasks, updateTask } from "./database.utils";
+import { type PouchTaskDocument, addTask, getTasks, updateTask } from "./database.utils";
 import { logger } from "./logger.utils";
 import { handleTasksUpload, readJsonFile, selectJsonFile, uploadTasksToDatabase } from "./upload.utils";
 
@@ -16,7 +16,7 @@ vi.mock(import("@monorepo/utils"), async () => {
 vi.mock(import("./database.utils"), () => ({
   addTask: vi.fn(),
   getTasks: vi.fn(),
-  modelToLocalTask: vi.fn(task => ({ ...task, id: task.$id })),
+  modelToLocalTask: vi.fn(task => ({ ...task, id: task._id })),
   modelToRemoteTask: vi.fn(task => task),
   updateTask: vi.fn(),
 }));
@@ -45,8 +45,17 @@ function mockDocumentCreateElement(files: File[] = []) {
 }
 
 // Helper function to create a mock task
-function createMockTask(id = "1", name = "Task 1", minutes = 30, once = "no"): AppWriteTaskModel {
-  return { $id: id, minutes, name, once } as AppWriteTaskModel;
+function createMockTask(id = "1", name = "Task 1", minutes = 30, once = "no"): PouchTaskDocument {
+  return {
+    _id: id,
+    completedOn: "",
+    isDone: false,
+    minutes,
+    name,
+    once,
+    reason: "just because",
+    type: "task",
+  };
 }
 
 // Helper function to assert successful upload results
@@ -91,7 +100,7 @@ describe("upload.utils", () => {
   });
 
   it("readJsonFile C should return error for tasks missing required properties", async () => {
-    const invalidTasks = [{ $id: "1", name: "Task 1" }];
+    const invalidTasks = [{ _id: "1", name: "Task 1", type: "task" }];
     const mockFile = new File([JSON.stringify(invalidTasks)], "tasks.json", { type: "application/json" });
     const result = await readJsonFile(mockFile);
     expect(result.ok).toBe(false);
@@ -157,7 +166,7 @@ describe("upload.utils", () => {
   });
 
   it("uploadTasksToDatabase E should return error when failed to load existing tasks", async () => {
-    const uploadTasks: AppWriteTaskModel[] = [];
+    const uploadTasks: PouchTaskDocument[] = [];
     vi.mocked(getTasks).mockResolvedValue(Result.error("Failed to load"));
     const result = await uploadTasksToDatabase(uploadTasks);
     expect(result.ok).toBe(false);

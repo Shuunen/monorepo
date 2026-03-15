@@ -9,6 +9,7 @@ onlyBuiltDependencies:
   - core-js-pure
   - electron
   - esbuild
+  - leveldown
   - lzma-native
   - nx
   - oxc-resolver

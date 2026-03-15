@@ -1,5 +1,5 @@
 import { Button } from "@monorepo/components";
-import { nbFirst, nbSecond, on, readClipboard } from "@monorepo/utils";
+import { on, readClipboard } from "@monorepo/utils";
 // oxlint-disable-next-line no-restricted-imports
 import { ExternalLinkIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -9,20 +9,36 @@ import { type CredentialField, state } from "../utils/state.utils";
 
 const fields = [
   {
-    href: "https://cloud.appwrite.io/",
-    label: "AppWrite database id",
-    link: "dashboard",
-    maxlength: 100,
-    name: "appwrite-database-id",
-    pattern: String.raw`^\w+$`,
+    href: "https://github.com/Shuunen/monorepo/blob/master/apps/what-now/src/bin/couchdb.env.exemple",
+    label: "Couch URL",
+    link: "example",
+    maxlength: 300,
+    name: "couchUrl",
+    pattern: "^https?://.+$",
   },
   {
-    href: "https://cloud.appwrite.io/",
-    label: "AppWrite collection id",
-    link: "dashboard",
-    maxlength: 100,
-    name: "appwrite-collection-id",
-    pattern: String.raw`^\w+$`,
+    href: "https://github.com/Shuunen/monorepo/blob/master/apps/what-now/src/bin/couchdb.env.exemple",
+    label: "Couch User",
+    link: "example",
+    maxlength: 120,
+    name: "couchUser",
+    pattern: "^.+$",
+  },
+  {
+    href: "https://github.com/Shuunen/monorepo/blob/master/apps/what-now/src/bin/couchdb.env.exemple",
+    label: "Couch Pass",
+    link: "example",
+    maxlength: 150,
+    name: "couchPass",
+    pattern: "^.+$",
+  },
+  {
+    href: "https://github.com/Shuunen/monorepo/blob/master/apps/what-now/src/bin/couchdb.env.exemple",
+    label: "Couch DB",
+    link: "example",
+    maxlength: 120,
+    name: "couchDb",
+    pattern: "^[\\w-]+$",
   },
   {
     href: "https://github.com/Shuunen/monorepo/blob/master/apps/what-now/docs/webhook.md",
@@ -35,22 +51,12 @@ const fields = [
 ] as const;
 
 type FormData = {
-  apiCollection: string;
-  apiDatabase: string;
+  couchDb: string;
+  couchPass: string;
+  couchUrl: string;
+  couchUser: string;
   webhook: string;
 };
-
-function getFieldValue(index: number, formData: FormData): string {
-  if (index === nbFirst) return formData.apiDatabase;
-  if (index === nbSecond) return formData.apiCollection;
-  return formData.webhook;
-}
-
-function getFieldKey(index: number): keyof FormData {
-  if (index === nbFirst) return "apiDatabase";
-  if (index === nbSecond) return "apiCollection";
-  return "webhook";
-}
 
 type CredentialsFormProps = {
   formData: FormData;
@@ -61,7 +67,7 @@ type CredentialsFormProps = {
 function CredentialsForm({ formData, onInputChange, onSubmit }: CredentialsFormProps) {
   return (
     <form onSubmit={onSubmit}>
-      {fields.map((field, index) => {
+      {fields.map(field => {
         const inputId = `input-${field.name}`;
         return (
           <div className="mb-5" key={field.name}>
@@ -77,21 +83,17 @@ function CredentialsForm({ formData, onInputChange, onSubmit }: CredentialsFormP
               id={inputId}
               maxLength={field.maxlength}
               name={field.name}
-              onChange={event => {
-                const fieldKey = getFieldKey(index);
-                onInputChange(fieldKey, event.target.value);
-              }}
+              onChange={event => onInputChange(field.name, event.target.value)}
               pattern={field.pattern}
               type="text"
-              value={getFieldValue(index, formData)}
+              value={formData[field.name]}
             />
           </div>
         );
       })}
-
       <div className="flex justify-center gap-4">
         <Button name="save-credentials" type="submit">
-          Save Credentials
+          Save Settings
         </Button>
       </div>
     </form>
@@ -100,17 +102,21 @@ function CredentialsForm({ formData, onInputChange, onSubmit }: CredentialsFormP
 
 function useCredentialsLogic() {
   const [formData, setFormData] = useState<FormData>({
-    apiCollection: state.apiCollection,
-    apiDatabase: state.apiDatabase,
+    couchDb: state.couchDb,
+    couchPass: state.couchPass,
+    couchUrl: state.couchUrl,
+    couchUser: state.couchUser,
     webhook: state.webhook,
   });
 
   const fillForm = useCallback((data: Readonly<Record<CredentialField, string>>) => {
     logger.info("credentials, fill form", data);
     setFormData({
-      apiCollection: data.apiCollection || "",
-      apiDatabase: data.apiDatabase || "",
-      webhook: data.webhook || "",
+      couchDb: data.couchDb,
+      couchPass: data.couchPass,
+      couchUrl: data.couchUrl,
+      couchUser: data.couchUser,
+      webhook: data.webhook,
     });
   }, []);
 
@@ -121,16 +127,17 @@ function useCredentialsLogic() {
   const handleSubmit = useCallback(
     (event: React.SyntheticEvent) => {
       event.preventDefault();
-      const { apiCollection, apiDatabase, webhook } = formData;
-      const isOk = validateCredentials(apiDatabase, apiCollection);
-      state.statusError = isOk ? "" : "Invalid credentials";
+      const { couchDb, couchPass, couchUrl, couchUser, webhook } = formData;
+      const isOk = validateCredentials(couchUrl, couchUser, couchPass, couchDb, webhook);
+      state.statusError = isOk ? "" : "Invalid settings";
       if (!isOk) return;
-      logger.info("credentials submitted", { apiCollection, apiDatabase, webhook });
-      state.apiDatabase = apiDatabase;
-      state.apiCollection = apiCollection;
+      logger.info("settings submitted", { couchDb, couchPass, couchUrl, couchUser, webhook });
+      state.couchDb = couchDb;
+      state.couchPass = couchPass;
+      state.couchUrl = couchUrl;
+      state.couchUser = couchUser;
       state.webhook = webhook;
       state.isSetup = true;
-      // navigate to home to see the tasks
       globalThis.location.href = "/";
     },
     [formData],
@@ -145,11 +152,11 @@ export function Credentials() {
 
   const handleFocus = useCallback(async () => {
     if (state.isSetup) return;
-    const result = await readClipboard();
-    if (!result.ok) return logger.error("failed to read clipboard", result.error);
-    logger.info("clipboard contains :", result.value);
-    const data = parseClipboard(result.value);
-    if (data.apiCollection) fillForm(data);
+    const read = await readClipboard();
+    if (!read.ok) return logger.error("failed to read clipboard", read.error);
+    logger.info("clipboard contains :", read.value);
+    const data = parseClipboard(read.value);
+    if (data.ok && data.value.couchUrl) fillForm(data.value);
   }, [fillForm]);
 
   useEffect(() => {

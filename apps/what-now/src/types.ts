@@ -26,17 +26,14 @@ export type Task = {
   reason: string;
 };
 
-export type AppWriteTask = {
-  /** @example "2025-01-26T18:53:32.006+00:00" */
-  "completed-on": string;
-  /** @example false */
-  done: boolean;
-  /** @example 5 */
+export type TaskDocument = {
+  _id: string;
+  _rev?: string;
+  completedOn: string;
+  isDone: boolean;
   minutes: number;
-  /** @example "ranger un truc qui traîne" */
   name: string;
-  /** @example "day" */
   once: string;
-  /** @example null */
   reason: string;
+  type: "task";
 };

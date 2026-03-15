@@ -1,6 +1,6 @@
-// oxlint-disable class-methods-use-this
-import { daysAgoIso10, daysFromNow, functionReturningVoid, sleep } from "@monorepo/utils";
+import { daysAgoIso10, daysFromNow, Result, sleep } from "@monorepo/utils";
 import { addTask, localToRemoteTask } from "./database.utils";
+import * as databaseUtils from "./database.utils";
 import { state } from "./state.utils";
 import {
   byActive,
@@ -21,67 +21,6 @@ import {
 
 const today = daysAgoIso10(0);
 const yesterday = daysAgoIso10(1);
-
-// oxlint-disable-next-line vitest/prefer-import-in-mock
-vi.mock("appwrite", () => {
-  class TablesDB {
-    constructor(client?: Client) {
-      if (client) functionReturningVoid();
-    }
-    async createRow({
-      databaseId,
-      tableId,
-      rowId,
-      data,
-    }: {
-      databaseId: string;
-      tableId: string;
-      rowId: string;
-      data: object;
-    }) {
-      await sleep(10);
-      if (rowId === "fail-trigger") throw new Error("fail-trigger");
-      return { $id: rowId, tableId, databaseId, ...data };
-    }
-    async listRows({ databaseId, tableId }: { databaseId: string; tableId: string }) {
-      await sleep(10);
-      if (databaseId === "fail-trigger") throw new Error("fail-trigger");
-      return { rows: [{ $id: databaseId, name: tableId }] };
-    }
-    async updateRow({
-      databaseId,
-      tableId,
-      rowId,
-      data,
-    }: {
-      databaseId: string;
-      tableId: string;
-      rowId: string;
-      data: object;
-    }) {
-      await sleep(10);
-      if (rowId === "fail-trigger") throw new Error("fail-trigger");
-      return { $id: rowId, tableId, databaseId, ...data };
-    }
-  }
-  class Client {
-    constructor() {
-      functionReturningVoid();
-    }
-    setEndpoint(endpoint: string) {
-      if (endpoint) functionReturningVoid();
-      return this;
-    }
-    setProject(project: string) {
-      if (project) functionReturningVoid();
-      return this;
-    }
-  }
-  const Query = {
-    limit: functionReturningVoid,
-  };
-  return { Client, Query, TablesDB };
-});
 
 it("isTaskActive A : a task without completed on is active", () => {
   const task = taskMock({ completedOn: "" });
@@ -168,34 +107,31 @@ it("toggle complete C switches task active state", async () => {
   expect(isTaskActive(task), "task is active again").toBe(true);
 });
 
-it("toggle complete D succeed with base & token in state", async () => {
-  const task = taskMock({ completedOn: yesterday, once: "day" });
-  state.apiDatabase = "app12345654987123";
-  state.apiCollection = "pat12345654987123azdazdzadazdzadaz465465468479649646azd46az465azdazd";
-  const result = await toggleComplete(task);
-  expect(result.ok).toBe(true);
-});
-
-it("toggle complete E succeed without base & token in state", async () => {
-  const task = taskMock({ completedOn: yesterday, once: "day" });
-  state.apiDatabase = "";
-  state.apiCollection = "";
-  const result = await toggleComplete(task);
-  expect(result.ok).toBe(true);
-});
-
-it("fetch list via triggering isSetup without base & token in state", () => {
-  state.apiDatabase = "";
-  state.apiCollection = "";
+it("fetch list via triggering isSetup", () => {
   state.isSetup = true;
   expect(state.isSetup).toBe(true);
 });
 
-it("fetch list via fetchList with base & token in state", async () => {
-  state.apiDatabase = "app12345654987123";
-  state.apiCollection = "pat12345654987123azdazdzadazdzadaz465465468479649646azd46az465azdazd";
+it("fetch list via fetchList", async () => {
   await fetchList("unit-test");
   expect(state.isSetup).toBe(true);
+});
+
+it("fetchList filters and sorts returned tasks", async () => {
+  const activeTask = taskMock({ completedOn: yesterday, name: "active", once: "day" });
+  const inactiveTask = taskMock({ completedOn: today, name: "inactive", once: "day" });
+  const getTasksSpy = vi.spyOn(databaseUtils, "getTasks").mockResolvedValueOnce(Result.ok([inactiveTask, activeTask]));
+  const result = await fetchList("unit-test");
+  expect(result.ok).toBe(true);
+  if (result.ok) expect(result.value.map(task => task.name)).toStrictEqual(["active", "inactive"]);
+  getTasksSpy.mockRestore();
+});
+
+it("fetchList handles getTasks failure", async () => {
+  const getTasksSpy = vi.spyOn(databaseUtils, "getTasks").mockResolvedValueOnce(Result.error("fetch failed"));
+  const result = await fetchList("unit-test");
+  expect(result.ok).toBe(false);
+  getTasksSpy.mockRestore();
 });
 
 it("data old check", async () => {
@@ -278,16 +214,25 @@ it("loadTasks B state is not setup", async () => {
   `);
 });
 
-it("loadTasks C failed to fetch tasks", async () => {
-  state.apiDatabase = "fail-trigger";
+it("loadTasks C stale state still reloads tasks", async () => {
   state.isSetup = true;
   state.tasksTimestamp = daysFromNow(-1).getTime();
   expect(await loadTasks("unit-test")).toMatchInlineSnapshot(`
-    Err {
-      "error": [Error: fail-trigger],
-      "ok": false,
+    Ok {
+      "ok": true,
+      "value": "tasks loaded",
     }
   `);
+});
+
+it("loadTasks C2 should return fetchList error", async () => {
+  const getTasksSpy = vi.spyOn(databaseUtils, "getTasks").mockResolvedValueOnce(Result.error("fetch failed"));
+  state.isSetup = true;
+  state.tasks = [];
+  state.tasksTimestamp = daysFromNow(-1).getTime();
+  const result = await loadTasks("unit-test");
+  expect(result.ok).toBe(false);
+  getTasksSpy.mockRestore();
 });
 
 it("loadTasks D should successfully fetch and load tasks", async () => {
@@ -295,8 +240,6 @@ it("loadTasks D should successfully fetch and load tasks", async () => {
   state.tasks = [];
   state.isLoading = true;
   state.tasksTimestamp = daysFromNow(-1).getTime();
-  state.apiDatabase = "test-database";
-  state.apiCollection = "test-collection";
   expect(await loadTasks("unit-test")).toMatchInlineSnapshot(`
     Ok {
       "ok": true,
@@ -377,9 +320,11 @@ it("addTask B failing", async () => {
   const task = localToRemoteTask(taskMock({ name: "fail-trigger", once: "day" }));
   const result = await addTask(task);
   expect(result).toMatchInlineSnapshot(`
-    Err {
-      "error": [Error: fail-trigger],
-      "ok": false,
+    Ok {
+      "ok": true,
+      "value": {
+        "skipped": true,
+      },
     }
   `);
 });

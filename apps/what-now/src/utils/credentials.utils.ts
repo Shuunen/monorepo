@@ -1,5 +1,32 @@
+import { parseJson, Result } from "@monorepo/utils";
+import { z } from "zod";
 import { logger } from "./logger.utils";
-import { type CredentialField, state } from "./state.utils";
+import { state } from "./state.utils";
+
+const credentialsSchema = z.object({
+  couchDb: z
+    .string()
+    .min(1)
+    .regex(/^[\w-]+$/u, "Couch DB name must only contain letters, numbers, underscores or dashes"),
+  couchPass: z.string().min(1, "Couch Pass is required"),
+  couchUrl: z
+    .string()
+    .min(1, "Couch URL is required")
+    .regex(/^https?:\/\/.+/u, "Couch URL must be a valid HTTP or HTTPS URL"),
+  couchUser: z.string().min(1, "Couch User is required"),
+  webhook: z.string().regex(/^https?:\/\/.+/u, "Webhook must be a valid HTTP or HTTPS URL"),
+});
+
+type Credentials = z.infer<typeof credentialsSchema>;
+
+export function alignClipboard(text: string) {
+  return text
+    .replaceAll(/: ?""(?<thing>[,\n])/gu, ': "__EMPTY__"$<thing>')
+    .replaceAll('""', '"')
+    .replaceAll('"__EMPTY__"', '""')
+    .replace('"{', "{")
+    .replace('}"', "}"); // need to replace double double quotes with single double quotes (Google Sheet issue -.-'''''')
+}
 
 /**
  * Parse clipboard
@@ -7,26 +34,46 @@ import { type CredentialField, state } from "./state.utils";
  * @returns the parsed clipboard
  */
 export function parseClipboard(clipboard: string) {
-  // clipboard can contains something like : "appABC
-  // patXYZ.123
-  // https://zob.com"
-  const regex = /"(?<apiDatabase>[\w-]{1,36})\n(?<apiCollection>[\w-]{1,36})\n(?<webhook>http[^"]+)"/u;
-  const { apiCollection = "", apiDatabase = "", webhook = "" } = regex.exec(clipboard)?.groups ?? {};
-  return { apiCollection, apiDatabase, webhook } satisfies Record<CredentialField, string>;
+  const json = parseJson(alignClipboard(clipboard));
+  if (!json.ok) {
+    logger.debug("clipboard is not a valid JSON");
+    return Result.error("clipboard is not a valid JSON");
+  }
+  const parsed = credentialsSchema.safeParse(json.value);
+  if (!parsed.success) {
+    logger.warn("clipboard JSON does not match credentials schema", parsed.error);
+    return Result.error(`clipboard JSON does not match credentials schema : ${parsed.error.message}`);
+  }
+  return Result.ok(parsed.data);
 }
 
 /**
- * Validate database credentials
- * @param databaseId the database id to use
- * @param collectionId the collection id to use
- * @returns true if credentials are valid
+ * Validate settings required by the app
+ * @param couchUrl the couchdb base URL
+ * @param couchUser the couchdb username
+ * @param couchPass the couchdb password
+ * @param couchDb the couchdb database name
+ * @param webhook the webhook URL to use
+ * @returns true if settings are valid
  */
-export function validateCredentials(databaseId?: string, collectionId?: string) {
-  const uuidRegex = /^[\w-]{1,36}$/u;
-  const isDatabaseValid = databaseId !== undefined && typeof databaseId === "string" && uuidRegex.test(databaseId);
-  const isCollectionValid =
-    collectionId !== undefined && typeof collectionId === "string" && uuidRegex.test(collectionId);
-  return isDatabaseValid && isCollectionValid;
+// oxlint-disable-next-line max-params
+export function validateCredentials(
+  couchUrl?: string,
+  couchUser?: string,
+  couchPass?: string,
+  couchDb?: string,
+  webhook?: string,
+) {
+  if (typeof couchUrl !== "string" || couchUrl.length === 0) return false;
+  if (typeof couchUser !== "string" || couchUser.length === 0) return false;
+  if (typeof couchPass !== "string" || couchPass.length === 0) return false;
+  if (typeof couchDb !== "string" || couchDb.length === 0) return false;
+  const httpUrlRegex = /^https?:\/\/.+/u;
+  const databaseRegex = /^[\w-]+$/u;
+  if (!httpUrlRegex.test(couchUrl)) return false;
+  if (!databaseRegex.test(couchDb)) return false;
+  if (webhook === undefined || webhook === "") return true;
+  return httpUrlRegex.test(webhook);
 }
 
 /**
@@ -36,17 +83,31 @@ export function validateCredentials(databaseId?: string, collectionId?: string) 
  */
 export function checkUrlCredentials(hash = "") {
   logger.info("check credentials", hash.length > 0 ? `and detected hash "${hash}"` : "");
-  const matches = /#(?<database>[\w-]{1,36})&(?<collection>[\w-]{1,36})/u.exec(hash);
+  const hashParams = new URLSearchParams(hash.replace(/^#/, ""));
+  const hashCredentials = {
+    couchDb: hashParams.get("couchDb") ?? "",
+    couchPass: hashParams.get("couchPass") ?? "",
+    couchUrl: hashParams.get("couchUrl") ?? "",
+    couchUser: hashParams.get("couchUser") ?? "",
+    webhook: hashParams.get("webhook") ?? "",
+  } satisfies Credentials;
   if (
-    matches?.groups?.database !== undefined &&
-    matches.groups.collection !== undefined &&
-    validateCredentials(matches.groups.database, matches.groups.collection)
+    validateCredentials(
+      hashCredentials.couchUrl,
+      hashCredentials.couchUser,
+      hashCredentials.couchPass,
+      hashCredentials.couchDb,
+      hashCredentials.webhook,
+    )
   ) {
-    state.apiDatabase = matches.groups.database;
-    state.apiCollection = matches.groups.collection;
+    state.couchDb = hashCredentials.couchDb;
+    state.couchPass = hashCredentials.couchPass;
+    state.couchUrl = hashCredentials.couchUrl;
+    state.couchUser = hashCredentials.couchUser;
+    state.webhook = hashCredentials.webhook;
     logger.info("credentials found in hash");
   }
-  state.isSetup = validateCredentials(state.apiDatabase, state.apiCollection);
+  state.isSetup = validateCredentials(state.couchUrl, state.couchUser, state.couchPass, state.couchDb, state.webhook);
   logger.info("credentials are", state.isSetup ? "valid" : "invalid");
   state.statusInfo = state.isSetup ? "" : "Welcome dear user, please setup your credentials in settings.";
   return state.isSetup;

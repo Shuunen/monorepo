@@ -1,6 +1,6 @@
 import { parseJson, Result, toastError, toastSuccess } from "@monorepo/utils";
 import {
-  type AppWriteTaskModel,
+  type PouchTaskDocument,
   addTask,
   getTasks,
   modelToLocalTask,
@@ -36,12 +36,12 @@ export function selectJsonFile(): Promise<File | undefined> {
  */
 export async function readJsonFile(file: File) {
   const text = await file.text();
-  const result = parseJson<AppWriteTaskModel[]>(text);
+  const result = parseJson<PouchTaskDocument[]>(text);
   if (!result.ok) return Result.error(result.error);
   // Validate each task has required properties
   for (const [index, task] of result.value.entries())
-    if (!task.name || !task.once || typeof task.minutes !== "number")
-      return Result.error(`Task at index ${index} is missing required properties (name, once, minutes)`);
+    if (!task._id || !task.name || !task.once || typeof task.minutes !== "number")
+      return Result.error(`Task at index ${index} is missing required properties (_id, name, once, minutes)`);
   return Result.ok(result.value);
 }
 
@@ -51,7 +51,7 @@ export async function readJsonFile(file: File) {
  * @param results - Results object to update
  */
 async function updateExistingTask(
-  task: AppWriteTaskModel,
+  task: PouchTaskDocument,
   results: { created: number; errors: string[]; updated: number },
 ) {
   const localTask = modelToLocalTask(task);
@@ -67,9 +67,9 @@ async function updateExistingTask(
  * @param task - The uploaded task
  * @param results - Results object to update
  */
-async function createNewTask(task: AppWriteTaskModel, results: { created: number; errors: string[]; updated: number }) {
-  const appWriteTask = modelToRemoteTask(task);
-  const result = await addTask(appWriteTask);
+async function createNewTask(task: PouchTaskDocument, results: { created: number; errors: string[]; updated: number }) {
+  const remoteTask = modelToRemoteTask(task);
+  const result = await addTask(remoteTask);
   if (result.ok) {
     results.created += 1;
     logger.info(`created task: ${task.name}`);
@@ -83,11 +83,11 @@ async function createNewTask(task: AppWriteTaskModel, results: { created: number
  * @param results - Results object to update
  */
 async function processTaskUpload(
-  task: AppWriteTaskModel,
+  task: PouchTaskDocument,
   existingTaskIds: Set<string>,
   results: { created: number; errors: string[]; updated: number },
 ) {
-  const taskExists = existingTaskIds.has(task.$id);
+  const taskExists = existingTaskIds.has(task._id);
   if (taskExists) await updateExistingTask(task, results);
   else await createNewTask(task, results);
 }
@@ -97,7 +97,7 @@ async function processTaskUpload(
  * @param uploadTasks - Array of tasks from the uploaded JSON
  * @returns Result with success/failure information
  */
-export async function uploadTasksToDatabase(uploadTasks: AppWriteTaskModel[]) {
+export async function uploadTasksToDatabase(uploadTasks: PouchTaskDocument[]) {
   logger.info(`starting upload of ${uploadTasks.length} tasks...`);
 
   const existingTasksResult = await getTasks();
