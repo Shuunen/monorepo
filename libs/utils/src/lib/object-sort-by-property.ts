@@ -1,3 +1,4 @@
+import { isNil } from "es-toolkit";
 import { nbAscending, nbDescending } from "./constants.js";
 
 /**
@@ -17,10 +18,12 @@ export function byProperty<Type extends Record<string, unknown>>(property: strin
   return (recordA: Type, recordB: Type) => {
     const valueA = recordA[property] as number;
     const valueB = recordB[property] as number;
-    if (!valueA && valueB) {
+    const isValueAMissing = isNil(valueA);
+    const isValueBMissing = isNil(valueB);
+    if (isValueAMissing && !isValueBMissing) {
       return sortOrder;
     }
-    if (valueA && !valueB) {
+    if (!isValueAMissing && isValueBMissing) {
       return -sortOrder;
     }
     if (valueA === valueB) {
