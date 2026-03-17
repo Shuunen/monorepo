@@ -1,13 +1,21 @@
+import type { Simplify } from "@monorepo/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ComponentProps } from "react";
 import { Button as ShadButton } from "../shadcn/button";
 import { cn } from "../shadcn/utils";
 import { type NameProp, testIdFromProps } from "./form.utils";
 
-type ButtonProps = ComponentProps<typeof ShadButton> & VariantProps<typeof buttonVariants> & NameProp;
+type ButtonProps = Simplify<
+  Omit<ComponentProps<typeof ShadButton>, "variant" | "size"> &
+    NameProp & {
+      asChild?: boolean;
+      variant?: VariantProps<typeof buttonVariants>["variant"];
+      size?: VariantProps<typeof buttonVariants>["size"];
+    }
+>;
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "inline-flex w-fit shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     defaultVariants: {
       size: "default",
@@ -38,6 +46,7 @@ const buttonVariants = cva(
 
 export function Button({ children, variant, size, className = "", asChild = false, disabled, ...props }: ButtonProps) {
   const classes = `${className} ${disabled ? cn("cursor-not-allowed grayscale") : cn("cursor-pointer")}`;
+  const shadVariant = variant as ComponentProps<typeof ShadButton>["variant"];
   return (
     <ShadButton
       asChild={asChild}
@@ -45,7 +54,7 @@ export function Button({ children, variant, size, className = "", asChild = fals
       data-testid={testIdFromProps("button", props)}
       disabled={disabled}
       size={size}
-      variant={variant}
+      variant={shadVariant}
       {...props}
     >
       {children}

@@ -1,4 +1,5 @@
-/* v8 ignore start -- @preserve */
+/* v8 ignore start */
+import { TooltipProvider } from "@monorepo/components";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
@@ -12,7 +13,9 @@ const root = createRoot(rootElement);
 root.render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <TooltipProvider>
+        <App />
+      </TooltipProvider>
     </BrowserRouter>
     <Footer />
   </StrictMode>,

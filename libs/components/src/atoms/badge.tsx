@@ -1,12 +1,14 @@
+import type { Simplify } from "@monorepo/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ComponentProps } from "react";
 import { Badge as ShadBadge } from "../shadcn/badge";
 import { cn } from "../shadcn/utils";
 import { type NameProp, testIdFromProps } from "./form.utils";
 
-type BadgeProps = ComponentProps<typeof ShadBadge> &
-  NameProp &
-  VariantProps<typeof badgeVariants> & { asChild?: boolean };
+type BadgeProps = Simplify<
+  Omit<ComponentProps<typeof ShadBadge>, "variant"> &
+    NameProp & { asChild?: boolean; variant?: VariantProps<typeof badgeVariants>["variant"] }
+>;
 
 const badgeVariants = cva(
   "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3",
@@ -34,12 +36,13 @@ const badgeVariants = cva(
 );
 
 export function Badge({ children, variant, className = "", asChild = false, ...props }: BadgeProps) {
+  const shadVariant = variant as ComponentProps<typeof ShadBadge>["variant"];
   return (
     <ShadBadge
       asChild={asChild}
       className={cn(badgeVariants({ className, variant }))}
       data-testid={testIdFromProps("badge", props)}
-      variant={variant}
+      variant={shadVariant}
       {...props}
     >
       {children}
