@@ -1,6 +1,14 @@
 import { getFormSummaryContent } from "./form-summary-field-value.utils";
 
 describe("form-summary-field-value.utils", () => {
+  beforeEach(() => {
+    vi.stubEnv("TZ", "UTC");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("getFormSummaryContent A should return notSpecified for undefined", () => {
     const content = getFormSummaryContent(undefined);
     expect(content).toMatchInlineSnapshot(`"Not specified"`);
@@ -23,7 +31,7 @@ describe("form-summary-field-value.utils", () => {
 
   it("getFormSummaryContent E should format date-time strings", () => {
     const content = getFormSummaryContent("2026-03-20T08:30:00.000Z");
-    expect(content).toMatchInlineSnapshot(`"20/03/2026 - 09:30"`);
+    expect(content).toMatchInlineSnapshot(`"20/03/2026 - 08:30"`);
   });
 
   it("getFormSummaryContent F should format booleans as title case", () => {
