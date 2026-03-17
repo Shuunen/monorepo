@@ -288,7 +288,7 @@ export function AutoForm({
   }
 
   function renderReadonlyContent() {
-    const sections = sectionsFromSchema(currentSchema, formData, parentData);
+    const sections = sectionsFromSchema({ data: formData, parentData, schema: currentSchema });
     const stepTitle = typeLikeResolver(stepMetadata?.title, formData, parentData) ?? `Step ${currentStep + 1}`;
     const rightButton = isLastStep
       ? {

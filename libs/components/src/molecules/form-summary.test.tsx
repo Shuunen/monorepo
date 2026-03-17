@@ -41,6 +41,6 @@ describe("form-summary", () => {
     };
     const { container } = render(<FormSummary data={data} name="C" />);
     const cells = container.querySelectorAll("td");
-    expect(alignForSnap(cells)).toMatchInlineSnapshot(`"Age | 30 | Is Active | true | Score | 95.5"`);
+    expect(alignForSnap(cells)).toMatchInlineSnapshot(`"Age | 30 | Is Active | True | Score | 95.5"`);
   });
 });
