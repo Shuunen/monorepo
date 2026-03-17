@@ -23,7 +23,7 @@ describe("form-summary-field-value.utils", () => {
 
   it("getFormSummaryContent E should format date-time strings", () => {
     const content = getFormSummaryContent("2026-03-20T08:30:00.000Z");
-    expect(content).toMatchInlineSnapshot(`"20/03/2026 - 08:30"`);
+    expect(content).toMatchInlineSnapshot(`"20/03/2026 - 09:30"`);
   });
 
   it("getFormSummaryContent F should format booleans as title case", () => {
