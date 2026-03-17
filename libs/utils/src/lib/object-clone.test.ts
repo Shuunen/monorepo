@@ -1,6 +1,6 @@
-import { clone } from "./object-clone.ts";
-import { objectEqual } from "./object-equal.ts";
-import { objectSum } from "./object-sum.ts";
+import { clone } from "./object-clone.js";
+import { objectEqual } from "./object-equal.js";
+import { objectSum } from "./object-sum.js";
 
 describe(clone, () => {
   const person = {

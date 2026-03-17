@@ -1,4 +1,4 @@
-import { objectEqual } from "./object-equal.ts";
+import { objectEqual } from "./object-equal.js";
 
 describe(objectEqual, () => {
   const object4 = { fool: { bar: "foo", regex: /^ho\d+$/iu }, keyA: 1, keyB: 2, keyC: 3 };
