@@ -1,4 +1,3 @@
-// oxlint-disable promise/prefer-await-to-then
 // Mock fetch to prevent network calls during tests
 globalThis.fetch = vi.fn(() =>
   Promise.resolve({
