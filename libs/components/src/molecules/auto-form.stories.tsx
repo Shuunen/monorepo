@@ -608,7 +608,7 @@ export const StepperStates: Story = {
       await expect(secondStepButton).toHaveAttribute("data-active", "true");
       const formSummary = canvas.getByTestId("form-summary-no-title");
       await expect(formSummary).toHaveTextContent("Pet NameFido");
-      await expect(formSummary).toHaveTextContent("Pet Agenot specified");
+      await expect(formSummary).toHaveTextContent("Pet AgeNot specified");
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
     });
@@ -856,14 +856,10 @@ export const SummaryOnly: Story = {
       await expect(summaryStepTitle).toHaveTextContent("Summary");
       await expect(within(summaryStep).getByText("Enter your personal information")).toBeInTheDocument();
       await expect(within(summaryStep).queryByText("Enter your additional information")).toBeNull();
-      await expect(canvas.getByText("Email Address")).toBeInTheDocument();
-      await expect(canvas.getByText("jane.doe@example.com")).toBeInTheDocument();
-      await expect(canvas.getByText("Full Name")).toBeInTheDocument();
-      await expect(canvas.getByText("Jane Doe")).toBeInTheDocument();
-      await expect(canvas.getByText("Age")).toBeInTheDocument();
-      await expect(canvas.getByText("28")).toBeInTheDocument();
-      await expect(canvas.getByText("Subscribe to newsletter")).toBeInTheDocument();
-      await expect(canvas.getByText("true")).toBeInTheDocument();
+      await expect(summaryStep).toHaveTextContent(["Email Address", "jane.doe@example.com"].join(""));
+      await expect(summaryStep).toHaveTextContent(["Full Name", "Jane Doe"].join(""));
+      await expect(summaryStep).toHaveTextContent(["Age", "28"].join(""));
+      await expect(summaryStep).toHaveTextContent(["Subscribe to newsletter", "True"].join(""));
     });
     await step("verify data before submission", async () => {
       await sleep(nbPercentMax);

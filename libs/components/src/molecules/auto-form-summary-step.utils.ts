@@ -1,5 +1,7 @@
+// oxlint-disable max-lines
+import { Result } from "@monorepo/utils";
 import { isFunction } from "es-toolkit";
-import type { z } from "zod";
+import { z } from "zod";
 import type {
   AutoFormData,
   AutoFormFieldMetadata,
@@ -92,23 +94,18 @@ function sectionDataFromObjectItem({ data, innerShape, item, key, index }: Secti
     let innerValue = item[innerKey];
     if (hasOptions) {
       const options = typeLikeResolver(innerMetadata.options, item, data);
-      /* v8 ignore start */
       if (Array.isArray(options)) {
         innerValue = options.find(opt => opt.value === innerValue)?.label;
       }
-      /* v8 ignore stop */
     }
     sectionData[`${key}.${index}.${innerKey}`] = {
-      /* v8 ignore start */
       label: innerMetadata?.label ?? innerKey,
-      /* v8 ignore stop */
       value: innerValue,
     };
   }
   return sectionData;
 }
 
-/* v8 ignore start */
 type SectionsFromArrayOfObjectsProps = {
   data: AutoFormData;
   fieldSchema: z.ZodType;
@@ -141,7 +138,6 @@ function sectionsFromArrayOfObjects(props: SectionsFromArrayOfObjectsProps) /* N
   }
   return sections;
 }
-/* v8 ignore stop */
 
 function isArrayOfObjects(fieldSchema: z.ZodType) {
   if (!isZodArray(fieldSchema)) {
@@ -151,20 +147,45 @@ function isArrayOfObjects(fieldSchema: z.ZodType) {
   return elementResult.ok && isZodObject(elementResult.value);
 }
 
-// oxlint-disable-next-line max-params
-function resolveFieldValue(
-  metadata: AutoFormFieldMetadata | undefined,
-  data: AutoFormData,
-  key: string,
-  parentData?: AutoFormData,
-) {
-  if (isRadioOrSelectMetadata(metadata)) {
-    /* v8 ignore start */
-    const options = typeLikeResolver(metadata.options, data, parentData);
-    return Array.isArray(options) ? options.find(opt => opt.value === data[key])?.label : data[key];
-    /* v8 ignore stop */
+function codecFromMetadata(metadata?: AutoFormFieldMetadata) {
+  if (!metadata || !("codec" in metadata) || metadata.codec === undefined) {
+    return undefined;
   }
-  return data[key];
+  return metadata.codec;
+}
+
+function encodedSummaryValue(codec: z.ZodCodec, value: unknown) {
+  const result = Result.trySafe(() => z.encode(codec, value));
+  if (result.ok) {
+    return result.value;
+  }
+  return value;
+}
+
+type ResolveFieldValueProps = {
+  applyCodec?: boolean;
+  data: AutoFormData;
+  key: string;
+  metadata: AutoFormFieldMetadata | undefined;
+  parentData?: AutoFormData;
+};
+
+function resolveFieldValue({ applyCodec = false, metadata, data, key, parentData }: ResolveFieldValueProps) {
+  const rawValue = data[key];
+  if (isRadioOrSelectMetadata(metadata)) {
+    const options = typeLikeResolver(metadata.options, data, parentData);
+    const selectedValue = Array.isArray(options) ? options.find(opt => opt.value === rawValue)?.label : rawValue;
+    const codec = codecFromMetadata(metadata);
+    if (codec === undefined || selectedValue === undefined || selectedValue === null || !applyCodec) {
+      return selectedValue;
+    }
+    return encodedSummaryValue(codec, selectedValue);
+  }
+  const codec = codecFromMetadata(metadata);
+  if (codec === undefined || rawValue === undefined || rawValue === null || !applyCodec) {
+    return rawValue;
+  }
+  return encodedSummaryValue(codec, rawValue);
 }
 
 type SectionBuilderState = {
@@ -184,19 +205,18 @@ function flushCurrentSection(state: SectionBuilderState) {
 }
 
 type ProcessFieldForSectionProps = {
+  applyCodec?: boolean;
   data: AutoFormData;
   key: string;
   shape: z.ZodObject["shape"];
   state: SectionBuilderState;
 };
 
-function processFieldForSection({ key, shape, data, state }: ProcessFieldForSectionProps) {
+function processFieldForSection({ applyCodec = false, key, shape, data, state }: ProcessFieldForSectionProps) {
   const fieldSchema = shape[key] as z.ZodType;
-  /* v8 ignore start */
   if (!fieldSchema) {
     return;
   }
-  /* v8 ignore stop */
   const metadata = getFieldMetadata(fieldSchema);
   if (metadata?.render === "section") {
     const showSectionInSummary = !("showInSummary" in metadata) || metadata?.showInSummary;
@@ -217,22 +237,29 @@ function processFieldForSection({ key, shape, data, state }: ProcessFieldForSect
   }
   if (shouldIncludeField(fieldSchema, metadata, data)) {
     state.currentSectionData[key] = {
-      /* v8 ignore start */
       label: metadata?.label ?? key,
-      /* v8 ignore stop */
-      value: resolveFieldValue(metadata, data, key, state.parentData),
+      value: resolveFieldValue({ applyCodec, data, key, metadata, parentData: state.parentData }),
     };
   }
 }
 
+type SectionsFromSchemaOptions = {
+  applyCodec?: boolean;
+  data: AutoFormData;
+  schema: z.ZodObject;
+  parentData?: AutoFormData;
+};
+
 /**
  * Builds summary sections from a single schema regardless of step state.
- * @param schema - The Zod object schema for the step
- * @param data - The form data
- * @param parentData - Optional parent form data when in subform
+ * @param options - The options for building sections from schema
+ * @param options.applyCodec - Whether to apply codecs from metadata when resolving field values
+ * @param options.data - The complete form data
+ * @param options.schema - The Zod schema to build sections from
+ * @param options.parentData - Optional parent form data for TypeLike resolution in subforms
  * @returns Array of summary sections
  */
-export function sectionsFromSchema(schema: z.ZodObject, data: AutoFormData, parentData?: AutoFormData) {
+export function sectionsFromSchema({ schema, data, parentData, applyCodec }: SectionsFromSchemaOptions) {
   const state: SectionBuilderState = {
     currentSectionData: {},
     currentSectionTitle: undefined,
@@ -241,7 +268,7 @@ export function sectionsFromSchema(schema: z.ZodObject, data: AutoFormData, pare
     sections: [],
   };
   for (const key of Object.keys(schema.shape)) {
-    processFieldForSection({ data, key, shape: schema.shape, state });
+    processFieldForSection({ applyCodec, data, key, shape: schema.shape, state });
   }
   flushCurrentSection(state);
   return state.sections;
@@ -253,7 +280,7 @@ function sectionsFromEditableStep(schema: z.ZodObject, data: AutoFormData, paren
   if (stepState === "readonly" || stepState === "upcoming") {
     return [];
   }
-  return sectionsFromSchema(schema, data, parentData);
+  return sectionsFromSchema({ data, parentData, schema });
 }
 
 /**

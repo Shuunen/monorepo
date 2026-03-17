@@ -116,6 +116,7 @@ export * from "./molecules/form-field-upload.const";
 export * from "./molecules/form-field.utils";
 export * from "./molecules/form-summary";
 export * from "./molecules/form-summary-field-value";
+export * from "./molecules/form-summary-field-value.utils";
 export * from "./molecules/kitchen-sink";
 export * from "./molecules/landing";
 export * from "./molecules/test-id-checker";

@@ -1,41 +1,13 @@
-import { dateIsoToReadableDatetime, slugify, stringify } from "@monorepo/utils";
+import { downloadFile, slugify } from "@monorepo/utils";
+import { isNil } from "es-toolkit";
 import { TableCell } from "../atoms/table";
 import { IconDownload } from "../icons/icon-download";
+import { getFormSummaryContent } from "./form-summary-field-value.utils";
 
-type Props = {
-  name: string;
-  value: unknown;
-};
-
-function downloadFile(file: File) {
-  const url = URL.createObjectURL(file);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = file.name;
-  document.body.append(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
-}
-
-export function FormSummaryFieldValue({ value, name }: Props) {
-  // @ts-expect-error includes doesn't allow unknown as parameter
-  // oxlint-disable-next-line unicorn/no-null
-  if ([undefined, null].includes(value)) {
-    return <TableCell className="overflow-hidden text-ellipsis italic opacity-30">not specified</TableCell>;
-  }
-
-  if (value instanceof Date) {
-    return (
-      <TableCell className="overflow-hidden text-ellipsis">
-        {dateIsoToReadableDatetime(value, { withTime: false })}
-      </TableCell>
-    );
-  }
-
+export function FormSummaryFieldValue({ value, name }: { name: string; value: unknown }) {
   if (value instanceof File) {
     return (
-      <TableCell className="overflow-hidden text-ellipsis">
+      <TableCell>
         <a
           className="flex cursor-pointer items-center gap-2 underline"
           data-testid={slugify(`summary-file-${name}`)}
@@ -46,6 +18,9 @@ export function FormSummaryFieldValue({ value, name }: Props) {
       </TableCell>
     );
   }
-
-  return <TableCell className="overflow-hidden text-ellipsis">{stringify(value)}</TableCell>;
+  const content = getFormSummaryContent(value);
+  if (isNil(value)) {
+    return <TableCell className="italic opacity-30">{content}</TableCell>;
+  }
+  return <TableCell className="whitespace-normal">{content}</TableCell>;
 }

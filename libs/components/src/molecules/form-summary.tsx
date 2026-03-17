@@ -21,9 +21,9 @@ export function FormSummary(props: FormSummaryProps) {
     <div className="w-full overflow-hidden" data-testid={testIdFromProps("form-summary", props)}>
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead className="w-1/2">Label</TableHead>
-            <TableHead className="w-1/2">Value</TableHead>
+          <TableRow className="grid grid-cols-[320px_1fr]">
+            <TableHead>Label</TableHead>
+            <TableHead>Value</TableHead>
           </TableRow>
         </TableHeader>
       </Table>
@@ -31,8 +31,8 @@ export function FormSummary(props: FormSummaryProps) {
         <Table>
           <TableBody>
             {entries.map(([key, data]) => (
-              <TableRow className="grid grid-cols-2" key={key}>
-                <TableCell className="overflow-hidden text-ellipsis">{data.label}</TableCell>
+              <TableRow className="grid grid-cols-[320px_1fr]" key={key}>
+                <TableCell className="whitespace-normal">{data.label}</TableCell>
                 <FormSummaryFieldValue name={key} value={data.value} />
               </TableRow>
             ))}

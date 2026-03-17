@@ -326,27 +326,215 @@ describe("auto-form-summary-step.utils", () => {
   it("sectionsFromSchema A should build sections regardless of step state", () => {
     const schema = step(z.object({ a: field(z.string(), { label: "A" }) }), { state: "readonly" });
     const data = { a: "foo" };
-    const sections = sectionsFromSchema(schema, data);
+    const sections = sectionsFromSchema({ schema, data });
     expect(sections).toHaveLength(1);
     expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
   });
   it("sectionsFromSchema B should build sections for editable steps too", () => {
     const schema = step(z.object({ b: field(z.string(), { label: "B" }) }), { state: "editable" });
     const data = { b: "bar" };
-    const sections = sectionsFromSchema(schema, data);
+    const sections = sectionsFromSchema({ schema, data });
     expect(sections).toHaveLength(1);
     expect(sections[0].data).toEqual({ b: { label: "B", value: "bar" } });
   });
   it("sectionsFromSchema C should build sections for upcoming steps", () => {
     const schema = step(z.object({ c: field(z.string(), { label: "C" }) }), { state: "upcoming" });
     const data = { c: "baz" };
-    const sections = sectionsFromSchema(schema, data);
+    const sections = sectionsFromSchema({ schema, data });
     expect(sections).toHaveLength(1);
     expect(sections[0].data).toEqual({ c: { label: "C", value: "baz" } });
   });
   it("sectionsFromSchema D should skip sections with showInSummary set to false", () => {
     const schema = z.object({ section: section({ title: "Section", showInSummary: false }) });
-    const sections = sectionsFromSchema(schema, {});
+    const sections = sectionsFromSchema({ schema, data: {} });
     expect(sections).toHaveLength(0);
+  });
+  it("sectionsFromSchema E should encode regular field values with codec for summary", () => {
+    const value = new Date(2026, 2, 21);
+    const expectedValue = `encoded:${value.toISOString().slice(0, 10)}`;
+    const schema = z.object({
+      dateField: field(z.date(), {
+        codec: z.codec(z.string(), z.date(), {
+          decode: input => new Date(input),
+          encode: date => `encoded:${date.toISOString().slice(0, 10)}`,
+        }),
+        label: "Date",
+      }),
+    });
+    const sections = sectionsFromSchema({ schema, data: { dateField: value }, applyCodec: true });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data.dateField).toEqual({ label: "Date", value: expectedValue });
+  });
+  it("sectionsFromSchema F should fallback to raw regular value when codec encode fails", () => {
+    const value = new Date(2026, 2, 21);
+    const schema = z.object({
+      dateField: field(z.date(), {
+        codec: z.codec(z.iso.date(), z.date(), {
+          decode: input => new Date(input),
+          encode: () => "not-an-iso-date",
+        }),
+        label: "Date",
+      }),
+    });
+    const sections = sectionsFromSchema({ schema, data: { dateField: value }, applyCodec: true });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data.dateField).toEqual({ label: "Date", value });
+  });
+  it("sectionsFromSchema G should encode select label values with codec for summary", () => {
+    const schema = z.object({
+      role: field(z.enum(["eng", "mgr"]), {
+        codec: z.codec(z.string(), z.string(), {
+          decode: input => input,
+          encode: value => `encoded:${value}`,
+        }),
+        label: "Role",
+        options: [
+          { label: "Engineer", value: "eng" },
+          { label: "Manager", value: "mgr" },
+        ],
+        render: "select",
+      }),
+    });
+    const sections = sectionsFromSchema({ schema, data: { role: "eng" }, applyCodec: true });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data.role).toEqual({ label: "Role", value: "encoded:Engineer" });
+  });
+  it("sectionsFromSchema H should fallback to select label when codec encode fails", () => {
+    const schema = z.object({
+      role: field(z.enum(["eng", "mgr"]), {
+        codec: z.codec(z.iso.date(), z.string(), {
+          decode: input => input,
+          encode: () => "not-an-iso-date",
+        }),
+        label: "Role",
+        options: [
+          { label: "Engineer", value: "eng" },
+          { label: "Manager", value: "mgr" },
+        ],
+        render: "select",
+      }),
+    });
+    const sections = sectionsFromSchema({ schema, data: { role: "eng" }, applyCodec: true });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data.role).toEqual({ label: "Role", value: "Engineer" });
+  });
+  it("sectionsFromSchema I should fallback to inner key label when array item field metadata is missing", () => {
+    const schema = z.object({
+      items: forms(z.object({ rawKey: z.string() })),
+    });
+    const sections = sectionsFromSchema({ schema, data: { items: [{ rawKey: "alpha" }] } });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data["items.0.rawKey"]).toEqual({ label: "rawKey", value: "alpha" });
+  });
+  it("sectionsFromSchema J should skip empty array-item sections", () => {
+    const schema = z.object({
+      items: forms(
+        z.object({
+          hidden: field(z.string().optional(), { excluded: true }),
+        }),
+      ),
+    });
+    const sections = sectionsFromSchema({ schema, data: { items: [{ hidden: "secret" }] } });
+    expect(sections).toEqual([]);
+  });
+  it("sectionsFromSchema K should fallback to raw option value when options resolve to non-array", () => {
+    const schema = z.object({
+      role: field(z.enum(["eng", "mgr"]), {
+        label: "Role",
+        // @ts-expect-error testing invalid options return
+        options: () => undefined,
+      }),
+    });
+    const sections = sectionsFromSchema({ schema, data: { role: "eng" } });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data.role).toEqual({ label: "Role", value: "eng" });
+  });
+  it("sectionsFromSchema L should keep null value for codec-backed regular fields", () => {
+    const schema = z.object({
+      dateField: field(z.date(), {
+        codec: z.codec(z.string(), z.date(), {
+          decode: input => new Date(input),
+          encode: date => `encoded:${date.toISOString()}`,
+        }),
+        label: "Date",
+      }),
+    });
+    const sections = sectionsFromSchema({ schema, data: { dateField: null }, applyCodec: true });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data.dateField).toEqual({ label: "Date", value: null });
+  });
+  it("sectionsFromSchema M should fallback to key label for top-level fields without metadata", () => {
+    const schema = z.object({ rawName: z.string() });
+    const sections = sectionsFromSchema({ schema, data: { rawName: "Jane" } });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data.rawName).toEqual({ label: "rawName", value: "Jane" });
+  });
+  it("sectionsFromSchema N should use outer key when array field has no metadata", () => {
+    const schema = z.object({
+      items: z.array(z.object({ name: field(z.string(), { label: "Name" }) })),
+    });
+    const sections = sectionsFromSchema({ schema, data: { items: [{ name: "Buddy" }] } });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].title).toBe("items 1");
+  });
+  it("sectionsFromSchema O should keep raw inner value when array item options resolve to non-array", () => {
+    const schema = z.object({
+      items: z.array(
+        z.object({
+          role: field(z.enum(["eng", "mgr"]), {
+            label: "Role",
+            // @ts-expect-error testing invalid options return
+            options: () => undefined,
+            render: "select",
+          }),
+        }),
+      ),
+    });
+    const sections = sectionsFromSchema({ schema, data: { items: [{ role: "eng" }] } });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data["items.0.role"]).toEqual({ label: "Role", value: "eng" });
+  });
+  it("sectionsFromSchema P should fallback to key when array metadata label is explicitly undefined", () => {
+    const schema = z.object({
+      items: forms(z.object({ name: field(z.string(), { label: "Name" }) }), { label: undefined }),
+    });
+    const sections = sectionsFromSchema({ schema, data: { items: [{ name: "Buddy" }] } });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].title).toBe("items 1");
+  });
+  it("sectionsFromSchema Q should return empty sections when array element resolution fails on second read", async () => {
+    vi.resetModules();
+    let getElementSchemaCalls = 0;
+    vi.doMock("./auto-form.utils", async importOriginal => {
+      // oxlint-disable-next-line typescript/consistent-type-imports
+      const actual = await importOriginal<typeof import("./auto-form.utils")>();
+      return {
+        ...actual,
+        getElementSchema: vi.fn(() => {
+          getElementSchemaCalls += 1;
+          if (getElementSchemaCalls === 1) {
+            return { ok: true, value: z.object({ name: z.string() }) };
+          }
+          return { error: "forced-error", ok: false };
+        }),
+        isZodArray: vi.fn(() => true),
+        isZodObject: vi.fn(() => true),
+      };
+    });
+    const utilsModule = await import("./auto-form-summary-step.utils");
+    const schema = z.object({
+      items: fields(z.object({ name: field(z.string(), { label: "Name" }) })),
+    });
+    const sections = utilsModule.sectionsFromSchema({ schema, data: { items: [{ name: "Buddy" }] } });
+    expect(sections).toEqual([]);
+    vi.doUnmock("./auto-form.utils");
+    vi.resetModules();
+  });
+  it("sectionsFromSchema R should skip entries when schema shape contains undefined field", () => {
+    const schema = z.object({ a: field(z.string(), { label: "A" }) });
+    const shape = schema.shape as Record<string, z.ZodType | undefined>;
+    shape.a = undefined;
+    const sections = sectionsFromSchema({ schema, data: { a: "foo" } });
+    expect(sections).toEqual([]);
   });
 });
