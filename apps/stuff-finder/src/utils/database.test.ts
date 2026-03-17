@@ -4,7 +4,6 @@ import {
   addItemRemotely,
   deleteImageRemotely,
   deleteItemRemotely,
-  downloadBlob,
   downloadImages,
   downloadItems,
   downloadObject,
@@ -353,12 +352,6 @@ describe("database.utils", () => {
     expect(photo).toMatchInlineSnapshot(`"https://example.com/photo.jpg"`);
   });
 
-  it("downloadBlob A", () => {
-    expect(() => {
-      downloadBlob(new Blob([]), "file.txt");
-    }).toThrowErrorMatchingInlineSnapshot(`[ReferenceError: document is not defined]`);
-  });
-
   it("downloadObject A", () => {
     expect(() => {
       downloadObject({ wow: 14 }, "file.txt");
@@ -367,7 +360,7 @@ describe("database.utils", () => {
 
   it("downloadUrl A", async () => {
     await expect(downloadUrl("http://files.com/42.txt", "my-file.txt")).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[ReferenceError: document is not defined]`,
+      `[TypeError: The "obj" argument must be an instance of Blob. Received an instance of Object]`,
     );
   });
 
@@ -386,7 +379,7 @@ describe("database.utils", () => {
     const files = [mockFile({ $id: "some-image-file-uuid-a" }), mockFile({ $id: "some-other-image-file-uuid-b" })];
     databaseMock.listFiles.mockResolvedValueOnce({ files, total: 2 });
     await expect(downloadImages()).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[ReferenceError: document is not defined]`,
+      `[TypeError: The "obj" argument must be an instance of Blob. Received an instance of Object]`,
     );
   });
 

@@ -1,5 +1,6 @@
 import {
   dateIso10,
+  downloadFile,
   storage as lsStorage,
   nbHueMax,
   nbPercentMax,
@@ -87,27 +88,18 @@ export async function uploadImage(fileName: string, url: string) {
   return Result.ok(upload.value.$id);
 }
 
-export function downloadBlob(blob: Blob, fileName: string) {
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = fileName;
-  document.body.append(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(link.href);
-  toastSuccess("Download started");
-}
-
 export function downloadObject(data: Record<string, unknown> | unknown[], fileName: string) {
   const json = JSON.stringify(data, undefined, nbSpacesIndent);
   const blob = new Blob([json], { type: "application/json" });
-  downloadBlob(blob, fileName);
+  downloadFile(blob, fileName);
+  toastSuccess("Download started");
 }
 
 export async function downloadUrl(url: string, fileName: string) {
   const result = await fetch(url);
   const blob = await result.blob();
-  downloadBlob(blob, fileName);
+  downloadFile(blob, fileName);
+  toastSuccess("Download started");
 }
 
 export async function listImages(bucketId = state.credentials.bucketId) {

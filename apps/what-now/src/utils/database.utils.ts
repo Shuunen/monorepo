@@ -1,4 +1,13 @@
-import { dateIso10, nbPercentMax, nbSpacesIndent, Result, slugify, toastError, toastSuccess } from "@monorepo/utils";
+import {
+  dateIso10,
+  downloadFile,
+  nbPercentMax,
+  nbSpacesIndent,
+  Result,
+  slugify,
+  toastError,
+  toastSuccess,
+} from "@monorepo/utils";
 import { Client, TablesDB, type Models, Query } from "appwrite";
 import type { AppWriteTask, Task } from "../types";
 import { logger } from "./logger.utils";
@@ -128,13 +137,6 @@ export async function downloadData() {
   }
   const json = JSON.stringify(result.value.rows, undefined, nbSpacesIndent);
   const blob = new Blob([json], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${dateIso10()}_what-now_tasks.json`;
-  document.body.append(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
+  downloadFile(blob, `${dateIso10()}_what-now_tasks.json`);
   toastSuccess("Data downloaded");
 }
