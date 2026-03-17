@@ -1,5 +1,5 @@
 // oxlint-disable react/no-multi-comp
-import { arrayAlign, cn, isObjectEmpty, nbThird, Result, useStableKeys } from "@monorepo/utils";
+import { arrayAlign, cn, isObjectEmpty, nbThird, Result, useStableKeys, isRecord } from "@monorepo/utils";
 import { invariant } from "es-toolkit";
 import { useEffect, useMemo, useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -27,10 +27,6 @@ import {
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import type { ItemProps, OnCompleteItemParams } from "./form-field-form-list.types";
 import { isSubformFilled, nbFilledItems } from "./form-field-form-list.utils";
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
 
 function ItemBadge({ hasError, isEmpty }: { hasError: boolean; isEmpty: boolean }) {
   let icon = <IconCircleClose />;

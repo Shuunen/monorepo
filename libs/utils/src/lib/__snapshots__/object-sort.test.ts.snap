@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`objectSort C sort a complex object with null, undefined, etc 1`] = `
+exports[`objectSort > objectSort C sort a complex object with null, undefined, etc 1`] = `
 {
   "alpaca": {
     "c1": 11,

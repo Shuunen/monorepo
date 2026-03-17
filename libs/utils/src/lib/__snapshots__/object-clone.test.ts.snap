@@ -1,0 +1,28 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`clone > clone I debug 1`] = `
+{
+  "person": {
+    "age": 21,
+    "details": {
+      "dateOfBirth": 2001-12-22T00:00:00.000Z,
+      "favouriteFood": "sushi",
+    },
+    "name": "John",
+    "nameRegex": /\\^jo/iu,
+    "nameValid": true,
+    "nameValidator": [Function],
+  },
+  "personCopy": {
+    "age": 42,
+    "details": {
+      "dateOfBirth": 2001-12-22T00:00:00.000Z,
+      "favouriteFood": "sushi",
+    },
+    "name": "John",
+    "nameRegex": /\\^jo/iu,
+    "nameValid": true,
+    "nameValidator": [Function],
+  },
+}
+`;

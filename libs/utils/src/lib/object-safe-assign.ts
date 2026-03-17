@@ -1,4 +1,4 @@
-import { isRecord } from "./objects.js";
+import { isRecord } from "./object-is-record.js";
 
 /**
  * Like Object.assign but only non-null/undefined values can overwrite
@@ -17,7 +17,7 @@ export function safeAssign(target: Record<string, unknown>, ...sources: Readonly
         if (!target[key]) {
           Object.assign(target, { [key]: {} });
         }
-        safeAssign(target[key] as Record<string, unknown>, source[key] as Record<string, unknown>);
+        safeAssign(target[key] as Record<string, unknown>, source[key]);
       } else if (source[key] !== null && source[key] !== undefined) {
         Object.assign(target, { [key]: source[key] });
       }

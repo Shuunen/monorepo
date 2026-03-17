@@ -1,4 +1,5 @@
 import { nbSpacesIndent } from "./constants.js";
+import { isRecord } from "./object-is-record.js";
 import { objectSort } from "./object-sort.js";
 
 // currently handled :
@@ -114,10 +115,6 @@ type SerializedFile = {
 type SerializedDate = {
   __date__: string;
 };
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
 
 function isSerializedRegex(value: unknown): value is SerializedRegex {
   return isRecord(value) && typeof value.__regexSource__ === "string" && typeof value.__regexFlags__ === "string";

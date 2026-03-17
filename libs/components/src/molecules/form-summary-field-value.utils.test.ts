@@ -1,6 +1,14 @@
 import { getFormSummaryContent } from "./form-summary-field-value.utils";
 
 describe("form-summary-field-value.utils", () => {
+  beforeEach(() => {
+    vi.stubEnv("TZ", "UTC");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("getFormSummaryContent A should return notSpecified for undefined", () => {
     const content = getFormSummaryContent(undefined);
     expect(content).toMatchInlineSnapshot(`"Not specified"`);
