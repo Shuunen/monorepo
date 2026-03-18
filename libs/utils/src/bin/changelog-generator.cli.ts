@@ -4,7 +4,7 @@ import { Logger, parseJson, Result, stringify } from "@monorepo/utils";
 
 /* v8 ignore next */
 const logger = new Logger({ minimumLevel: import.meta.main ? "3-info" : "7-error" });
-const commitRegex = /(?<ticket>\w+-\d+)[ :]+(?<type>\w+(?<scope>\([\w-]+\))?: ?)?(?<message>[\w -.:/<>]+)/;
+const commitRegex = /(?<ticket>\w+-\d+)[ :]+(?<type>\w+(?<scope>\([\w-]+\))?: ?)?(?<message>.+)/;
 
 /**
  * @param {string} commitLine single commit line to be parsed
