@@ -4,6 +4,7 @@ import { isFunction } from "es-toolkit";
 import { z } from "zod";
 import type {
   AutoFormData,
+  AutoFormFieldAcceptMetadata,
   AutoFormFieldMetadata,
   AutoFormFieldRadioMetadata,
   AutoFormFieldSelectMetadata,
@@ -63,6 +64,20 @@ export function isRadioOrSelectMetadata(
   return metadata ? "options" in metadata : false;
 }
 
+function isAcceptMetadata(metadata?: AutoFormFieldMetadata): metadata is AutoFormFieldAcceptMetadata {
+  return metadata?.render === "accept";
+}
+
+function acceptLabelFromMetadata(metadata: AutoFormFieldAcceptMetadata, value: unknown) {
+  if (value === true) {
+    return metadata.labels?.accept ?? "Accept";
+  }
+  if (value === false) {
+    return metadata.labels?.reject ?? "Reject";
+  }
+  return value;
+}
+
 type SectionDataFromObjectItemProps = {
   data: AutoFormData;
   index: number;
@@ -97,6 +112,8 @@ function sectionDataFromObjectItem({ data, innerShape, item, key, index }: Secti
       if (Array.isArray(options)) {
         innerValue = options.find(opt => opt.value === innerValue)?.label;
       }
+    } else if (isAcceptMetadata(innerMetadata)) {
+      innerValue = acceptLabelFromMetadata(innerMetadata, innerValue);
     }
     sectionData[`${key}.${index}.${innerKey}`] = {
       label: innerMetadata?.label ?? innerKey,
@@ -180,6 +197,9 @@ function resolveFieldValue(props: ResolveFieldValueProps) /* NOSONAR */ {
       return selectedValue;
     }
     return encodedSummaryValue(codec, selectedValue);
+  }
+  if (isAcceptMetadata(props.metadata)) {
+    return acceptLabelFromMetadata(props.metadata, rawValue);
   }
   const codec = codecFromMetadata(props.metadata);
   if (codec === undefined || rawValue === undefined || rawValue === null || !props.applyCodec) {

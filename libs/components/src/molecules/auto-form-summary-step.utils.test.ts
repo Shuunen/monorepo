@@ -6,7 +6,7 @@ import {
   sectionsFromEditableSteps,
   sectionsFromSchema,
 } from "./auto-form-summary-step.utils";
-import { field, fields, forms, section, step } from "./auto-form.utils";
+import { acceptField, field, fields, forms, section, step } from "./auto-form.utils";
 
 describe("auto-form-summary-step.utils", () => {
   // groupedSectionsFromEditableSteps
@@ -177,7 +177,22 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections[0].title).toBeUndefined();
     expect(sections[0].data).toEqual({ b: { label: "B", value: "Bar" } });
   });
-  it("sectionsFromEditableSteps F should create dedicated sections for array of objects", () => {
+  it("sectionsFromEditableSteps F should handle accept fields with custom labels", () => {
+    const schema = z.object({
+      consent: acceptField({
+        label: "Consent",
+        labels: {
+          accept: "I agree",
+          reject: "I decline",
+        },
+      }),
+    });
+    const sections = sectionsFromEditableSteps([schema], { consent: false });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].title).toBeUndefined();
+    expect(sections[0].data).toEqual({ consent: { label: "Consent", value: "I decline" } });
+  });
+  it("sectionsFromEditableSteps G should create dedicated sections for array of objects", () => {
     const schema = z.object({
       a: field(z.string(), { label: "A" }),
       pets: forms(
@@ -201,7 +216,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     expect(sections[2].title).toBe("pets 2");
   });
-  it("sectionsFromEditableSteps G should use identifier for array of objects section titles", () => {
+  it("sectionsFromEditableSteps H should use identifier for array of objects section titles", () => {
     const schema = z.object({
       pets: forms(z.object({ name: field(z.string(), { label: "Name" }) }), {
         identifier: data => `Pet: ${data?.name}`,
@@ -214,7 +229,7 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections[0].title).toBe("Pet: Buddy");
     expect(sections[1].title).toBe("Pet: Max");
   });
-  it("sectionsFromEditableSteps H should use field label for array of objects when no identifier", () => {
+  it("sectionsFromEditableSteps I should use field label for array of objects when no identifier", () => {
     const schema = z.object({
       pets: forms(z.object({ name: field(z.string(), { label: "Name" }) }), { label: "My Pets" }),
     });
@@ -223,7 +238,7 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections).toHaveLength(1);
     expect(sections[0].title).toBe("My Pets 1");
   });
-  it("sectionsFromEditableSteps I should handle empty array of objects", () => {
+  it("sectionsFromEditableSteps J should handle empty array of objects", () => {
     const schema = z.object({
       pets: forms(z.object({ name: field(z.string(), { label: "Name" }) })),
     });
@@ -231,7 +246,7 @@ describe("auto-form-summary-step.utils", () => {
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(0);
   });
-  it("sectionsFromEditableSteps J should handle missing array data", () => {
+  it("sectionsFromEditableSteps K should handle missing array data", () => {
     const schema = z.object({
       pets: forms(z.object({ name: field(z.string(), { label: "Name" }) })),
     });
@@ -239,7 +254,7 @@ describe("auto-form-summary-step.utils", () => {
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(0);
   });
-  it("sectionsFromEditableSteps K should handle array of objects with select fields inside", () => {
+  it("sectionsFromEditableSteps L should handle array of objects with select fields inside", () => {
     const schema = z.object({
       pets: forms(
         z.object({
@@ -258,7 +273,7 @@ describe("auto-form-summary-step.utils", () => {
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections[0].data["pets.0.type"]?.value).toBe("Dog");
   });
-  it("sectionsFromEditableSteps L should place array sections after the current section", () => {
+  it("sectionsFromEditableSteps M should place array sections after the current section", () => {
     const schema = z.object({
       a: field(z.string(), { label: "A" }),
       pets: forms(z.object({ name: field(z.string(), { label: "Name" }) })),
@@ -273,7 +288,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     expect(sections[1].title).toBe("pets 1");
   });
-  it("sectionsFromEditableSteps M should skip section markers inside array of objects", () => {
+  it("sectionsFromEditableSteps N should skip section markers inside array of objects", () => {
     const schema = z.object({
       pets: forms(
         z.object({
@@ -287,7 +302,7 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections).toHaveLength(1);
     expect(sections[0].data).toEqual({ "pets.0.name": { label: "Name", value: "Buddy" } });
   });
-  it("sectionsFromEditableSteps N should hide regular field when showInSummary is false", () => {
+  it("sectionsFromEditableSteps O should hide regular field when showInSummary is false", () => {
     const schema = z.object({
       a: field(z.string(), { label: "A" }),
       b: field(z.string(), { label: "B", showInSummary: false }),
@@ -301,7 +316,7 @@ describe("auto-form-summary-step.utils", () => {
       c: { label: "C", value: "baz" },
     });
   });
-  it("sectionsFromEditableSteps O should hide forms array when showInSummary is false", () => {
+  it("sectionsFromEditableSteps P should hide forms array when showInSummary is false", () => {
     const schema = z.object({
       a: field(z.string(), { label: "A" }),
       pets: forms(z.object({ name: field(z.string(), { label: "Name" }) }), { showInSummary: false }),
@@ -311,7 +326,7 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections).toHaveLength(1);
     expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
   });
-  it("sectionsFromEditableSteps P should handle field-list arrays of objects", () => {
+  it("sectionsFromEditableSteps Q should handle field-list arrays of objects", () => {
     const schema = z.object({
       items: fields(z.object({ value: field(z.string(), { label: "Value" }) })),
     });
@@ -418,7 +433,25 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections).toHaveLength(1);
     expect(sections[0].data.role).toEqual({ label: "Role", value: "Engineer" });
   });
-  it("sectionsFromSchema I should fallback to inner key label when array item field metadata is missing", () => {
+  it("sectionsFromSchema I should map accept labels in array item sections", () => {
+    const schema = z.object({
+      items: forms(
+        z.object({
+          consent: acceptField({
+            label: "Consent",
+            labels: {
+              accept: "Accepted",
+              reject: "Rejected",
+            },
+          }),
+        }),
+      ),
+    });
+    const sections = sectionsFromSchema({ schema, data: { items: [{ consent: true }] } });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data["items.0.consent"]).toEqual({ label: "Consent", value: "Accepted" });
+  });
+  it("sectionsFromSchema J should fallback to inner key label when array item field metadata is missing", () => {
     const schema = z.object({
       items: forms(z.object({ rawKey: z.string() })),
     });
@@ -426,7 +459,7 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections).toHaveLength(1);
     expect(sections[0].data["items.0.rawKey"]).toEqual({ label: "rawKey", value: "alpha" });
   });
-  it("sectionsFromSchema J should skip empty array-item sections", () => {
+  it("sectionsFromSchema K should skip empty array-item sections", () => {
     const schema = z.object({
       items: forms(
         z.object({
@@ -437,7 +470,7 @@ describe("auto-form-summary-step.utils", () => {
     const sections = sectionsFromSchema({ schema, data: { items: [{ hidden: "secret" }] } });
     expect(sections).toEqual([]);
   });
-  it("sectionsFromSchema K should fallback to raw option value when options resolve to non-array", () => {
+  it("sectionsFromSchema L should fallback to raw option value when options resolve to non-array", () => {
     const schema = z.object({
       role: field(z.enum(["eng", "mgr"]), {
         label: "Role",
@@ -449,7 +482,7 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections).toHaveLength(1);
     expect(sections[0].data.role).toEqual({ label: "Role", value: "eng" });
   });
-  it("sectionsFromSchema L should keep null value for codec-backed regular fields", () => {
+  it("sectionsFromSchema M should keep null value for codec-backed regular fields", () => {
     const schema = z.object({
       dateField: field(z.date(), {
         codec: z.codec(z.string(), z.date(), {
@@ -463,13 +496,13 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections).toHaveLength(1);
     expect(sections[0].data.dateField).toEqual({ label: "Date", value: null });
   });
-  it("sectionsFromSchema M should fallback to key label for top-level fields without metadata", () => {
+  it("sectionsFromSchema N should fallback to key label for top-level fields without metadata", () => {
     const schema = z.object({ rawName: z.string() });
     const sections = sectionsFromSchema({ schema, data: { rawName: "Jane" } });
     expect(sections).toHaveLength(1);
     expect(sections[0].data.rawName).toEqual({ label: "rawName", value: "Jane" });
   });
-  it("sectionsFromSchema N should use outer key when array field has no metadata", () => {
+  it("sectionsFromSchema O should use outer key when array field has no metadata", () => {
     const schema = z.object({
       items: z.array(z.object({ name: field(z.string(), { label: "Name" }) })),
     });
@@ -477,7 +510,7 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections).toHaveLength(1);
     expect(sections[0].title).toBe("items 1");
   });
-  it("sectionsFromSchema O should keep raw inner value when array item options resolve to non-array", () => {
+  it("sectionsFromSchema P should keep raw inner value when array item options resolve to non-array", () => {
     const schema = z.object({
       items: z.array(
         z.object({
@@ -494,7 +527,7 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections).toHaveLength(1);
     expect(sections[0].data["items.0.role"]).toEqual({ label: "Role", value: "eng" });
   });
-  it("sectionsFromSchema P should fallback to key when array metadata label is explicitly undefined", () => {
+  it("sectionsFromSchema Q should fallback to key when array metadata label is explicitly undefined", () => {
     const schema = z.object({
       items: forms(z.object({ name: field(z.string(), { label: "Name" }) }), { label: undefined }),
     });
@@ -502,7 +535,7 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections).toHaveLength(1);
     expect(sections[0].title).toBe("items 1");
   });
-  it("sectionsFromSchema Q should return empty sections when array element resolution fails on second read", async () => {
+  it("sectionsFromSchema R should return empty sections when array element resolution fails on second read", async () => {
     vi.resetModules();
     let getElementSchemaCalls = 0;
     vi.doMock("./auto-form.utils", async importOriginal => {
@@ -530,11 +563,35 @@ describe("auto-form-summary-step.utils", () => {
     vi.doUnmock("./auto-form.utils");
     vi.resetModules();
   });
-  it("sectionsFromSchema R should skip entries when schema shape contains undefined field", () => {
+  it("sectionsFromSchema S should skip entries when schema shape contains undefined field", () => {
     const schema = z.object({ a: field(z.string(), { label: "A" }) });
     const shape = schema.shape as Record<string, z.ZodType | undefined>;
     shape.a = undefined;
     const sections = sectionsFromSchema({ schema, data: { a: "foo" } });
     expect(sections).toEqual([]);
+  });
+  it("sectionsFromSchema T should use default labels for accept fields without custom labels", () => {
+    const schema = z.object({
+      consent: acceptField({ label: "Consent" }),
+      approval: acceptField({ label: "Approval" }),
+    });
+    const sections = sectionsFromSchema({ schema, data: { approval: false, consent: true } });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data.consent).toEqual({ label: "Consent", value: "Accept" });
+    expect(sections[0].data.approval).toEqual({ label: "Approval", value: "Reject" });
+  });
+  it("sectionsFromSchema U should keep raw value when accept field value is not boolean", () => {
+    const schema = z.object({
+      consent: acceptField({
+        label: "Consent",
+        labels: {
+          accept: "Accepted",
+          reject: "Rejected",
+        },
+      }),
+    });
+    const sections = sectionsFromSchema({ schema, data: { consent: "pending" } });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data.consent).toEqual({ label: "Consent", value: "pending" });
   });
 });
