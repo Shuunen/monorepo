@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
  * A set of layered sections of content—known as tab panels—that are displayed
  * one at a time.
  */
-const meta = {
+const meta: Meta<typeof Tabs> = {
   args: {
     className: "w-96",
     defaultValue: "account",

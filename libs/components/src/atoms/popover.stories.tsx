@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 /**
  * Displays rich content in a portal, triggered by a button.
  */
-const meta = {
+const meta: Meta<typeof Popover> = {
   argTypes: {},
   component: Popover,
   parameters: {
