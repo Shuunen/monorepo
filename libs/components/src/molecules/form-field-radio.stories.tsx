@@ -436,3 +436,45 @@ export const HorizontalCard: Story = {
     });
   },
 };
+
+/**
+ * Vertical card radio group
+ */
+export const VerticalCard: Story = {
+  args: {
+    schemas: [
+      z.object({
+        agreedToTerms: field(z.enum(["yes", "idk", "nope"]), {
+          isVertical: true,
+          label: "Response",
+          options: [
+            {
+              icon: IconAccept,
+              iconColor: "text-success",
+              label: "Yes I guess",
+              value: "yes",
+              description: "I'm sure.",
+            },
+            {
+              icon: IconWarning,
+              iconColor: "text-warning",
+              label: "I don't know",
+              value: "idk",
+              description: "I'm not sure...",
+            },
+            {
+              icon: IconReject,
+              iconColor: "text-destructive",
+              label: "Nope not really",
+              value: "nope",
+              description: "I'm sure.",
+            },
+          ],
+          placeholder: "Select a response",
+          render: "radio",
+          variant: "card",
+        }),
+      }),
+    ],
+  },
+};
