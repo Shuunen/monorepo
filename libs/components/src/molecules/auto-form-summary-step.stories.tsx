@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, within } from "storybook/test";
 import { z } from "zod";
 import { AutoFormSummaryStep } from "./auto-form-summary-step";
-import { field, fields, forms, section, step } from "./auto-form.utils";
+import { acceptField, field, fields, forms, section, step } from "./auto-form.utils";
 
 const meta = {
   component: AutoFormSummaryStep,
@@ -121,7 +121,18 @@ const complexSchemas = [
       }),
       booleanRenderAccept: field(z.boolean(), {
         label: "Boolean render accept",
+        labels: {
+          accept: "I accept the terms and conditions",
+          reject: "I do not accept the terms and conditions",
+        },
         render: "accept",
+      }),
+      booleanAcceptField: acceptField({
+        label: "Boolean accept field",
+        labels: {
+          accept: "Confirmation",
+          reject: "Non-confirmation",
+        },
       }),
       booleanRenderCheckbox: field(z.boolean(), {
         label: "Boolean render checkbox",
@@ -302,6 +313,7 @@ export const Complex: Story = {
         },
       ],
       booleanRenderAccept: true,
+      booleanAcceptField: false,
       booleanRenderCheckbox: false,
       booleanRenderSwitch: true,
       dateRenderDate: summaryDate,
@@ -352,6 +364,10 @@ export const Complex: Story = {
     await expect(profileSummary).toHaveTextContent(["String render time", "09:30"].join(""));
     await expect(profileSummary).toHaveTextContent(["String render date-time", "20/03/2026 - 09:30"].join(""));
     await expect(profileSummary).toHaveTextContent(["Boolean render switch", "Yes"].join(""));
+    await expect(profileSummary).toHaveTextContent(
+      ["Boolean render accept", "I accept the terms and conditions"].join(""),
+    );
+    await expect(profileSummary).toHaveTextContent(["Boolean accept field", "Non-confirmation"].join(""));
     await expect(profileSummary).toHaveTextContent(["Boolean render checkbox", "No"].join(""));
     await expect(profileSummary).toHaveTextContent(["Enum render select", "Japan"].join(""));
     await expect(profileSummary).toHaveTextContent(["Enum render radio", "Engineer radio label"].join(""));
