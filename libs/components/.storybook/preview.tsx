@@ -1,10 +1,11 @@
+// oxlint-disable only-export-components, no-multi-comp
+import { TooltipProvider } from "@monorepo/components";
 import type { Decorator, Preview } from "@storybook/react-vite";
-import { createRootRoute, createRouter, RouterProvider } from "@tanstack/react-router";
 // Import Tailwind CSS styles for Storybook
 import "../src/styles.css";
 import "./tw.css";
+import { createRootRoute, createRouter, RouterProvider } from "@tanstack/react-router";
 
-// oxlint-disable-next-line react/only-export-components
 const RouterDecorator: Decorator = Story => {
   const rootRoute = createRootRoute({ component: () => <Story /> });
   const routeTree = rootRoute;
@@ -12,8 +13,14 @@ const RouterDecorator: Decorator = Story => {
   return <RouterProvider router={router} />;
 };
 
+const TooltipDecorator: Decorator = Story => (
+  <TooltipProvider>
+    <Story />
+  </TooltipProvider>
+);
+
 const preview: Preview = {
-  decorators: [RouterDecorator],
+  decorators: [RouterDecorator, TooltipDecorator],
   parameters: {
     controls: {
       matchers: {
@@ -24,5 +31,5 @@ const preview: Preview = {
   },
 };
 
-// oxlint-disable-next-line no-default-export
+// oxlint-disable-next-line import/no-default-export
 export { preview as default };
