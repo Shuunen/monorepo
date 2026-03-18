@@ -859,7 +859,7 @@ export const SummaryOnly: Story = {
       await expect(summaryStep).toHaveTextContent(["Email Address", "jane.doe@example.com"].join(""));
       await expect(summaryStep).toHaveTextContent(["Full Name", "Jane Doe"].join(""));
       await expect(summaryStep).toHaveTextContent(["Age", "28"].join(""));
-      await expect(summaryStep).toHaveTextContent(["Subscribe to newsletter", "True"].join(""));
+      await expect(summaryStep).toHaveTextContent(["Subscribe to newsletter", "Yes"].join(""));
     });
     await step("verify data before submission", async () => {
       await sleep(nbPercentMax);

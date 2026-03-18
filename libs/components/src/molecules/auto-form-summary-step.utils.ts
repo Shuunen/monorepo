@@ -170,19 +170,19 @@ type ResolveFieldValueProps = {
   parentData?: AutoFormData;
 };
 
-function resolveFieldValue({ applyCodec = false, metadata, data, key, parentData }: ResolveFieldValueProps) {
-  const rawValue = data[key];
-  if (isRadioOrSelectMetadata(metadata)) {
-    const options = typeLikeResolver(metadata.options, data, parentData);
+function resolveFieldValue(props: ResolveFieldValueProps) /* NOSONAR */ {
+  const rawValue = props.data[props.key];
+  if (isRadioOrSelectMetadata(props.metadata)) {
+    const options = typeLikeResolver(props.metadata.options, props.data, props.parentData);
     const selectedValue = Array.isArray(options) ? options.find(opt => opt.value === rawValue)?.label : rawValue;
-    const codec = codecFromMetadata(metadata);
-    if (codec === undefined || selectedValue === undefined || selectedValue === null || !applyCodec) {
+    const codec = codecFromMetadata(props.metadata);
+    if (codec === undefined || selectedValue === undefined || selectedValue === null || !props.applyCodec) {
       return selectedValue;
     }
     return encodedSummaryValue(codec, selectedValue);
   }
-  const codec = codecFromMetadata(metadata);
-  if (codec === undefined || rawValue === undefined || rawValue === null || !applyCodec) {
+  const codec = codecFromMetadata(props.metadata);
+  if (codec === undefined || rawValue === undefined || rawValue === null || !props.applyCodec) {
     return rawValue;
   }
   return encodedSummaryValue(codec, rawValue);

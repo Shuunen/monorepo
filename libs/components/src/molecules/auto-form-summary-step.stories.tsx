@@ -137,8 +137,8 @@ const complexSchemas = [
       enumRenderRadio: field(z.enum(["engineer", "manager"]), {
         label: "Enum render radio",
         options: [
-          { label: "Engineer", value: "engineer" },
-          { label: "Manager", value: "manager" },
+          { label: "Engineer radio label", value: "engineer" },
+          { label: "Manager radio label", value: "manager" },
         ],
         render: "radio",
       }),
@@ -351,11 +351,10 @@ export const Complex: Story = {
     await expect(profileSummary).toHaveTextContent(["String render date", "18/03/2026"].join(""));
     await expect(profileSummary).toHaveTextContent(["String render time", "09:30"].join(""));
     await expect(profileSummary).toHaveTextContent(["String render date-time", "20/03/2026 - 09:30"].join(""));
-    await expect(profileSummary).toHaveTextContent(["Boolean render switch", "True"].join(""));
-    await expect(profileSummary).toHaveTextContent(["Boolean render accept", "True"].join(""));
-    await expect(profileSummary).toHaveTextContent(["Boolean render checkbox", "False"].join(""));
+    await expect(profileSummary).toHaveTextContent(["Boolean render switch", "Yes"].join(""));
+    await expect(profileSummary).toHaveTextContent(["Boolean render checkbox", "No"].join(""));
     await expect(profileSummary).toHaveTextContent(["Enum render select", "Japan"].join(""));
-    await expect(profileSummary).toHaveTextContent(["Enum render radio", "Engineer"].join(""));
+    await expect(profileSummary).toHaveTextContent(["Enum render radio", "Engineer radio label"].join(""));
     await expect(profileSummary).toHaveTextContent(
       ["Array render field-list string", "TypeScript, React, Zod"].join(""),
     );
@@ -380,7 +379,7 @@ export const Complex: Story = {
     await expect(alexSummary).toHaveTextContent(["String render text", "Alex"].join(""));
     await expect(alexSummary).toHaveTextContent(["Enum render select", "Team lead"].join(""));
     await expect(alexSummary).toHaveTextContent(["String render email", "alex@example.com"].join(""));
-    await expect(alexSummary).toHaveTextContent(["Boolean render checkbox", "True"].join(""));
+    await expect(alexSummary).toHaveTextContent(["Boolean render checkbox", "Yes"].join(""));
     await expect(alexSummary).toHaveTextContent(
       ["String render text depends on boolean render checkbox", "+33123456789"].join(""),
     );

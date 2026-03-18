@@ -34,9 +34,11 @@ describe("form-summary-field-value.utils", () => {
     expect(content).toMatchInlineSnapshot(`"20/03/2026 - 08:30"`);
   });
 
-  it("getFormSummaryContent F should format booleans as title case", () => {
-    const content = getFormSummaryContent(true);
-    expect(content).toMatchInlineSnapshot(`"True"`);
+  it("getFormSummaryContent F should format booleans as Yes/No", () => {
+    const contentYes = getFormSummaryContent(true);
+    expect(contentYes).toMatchInlineSnapshot(`"Yes"`);
+    const contentNo = getFormSummaryContent(false);
+    expect(contentNo).toMatchInlineSnapshot(`"No"`);
   });
 
   it("getFormSummaryContent G should join arrays with commas", () => {
