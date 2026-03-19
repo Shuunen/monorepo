@@ -1,4 +1,5 @@
 .cache
+.claude/worktrees
 .cursor/rules/nx-rules.mdc
 .DS_Store
 .env
