@@ -353,3 +353,72 @@ export const FormListInitializedFixedEmpty: Story = {
     expect(thirdApplicant).toBeInTheDocument();
   },
 };
+
+const applicantSchemaWithKeyMapping = z.object({
+  name: field(z.string().min(2), {
+    label: "Child's Name",
+    placeholder: "Enter the name of the child",
+    key: "childName",
+  }),
+  diet: field(z.string().min(2).prefault("vegan"), {
+    label: "Child's diet",
+    key: "additionalInformations.diet",
+  }),
+  age: field(z.number().min(0).max(120), {
+    label: "Child's Age",
+    placeholder: "Enter the age of the child",
+  }),
+});
+
+export const WithKeyMapping: Story = {
+  args: {
+    schemas: [
+      step(
+        z.object({
+          persons: forms(applicantSchemaWithKeyMapping, {
+            icon: <IconHome />,
+            identifier: data => (data?.name ? `${data.name} (${data.age} years)` : `New person - ${data?.index}`),
+            label: "Add persons",
+            placeholder: "You can add multiple persons, no minimum or maximum.",
+            key: "applicants",
+          }),
+        }),
+      ),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+
+    await step("verify initial state", async () => {
+      expect(submittedData).toContainHTML(`{}`);
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      expect(submittedData).toContainHTML(`{}`);
+    });
+
+    await step("add first item", async () => {
+      expect(canvas.queryByTestId("button-complete")).toBeNull();
+      const addButton = canvas.getByTestId("button-add");
+      await userEvent.click(addButton);
+      const completeButton = canvas.getByTestId("button-complete");
+      expect(completeButton).toBeInTheDocument();
+      await userEvent.click(completeButton);
+      const nameInput = canvas.getByTestId("input-text-name");
+      const ageInput = canvas.getByTestId("input-number-age");
+      await userEvent.type(nameInput, "Alice");
+      await userEvent.type(ageInput, "7");
+      expect(submittedData).toContainHTML(`{}`);
+      const subFormSubmitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(subFormSubmitButton);
+      await sleep(100); // wait for state update
+      const expectedData = { applicants: [{ childName: "Alice", additionalInformations: { diet: "vegan" }, age: 7 }] };
+      expect(submittedData).toContainHTML(`{}`);
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+      const badgeSuccess = canvas.getByTestId("badge-status");
+      expect(badgeSuccess).toHaveTextContent("Validated");
+      expect(submittedData).toContainHTML(stringify(expectedData, true));
+    });
+  },
+};

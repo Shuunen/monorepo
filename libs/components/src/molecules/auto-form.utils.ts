@@ -1,6 +1,6 @@
 // oxlint-disable max-lines
 import { getNested, isString, Logger, nbPercentMax, Result, setNested, sleep, stringify } from "@monorepo/utils";
-import { isFunction } from "es-toolkit";
+import { isFunction, isPlainObject } from "es-toolkit";
 import type { ReactNode } from "react";
 import { z } from "zod";
 import type {
@@ -507,6 +507,26 @@ export function shouldIncludeField(
 }
 
 /**
+ * Applies keyOut mappings to object fields without re-applying codecs.
+ * Used for array items where codecs are already applied by getValueFromCodec.
+ * @param schema - The Zod schema object describing the form fields.
+ * @param data - The submitted data object to be cleaned.
+ * @returns A new object with keyOut mappings applied.
+ */
+function applyKeyOutMapping(schema: z.ZodObject, data: AutoFormData): AutoFormData {
+  const { shape } = schema;
+  const result: AutoFormData = {};
+  for (const [key, value] of Object.entries(data)) {
+    const fieldSchema = shape[key] as z.ZodType;
+    const metadata = getFieldMetadata(fieldSchema);
+    const { keyOut } = getKeyMapping(metadata);
+    const outputKey = keyOut ?? key;
+    setNested(result, outputKey, value);
+  }
+  return result;
+}
+
+/**
  * Cleans the submitted form data by filtering out fields that are not visible or are marked as excluded in the schema metadata.
  * Also applies keyOut mapping to convert field names back to external data format.
  * @param schema - The Zod schema object describing the form fields.
@@ -528,13 +548,20 @@ function normalizeDataForSchema(schema: z.ZodObject, data: AutoFormData, origina
     // Apply keyOut mapping if provided
     const { keyOut } = getKeyMapping(metadata);
     const outputKey = keyOut ?? key;
-    const valueWithCodec = getValueFromCodec({ fieldSchema, method: "encode", value });
-    // Check if outputKey contains a dot (nested path)
-    if (outputKey.includes(".")) {
-      setNested(result, outputKey, valueWithCodec);
-    } else {
-      result[outputKey] = valueWithCodec;
+    let valueWithCodec = getValueFromCodec({ fieldSchema, method: "encode", value });
+
+    // For arrays of objects (form lists), apply keyOut mappings on nested fields
+    if (fieldSchema && Array.isArray(valueWithCodec) && isZodArray(getUnwrappedSchema(fieldSchema))) {
+      const elementResult = getElementSchema(fieldSchema);
+      const elementSchema = Result.unwrap(elementResult).value;
+      if (elementSchema && isZodObject(elementSchema)) {
+        valueWithCodec = (valueWithCodec as AutoFormData[]).map(item =>
+          isPlainObject(item) ? applyKeyOutMapping(elementSchema as z.ZodObject, item) : item,
+        );
+      }
     }
+
+    setNested(result, outputKey, valueWithCodec);
   }
   return result;
 }
