@@ -259,7 +259,7 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
 bash # reload shell to be able to invoke nvm
 nvm install --lts
 # vvv below is for desktop only vvv
-sudo apt install gparted meld mediainfo mkvtoolnix mkvtoolnix-gui mpv xsel shotwell synaptic vlc ffmpeg -y
+sudo apt install gparted meld mediainfo mkvtoolnix mkvtoolnix-gui mpv xsel shotwell synaptic vlc ffmpeg thunar -y
 sudo apt update
 sudo apt autoremove -y
 echo -e "optional : you can manually run 'sudo apt install ttf-mscorefonts-installer' & 'sudo fc-cache -f -v' to get win fonts & clear font cache"
@@ -279,7 +279,7 @@ Install these rpm :
 ```bash
 sudo snap install node --classic --channel=18 # sudo dnf module install nodejs:18/common # not working on Nobara 38
 sudo dnf install neofetch git aria2 nano curl golang -y # vvv below is for desktop only vvv
-sudo dnf install pinta qimgv gparted meld mediainfo mkvtoolnix mkvtoolnix-gui mpv xsel shotwell vlc ffmpeg qbittorrent -y
+sudo dnf install pinta qimgv gparted meld mediainfo mkvtoolnix mkvtoolnix-gui mpv xsel shotwell vlc ffmpeg thunar qbittorrent -y
 ```
 
 </details>
@@ -339,6 +339,7 @@ Nice app to keep in mind :
 - [FontFinder](https://github.com/mmstick/fontfinder) : font viewer & manager, install fonts from google fonts
 - [FSearch](https://github.com/cboxdoerfer/fsearch) : ultra fast search
 - [Gdevelop](https://gdevelop.io/) : game development tool
+- [GPU Screen Recorder](https://flathub.org/en/apps/com.dec05eba.gpu_screen_recorder) : GPU accelerated screen recorder
 - [Identity](https://gitlab.gnome.org/YaLTeR/identity) : compare images & videos
 - [Imagine](https://github.com/meowtec/Imagine) : batch image compressor
 - [JDownloader2](https://jdownloader.org/) : download manager
@@ -346,10 +347,14 @@ Nice app to keep in mind :
 - [LosslessCut](https://github.com/mifi/lossless-cut/releases) : cut videos
 - [MetaGrabber](https://github.com/andreaswilli/meta-grabber/releases) : get metadata from videos
 - [Picard](https://picard.musicbrainz.org/) : music tagger
+- [Pinta](https://flathub.org/en/apps/com.github.PintaProject.Pinta) : simple & effective image editor
+- [Recoll](https://www.recoll.org/) : desktop gui indexer and search engine
 - [Spek](https://github.com/alexkay/spek) : audio spectrum analyzer
+- [Teams for Linux](https://github.com/IsmaelMartinez/teams-for-linux) : unofficial teams client
 - [ULauncher](https://ulauncher.io) : great app launcher
 - [ULauncher Adwaita-gtk4](https://github.com/lighttigerXIV/ulauncher-adwaita-gtk4) : great dark theme for ULauncher
 - [ULauncher Custom Scripts](https://github.com/NastuzziSamy/ulauncher-custom-scripts) : allow to run custom scripts from ULauncher
 - [Upscayl](https://github.com/upscayl/upscayl) : great image upscale tool
+- [ZapZap](https://rtosta.com/zapzap/) : whatsapp desktop client with native notifications
 
 </details>
