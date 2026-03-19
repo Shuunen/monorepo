@@ -640,6 +640,13 @@ export function getSchemaDefaultValue(fieldSchema: z.ZodType): unknown {
     }
     return (fieldSchema as z.ZodDefault).def.defaultValue;
   }
+  if (fieldSchema.type === "optional") {
+    const innerSchema = (fieldSchema as z.ZodOptional<z.ZodType>).unwrap();
+    if (["default", "prefault"].includes(innerSchema.type)) {
+      return getSchemaDefaultValue(innerSchema);
+    }
+    return undefined;
+  }
   const metadata = getFieldMetadata(fieldSchema);
   if (isZodBoolean(fieldSchema) && metadata?.render !== "accept") {
     return false;

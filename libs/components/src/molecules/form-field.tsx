@@ -50,7 +50,7 @@ export function FormFieldBase(props: FormFieldBaseProps) {
   );
   useEffect(() => {
     const currentValue = getValues(fieldName);
-    if (currentValue !== undefined || isOptional) {
+    if (currentValue !== undefined) {
       return;
     }
     const defaultValue = getSchemaDefaultValue(fieldSchema);

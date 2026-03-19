@@ -57,13 +57,13 @@ export const Basic: Story = {
     await step("submit without toggling should not submit", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
-      expect(submittedData).toContainHTML("{}");
+      await expect(submittedData).toContainHTML("{}");
     });
     await step("toggle switch to true and submit", async () => {
       await userEvent.click(toggleSwitch);
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
-      expect(submittedData).toContainHTML(stringify({ agreedToTerms: true }, true));
+      await expect(submittedData).toContainHTML(stringify({ agreedToTerms: true }, true));
     });
   },
 };
@@ -88,8 +88,8 @@ export const WithInitialValueTrue: Story = {
     const toggleSwitch = canvas.getByRole("switch");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
-    await step("verify initial value is true", () => {
-      expect(toggleSwitch).toHaveAttribute("aria-checked", "true");
+    await step("verify initial value is true", async () => {
+      await expect(toggleSwitch).toHaveAttribute("aria-checked", "true");
     });
 
     await step("submit form with initial value", async () => {
@@ -97,8 +97,8 @@ export const WithInitialValueTrue: Story = {
       await userEvent.click(submitButton);
     });
 
-    await step("verify submitted data matches initial value", () => {
-      expect(submittedData).toContainHTML(stringify({ enableNotifications: true }, true));
+    await step("verify submitted data matches initial value", async () => {
+      await expect(submittedData).toContainHTML(stringify({ enableNotifications: true }, true));
     });
   },
 };
@@ -118,10 +118,10 @@ export const WithInitialValueFalse: Story = {
       }),
     ],
   },
-  play: ({ canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const toggleSwitch = canvas.getByRole("switch");
-    expect(toggleSwitch).toHaveAttribute("aria-checked", "false");
+    await expect(toggleSwitch).toHaveAttribute("aria-checked", "false");
   },
 };
 
@@ -144,8 +144,8 @@ export const WithDefaultValueTrue: Story = {
     const toggleSwitch = canvas.getByRole("switch");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
-    await step("verify initial value is true", () => {
-      expect(toggleSwitch).toHaveAttribute("aria-checked", "true");
+    await step("verify initial value is true", async () => {
+      await expect(toggleSwitch).toHaveAttribute("aria-checked", "true");
     });
 
     await step("submit form with initial value", async () => {
@@ -153,8 +153,8 @@ export const WithDefaultValueTrue: Story = {
       await userEvent.click(submitButton);
     });
 
-    await step("verify submitted data matches initial value", () => {
-      expect(submittedData).toContainHTML(stringify({ subscribeToNewsletter: true }, true));
+    await step("verify submitted data matches initial value", async () => {
+      await expect(submittedData).toContainHTML(stringify({ subscribeToNewsletter: true }, true));
     });
   },
 };
@@ -178,8 +178,8 @@ export const WithDefaultValueFalse: Story = {
     const toggleSwitch = canvas.getByRole("switch");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
 
-    await step("verify initial value is false", () => {
-      expect(toggleSwitch).toHaveAttribute("aria-checked", "false");
+    await step("verify initial value is false", async () => {
+      await expect(toggleSwitch).toHaveAttribute("aria-checked", "false");
     });
 
     await step("submit form with initial value", async () => {
@@ -187,11 +187,11 @@ export const WithDefaultValueFalse: Story = {
       await userEvent.click(submitButton);
     });
 
-    await step("verify that we have no errors on submit", () => {
+    await step("verify that we have no errors on submit", async () => {
       const issues = canvas.queryAllByRole("alert");
       expect(issues.map(el => el.textContent).join(",")).toBe("");
       const expectedData = stringify({ subscribeToNewsletter: false }, true);
-      expect(submittedData).toContainHTML(expectedData);
+      await expect(submittedData).toContainHTML(expectedData);
     });
   },
 };
@@ -210,10 +210,39 @@ export const Optional: Story = {
       }),
     ],
   },
-  play: ({ canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const submitButton = canvas.getByRole("button", { name: "Submit" });
-    expect(submitButton).not.toBeDisabled();
+    await expect(submitButton).not.toBeDisabled();
+  },
+};
+
+/**
+ * Optional boolean field
+ */
+export const OptionalWithPrefault: Story = {
+  args: {
+    schemas: [
+      z.object({
+        subscribe: field(z.boolean().prefault(false).optional(), {
+          label: "Subscribe to newsletter",
+          placeholder: "Optional subscription",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const submittedData = canvas.getByTestId("debug-data-submitted-data");
+
+    await step("submit form with prefault value", async () => {
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
+    });
+
+    await step("verify prefault value is included in submitted data", async () => {
+      await expect(submittedData).toContainHTML(stringify({ subscribe: false }, true));
+    });
   },
 };
 
@@ -233,11 +262,11 @@ export const DisabledTrue: Story = {
       }),
     ],
   },
-  play: ({ canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const toggleSwitch = canvas.getByRole("switch");
-    expect(toggleSwitch).toBeDisabled();
-    expect(toggleSwitch).toHaveAttribute("aria-checked", "true");
+    await expect(toggleSwitch).toBeDisabled();
+    await expect(toggleSwitch).toHaveAttribute("aria-checked", "true");
   },
 };
 
@@ -257,11 +286,11 @@ export const DisabledFalse: Story = {
       }),
     ],
   },
-  play: ({ canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const toggleSwitch = canvas.getByRole("switch");
-    expect(toggleSwitch).toBeDisabled();
-    expect(toggleSwitch).toHaveAttribute("aria-checked", "false");
+    await expect(toggleSwitch).toBeDisabled();
+    await expect(toggleSwitch).toHaveAttribute("aria-checked", "false");
   },
 };
 
@@ -293,22 +322,22 @@ export const MultipleFields: Story = {
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("toggle acceptCookies to true", async () => {
       await userEvent.click(switches[0]);
-      expect(switches[0]).toHaveAttribute("aria-checked", "true");
+      await expect(switches[0]).toHaveAttribute("aria-checked", "true");
     });
     await step("toggle rememberMe to true", async () => {
       await userEvent.click(switches[2]);
-      expect(switches[2]).toHaveAttribute("aria-checked", "true");
+      await expect(switches[2]).toHaveAttribute("aria-checked", "true");
     });
     await step("submit form", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
     });
-    await step("verify submitted data", () => {
+    await step("verify submitted data", async () => {
       const expectedData = {
         acceptCookies: true,
         rememberMe: true,
       };
-      expect(submittedData).toContainHTML(stringify(expectedData, true));
+      await expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
   },
 };
@@ -332,17 +361,17 @@ export const CheckboxBasic: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByTestId("checkbox-agreed-to-terms");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
-    expect(checkbox).toBeInTheDocument();
+    await expect(checkbox).toBeInTheDocument();
     await step("submit without checking should not submit", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
-      expect(submittedData).toContainHTML("{}");
+      await expect(submittedData).toContainHTML("{}");
     });
     await step("check checkbox and submit", async () => {
       await userEvent.click(checkbox);
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
-      expect(submittedData).toContainHTML(stringify({ agreedToTerms: true }, true));
+      await expect(submittedData).toContainHTML(stringify({ agreedToTerms: true }, true));
     });
   },
 };
@@ -367,15 +396,15 @@ export const CheckboxWithInitialValueTrue: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByTestId("checkbox-enable-notifications");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
-    await step("verify initial value is true", () => {
-      expect(checkbox).toHaveAttribute("data-state", "checked");
+    await step("verify initial value is true", async () => {
+      await expect(checkbox).toHaveAttribute("data-state", "checked");
     });
     await step("submit form with initial value", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
     });
-    await step("verify submitted data matches initial value", () => {
-      expect(submittedData).toContainHTML(stringify({ enableNotifications: true }, true));
+    await step("verify submitted data matches initial value", async () => {
+      await expect(submittedData).toContainHTML(stringify({ enableNotifications: true }, true));
     });
   },
 };
@@ -396,10 +425,10 @@ export const CheckboxWithInitialValueFalse: Story = {
       }),
     ],
   },
-  play: ({ canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByTestId("checkbox-share-data");
-    expect(checkbox).toHaveAttribute("data-state", "unchecked");
+    await expect(checkbox).toHaveAttribute("data-state", "unchecked");
   },
 };
 
@@ -422,15 +451,15 @@ export const CheckboxWithDefaultValueTrue: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByTestId("checkbox-subscribe-to-newsletter");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
-    await step("verify initial value is true", () => {
-      expect(checkbox).toHaveAttribute("data-state", "checked");
+    await step("verify initial value is true", async () => {
+      await expect(checkbox).toHaveAttribute("data-state", "checked");
     });
     await step("submit form with initial value", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);
     });
-    await step("verify submitted data matches initial value", () => {
-      expect(submittedData).toContainHTML(stringify({ subscribeToNewsletter: true }, true));
+    await step("verify submitted data matches initial value", async () => {
+      await expect(submittedData).toContainHTML(stringify({ subscribeToNewsletter: true }, true));
     });
   },
 };
@@ -452,11 +481,11 @@ export const CheckboxDisabledTrue: Story = {
       }),
     ],
   },
-  play: ({ canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByTestId("checkbox-verified");
-    expect(checkbox).toBeDisabled();
-    expect(checkbox).toHaveAttribute("data-state", "checked");
+    await expect(checkbox).toBeDisabled();
+    await expect(checkbox).toHaveAttribute("data-state", "checked");
   },
 };
 
@@ -477,11 +506,11 @@ export const CheckboxDisabledFalse: Story = {
       }),
     ],
   },
-  play: ({ canvasElement }) => {
+  play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByTestId("checkbox-suspended");
-    expect(checkbox).toBeDisabled();
-    expect(checkbox).toHaveAttribute("data-state", "unchecked");
+    await expect(checkbox).toBeDisabled();
+    await expect(checkbox).toHaveAttribute("data-state", "unchecked");
   },
 };
 
@@ -525,21 +554,21 @@ export const CheckboxMultipleFields: Story = {
     await step("submit form", async () => {
       await userEvent.click(submitButton);
       const expectedData = {};
-      expect(submittedData).toContainHTML(stringify(expectedData, true));
+      await expect(submittedData).toContainHTML(stringify(expectedData, true));
       const issues = canvas.queryAllByRole("alert");
-      expect(issues.map(el => el.textContent).join(",")).toBe("Please check this one");
+      await expect(issues.map(el => el.textContent).join(",")).toBe("Please check this one");
     });
     await step("play with literals", async () => {
       await userEvent.click(literalTrue);
       await userEvent.click(literalFalse);
       const issues = canvas.queryAllByRole("alert");
-      expect(issues.map(el => el.textContent).join(",")).toBe("Please don't check this one");
+      await expect(issues.map(el => el.textContent).join(",")).toBe("Please don't check this one");
     });
     await step("fix issues and submit", async () => {
       await userEvent.click(literalFalse);
       await userEvent.click(requiredTrue);
       const issues = canvas.queryAllByRole("alert");
-      expect(issues.map(el => el.textContent).join(",")).toBe("");
+      await expect(issues.map(el => el.textContent).join(",")).toBe("");
       await userEvent.click(submitButton);
       const expectedData = {
         requiredTrue: true, // true because we checked it
@@ -547,7 +576,7 @@ export const CheckboxMultipleFields: Story = {
         literalTrue: true, // true because true in the schema and only possible to be true
         literalFalse: false, // false because false in the schema and only possible to be false
       };
-      expect(submittedData).toContainHTML(stringify(expectedData, true));
+      await expect(submittedData).toContainHTML(stringify(expectedData, true));
     });
   },
 };
@@ -594,14 +623,14 @@ export const CheckboxGroup: Story = {
     await step("submit without selecting should show error", async () => {
       await userEvent.click(submitButton);
       const issues = canvas.queryAllByRole("alert");
-      expect(issues.map(el => el.textContent).join(",")).toBe("Please select at least one newsletter");
-      expect(submittedData).toContainHTML("{}");
+      await expect(issues.map(el => el.textContent).join(",")).toBe("Please select at least one newsletter");
+      await expect(submittedData).toContainHTML("{}");
     });
     await step("select one checkbox and submit should succeed", async () => {
       const recommendations = canvas.getByTestId("checkbox-newsletter-recommendations");
       await userEvent.click(recommendations);
       await userEvent.click(submitButton);
-      expect(submittedData).toContainHTML(stringify({ newsletterRecommendations: true }, true));
+      await expect(submittedData).toContainHTML(stringify({ newsletterRecommendations: true }, true));
     });
   },
 };
