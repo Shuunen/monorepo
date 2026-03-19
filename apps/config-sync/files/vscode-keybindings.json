@@ -71,5 +71,10 @@
     "command": "workbench.action.terminal.sendSequence",
     "key": "shift+enter",
     "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+.",
+    "command": "editor.action.commentLine",
+    "when": "editorTextFocus && !editorReadonly"
   }
 ]
