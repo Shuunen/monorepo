@@ -317,9 +317,13 @@ export const MultiStep: Story = {
       const nextButton = canvas.getByRole("button", { name: "Next" });
       await userEvent.click(nextButton);
     });
-    await step("click on bob and see errors", async () => {
+    await step("click on bob and see errors only after submit", async () => {
       const allCompleteButtons = canvas.getAllByTestId("button-complete");
       await userEvent.click(allCompleteButtons[1]);
+      const errorsBeforeSubmit = canvas.queryAllByRole("alert");
+      expect(errorsBeforeSubmit).toHaveLength(0);
+      const submitButton = canvas.getByRole("button", { name: "Submit" });
+      await userEvent.click(submitButton);
       const errors = canvas.getAllByRole("alert");
       expect(errors).toHaveLength(1);
       expect(errors[0]).toHaveTextContent("Please do not name your child after you");

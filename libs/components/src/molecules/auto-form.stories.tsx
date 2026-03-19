@@ -1499,6 +1499,14 @@ export const CustomErrors: Story = {
       const errors = canvas.queryAllByRole("alert");
       await expect(errors).toHaveLength(0);
     });
+    await step("verify custom error does not appear before first submit", async () => {
+      const lastNameInput = canvas.getByTestId("input-text-last-name");
+      await userEvent.type(lastNameInput, "John");
+      await userEvent.tab();
+      const errors = canvas.queryAllByRole("alert");
+      await expect(errors).toHaveLength(0);
+      await userEvent.clear(lastNameInput);
+    });
     await step("verify can submit last name without errors", async () => {
       const lastNameInput = canvas.getByTestId("input-text-last-name");
       await userEvent.type(lastNameInput, "Doe");

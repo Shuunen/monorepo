@@ -15,6 +15,7 @@ import { AutoFormNavigation } from "./auto-form-navigation";
 import { AutoFormParentDataProvider, useAutoFormParentData } from "./auto-form-parent-data";
 import { AutoFormStepper } from "./auto-form-stepper";
 import { AutoFormSubmissionStep } from "./auto-form-submission-step";
+import { AutoFormSubmittedProvider } from "./auto-form-submitted";
 import { AutoFormSummaryStep } from "./auto-form-summary-step";
 import { sectionsFromSchema } from "./auto-form-summary-step.utils";
 import { defaultIcons, defaultLabels } from "./auto-form.const";
@@ -98,6 +99,7 @@ export function AutoForm({
   const subformSchemas = useMemo(() => [subformOptions?.schema], [subformOptions]);
   const [parentFormDataSnapshot, setParentFormDataSnapshot] = useState<AutoFormData | undefined>(undefined);
   const [pendingValidation, setPendingValidation] = useState(false);
+  const [hasSubmittedOnce, setHasSubmittedOnce] = useState(false);
   const parentData = useAutoFormParentData();
   const form = useForm({
     defaultValues,
@@ -111,6 +113,10 @@ export function AutoForm({
       setPendingValidation(false);
     }
   }, [pendingValidation, form]);
+
+  useEffect(() => {
+    setHasSubmittedOnce(false);
+  }, [currentStep]);
 
   function updateFormData() {
     const updatedData = { ...formData, ...form.getValues() };
@@ -156,6 +162,7 @@ export function AutoForm({
    * @returns void
    */
   function handleStepSubmit() {
+    setHasSubmittedOnce(true);
     const updatedData = updateFormData();
     if (currentSchema && hasCustomErrors(currentSchema, updatedData, parentData)) {
       logger?.warn("Step submission blocked by custom field errors");
@@ -390,15 +397,17 @@ export function AutoForm({
       })}
     >
       <Form {...form}>
-        {shouldShowStepper && (
-          <AutoFormStepper
-            disabled={isStepperDisabled}
-            onStepClick={handleStepClick}
-            steps={steps}
-            width={stepperWidth}
-          />
-        )}
-        <div className="flex-1 overflow-hidden">{renderContent()}</div>
+        <AutoFormSubmittedProvider value={hasSubmittedOnce}>
+          {shouldShowStepper && (
+            <AutoFormStepper
+              disabled={isStepperDisabled}
+              onStepClick={handleStepClick}
+              steps={steps}
+              width={stepperWidth}
+            />
+          )}
+          <div className="flex-1 overflow-hidden">{renderContent()}</div>
+        </AutoFormSubmittedProvider>
       </Form>
     </div>
   );
