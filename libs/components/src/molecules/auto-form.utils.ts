@@ -277,8 +277,19 @@ export function isFieldVisible(fieldSchema: z.ZodType, formData: AutoFormData) {
   if (!("dependsOn" in metadata) || !metadata.dependsOn) {
     return true;
   }
+  return evaluateDependsOn(metadata.dependsOn, formData);
+}
+
+/**
+ * Evaluates the conditions based on the actual formData.
+ * Outer array = AND (every group must pass), Inner array = OR (at least one condition in group must pass)
+ * @param dependsOn conditions to evaluate
+ * @param formData actual data
+ * @returns the result of evaluation of the given conditions,
+ */
+export function evaluateDependsOn(dependsOn: string | DependsOnCondition[], formData: AutoFormData) {
   // Outer array = AND (every group must pass), Inner array = OR (at least one condition in group must pass)
-  return parseDependsOn(metadata.dependsOn).every(orGroup =>
+  return parseDependsOn(dependsOn).every(orGroup =>
     // oxlint-disable-next-line max-nested-callbacks
     orGroup.some(condition => evaluateCondition(condition, formData)),
   );
