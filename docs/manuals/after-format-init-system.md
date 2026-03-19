@@ -334,6 +334,7 @@ Nice app to keep in mind :
 - [Czkawka](https://github.com/qarmin/czkawka/releases/) : duplicate finder & cleaner
 - [Digikam](https://www.digikam.org/) : photo collection manager
 - [Electorrent](https://github.com/tympanix/Electorrent) : remote torrent gui
+- [Espanso](https://espanso.org/) : great cross platform text expander [deb](https://github.com/espanso/espanso/releases/download/v2.3.0/espanso-debian-x11-amd64.deb)
 - [Filebot](https://www.filebot.net/) : rename & organize movie/tv shows files
 - [FontBase](https://fontba.se/downloads/linux) : font manager
 - [FontFinder](https://github.com/mmstick/fontfinder) : font viewer & manager, install fonts from google fonts

@@ -7,6 +7,9 @@
 
 # Matches are substitution rules: when you type the "trigger" string
 # it gets replaced by the "replace" string.
+
+# yaml-language-server: $schema=https://raw.githubusercontent.com/espanso/espanso/dev/schemas/match.schema.json
+
 matches:
   # first name
   - regex: ":(fi)"
@@ -116,16 +119,16 @@ matches:
   # But matches can also be dynamic:
 
   # Print the current date
-  - trigger: ":today"
-    replace: "{{today}}"
+  - trigger: ":date"
+    replace: "{{mydate}}"
     vars:
-      - name: today
+      - name: mydate
         type: date
         params:
           format: "%m/%d/%Y"
 
   # Print the output of a shell command
-  - trigger: ":shc"
+  - trigger: ":shell"
     replace: "{{output}}"
     vars:
       - name: output

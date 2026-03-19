@@ -77,6 +77,8 @@ const linuxConfigs = [
   { source: `${home}/.local/share/kio/servicemenus/take-screenshot.desktop` },
   // { source: `${home}/.local/share/nautilus/scripts/Shrink all pdf`},
   // { source: `${home}/.local/share/nautilus/scripts/Take screenshot`},
+  { renameTo: "espanso-config.yml", source: `${home}/.config/espanso/config/default.yml` },
+  { renameTo: "espanso-match.yml", source: `${home}/.config/espanso/match/base.yml` },
 ];
 
 configs.push(...(isWindows ? windowsConfigs : linuxConfigs));
