@@ -68,7 +68,7 @@ export function Rules({ rules, setRules }: { rules: Rule[]; setRules: (rules: Ru
           <PlusCircleIcon className="size-7 text-primary" />
         </Button>
       </div>
-      <Card className="flex flex-col gap-2 bg-white p-6">
+      <Card name="rules" className="flex flex-col gap-2 bg-white p-6">
         {rules.map(rule => (
           <RuleLine
             key={rule.id}
