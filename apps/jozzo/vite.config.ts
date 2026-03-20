@@ -32,7 +32,8 @@ export default defineConfig({
     globals: true,
     include: ["src/**/*.test.{ts,tsx}"],
     pool: "threads",
-    reporters: ["default"],
+    reporters: ["dot"],
+    silent: true,
     watch: false,
   },
 });

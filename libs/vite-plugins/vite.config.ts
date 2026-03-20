@@ -14,7 +14,8 @@ export default defineConfig({
     environment: "node",
     globals: true,
     include: ["src/**/*.test.js"],
-    reporters: ["default"],
+    reporters: ["dot"],
+    silent: true,
     watch: false,
   },
   // Uncomment this if you are using workers.
