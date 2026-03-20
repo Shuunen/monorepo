@@ -6,7 +6,7 @@ export default defineConfig({
       exclude: ["src/*.types.ts", "*.config.ts"],
       include: ["src"],
       provider: "v8" as const,
-      reporter: [["text", { maxCols: 120 }], "lcov", "html"],
+      reporter: [["text", { maxCols: 120 }], "lcov"],
       reportsDirectory: "./test-output/vitest/coverage",
     },
     // environment: 'happy-dom',
