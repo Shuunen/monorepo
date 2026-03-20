@@ -25,11 +25,11 @@ export type ConfirmDialogProps = {
 
 export function ConfirmDialog(props: ConfirmDialogProps) {
   return (
-    <Dialog data-testid="radio-modal" onOpenChange={props.onCancel} open={props.isOpen}>
-      <DialogContent>
+    <Dialog onOpenChange={props.onCancel} open={props.isOpen}>
+      <DialogContent name="confirm">
         <DialogHeader>
-          <DialogTitle data-testid="modal-title">{props.title}</DialogTitle>
-          <DialogDescription data-testid="modal-description">{props.description}</DialogDescription>
+          <DialogTitle data-testid="confirm-dialog-title">{props.title}</DialogTitle>
+          <DialogDescription data-testid="confirm-dialog-description">{props.description}</DialogDescription>
         </DialogHeader>
         {props.children}
         <DialogFooter>

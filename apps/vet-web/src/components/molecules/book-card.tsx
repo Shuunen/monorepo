@@ -17,7 +17,7 @@ type BookCardProps = {
 
 export function BookCard({ icon, title, description, features, buttonText, buttonTo }: BookCardProps) {
   return (
-    <Card>
+    <Card name="book-card">
       <CardHeader>
         <CardTitle>
           <div className="flex items-center pt-2 text-2xl text-primary">

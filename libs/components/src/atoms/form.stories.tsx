@@ -56,7 +56,7 @@ const meta = {
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Message</FormLabel>
+                <FormLabel name={field.name}>Message</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Type your message here." {...field} />
                 </FormControl>
