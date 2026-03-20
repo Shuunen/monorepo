@@ -48,7 +48,6 @@ export default defineConfig({
       html: path.join(reportsRoot, "index.html"),
     },
     reporters: ["dot", "html"],
-    setupFiles: [".storybook/vitest.setup.ts"],
     silent: true,
   },
 });
