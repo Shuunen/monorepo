@@ -225,6 +225,7 @@ export function DatetimePicker({
             >
               <Card
                 className="max-w-75 gap-0 border border-input py-4"
+                name={props.name ? `datetime-picker-${props.name}` : "datetime-picker"}
                 onClick={(event: { stopPropagation: () => void }) => event.stopPropagation()}
               >
                 <CardContent className="mb-2 px-4">

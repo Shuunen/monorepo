@@ -1,5 +1,5 @@
 // oxlint-disable only-export-components, no-multi-comp
-import { TooltipProvider } from "@monorepo/components";
+import { TestIdChecker, TooltipProvider } from "@monorepo/components";
 import type { Decorator, Preview } from "@storybook/react-vite";
 // Import Tailwind CSS styles for Storybook
 import "../src/styles.css";
@@ -19,8 +19,15 @@ const TooltipDecorator: Decorator = Story => (
   </TooltipProvider>
 );
 
+const TestIdCheckerDecorator: Decorator = Story => (
+  <div>
+    <Story />
+    <TestIdChecker />
+  </div>
+);
+
 const preview: Preview = {
-  decorators: [RouterDecorator, TooltipDecorator],
+  decorators: [RouterDecorator, TooltipDecorator, TestIdCheckerDecorator],
   parameters: {
     controls: {
       matchers: {

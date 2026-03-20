@@ -28,9 +28,13 @@ export const TextContent: Story = {
         eius sequi illum.
       </p>
     ),
+    name: "text-content",
   },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
+
+    const card = canvas.getByTestId("card-text-content");
+    expect(card).toBeInTheDocument();
 
     // Check that the text content is rendered inside the card
     const paragraph = canvas.getByText(
@@ -40,17 +44,22 @@ export const TextContent: Story = {
   },
 };
 
-export const CompleteCard: Story = {
+export const Complete: Story = {
+  args: {
+    name: "complete",
+  },
   play: ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
     // Check header, description, content, footer
-    const title = canvas.getByText("Card Title");
-    const description = canvas.getByText("Card Description");
-    const paragraph = canvas.getByText(
+    const card = canvas.getByTestId("card-complete");
+    expect(card).toBeInTheDocument();
+    const title = within(card).getByText("Card Title");
+    const description = within(card).getByText("Card Description");
+    const paragraph = within(card).getByText(
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat aspernatur ea architecto, consectetur dignissimos minima magni sed illum odio assumenda, soluta iure incidunt repudiandae. Incidunt voluptas provident eius sequi illum.",
     );
-    const footer = canvas.getByText("A nice footer");
+    const footer = within(card).getByText("A nice footer");
 
     expect(title).toBeInTheDocument();
     expect(description).toBeInTheDocument();
@@ -58,14 +67,14 @@ export const CompleteCard: Story = {
     expect(footer).toBeInTheDocument();
 
     // Check the button exists and is clickable
-    const button = canvas.getByTestId("button-card");
+    const button = within(card).getByTestId("button-card");
     expect(button).toBeInTheDocument();
 
     button.click();
     expect(cardButtonClickMock).toHaveBeenCalled();
   },
   render: () => (
-    <Card>
+    <Card name="complete">
       <CardHeader>
         <CardTitle>Card Title</CardTitle>
         <CardDescription>Card Description</CardDescription>

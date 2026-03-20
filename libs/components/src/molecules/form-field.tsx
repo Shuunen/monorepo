@@ -86,7 +86,9 @@ export function FormFieldBase(props: FormFieldBaseProps) {
             "not-indented": !indented,
           })}
         >
-          {props.showLabel !== false && <FormFieldLabel isOptional={isOptional} label={metadata.label} />}
+          {props.showLabel !== false && (
+            <FormFieldLabel name={fieldName} isOptional={isOptional} label={metadata.label} />
+          )}
           {children?.({ field, fieldState, formState })}
           <FormMessage name={fieldName}>{customErrorMessage}</FormMessage>
         </FormItem>

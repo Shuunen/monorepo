@@ -20,12 +20,14 @@ const meta: Meta<typeof DropdownMenu> = {
   },
   render: args => (
     <DropdownMenu {...args}>
-      <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-      <DropdownMenuContent className="w-44">
-        <DropdownMenuItem onSelect={onProfileSelectMock}>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Team</DropdownMenuItem>
-        <DropdownMenuItem>Subscription</DropdownMenuItem>
+      <DropdownMenuTrigger name="actions">Open</DropdownMenuTrigger>
+      <DropdownMenuContent className="w-44" name="actions">
+        <DropdownMenuItem name="profile" onSelect={onProfileSelectMock}>
+          Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem name="billing">Billing</DropdownMenuItem>
+        <DropdownMenuItem name="team">Team</DropdownMenuItem>
+        <DropdownMenuItem name="subscription">Subscription</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   ),

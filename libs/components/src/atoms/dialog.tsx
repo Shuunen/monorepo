@@ -1,14 +1,26 @@
+import type { ComponentProps } from "react";
+import { DialogContent as ShadDialogContent, DialogTitle as ShadDialogTitle } from "../shadcn/dialog";
+import { type NameProp, testIdFromProps } from "./form.utils";
+
 export {
   Dialog,
   DialogClose,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogOverlay,
   DialogPortal,
-  DialogTitle,
   DialogTrigger,
 } from "../shadcn/dialog";
 
-// TODO : ideally we add data-testid handling (and other customizations) like in button.tsx instead of just exposing the raw shadcn component
+type DialogContentProps = ComponentProps<typeof ShadDialogContent> & NameProp;
+
+export function DialogContent({ ...props }: DialogContentProps) {
+  return <ShadDialogContent data-testid={testIdFromProps("dialog-content", props)} {...props} />;
+}
+
+type DialogTitleProps = ComponentProps<typeof ShadDialogTitle>;
+
+export function DialogTitle({ ...props }: DialogTitleProps) {
+  return <ShadDialogTitle data-testid="dialog-title" {...props} />;
+}

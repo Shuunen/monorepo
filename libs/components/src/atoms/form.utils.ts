@@ -3,6 +3,7 @@ import { camelToKebabCase, slugify } from "@monorepo/utils";
 export type NameProp = {
   /** a name of the form field or component, like firstName or email */
   name: string;
+  ["data-testid"]?: never;
 };
 
 export function testIdFromProps(prefix: string, props: NameProp, addValue?: boolean): string {

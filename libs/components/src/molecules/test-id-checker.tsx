@@ -7,12 +7,12 @@ import { IconWarning } from "../icons/icon-warning";
 import { IconX } from "../icons/icon-x";
 import { cn } from "../shadcn/utils";
 
-const STORAGE_KEY = "showTestIdChecker";
-const INTERVAL = 1000;
-const MIN_OCCURRENCES = 2;
-const INITIAL_INDEX = 0;
-const INDEX_INCREMENT = 1;
-const HIGHLIGHT_CLASSES = [
+const storageKey = "showTestIdChecker";
+const interval = 1000;
+const minOccurrences = 2;
+const initialIndex = 0;
+const indexIncrement = 1;
+const highlightClasses = [
   "!outline",
   "!outline-2",
   "!outline-dashed",
@@ -57,7 +57,7 @@ const highlightManager = {
     this.remove(this.lastHighlighted);
     const elements = Array.from(document.querySelectorAll<HTMLElement>(`[data-testid="${testid}"]`));
     for (const el of elements) {
-      el.classList.add(...HIGHLIGHT_CLASSES);
+      el.classList.add(...highlightClasses);
       el.scrollIntoView({ behavior: "smooth" });
     }
     this.lastHighlighted = testid;
@@ -69,7 +69,7 @@ const highlightManager = {
     }
     const elements = Array.from(document.querySelectorAll<HTMLElement>(`[data-testid="${testid}"]`));
     for (const el of elements) {
-      el.classList.remove(...HIGHLIGHT_CLASSES);
+      el.classList.remove(...highlightClasses);
     }
     if (this.lastHighlighted === testid) {
       this.lastHighlighted = undefined;
@@ -112,7 +112,7 @@ function useTestIds(visible: boolean) {
     };
 
     update();
-    timer.current = setInterval(update, INTERVAL);
+    timer.current = setInterval(update, interval);
     return () => {
       clearInterval(timer.current);
       highlightManager.remove(highlightManager.lastHighlighted);
@@ -123,9 +123,9 @@ function useTestIds(visible: boolean) {
   const processedTestIds = testIds.reduce<TestIdInfo[]>((acc, id) => {
     const existing = acc.find(item => item.id === id);
     if (existing) {
-      existing.occurrences += INDEX_INCREMENT;
+      existing.occurrences += indexIncrement;
     } else {
-      acc.push({ id, isValid: isValidTestId(id), occurrences: INDEX_INCREMENT });
+      acc.push({ id, isValid: isValidTestId(id), occurrences: indexIncrement });
     }
     return acc;
   }, []);
@@ -149,9 +149,9 @@ function TestIdListItem({ id, index, occurrences, isValid }: TestIdInfo & { inde
       }}
       title={isValid ? undefined : "This data-testid contains un-expected chars"}
     >
-      <span className="opacity-50">{index + INDEX_INCREMENT}.</span>
+      <span className="opacity-50">{index + indexIncrement}.</span>
       {id}
-      {occurrences >= MIN_OCCURRENCES && ` (${occurrences.toString()} occurrences)`}
+      {occurrences >= minOccurrences && ` (${occurrences.toString()} occurrences)`}
       {!isValid && <IconWarning className="size-4" />}
     </li>
   );
@@ -163,9 +163,9 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
     if (forceVisible) {
       return true;
     }
-    const actual = localStorage.getItem(STORAGE_KEY);
+    const actual = localStorage.getItem(storageKey);
     if (!actual) {
-      localStorage.setItem(STORAGE_KEY, "false");
+      localStorage.setItem(storageKey, "false");
     }
     return actual === "true";
   });
@@ -178,6 +178,7 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
     <Card
       aria-label="data-testid checker"
       className="fixed right-6 bottom-6 z-100 max-h-11/12 w-auto min-w-65 gap-0 overflow-hidden py-0 text-sm shadow-lg"
+      name="test-id-checker"
     >
       <CardHeader
         className={cn(
@@ -190,7 +191,7 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
           name="close-test-id-checker"
           onClick={() => {
             setVisible(false);
-            localStorage.setItem(STORAGE_KEY, "false");
+            localStorage.setItem(storageKey, "false");
           }}
           variant="ghost"
         >
@@ -198,7 +199,7 @@ export function TestIdChecker({ forceVisible = false }: { forceVisible?: boolean
         </Button>
       </CardHeader>
       <CardContent className="overflow-y-auto p-0">
-        {testIds.length === INITIAL_INDEX ? (
+        {testIds.length === initialIndex ? (
           <div className="p-4 text-center text-gray-400">No data-testid found</div>
         ) : (
           <ul className="text-gray-300" ref={listElement}>

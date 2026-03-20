@@ -37,7 +37,7 @@ const DialogExample = () => {
       </DialogTrigger>
       <DialogPortal>
         <DialogOverlay />
-        <DialogContent>
+        <DialogContent name="example">
           <DialogHeader>
             <DialogTitle>Dialog Title</DialogTitle>
             <DialogDescription>This is a dialog description.</DialogDescription>
@@ -45,11 +45,11 @@ const DialogExample = () => {
           <div>Dialog body content goes here.</div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button name="close" variant="secondary">
+              <Button name="dialog-close" variant="secondary">
                 Close
               </Button>
             </DialogClose>
-            <Button name="save">Save</Button>
+            <Button name="dialog-save">Save</Button>
           </DialogFooter>
         </DialogContent>
       </DialogPortal>
@@ -64,14 +64,16 @@ export const Default: Story = {
 
     // Trigger button is inside the canvas
     const openButton = canvas.getByTestId("button-open-dialog");
-    expect(openButton).toBeInTheDocument();
+    await expect(openButton).toBeInTheDocument();
 
     // Dialog content is rendered in a portal: use `screen`
-    const title = await screen.findByText(/dialog title/i);
+    const content = await screen.findByTestId("dialog-content-example");
+    await expect(content).toBeInTheDocument();
+    const title = await screen.findByTestId("dialog-title");
+    await expect(title).toBeInTheDocument();
+    await expect(title).toBeVisible();
     const description = screen.getByText(/this is a dialog description/i);
-
-    expect(title).toBeVisible();
-    expect(description).toBeVisible();
+    await expect(description).toBeVisible();
   },
   render: () => <DialogExample />,
 };
