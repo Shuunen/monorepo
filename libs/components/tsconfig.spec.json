@@ -14,7 +14,7 @@
     ]
   },
   "extends": "../../tsconfig.base.json",
-  "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.d.ts", "vite.config.ts", ".storybook/vitest.setup.ts"],
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.d.ts", "vite.config.ts"],
   "references": [
     {
       "path": "./tsconfig.lib.json"

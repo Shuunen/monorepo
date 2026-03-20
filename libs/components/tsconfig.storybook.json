@@ -6,7 +6,7 @@
     "outDir": "out-tsc/storybook",
     "types": ["vite/client", "node"]
   },
-  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", ".storybook/vitest.setup.ts"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"],
   "extends": "../../tsconfig.base.json",
   "include": ["src/**/*.stories.tsx", "src/**/*.stories.mdx", ".storybook/*.ts", ".storybook/*.tsx"],
   "references": [
