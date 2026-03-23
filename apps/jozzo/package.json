@@ -3,7 +3,7 @@
     "@monorepo/utils": "workspace:*",
     "@monorepo/vite-plugins": "workspace:*",
     "@mui/material": "^7.3.9",
-    "@preact/preset-vite": "~2.10.4",
+    "@preact/preset-vite": "~2.10.5",
     "preact": "~10.29.0",
     "react-confetti-boom": "~2.0.1"
   },
