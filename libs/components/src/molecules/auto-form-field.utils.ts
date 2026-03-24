@@ -55,3 +55,11 @@ export const componentRegistry: ComponentRegistry = {
   time: FormFieldDate,
   upload: FormFieldUpload,
 } as const;
+
+export function isFieldOptional(fieldSchema: z.ZodType) {
+  if (["default", "prefault"].includes(fieldSchema.type)) {
+    const inner = (fieldSchema as z.ZodDefault<z.ZodType>).unwrap();
+    return inner.type === "optional";
+  }
+  return fieldSchema.type === "optional";
+}

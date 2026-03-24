@@ -1,9 +1,9 @@
 import { functionReturningVoid } from "@monorepo/utils";
 import { type Dispatch, type SetStateAction, memo, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 import { Alert } from "../atoms/alert";
-import { type AutoFormFieldProps, componentRegistry } from "./auto-form-field.utils";
+import { type AutoFormFieldProps, componentRegistry, isFieldOptional } from "./auto-form-field.utils";
 import type { AutoFormData } from "./auto-form.types";
 import { getFieldMetadata, getFormFieldRender, isFieldVisible } from "./auto-form.utils";
 import { FormFieldFieldList } from "./form-field-field-list";
@@ -40,8 +40,8 @@ export const AutoFormField = memo(({ fieldName, fieldSchema, stepState, logger, 
     return undefined;
   }
 
-  logger?.info("Rendering", { fieldName });
-  const isOptional = fieldSchema instanceof z.ZodOptional;
+  const isOptional = isFieldOptional(fieldSchema);
+  logger?.info("Rendering", { fieldName, isOptional });
   const fieldState = "state" in metadata ? metadata.state : undefined;
   const state = fieldState ?? stepState ?? "editable";
   const props = { fieldName, fieldSchema, isOptional, logger, readonly: state === "readonly", showForm };
