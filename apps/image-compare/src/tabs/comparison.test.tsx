@@ -4,19 +4,19 @@ import { Comparison } from "./comparison.tab";
 describe("comparison", () => {
   it("Comparison A should render successfully", () => {
     const { container } = render(<Comparison />);
-    expect(container).toBeTruthy();
+    expect(container).toBeInstanceOf(HTMLElement);
   });
 
   it("Comparison B should render control buttons", () => {
     render(<Comparison />);
     const controlButtons = screen.getByTestId("control-buttons");
-    expect(controlButtons).toBeTruthy();
+    expect(controlButtons).toBeInstanceOf(HTMLElement);
   });
 
   it("Comparison C should display zoom percentage", () => {
     render(<Comparison />);
     const zoomText = screen.getByText("Zoom: 100%");
-    expect(zoomText).toBeTruthy();
+    expect(zoomText).toBeInstanceOf(HTMLElement);
   });
 
   it("Comparison D should reset view when reset button is clicked", () => {
@@ -24,7 +24,7 @@ describe("comparison", () => {
     const resetButton = screen.getByText("Reset view");
     fireEvent.click(resetButton);
     const zoomText = screen.getByText("Zoom: 100%");
-    expect(zoomText).toBeTruthy();
+    expect(zoomText).toBeInstanceOf(HTMLElement);
   });
 
   it("Comparison E should update zoom on wheel event", () => {
@@ -33,7 +33,7 @@ describe("comparison", () => {
     if (imageViewer) {
       fireEvent.wheel(imageViewer, { deltaY: -100 });
       // Zoom should change but we can't easily test the exact value in this simple test
-      expect(imageViewer).toBeTruthy();
+      expect(imageViewer).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -46,7 +46,7 @@ describe("comparison", () => {
           files: [],
         },
       });
-      expect(imageViewer).toBeTruthy();
+      expect(imageViewer).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -59,7 +59,7 @@ describe("comparison", () => {
         relatedTarget: null,
         target: imageViewer,
       });
-      expect(imageViewer).toBeTruthy();
+      expect(imageViewer).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -71,7 +71,7 @@ describe("comparison", () => {
       fireEvent.wheel(imageViewer, { deltaY: -500 });
       // Then try to pan
       fireEvent.mouseDown(imageViewer, { clientX: 100, clientY: 100 });
-      expect(imageViewer).toBeTruthy();
+      expect(imageViewer).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -85,7 +85,7 @@ describe("comparison", () => {
       fireEvent.mouseDown(imageViewer, { clientX: 100, clientY: 100 });
       // Move mouse
       fireEvent.mouseMove(imageViewer, { clientX: 150, clientY: 150 });
-      expect(imageViewer).toBeTruthy();
+      expect(imageViewer).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -96,7 +96,7 @@ describe("comparison", () => {
       fireEvent.wheel(imageViewer, { deltaY: -500 });
       fireEvent.mouseDown(imageViewer, { clientX: 100, clientY: 100 });
       fireEvent.mouseUp(imageViewer);
-      expect(imageViewer).toBeTruthy();
+      expect(imageViewer).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -107,7 +107,7 @@ describe("comparison", () => {
       fireEvent.wheel(imageViewer, { deltaY: -500 });
       fireEvent.mouseDown(imageViewer, { clientX: 100, clientY: 100 });
       fireEvent.mouseLeave(imageViewer);
-      expect(imageViewer).toBeTruthy();
+      expect(imageViewer).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -115,7 +115,7 @@ describe("comparison", () => {
     render(<Comparison />);
     // Slider control is rendered
     const container = screen.getByTestId("control-buttons").parentElement;
-    expect(container).toBeTruthy();
+    expect(container).toBeInstanceOf(HTMLElement);
   });
 
   it("Comparison M should not pan when zoom is at minimum", () => {
@@ -127,7 +127,7 @@ describe("comparison", () => {
       fireEvent.mouseMove(imageViewer, { clientX: 150, clientY: 150 });
       // Should not pan, verify zoom is still 100%
       const zoomText = screen.getByText("Zoom: 100%");
-      expect(zoomText).toBeTruthy();
+      expect(zoomText).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -140,7 +140,7 @@ describe("comparison", () => {
           files: [],
         },
       });
-      expect(imageViewer).toBeTruthy();
+      expect(imageViewer).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -155,7 +155,7 @@ describe("comparison", () => {
           files: [file1, file2],
         },
       });
-      expect(imageViewer).toBeTruthy();
+      expect(imageViewer).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -164,7 +164,7 @@ describe("comparison", () => {
     const sliderHandle = container.querySelector('[test-id="slider-handle"]');
     if (sliderHandle) {
       fireEvent.mouseDown(sliderHandle, { clientX: 100, clientY: 100 });
-      expect(sliderHandle).toBeTruthy();
+      expect(sliderHandle).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -175,7 +175,7 @@ describe("comparison", () => {
     if (sliderHandle && imageViewer) {
       fireEvent.mouseDown(sliderHandle, { clientX: 100, clientY: 100 });
       fireEvent.mouseMove(imageViewer, { clientX: 200, clientY: 100 });
-      expect(sliderHandle).toBeTruthy();
+      expect(sliderHandle).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -193,7 +193,7 @@ describe("comparison", () => {
           files: [file1, file2, file3, file4],
         },
       });
-      expect(imageViewer).toBeTruthy();
+      expect(imageViewer).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -203,7 +203,7 @@ describe("comparison", () => {
     if (fileInput) {
       const file = new File(["content"], "test.jpg", { type: "image/jpeg" });
       fireEvent.change(fileInput, { target: { files: [file] } });
-      expect(fileInput).toBeTruthy();
+      expect(fileInput).toBeInstanceOf(HTMLInputElement);
     }
   });
 
@@ -213,7 +213,7 @@ describe("comparison", () => {
     if (fileInput) {
       const file = new File(["content"], "test.jpg", { type: "image/jpeg" });
       fireEvent.change(fileInput, { target: { files: [file] } });
-      expect(fileInput).toBeTruthy();
+      expect(fileInput).toBeInstanceOf(HTMLInputElement);
     }
   });
 
@@ -230,7 +230,7 @@ describe("comparison", () => {
       // Zoom back to minimum - should reset pan
       fireEvent.wheel(imageViewer, { deltaY: 5000 });
       const zoomText = screen.getByText("Zoom: 100%");
-      expect(zoomText).toBeTruthy();
+      expect(zoomText).toBeInstanceOf(HTMLElement);
     }
   });
 });

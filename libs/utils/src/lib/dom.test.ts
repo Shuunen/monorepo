@@ -38,7 +38,7 @@ it("custom type dom element with classes", () => {
   const element = dom("strong", "important important--stuff");
   expect(element.tagName.toLowerCase()).toBe("strong");
   expect(element.className).toBe("important important--stuff");
-  expect(element.classList.contains("important--stuff")).toBeTruthy();
+  expect(element.classList.contains("important--stuff")).toBe(true);
 });
 
 it("custom type dom element with classes & text content", () => {
@@ -100,8 +100,8 @@ it("dom list ul/li", () => {
 it("dom backdrop", () => {
   const element = backdrop("custom-class");
   expect(element.tagName.toLowerCase()).toBe("div");
-  expect(element.classList.contains("backdrop")).toBeTruthy();
-  expect(element.classList.contains("custom-class")).toBeTruthy();
+  expect(element.classList.contains("backdrop")).toBe(true);
+  expect(element.classList.contains("custom-class")).toBe(true);
 });
 
 it("dom basics", () => {
@@ -111,7 +111,7 @@ it("dom basics", () => {
     const element = testFunction(name);
     expect(element.tagName.toLowerCase()).toBe(name);
     expect(element.textContent).toBe("");
-    expect(element.classList.contains(name)).toBeTruthy();
+    expect(element.classList.contains(name)).toBe(true);
     const elementContent = testFunction(name, `I really like guacamole with ${name}`);
     expect(elementContent.tagName.toLowerCase()).toBe(name);
     expect(elementContent.textContent).toBe(`I really like guacamole with ${name}`);

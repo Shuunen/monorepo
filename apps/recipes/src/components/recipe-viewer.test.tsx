@@ -17,35 +17,37 @@ function renderRecipeViewer(initialEntries = ["/recipes/plat/pizza"]) {
 describe(RecipeViewer, () => {
   it("RecipeViewer A should show error when category parameter is missing", () => {
     renderRecipeViewer(["/recipes/plat"]);
-    expect(screen.getByText("Recette non trouvée")).toBeTruthy();
-    expect(screen.getByText("Paramètres manquants")).toBeTruthy();
-    expect(screen.getByTestId("error")).toBeTruthy();
+    expect(screen.getByText("Recette non trouvée")).toBeInstanceOf(HTMLElement);
+    expect(screen.getByText("Paramètres manquants")).toBeInstanceOf(HTMLElement);
+    expect(screen.getByTestId("error")).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeViewer B should show error when recipe parameter is missing", () => {
     renderRecipeViewer(["/recipes"]);
-    expect(screen.getByText("Recette non trouvée")).toBeTruthy();
-    expect(screen.getByText("Paramètres manquants")).toBeTruthy();
-    expect(screen.getByTestId("error")).toBeTruthy();
+    expect(screen.getByText("Recette non trouvée")).toBeInstanceOf(HTMLElement);
+    expect(screen.getByText("Paramètres manquants")).toBeInstanceOf(HTMLElement);
+    expect(screen.getByTestId("error")).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeViewer C should show loading state initially for valid routes", () => {
     renderRecipeViewer(["/recipes/plat/pizza"]);
     // Should show loading initially
-    expect(screen.getByText("Chargement de la recette...")).toBeTruthy();
-    expect(screen.getByTestId("loading")).toBeTruthy();
+    expect(screen.getByText("Chargement de la recette...")).toBeInstanceOf(HTMLElement);
+    expect(screen.getByTestId("loading")).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeViewer D should eventually show error for non-existent recipe", async () => {
     renderRecipeViewer(["/recipes/invalid/nonexistent"]);
     await waitFor(
       () => {
-        expect(screen.getByText("Recette non trouvée")).toBeTruthy();
+        expect(screen.getByText("Recette non trouvée")).toBeInstanceOf(HTMLElement);
       },
       { timeout: 5000 },
     );
-    expect(screen.getByText('La recette "nonexistent" dans la catégorie "invalid" n\'existe pas.')).toBeTruthy();
-    expect(screen.getByTestId("error")).toBeTruthy();
+    expect(screen.getByText('La recette "nonexistent" dans la catégorie "invalid" n\'existe pas.')).toBeInstanceOf(
+      HTMLElement,
+    );
+    expect(screen.getByTestId("error")).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeViewer E should load existing recipes successfully", async () => {
@@ -55,14 +57,14 @@ describe(RecipeViewer, () => {
     await waitFor(
       () => {
         const loading = screen.queryByText("Chargement de la recette...");
-        expect(loading).toBeFalsy();
+        expect(loading).toBeNull();
       },
       { timeout: 5000 },
     );
     // Should have either loaded the recipe or shown an error, but not be loading
     const hasContent = screen.queryByTestId("recipe");
     const hasError = screen.queryByTestId("error");
-    expect(hasContent || hasError).toBeTruthy();
+    expect(hasContent || hasError).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeViewer F should render home link when recipe loads", async () => {
@@ -71,26 +73,26 @@ describe(RecipeViewer, () => {
     await waitFor(
       () => {
         const loading = screen.queryByText("Chargement de la recette...");
-        expect(loading).toBeFalsy();
+        expect(loading).toBeNull();
       },
       { timeout: 5000 },
     );
     // If recipe loaded successfully, should have home link
     const recipeContainer = screen.queryByTestId("recipe");
-    if (recipeContainer) expect(screen.getByText("Retour à l'accueil")).toBeTruthy();
+    if (recipeContainer) expect(screen.getByText("Retour à l'accueil")).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeViewer G should test error message component", () => {
     renderRecipeViewer(["/recipes"]);
     // Should render ErrorMessage component
-    expect(screen.getByText("Recette non trouvée")).toBeTruthy();
-    expect(screen.getByText("Paramètres manquants")).toBeTruthy();
+    expect(screen.getByText("Recette non trouvée")).toBeInstanceOf(HTMLElement);
+    expect(screen.getByText("Paramètres manquants")).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeViewer H should test loading message component", () => {
     renderRecipeViewer(["/recipes/plat/pizza"]);
     // Should render LoadingMessage component initially
-    expect(screen.getByText("Chargement de la recette...")).toBeTruthy();
+    expect(screen.getByText("Chargement de la recette...")).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeViewer I should test basic functionality", () => {
@@ -98,7 +100,7 @@ describe(RecipeViewer, () => {
     // Should either show loading or error initially
     const hasLoading = screen.queryByText("Chargement de la recette...");
     const hasError = screen.queryByText("Recette non trouvée");
-    expect(hasLoading || hasError).toBeTruthy();
+    expect(hasLoading || hasError).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeViewer J should test all component functions", async () => {
@@ -108,7 +110,7 @@ describe(RecipeViewer, () => {
     await waitFor(
       () => {
         const errorElement = screen.queryByText("Recette non trouvée");
-        expect(errorElement).toBeTruthy();
+        expect(errorElement).toBeInstanceOf(HTMLElement);
       },
       { timeout: 2000 },
     );

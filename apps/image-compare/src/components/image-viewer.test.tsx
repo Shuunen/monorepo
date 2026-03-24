@@ -38,15 +38,15 @@ describe("image-viewer", () => {
   it("ImageViewer B should display zoom level", () => {
     render(<ImageViewer {...mockProps} />);
     const zoomText = screen.getByText("Zoom: 100%");
-    expect(zoomText).toBeTruthy();
+    expect(zoomText).toBeInstanceOf(HTMLElement);
   });
 
   it("ImageViewer C should have choose buttons with zero opacity when not in contest mode", () => {
     render(<ImageViewer {...mockProps} />);
     const leftButton = screen.getByText("Choose left image");
     const rightButton = screen.getByText("Choose right image");
-    expect(leftButton).toBeTruthy();
-    expect(rightButton).toBeTruthy();
+    expect(leftButton).toBeInstanceOf(HTMLElement);
+    expect(rightButton).toBeInstanceOf(HTMLElement);
   });
 
   it("ImageViewer D should display choose buttons in contest mode", () => {
@@ -67,8 +67,8 @@ describe("image-viewer", () => {
     render(<ImageViewer {...mockProps} contestState={contestState} />);
     const leftButton = screen.getByText("Choose left image");
     const rightButton = screen.getByText("Choose right image");
-    expect(leftButton).toBeTruthy();
-    expect(rightButton).toBeTruthy();
+    expect(leftButton).toBeInstanceOf(HTMLElement);
+    expect(rightButton).toBeInstanceOf(HTMLElement);
   });
 
   it("ImageViewer E should call onSelectWinner when choose button is clicked", () => {
@@ -105,13 +105,13 @@ describe("image-viewer", () => {
     };
     const { container } = render(<ImageViewer {...mockProps} contestState={contestState} />);
     const sliderBar = container.querySelector('[test-id="slider-bar"]');
-    expect(sliderBar).toBeTruthy();
+    expect(sliderBar).toBeInstanceOf(HTMLElement);
   });
 
   it("ImageViewer G should show drag over overlay when dragging 2 files", () => {
     render(<ImageViewer {...mockProps} isDraggingOver nbDraggedFiles={2} />);
     const dropText = screen.getByText("Drop these 2 images to compare them");
-    expect(dropText).toBeTruthy();
+    expect(dropText).toBeInstanceOf(HTMLElement);
   });
 
   it("ImageViewer H should handle right image winning in contest", () => {
@@ -139,13 +139,13 @@ describe("image-viewer", () => {
     render(<ImageViewer {...mockProps} isDraggingLeft isDraggingOver nbDraggedFiles={1} />);
     const leftMessage = screen.getByText("Change left image");
     const rightMessage = screen.getByText("Change right image");
-    expect(leftMessage).toBeTruthy();
-    expect(rightMessage).toBeTruthy();
+    expect(leftMessage).toBeInstanceOf(HTMLElement);
+    expect(rightMessage).toBeInstanceOf(HTMLElement);
   });
 
   it("ImageViewer J should show contest message when dragging 3+ files", () => {
     render(<ImageViewer {...mockProps} isDraggingOver nbDraggedFiles={3} />);
     const contestMessage = screen.getByText("Drop these 3 images to start a contest");
-    expect(contestMessage).toBeTruthy();
+    expect(contestMessage).toBeInstanceOf(HTMLElement);
   });
 });

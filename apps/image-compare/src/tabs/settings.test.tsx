@@ -4,12 +4,12 @@ import { Settings } from "./settings.tab";
 describe("settings", () => {
   it("Settings A should render successfully", () => {
     const { container } = render(<Settings />);
-    expect(container).toBeTruthy();
+    expect(container).toBeInstanceOf(HTMLElement);
   });
 
   it("Settings B should display settings title", () => {
     render(<Settings />);
     const title = screen.getByText("Settings");
-    expect(title).toBeTruthy();
+    expect(title).toBeInstanceOf(HTMLElement);
   });
 });

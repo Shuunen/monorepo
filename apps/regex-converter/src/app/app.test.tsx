@@ -9,7 +9,7 @@ describe(App, () => {
         <App />
       </BrowserRouter>,
     );
-    expect(baseElement).toBeTruthy();
+    expect(baseElement).toBeDefined();
   });
 
   it("should have a greeting", () => {

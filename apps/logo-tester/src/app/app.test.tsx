@@ -12,7 +12,7 @@ describe(App, () => {
         </TooltipProvider>
       </BrowserRouter>,
     );
-    expect(baseElement).toBeTruthy();
+    expect(baseElement).toBeDefined();
   });
 
   it("should have a greeting", () => {
@@ -23,6 +23,6 @@ describe(App, () => {
         </TooltipProvider>
       </BrowserRouter>,
     );
-    expect(getAllByText("Logo Tester").length > 0).toBeTruthy();
+    expect(getAllByText("Logo Tester").length > 0).toBe(true);
   });
 });

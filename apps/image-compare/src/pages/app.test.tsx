@@ -9,7 +9,7 @@ describe(App, () => {
         <App />
       </BrowserRouter>,
     );
-    expect(baseElement).toBeTruthy();
+    expect(baseElement).toBeInstanceOf(HTMLElement);
   });
 
   it("should have a greeting", () => {
@@ -18,6 +18,6 @@ describe(App, () => {
         <App />
       </BrowserRouter>,
     );
-    expect(getAllByText("Image Compare").length > 0).toBeTruthy();
+    expect(getAllByText("Image Compare").length > 0).toBe(true);
   });
 });

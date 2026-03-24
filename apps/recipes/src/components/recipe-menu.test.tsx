@@ -16,7 +16,7 @@ describe(RecipeMenu, () => {
     // Either loading state or loaded recipes should be present
     const hasLoading = screen.queryByText("Chargement des recettes...");
     const hasRecipes = screen.queryByText("Desserts 🍰");
-    expect(hasLoading ?? hasRecipes).toBeTruthy();
+    expect(hasLoading ?? hasRecipes).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeMenu B should render recipes after loading", async () => {
@@ -24,13 +24,13 @@ describe(RecipeMenu, () => {
     // Wait for the component to load and show recipes
     await waitFor(
       () => {
-        expect(screen.queryByText("Chargement des recettes...")).toBeFalsy();
+        expect(screen.queryByText("Chargement des recettes...")).toBeNull();
       },
       { timeout: 5000 },
     );
     // Check that some categories are rendered (these should exist in the actual files)
     const categories = ["Apéritifs 🍹", "Desserts 🍰", "Plats 🍕", "Boissons 🥤"];
-    for (const category of categories) expect(screen.getByText(category)).toBeTruthy();
+    for (const category of categories) expect(screen.getByText(category)).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeMenu C should render recipe links", async () => {
@@ -38,20 +38,20 @@ describe(RecipeMenu, () => {
     // Wait for loading to complete
     await waitFor(
       () => {
-        expect(screen.queryByText("Chargement des recettes...")).toBeFalsy();
+        expect(screen.queryByText("Chargement des recettes...")).toBeNull();
       },
       { timeout: 5000 },
     );
     // Check that recipe links are rendered by checking for some expected recipe names
     const expectedRecipes = ["cafe", "chips", "banana-bread"];
-    for (const recipe of expectedRecipes) expect(screen.getByText(recipe)).toBeTruthy();
+    for (const recipe of expectedRecipes) expect(screen.getByText(recipe)).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeMenu D should have proper structure", async () => {
     renderRecipeMenu();
     await waitFor(
       () => {
-        expect(screen.queryByText("Chargement des recettes...")).toBeFalsy();
+        expect(screen.queryByText("Chargement des recettes...")).toBeNull();
       },
       { timeout: 5000 },
     );
@@ -70,7 +70,7 @@ describe(RecipeMenu, () => {
     // Wait for recipes to load
     await waitFor(
       () => {
-        expect(screen.getByText("chips")).toBeTruthy();
+        expect(screen.getByText("chips")).toBeInstanceOf(HTMLElement);
       },
       { timeout: 2000 },
     );
@@ -84,7 +84,7 @@ describe(RecipeMenu, () => {
     // Since we're not on a recipe page, links should have inactive state
     // This covers the isActive: false case in navClasses function
     const recipeLink = navLinks.find(link => link.textContent.includes("chips"));
-    expect(recipeLink).toBeTruthy();
+    expect(recipeLink).toBeInstanceOf(HTMLElement);
   });
 
   it("RecipeMenu F should test navClasses function directly", () => {
@@ -97,7 +97,7 @@ describe(RecipeMenu, () => {
     );
     // The navClasses function is tested indirectly through NavLink rendering
     // Both active and inactive states are covered by different route contexts
-    expect(true).toBeTruthy(); // This test ensures the function is loaded
+    expect(true).toBe(true); // This test ensures the function is loaded
   });
 
   it("RecipeMenu G should test missing category mapping fallback", async () => {

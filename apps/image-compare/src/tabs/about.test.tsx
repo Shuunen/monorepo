@@ -4,24 +4,24 @@ import { About } from "./about.tab";
 describe("about", () => {
   it("About A should render successfully", () => {
     const { container } = render(<About />);
-    expect(container).toBeTruthy();
+    expect(container).toBeInstanceOf(HTMLElement);
   });
 
   it("About B should display the purpose section", () => {
     render(<About />);
     const purposeHeading = screen.getByText("Purpose");
-    expect(purposeHeading).toBeTruthy();
+    expect(purposeHeading).toBeInstanceOf(HTMLElement);
   });
 
   it("About C should display the usage section", () => {
     render(<About />);
     const usageHeading = screen.getByText("Usage");
-    expect(usageHeading).toBeTruthy();
+    expect(usageHeading).toBeInstanceOf(HTMLElement);
   });
 
   it("About D should display the tech stack section", () => {
     render(<About />);
     const techStackHeading = screen.getByText("Tech stack");
-    expect(techStackHeading).toBeTruthy();
+    expect(techStackHeading).toBeInstanceOf(HTMLElement);
   });
 });

@@ -44,7 +44,7 @@ describe("control-buttons", () => {
       />,
     );
     const resetText = screen.getByText("Reset view");
-    expect(resetText).toBeTruthy();
+    expect(resetText).toBeInstanceOf(HTMLElement);
   });
 
   it("ControlButtons D should hide upload buttons in contest mode", () => {
@@ -98,7 +98,7 @@ describe("control-buttons", () => {
       />,
     );
     const exitText = screen.getByText("Exit contest");
-    expect(exitText).toBeTruthy();
+    expect(exitText).toBeInstanceOf(HTMLElement);
   });
 
   it("ControlButtons F should hide upload buttons when contest is complete", () => {
@@ -137,7 +137,7 @@ describe("control-buttons", () => {
     if (leftButton) {
       fireEvent.click(leftButton);
       const fileInput = container.querySelector("#left-upload");
-      expect(fileInput).toBeTruthy();
+      expect(fileInput).toBeInstanceOf(HTMLElement);
     }
   });
 
@@ -154,7 +154,7 @@ describe("control-buttons", () => {
     if (rightButton) {
       fireEvent.click(rightButton);
       const fileInput = container.querySelector("#right-upload");
-      expect(fileInput).toBeTruthy();
+      expect(fileInput).toBeInstanceOf(HTMLElement);
     }
   });
 

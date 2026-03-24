@@ -1,4 +1,3 @@
-import { expectEqualTypes } from "./expect-type.js";
 import { memoize } from "./memoize.js";
 
 let addCalls = 0;
@@ -81,5 +80,5 @@ it("memoize D testing memoized function with objects", () => {
 });
 
 it("memoize E : return types", () => {
-  expectEqualTypes(add(1, 2), memoizedAdd(1, 2));
+  expectTypeOf(add(1, 2)).toEqualTypeOf(memoizedAdd(1, 2));
 });

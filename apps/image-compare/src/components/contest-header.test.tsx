@@ -28,13 +28,13 @@ describe("contest-header", () => {
   it("ContestHeader A should display contest mode header", () => {
     render(<ContestHeader contestState={mockContestState} />);
     const header = screen.getByText("Round 1 - Match 1");
-    expect(header).toBeTruthy();
+    expect(header).toBeInstanceOf(HTMLElement);
   });
 
   it("ContestHeader B should display select your preferred image message", () => {
     render(<ContestHeader contestState={mockContestState} />);
     const message = screen.getByText("Select your preferred image");
-    expect(message).toBeTruthy();
+    expect(message).toBeInstanceOf(HTMLElement);
   });
 
   it("ContestHeader C should display winner header when contest is complete", () => {
@@ -46,7 +46,7 @@ describe("contest-header", () => {
     };
     render(<ContestHeader contestState={completeState} />);
     const header = screen.getByText("🏆 We have a winner !");
-    expect(header).toBeTruthy();
+    expect(header).toBeInstanceOf(HTMLElement);
   });
 
   it("ContestHeader D should display winner filename when contest is complete", () => {

@@ -32,7 +32,7 @@ describe("image.utils", () => {
       const onImageUpdate = vi.fn();
       handleSingleFileUpload(file, { imageSide: "left", onImageUpdate });
       // FileReader is async, we can't test the callback directly
-      expect(file).toBeTruthy();
+      expect(file).toBeInstanceOf(File);
     });
 
     it("handleSingleFileUpload C should process right image file", () => {
@@ -40,7 +40,7 @@ describe("image.utils", () => {
       const onImageUpdate = vi.fn();
       const onMetadataUpdate = vi.fn();
       handleSingleFileUpload(file, { imageSide: "right", onImageUpdate, onMetadataUpdate });
-      expect(file).toBeTruthy();
+      expect(file).toBeInstanceOf(File);
       expect(onImageUpdate).not.toHaveBeenCalled();
       expect(onMetadataUpdate).not.toHaveBeenCalled();
     });

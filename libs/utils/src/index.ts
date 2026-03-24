@@ -28,7 +28,6 @@ export * from "./lib/debounce.js";
 export * from "./lib/dom.js";
 export * from "./lib/environment.js";
 export * from "./lib/events.js";
-export * from "./lib/expect-type.js";
 export * from "./lib/fetch.js";
 export * from "./lib/flags.js";
 export * from "./lib/functions.js";

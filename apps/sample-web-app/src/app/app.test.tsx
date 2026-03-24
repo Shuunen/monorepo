@@ -9,7 +9,7 @@ describe(App, () => {
         <App />
       </BrowserRouter>,
     );
-    expect(baseElement).toBeTruthy();
+    expect(baseElement).toBeDefined();
   });
 
   it("should have a greeting", () => {
@@ -18,6 +18,6 @@ describe(App, () => {
         <App />
       </BrowserRouter>,
     );
-    expect(getAllByText("sample-web-app").length > 0).toBeTruthy();
+    expect(getAllByText("sample-web-app").length > 0).toBe(true);
   });
 });
