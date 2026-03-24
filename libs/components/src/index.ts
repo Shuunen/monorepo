@@ -69,6 +69,7 @@ export * from "./icons/icon-search-x";
 export * from "./icons/icon-select";
 export * from "./icons/icon-settings";
 export * from "./icons/icon-success";
+export * from "./icons/icon-terminal";
 export * from "./icons/icon-tooltip";
 export * from "./icons/icon-trash";
 export * from "./icons/icon-upcoming";
