@@ -255,6 +255,11 @@ const complexSchemas = [
           label: "Array render field-list string favourite",
         },
       ),
+      arrayRenderFieldListStringNoLabelOther: fields(
+        field(z.string().optional(), {
+          label: "Other tool",
+        }),
+      ),
       fileRenderUploadHiddenInSummary: field(z.file().optional(), {
         label: "File render upload hidden in summary",
         showInSummary: false,
@@ -293,6 +298,7 @@ export const Complex: Story = {
     formData: {
       arrayRenderFieldListString: ["TypeScript", "React", "Zod"],
       arrayRenderFieldListStringFavourite: ["Bun", "Vitest", "Storybook"],
+      arrayRenderFieldListStringNoLabelOther: ["Webpack", "Jest"],
       arrayRenderFormListObject: [
         {
           booleanRenderCheckbox: true,
@@ -413,6 +419,7 @@ export const Complex: Story = {
     await expect(preferencesSummary).toHaveTextContent(
       ["Array render field-list string favourite", "Bun, Vitest, Storybook"].join(""),
     );
+    await expect(preferencesSummary).toHaveTextContent(["Other tool", "Webpack, Jest"].join(""));
 
     await expect(canvas.queryByText("String render text hidden in summary")).toBeNull();
     await expect(canvas.queryByText("String render text depends on boolean render switch false")).toBeNull();
