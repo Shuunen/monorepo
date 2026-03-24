@@ -177,6 +177,10 @@ export function AutoForm({
       setCurrentStep(prev => prev + 1);
     }
   }
+
+  function handleStepSubmitInvalid() {
+    setHasSubmittedOnce(true);
+  }
   // Handle back button
   function handleBack() {
     if (submissionProps) {
@@ -338,7 +342,7 @@ export function AutoForm({
       ? { label: finalLabels.lastStepButton, name: "last-step-submit", type: "submit" as const }
       : { label: finalLabels.nextStep, name: "step-next", type: "submit" as const };
     return (
-      <form onSubmit={form.handleSubmit(handleStepSubmit)}>
+      <form onSubmit={form.handleSubmit(handleStepSubmit, handleStepSubmitInvalid)}>
         <AutoFormFields logger={logger} schema={currentSchema} showForm={showForm} state={stepMetadata?.state} />
         {showButtons && (
           <AutoFormNavigation
