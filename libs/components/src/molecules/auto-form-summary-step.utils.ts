@@ -78,6 +78,16 @@ function acceptLabelFromMetadata(metadata: AutoFormFieldAcceptMetadata, value: u
   return value;
 }
 
+function getFieldLabel(fieldSchema: z.ZodType, metadata: AutoFormFieldMetadata | undefined) {
+  if (!metadata?.label && metadata?.render === "field-list") {
+    const elementResult = getElementSchema(fieldSchema);
+    if (elementResult.ok) {
+      return getFieldMetadata(elementResult.value)?.label;
+    }
+  }
+  return metadata?.label;
+}
+
 type SectionDataFromObjectItemProps = {
   data: AutoFormData;
   index: number;
@@ -116,7 +126,7 @@ function sectionDataFromObjectItem({ data, innerShape, item, key, index }: Secti
       innerValue = acceptLabelFromMetadata(innerMetadata, innerValue);
     }
     sectionData[`${key}.${index}.${innerKey}`] = {
-      label: innerMetadata?.label ?? innerKey,
+      label: getFieldLabel(innerFieldSchema, innerMetadata) ?? innerKey,
       value: innerValue,
     };
   }
@@ -257,7 +267,7 @@ function processFieldForSection({ applyCodec = false, key, shape, data, state }:
   }
   if (shouldIncludeField(fieldSchema, metadata, data)) {
     state.currentSectionData[key] = {
-      label: metadata?.label ?? key,
+      label: getFieldLabel(fieldSchema, metadata) ?? key,
       value: resolveFieldValue({ applyCodec, data, key, metadata, parentData: state.parentData }),
     };
   }

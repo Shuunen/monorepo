@@ -594,4 +594,34 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections).toHaveLength(1);
     expect(sections[0].data.consent).toEqual({ label: "Consent", value: "pending" });
   });
+  it("sectionsFromSchema V should use sub field label when field list has no label", () => {
+    const schema = z.object({
+      list: fields(field(z.string(), { label: "Item" })),
+    });
+    const sections = sectionsFromSchema({ schema, data: { list: ["item-1"] } });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data.list).toEqual({ label: "Item", value: ["item-1"] });
+  });
+  it("sectionsFromSchema W should fallback to field key when field list element resolution fails and no label", async () => {
+    vi.resetModules();
+    vi.doMock("./auto-form.utils", async importOriginal => {
+      // oxlint-disable-next-line typescript/consistent-type-imports
+      const actual = await importOriginal<typeof import("./auto-form.utils")>();
+      return {
+        ...actual,
+        getElementSchema: vi.fn(() => ({ ok: false, error: "forced-error" })),
+        isZodArray: vi.fn(() => true),
+        isZodObject: vi.fn(() => true),
+      };
+    });
+    const utilsModule = await import("./auto-form-summary-step.utils");
+    const schema = z.object({
+      list: fields(field(z.string(), { label: "Item" })),
+    });
+    const sections = utilsModule.sectionsFromSchema({ schema, data: { list: ["item-1"] } });
+    expect(sections).toHaveLength(1);
+    expect(sections[0].data.list).toEqual({ label: "list", value: ["item-1"] });
+    vi.doUnmock("./auto-form.utils");
+    vi.resetModules();
+  });
 });
