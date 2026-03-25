@@ -31,10 +31,10 @@ jobs:
       # Uncomment this line to enable task distribution
       # - run: pnpm dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
 
-      - name: Setup Node 22 with pnpm cache
+      - name: Setup Node 24 with pnpm cache
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           cache: "pnpm"
 
       - name: Install Dependencies
