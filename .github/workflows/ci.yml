@@ -69,5 +69,5 @@ jobs:
         if: steps.check_playwright.outputs.needed == 'true'
         run: pnpm exec playwright install --with-deps && echo playwright install ok ✅
 
-      - name: Run Checks
-        run: pnpm check && echo run checks ok ✅
+      - name: Run Checks CI
+        run: pnpm check:ci

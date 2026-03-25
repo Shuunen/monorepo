@@ -10,11 +10,28 @@
         "cwd": "{projectRoot}"
       }
     },
+    "oxlint-fix": {
+      "cache": false,
+      "dependsOn": [{ "projects": ["*"], "target": "generate-*" }],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "oxlint --fix --fix-suggestions --fix-dangerously --type-aware --deny-warnings --report-unused-disable-directives",
+        "cwd": "{projectRoot}"
+      }
+    },
     "oxfmt": {
       "cache": false,
       "executor": "nx:run-commands",
       "options": {
         "command": "oxfmt --check",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "oxfmt-fix": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "oxfmt --write",
         "cwd": "{projectRoot}"
       }
     },
@@ -26,6 +43,14 @@
         "cwd": "{projectRoot}"
       }
     },
+    "sherif-fix": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "sherif --fix",
+        "cwd": "{projectRoot}"
+      }
+    },
     "headers": {
       "cache": false,
       "executor": "nx:run-commands",
@@ -34,9 +59,13 @@
         "cwd": "{projectRoot}"
       }
     },
-    "lint": {
+    "global": {
       "cache": false,
       "dependsOn": ["oxlint", "oxfmt", "sherif"]
+    },
+    "global-fix": {
+      "cache": false,
+      "dependsOn": ["oxlint-fix", "oxfmt-fix", "sherif-fix"]
     }
   }
 }
