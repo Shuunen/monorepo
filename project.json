@@ -1,0 +1,42 @@
+{
+  "$schema": "./node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "oxlint": {
+      "cache": false,
+      "dependsOn": [{ "projects": ["*"], "target": "generate-*" }],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "oxlint --type-aware --deny-warnings --report-unused-disable-directives",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "oxfmt": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "oxfmt --check",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "sherif": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "sherif",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "headers": {
+      "cache": false,
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bun libs/utils/src/bin/header-injector.cli.ts --header=\"Copyright 2026 ACME\"",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint": {
+      "cache": false,
+      "dependsOn": ["oxlint", "oxfmt", "sherif"]
+    }
+  }
+}

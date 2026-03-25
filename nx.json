@@ -96,7 +96,7 @@
     },
     "ts-check": {
       "cache": true,
-      "dependsOn": ["^ts-check"],
+      "dependsOn": ["generate-changelog", "generate-trad", "^ts-check"],
       "executor": "nx:run-commands",
       "inputs": ["default"],
       "options": {
