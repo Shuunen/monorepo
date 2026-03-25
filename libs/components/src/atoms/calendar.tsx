@@ -4,6 +4,12 @@ import { type NameProp, testIdFromProps } from "./form.utils";
 
 type CalendarProps = ComponentProps<typeof ShadCalendar> & NameProp;
 
+const minYear = 1900;
+
 export function Calendar({ ...props }: CalendarProps) {
-  return <ShadCalendar data-testid={testIdFromProps("calendar", props)} {...props} />;
+  const targetProps = {
+    startMonth: new Date(minYear, 0),
+    ...props,
+  };
+  return <ShadCalendar data-testid={testIdFromProps("calendar", targetProps)} {...targetProps} />;
 }

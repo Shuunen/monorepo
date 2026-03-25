@@ -244,7 +244,9 @@ export function DatetimePicker({
                       setDateValue(dateIsoToReadableDatetime(newDate, { withTime: false }));
                       setMonth(newDate);
                       onChange?.(newDate);
-                      setOpen(false);
+                      if (!time) {
+                        setOpen(false);
+                      }
                     }}
                   />
                 </CardContent>
