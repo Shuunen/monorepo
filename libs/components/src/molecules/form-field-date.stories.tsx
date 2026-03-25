@@ -56,8 +56,8 @@ export const Basic: Story = {
     expect(dateInput).toBeInTheDocument();
     await step("fill date input", async () => {
       await userEvent.clear(dateInput);
-      await userEvent.type(dateInput, "15051990");
-      expect(dateInput).toHaveValue("15/05/1990");
+      await userEvent.type(dateInput, "15051900");
+      expect(dateInput).toHaveValue("15/05/1900");
     });
     await step("submit form", async () => {
       const submitButton = canvas.getByRole("button", { name: "Submit" });
@@ -65,7 +65,7 @@ export const Basic: Story = {
     });
     await step("verify submitted data contains Date object", () => {
       const submittedData = canvas.getByTestId("debug-data-submitted-data");
-      const expectedDate = new Date("1990-05-15");
+      const expectedDate = new Date("1900-05-15");
       expect(submittedData).toContainHTML(stringify({ birthDate: expectedDate }, true));
     });
   },
