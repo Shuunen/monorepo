@@ -90,7 +90,8 @@
     "test": {
       "options": {
         "coverage": true,
-        "coverage.thresholds.100": true
+        "coverage.thresholds.100": true,
+        "typecheck": true
       }
     },
     "ts-check": {
