@@ -75,6 +75,7 @@ const linuxConfigs = [
   { source: `${home}/.local/share/applications/lol-practice-5v5.desktop` },
   { source: `${home}/.local/share/applications/stuff-finder.desktop` },
   { source: `${home}/.local/share/kio/servicemenus/take-screenshot.desktop` },
+  { renameTo: "xfce4-helpers.rc", source: `${home}/.config/xfce4/helpers.rc` },
   // { source: `${home}/.local/share/nautilus/scripts/Shrink all pdf`},
   // { source: `${home}/.local/share/nautilus/scripts/Take screenshot`},
   { renameTo: "espanso-config.yml", source: `${home}/.config/espanso/config/default.yml` },
