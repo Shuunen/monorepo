@@ -26,9 +26,6 @@
       "path": "./apps/regex-converter"
     },
     {
-      "path": "./apps/sample-web-app-e2e"
-    },
-    {
       "path": "./apps/sample-web-app"
     },
     {
@@ -47,6 +44,9 @@
       "path": "./apps/what-now/electron"
     },
     {
+      "path": "./apps/xml-validation"
+    },
+    {
       "path": "./libs/components"
     },
     {
@@ -60,6 +60,9 @@
     },
     {
       "path": "./libs/xml-validator"
+    },
+    {
+      "path": "./apps/sample-web-app-e2e"
     }
   ]
 }

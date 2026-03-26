@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@monorepo/components": "workspace:*",
+    "@monorepo/utils": "workspace:*",
+    "@monorepo/vite-plugins": "workspace:*",
+    "@monorepo/xml-validator": "workspace:*"
+  },
+  "name": "xml-validation",
+  "private": true,
+  "type": "module",
+  "version": "0.0.1"
+}

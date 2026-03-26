@@ -436,6 +436,21 @@ importers:
         specifier: ~0.0.194
         version: 0.0.194
 
+  apps/xml-validation:
+    dependencies:
+      '@monorepo/components':
+        specifier: workspace:*
+        version: link:../../libs/components
+      '@monorepo/utils':
+        specifier: workspace:*
+        version: link:../../libs/utils
+      '@monorepo/vite-plugins':
+        specifier: workspace:*
+        version: link:../../libs/vite-plugins
+      '@monorepo/xml-validator':
+        specifier: workspace:*
+        version: link:../../libs/xml-validator
+
   libs/components:
     dependencies:
       '@fontsource-variable/inter':

@@ -233,7 +233,7 @@ describe(useXmlValidator, () => {
     expect(worker).toBeDefined();
 
     act(() => {
-      worker.dispatchRuntimeError("worker blew up");
+      worker?.dispatchRuntimeError("worker blew up");
     });
 
     await waitFor(() => {
@@ -254,7 +254,7 @@ describe(useXmlValidator, () => {
 
     unmount();
 
-    expect(worker.terminate).toHaveBeenCalledOnce();
+    expect(worker?.terminate).toHaveBeenCalledOnce();
   });
 
   it("useXmlValidator G validate no-ops when worker ref is unset (e.g. after unmount)", async () => {
@@ -266,7 +266,8 @@ describe(useXmlValidator, () => {
 
     const [worker] = createdWorkers;
     expect(worker).toBeDefined();
-    const postSpy = vi.spyOn(worker, "postMessage");
+    // oxlint-disable-next-line typescript/no-non-null-assertion
+    const postSpy = vi.spyOn(worker!, "postMessage");
 
     unmount();
 
@@ -304,7 +305,7 @@ describe(useXmlValidator, () => {
       expect(createdWorkers.length).toBe(2);
     });
 
-    expect(firstWorker.terminate).toHaveBeenCalledOnce();
+    expect(firstWorker?.terminate).toHaveBeenCalledOnce();
     await waitFor(() => {
       expect(result.current.state.status).toBe("ready");
     });

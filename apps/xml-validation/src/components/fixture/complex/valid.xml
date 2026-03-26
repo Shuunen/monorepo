@@ -1,0 +1,11 @@
+<contact>
+  <firstName>test</firstName>
+  <lastName>Dupont</lastName>
+  <email>test@example.com</email>
+  <address>
+    <street>42 Rue de la République</street>
+    <city>Lyon</city>
+    <zipCode>69002</zipCode>
+    <country>France</country>
+  </address>
+</contact>
