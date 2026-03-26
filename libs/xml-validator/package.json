@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "@monorepo/utils": "workspace:*",
+    "libxml2-wasm": "^0.7.1"
+  },
+  "version": "0.1.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./out-tsc/src/index.d.ts",
+    "./package.json": "./package.json"
+  },
+  "name": "@monorepo/xml-validator",
+  "nx": {
+    "name": "xml-validator",
+    "sourceRoot": "libs/xml-validator/src"
+  },
+  "private": true,
+  "type": "module"
+}

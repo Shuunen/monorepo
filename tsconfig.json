@@ -57,6 +57,9 @@
     },
     {
       "path": "./libs/vite-plugins"
+    },
+    {
+      "path": "./libs/xml-validator"
     }
   ]
 }
