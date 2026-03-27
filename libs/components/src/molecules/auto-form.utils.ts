@@ -474,7 +474,31 @@ function getDataForField({
   }
 
   const value = isSourceKeyNested ? getNested(externalData, sourceKey) : externalData[sourceKey];
+  if (value === undefined) {
+    return undefined;
+  }
+  if (isZodArray(fieldSchema)) {
+    const mappedArrayItems = mapArrayOfObjectsToFormFields(fieldSchema, value);
+    if (mappedArrayItems !== undefined) {
+      return mappedArrayItems;
+    }
+  }
   return getValueFromCodec({ fieldSchema, method: "decode", value });
+}
+
+function mapArrayOfObjectsToFormFields(fieldSchema: z.ZodType, value: unknown) {
+  const elementResult = getElementSchema(fieldSchema);
+  if (!elementResult.ok || !isZodObject(elementResult.value)) {
+    return undefined;
+  }
+  const elementSchema = elementResult.value as z.ZodObject;
+  const items = Array.isArray(value) ? value : [value];
+  return items.map((item): unknown => {
+    if (!isPlainObject(item)) {
+      return item;
+    }
+    return mapExternalDataToFormFields(elementSchema, item);
+  });
 }
 
 /**
