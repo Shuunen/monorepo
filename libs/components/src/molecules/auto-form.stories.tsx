@@ -888,8 +888,8 @@ export const SummaryWithArrayOfObjects: Story = {
       age: 28,
       subscribe: true,
       pets: [
-        { name: "Buddy", breed: "Labrador" },
-        { name: "Max", breed: "Poodle" },
+        { name: "Buddy", breedKind: { breed: "Labrador" } },
+        { name: "Max", breedKind: { breed: "Poodle" } },
       ],
     },
     schemas: [
@@ -899,7 +899,9 @@ export const SummaryWithArrayOfObjects: Story = {
           name: field(z.string().min(2, "Name is required"), { label: "Full Name" }),
           age: field(z.number().min(0).max(120).optional(), { label: "Age" }),
           subscribe: field(z.boolean(), { label: "Subscribe to newsletter" }),
-          pets: forms(z.object({ name: z.string(), breed: z.string() })),
+          pets: forms(
+            z.object({ name: z.string(), breed: field(z.string(), { label: "Breed", key: "breedKind.breed" }) }),
+          ),
         }),
         { title: "Pets", state: "readonly" },
       ),

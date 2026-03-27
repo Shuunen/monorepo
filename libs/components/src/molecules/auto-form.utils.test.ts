@@ -607,6 +607,42 @@ describe("auto-form.utils", () => {
     const result = mapExternalDataToFormFields(schema, externalData);
     expect(stringify(result)).toMatchInlineSnapshot(`"{"users":["John"]}"`);
   });
+  it("mapExternalDataToFormFields N should recursively map keyIn and codec inside array object items", () => {
+    const schema = z.object({
+      pets: forms(
+        z.object({
+          birthDate: field(z.string(), {
+            codec: isoDateStringToDateInstance,
+            keyIn: "meta.birthDate",
+            label: "Birth Date",
+          }),
+          breed: field(z.string(), { key: "breedKind.breed", label: "Breed" }),
+          name: field(z.string(), { label: "Name" }),
+          otherInformation: forms(
+            z.object({
+              value: field(z.number(), { label: "value" }),
+            }),
+            {
+              key: "meta.otherInformation",
+            },
+          ),
+        }),
+      ),
+    });
+    const externalData = {
+      pets: [
+        {
+          breedKind: { breed: "Labrador" },
+          meta: { birthDate: "2026-01-14" },
+          name: "Buddy",
+        },
+      ],
+    };
+    const result = mapExternalDataToFormFields(schema, externalData);
+    expect(stringify(result)).toMatchInlineSnapshot(
+      `"{"pets":[{"birthDate":{"__date__":"2026-01-14T00:00:00.000Z"},"breed":"Labrador","name":"Buddy"}]}"`,
+    );
+  });
 
   // fields
   it("fields A should create a ZodArray", () => {
