@@ -1,6 +1,6 @@
 // oxlint-disable max-lines
 import { getNested, isString, Logger, nbPercentMax, Result, setNested, sleep, stringify } from "@monorepo/utils";
-import { isFunction, isPlainObject } from "es-toolkit";
+import { invariant, isFunction, isPlainObject } from "es-toolkit";
 import type { ReactNode } from "react";
 import { z } from "zod";
 import type {
@@ -858,7 +858,9 @@ export function getDefaultValues(schemas: z.ZodObject[], initialData: AutoFormDa
  */
 export function getLastAccessibleStepIndex(schemas: z.ZodObject[]) {
   for (let index = schemas.length - 1; index >= 0; index -= 1) {
-    const stepMeta = getStepMetadata(schemas[index]);
+    const schema = schemas[index];
+    invariant(schema, "Undefined schema found while determining last accessible step index");
+    const stepMeta = getStepMetadata(schema);
     if (stepMeta?.state !== "upcoming") {
       return index;
     }
@@ -877,7 +879,9 @@ export function isStepClickable(schemas: z.ZodObject[], stepIndex: number, submi
   if (submissionStatus === "success" || submissionStatus === "warning") {
     return false;
   }
-  const stepMeta = getStepMetadata(schemas[stepIndex]);
+  const schema = schemas[stepIndex];
+  invariant(schema, "Undefined schema found while checking if step is clickable");
+  const stepMeta = getStepMetadata(schema);
   return stepMeta?.state !== "upcoming";
 }
 

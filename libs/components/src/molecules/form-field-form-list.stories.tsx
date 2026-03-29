@@ -1,5 +1,6 @@
 import { isBrowserEnvironment, Logger, sleep, stringify } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { invariant } from "es-toolkit";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
@@ -238,6 +239,11 @@ export const ExistingData: Story = {
     await step("try to go below min items", async () => {
       const deleteButtons = canvas.getAllByTestId("button-delete");
       expect(deleteButtons.length).toBe(5);
+      invariant(deleteButtons[0], "Delete button 0 not found");
+      invariant(deleteButtons[1], "Delete button 1 not found");
+      invariant(deleteButtons[2], "Delete button 2 not found");
+      invariant(deleteButtons[3], "Delete button 3 not found");
+      invariant(deleteButtons[4], "Delete button 4 not found");
       await userEvent.click(deleteButtons[4]);
       await userEvent.click(deleteButtons[3]);
       await userEvent.click(deleteButtons[2]);
@@ -319,6 +325,8 @@ export const MultiStep: Story = {
     });
     await step("click on bob and see errors only after submit", async () => {
       const allCompleteButtons = canvas.getAllByTestId("button-complete");
+      expect(allCompleteButtons.length).toBe(2);
+      invariant(allCompleteButtons[1], "Complete button 1 not found");
       await userEvent.click(allCompleteButtons[1]);
       const errorsBeforeSubmit = canvas.queryAllByRole("alert");
       expect(errorsBeforeSubmit).toHaveLength(0);

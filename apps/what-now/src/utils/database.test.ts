@@ -7,7 +7,7 @@ describe("database.utils", () => {
     $databaseId: "6796758d0018464afda2",
     $id: "test-task-id",
     $permissions: [],
-    $sequence: 175,
+    $sequence: "175",
     $tableId: "6796759300059f9201af",
     $updatedAt: "2025-08-03T08:59:26.617+00:00",
     "completed-on": "2025-08-03T00:00:00.000+00:00",

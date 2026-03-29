@@ -82,8 +82,8 @@ function getSize(text) {
     let size = Number(mSize);
     if (mUnit === "to" || mUnit === "tb") size *= 1000; // align sizes to Go, may be slightly different according to TO vs TB
     if (size > result.size) result.size = size;
-    result.mSize = mSize;
-    result.mUnit = mUnit;
+    result.mSize = mSize ?? "";
+    result.mUnit = mUnit ?? "";
   }
   return result;
 }
@@ -111,7 +111,7 @@ function HddCleaner() {
       utils.error("failed at finding price in :", `"${priceElement.textContent}"`);
       return false;
     }
-    const price = utils.parsePrice(priceElement.childNodes[0].textContent ?? "");
+    const price = utils.parsePrice(priceElement.childNodes[0]?.textContent ?? "");
     const pricePerTo = Math.round(price.amount / (size / 1000));
     let rating = "";
     for (let index = 40; index > 20; index -= 5) if (pricePerTo < index) rating += "👍";
@@ -197,7 +197,7 @@ function HddCleaner() {
    */
   function sortProductsByPricePerTo(productElements) {
     if (productElements.length > 1) {
-      const parent = productElements[0].parentElement;
+      const parent = productElements[0]?.parentElement;
       if (parent) {
         productElements.sort((productA, productB) => {
           const priceA = Number(productA.dataset.pricePerTo);

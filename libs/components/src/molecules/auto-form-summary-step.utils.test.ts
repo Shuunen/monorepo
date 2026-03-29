@@ -16,10 +16,10 @@ describe("auto-form-summary-step.utils", () => {
     const data = { a: "foo", b: "bar" };
     const groups = groupedSectionsFromEditableSteps([schema1, schema2], data);
     expect(groups).toHaveLength(2);
-    expect(groups[0].stepTitle).toBe("Step One");
-    expect(groups[0].sections).toHaveLength(1);
-    expect(groups[1].stepTitle).toBe("Step Two");
-    expect(groups[1].sections).toHaveLength(1);
+    expect(groups[0]?.stepTitle).toBe("Step One");
+    expect(groups[0]?.sections).toHaveLength(1);
+    expect(groups[1]?.stepTitle).toBe("Step Two");
+    expect(groups[1]?.sections).toHaveLength(1);
   });
   it("groupedSectionsFromEditableSteps B should skip readonly and upcoming steps", () => {
     const schema1 = step(z.object({ a: field(z.string(), { label: "A" }) }), { state: "readonly", title: "Readonly" });
@@ -28,14 +28,14 @@ describe("auto-form-summary-step.utils", () => {
     const data = { a: "foo", b: "bar", c: "baz" };
     const groups = groupedSectionsFromEditableSteps([schema1, schema2, schema3], data);
     expect(groups).toHaveLength(1);
-    expect(groups[0].stepTitle).toBe("Editable");
+    expect(groups[0]?.stepTitle).toBe("Editable");
   });
   it("groupedSectionsFromEditableSteps C should handle steps without title", () => {
     const schema = z.object({ a: field(z.string(), { label: "A" }) });
     const data = { a: "foo" };
     const groups = groupedSectionsFromEditableSteps([schema], data);
     expect(groups).toHaveLength(1);
-    expect(groups[0].stepTitle).toBeUndefined();
+    expect(groups[0]?.stepTitle).toBeUndefined();
   });
   // filterDataForSummary
   it("filterDataForSummary A should filter out fields from readonly steps", () => {
@@ -119,7 +119,7 @@ describe("auto-form-summary-step.utils", () => {
     const data = { a: "foo", b: "bar" };
     const sections = sectionsFromEditableSteps([schema1, schema2], data);
     expect(sections).toHaveLength(1);
-    expect(sections[0].data).toEqual({ b: { label: "B", value: "bar" } });
+    expect(sections[0]?.data).toEqual({ b: { label: "B", value: "bar" } });
   });
   it("sectionsFromEditableSteps B should handle steps without sections", () => {
     const schema = step(
@@ -132,8 +132,8 @@ describe("auto-form-summary-step.utils", () => {
     const data = { a: "foo", b: "bar" };
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBeUndefined();
-    expect(sections[0].data).toEqual({
+    expect(sections[0]?.title).toBeUndefined();
+    expect(sections[0]?.data).toEqual({
       a: { label: "A", value: "foo" },
       b: { label: "B", value: "bar" },
     });
@@ -147,8 +147,8 @@ describe("auto-form-summary-step.utils", () => {
     const data = { a: "foo", b: "bar" };
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBeUndefined();
-    expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
+    expect(sections[0]?.title).toBeUndefined();
+    expect(sections[0]?.data).toEqual({ a: { label: "A", value: "foo" } });
   });
   it("sectionsFromEditableSteps D should handle invisible fields", () => {
     const schema = z.object({
@@ -158,8 +158,8 @@ describe("auto-form-summary-step.utils", () => {
     const data = { a: "foo", b: "bar" };
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBeUndefined();
-    expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
+    expect(sections[0]?.title).toBeUndefined();
+    expect(sections[0]?.data).toEqual({ a: { label: "A", value: "foo" } });
   });
   it("sectionsFromEditableSteps E should handle enum fields", () => {
     const schema = z.object({
@@ -174,8 +174,8 @@ describe("auto-form-summary-step.utils", () => {
     const data = { b: "bar" };
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBeUndefined();
-    expect(sections[0].data).toEqual({ b: { label: "B", value: "Bar" } });
+    expect(sections[0]?.title).toBeUndefined();
+    expect(sections[0]?.data).toEqual({ b: { label: "B", value: "Bar" } });
   });
   it("sectionsFromEditableSteps F should handle accept fields with custom labels", () => {
     const schema = z.object({
@@ -189,8 +189,8 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromEditableSteps([schema], { consent: false });
     expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBeUndefined();
-    expect(sections[0].data).toEqual({ consent: { label: "Consent", value: "I decline" } });
+    expect(sections[0]?.title).toBeUndefined();
+    expect(sections[0]?.data).toEqual({ consent: { label: "Consent", value: "I decline" } });
   });
   it("sectionsFromEditableSteps G should create dedicated sections for array of objects", () => {
     const schema = z.object({
@@ -209,12 +209,12 @@ describe("auto-form-summary-step.utils", () => {
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(3);
     expect(sections[0]).toEqual({ data: { a: { label: "A", value: "foo" } }, title: undefined });
-    expect(sections[1].title).toBe("pets 1");
-    expect(sections[1].data).toEqual({
+    expect(sections[1]?.title).toBe("pets 1");
+    expect(sections[1]?.data).toEqual({
       "pets.0.name": { label: "Name", value: "Buddy" },
       "pets.0.breed": { label: "Breed", value: "Labrador" },
     });
-    expect(sections[2].title).toBe("pets 2");
+    expect(sections[2]?.title).toBe("pets 2");
   });
   it("sectionsFromEditableSteps H should use identifier for array of objects section titles", () => {
     const schema = z.object({
@@ -226,8 +226,8 @@ describe("auto-form-summary-step.utils", () => {
     const data = { pets: [{ name: "Buddy" }, { name: "Max" }] };
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(2);
-    expect(sections[0].title).toBe("Pet: Buddy");
-    expect(sections[1].title).toBe("Pet: Max");
+    expect(sections[0]?.title).toBe("Pet: Buddy");
+    expect(sections[1]?.title).toBe("Pet: Max");
   });
   it("sectionsFromEditableSteps I should use field label for array of objects when no identifier", () => {
     const schema = z.object({
@@ -236,7 +236,7 @@ describe("auto-form-summary-step.utils", () => {
     const data = { pets: [{ name: "Buddy" }] };
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBe("My Pets 1");
+    expect(sections[0]?.title).toBe("My Pets 1");
   });
   it("sectionsFromEditableSteps J should handle empty array of objects", () => {
     const schema = z.object({
@@ -271,7 +271,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const data = { pets: [{ type: "dog" }] };
     const sections = sectionsFromEditableSteps([schema], data);
-    expect(sections[0].data["pets.0.type"]?.value).toBe("Dog");
+    expect(sections[0]?.data["pets.0.type"]?.value).toBe("Dog");
   });
   it("sectionsFromEditableSteps M should place array sections after the current section", () => {
     const schema = z.object({
@@ -282,11 +282,11 @@ describe("auto-form-summary-step.utils", () => {
     const data = { a: "foo", b: "bar", pets: [{ name: "Buddy" }] };
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(2);
-    expect(sections[0].data).toEqual({
+    expect(sections[0]?.data).toEqual({
       a: { label: "A", value: "foo" },
       b: { label: "B", value: "bar" },
     });
-    expect(sections[1].title).toBe("pets 1");
+    expect(sections[1]?.title).toBe("pets 1");
   });
   it("sectionsFromEditableSteps N should skip section markers inside array of objects", () => {
     const schema = z.object({
@@ -300,7 +300,7 @@ describe("auto-form-summary-step.utils", () => {
     const data = { pets: [{ name: "Buddy" }] };
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(1);
-    expect(sections[0].data).toEqual({ "pets.0.name": { label: "Name", value: "Buddy" } });
+    expect(sections[0]?.data).toEqual({ "pets.0.name": { label: "Name", value: "Buddy" } });
   });
   it("sectionsFromEditableSteps O should hide regular field when showInSummary is false", () => {
     const schema = z.object({
@@ -311,7 +311,7 @@ describe("auto-form-summary-step.utils", () => {
     const data = { a: "foo", b: "bar", c: "baz" };
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(1);
-    expect(sections[0].data).toEqual({
+    expect(sections[0]?.data).toEqual({
       a: { label: "A", value: "foo" },
       c: { label: "C", value: "baz" },
     });
@@ -324,7 +324,7 @@ describe("auto-form-summary-step.utils", () => {
     const data = { a: "foo", pets: [{ name: "Buddy" }] };
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(1);
-    expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
+    expect(sections[0]?.data).toEqual({ a: { label: "A", value: "foo" } });
   });
   it("sectionsFromEditableSteps Q should handle field-list arrays of objects", () => {
     const schema = z.object({
@@ -333,8 +333,8 @@ describe("auto-form-summary-step.utils", () => {
     const data = { items: [{ value: "a" }, { value: "b" }] };
     const sections = sectionsFromEditableSteps([schema], data);
     expect(sections).toHaveLength(2);
-    expect(sections[0].title).toBe("items 1");
-    expect(sections[1].title).toBe("items 2");
+    expect(sections[0]?.title).toBe("items 1");
+    expect(sections[1]?.title).toBe("items 2");
   });
 
   // sectionsFromSchema
@@ -343,21 +343,21 @@ describe("auto-form-summary-step.utils", () => {
     const data = { a: "foo" };
     const sections = sectionsFromSchema({ schema, data });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data).toEqual({ a: { label: "A", value: "foo" } });
+    expect(sections[0]?.data).toEqual({ a: { label: "A", value: "foo" } });
   });
   it("sectionsFromSchema B should build sections for editable steps too", () => {
     const schema = step(z.object({ b: field(z.string(), { label: "B" }) }), { state: "editable" });
     const data = { b: "bar" };
     const sections = sectionsFromSchema({ schema, data });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data).toEqual({ b: { label: "B", value: "bar" } });
+    expect(sections[0]?.data).toEqual({ b: { label: "B", value: "bar" } });
   });
   it("sectionsFromSchema C should build sections for upcoming steps", () => {
     const schema = step(z.object({ c: field(z.string(), { label: "C" }) }), { state: "upcoming" });
     const data = { c: "baz" };
     const sections = sectionsFromSchema({ schema, data });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data).toEqual({ c: { label: "C", value: "baz" } });
+    expect(sections[0]?.data).toEqual({ c: { label: "C", value: "baz" } });
   });
   it("sectionsFromSchema D should skip sections with showInSummary set to false", () => {
     const schema = z.object({ section: section({ title: "Section", showInSummary: false }) });
@@ -378,7 +378,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { dateField: value }, applyCodec: true });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data.dateField).toEqual({ label: "Date", value: expectedValue });
+    expect(sections[0]?.data.dateField).toEqual({ label: "Date", value: expectedValue });
   });
   it("sectionsFromSchema F should fallback to raw regular value when codec encode fails", () => {
     const value = new Date(2026, 2, 21);
@@ -393,7 +393,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { dateField: value }, applyCodec: true });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data.dateField).toEqual({ label: "Date", value });
+    expect(sections[0]?.data.dateField).toEqual({ label: "Date", value });
   });
   it("sectionsFromSchema G should encode select label values with codec for summary", () => {
     const schema = z.object({
@@ -412,7 +412,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { role: "eng" }, applyCodec: true });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data.role).toEqual({ label: "Role", value: "encoded:Engineer" });
+    expect(sections[0]?.data.role).toEqual({ label: "Role", value: "encoded:Engineer" });
   });
   it("sectionsFromSchema H should fallback to select label when codec encode fails", () => {
     const schema = z.object({
@@ -431,7 +431,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { role: "eng" }, applyCodec: true });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data.role).toEqual({ label: "Role", value: "Engineer" });
+    expect(sections[0]?.data.role).toEqual({ label: "Role", value: "Engineer" });
   });
   it("sectionsFromSchema I should map accept labels in array item sections", () => {
     const schema = z.object({
@@ -449,7 +449,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { items: [{ consent: true }] } });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data["items.0.consent"]).toEqual({ label: "Consent", value: "Accepted" });
+    expect(sections[0]?.data["items.0.consent"]).toEqual({ label: "Consent", value: "Accepted" });
   });
   it("sectionsFromSchema J should fallback to inner key label when array item field metadata is missing", () => {
     const schema = z.object({
@@ -457,7 +457,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { items: [{ rawKey: "alpha" }] } });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data["items.0.rawKey"]).toEqual({ label: "rawKey", value: "alpha" });
+    expect(sections[0]?.data["items.0.rawKey"]).toEqual({ label: "rawKey", value: "alpha" });
   });
   it("sectionsFromSchema K should skip empty array-item sections", () => {
     const schema = z.object({
@@ -480,7 +480,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { role: "eng" } });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data.role).toEqual({ label: "Role", value: "eng" });
+    expect(sections[0]?.data.role).toEqual({ label: "Role", value: "eng" });
   });
   it("sectionsFromSchema M should keep null value for codec-backed regular fields", () => {
     const schema = z.object({
@@ -494,13 +494,13 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { dateField: null }, applyCodec: true });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data.dateField).toEqual({ label: "Date", value: null });
+    expect(sections[0]?.data.dateField).toEqual({ label: "Date", value: null });
   });
   it("sectionsFromSchema N should fallback to key label for top-level fields without metadata", () => {
     const schema = z.object({ rawName: z.string() });
     const sections = sectionsFromSchema({ schema, data: { rawName: "Jane" } });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data.rawName).toEqual({ label: "rawName", value: "Jane" });
+    expect(sections[0]?.data.rawName).toEqual({ label: "rawName", value: "Jane" });
   });
   it("sectionsFromSchema O should use outer key when array field has no metadata", () => {
     const schema = z.object({
@@ -508,7 +508,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { items: [{ name: "Buddy" }] } });
     expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBe("items 1");
+    expect(sections[0]?.title).toBe("items 1");
   });
   it("sectionsFromSchema P should keep raw inner value when array item options resolve to non-array", () => {
     const schema = z.object({
@@ -525,7 +525,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { items: [{ role: "eng" }] } });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data["items.0.role"]).toEqual({ label: "Role", value: "eng" });
+    expect(sections[0]?.data["items.0.role"]).toEqual({ label: "Role", value: "eng" });
   });
   it("sectionsFromSchema Q should fallback to key when array metadata label is explicitly undefined", () => {
     const schema = z.object({
@@ -533,7 +533,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { items: [{ name: "Buddy" }] } });
     expect(sections).toHaveLength(1);
-    expect(sections[0].title).toBe("items 1");
+    expect(sections[0]?.title).toBe("items 1");
   });
   it("sectionsFromSchema R should return empty sections when array element resolution fails on second read", async () => {
     vi.resetModules();
@@ -577,8 +577,8 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { approval: false, consent: true } });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data.consent).toEqual({ label: "Consent", value: "Accept" });
-    expect(sections[0].data.approval).toEqual({ label: "Approval", value: "Reject" });
+    expect(sections[0]?.data.consent).toEqual({ label: "Consent", value: "Accept" });
+    expect(sections[0]?.data.approval).toEqual({ label: "Approval", value: "Reject" });
   });
   it("sectionsFromSchema U should keep raw value when accept field value is not boolean", () => {
     const schema = z.object({
@@ -592,7 +592,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { consent: "pending" } });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data.consent).toEqual({ label: "Consent", value: "pending" });
+    expect(sections[0]?.data.consent).toEqual({ label: "Consent", value: "pending" });
   });
   it("sectionsFromSchema V should use sub field label when field list has no label", () => {
     const schema = z.object({
@@ -600,7 +600,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = sectionsFromSchema({ schema, data: { list: ["item-1"] } });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data.list).toEqual({ label: "Item", value: ["item-1"] });
+    expect(sections[0]?.data.list).toEqual({ label: "Item", value: ["item-1"] });
   });
   it("sectionsFromSchema W should fallback to field key when field list element resolution fails and no label", async () => {
     vi.resetModules();
@@ -620,7 +620,7 @@ describe("auto-form-summary-step.utils", () => {
     });
     const sections = utilsModule.sectionsFromSchema({ schema, data: { list: ["item-1"] } });
     expect(sections).toHaveLength(1);
-    expect(sections[0].data.list).toEqual({ label: "list", value: ["item-1"] });
+    expect(sections[0]?.data.list).toEqual({ label: "list", value: ["item-1"] });
     vi.doUnmock("./auto-form.utils");
     vi.resetModules();
   });

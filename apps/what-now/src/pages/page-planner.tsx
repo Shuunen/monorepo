@@ -2,6 +2,7 @@
 // oxlint-disable max-lines
 import { Button, FloatingMenu } from "@monorepo/components";
 import { dateIso10, formatDate } from "@monorepo/utils";
+import { invariant } from "es-toolkit";
 // oxlint-disable-next-line no-restricted-imports
 import {
   ArrowLeftRightIcon,
@@ -264,6 +265,8 @@ function PlannerContent({
           columnDate.setDate(monday.getDate() + index);
           const realDate = formatDate(columnDate, "dd MMMM");
           const isToday = columnDate.toDateString() === today.toDateString();
+          const tasks = tasksByDay[index];
+          invariant(tasks, `Tasks for day index ${index} not found`);
           return (
             <div className="min-w-48 shrink-0" key={realDate}>
               <DayColumn
@@ -273,7 +276,7 @@ function PlannerContent({
                 onDateChange={onDateChange}
                 onFrequencyChange={onFrequencyChange}
                 realDate={realDate}
-                tasks={tasksByDay[index]}
+                tasks={tasks}
               />
             </div>
           );

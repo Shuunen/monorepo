@@ -241,9 +241,9 @@ describe("page-metrics.utils", () => {
     expect(result.itemsWithoutLocation).toHaveLength(1);
     expect(result.itemsWithoutPhoto).toHaveLength(2);
     expect(result.itemsWithoutPrice).toHaveLength(2);
-    expect(result.itemsNotPrinted[0].$id).toMatchInlineSnapshot(`"2"`);
-    expect(result.itemsWithoutLocation[0].$id).toMatchInlineSnapshot(`"4"`);
-    expect(result.itemsWithoutPhoto[0].$id).toMatchInlineSnapshot(`"4"`);
-    expect(result.itemsWithoutPrice[0].$id).toMatchInlineSnapshot(`"3"`);
+    expect(result.itemsNotPrinted[0]?.$id).toMatchInlineSnapshot(`"2"`);
+    expect(result.itemsWithoutLocation[0]?.$id).toMatchInlineSnapshot(`"4"`);
+    expect(result.itemsWithoutPhoto[0]?.$id).toMatchInlineSnapshot(`"4"`);
+    expect(result.itemsWithoutPrice[0]?.$id).toMatchInlineSnapshot(`"3"`);
   });
 });

@@ -1,3 +1,4 @@
+import { invariant } from "es-toolkit";
 import { nbMsInMinute } from "./constants.js";
 
 /**
@@ -27,8 +28,10 @@ export function dateToIsoString(date: Readonly<Date>, shouldRemoveTimezone = fal
  * @param date input date
  * @returns string like : "2019-12-31"
  */
-export function dateIso10(date: Readonly<Date> = new Date()) {
-  return date.toISOString().split("T")[0];
+export function dateIso10(date: Readonly<Date> = new Date()): NonNullable<string> {
+  const [result] = date.toISOString().split("T");
+  invariant(result, "Failed to convert date to ISO string");
+  return result;
 }
 
 /**
@@ -122,7 +125,7 @@ function partialDateDisplay(dateString: string): string {
     return INVALID_DATE;
   }
 
-  if (month === "00") {
+  if (month === "00" && year) {
     return year;
   }
   if (month !== "00" && day === "00") {
@@ -147,12 +150,17 @@ export function buildIsoFromLocal(datePart: string, timePart: string): string {
   }
   const [yy, mm, dd] = datePart.split("-").map(Number);
   const [hh, min] = timePart.split(":").map(Number);
-
+  const hasInvalidDatePart = yy === undefined || mm === undefined || dd === undefined;
+  const hasInvalidTimePart = hh === undefined || min === undefined;
+  if (hasInvalidDatePart || hasInvalidTimePart) {
+    return "";
+  }
   const local = new Date(yy, mm - 1, dd, hh, min, 0, 0);
-
+  /* v8 ignore start */
   if (Number.isNaN(local.getTime())) {
     return "";
   }
+  /* v8 ignore stop */
   return new Date(local.getTime() - local.getTimezoneOffset() * nbMsInMinute)
     .toISOString()
     .replace(millisecondsPattern, "Z");

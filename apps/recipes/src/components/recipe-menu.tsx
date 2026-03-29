@@ -27,8 +27,10 @@ function parseRecipesFromPaths(recipeModules: Record<string, () => Promise<unkno
     const match = RECIPE_PATH_REGEX.exec(path);
     if (!match) continue;
     const [, category, name] = match;
-    /* v8 ignore next -- @preserve */
+    /* v8 ignore start */
     if (name === "template") continue;
+    if (category === undefined || name === undefined) continue;
+    /* v8 ignore stop */
     recipes.push({ category, name });
   }
   return recipes;
@@ -38,10 +40,10 @@ function groupRecipesByCategory(recipes: Recipe[]): Record<string, Recipe[]> {
   const grouped: Record<string, Recipe[]> = {};
   for (const recipe of recipes) {
     if (!grouped[recipe.category]) grouped[recipe.category] = [];
-    grouped[recipe.category].push(recipe);
+    grouped[recipe.category]?.push(recipe);
   }
   for (const category of Object.keys(grouped))
-    grouped[category].sort((first, second) => first.name.localeCompare(second.name));
+    grouped[category]?.sort((first, second) => first.name.localeCompare(second.name));
   return grouped;
 }
 
@@ -83,7 +85,7 @@ export function RecipeMenu() {
           <section className="w-full" key={category}>
             <h2>{categoryMap[category]}</h2>
             <ol className="grid pl-0! sm:grid-cols-2">
-              {groupedRecipes[category].map((recipe, index) => (
+              {groupedRecipes[category]?.map((recipe, index) => (
                 <li className="flex items-center" key={`${recipe.category}/${recipe.name}`}>
                   <span className="mr-2">{index + 1}.</span>
                   <NavLink to={`/recipes/${recipe.category}/${recipe.name}`}>{recipe.name}</NavLink>

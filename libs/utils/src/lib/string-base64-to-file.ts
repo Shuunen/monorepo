@@ -13,11 +13,16 @@ const mimeTypeRegex = /:(?<mimeType>[^;]+);/; // NOSONAR
 export function base64ToFile(base64: string, filename: string, checkExtension = true) {
   // Strip off the data URL prefix if present.
   const [dataUrlPrefix, base64String] = base64.split(",");
+  if (dataUrlPrefix === undefined || base64String === undefined) {
+    return Result.error("Invalid base64 string format.");
+  }
   // Decode Base64 to binary string.
+  /* v8 ignore start */
   const base64BinaryResult = Result.trySafe(() => atob(base64String));
   if (!base64BinaryResult.ok) {
-    return Result.error("Failed to encode base64 string.");
+    return Result.error("Failed to decode base64 string.");
   }
+  /* v8 ignore stop */
 
   const uint8Arr = new Uint8Array(base64BinaryResult.value.length);
 

@@ -40,7 +40,7 @@ export function normalizeToDate(value: unknown): Date | undefined {
   }
   if (typeof value === "string") {
     if (timeOnlyRegex.test(value)) {
-      const [hours, minutes] = value.split(":").map(Number);
+      const [hours = 0, minutes = 0] = value.split(":").map(Number);
       const date = new Date();
       date.setHours(hours, minutes, 0, 0);
       return date;

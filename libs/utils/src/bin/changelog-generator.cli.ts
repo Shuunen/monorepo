@@ -11,7 +11,7 @@ const commitRegex = /(?<ticket>\w+-\d+)[ :]+(?<type>\w+(?<scope>\([\w-]+\))?: ?)
  * @returns an object with {date, hash, message, ticket} or undefined depending on the retrievable information from the commit itself
  */
 export function parseSingleCommit(commitLine: string) {
-  const [hash, date, subject] = commitLine.trim().split("|");
+  const [hash, date, subject = ""] = commitLine.trim().split("|");
   const match = commitRegex.exec(subject);
   if (match?.groups) {
     const { ticket, message } = match.groups;
@@ -29,7 +29,7 @@ export function getHistory(filters: string[] = []) {
     .map(commit => parseSingleCommit(commit))
     .filter(commit =>
       // oxlint-disable-next-line max-nested-callbacks
-      filters.length > 0 ? filters.some(prefix => commit?.ticket.startsWith(prefix)) : Boolean(commit),
+      filters.length > 0 ? filters.some(prefix => commit?.ticket?.startsWith(prefix)) : Boolean(commit),
     )
     .toReversed();
 }

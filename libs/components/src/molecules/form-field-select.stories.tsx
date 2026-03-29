@@ -1,5 +1,6 @@
 import { isBrowserEnvironment, Logger, stringify } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { invariant } from "es-toolkit";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
@@ -120,6 +121,7 @@ export const LabelGeneration: Story = {
       expect(colorOptions[0]).toHaveTextContent("Red");
       expect(colorOptions[1]).toHaveTextContent("Green");
       expect(colorOptions[2]).toHaveTextContent("Blue");
+      invariant(colorOptions[1], "Green option 1 not found");
       await userEvent.click(colorOptions[1]);
       expect(colorTrigger).toHaveTextContent("Green");
     });
@@ -132,6 +134,7 @@ export const LabelGeneration: Story = {
       expect(sizeOptions[1]).toHaveTextContent("Medium");
       expect(sizeOptions[2]).toHaveTextContent("Large");
       expect(sizeOptions[3]).toHaveTextContent("Extra-large");
+      invariant(sizeOptions[2], "Large option 2 not found");
       await userEvent.click(sizeOptions[2]);
       expect(sizeTrigger).toHaveTextContent("Large");
     });
@@ -144,6 +147,7 @@ export const LabelGeneration: Story = {
       expect(priorityOptions[1]).toHaveTextContent("Medium");
       expect(priorityOptions[2]).toHaveTextContent("High");
       expect(priorityOptions[3]).toHaveTextContent("Critical");
+      invariant(priorityOptions[3], "Critical option 3 not found");
       await userEvent.click(priorityOptions[3]);
       expect(priorityTrigger).toHaveTextContent("Critical");
     });
@@ -328,6 +332,7 @@ export const CustomLabels: Story = {
       expect(countryOptions[0]).toHaveTextContent("🇺🇸 United States");
       expect(countryOptions[1]).toHaveTextContent("🇬🇧 United Kingdom");
       expect(countryOptions[2]).toHaveTextContent("🇫🇷 France");
+      invariant(countryOptions[2], "France option 2 not found");
       await userEvent.click(countryOptions[2]);
       expect(countryTrigger).toHaveTextContent("🇫🇷 France");
     });
@@ -339,6 +344,7 @@ export const CustomLabels: Story = {
       expect(sizeOptions[0]).toHaveTextContent("Extra Small (XS)");
       expect(sizeOptions[2]).toHaveTextContent("Medium (M)");
       expect(sizeOptions[4]).toHaveTextContent("Extra Large (XL)");
+      invariant(sizeOptions[3], "Large option 3 not found");
       await userEvent.click(sizeOptions[3]);
       expect(sizeTrigger).toHaveTextContent("Large (L)");
     });
@@ -396,6 +402,7 @@ export const WithOptionsAsFunction: Story = {
       await expect(colorOptions[0]).toHaveTextContent("Red");
       await expect(colorOptions[1]).toHaveTextContent("Green");
       await expect(colorOptions[2]).toHaveTextContent("Blue");
+      invariant(colorOptions[2], "Blue option 2 not found");
       await userEvent.click(colorOptions[2]);
       await expect(colorTrigger).toHaveTextContent("Blue");
     });
@@ -422,6 +429,7 @@ export const WithOptionsAsFunction: Story = {
       const colorOptions = within(colorListbox).getAllByRole("option");
       await expect(colorOptions[0]).toHaveTextContent("Red");
       await expect(colorOptions[1]).toHaveTextContent("Blue");
+      invariant(colorOptions[0], "Red option 0 not found");
       await userEvent.click(colorOptions[0]);
       await expect(colorTrigger).toHaveTextContent("Red");
     });

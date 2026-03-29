@@ -84,6 +84,12 @@ export function injectMarkInAsset({ asset, fileName, mark, placeholder }) {
   // console.log(`Checking ${fileName}... hasAsset: ${!!asset}, typeof source: ${typeof asset.source}, typeof code: ${typeof asset.code}`)
   const firstLine = fileName.endsWith(".html") ? "" : `/* ${placeholder} : ${mark} */\n`;
   const contentKey = fileName.endsWith(".js") ? "code" : "source";
+  /* v8 ignore start */
+  if (asset[contentKey] === undefined) {
+    console.warn(yellow(`Warning /!\\ no content found for ${fileName}, skipping mark injection.`));
+    return;
+  }
+  /* v8 ignore stop */
   const oldContent = asset[contentKey];
   const newContent = injectMark(oldContent, placeholder, mark);
   if (oldContent.includes(placeholder) && !newContent.includes(mark)) {
@@ -107,12 +113,14 @@ export function injectMarkInAssets(assets, placeholder, version) {
     fileName => fileName.endsWith(".html") || fileName.endsWith(".js") || fileName.endsWith(".css"),
   );
   for (const fileName of targets) {
-    injectMarkInAsset({
-      asset: assets[fileName],
-      fileName,
-      mark,
-      placeholder,
-    });
+    const asset = assets[fileName];
+    /* v8 ignore start */
+    if (asset === undefined) {
+      console.warn(yellow(`Warning /!\\ asset for ${fileName} is undefined, skipping mark injection.`));
+      continue;
+    }
+    /* v8 ignore stop */
+    injectMarkInAsset({ asset, fileName, mark, placeholder });
   }
   console.log(`Mark potentially injected into ${targets.length} files`);
 }

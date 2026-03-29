@@ -3,7 +3,6 @@ export * from "./lib/array-align.js";
 export * from "./lib/array-insert-after.js";
 export * from "./lib/array-pick-one.js";
 export * from "./lib/array-remove-value.js";
-export * from "./lib/array-shuffle.js";
 export * from "./lib/array-unique.js";
 export * from "./lib/browser-clipboard.js";
 export * from "./lib/browser-console.js";

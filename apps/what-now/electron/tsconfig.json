@@ -6,7 +6,6 @@
     "esModuleInterop": true,
     "importHelpers": true,
     "module": "CommonJS",
-    "moduleResolution": "node",
     "outDir": "./build",
     "rootDir": ".",
     "skipLibCheck": true,

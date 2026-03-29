@@ -150,7 +150,7 @@ export function ImageViewer({
         className="pointer-events-none absolute inset-0 select-none"
         initial={{ opacity: 0 }}
         style={{
-          clipPath: `inset(0 ${100 - sliderPosition[0]}% 0 0)`,
+          clipPath: `inset(0 ${100 - /* v8 ignore start */ (sliderPosition[0] ?? 0) /* v8 ignore stop */}% 0 0)`,
         }}
         transition={{ damping: 30, opacity: { duration: 0.3 }, stiffness: 300, type: "spring" }}
       >

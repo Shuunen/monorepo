@@ -1,5 +1,6 @@
 import { isBrowserEnvironment, Logger, stringify } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { invariant } from "es-toolkit";
 import { useState } from "react";
 import { expect, userEvent, within } from "storybook/test";
 import { z } from "zod";
@@ -321,10 +322,12 @@ export const MultipleFields: Story = {
     const switches = canvas.getAllByRole("switch");
     const submittedData = canvas.getByTestId("debug-data-submitted-data");
     await step("toggle acceptCookies to true", async () => {
+      invariant(switches[0], "Accept Cookies switch not found");
       await userEvent.click(switches[0]);
       await expect(switches[0]).toHaveAttribute("aria-checked", "true");
     });
     await step("toggle rememberMe to true", async () => {
+      invariant(switches[2], "Remember Me switch not found");
       await userEvent.click(switches[2]);
       await expect(switches[2]).toHaveAttribute("aria-checked", "true");
     });

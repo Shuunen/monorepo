@@ -221,7 +221,7 @@ export function formatRoomBoxLocation(boxTrimmed: string, drawer: number) {
  * @returns The formatted location string like "Salon G‧2 (bricolage & sport)" or "Salon G‧2"
  */
 function formatLetterBoxLocation(input: Item, short = false) {
-  const box = input.box.trim()[0].toUpperCase();
+  const box = input.box.trim()[0]?.toUpperCase();
   /* v8 ignore next 5 -- @preserve */
   const room = short ? "" : capitalize(itemBoxToRoom(input.box) ?? "");
   const drawer = input.drawer && input.drawer > 0 ? `‧${input.drawer}` : ""; // '‧2' or ''

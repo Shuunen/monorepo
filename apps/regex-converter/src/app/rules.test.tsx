@@ -1,4 +1,5 @@
 import { fireEvent, render } from "@testing-library/react";
+import { invariant } from "es-toolkit";
 import { RuleLine, Rules } from "./rules";
 import type { Rule } from "./types";
 
@@ -42,7 +43,9 @@ describe(Rules, () => {
     if (addBtn) fireEvent.click(addBtn);
     expect(setRules).toHaveBeenCalled();
     // Remove rule
-    fireEvent.click(getAllByRole("button")[1]);
+    const [, removeButton] = getAllByRole("button");
+    invariant(removeButton, "Remove button not found");
+    fireEvent.click(removeButton);
     expect(setRules).toHaveBeenCalled();
     // Update rule
     fireEvent.change(getByPlaceholderText("replace in"), { target: { value: "new" } });
@@ -66,7 +69,9 @@ describe(Rules, () => {
       rules = r;
     });
     const { getAllByRole } = render(<Rules rules={rules} setRules={setRules} />);
-    fireEvent.click(getAllByRole("button")[1]);
+    const [, removeButton] = getAllByRole("button");
+    invariant(removeButton, "Remove button not found");
+    fireEvent.click(removeButton);
     expect(setRules).toHaveBeenCalledWith([]);
   });
 

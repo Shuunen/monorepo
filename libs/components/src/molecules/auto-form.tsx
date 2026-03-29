@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn, nbPercentMax, scrollToElement, sleep } from "@monorepo/utils";
 import { Link } from "@tanstack/react-router";
+import { invariant } from "es-toolkit";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
@@ -91,6 +92,7 @@ export function AutoForm({
   const [formData, setFormData] = useState<AutoFormData>(defaultValues);
   const [showBackButtonInSubform, setShowBackButtonInSubform] = useState<boolean>(true);
   const currentSchema = schemas[currentStep];
+  invariant(currentSchema, `Current schema not found for step ${currentStep}`);
   const lastAccessibleStepIndex = useMemo(() => getLastAccessibleStepIndex(schemas), [schemas]);
   const isLastStep = currentStep === lastAccessibleStepIndex;
   const finalLabels = { ...defaultLabels, ...labels };
@@ -299,6 +301,7 @@ export function AutoForm({
   }
 
   function renderReadonlyContent() {
+    invariant(currentSchema, "Current schema not found for readonly step");
     const sections = sectionsFromSchema({ data: formData, parentData, schema: currentSchema });
     const stepTitle = typeLikeResolver(stepMetadata?.title, formData, parentData) ?? `Step ${currentStep + 1}`;
     const rightButton = isLastStep
@@ -341,6 +344,7 @@ export function AutoForm({
     const rightButton = isLastStep
       ? { label: finalLabels.lastStepButton, name: "last-step-submit", type: "submit" as const }
       : { label: finalLabels.nextStep, name: "step-next", type: "submit" as const };
+    invariant(currentSchema, "Current schema not found for form step");
     return (
       <form onSubmit={form.handleSubmit(handleStepSubmit, handleStepSubmitInvalid)}>
         <AutoFormFields logger={logger} schema={currentSchema} showForm={showForm} state={stepMetadata?.state} />

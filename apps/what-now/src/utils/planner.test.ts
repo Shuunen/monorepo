@@ -35,7 +35,7 @@ const mockAppWriteTask: AppWriteTaskModel = {
   $databaseId: "database-id",
   $id: "task-1",
   $permissions: [],
-  $sequence: 1,
+  $sequence: "1",
   $tableId: "collection-id",
   $updatedAt: "2023-01-01T10:00:00Z",
   "completed-on": "2023-01-01T10:00:00Z",

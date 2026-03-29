@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { invariant } from "es-toolkit";
 import { expect, fn, userEvent, within } from "storybook/test";
 import {
   Select,
@@ -107,6 +108,7 @@ export const ShouldSelectOption: Story = {
     await step("open and select item", async () => {
       await userEvent.click(select);
       const options = canvasBody.getAllByRole("option");
+      invariant(options[1], "Option not found");
       await userEvent.click(options[1]);
       expect(select).toHaveTextContent("Banana");
     });
@@ -114,6 +116,7 @@ export const ShouldSelectOption: Story = {
     await step("verify the selected option", async () => {
       await userEvent.click(select);
       const options = canvasBody.getAllByRole("option");
+      invariant(options[1], "Option not found");
       expect(options[1]).toHaveAttribute("data-state", "checked");
       await userEvent.click(options[1]);
     });

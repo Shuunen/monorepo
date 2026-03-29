@@ -48,7 +48,7 @@ function MbImportFromSpotify() {
     const dateMatches = /datePublished":"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/u.exec(
       textFromSelector('script[type="application/ld+json"]'),
     );
-    if (dateMatches?.groups?.day) {
+    if (dateMatches?.groups?.day && dateMatches?.groups?.month && dateMatches?.groups?.year) {
       data.date.year = dateMatches.groups.year;
       data.date.month = dateMatches.groups.month;
       data.date.day = dateMatches.groups.day;
