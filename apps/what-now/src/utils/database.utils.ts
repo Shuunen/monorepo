@@ -4,6 +4,7 @@ import {
   nbPercentMax,
   nbSpacesIndent,
   Result,
+  type Simplify,
   slugify,
   toastError,
   toastSuccess,
@@ -17,7 +18,7 @@ const client = new Client();
 const tablesDb = new TablesDB(client);
 client.setEndpoint("https://cloud.appwrite.io/v1").setProject("what-now");
 
-export type AppWriteTaskModel = AppWriteTask & Models.Row;
+export type AppWriteTaskModel = Simplify<AppWriteTask & Models.Row>;
 
 export const uuidMaxLength = 36;
 

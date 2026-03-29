@@ -31,6 +31,11 @@ export function parseTimeInput(value: string): { hours: number; minutes: number 
     return undefined;
   }
   const [, hh, mm] = match;
+  /* v8 ignore start */
+  if (hh === undefined || mm === undefined) {
+    return undefined;
+  }
+  /* v8 ignore stop */
   const hours = Number.parseInt(hh, 10);
   const minutes = Number.parseInt(mm, 10);
   if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {

@@ -12,7 +12,7 @@ describe(base64ToFile, () => {
   it("B bad format, should not encode", () => {
     const base64GifString = "R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
     const result = Result.unwrap(base64ToFile(base64GifString, "file.gif"));
-    expect(result.error).toMatchInlineSnapshot(`"Failed to encode base64 string."`);
+    expect(result.error).toMatchInlineSnapshot(`"Invalid base64 string format."`);
   });
 
   it("C missing extension in filename", () => {

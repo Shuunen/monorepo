@@ -42,7 +42,7 @@ function MbImportFromAmazonMusic() {
       urlType: "77",
     };
     const dateMatches = /origine : (?<day>\d{1,2}) (?<month>\S+) (?<year>\d{4})/u.exec(details);
-    if (dateMatches?.groups?.year) {
+    if (dateMatches?.groups?.year && dateMatches?.groups?.month && dateMatches?.groups?.day) {
       const months = [
         "janvier",
         "février",

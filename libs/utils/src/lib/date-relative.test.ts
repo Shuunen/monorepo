@@ -1,3 +1,4 @@
+import { nbMsInDay, nbMsInMonth, nbMsInWeek, nbMsInYear } from "./constants.js";
 import { dateIso10 } from "./date-iso.js";
 import { daysAgo, daysAgoIso10, daysFromNow, readableTimeAgo } from "./date-relative.js";
 
@@ -26,15 +27,15 @@ describe("date-relative", () => {
     [1 * 60 * 60 * 1000, "1 hour ago"],
     [1.5 * 60 * 60 * 1000, "1 hour ago"],
     [2.5 * 60 * 60 * 1000, "2 hours ago"],
-    [daysAgo(1), "yesterday"],
-    [daysAgo(2), "2 days ago"],
-    [daysAgo(8), "last week"],
-    [daysAgo(15), "2 weeks ago"],
-    [daysAgo(29), "4 weeks ago"],
-    [daysAgo(35), "last month"],
-    [daysAgo(61), "2 months ago"],
-    [daysAgo(364), "12 months ago"],
-    [daysAgo(365), "last year"],
+    [nbMsInDay, "yesterday"],
+    [2 * nbMsInDay, "2 days ago"],
+    [1.1 * nbMsInWeek, "last week"],
+    [2.1 * nbMsInWeek, "2 weeks ago"],
+    [4.1 * nbMsInWeek, "4 weeks ago"],
+    [1.1 * nbMsInMonth, "last month"],
+    [2.1 * nbMsInMonth, "2 months ago"],
+    [12 * nbMsInMonth, "12 months ago"],
+    [nbMsInYear, "last year"],
   ] as const;
 
   for (const [index, [input, expected]] of samples.entries()) {

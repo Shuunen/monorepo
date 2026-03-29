@@ -4,8 +4,7 @@ import type React from "react";
 
 // source : https://ui.aceternity.com/components/background-gradient
 
-// oxlint-disable-next-line max-lines-per-function
-export const BackgroundGradient = ({
+export function BackgroundGradient({
   children,
   className,
   containerClassName,
@@ -15,7 +14,7 @@ export const BackgroundGradient = ({
   className?: string;
   containerClassName?: string;
   animate?: boolean;
-}) => {
+}) {
   const variants = {
     animate: {
       backgroundPosition: ["0, 50%", "100% 50%", "0 50%"],
@@ -24,52 +23,36 @@ export const BackgroundGradient = ({
       backgroundPosition: "0 50%",
     },
   };
+  const animationProps = animate
+    ? ({
+        animate: "animate",
+        initial: "initial",
+        style: { backgroundSize: "400% 400%" },
+        transition: {
+          duration: 5,
+          repeat: Infinity,
+          repeatType: "reverse",
+        },
+        variants,
+      } as const)
+    : {};
   return (
     <div className={cn("group relative p-1", containerClassName)}>
       <motion.div
-        animate={animate ? "animate" : undefined}
+        {...animationProps}
         className={cn(
           "absolute inset-0 z-1 rounded-3xl opacity-60 blur-xl transition duration-500 will-change-transform group-hover:opacity-100",
           "bg-[radial-gradient(circle_farthest-side_at_0_100%,#00ccb1,transparent),radial-gradient(circle_farthest-side_at_100%_0,#7b61ff,transparent),radial-gradient(circle_farthest-side_at_100%_100%,#ffc414,transparent),radial-gradient(circle_farthest-side_at_0_0,#1ca0fb,#141316)]",
         )}
-        initial={animate ? "initial" : undefined}
-        style={{
-          backgroundSize: animate ? "400% 400%" : undefined,
-        }}
-        transition={
-          animate
-            ? {
-                duration: 5,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }
-            : undefined
-        }
-        variants={animate ? variants : undefined}
       />
       <motion.div
-        animate={animate ? "animate" : undefined}
+        {...animationProps}
         className={cn(
           "absolute inset-0 z-1 rounded-3xl will-change-transform",
           "bg-[radial-gradient(circle_farthest-side_at_0_100%,#00ccb1,transparent),radial-gradient(circle_farthest-side_at_100%_0,#7b61ff,transparent),radial-gradient(circle_farthest-side_at_100%_100%,#ffc414,transparent),radial-gradient(circle_farthest-side_at_0_0,#1ca0fb,#141316)]",
         )}
-        initial={animate ? "initial" : undefined}
-        style={{
-          backgroundSize: animate ? "400% 400%" : undefined,
-        }}
-        transition={
-          animate
-            ? {
-                duration: 5,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }
-            : undefined
-        }
-        variants={animate ? variants : undefined}
       />
-
       <div className={cn("relative z-10", className)}>{children}</div>
     </div>
   );
-};
+}

@@ -154,7 +154,7 @@ function JustEtfExport() {
   /**
    * Extract table cell data
    * @param {string} name - cell name or identifier
-   * @param {Element} cell - table cell element
+   * @param {Element | undefined} cell - table cell element
    * @returns {string} extracted text content
    */
   function extractCellData(name, cell) {

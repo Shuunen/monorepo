@@ -2,6 +2,7 @@
   "compilerOptions": {
     "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
+    "exactOptionalPropertyTypes": true,
     "lib": ["ESNext", "DOM"],
     "module": "nodenext",
     "moduleResolution": "nodenext",

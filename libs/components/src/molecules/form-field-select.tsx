@@ -1,6 +1,6 @@
 import { cn, functionReturningVoid } from "@monorepo/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { isFunction } from "es-toolkit";
+import { invariant, isFunction } from "es-toolkit";
 import { useEffect, useRef, useState } from "react";
 import { useWatch } from "react-hook-form";
 import { Button } from "../atoms/button";
@@ -64,6 +64,7 @@ function VirtualizedOptions({
       <div className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
         {virtualizer.getVirtualItems().map(virtualItem => {
           const option = options[virtualItem.index];
+          invariant(option, `Option at index ${virtualItem.index} not found`);
           const isSelected = fieldValue === option.value;
           return (
             <div

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { invariant } from "es-toolkit";
 import { useState } from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
 import { SelectLong } from "./select-long";
@@ -89,6 +90,7 @@ export const Default: Story = {
       await userEvent.click(select);
       expect(canvasBody.queryByTestId("select-search-input")).toBeNull();
       const options = canvasBody.getAllByRole("option");
+      invariant(options[1], "Option not found");
       await userEvent.click(options[1]);
       expect(select).toHaveTextContent("Fred");
     });
@@ -123,6 +125,7 @@ export const Long: Story = {
       await userEvent.type(input, "aspe");
       const options = canvasBody.getAllByRole("option");
       expect(options).toHaveLength(1);
+      invariant(options[0], "Option 0 not found");
       await userEvent.click(options[0]);
     });
 
@@ -155,6 +158,7 @@ export const OnChangeTest: Story = {
     await step("open and select string item", async () => {
       await userEvent.click(select);
       const options = canvasBody.getAllByRole("option");
+      invariant(options[1], "Option 1 not found");
       await userEvent.click(options[1]);
       expect(select).toHaveTextContent("Fred");
       expect(onChangeSpy).toHaveBeenCalled();
@@ -164,6 +168,7 @@ export const OnChangeTest: Story = {
     await step("open and select object item", async () => {
       await userEvent.click(select);
       const options = canvasBody.getAllByRole("option");
+      invariant(options[0], "Option 0 not found");
       await userEvent.click(options[0]); // "Toto"
       expect(select).toHaveTextContent("Toto");
       expect(onChangeSpy).toHaveBeenCalledWith('{"name":"toto"}', expect.objectContaining({ label: "Toto" }));
@@ -192,6 +197,7 @@ export const CodeVersion: Story = {
       await userEvent.click(select);
       const options = canvasBody.getAllByRole("option");
       expect(options).toHaveLength(2);
+      invariant(options[0], "Option 0 not found");
       await userEvent.click(options[0]);
       expect(select).toHaveTextContent("Alpha");
       expect(onChangeSpy).toHaveBeenCalledWith(

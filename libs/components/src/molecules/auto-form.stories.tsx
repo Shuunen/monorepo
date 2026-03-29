@@ -1,5 +1,6 @@
 import { dateIso10, isBrowserEnvironment, Logger, nbPercentMax, sleep, stringify } from "@monorepo/utils";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { invariant } from "es-toolkit";
 import { type ReactNode, useState } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { z } from "zod";
@@ -432,13 +433,15 @@ export const OptionalSection: Story = {
       const favouriteColorTrigger = canvas.getByTestId("button-favourite-color");
       await userEvent.click(favouriteColorTrigger);
       const favouriteColorOptions = await canvasBody.findAllByRole("option");
+      invariant(favouriteColorOptions[1], "Favourite color option 1 not found");
       await userEvent.click(favouriteColorOptions[1]); // select "green"
       const isHackerCheckbox = await canvas.findByTestId("switch-is-hacker");
       await expect(isHackerCheckbox).toBeVisible();
       await userEvent.click(isHackerCheckbox);
       await userEvent.click(favouriteColorTrigger);
-      // oxlint-disable-next-line no-await-expression-member
-      await userEvent.click((await canvasBody.findAllByRole("option"))[0]); // select "red"
+      const [option] = await canvasBody.findAllByRole("option");
+      invariant(option, "Favourite color option 0 not found");
+      await userEvent.click(option); // select "red"
       await expect(canvas.queryByTestId("switch-is-hacker")).not.toBeInTheDocument();
     });
     await step("go to step 2", async () => {
@@ -1604,6 +1607,7 @@ export const SummaryWithEnumFields: Story = {
       const ageSelect = canvas.getByTestId("button-age-select");
       await userEvent.click(ageSelect);
       const ageSelectOptions = canvasBody.getAllByRole("option");
+      invariant(ageSelectOptions[1], "Age select option 1 not found");
       await userEvent.click(ageSelectOptions[1]);
       const submitButton = canvas.getByRole("button", { name: "Submit" });
       await userEvent.click(submitButton);

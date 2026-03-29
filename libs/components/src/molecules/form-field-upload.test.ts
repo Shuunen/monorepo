@@ -128,21 +128,21 @@ describe("zod schema imageSchemaRequired", () => {
     const file = new File([""], "", { type: "application/pdf" });
     const result = imageSchemaRequired.safeParse(file);
     expect(result.success).toBe(false);
-    expect(result.error?.issues[0].message).toMatchInlineSnapshot(`"File is required"`);
+    expect(result.error?.issues[0]?.message).toMatchInlineSnapshot(`"File is required"`);
   });
 
   it("should fail if file has no extension", () => {
     const file = new File([""], "test-file", { type: "application/octet-stream" });
     const result = imageSchemaRequired.safeParse(file);
     expect(result.success).toBe(false);
-    expect(result.error?.issues[0].message).toMatchInlineSnapshot(`"File has no extension"`);
+    expect(result.error?.issues[0]?.message).toMatchInlineSnapshot(`"File has no extension"`);
   });
 
   it("should fail for disallowed extensions", () => {
     const file = new File([""], "test-file.exe", { type: "application/x-msdownload" });
     const result = imageSchemaRequired.safeParse(file);
     expect(result.success).toBe(false);
-    expect(result.error?.issues[0].message).toMatchInlineSnapshot(
+    expect(result.error?.issues[0]?.message).toMatchInlineSnapshot(
       `"File extension not allowed, accepted : jpg, jpeg, png, pdf"`,
     );
   });

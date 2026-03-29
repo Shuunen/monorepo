@@ -160,7 +160,7 @@ export function createTaskDistribution(tasks: Task[], modifications: Record<stri
   // Distribute tasks across days based on their effective recurrence
   for (const task of tasks) {
     const taskDays = getTaskDaysWithModifications(task, modifications);
-    for (const dayIndex of taskDays) tasksByDay[dayIndex].push(task);
+    for (const dayIndex of taskDays) tasksByDay[dayIndex]?.push(task);
   }
   return tasksByDay;
 }

@@ -29,7 +29,7 @@ export function mockItemModel(data: Partial<ItemModel> = {}) {
     $createdAt: "2020-03-01T00:00:00.000Z",
     $databaseId: "db234",
     $permissions: [],
-    $sequence: 1,
+    $sequence: "1",
     $tableId: "col234",
     $updatedAt: "2021-08-01T00:00:00.000Z",
     box: "B (usb & audio)",

@@ -13,7 +13,7 @@ export function FormFieldDate({ fieldName, fieldSchema, isOptional, logger, read
   const outputString = isZodString(fieldSchema);
   const render = "render" in metadata ? (metadata.render as "date" | "date-time" | "time") : undefined;
   const mode = render ?? "date";
-  const defaultToNoon = "defaultToNoon" in metadata ? metadata.defaultToNoon === true : false;
+  const defaultToNoon = "defaultToNoon" in metadata ? metadata.defaultToNoon : false;
   const props = { fieldName, fieldSchema, isOptional, logger, readonly };
   return (
     <FormFieldBase {...props}>

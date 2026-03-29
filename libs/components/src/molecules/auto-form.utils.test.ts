@@ -1057,10 +1057,10 @@ describe("auto-form.utils", () => {
       showSummary: false,
     });
     expect(result).toHaveLength(2);
-    expect(result[0].title).toBe("Step 1");
-    expect(result[0].active).toBe(true);
-    expect(result[1].title).toBe("Step 2");
-    expect(result[1].active).toBe(false);
+    expect(result[0]?.title).toBe("Step 1");
+    expect(result[0]?.active).toBe(true);
+    expect(result[1]?.title).toBe("Step 2");
+    expect(result[1]?.active).toBe(false);
   });
   it("buildStepperSteps B should mark correct step as active", () => {
     const schemas = [step(z.object(), { title: "Step 1" }), step(z.object(), { title: "Step 2" })];
@@ -1071,8 +1071,8 @@ describe("auto-form.utils", () => {
       schemas,
       showSummary: false,
     });
-    expect(result[0].active).toBe(false);
-    expect(result[1].active).toBe(true);
+    expect(result[0]?.active).toBe(false);
+    expect(result[1]?.active).toBe(true);
   });
   it("buildStepperSteps C should not mark any step active when showing summary", () => {
     const schemas = [step(z.object(), { title: "Step 1" })];
@@ -1083,7 +1083,7 @@ describe("auto-form.utils", () => {
       schemas,
       showSummary: true,
     });
-    expect(result[0].active).toBe(false);
+    expect(result[0]?.active).toBe(false);
   });
   it("buildStepperSteps D should not mark any step active when has submission", () => {
     const schemas = [step(z.object(), { title: "Step 1" })];
@@ -1094,7 +1094,7 @@ describe("auto-form.utils", () => {
       schemas,
       showSummary: false,
     });
-    expect(result[0].active).toBe(false);
+    expect(result[0]?.active).toBe(false);
   });
   it("buildStepperSteps E should use default title when not provided", () => {
     const schemas = [z.object()];
@@ -1105,7 +1105,7 @@ describe("auto-form.utils", () => {
       schemas,
       showSummary: false,
     });
-    expect(result[0].title).toBe("Step 1");
+    expect(result[0]?.title).toBe("Step 1");
   });
   it("buildStepperSteps F should handle sections", () => {
     const schemas = [
@@ -1120,9 +1120,9 @@ describe("auto-form.utils", () => {
       schemas,
       showSummary: false,
     });
-    expect(result[0].section).toBe("Section A");
-    expect(result[1].section).toBeUndefined();
-    expect(result[2].section).toBe("Section B");
+    expect(result[0]?.section).toBe("Section A");
+    expect(result[1]?.section).toBeUndefined();
+    expect(result[2]?.section).toBe("Section B");
   });
 
   // getChildSchemaWithoutOptional
