@@ -96,6 +96,11 @@ type SectionDataFromObjectItemProps = {
   key: string;
 };
 
+type SectionDataResult = {
+  data: AutoFormSummarySection["data"];
+  nestedSections: AutoFormSummarySection[];
+};
+
 /**
  * Builds the data for a section from an object item.
  * @param SectionData - The data for the section
@@ -107,12 +112,31 @@ type SectionDataFromObjectItemProps = {
  * @param SectionData.parentData - Optional parent form data for TypeLike resolution
  * @returns The data for the section
  */
-function sectionDataFromObjectItem({ data, innerShape, item, key, index }: SectionDataFromObjectItemProps) {
+// oxlint-disable-next-line max-lines-per-function
+function sectionDataFromObjectItem({
+  data,
+  innerShape,
+  item,
+  key,
+  index,
+}: SectionDataFromObjectItemProps): SectionDataResult {
   const sectionData: AutoFormSummarySection["data"] = {};
+  const nestedSections: AutoFormSummarySection[] = [];
   for (const innerKey of Object.keys(innerShape)) {
     const innerFieldSchema = innerShape[innerKey] as z.ZodType;
     const innerMetadata = getFieldMetadata(innerFieldSchema);
     if (innerMetadata?.render === "section" || innerMetadata?.excluded || !isFieldVisible(innerFieldSchema, item)) {
+      continue;
+    }
+    if (isArrayOfObjects(innerFieldSchema)) {
+      nestedSections.push(
+        ...sectionsFromArrayOfObjects({
+          data: item,
+          fieldSchema: innerFieldSchema,
+          key: innerKey,
+          metadata: innerMetadata,
+        }),
+      );
       continue;
     }
     const hasOptions = isRadioOrSelectMetadata(innerMetadata);
@@ -130,7 +154,7 @@ function sectionDataFromObjectItem({ data, innerShape, item, key, index }: Secti
       value: innerValue,
     };
   }
-  return sectionData;
+  return { data: sectionData, nestedSections };
 }
 
 type SectionsFromArrayOfObjectsProps = {
@@ -158,9 +182,11 @@ function sectionsFromArrayOfObjects(props: SectionsFromArrayOfObjectsProps) /* N
   for (let index = 0; index < items.length; index += 1) {
     const item = items[index] as AutoFormData;
     const itemTitle = identifier ? identifier({ ...item, index: index + 1 }) : `${fieldLabel} ${index + 1}`;
-    const sectionData = sectionDataFromObjectItem({ data, index, innerShape, item, key });
-    if (Object.keys(sectionData).length > 0) {
-      sections.push({ data: sectionData, title: itemTitle });
+    const { data: sectionData, nestedSections } = sectionDataFromObjectItem({ data, index, innerShape, item, key });
+    const hasData = Object.keys(sectionData).length > 0;
+    const hasNested = nestedSections.length > 0;
+    if (hasData || hasNested) {
+      sections.push({ data: sectionData, sections: hasNested ? nestedSections : undefined, title: itemTitle });
     }
   }
   return sections;

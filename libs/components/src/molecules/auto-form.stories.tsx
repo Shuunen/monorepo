@@ -888,8 +888,12 @@ export const SummaryWithArrayOfObjects: Story = {
       age: 28,
       subscribe: true,
       pets: [
-        { name: "Buddy", breedKind: { breed: "Labrador" } },
-        { name: "Max", breedKind: { breed: "Poodle" } },
+        {
+          name: "Buddy",
+          breedKind: { breed: "Labrador" },
+          otherInformations: [{ otherInformation: "Other information" }],
+        },
+        { name: "Max", breedKind: { breed: "Poodle" }, otherInformations: [{ otherInformation: "Other information" }] },
       ],
     },
     schemas: [
@@ -900,7 +904,11 @@ export const SummaryWithArrayOfObjects: Story = {
           age: field(z.number().min(0).max(120).optional(), { label: "Age" }),
           subscribe: field(z.boolean(), { label: "Subscribe to newsletter" }),
           pets: forms(
-            z.object({ name: z.string(), breed: field(z.string(), { label: "Breed", key: "breedKind.breed" }) }),
+            z.object({
+              name: z.string(),
+              breed: field(z.string(), { label: "Breed", key: "breedKind.breed" }),
+              otherInformations: forms(z.object({ otherInformation: z.string() })),
+            }),
           ),
         }),
         { title: "Pets", state: "readonly" },
@@ -944,6 +952,10 @@ export const SummaryWithArrayOfObjects: Story = {
       const pet1 = canvas.getByTestId("form-summary-pets-1");
       await expect(pet1).toHaveTextContent("Buddy");
       await expect(pet1).toHaveTextContent("Labrador");
+      const otherInformation = within(pet1).getByTestId("form-summary-section-otherInformations 1");
+      await expect(otherInformation).toBeInTheDocument();
+      await expect(otherInformation).toHaveTextContent("otherInformations 1");
+      await expect(within(otherInformation).getByText("Other information")).toBeInTheDocument();
       const titlePets = canvas.getByTestId("title-pets");
       await expect(titlePets).toHaveTextContent("Pets");
     });
