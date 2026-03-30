@@ -324,7 +324,11 @@ export function AutoForm({
           {sections.map((sectionItem, index) => (
             <div className="grid gap-3" key={sectionItem.title ?? `section-${index}`}>
               {sectionItem.title && <Title level={3}>{sectionItem.title}</Title>}
-              <FormSummary data={sectionItem.data} name={sectionItem.title ?? "no-title"} />
+              <FormSummary
+                data={sectionItem.data}
+                name={sectionItem.title ?? "no-title"}
+                sections={sectionItem.sections}
+              />
             </div>
           ))}
         </div>

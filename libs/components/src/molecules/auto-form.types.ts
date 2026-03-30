@@ -272,6 +272,8 @@ export type AutoFormSubmissionStepProps = {
 export type AutoFormSummarySection = {
   /** The data entries in the section, with label and value */
   data: FormSummaryData;
+  /** Nested sub-sections for sub-forms within sub-forms */
+  sections?: AutoFormSummarySection[];
   /** Optional title for the section, developers are not forced to provide one */
   title?: string;
 };

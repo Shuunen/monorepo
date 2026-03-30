@@ -336,6 +336,97 @@ describe("auto-form-summary-step.utils", () => {
     expect(sections[0]?.title).toBe("items 1");
     expect(sections[1]?.title).toBe("items 2");
   });
+  it("sectionsFromEditableSteps R should handle nested forms within forms", () => {
+    const schema = z.object({
+      pets: forms(
+        z.object({
+          name: field(z.string(), { label: "Name" }),
+          toys: forms(z.object({ toyName: field(z.string(), { label: "Toy Name" }) })),
+        }),
+      ),
+    });
+    const data = {
+      pets: [{ name: "Buddy", toys: [{ toyName: "Ball" }, { toyName: "Bone" }] }],
+    };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0]?.title).toBe("pets 1");
+    expect(sections[0]?.data).toEqual({ "pets.0.name": { label: "Name", value: "Buddy" } });
+    expect(sections[0]?.sections).toHaveLength(2);
+    expect(sections[0]?.sections?.[0]?.title).toBe("toys 1");
+    expect(sections[0]?.sections?.[0]?.data).toEqual({
+      "toys.0.toyName": { label: "Toy Name", value: "Ball" },
+    });
+    expect(sections[0]?.sections?.[1]?.title).toBe("toys 2");
+    expect(sections[0]?.sections?.[1]?.data).toEqual({
+      "toys.1.toyName": { label: "Toy Name", value: "Bone" },
+    });
+  });
+  it("sectionsFromEditableSteps S should handle nested forms with empty nested array", () => {
+    const schema = z.object({
+      pets: forms(
+        z.object({
+          name: field(z.string(), { label: "Name" }),
+          toys: forms(z.object({ toyName: field(z.string(), { label: "Toy Name" }) })),
+        }),
+      ),
+    });
+    const data = { pets: [{ name: "Buddy", toys: [] }] };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0]?.title).toBe("pets 1");
+    expect(sections[0]?.data).toEqual({ "pets.0.name": { label: "Name", value: "Buddy" } });
+    expect(sections[0]?.sections).toBeUndefined();
+  });
+  // oxlint-disable-next-line complexity
+  it("sectionsFromEditableSteps T should handle deeply nested forms (3 levels)", () => {
+    const schema = z.object({
+      teams: forms(
+        z.object({
+          teamName: field(z.string(), { label: "Team" }),
+          members: forms(
+            z.object({
+              memberName: field(z.string(), { label: "Member" }),
+              tasks: forms(z.object({ taskName: field(z.string(), { label: "Task" }) })),
+            }),
+          ),
+        }),
+      ),
+    });
+    const data = {
+      teams: [{ teamName: "Alpha", members: [{ memberName: "Alice", tasks: [{ taskName: "Fix bug" }] }] }],
+    };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0]?.title).toBe("teams 1");
+    expect(sections[0]?.data).toEqual({ "teams.0.teamName": { label: "Team", value: "Alpha" } });
+    expect(sections[0]?.sections).toHaveLength(1);
+    expect(sections[0]?.sections?.[0]?.title).toBe("members 1");
+    expect(sections[0]?.sections?.[0]?.data).toEqual({
+      "members.0.memberName": { label: "Member", value: "Alice" },
+    });
+    expect(sections[0]?.sections?.[0]?.sections).toHaveLength(1);
+    expect(sections[0]?.sections?.[0]?.sections?.[0]?.title).toBe("tasks 1");
+    expect(sections[0]?.sections?.[0]?.sections?.[0]?.data).toEqual({
+      "tasks.0.taskName": { label: "Task", value: "Fix bug" },
+    });
+  });
+  it("sectionsFromEditableSteps U should produce section with only nested sections when parent has no direct fields", () => {
+    const schema = z.object({
+      pets: forms(
+        z.object({
+          toys: forms(z.object({ toyName: field(z.string(), { label: "Toy Name" }) })),
+        }),
+      ),
+    });
+    const data = { pets: [{ toys: [{ toyName: "Ball" }] }] };
+    const sections = sectionsFromEditableSteps([schema], data);
+    expect(sections).toHaveLength(1);
+    expect(sections[0]?.title).toBe("pets 1");
+    expect(sections[0]?.data).toEqual({});
+    expect(sections[0]?.sections).toHaveLength(1);
+    expect(sections[0]?.sections?.[0]?.title).toBe("toys 1");
+  });
 
   // sectionsFromSchema
   it("sectionsFromSchema A should build sections regardless of step state", () => {
