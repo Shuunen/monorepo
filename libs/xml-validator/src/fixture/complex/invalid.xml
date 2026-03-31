@@ -1,0 +1,8 @@
+<contact>
+  <firstName></firstName>
+  <lastName>Dupont</lastName>
+  <address>
+    <street>42 Rue de la République</street>
+    <city>Lyon</city>
+  </address>
+</contact>

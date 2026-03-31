@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "emitDeclarationOnly": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["ESNext", "DOM"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "outDir": "out-tsc/tsc",
+    "tsBuildInfoFile": "out-tsc/tsc/tsconfig.lib.tsbuildinfo",
+    "types": ["node"]
+  },
+  "exclude": ["out-tsc", "dist", "vite.config.ts", "src/**/*.test.ts", "src/fixture/**/*.{xml,xsd}"],
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*.ts"],
+  "references": [
+    {
+      "path": "../utils/tsconfig.lib.json"
+    }
+  ]
+}

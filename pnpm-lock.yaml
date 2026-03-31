@@ -436,6 +436,21 @@ importers:
         specifier: ~0.0.194
         version: 0.0.194
 
+  apps/xml-validation:
+    dependencies:
+      '@monorepo/components':
+        specifier: workspace:*
+        version: link:../../libs/components
+      '@monorepo/utils':
+        specifier: workspace:*
+        version: link:../../libs/utils
+      '@monorepo/vite-plugins':
+        specifier: workspace:*
+        version: link:../../libs/vite-plugins
+      '@monorepo/xml-validator':
+        specifier: workspace:*
+        version: link:../../libs/xml-validator
+
   libs/components:
     dependencies:
       '@fontsource-variable/inter':
@@ -534,6 +549,15 @@ importers:
         version: 0.2.9
 
   libs/vite-plugins: {}
+
+  libs/xml-validator:
+    dependencies:
+      '@monorepo/utils':
+        specifier: workspace:*
+        version: link:../utils
+      libxml2-wasm:
+        specifier: ^0.7.1
+        version: 0.7.1
 
 packages:
 
@@ -6330,6 +6354,10 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
+
+  libxml2-wasm@0.7.1:
+    resolution: {integrity: sha512-aZpJJL/j6T3D+5TmhG4D0ylR3mN6UzmqmBjyb/p+zEAaouG6GpfHiUNUzKR3vKCEoJt/Z2L15XPDCVPuFJIQhg==}
+    engines: {node: '>=18'}
 
   lightningcss-android-arm64@1.32.0:
     resolution: {integrity: sha512-YK7/ClTt4kAK0vo6w3X+Pnm0D2cf2vPHbhOXdoNti1Ga0al1P4TBZhwjATvjNwLEBCnKvjJc2jQgHXH0NEwlAg==}
@@ -14286,6 +14314,8 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+
+  libxml2-wasm@0.7.1: {}
 
   lightningcss-android-arm64@1.32.0:
     optional: true

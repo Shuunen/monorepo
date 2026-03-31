@@ -23,7 +23,8 @@
     "paths": {
       "@monorepo/components": ["./libs/components/src/index.ts"],
       "@monorepo/utils": ["./libs/utils/src/index.ts"],
-      "@monorepo/vite-plugins": ["./libs/vite-plugins/src/index.js"]
+      "@monorepo/vite-plugins": ["./libs/vite-plugins/src/index.js"],
+      "@monorepo/xml-validator": ["./libs/xml-validator/src/index.ts"]
     },
     "skipLibCheck": true,
     "strict": true,

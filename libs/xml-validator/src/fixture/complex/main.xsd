@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+          xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+           elementFormDefault="qualified">
+
+  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="https://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"/>
+
+  <xs:include schemaLocation="common-types.xsd"/>
+  <xs:include schemaLocation="address.xsd"/>
+
+  <xs:element name="contact">
+    <xs:complexType>
+      <xs:all>
+        <!-- "NonEmptyString" and "EmailType" come from common-types.xsd (include) -->
+        <xs:element name="firstName" type="NonEmptyString"/>
+        <xs:element name="lastName" type="NonEmptyString"/>
+        <xs:element name="email" type="EmailType"/>
+        <xs:element name="address" type="AddressType"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

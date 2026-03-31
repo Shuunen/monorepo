@@ -91,6 +91,11 @@ export function injectMarkInAsset({ asset, fileName, mark, placeholder }) {
   }
   /* v8 ignore stop */
   const oldContent = asset[contentKey];
+  /* v8 ignore start */
+  if (typeof oldContent !== "string") {
+    return;
+  }
+  /* v8 ignore stop */
   const newContent = injectMark(oldContent, placeholder, mark);
   if (oldContent.includes(placeholder) && !newContent.includes(mark)) {
     console.warn(yellow(`Warning /!\\ some "${placeholder}" placeholder have not been replaced in ${fileName}.`));
