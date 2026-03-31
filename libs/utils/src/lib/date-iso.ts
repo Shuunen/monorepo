@@ -52,6 +52,23 @@ export function dateIsoStripSecondsZone(date: string) {
 const INVALID_DATE = "N/A";
 const EMPTY_DATE = "-";
 
+export function parseAsUTC(date: Date | string | number): Date {
+  if (date instanceof Date) {
+    return date;
+  }
+
+  if (typeof date === "string") {
+    /* v8 ignore start */
+    // oxlint-disable-next-line no-magic-numbers
+    const hasTimezone = date.includes("Z") || date.includes("+") || (date.match(/-/g) || []).length > 2;
+    /* v8 ignore end */
+    const dateWithZ = hasTimezone ? date : `${date}Z`;
+    return new Date(dateWithZ);
+  }
+
+  return new Date(date);
+}
+
 /**
  * Strip the seconds, milliseconds and timezone from an ISO date string
  * @param date  the ISO date as a string or a Date object
@@ -59,7 +76,7 @@ const EMPTY_DATE = "-";
  *   withTime?: boolean; // Whether to include the time (hours:minutes) in the output. Defaults to `true`.
  *   acceptPartialDate?: boolean; // Whether to accept partial dates like "2025" or "2025-12". Defaults to `false`. If true and the date is partial, the output is handled by `partialDateDisplay`.
  * }
- * @returns A formatted date string (example: "24/12/2025" or "24/12/2025 17:00"), or a special INVALID_DATE constant if the input is invalid and partials are not accepted. If partials are accepted, returns a formatted partial date string.
+ * @returns A formatted date string (example: "24/12/2025" or "24/12/2025 17:00") in the current timezone, or a special INVALID_DATE constant if the input is invalid and partials are not accepted. If partials are accepted, returns a formatted partial date string.
  */
 export function dateIsoToReadableDatetime(
   date: string | Date | null | undefined,
@@ -74,7 +91,7 @@ export function dateIsoToReadableDatetime(
     return EMPTY_DATE;
   }
 
-  const dateObject: Date = date instanceof Date ? date : new Date(date);
+  const dateObject: Date = parseAsUTC(date);
   const padLength = 2;
 
   const invalidDate = Number.isNaN(dateObject.getTime());
@@ -87,14 +104,14 @@ export function dateIsoToReadableDatetime(
     return partialDateDisplay(date as string);
   }
 
-  const day = String(dateObject.getUTCDate()).padStart(padLength, "0");
-  const month = String(dateObject.getUTCMonth() + 1).padStart(padLength, "0");
-  const year = dateObject.getUTCFullYear();
+  const day = String(dateObject.getDate()).padStart(padLength, "0");
+  const month = String(dateObject.getMonth() + 1).padStart(padLength, "0");
+  const year = dateObject.getFullYear();
 
   let result = `${day}/${month}/${year}`;
   if (withTime) {
-    const hours = String(dateObject.getUTCHours()).padStart(padLength, "0");
-    const minutes = String(dateObject.getUTCMinutes()).padStart(padLength, "0");
+    const hours = String(dateObject.getHours()).padStart(padLength, "0");
+    const minutes = String(dateObject.getMinutes()).padStart(padLength, "0");
     result += ` ${hours}:${minutes}`;
   }
 

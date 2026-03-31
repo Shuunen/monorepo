@@ -124,11 +124,32 @@ export const ExistingFile: Story = {
   },
 };
 
+export const FileSchemaFiltering: Story = {
+  args: {
+    schemas: [
+      z.object({
+        document: field(fileSchema({ extensions: ["pdf", "jpg", "png"] }), {
+          accept: ".pdf,.jpg,.png",
+          label: "Image or PDF document",
+          placeholder: "Select a PDF or image file",
+        }),
+      }),
+    ],
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await step("filters allowed extensions", () => {
+      const input = canvas.getByTestId("input-file-document-upload-idle");
+      expect(input.getAttribute("accept")).toBe(".pdf,.jpg,.png");
+    });
+  },
+};
+
 export const FileSchemaValidation: Story = {
   args: {
     schemas: [
       z.object({
-        document: field(fileSchema(["pdf", "jpg", "png"], true), {
+        document: field(fileSchema({ extensions: ["pdf", "jpg", "png"] }), {
           label: "Image or PDF document",
           placeholder: "Select a PDF or image file",
         }),

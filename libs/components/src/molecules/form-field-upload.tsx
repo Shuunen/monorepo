@@ -16,6 +16,7 @@ import { FormControl } from "../atoms/form";
 import { Input } from "../atoms/input";
 import { Progress } from "../atoms/progress";
 import { cn } from "../shadcn/utils";
+import type { AutoFormFieldUploadMetadata } from "./auto-form.types";
 import { getFieldMetadataOrThrow } from "./auto-form.utils";
 import { FormFieldBase, type FormFieldBaseProps } from "./form-field";
 import {
@@ -49,7 +50,7 @@ export function FormFieldUpload({
   onFileUploadComplete,
   onFileUploadError,
 }: FormFieldUploadProps) {
-  const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema);
+  const metadata = getFieldMetadataOrThrow(fieldName, fieldSchema) as AutoFormFieldUploadMetadata;
   const { placeholder, state = "editable" } = metadata;
   const isDisabled = ["disabled", "readonly"].includes(state);
   const testId = camelToKebabCase(fieldName);
@@ -192,7 +193,7 @@ export function FormFieldUpload({
         <FormControl>
           {idleNoFile ? (
             <Input
-              accept={accept}
+              accept={metadata.accept || accept}
               disabled={isDisabled}
               name={`${testId}-${stateTestId}`}
               onChange={event => handleFileSelect(event, field.onChange)}

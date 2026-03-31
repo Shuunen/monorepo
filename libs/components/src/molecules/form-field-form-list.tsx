@@ -246,9 +246,6 @@ export function FormFieldFormList({
                 {labels?.addButton ?? "Add item"}
                 <IconReject className="size-5 rotate-45" />
               </Button>
-              {hasError && (
-                <span className="text-sm text-destructive">Please complete all forms before submitting.</span>
-              )}
             </div>
           </div>
         );

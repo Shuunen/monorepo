@@ -5,6 +5,7 @@ import {
   dateIsoToReadableDatetime,
   dateToIsoString,
   isValidDate,
+  parseAsUTC,
 } from "./date-iso.js";
 
 describe("date-iso", () => {
@@ -112,5 +113,58 @@ describe("date-iso", () => {
     expect(dateIsoToReadableDatetime("1985-06-00", { acceptPartialDate: true })).toBe("06/1985");
     expect(dateIsoToReadableDatetime("1985-06-50", { acceptPartialDate: true })).toBe("N/A");
     expect(dateIsoToReadableDatetime("19856-06-50", { acceptPartialDate: true })).toBe("N/A");
+  });
+});
+
+describe(parseAsUTC, () => {
+  it("should return the same object if input is already a Date instance", () => {
+    const now = new Date();
+    const result = parseAsUTC(now);
+    expect(result).toBe(now); // Reference equality
+    expect(result.getTime()).toBe(now.getTime());
+  });
+
+  it('should append "Z" to an ISO string without timezone and parse it as UTC', () => {
+    const dateStr = "2026-03-24T10:00:00";
+    const result = parseAsUTC(dateStr);
+
+    // 10:00 AM UTC should be exactly 10:00.000Z
+    expect(result.toISOString()).toBe("2026-03-24T10:00:00.000Z");
+  });
+
+  it('should not append "Z" if the string already contains one', () => {
+    const dateStr = "2026-03-24T10:00:00Z";
+    const result = parseAsUTC(dateStr);
+
+    expect(result.toISOString()).toBe("2026-03-24T10:00:00.000Z");
+  });
+
+  it('should respect existing offsets and not append "Z"', () => {
+    const dateWithOffset = "2026-03-24T10:00:00+02:00";
+    const result = parseAsUTC(dateWithOffset);
+
+    // 10:00 AM GMT+2 is equivalent to 08:00 AM UTC
+    expect(result.toISOString()).toBe("2026-03-24T08:00:00.000Z");
+  });
+
+  it("should work correctly with a numeric timestamp", () => {
+    const timestamp = 1711274400000;
+    const result = parseAsUTC(timestamp);
+
+    expect(result.getTime()).toBe(timestamp);
+    expect(result).toBeInstanceOf(Date);
+  });
+
+  it('should return an "Invalid Date" object for malformed strings', () => {
+    const result = parseAsUTC("not-a-date");
+    expect(result.toString()).toBe("Invalid Date");
+  });
+
+  it("should handle date-only strings by treating them as UTC midnight", () => {
+    const dateOnly = "2026-03-24";
+    const result = parseAsUTC(dateOnly);
+
+    // "2026-03-24Z" parses to midnight UTC
+    expect(result.toISOString()).toBe("2026-03-24T00:00:00.000Z");
   });
 });

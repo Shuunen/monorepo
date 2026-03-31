@@ -204,6 +204,8 @@ export type AutoFormFieldTextMetadata = Simplify<
 
 export type AutoFormFieldUploadMetadata = Simplify<
   AutoFormFieldBaseMetadata & {
+    /** The accept attribute of the file input. */
+    accept?: string;
     render?: "upload";
   }
 >;

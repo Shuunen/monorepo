@@ -191,6 +191,14 @@ const allFieldsSchema = z.object({
     code: 'field(z.enum(["option1", ...]), { render: "radio" })',
     line: true,
   }),
+  // File upload
+  fileUploadCode: section({
+    code: 'field(z.file(), { accept: ".png" })',
+    description: "The default render of a ZodFile: an input file. For more details, check the FormFieldUpload story.",
+    line: true,
+    title: "File upload",
+  }),
+  fileUploadField: field(z.file().optional(), { accept: ".png", label: "File upload" }),
   // Field List
   fieldListCode: section({
     description:
@@ -269,6 +277,7 @@ export const AllFieldsFilled: Story = {
       textareaField: "Sample textarea",
       passwordField: "Sample password",
       radioField: "option2",
+      fileUploadField: new File(["some data"], "file.png"),
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -287,6 +296,7 @@ export const AllFieldsFilled: Story = {
       textareaField: "Sample textarea",
       passwordField: "Sample password",
       radioField: "option2",
+      fileUploadField: new File(["some data"], "file.png"),
       fieldListField: [null],
     };
     await step("initial state", async () => {

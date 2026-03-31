@@ -86,7 +86,7 @@ export function AutoFormStepper({ steps, onStepClick, disabled = false, width }:
   const values = useWatch();
   const parentData = useAutoFormParentData();
   return (
-    <div className={cn("mr-10 flex flex-col gap-4", { [`w-[${width}px]`]: width })}>
+    <div className={cn("mr-10 flex flex-col gap-4")} style={{ width }}>
       {steps.map(step => (
         <AutoFormStep
           disabled={disabled}

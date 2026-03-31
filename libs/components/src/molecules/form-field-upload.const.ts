@@ -31,8 +31,18 @@ export function formatFileSize(bytes: number, addUnit = true): string {
   return formatValue(bytes / bytesInMb, "MB");
 }
 
-export function fileSchema(extensions: readonly string[], isRequired: boolean) {
-  return z.file().check(ctx => {
+type FileSchemaParams = {
+  extensions: readonly string[];
+  errorMessages?: {
+    extensionMissing?: string;
+    extensionNotAllowed?: string;
+    required?: string;
+  };
+  isRequired?: boolean;
+};
+
+export function fileSchema({ errorMessages = {}, extensions, isRequired = true }: FileSchemaParams) {
+  return z.file(isRequired ? errorMessages.required : undefined).check(ctx => {
     if (!isRequired && ctx.value.name === "") {
       return;
     }
@@ -41,7 +51,7 @@ export function fileSchema(extensions: readonly string[], isRequired: boolean) {
         code: "custom",
         continue: false,
         input: ctx.value,
-        message: "File is required",
+        message: errorMessages.required ?? "File is required",
       });
       return;
     }
@@ -51,7 +61,7 @@ export function fileSchema(extensions: readonly string[], isRequired: boolean) {
         code: "custom",
         continue: false,
         input: ctx.value,
-        message: "File has no extension",
+        message: errorMessages.extensionMissing ?? "File has no extension",
       });
       return;
     }
@@ -60,7 +70,7 @@ export function fileSchema(extensions: readonly string[], isRequired: boolean) {
         code: "custom",
         continue: false,
         input: ctx.value,
-        message: `File extension not allowed, accepted : ${extensions.join(", ")}`,
+        message: errorMessages.extensionNotAllowed ?? `File extension not allowed, accepted : ${extensions.join(", ")}`,
       });
     }
   });
@@ -68,5 +78,5 @@ export function fileSchema(extensions: readonly string[], isRequired: boolean) {
 
 export const imageExtensions = ["jpg", "jpeg", "png", "pdf"] as const;
 export const imageAccept = `.${imageExtensions.join(",.")}`;
-export const imageSchemaRequired = fileSchema(imageExtensions, true);
-export const imageSchemaOptional = fileSchema(imageExtensions, false);
+export const imageSchemaRequired = fileSchema({ extensions: imageExtensions });
+export const imageSchemaOptional = fileSchema({ extensions: imageExtensions, isRequired: false });
