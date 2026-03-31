@@ -92,8 +92,8 @@
   "scripts": {
     "add:app": "bun apps/sample-web-app/src/bin/add-app.cli.ts",
     "add:shadcn": "bun libs/components/bin/add.cli.ts",
-    "check": "nx affected -t global-fix,ts-check,lint,test,build,e2e,list,build-storybook,test-storybook && echo check success",
-    "check:ci": "nx affected -t global,ts-check,lint,test,build,e2e,list,build-storybook,test-storybook && echo check:ci success",
+    "check": "nx run-many -t global-fix && nx affected -t ts-check,lint,test,build,e2e,list,build-storybook,test-storybook && echo check success",
+    "check:ci": "nx run-many -t global && nx affected -t ts-check,lint,test,build,e2e,list,build-storybook,test-storybook && echo check:ci success",
     "check:eslint": "bun apps/one-file/src/eslint-cleaner.cli.ts && echo check:eslint success",
     "clean": "pnpm clean:nx && pnpm clean:folders && pnpm clean:modules && echo clean success",
     "clean:folders": "rm -rf ./*/*/out-tsc ./*/*/test-output ./*/*/dist && echo clean:folders success",
