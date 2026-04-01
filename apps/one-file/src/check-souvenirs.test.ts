@@ -2,39 +2,39 @@
 import path from "node:path";
 import { alignForSnap, stringify } from "@monorepo/utils";
 
-const mockUnlink = vi.fn().mockResolvedValue(undefined);
-const mockRename = vi.fn().mockResolvedValue(undefined);
+const mockUnlink = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
+const mockRename = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
 
 vi.mock(import("node:fs/promises"), () => ({
   rename: mockRename,
   unlink: mockUnlink,
 }));
 
-const mockSpawnSync = vi.fn().mockReturnValue({ error: null, status: 0, stdout: "" });
+const mockSpawnSync = vi.fn<() => unknown>().mockReturnValue({ error: null, status: 0, stdout: "" });
 
 vi.mock(import("node:child_process"), () => ({
   spawnSync: mockSpawnSync,
 }));
 
-const mockGlob = vi.fn().mockResolvedValue([]);
+const mockGlob = vi.fn<() => Promise<unknown[]>>().mockResolvedValue([]);
 
 vi.mock(import("tiny-glob"), () => ({
   default: mockGlob,
 }));
 
-const mockSharpToFile = vi.fn().mockResolvedValue(undefined);
-const mockSharpJpeg = vi.fn().mockReturnValue({ toFile: mockSharpToFile });
-const mockSharp = vi.fn().mockReturnValue({ jpeg: mockSharpJpeg });
+const mockSharpToFile = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
+const mockSharpJpeg = vi.fn<() => unknown>().mockReturnValue({ toFile: mockSharpToFile });
+const mockSharp = vi.fn<() => unknown>().mockReturnValue({ jpeg: mockSharpJpeg });
 
 // oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("sharp", () => ({
   default: mockSharp,
 }));
 
-const mockRead = vi.fn().mockResolvedValue({});
-const mockWrite = vi.fn().mockResolvedValue(undefined);
-const mockRewriteAllTags = vi.fn().mockResolvedValue(undefined);
-const mockEnd = vi.fn();
+const mockRead = vi.fn<() => Promise<unknown>>().mockResolvedValue({});
+const mockWrite = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
+const mockRewriteAllTags = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
+const mockEnd = vi.fn<() => void>();
 
 // oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("exiftool-vendored", () => ({

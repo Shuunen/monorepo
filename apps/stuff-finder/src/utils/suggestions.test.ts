@@ -1,3 +1,4 @@
+// oxlint-disable typescript/require-await
 import { clone } from "@monorepo/utils";
 import { get } from "./browser.utils";
 import { mockItem } from "./mock.utils";
@@ -92,11 +93,10 @@ it("addSuggestionsFromCampo A without wrapApiKey", async () => {
 it("addSuggestionsFromCampo B with working get", async () => {
   state.credentials.wrap = "xyz";
   const suggestions = clone(emptyItemSuggestions);
-  const mock = vi.fn().mockImplementation(get);
-  mock.mockImplementationOnce(() => ({ data: { items: [mockItem({ price: 42 })] }, success: true }));
+  const mock = vi.fn<typeof get>().mockImplementation(get);
+  mock.mockImplementationOnce(async () => ({ data: { items: [mockItem({ price: 42 })] }, success: true }));
   await addSuggestionsFromCampo(suggestions, "3760052142741", mock);
-  expect(mock).toHaveBeenCalledOnce();
-  expect(mock).toHaveBeenCalledWith(
+  expect(mock).toHaveBeenCalledExactlyOnceWith(
     "https://wrapapi.com/use/jojo/alcampo/search/0.0.3?str=3760052142741&wrapAPIKey=xyz",
   );
   expect(suggestions).toMatchSnapshot();
@@ -106,11 +106,12 @@ it("addSuggestionsFromAliEx A with working get", async () => {
   state.credentials.wrap = "xyz";
   const suggestions = clone(emptyItemSuggestions);
   const title = "title A";
-  const mock = vi.fn().mockImplementation(get);
-  mock.mockImplementationOnce(() => ({ data: { items: [{ title }] }, success: true }));
+  const mock = vi.fn<typeof get>().mockImplementation(get);
+  mock.mockImplementationOnce(async () => ({ data: { items: [{ title }] }, success: true }));
   await addSuggestionsFromAliEx(suggestions, "3760052142741", mock);
-  expect(mock).toHaveBeenCalledOnce();
-  expect(mock).toHaveBeenCalledWith("https://wrapapi.com/use/jojo/aliex/search/0.0.1?str=3760052142741&wrapAPIKey=xyz");
+  expect(mock).toHaveBeenCalledExactlyOnceWith(
+    "https://wrapapi.com/use/jojo/aliex/search/0.0.1?str=3760052142741&wrapAPIKey=xyz",
+  );
   expect(suggestions).toMatchSnapshot();
 });
 
@@ -118,19 +119,20 @@ it("addSuggestionsFromAngbo A with working get", async () => {
   state.credentials.wrap = "xyz";
   const suggestions = clone(emptyItemSuggestions);
   const title = "title A";
-  const mock = vi.fn().mockImplementation(get);
-  mock.mockImplementationOnce(() => ({ data: { title }, success: true }));
+  const mock = vi.fn<typeof get>().mockImplementation(get);
+  mock.mockImplementationOnce(async () => ({ data: { title }, success: true }));
   await addSuggestionsFromAngbo(suggestions, "3760052142741", mock);
-  expect(mock).toHaveBeenCalledOnce();
-  expect(mock).toHaveBeenCalledWith("https://wrapapi.com/use/jojo/angbo/search/0.0.3?id=3760052142741&wrapAPIKey=xyz");
+  expect(mock).toHaveBeenCalledExactlyOnceWith(
+    "https://wrapapi.com/use/jojo/angbo/search/0.0.3?id=3760052142741&wrapAPIKey=xyz",
+  );
   expect(suggestions).toMatchSnapshot();
 });
 
 it("addSuggestionsFromDeyes A with working get", async () => {
   state.credentials.wrap = "xyz";
   const suggestions = clone(emptyItemSuggestions);
-  const mock = vi.fn().mockImplementation(get);
-  mock.mockImplementationOnce(() => ({
+  const mock = vi.fn<typeof get>().mockImplementation(get);
+  mock.mockImplementationOnce(async () => ({
     data: {
       brand: { name: "brand A" },
       description: "",
@@ -142,7 +144,8 @@ it("addSuggestionsFromDeyes A with working get", async () => {
     success: true,
   }));
   await addSuggestionsFromDeyes(suggestions, "3760052142741", mock);
-  expect(mock).toHaveBeenCalledOnce();
-  expect(mock).toHaveBeenCalledWith("https://wrapapi.com/use/jojo/deyes/json/0.0.2?code=3760052142741&wrapAPIKey=xyz");
+  expect(mock).toHaveBeenCalledExactlyOnceWith(
+    "https://wrapapi.com/use/jojo/deyes/json/0.0.2?code=3760052142741&wrapAPIKey=xyz",
+  );
   expect(suggestions).toMatchSnapshot();
 });

@@ -7,8 +7,8 @@ const sampleRule: Rule = { enabled: true, id: "1", pattern: "foo", replacement: 
 
 describe(RuleLine, () => {
   it("RuleLine A should render rule fields and call onChange/onRemove", () => {
-    const onChange = vi.fn();
-    const onRemove = vi.fn();
+    const onChange = vi.fn<() => void>();
+    const onRemove = vi.fn<() => void>();
     const { getByPlaceholderText, getByRole } = render(
       <RuleLine onChange={onChange} onRemove={onRemove} rule={sampleRule} />,
     );
@@ -21,8 +21,8 @@ describe(RuleLine, () => {
   });
 
   it("RuleLine B should call onChange for enabled switch", () => {
-    const onChange = vi.fn();
-    const onRemove = vi.fn();
+    const onChange = vi.fn<() => void>();
+    const onRemove = vi.fn<() => void>();
     const { container } = render(<RuleLine onChange={onChange} onRemove={onRemove} rule={sampleRule} />);
     // Find the switch button (Radix UI wraps input in a button for accessibility)
     const switchBtn = container.querySelector('[data-slot="switch"]');
@@ -34,7 +34,7 @@ describe(RuleLine, () => {
 describe(Rules, () => {
   it("Rules A should render rules and allow add/remove/update", () => {
     let rules: Rule[] = [sampleRule];
-    const setRules = vi.fn(r => {
+    const setRules = vi.fn<(r: typeof rules) => void>(r => {
       rules = r;
     });
     const { getByText, getAllByRole, getByPlaceholderText } = render(<Rules rules={rules} setRules={setRules} />);
@@ -54,7 +54,7 @@ describe(Rules, () => {
 
   it("Rules B should handle empty rules array and add rule", () => {
     let rules: Rule[] = [];
-    const setRules = vi.fn(r => {
+    const setRules = vi.fn<(r: typeof rules) => void>(r => {
       rules = r;
     });
     const { getByText } = render(<Rules rules={rules} setRules={setRules} />);
@@ -65,7 +65,7 @@ describe(Rules, () => {
 
   it("Rules C should remove last rule and leave empty", () => {
     let rules: Rule[] = [sampleRule];
-    const setRules = vi.fn(r => {
+    const setRules = vi.fn<(r: typeof rules) => void>(r => {
       rules = r;
     });
     const { getAllByRole } = render(<Rules rules={rules} setRules={setRules} />);
@@ -77,7 +77,7 @@ describe(Rules, () => {
 
   it("Rules D should not update any rule if id does not match", () => {
     let rules: Rule[] = [sampleRule];
-    const setRules = vi.fn(r => {
+    const setRules = vi.fn<(r: typeof rules) => void>(r => {
       rules = r;
     });
     render(<Rules rules={rules} setRules={setRules} />);

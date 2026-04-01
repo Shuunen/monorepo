@@ -6,7 +6,7 @@ if (!GlobalRegistrator.isRegistered) {
 }
 
 it("on, emit & off", () => {
-  const callback = vi.fn(() => 12);
+  const callback = vi.fn<() => number>(() => 12);
   const listener = on("foo", callback);
   expect(callback).toHaveBeenCalledTimes(0);
   emit("foo", 42);
@@ -18,7 +18,7 @@ it("on, emit & off", () => {
 });
 
 it("emit without data", () => {
-  const callback = vi.fn();
+  const callback = vi.fn<() => void>();
   const listener = on("test-event", callback);
   emit("test-event");
   expect(callback).toHaveBeenCalledOnce();
@@ -26,7 +26,7 @@ it("emit without data", () => {
 });
 
 it("on handles non-CustomEvent", () => {
-  const callback = vi.fn();
+  const callback = vi.fn<() => void>();
   const element = document.createElement("div");
   const listener = on("click", callback, element);
   element.click();

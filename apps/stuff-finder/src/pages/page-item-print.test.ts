@@ -1,3 +1,6 @@
+import type { sleep } from "@monorepo/utils";
+import type { clearElementsForPrint } from "../utils/browser.utils";
+import type { updateItem } from "../utils/item.utils";
 import { mockItem } from "../utils/mock.utils";
 import { findItemById, handlePrintAction } from "./page-item-print.utils";
 
@@ -5,16 +8,16 @@ vi.mock(import("@monorepo/utils"), async importOriginal => {
   const actual = await importOriginal();
   return {
     ...actual,
-    sleep: vi.fn().mockResolvedValue(undefined),
+    sleep: vi.fn<typeof sleep>().mockResolvedValue(undefined),
   };
 });
 
 vi.mock(import("../utils/browser.utils"), () => ({
-  clearElementsForPrint: vi.fn(),
+  clearElementsForPrint: vi.fn<typeof clearElementsForPrint>(),
 }));
 
 vi.mock(import("../utils/item.utils"), () => ({
-  updateItem: vi.fn(),
+  updateItem: vi.fn<typeof updateItem>(),
 }));
 
 describe("page-item-print.utils", () => {
@@ -22,7 +25,7 @@ describe("page-item-print.utils", () => {
     const { state } = await import("../utils/state.utils");
     vi.clearAllMocks();
     state.items = [];
-    globalThis.print = vi.fn();
+    globalThis.print = vi.fn<() => void>();
   });
 
   it("findItemById A should return matching item", async () => {

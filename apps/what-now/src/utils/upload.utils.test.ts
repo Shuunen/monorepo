@@ -1,6 +1,12 @@
-// oxlint-disable typescript/no-unsafe-return
 import { functionReturningVoid, Result, toastError, toastSuccess } from "@monorepo/utils";
-import { type AppWriteTaskModel, addTask, getTasks, updateTask } from "./database.utils";
+import {
+  type AppWriteTaskModel,
+  addTask,
+  getTasks,
+  type modelToLocalTask,
+  type modelToRemoteTask,
+  updateTask,
+} from "./database.utils";
 import { logger } from "./logger.utils";
 import { handleTasksUpload, readJsonFile, selectJsonFile, uploadTasksToDatabase } from "./upload.utils";
 
@@ -8,26 +14,42 @@ vi.mock(import("@monorepo/utils"), async () => {
   const actual = await vi.importActual("@monorepo/utils");
   return {
     ...actual,
-    toastError: vi.fn(),
-    toastSuccess: vi.fn(),
+    toastError: vi.fn<() => void>(),
+    toastSuccess: vi.fn<() => void>(),
   };
 });
 
 vi.mock(import("./database.utils"), () => ({
-  addTask: vi.fn(),
-  getTasks: vi.fn(),
-  modelToLocalTask: vi.fn(task => ({ ...task, id: task.$id })),
-  modelToRemoteTask: vi.fn(task => task),
-  updateTask: vi.fn(),
+  addTask: vi.fn<typeof addTask>(),
+  getTasks: vi.fn<typeof getTasks>(),
+  modelToLocalTask: vi.fn<typeof modelToLocalTask>(task => ({
+    completedOn: task["completed-on"],
+    id: task.$id,
+    isDone: task.done,
+    minutes: task.minutes,
+    name: task.name,
+    once: task.once,
+    reason: task.reason ?? undefined,
+  })),
+  modelToRemoteTask: vi.fn<typeof modelToRemoteTask>(model => ({
+    "completed-on": model["completed-on"],
+    done: model.done,
+    minutes: model.minutes,
+    name: model.name,
+    once: model.once,
+    reason: model.reason,
+  })),
+  updateTask: vi.fn<typeof updateTask>(),
 }));
 
 // Helper function to create a mock file input element
 function createMockFileInput(files: File[] = []) {
-  const mockClick = vi.fn();
-  const mockAddEventListener = vi.fn((event, handler) => {
-    // oxlint-disable-next-line typescript/no-unsafe-call
-    if (event === "change") setTimeout(() => handler({ target: { files } }), 0);
-  });
+  const mockClick = vi.fn<() => void>();
+  const mockAddEventListener = vi.fn<(event: string, handler: (e: { target: { files: File[] } }) => void) => void>(
+    (event, handler) => {
+      if (event === "change") setTimeout(() => handler({ target: { files } }), 0);
+    },
+  );
   return {
     accept: "",
     addEventListener: mockAddEventListener,

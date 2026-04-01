@@ -629,20 +629,21 @@ describe("auto-form-summary-step.utils", () => {
   it("sectionsFromSchema R should return empty sections when array element resolution fails on second read", async () => {
     vi.resetModules();
     let getElementSchemaCalls = 0;
-    vi.doMock("./auto-form.utils", async importOriginal => {
+    vi.doMock(import("./auto-form.utils"), async importOriginal => {
       // oxlint-disable-next-line typescript/consistent-type-imports
       const actual = await importOriginal<typeof import("./auto-form.utils")>();
+      function getElementSchema(_fieldSchema: z.ZodType) {
+        getElementSchemaCalls += 1;
+        if (getElementSchemaCalls === 1) {
+          return { ok: true as const, value: z.object({ name: z.string() }) };
+        }
+        return { error: "cant get element of a non-array schema" as const, ok: false as const };
+      }
       return {
         ...actual,
-        getElementSchema: vi.fn(() => {
-          getElementSchemaCalls += 1;
-          if (getElementSchemaCalls === 1) {
-            return { ok: true, value: z.object({ name: z.string() }) };
-          }
-          return { error: "forced-error", ok: false };
-        }),
-        isZodArray: vi.fn(() => true),
-        isZodObject: vi.fn(() => true),
+        getElementSchema,
+        isZodArray: () => true,
+        isZodObject: () => true,
       };
     });
     const utilsModule = await import("./auto-form-summary-step.utils");
@@ -695,14 +696,14 @@ describe("auto-form-summary-step.utils", () => {
   });
   it("sectionsFromSchema W should fallback to field key when field list element resolution fails and no label", async () => {
     vi.resetModules();
-    vi.doMock("./auto-form.utils", async importOriginal => {
+    vi.doMock(import("./auto-form.utils"), async importOriginal => {
       // oxlint-disable-next-line typescript/consistent-type-imports
       const actual = await importOriginal<typeof import("./auto-form.utils")>();
       return {
         ...actual,
-        getElementSchema: vi.fn(() => ({ ok: false, error: "forced-error" })),
-        isZodArray: vi.fn(() => true),
-        isZodObject: vi.fn(() => true),
+        getElementSchema: () => ({ error: "cant get element of a non-array schema" as const, ok: false as const }),
+        isZodArray: () => true,
+        isZodObject: () => true,
       };
     });
     const utilsModule = await import("./auto-form-summary-step.utils");

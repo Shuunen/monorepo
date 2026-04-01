@@ -44,7 +44,7 @@ it("copyToClipboard C with willLog", async () => {
   // Patch navigator.clipboard
   const originalClipboard = globalThis.navigator?.clipboard;
   const mockClipboard = {
-    writeText: vi.fn(() => undefined),
+    writeText: vi.fn<() => void>(() => undefined),
   };
   Object.defineProperty(globalThis.navigator, "clipboard", {
     configurable: true,

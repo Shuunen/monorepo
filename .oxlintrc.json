@@ -11,24 +11,24 @@
   },
   "globals": {
     "__dirname": "readonly",
-    "Audio": "readonly",
     "atob": "readonly",
+    "Audio": "readonly",
     "Blob": "readonly",
     "btoa": "readonly",
-    "CryptoKey": "readonly",
-    "CustomEvent": "readonly",
     "clearInterval": "readonly",
     "clearTimeout": "readonly",
     "console": "readonly",
     "crypto": "readonly",
-    "DOMParser": "readonly",
+    "CryptoKey": "readonly",
+    "CustomEvent": "readonly",
     "document": "readonly",
+    "DOMParser": "readonly",
     "Element": "readonly",
     "Event": "readonly",
+    "fetch": "readonly",
     "File": "readonly",
     "FileReader": "readonly",
     "FormData": "readonly",
-    "fetch": "readonly",
     "Headers": "readonly",
     "HTMLAnchorElement": "readonly",
     "HTMLButtonElement": "readonly",
@@ -68,7 +68,12 @@
     "storybook-static",
     "test-output"
   ],
-  "jsPlugins": [{ "name": "monorepo-plugin", "specifier": "./libs/oxc-plugins/src/monorepo.plugin.ts" }],
+  "jsPlugins": [
+    {
+      "name": "monorepo-plugin",
+      "specifier": "./libs/oxc-plugins/src/monorepo.plugin.ts"
+    }
+  ],
   "overrides": [
     {
       "files": ["*.tsx"],
@@ -176,8 +181,8 @@
         "addMbSubmit": "readonly",
         "createMbForm": "readonly",
         "insertMbForm": "readonly",
-        "MutationObserver": "readonly",
         "module": "readonly",
+        "MutationObserver": "readonly",
         "Shuutils": "readonly",
         "textFromSelector": "readonly"
       },
@@ -199,8 +204,8 @@
         "Blob": "readonly",
         "Buffer": "readonly",
         "process": "readonly",
-        "Response": "readonly",
         "require": "readonly",
+        "Response": "readonly",
         "URL": "readonly"
       }
     },
@@ -397,6 +402,7 @@
     "no-unassigned-import": "off",
     "no-undefined": "off",
     "no-unnecessary-condition": "off",
+    "no-unnecessary-type-arguments": "off",
     "no-unsafe-assignment": "off",
     "no-unsafe-member-access": "off",
     "no-unsafe-type-assertion": "off",
@@ -417,6 +423,7 @@
     "prefer-ternary": "off",
     "promise-function-async": "off",
     "react-in-jsx-scope": "off",
+    "require-test-timeout": "off",
     "restrict-template-expressions": "off",
     "sort-imports": "off",
     "strict-boolean-expressions": "off",

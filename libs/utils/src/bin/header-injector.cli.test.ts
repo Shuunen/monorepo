@@ -1,10 +1,7 @@
 import { invariant } from "es-toolkit";
 
 vi.mock(import("tiny-glob"));
-vi.mock(import("node:fs"), () => ({
-  readFileSync: vi.fn(),
-  writeFileSync: vi.fn(),
-}));
+vi.mock(import("node:fs"));
 
 const glob = await import("tiny-glob");
 const fs = await import("node:fs");

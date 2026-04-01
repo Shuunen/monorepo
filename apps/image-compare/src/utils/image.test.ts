@@ -22,14 +22,14 @@ describe("image.utils", () => {
 
   describe(handleSingleFileUpload, () => {
     it("handleSingleFileUpload A should return early if file is undefined", () => {
-      const onImageUpdate = vi.fn();
+      const onImageUpdate = vi.fn<() => void>();
       handleSingleFileUpload(undefined, { imageSide: "left", onImageUpdate });
       expect(onImageUpdate).not.toHaveBeenCalled();
     });
 
     it("handleSingleFileUpload B should process left image file", () => {
       const file = new File(["content"], "test.jpg", { type: "image/jpeg" });
-      const onImageUpdate = vi.fn();
+      const onImageUpdate = vi.fn<() => void>();
       handleSingleFileUpload(file, { imageSide: "left", onImageUpdate });
       // FileReader is async, we can't test the callback directly
       expect(file).toBeInstanceOf(File);
@@ -37,8 +37,8 @@ describe("image.utils", () => {
 
     it("handleSingleFileUpload C should process right image file", () => {
       const file = new File(["content"], "test.jpg", { type: "image/jpeg" });
-      const onImageUpdate = vi.fn();
-      const onMetadataUpdate = vi.fn();
+      const onImageUpdate = vi.fn<() => void>();
+      const onMetadataUpdate = vi.fn<() => void>();
       handleSingleFileUpload(file, { imageSide: "right", onImageUpdate, onMetadataUpdate });
       expect(file).toBeInstanceOf(File);
       expect(onImageUpdate).not.toHaveBeenCalled();
@@ -51,7 +51,7 @@ describe("image.utils", () => {
       const file = new File(["content"], "test.jpg", { type: "image/jpeg" });
       const fileList = { 0: file, item: () => file, length: 1 } as unknown as FileList;
       const spy = vi.spyOn(logger, "showError").mockImplementation(functionReturningVoid);
-      handleMultipleFilesUpload(fileList, { onContestStart: vi.fn() });
+      handleMultipleFilesUpload(fileList, { onContestStart: vi.fn<() => void>() });
       expect(spy).toHaveBeenCalledWith("Please drop 2 or more images to compare.");
     });
 
@@ -64,10 +64,10 @@ describe("image.utils", () => {
         item: (i: number) => (i === 0 ? file1 : file2),
         length: 2,
       } as unknown as FileList;
-      const onLeftImageUpdate = vi.fn();
-      const onRightImageUpdate = vi.fn();
-      const onLeftMetadataUpdate = vi.fn();
-      const onRightMetadataUpdate = vi.fn();
+      const onLeftImageUpdate = vi.fn<() => void>();
+      const onRightImageUpdate = vi.fn<() => void>();
+      const onLeftMetadataUpdate = vi.fn<() => void>();
+      const onRightMetadataUpdate = vi.fn<() => void>();
       const spy = vi.spyOn(logger, "info").mockImplementation(functionReturningVoid);
       handleMultipleFilesUpload(fileList, {
         onLeftImageUpdate,
@@ -93,7 +93,7 @@ describe("image.utils", () => {
         item: (i: number) => [file1, file2, file3][i],
         length: 3,
       } as unknown as FileList;
-      const onContestStart = vi.fn();
+      const onContestStart = vi.fn<() => void>();
       const infoSpy = vi.spyOn(logger, "info").mockImplementation(functionReturningVoid);
       handleMultipleFilesUpload(fileList, { onContestStart });
       await sleep(20); // Wait for async FileReader operations
@@ -103,8 +103,8 @@ describe("image.utils", () => {
 
     it("handleMultipleFilesUpload D should handle empty FileList for two images", () => {
       const fileList = { 0: undefined, 1: undefined, item: () => undefined, length: 2 } as unknown as FileList;
-      const onLeftImageUpdate = vi.fn();
-      const onRightImageUpdate = vi.fn();
+      const onLeftImageUpdate = vi.fn<() => void>();
+      const onRightImageUpdate = vi.fn<() => void>();
       handleMultipleFilesUpload(fileList, { onLeftImageUpdate, onRightImageUpdate });
       expect(fileList.length).toBe(2);
     });
@@ -118,10 +118,10 @@ describe("image.utils", () => {
         item: (i: number) => (i === 0 ? file1 : file2),
         length: 2,
       } as unknown as FileList;
-      const onLeftImageUpdate = vi.fn();
-      const onRightImageUpdate = vi.fn();
-      const onLeftMetadataUpdate = vi.fn();
-      const onRightMetadataUpdate = vi.fn();
+      const onLeftImageUpdate = vi.fn<() => void>();
+      const onRightImageUpdate = vi.fn<() => void>();
+      const onLeftMetadataUpdate = vi.fn<() => void>();
+      const onRightMetadataUpdate = vi.fn<() => void>();
       handleMultipleFilesUpload(fileList, {
         onLeftImageUpdate,
         onLeftMetadataUpdate,

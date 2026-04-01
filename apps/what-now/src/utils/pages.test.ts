@@ -2,7 +2,7 @@ import { CalendarIcon, CircleQuestionMarkIcon, HomeIcon, SettingsIcon } from "lu
 import { useActions } from "./pages.utils";
 
 // Mock react-router-dom
-const mockNavigate = vi.fn();
+const mockNavigate = vi.fn<() => void>();
 vi.mock(import("react-router-dom"), () => ({
   useNavigate: () => mockNavigate,
 }));

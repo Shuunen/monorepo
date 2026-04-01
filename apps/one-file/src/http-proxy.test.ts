@@ -14,13 +14,13 @@ import {
 
 // oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("express", () => {
-  const mockJson = vi.fn(() => vi.fn());
+  const mockJson = vi.fn<() => () => void>(() => vi.fn<() => void>());
   const mockApp = {
-    listen: vi.fn(),
-    post: vi.fn(),
-    use: vi.fn(),
+    listen: vi.fn<() => void>(),
+    post: vi.fn<() => void>(),
+    use: vi.fn<() => void>(),
   };
-  const mockExpress = vi.fn(() => mockApp);
+  const mockExpress = vi.fn<() => typeof mockApp>(() => mockApp);
   // @ts-expect-error non important typing issue
   mockExpress.json = mockJson;
   return {
@@ -30,29 +30,31 @@ vi.mock("express", () => {
 
 // oxlint-disable-next-line vitest/prefer-import-in-mock
 vi.mock("cors", () => ({
-  default: vi.fn(() => vi.fn()),
+  default: vi.fn<() => () => void>(() => vi.fn<() => void>()),
 }));
 
 // Mock fetch globally
-globalThis.fetch = vi.fn();
+globalThis.fetch = vi.fn<typeof fetch>();
 
 function createMockFetchResponse(contentType: string, responseData: unknown) {
   const mock = {
     headers: {
-      get: vi.fn().mockReturnValue(contentType),
+      get: vi.fn<() => string>().mockReturnValue(contentType),
     },
     status: 200,
     statusText: "OK",
   } as Record<string, unknown>;
-  if (contentType.includes("application/json")) mock.json = vi.fn().mockResolvedValue(responseData);
-  else if (contentType.includes("text/plain")) mock.text = vi.fn().mockResolvedValue(responseData);
+  if (contentType.includes("application/json"))
+    mock.json = vi.fn<() => Promise<unknown>>().mockResolvedValue(responseData);
+  else if (contentType.includes("text/plain"))
+    mock.text = vi.fn<() => Promise<unknown>>().mockResolvedValue(responseData);
   return mock;
 }
 
 function createErrorMockFetchResponse() {
   return {
-    headers: { get: vi.fn().mockReturnValue("application/json") },
-    json: vi.fn().mockRejectedValue(new Error("Parse error")),
+    headers: { get: vi.fn<() => string>().mockReturnValue("application/json") },
+    json: vi.fn<() => Promise<unknown>>().mockRejectedValue(new Error("Parse error")),
     status: 200,
     statusText: "OK",
   };
@@ -66,8 +68,8 @@ describe("http-proxy", () => {
     vi.clearAllMocks();
 
     mockResponse = {
-      json: vi.fn().mockReturnThis(),
-      status: vi.fn().mockReturnThis(),
+      json: vi.fn<() => unknown>().mockReturnThis(),
+      status: vi.fn<() => unknown>().mockReturnThis(),
     };
 
     mockRequest = {
