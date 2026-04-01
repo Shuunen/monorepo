@@ -44,7 +44,7 @@ export function PageHome({ ...properties }: Readonly<Record<string, unknown>>) {
         <AppPrompter />
         <div className="grid gap-8 md:grid-cols-3 md:gap-6" style={ctaStyle}>
           <div className={triggerColumnClasses}>
-            <Button className="py-5.5" name="scan" onClick={() => navigate("/scan")}>
+            <Button className="w-full py-5.5" name="scan" onClick={() => navigate("/scan")}>
               Scan it
             </Button>
             <svg className="h-8" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
@@ -72,7 +72,7 @@ export function PageHome({ ...properties }: Readonly<Record<string, unknown>>) {
             </svg>
           </div>
           <div className={triggerColumnClasses}>
-            <Button className="py-5.5" name="speech" onClick={onSpeech}>
+            <Button className="w-full py-5.5" name="speech" onClick={onSpeech}>
               Say it
             </Button>
             <svg className="h-8" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
