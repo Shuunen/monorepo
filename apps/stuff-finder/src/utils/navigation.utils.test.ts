@@ -2,51 +2,59 @@ import type { NavigateFunction } from "react-router-dom";
 import { navigate, setNavigate } from "./navigation.utils";
 
 describe("navigation.utils", () => {
-  let mockNavigate: NavigateFunction = vi.fn();
+  let navigateSpy = vi.fn<(path: string, options?: unknown) => void>();
+  let mockNavigate = (to: unknown, options?: unknown) => {
+    if (typeof to !== "string") return;
+    navigateSpy(to, options);
+  };
 
   beforeEach(() => {
-    mockNavigate = vi.fn();
+    navigateSpy = vi.fn<(path: string, options?: unknown) => void>();
+    mockNavigate = (to: unknown, options?: unknown) => {
+      if (typeof to !== "string") return;
+      navigateSpy(to, options);
+    };
     setNavigate(undefined as unknown as NavigateFunction);
   });
 
   it("setNavigate A should store the navigate function", () => {
-    setNavigate(mockNavigate);
+    setNavigate(mockNavigate as unknown as NavigateFunction);
     navigate("/test");
-    expect(mockNavigate).toHaveBeenCalledWith("/test", { replace: false });
+    expect(navigateSpy).toHaveBeenCalledWith("/test", { replace: false });
   });
 
   it("navigate A should call navigate with path and default replace false when navigate is set", () => {
-    setNavigate(mockNavigate);
+    setNavigate(mockNavigate as unknown as NavigateFunction);
     navigate("/dashboard");
-    expect(mockNavigate).toHaveBeenCalledWith("/dashboard", { replace: false });
+    expect(navigateSpy).toHaveBeenCalledWith("/dashboard", { replace: false });
   });
 
   it("navigate B should call navigate with path and replace true when specified", () => {
-    setNavigate(mockNavigate);
+    setNavigate(mockNavigate as unknown as NavigateFunction);
     navigate("/login", true);
-    expect(mockNavigate).toHaveBeenCalledWith("/login", { replace: true });
+    expect(navigateSpy).toHaveBeenCalledWith("/login", { replace: true });
   });
 
   it("navigate C should not call navigate when navigate is not set", () => {
     navigate("/test");
-    expect(mockNavigate).not.toHaveBeenCalled();
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 
   it("navigate D should handle multiple calls with different parameters", () => {
-    setNavigate(mockNavigate);
+    setNavigate(mockNavigate as unknown as NavigateFunction);
     navigate("/first");
     navigate("/second", true);
     navigate("/third", false);
-    expect(mockNavigate).toHaveBeenCalledTimes(3);
-    expect(mockNavigate).toHaveBeenNthCalledWith(1, "/first", { replace: false });
-    expect(mockNavigate).toHaveBeenNthCalledWith(2, "/second", { replace: true });
-    expect(mockNavigate).toHaveBeenNthCalledWith(3, "/third", { replace: false });
+    expect(navigateSpy).toHaveBeenCalledTimes(3);
+    expect(navigateSpy).toHaveBeenNthCalledWith(1, "/first", { replace: false });
+    expect(navigateSpy).toHaveBeenNthCalledWith(2, "/second", { replace: true });
+    expect(navigateSpy).toHaveBeenNthCalledWith(3, "/third", { replace: false });
   });
 
   it("navigate E should pass state to the navigate function", () => {
-    setNavigate(mockNavigate);
+    setNavigate(mockNavigate as unknown as NavigateFunction);
     const routeState = { header: "test", results: [] };
     navigate("/search/foo", false, routeState);
-    expect(mockNavigate).toHaveBeenCalledWith("/search/foo", { replace: false, state: routeState });
+    expect(navigateSpy).toHaveBeenCalledWith("/search/foo", { replace: false, state: routeState });
   });
 });

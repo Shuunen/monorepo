@@ -3,9 +3,9 @@ import type { ContestState } from "../utils/comparison.utils";
 import { ControlButtons } from "./control-buttons";
 
 describe("control-buttons", () => {
-  const mockLeftUpload = vi.fn();
-  const mockRightUpload = vi.fn();
-  const mockReset = vi.fn();
+  const mockLeftUpload = vi.fn<() => void>();
+  const mockRightUpload = vi.fn<() => void>();
+  const mockReset = vi.fn<() => void>();
 
   it("ControlButtons A should render all buttons in normal mode", () => {
     render(

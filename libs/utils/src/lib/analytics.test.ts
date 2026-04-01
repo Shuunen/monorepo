@@ -23,9 +23,9 @@ it("analytics B with pile", () => {
 });
 
 it("analytics C with callbacks", () => {
-  const onIdentify = vi.fn();
-  const onPage = vi.fn();
-  const onTrack = vi.fn();
+  const onIdentify = vi.fn<() => void>();
+  const onPage = vi.fn<() => void>();
+  const onTrack = vi.fn<() => void>();
   const analytics = createAnalytics({ app: "unit-callbacks", onIdentify, onPage, onTrack });
   analytics.track("event-name");
   expect(onTrack).toHaveBeenNthCalledWith(1, "event-name", undefined);

@@ -16,7 +16,7 @@ describe(useFormChangeDetector, () => {
   });
 
   it("calls callback with form values on change", () => {
-    const callback = vi.fn();
+    const callback = vi.fn<() => void>();
     const { result } = renderHook(() => {
       const form = useForm<{ name: string }>({ defaultValues: { name: "" } });
       useFormChangeDetector(form, callback);
@@ -32,7 +32,7 @@ describe(useFormChangeDetector, () => {
   });
 
   it("debounces callback calls", () => {
-    const callback = vi.fn();
+    const callback = vi.fn<() => void>();
     const { result } = renderHook(() => {
       const form = useForm<{ age: number }>({ defaultValues: { age: 0 } });
       useFormChangeDetector(form, callback);
@@ -51,7 +51,7 @@ describe(useFormChangeDetector, () => {
   });
 
   it("unsubscribes on unmount", () => {
-    const callback = vi.fn();
+    const callback = vi.fn<() => void>();
     const { unmount } = renderHook(() => {
       const form = useForm<{ foo: string }>({ defaultValues: { foo: "" } });
       useFormChangeDetector(form, callback);

@@ -147,7 +147,7 @@ describe("server.cli.ts (unit)", () => {
   });
 
   it("sendCorsHeaders A should set headers", () => {
-    const setHeader = vi.fn();
+    const setHeader = vi.fn<() => void>();
     const res = { setHeader } as unknown as http.ServerResponse;
     serverModule.sendCorsHeaders(res);
     expect(setHeader).toHaveBeenCalledWith("Access-Control-Allow-Origin", "*");
@@ -173,8 +173,8 @@ describe("server.cli.ts (unit)", () => {
   });
 
   it("respondNotFound A should write 404", () => {
-    const end = vi.fn();
-    const writeHead = vi.fn();
+    const end = vi.fn<() => void>();
+    const writeHead = vi.fn<() => void>();
     const res = { end, writeHead } as unknown as http.ServerResponse;
     serverModule.respondNotFound(res);
     expect(writeHead).toHaveBeenCalledWith(serverModule.options.codes.notFound, {
@@ -184,8 +184,8 @@ describe("server.cli.ts (unit)", () => {
   });
 
   it("respondBadRequest A should write 400", () => {
-    const end = vi.fn();
-    const writeHead = vi.fn();
+    const end = vi.fn<() => void>();
+    const writeHead = vi.fn<() => void>();
     const res = { end, writeHead } as unknown as http.ServerResponse;
     serverModule.respondBadRequest({ message: "bad", nextTask: undefined, progress: 0, remaining: undefined, res });
     expect(writeHead).toHaveBeenCalledWith(serverModule.options.codes.badRequest, {

@@ -1,13 +1,13 @@
 import { fetchJson } from "./fetch.js";
 
 // Mock fetch globally
-const mockFetch = vi.fn();
+const mockFetch = vi.fn<(...args: unknown[]) => Promise<unknown>>();
 vi.stubGlobal("fetch", mockFetch);
 
 it("fetchJson A should successfully fetch and parse JSON data", async () => {
   const mockData = { id: 123, message: "success" };
   const mockResponse = {
-    json: vi.fn().mockResolvedValue(mockData),
+    json: vi.fn<() => Promise<unknown>>().mockResolvedValue(mockData),
   };
   mockFetch.mockResolvedValue(mockResponse);
 
@@ -42,7 +42,7 @@ it("fetchJson B should handle fetch network errors", async () => {
 
 it("fetchJson C should handle JSON parsing errors", async () => {
   const mockResponse = {
-    json: vi.fn().mockRejectedValue(new Error("Invalid JSON")),
+    json: vi.fn<() => Promise<unknown>>().mockRejectedValue(new Error("Invalid JSON")),
   };
   mockFetch.mockResolvedValue(mockResponse);
 
@@ -59,7 +59,7 @@ it("fetchJson C should handle JSON parsing errors", async () => {
 it("fetchJson D should pass request options correctly", async () => {
   const mockData = { status: "ok" };
   const mockResponse = {
-    json: vi.fn().mockResolvedValue(mockData),
+    json: vi.fn<() => Promise<unknown>>().mockResolvedValue(mockData),
   };
   mockFetch.mockResolvedValue(mockResponse);
 
@@ -80,7 +80,7 @@ it("fetchJson D should pass request options correctly", async () => {
 
 it("fetchJson E should handle empty response body", async () => {
   const mockResponse = {
-    json: vi.fn().mockResolvedValue(null),
+    json: vi.fn<() => Promise<unknown>>().mockResolvedValue(null),
   };
   mockFetch.mockResolvedValue(mockResponse);
 

@@ -14,8 +14,8 @@ const mockFiles = [
 describe("barrel-maker cli", () => {
   beforeEach(() => {
     vi.resetModules();
-    vi.doMock("tiny-glob", () => ({ default: vi.fn().mockResolvedValue(mockFiles) }));
-    vi.doMock("node:fs", () => ({ writeFileSync: vi.fn() }));
+    vi.doMock(import("tiny-glob"), () => ({ default: vi.fn<() => Promise<string[]>>().mockResolvedValue(mockFiles) }));
+    vi.doMock(import("node:fs"), () => ({ writeFileSync: vi.fn<() => void>() }));
   });
 
   it("make A ext empty and default index.ts", async () => {

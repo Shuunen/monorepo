@@ -19,10 +19,10 @@ import {
 
 // Mock node:fs functions
 vi.mock(import("node:fs"), () => ({
-  readdirSync: vi.fn(),
-  renameSync: vi.fn(),
-  statSync: vi.fn(),
-  unlinkSync: vi.fn(),
+  readdirSync: vi.fn<() => void>(),
+  renameSync: vi.fn<() => void>(),
+  statSync: vi.fn<() => void>(),
+  unlinkSync: vi.fn<() => void>(),
 }));
 
 describe("clean-ytdl", () => {

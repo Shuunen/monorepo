@@ -5,7 +5,7 @@ import { navigateToSearch, search } from "./page-search.const";
 
 // Mock navigation utils
 vi.mock(import("../utils/navigation.utils"), () => ({
-  navigate: vi.fn(),
+  navigate: vi.fn<() => void>(),
 }));
 
 // Mock fuse.js/basic

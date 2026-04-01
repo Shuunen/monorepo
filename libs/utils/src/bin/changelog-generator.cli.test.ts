@@ -13,10 +13,10 @@ import {
 // oxlint-disable-next-line arrow-body-style
 const { mockFileSync, mockExecSync } = vi.hoisted(() => {
   return {
-    mockFileSync: vi.fn(),
-    mockExecSync: vi.fn(),
-    mockGetAllHistory: vi.fn(),
-    mockReadPackageJsonVersion: vi.fn(),
+    mockFileSync: vi.fn<() => unknown>(),
+    mockExecSync: vi.fn<() => unknown>(),
+    mockGetAllHistory: vi.fn<() => unknown>(),
+    mockReadPackageJsonVersion: vi.fn<() => unknown>(),
   };
 });
 
