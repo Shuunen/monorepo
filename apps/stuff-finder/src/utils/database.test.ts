@@ -34,6 +34,7 @@ globalThis.fetch = mockFetch;
 describe("database.utils", () => {
   beforeEach(() => {
     state.credentials = { bucketId: "bucketA", collectionId: "collectionA", databaseId: "databaseA", wrap: "wrapA" };
+    state.items = [];
     mockFetch.mockClear();
     databaseMock.reset();
     logger.disable();
@@ -237,6 +238,27 @@ describe("database.utils", () => {
     expect(Result.unwrap(result).error).toMatchInlineSnapshot(`"Invalid length: Expected !0 but received 0"`);
   });
 
+  it("updateItemRemotely G photo changed, should delete old photo and upload with unique id", async () => {
+    const originalItem = mockItem({ $id: "item-uuid", photos: ["old-bucket-photo-id"] });
+    state.items = [originalItem];
+    mockFetch.mockResolvedValueOnce(new Response(new Blob([], { type: "image/jpeg" })));
+    const updatedItem = mockItem({ $id: "item-uuid", photos: ["https://example.com/new-photo.jpg"] });
+    const result = await updateItemRemotely(updatedItem);
+    expect(result.ok).toBe(true);
+    expect(databaseMock.deleteFile).toHaveBeenNthCalledWith(1, {
+      bucketId: "bucketA",
+      fileId: "old-bucket-photo-id",
+    });
+    expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, {
+      bucketId: "bucketA",
+      file: expect.anything(),
+      fileId: expect.stringMatching(/^reference-b-photo-0-[a-z\d]+-jpg$/),
+    });
+    const photos = Result.unwrap(result).value?.photos;
+    expect(photos?.[0]).toMatch(/^reference-b-photo-0-[a-z\d]+-jpg$/);
+    expect(photos?.[0]).not.toBe("reference-b-photo-0-jpg");
+  });
+
   it("getAppWriteIdFromUrl A valid url", () => {
     const url = "https://cloud.appwrite.io/v1/storage/buckets/bucket123/files/photo456/view?project=my-project-id";
     expect(getAppWriteIdFromUrl(url)).toMatchInlineSnapshot(`"photo456"`);
@@ -267,9 +289,9 @@ describe("database.utils", () => {
     expect(result.ok).toBe(true);
     const photos = Result.unwrap(result).value?.photos;
     expect(photos).toHaveLength(3);
-    expect(photos?.join(", ")).toMatchInlineSnapshot(
-      `"reference-b-photo-0-jpg, a-bucket-photo-uuid, reference-b-photo-2-jpg"`,
-    );
+    expect(photos?.[0]).toMatch(/^reference-b-photo-0-[a-z\d]+-jpg$/);
+    expect(photos?.[1]).toBe("a-bucket-photo-uuid");
+    expect(photos?.[2]).toMatch(/^reference-b-photo-2-[a-z\d]+-jpg$/);
     expect(mockFetch).toHaveBeenCalledTimes(2);
     expect(mockFetch).toHaveBeenNthCalledWith(1, photoUrlA);
     expect(mockFetch).toHaveBeenNthCalledWith(2, photoUrlC);
@@ -277,12 +299,12 @@ describe("database.utils", () => {
     expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, {
       bucketId: "bucketA",
       file: expect.anything(),
-      fileId: "reference-b-photo-0-jpg",
+      fileId: expect.stringMatching(/^reference-b-photo-0-[a-z\d]+-jpg$/),
     });
     expect(databaseMock.createFile).toHaveBeenNthCalledWith(2, {
       bucketId: "bucketA",
       file: expect.anything(),
-      fileId: "reference-b-photo-2-jpg",
+      fileId: expect.stringMatching(/^reference-b-photo-2-[a-z\d]+-jpg$/),
     });
   });
 
@@ -313,6 +335,37 @@ describe("database.utils", () => {
     const photos = Result.unwrap(result).value?.photos;
     expect(photos?.[0]).toMatchInlineSnapshot(`"https://example.com/photo.png"`);
     expect(mockFetch).toHaveBeenNthCalledWith(1, photoUrl);
+  });
+
+  it("uploadPhotosIfNeeded F with old bucket photo, should delete old and upload with unique id", async () => {
+    mockFetch.mockResolvedValueOnce(new Response(new Blob([], { type: "image/jpeg" })));
+    const newPhotoUrl = "https://example.com/new-photo.jpg";
+    const oldPhotoId = "old-photo-uuid";
+    const item = mockItem({ photos: [newPhotoUrl] });
+    const result = await uploadPhotosIfNeeded(item, [oldPhotoId]);
+    expect(result.ok).toBe(true);
+    const photos = Result.unwrap(result).value?.photos;
+    expect(photos?.[0]).toMatch(/^reference-b-photo-0-[a-z\d]+-jpg$/);
+    expect(photos?.[0]).not.toBe("reference-b-photo-0-jpg");
+    expect(databaseMock.deleteFile).toHaveBeenNthCalledWith(1, { bucketId: "bucketA", fileId: "old-photo-uuid" });
+    expect(databaseMock.createFile).toHaveBeenNthCalledWith(1, {
+      bucketId: "bucketA",
+      file: expect.anything(),
+      fileId: expect.stringMatching(/^reference-b-photo-0-[a-z\d]+-jpg$/),
+    });
+  });
+
+  it("uploadPhotosIfNeeded G with old url photo, should not delete old", async () => {
+    mockFetch.mockResolvedValueOnce(new Response(new Blob([], { type: "image/jpeg" })));
+    const newPhotoUrl = "https://example.com/new-photo.jpg";
+    const oldPhotoUrl = "https://example.com/old-photo.jpg";
+    const item = mockItem({ photos: [newPhotoUrl] });
+    const result = await uploadPhotosIfNeeded(item, [oldPhotoUrl]);
+    expect(result.ok).toBe(true);
+    const photos = Result.unwrap(result).value?.photos;
+    expect(photos?.[0]).toMatch(/^reference-b-photo-0-[a-z\d]+-jpg$/);
+    expect(databaseMock.deleteFile).toHaveBeenCalledTimes(0);
+    expect(databaseMock.createFile).toHaveBeenCalledOnce();
   });
 
   it("itemIdToImageUrl A", () => {

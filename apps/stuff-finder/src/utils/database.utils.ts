@@ -2,6 +2,7 @@ import {
   dateIso10,
   downloadFile,
   storage as lsStorage,
+  nbDaysInMonth,
   nbHueMax,
   nbPercentMax,
   nbSpacesIndent,
@@ -190,18 +191,25 @@ export function removeAppWriteFields(item: Record<string, unknown>) {
   return clone;
 }
 
-export async function uploadPhotosIfNeeded(item: Item) {
+export async function uploadPhotosIfNeeded(item: Item, oldPhotos: string[] = []) {
   const data = structuredClone(item);
   const id = getItemId(data);
   if (!id.ok) return Result.error(id.error);
-
   for (const [index, photo] of data.photos.entries()) {
     if (!isUrl(photo)) continue;
     let uuid = getAppWriteIdFromUrl(photo);
     /* v8 ignore if -- @preserve */
     if (uuid === undefined) {
+      const oldPhoto = oldPhotos[index];
+      const hasOldBucketPhoto = oldPhoto !== undefined && !isUrl(oldPhoto);
       // oxlint-disable-next-line no-await-in-loop
-      const result = await uploadImage(`${id.value}_photo-${index}`, photo);
+      if (hasOldBucketPhoto) await deleteImageRemotely(oldPhoto);
+      // generate a text id based on timestamp
+      const suffix = Date.now().toString(nbDaysInMonth);
+      // oxlint-disable-next-line no-await-in-loop
+      const result = await uploadImage(`${id.value}_photo-${index}-${suffix}`, photo);
+      if (!result.ok) return Result.error(`failed to upload photo at index ${index} for item ${item.$id}`);
+      // if upload failed, uuid will be the original url, it can be a external url or a bucket url that we failed to upload but still exists
       uuid = result.value;
     }
     data.photos[index] = uuid;
@@ -248,7 +256,9 @@ export async function deleteItemRemotely(item: Item, currentState = state) {
 }
 
 export async function updateItemRemotely(item: Item, currentState = state) {
-  const data = await uploadPhotosIfNeeded(item);
+  const originalItem = currentState.items.find(one => one.$id === item.$id);
+  const oldPhotos = originalItem?.photos ?? [];
+  const data = await uploadPhotosIfNeeded(item, oldPhotos);
   if (!data.ok) return Result.error(data.error);
   const { collectionId, databaseId } = currentState.credentials;
   if (data.value.$id.length === 0) return Result.error(`item id is empty in ${JSON.stringify(data.value)}`);
