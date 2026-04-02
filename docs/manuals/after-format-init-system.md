@@ -329,6 +329,7 @@ Setup Jackett :
 
 Nice app to keep in mind :
 
+- [Apostrophe](https://flathub.org/en/apps/org.gnome.gitlab.somas.Apostrophe) : efficient Markdown MD editor
 - [Boxy SVG](https://boxy-svg.com/) : simple & effective svg editor
 - [Breaktimer](https://breaktimer.app/) : break reminder & eye care
 - [Czkawka](https://github.com/qarmin/czkawka/releases/) : duplicate finder & cleaner
