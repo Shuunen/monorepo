@@ -15,4 +15,5 @@ else logger.error("root not found");
 const result = await getItems();
 state.status = result.ok ? "ready" : "settings-required";
 if (result.ok) toastInfo(result.value);
+else if (result.error instanceof Error) toastError(result.error.message);
 else if (typeof result.error === "string") toastError(result.error);
