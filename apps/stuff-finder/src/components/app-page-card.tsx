@@ -6,6 +6,17 @@ import { theme } from "../utils/theme.utils";
 import { AppButtonBack } from "./app-button-back";
 import { AppPageBottom } from "./app-page-bottom";
 
+type AppPageCardProps = Readonly<{
+  cardTitle: string;
+  children: ReactNode;
+  icon: MuiIcon;
+  nextLabel?: string;
+  nextUrl?: string;
+  pageCode: string;
+  pageTitle: string;
+  stepsBack?: number;
+}>;
+
 export function AppPageCard({
   cardTitle,
   children,
@@ -15,16 +26,7 @@ export function AppPageCard({
   pageCode,
   pageTitle,
   stepsBack = 1,
-}: Readonly<{
-  cardTitle: string;
-  children: ReactNode;
-  icon: MuiIcon;
-  nextLabel?: string;
-  nextUrl?: string;
-  pageCode: string;
-  pageTitle: string;
-  stepsBack?: number;
-}>) {
+}: AppPageCardProps) {
   setPageTitle(pageTitle);
   return (
     <ThemeProvider theme={theme}>
@@ -34,7 +36,7 @@ export function AppPageCard({
         data-page={pageCode}
       >
         <h3 className="hidden sm:block">{cardTitle}</h3>
-        <div className="relative z-10 block w-full grow overflow-auto bg-linear-to-b from-white/80 to-white p-4 text-purple-700 sm:p-6 md:w-auto md:min-w-[30rem] md:gap-6 md:rounded-md md:shadow-md">
+        <div className="relative z-10 block w-full grow overflow-auto bg-linear-to-b from-white/80 to-white p-4 sm:p-6 md:w-auto md:min-w-120 md:gap-6 md:rounded-md md:shadow-md">
           <div className="mb-2 flex w-full sm:mb-4 md:hidden">
             <AppButtonBack />
           </div>
