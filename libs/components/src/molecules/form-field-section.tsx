@@ -14,7 +14,7 @@ export type FormFieldSectionProps = {
   description?: string;
   /** Optional code block content to display */
   code?: string;
-  /** Optional line **/
+  /** Optional line break */
   line?: boolean;
   /** Optional label that mimic a form field label */
   label?: string;
@@ -22,6 +22,8 @@ export type FormFieldSectionProps = {
   labelStar?: boolean;
   /** Custom content rendered with current form values. Must be used inside a react-hook-form FormProvider. */
   customRender?: (formData: AutoFormData) => ReactNode;
+  /** Optional space before the section, useful when the section is not the first one in the form */
+  spacedTop?: boolean;
 };
 
 // We have a dedicated component for the custom render to avoid re-rendering the section when the form data changes
@@ -35,7 +37,8 @@ function CustomRenderContent({ customRender }: { customRender: (formData: AutoFo
 export function FormFieldSection(props: FormFieldSectionProps) {
   return (
     <div className="grid gap-2">
-      {props.title && <Title className="mt-4">{props.title}</Title>}
+      {props.spacedTop && <div className="mt-4" />}
+      {props.title && <Title>{props.title}</Title>}
       {props.subtitle && <Title level={2}>{props.subtitle}</Title>}
       {props.label && (
         <div className="text-lg">
